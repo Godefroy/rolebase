@@ -3,7 +3,7 @@ import TopNav from '../components/TopNav.astro'
 import TopNavDev from '../components/TopNavDev.astro'
 import Footer from '../components/Footer.astro'
 import SocialPreview from '../components/SocialPreview.astro'
-import { getLangFromUrl } from '../utils/i18n'
+import { getLangFromUrl, langs, defaultLang } from '../utils/i18n'
 import { getCanonicalPath } from '../utils/getCanonicalPath'
 import '../styles/global.css'
 
@@ -19,6 +19,8 @@ const lang = getLangFromUrl(Astro.url)
 const isDevSection = currentPath.includes('/developers') || currentPath.includes('/api')
 const canonicalPath = getCanonicalPath(currentPath)
 const mdAlternatePath = `${canonicalPath}.md`
+const hasLangPrefix = canonicalPath.startsWith(`/${lang}`)
+const altPath = (l: string) => hasLangPrefix ? canonicalPath.replace(`/${lang}`, `/${l}`) : canonicalPath
 ---
 
 <!doctype html>
@@ -29,6 +31,12 @@ const mdAlternatePath = `${canonicalPath}.md`
     <title>{title}</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href={new URL(canonicalPath, Astro.site).href} />
+    {hasLangPrefix && langs.map((l) => (
+      <link rel="alternate" hreflang={l} href={new URL(altPath(l), Astro.site).href} />
+    ))}
+    {hasLangPrefix && (
+      <link rel="alternate" hreflang="x-default" href={new URL(altPath(defaultLang), Astro.site).href} />
+    )}
     <link
       rel="alternate"
       type="text/markdown"
