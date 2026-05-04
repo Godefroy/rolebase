@@ -1,11 +1,12 @@
 ---
-import { getTranslations, getLangFromUrl, getOtherLangHref, langPath, langs } from '../utils/i18n'
+import config from '../../website.config'
+import { getTranslations, getLangFromUrl, getOtherLangHref, langPath } from '../utils/i18n'
 import Logo from './Logo.astro'
 
 const currentPath = Astro.url.pathname
 const lang = getLangFromUrl(Astro.url)
 const t = await getTranslations(lang)
-const otherLang = lang === langs[0] ? langs[1] : langs[0]
+const otherLang = lang === config.langs[0] ? config.langs[1] : config.langs[0]
 const otherLangHref = getOtherLangHref(currentPath, lang)
 
 const lp = (path: string) => langPath(lang, path)

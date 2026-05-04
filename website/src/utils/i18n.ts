@@ -1,7 +1,7 @@
 import { getEntry } from 'astro:content'
 import config from '../../website.config'
 
-export const { langs, defaultLang } = config
+const { langs, defaultLang } = config
 export type Lang = (typeof langs)[number]
 
 export async function getTranslations(lang: Lang) {
