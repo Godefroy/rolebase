@@ -11,6 +11,7 @@ import {
   Flex,
   Heading,
   HStack,
+  IconButton,
   Link,
   Spacer,
   Tag,
@@ -21,7 +22,7 @@ import {
 import { useUpdateThreadMutation } from '@gql'
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { PrivacyIcon } from 'src/icons'
+import { PinIcon, PinnedIcon, PrivacyIcon } from 'src/icons'
 import settings from 'src/settings'
 import { ThreadContext } from '../contexts/ThreadContext'
 import useThreadState from '../hooks/useThreadState'
@@ -76,6 +77,15 @@ export default function ThreadContent({
     [id]
   )
 
+  // Pin / unpin for everyone
+  const handleTogglePin = useCallback(
+    () =>
+      updateThread({
+        variables: { id, values: { pinned: !thread?.pinned } },
+      }),
+    [id, thread?.pinned]
+  )
+
   if (error) {
     console.error(error)
     return <Page404 />
@@ -113,6 +123,44 @@ export default function ThreadContent({
               <Spacer />
 
               <HStack spacing={2}>
+                {canEdit ? (
+                  <Tooltip
+                    label={t(
+                      thread?.pinned
+                        ? 'ThreadContent.unpin'
+                        : 'ThreadContent.pin'
+                    )}
+                    hasArrow
+                  >
+                    <IconButton
+                      aria-label={t(
+                        thread?.pinned
+                          ? 'ThreadContent.unpin'
+                          : 'ThreadContent.pin'
+                      )}
+                      size="sm"
+                      variant="ghost"
+                      color={thread?.pinned ? 'yellow.500' : undefined}
+                      icon={
+                        thread?.pinned ? (
+                          <PinnedIcon size={20} />
+                        ) : (
+                          <PinIcon size={20} />
+                        )
+                      }
+                      onClick={handleTogglePin}
+                    />
+                  </Tooltip>
+                ) : (
+                  thread?.pinned && (
+                    <Tooltip label={t('ThreadContent.pinned')} hasArrow>
+                      <Box color="yellow.500">
+                        <PinnedIcon size={20} />
+                      </Box>
+                    </Tooltip>
+                  )
+                )}
+
                 {thread?.private && (
                   <Tooltip
                     label={t('ThreadContent.private', {

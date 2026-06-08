@@ -1282,7 +1282,10 @@
     "text": "a changé le statut de la discussion : <status />"
   },
   "ThreadContent": {
-    "private": "Discussion privée : Seuls les participants de {{role}} et les invités supplémentaires peuvent voir la décision."
+    "private": "Discussion privée : Seuls les participants de {{role}} et les invités supplémentaires peuvent voir la décision.",
+    "pin": "Épingler pour tout le monde",
+    "unpin": "Désépingler",
+    "pinned": "Épinglée"
   },
   "ThreadEditModal": {
     "headingEdit": "Paramètres de la discussion",

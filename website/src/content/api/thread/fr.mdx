@@ -16,6 +16,7 @@ category: 'threads'
 | `title` | `String` | Titre de la discussion |
 | `createdAt` | `Timestamp` | Date de création de la discussion (par défaut : horodatage actuel) |
 | `archived` | `Boolean` | Indique si la discussion est archivée (par défaut : false) |
+| `pinned` | `Boolean` | Indique si la discussion est épinglée pour tout le monde, ce qui la place en premier dans les listes (par défaut : false) |
 | `private` | `Boolean` | Indique si la discussion est privée (par défaut : false) |
 | `status` | `Thread_Status_Enum` | Statut actuel de la discussion (ex. : Active, Preparation, Closed) |
 
@@ -157,6 +158,20 @@ mutation UpdateThreadStatus {
   ) {
     id
     status
+  }
+}
+```
+
+### Épingler une discussion
+
+```graphql
+mutation PinThread {
+  update_thread_by_pk(
+    pk_columns: { id: "thread-id" }
+    _set: { pinned: true }
+  ) {
+    id
+    pinned
   }
 }
 ```

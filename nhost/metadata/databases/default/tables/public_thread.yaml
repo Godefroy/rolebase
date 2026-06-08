@@ -76,6 +76,7 @@ insert_permissions:
         - circleId
         - initiatorMemberId
         - orgId
+        - pinned
         - private
         - status
         - title
@@ -89,6 +90,7 @@ select_permissions:
         - id
         - initiatorMemberId
         - orgId
+        - pinned
         - private
         - status
         - title
@@ -117,6 +119,7 @@ update_permissions:
       columns:
         - archived
         - circleId
+        - pinned
         - private
         - status
         - title

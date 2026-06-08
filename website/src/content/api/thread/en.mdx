@@ -16,6 +16,7 @@ category: 'threads'
 | `title` | `String` | Title of the thread |
 | `createdAt` | `Timestamp` | When the thread was created (defaults to current timestamp) |
 | `archived` | `Boolean` | Whether the thread is archived (defaults to false) |
+| `pinned` | `Boolean` | Whether the thread is pinned for everyone, surfacing it first in thread lists (defaults to false) |
 | `private` | `Boolean` | Whether the thread is private (defaults to false) |
 | `status` | `Thread_Status_Enum` | Current status of the thread (e.g., Active, Preparation, Closed) |
 
@@ -157,6 +158,20 @@ mutation UpdateThreadStatus {
   ) {
     id
     status
+  }
+}
+```
+
+### Pin a Thread
+
+```graphql
+mutation PinThread {
+  update_thread_by_pk(
+    pk_columns: { id: "thread-id" }
+    _set: { pinned: true }
+  ) {
+    id
+    pinned
   }
 }
 ```

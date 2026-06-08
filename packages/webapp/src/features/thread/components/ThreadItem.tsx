@@ -6,6 +6,7 @@ import useMember from '@/member/hooks/useMember'
 import useOrgMember from '@/member/hooks/useOrgMember'
 import { usePathInOrg } from '@/org/hooks/usePathInOrg'
 import {
+  Box,
   Center,
   Circle,
   forwardRef,
@@ -19,7 +20,7 @@ import {
 import { ThreadFragment } from '@gql'
 import React from 'react'
 import { Link as ReachLink, useLocation } from 'react-router'
-import { PrivacyIcon } from 'src/icons'
+import { PinnedIcon, PrivacyIcon } from 'src/icons'
 import useThreadStatus from '../hooks/useThreadStatus'
 import ThreadModal from '../modals/ThreadModal'
 import ThreadStatusIcon from './ThreadStatusIcon'
@@ -118,6 +119,12 @@ const ThreadItem = forwardRef<Props, 'div'>(
             >
               {thread.title}
             </LinkOverlay>
+
+            {thread?.pinned && (
+              <Box color="yellow.500">
+                <PinnedIcon size={16} />
+              </Box>
+            )}
 
             {thread?.private && <PrivacyIcon size={18} />}
 

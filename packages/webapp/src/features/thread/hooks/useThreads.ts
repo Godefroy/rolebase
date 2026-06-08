@@ -63,6 +63,10 @@ export default function useThreads(filters?: {
           return { ...thread, read }
         })
         .sort((a, b) => {
+          // Show pinned threads first
+          if (a.pinned !== b.pinned) {
+            return a.pinned ? -1 : 1
+          }
           // Show unread threads first
           if (a.read !== b.read) {
             return a.read ? 1 : -1

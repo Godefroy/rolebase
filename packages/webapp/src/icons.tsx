@@ -81,6 +81,7 @@ import {
   Video,
 } from 'iconsax-react'
 import React from 'react'
+import { BsPinAngle, BsPinAngleFill } from 'react-icons/bs'
 import { FaUsers } from 'react-icons/fa'
 import { FiCheck, FiHelpCircle } from 'react-icons/fi'
 import { IoSearchOutline } from 'react-icons/io5'
@@ -144,6 +145,8 @@ export const NewsIcon = Activity
 export const NoteIcon = Note1
 export const NotificationIcon = Notification
 export const OrgChartIcon = MouseCircle
+export const PinIcon = BsPinAngle
+export const PinnedIcon = BsPinAngleFill
 export const PlayIcon = Play
 export const PollIcon = Chart2
 export const PrivacyIcon = Lock1

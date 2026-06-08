@@ -1249,7 +1249,10 @@
     "text": "has changed status topic : <status />"
   },
   "ThreadContent": {
-    "private": "Private topic: Only participants of {{role}} and additional guests can see the topic."
+    "private": "Private topic: Only participants of {{role}} and additional guests can see the topic.",
+    "pin": "Pin for everyone",
+    "unpin": "Unpin",
+    "pinned": "Pinned"
   },
   "ThreadEditModal": {
     "headingEdit": "Topic settings",

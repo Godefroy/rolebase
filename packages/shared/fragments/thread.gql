@@ -6,6 +6,7 @@ fragment Thread on thread {
   title
   createdAt
   archived
+  pinned
   status
   private
   extra_members {
