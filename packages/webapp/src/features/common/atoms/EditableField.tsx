@@ -53,6 +53,12 @@ export function EditableField({
     setIsEditing(false)
   }, [isEditing, value])
 
+  // Open edit mode on click, except when clicking a link or a file
+  const handleEditClick = useCallback((event: React.MouseEvent) => {
+    if ((event.target as HTMLElement).closest('a')) return
+    setIsEditing(true)
+  }, [])
+
   // Cancel on escape if value didn't change
   useEscKey(
     useCallback(() => {
@@ -107,7 +113,7 @@ export function EditableField({
                   }
                 : undefined
             }
-            onClick={canOpenEdit ? () => setIsEditing(true) : undefined}
+            onClick={canOpenEdit ? handleEditClick : undefined}
           >
             <SimpleEditor
               ref={editorRef}
