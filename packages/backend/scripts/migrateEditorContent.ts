@@ -72,19 +72,34 @@ const logEntityFields: Record<string, string[]> = {
 let totalConverted = 0
 let totalErrors = 0
 
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+
 async function request<T = any>(
   query: string,
   variables?: Record<string, unknown>
 ): Promise<T> {
-  const result = await nhost.graphql.request({ query, variables })
-  const body = result.body as { data?: T; errors?: unknown[] }
-  if (body.errors?.length) {
-    throw new Error(JSON.stringify(body.errors))
+  // Retry on transient network errors (closed socket, timeout…)
+  for (let attempt = 1; ; attempt++) {
+    try {
+      const result = await nhost.graphql.request({ query, variables })
+      const body = result.body as { data?: T; errors?: unknown[] }
+      if (body.errors?.length) {
+        throw new Error(JSON.stringify(body.errors))
+      }
+      if (!body.data) {
+        throw new Error('No data returned')
+      }
+      return body.data
+    } catch (error: any) {
+      // GraphQL errors are not retryable, network errors are
+      const retryable =
+        error instanceof TypeError || error?.cause !== undefined
+      if (!retryable || attempt >= 5) throw error
+      const delay = attempt * 2000
+      console.warn(`  ⚠️ Network error, retrying in ${delay / 1000}s…`)
+      await sleep(delay)
+    }
   }
-  if (!body.data) {
-    throw new Error('No data returned')
-  }
-  return body.data
 }
 
 function isLexicalJSON(value: unknown): value is string {
