@@ -8,7 +8,7 @@ import {
   ThreadActivityDataPoll,
 } from '@rolebase/shared/model/thread_activity'
 import { Thread_Activity_Type_Enum } from '../gql'
-import getTextFromJSONEditor from './getTextFromJSONEditor'
+import getEditorText from './getEditorText'
 
 export default function getActivitiesEditorTextByType(
   data: any,
@@ -18,15 +18,15 @@ export default function getActivitiesEditorTextByType(
     switch (type) {
       case Thread_Activity_Type_Enum.Message: {
         const { message } = data as ThreadActivityDataMessage
-        return getTextFromJSONEditor(message)
+        return getEditorText(message)
       }
       case Thread_Activity_Type_Enum.Poll: {
         const { question } = data as ThreadActivityDataPoll
-        return getTextFromJSONEditor(question)
+        return getEditorText(question)
       }
       case Thread_Activity_Type_Enum.MeetingNote: {
         const { notes } = data as ThreadActivityDataMeetingNote
-        return getTextFromJSONEditor(notes)
+        return getEditorText(notes)
       }
     }
   } catch (error) {

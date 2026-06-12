@@ -9,7 +9,7 @@ import settings from '../../settings'
 import { authedProcedure } from '../../trpc/authedProcedure'
 import { adminRequest } from '../../utils/adminRequest'
 import getActivitiesEditorTextByType from '../../utils/getActivitiesEditorTextByType'
-import getTextFromJSONEditor from '../../utils/getTextFromJSONEditor'
+import getEditorText from '../../utils/getEditorText'
 
 const configuration = new Configuration({
   apiKey: settings.openai.apiKey,
@@ -56,7 +56,7 @@ export default authedProcedure
       if (!step) continue
 
       const stepContents = [`## ${stepConfig.title}`]
-      const notes = getTextFromJSONEditor(step.notes).trim()
+      const notes = getEditorText(step.notes).trim()
       if (notes) stepContents.push(notes)
 
       // Add meeting notes of thread if they exist

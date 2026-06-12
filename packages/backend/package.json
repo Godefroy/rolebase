@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "start": "tsx src/index.ts",
-    "dev": "npm run codegen & nodemon -w 'src/**' -w '../shared/**' -w '../emails/**' -w '../editor-legacy/**' --ext 'ts,json' --ignore 'src/**/*.spec.ts' --exec 'tsx src/index.ts'",
+    "dev": "npm run codegen & nodemon -w 'src/**' -w '../shared/**' -w '../emails/**' -w '../editor-legacy/**' -w '../editor/**' --ext 'ts,json' --ignore 'src/**/*.spec.ts' --exec 'tsx src/index.ts'",
     "codegen": "graphql-codegen --config src/codegen.ts",
     "build": "tsc",
     "test": "vitest",
@@ -21,6 +21,7 @@
     "@jrmdayn/googleapis-batcher": "^0.5.0",
     "@microsoft/microsoft-graph-types-beta": "^0.40.0-preview",
     "@nhost/nhost-js": "^4.7.0",
+    "@rolebase/editor": "*",
     "@rolebase/editor-legacy": "*",
     "@rolebase/graph": "*",
     "@sentry/node": "^10.38.0",
