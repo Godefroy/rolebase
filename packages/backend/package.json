@@ -14,7 +14,8 @@
     "docker:deploy": "cd ../.. && docker buildx build -f packages/backend/Dockerfile --push --platform linux/amd64,linux/arm64 -t registry.eu-central-1.nhost.run/94212868-126b-47d0-bc96-4a9ac670c2ea:1.0.10 .",
     "nhost:config:validate": "cd ../.. && nhost run config-validate --config packages/backend/nhost-service.toml --service-id 94212868-126b-47d0-bc96-4a9ac670c2ea",
     "nhost:config:pull": "cd ../.. && nhost run config-pull --config packages/backend/nhost-service.toml --service-id 94212868-126b-47d0-bc96-4a9ac670c2ea",
-    "nhost:config:deploy": "cd ../.. && nhost run config-deploy --config packages/backend/nhost-service.toml --service-id 94212868-126b-47d0-bc96-4a9ac670c2ea"
+    "nhost:config:deploy": "cd ../.. && nhost run config-deploy --config packages/backend/nhost-service.toml --service-id 94212868-126b-47d0-bc96-4a9ac670c2ea",
+    "migrate:editor": "tsx scripts/migrateEditorContent.ts"
   },
   "dependencies": {
     "@jrmdayn/googleapis-batcher": "^0.5.0",
