@@ -1,7 +1,7 @@
 import {
   AVATAR_HEADING_WIDTH,
   getResizedImageUrl,
-} from '@/common/api/storage_images'
+} from '@rolebase/shared/helpers/getResizedImageUrl'
 import MemberRoles from '@/member/components/MemberRoles'
 import useMember from '@/member/hooks/useMember'
 import {

@@ -1,4 +1,8 @@
 import React, { memo, useMemo } from 'react'
+import {
+  AVATAR_GRAPH_WIDTH,
+  getResizedImageUrl,
+} from '@rolebase/shared/helpers/getResizedImageUrl'
 import { NodeData } from '../../types'
 import { useGraphRenderContext } from '../GraphRenderContext'
 import NodeElement from './NodeElement'
@@ -33,7 +37,12 @@ export default memo(function MemberElement({ node, levelHidden }: Props) {
       node={node}
       levelHidden={levelHidden}
       className="member"
-      style={{ backgroundImage: `url(${node.data.picture})` }}
+      style={{
+        backgroundImage: node.data.picture
+          ? // Resized: full-resolution photos decode to hundreds of MB
+            `url(${getResizedImageUrl(node.data.picture, AVATAR_GRAPH_WIDTH)})`
+          : undefined,
+      }}
       onClick={handleClick}
     >
       <span

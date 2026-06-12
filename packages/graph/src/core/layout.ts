@@ -2,7 +2,6 @@ import { CircleFullFragment } from '@rolebase/shared/gql'
 import { getCircleParticipants } from '@rolebase/shared/helpers/getCircleParticipants'
 import { truthy } from '@rolebase/shared/helpers/truthy'
 import * as d3 from 'd3'
-import { resizedImageUrl } from '../helpers/resizedImageUrl'
 import { textEllipsis } from '../helpers/textEllipsis'
 import settings from '../settings'
 import { CirclesGraphViews, Data, NodeData, NodeType } from '../types'
@@ -122,7 +121,7 @@ function membersToData(circle: CircleFullFragment, colorHue?: number): Data {
         entityId: entry.member.id,
         parentId: circle.id,
         name: textEllipsis(entry.member.name, 20),
-        picture: resizedImageUrl(entry.member.picture, settings.avatarWidth),
+        picture: entry.member.picture,
         type: NodeType.Member,
         colorHue,
       })

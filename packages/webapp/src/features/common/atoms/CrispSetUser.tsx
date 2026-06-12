@@ -2,7 +2,10 @@ import useCurrentMember from '@/member/hooks/useCurrentMember'
 import useCurrentOrg from '@/org/hooks/useCurrentOrg'
 import { Crisp } from 'crisp-sdk-web'
 import { useEffect } from 'react'
-import { AVATAR_SM_WIDTH, getResizedImageUrl } from '../api/storage_images'
+import {
+  AVATAR_SM_WIDTH,
+  getResizedImageUrl,
+} from '@rolebase/shared/helpers/getResizedImageUrl'
 import { useAuth } from '@/user/hooks/useAuth'
 
 export default function CrispSetUser() {

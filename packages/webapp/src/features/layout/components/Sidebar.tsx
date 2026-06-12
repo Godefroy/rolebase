@@ -1,7 +1,7 @@
 import {
   AVATAR_SM_WIDTH,
   getResizedImageUrl,
-} from '@/common/api/storage_images'
+} from '@rolebase/shared/helpers/getResizedImageUrl'
 import MeetingEditModal from '@/meeting/modals/MeetingEditModal'
 import useCurrentMember from '@/member/hooks/useCurrentMember'
 import useOrgAdmin from '@/member/hooks/useOrgAdmin'

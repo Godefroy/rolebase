@@ -1,7 +1,7 @@
 import {
   AVATAR_SM_WIDTH,
   getResizedImageUrl,
-} from '@/common/api/storage_images'
+} from '@rolebase/shared/helpers/getResizedImageUrl'
 import { Avatar, AvatarProps, Tooltip } from '@chakra-ui/react'
 import { MemberSummaryFragment } from '@gql'
 import React from 'react'

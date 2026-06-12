@@ -1,7 +1,7 @@
 import {
   AVATAR_SM_WIDTH,
   getResizedImageUrl,
-} from '@/common/api/storage_images'
+} from '@rolebase/shared/helpers/getResizedImageUrl'
 import { Avatar, AvatarProps, Center } from '@chakra-ui/react'
 import { SearchTypes } from '@rolebase/shared/model/search'
 import React from 'react'

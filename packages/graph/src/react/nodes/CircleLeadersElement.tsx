@@ -1,6 +1,10 @@
 import { Participant } from '@rolebase/shared/model/member'
 import React, { useMemo } from 'react'
 import { getColor } from '../../helpers/colors'
+import {
+  AVATAR_GRAPH_WIDTH,
+  getResizedImageUrl,
+} from '@rolebase/shared/helpers/getResizedImageUrl'
 import { NodeData } from '../../types'
 import { useGraphRenderContext } from '../GraphRenderContext'
 import { nodeSize } from '../styles'
@@ -67,7 +71,11 @@ export default function CircleLeadersElement({ node }: Props) {
               width: `${avatarSize}px`,
               height: `${avatarSize}px`,
               backgroundImage: leader.member.picture
-                ? `url(${leader.member.picture})`
+                ? // Resized: full-resolution photos decode to hundreds of MB
+                  `url(${getResizedImageUrl(
+                    leader.member.picture,
+                    AVATAR_GRAPH_WIDTH
+                  )})`
                 : undefined,
               backgroundColor: bgColor,
             }}

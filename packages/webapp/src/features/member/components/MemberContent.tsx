@@ -1,7 +1,7 @@
 import {
   AVATAR_HEADING_WIDTH,
   getResizedImageUrl,
-} from '@/common/api/storage_images'
+} from '@rolebase/shared/helpers/getResizedImageUrl'
 import ModalCloseStaticButton from '@/common/atoms/ModalCloseStaticButton'
 import { Title } from '@/common/atoms/Title'
 import { useAuth } from '@/user/hooks/useAuth'

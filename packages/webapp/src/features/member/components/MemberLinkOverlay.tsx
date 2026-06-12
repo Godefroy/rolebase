@@ -1,7 +1,7 @@
 import {
   AVATAR_SM_WIDTH,
   getResizedImageUrl,
-} from '@/common/api/storage_images'
+} from '@rolebase/shared/helpers/getResizedImageUrl'
 import useCircleMemberLink from '@/participants/hooks/useCircleMemberLink'
 import { Avatar, LinkOverlay, LinkOverlayProps } from '@chakra-ui/react'
 import { MemberFragment } from '@gql'

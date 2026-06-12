@@ -53,6 +53,4 @@ export default {
     threshold: 2 / 3,
     topThreshold: 2 / 3,
   },
-  // Width applied to members pictures URLs
-  avatarWidth: 128,
 }

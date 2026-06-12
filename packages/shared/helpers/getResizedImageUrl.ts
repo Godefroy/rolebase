@@ -2,8 +2,8 @@ export const AVATAR_SM_WIDTH = 72
 export const AVATAR_HEADING_WIDTH = 256
 export const AVATAR_GRAPH_WIDTH = 128
 
-// Add with to image url
-// Warning: It works only with images from storage
+// Add width param to image url
+// Warning: It works only with images from Nhost storage
 export function getResizedImageUrl<
   Url extends string | null | undefined,
   Return = Url extends null ? Exclude<Url, null> | undefined : Url,
