@@ -1,4 +1,3 @@
-import { exportToMarkdown as exportHeadlessEditorStateToMarkdown } from '@rolebase/editor-legacy'
 import { chakra, List, ListItem, Text } from '@chakra-ui/react'
 import { diffChars } from 'diff'
 import isEqual from 'lodash.isequal'
@@ -157,11 +156,31 @@ function ValueDiff({ value, compareValue }: CompareProps<Value>) {
   )
 }
 
+// Values are markdown since the editor migration. Old log entries can
+// still contain Lexical JSON: extract their plain text without Lexical.
+function legacyTextValue(value: string): string {
+  if (value[0] !== '{') return value
+  try {
+    const json = JSON.parse(value)
+    if (!json?.root) return value
+    const walk = (node: any): string =>
+      node.text ??
+      (node.children
+        ? node.children
+            .map(walk)
+            .join(node.type === 'root' || node.type === undefined ? '\n' : '')
+        : '')
+    return walk(json.root)
+  } catch {
+    return value
+  }
+}
+
 function TextDiff({ value, compareValue }: CompareProps<string>) {
-  const valueMarkdown = exportHeadlessEditorStateToMarkdown(value)
+  const valueMarkdown = legacyTextValue(value)
   if (!compareValue) return <JsonDiff value={valueMarkdown} />
 
-  const compareValueMarkdown = exportHeadlessEditorStateToMarkdown(compareValue)
+  const compareValueMarkdown = legacyTextValue(compareValue)
 
   // Compute diff
   const diffParts = diffChars(compareValueMarkdown, valueMarkdown)

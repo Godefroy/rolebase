@@ -1,1 +1,1 @@
-export type { EditorHandle } from './lib/plugins/EditorRefPlugin'
+export type { EditorHandle } from '@rolebase/editor/react'

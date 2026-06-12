@@ -1,18 +1,20 @@
 import { FormControlOptions, useFormControl } from '@chakra-ui/react'
+import { EditorHandle, RichEditor } from '@rolebase/editor/react'
 import { pick } from '@utils/pick'
 import React, {
-  Suspense,
   forwardRef,
   memo,
   useCallback,
   useImperativeHandle,
   useRef,
+  useState,
 } from 'react'
 import { useTranslation } from 'react-i18next'
+import useEditorLabels from '../hooks/useEditorLabels'
+import { useEditorValue } from '../hooks/useEditorValue'
 import useFileUpload from '../hooks/useFileUpload'
 import useMentionables from '../hooks/useMentionables'
-import RichEditor from '../lib/RichEditor'
-import { EditorHandle } from '../lib/plugins/EditorRefPlugin'
+import EditorContainer from './EditorContainer'
 
 // Simple Markdown editor
 
@@ -37,6 +39,10 @@ const SimpleEditor = forwardRef<EditorHandle, Props>(
     const formControlProps = useFormControl<HTMLInputElement>({})
     const { handleUpload } = useFileUpload()
     const mentionables = useMentionables()
+    const labels = useEditorLabels()
+
+    // Convert legacy Lexical JSON values to markdown on the fly
+    const editorValue = useEditorValue(value)
 
     useImperativeHandle(ref, () => localRef.current!, [])
 
@@ -50,23 +56,34 @@ const SimpleEditor = forwardRef<EditorHandle, Props>(
       'aria-required'
     )
 
+    const [isFocused, setIsFocused] = useState(false)
+
+    const handleFocus = useCallback(() => setIsFocused(true), [])
+
     // Save on blur
     const handleBlur = useCallback(() => {
+      setIsFocused(false)
       if (!localRef.current) return
       onChange?.(localRef.current.getValue(true))
     }, [onChange])
 
-    // Save on Ctrl+S or Cmd+Enter
+    // Save on Cmd/Ctrl + Enter
     const handleSubmit = useCallback(() => {
       if (!localRef.current) return
       onSubmit?.(localRef.current.getValue(true))
     }, [onSubmit])
 
+    if (editorValue === undefined) return null
+
     return (
-      <Suspense fallback={null}>
+      <EditorContainer
+        readOnly={computedReadOnly}
+        isFocused={isFocused}
+        {...ariaProps}
+      >
         <RichEditor
           ref={localRef}
-          value={value}
+          value={editorValue}
           placeholder={placeholder}
           emptyParagraphPlaceholder={t('common.emptyParagraphPlaceholder')}
           autoFocus={autoFocus}
@@ -74,12 +91,13 @@ const SimpleEditor = forwardRef<EditorHandle, Props>(
           minH={minH}
           maxH={maxH}
           mentionables={mentionables}
+          labels={labels}
+          onUpload={handleUpload}
+          onFocus={handleFocus}
           onBlur={handleBlur}
           onSubmit={handleSubmit}
-          onUpload={handleUpload}
-          {...ariaProps}
         />
-      </Suspense>
+      </EditorContainer>
     )
   }
 )

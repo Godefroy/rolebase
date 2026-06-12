@@ -1,6 +1,9 @@
 /* Rolebase editor styles.
-   Themable through CSS variables (override them from the app):  */
-.editor {
+   Themable through CSS variables (override them from the app).
+   Suggestion popups are mounted in document.body, hence the
+   .editor-popup selector alongside .editor. */
+.editor,
+.editor-popup {
   --editor-text-color: inherit;
   --editor-muted-color: rgba(128, 128, 128, 0.7);
   --editor-border-color: rgba(128, 128, 128, 0.3);

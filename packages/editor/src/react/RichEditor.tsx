@@ -311,6 +311,15 @@ export default forwardRef<EditorHandle, RichEditorProps>(function RichEditor(
     }
   }, [collab, editor])
 
+  // Update collaboration user info (member name can load after mount)
+  useEffect(() => {
+    if (!editor || !collab) return
+    editor.commands.updateUser({
+      name: collaboration?.username ?? '',
+      color: collaboration?.cursorColor ?? '#888888',
+    })
+  }, [editor, collab, collaboration?.username, collaboration?.cursorColor])
+
   // Reflect readOnly and collaboration sync state on editability
   useEffect(() => {
     if (!editor) return

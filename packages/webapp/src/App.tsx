@@ -1,6 +1,8 @@
+import '@/editor/editorTheme.css'
 import { SidebarProvider } from '@/layout/contexts/SidebarContext'
 import { ApolloProvider } from '@apollo/client'
 import { ChakraProvider, ColorModeScript } from '@chakra-ui/react'
+import '@rolebase/editor/src/react/styles.css'
 import { StoreProvider } from 'easy-peasy'
 import React from 'react'
 import { I18nextProvider } from 'react-i18next'

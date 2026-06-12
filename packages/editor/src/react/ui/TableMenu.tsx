@@ -1,5 +1,5 @@
 import { Editor } from '@tiptap/core'
-import { BubbleMenu } from '@tiptap/react/menus'
+import { BubbleMenu } from '../menusShim'
 import React, { ReactNode } from 'react'
 import {
   MdDeleteOutline,

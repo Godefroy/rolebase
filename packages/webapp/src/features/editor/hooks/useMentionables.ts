@@ -1,6 +1,5 @@
+import { Mentionable, MentionEntities } from '@rolebase/editor/react'
 import { useStoreState } from '@store/hooks'
-import { MentionEntities } from '@rolebase/editor-legacy'
-import { Mentionable } from '../lib/plugins/MentionsPlugin'
 
 export default function useMentionables(): Mentionable[] {
   const members = useStoreState((state) => state.org.members)

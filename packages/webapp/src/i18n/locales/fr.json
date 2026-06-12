@@ -862,6 +862,37 @@
   "ReactionAddButton": {
     "tooltip": "Ajouter une réaction…"
   },
+  "RichEditor": {
+    "heading1": "Titre 1",
+    "heading2": "Titre 2",
+    "heading3": "Titre 3",
+    "bulletList": "Liste à puces",
+    "orderedList": "Liste numérotée",
+    "taskList": "Checklist",
+    "table": "Tableau",
+    "quote": "Citation",
+    "codeBlock": "Bloc de code",
+    "divider": "Séparateur",
+    "collapsible": "Section dépliable",
+    "image": "Image",
+    "file": "Fichier",
+    "youtube": "Vidéo YouTube",
+    "youtubePrompt": "URL de la vidéo YouTube",
+    "bold": "Gras",
+    "italic": "Italique",
+    "underline": "Souligné",
+    "strike": "Barré",
+    "code": "Code",
+    "link": "Lien",
+    "linkPlaceholder": "Coller un lien…",
+    "unlink": "Supprimer le lien",
+    "addRowBelow": "Ajouter une ligne",
+    "addColumnRight": "Ajouter une colonne",
+    "deleteRow": "Supprimer la ligne",
+    "deleteColumn": "Supprimer la colonne",
+    "toggleHeaderRow": "Basculer la ligne d'en-tête",
+    "deleteTable": "Supprimer le tableau"
+  },
   "RoleEditableField": {
     "baseRoleInfo": "La modification s'appliquera à tous les Rôles {{role}} de l'organisation car c'est une rôle de base."
   },

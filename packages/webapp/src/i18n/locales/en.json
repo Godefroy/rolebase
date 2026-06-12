@@ -828,6 +828,37 @@
   "ReactionAddButton": {
     "tooltip": "Add reaction…"
   },
+  "RichEditor": {
+    "heading1": "Heading 1",
+    "heading2": "Heading 2",
+    "heading3": "Heading 3",
+    "bulletList": "Bullet list",
+    "orderedList": "Numbered list",
+    "taskList": "Checklist",
+    "table": "Table",
+    "quote": "Quote",
+    "codeBlock": "Code block",
+    "divider": "Divider",
+    "collapsible": "Collapsible section",
+    "image": "Image",
+    "file": "File",
+    "youtube": "YouTube video",
+    "youtubePrompt": "YouTube video URL",
+    "bold": "Bold",
+    "italic": "Italic",
+    "underline": "Underline",
+    "strike": "Strikethrough",
+    "code": "Code",
+    "link": "Link",
+    "linkPlaceholder": "Paste a link…",
+    "unlink": "Remove link",
+    "addRowBelow": "Add row",
+    "addColumnRight": "Add column",
+    "deleteRow": "Delete row",
+    "deleteColumn": "Delete column",
+    "toggleHeaderRow": "Toggle header row",
+    "deleteTable": "Delete table"
+  },
   "RoleEditableField": {
     "baseRoleInfo": "The modification will apply to all {{role}} roles of the organization because it is a basic role."
   },

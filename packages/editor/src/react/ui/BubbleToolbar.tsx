@@ -1,6 +1,6 @@
 import { Editor } from '@tiptap/core'
 import { useEditorState } from '@tiptap/react'
-import { BubbleMenu } from '@tiptap/react/menus'
+import { BubbleMenu } from '../menusShim'
 import React, { FormEvent, useEffect, useState } from 'react'
 import {
   FiBold,

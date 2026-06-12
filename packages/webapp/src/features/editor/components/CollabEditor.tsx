@@ -1,20 +1,29 @@
 import useCurrentMember from '@/member/hooks/useCurrentMember'
-import { FormControlOptions } from '@chakra-ui/react'
+import { Circle, FormControlOptions, Tooltip } from '@chakra-ui/react'
+import { randomColor } from '@chakra-ui/theme-tools'
+import {
+  CollaborationConfig,
+  EditorHandle,
+  RichEditor,
+} from '@rolebase/editor/react'
 import React, {
-  Suspense,
   forwardRef,
   memo,
   useCallback,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from 'react'
 import { useTranslation } from 'react-i18next'
+import settings from 'src/settings'
+import useEditorLabels from '../hooks/useEditorLabels'
+import { useEditorValue } from '../hooks/useEditorValue'
 import useFileUpload from '../hooks/useFileUpload'
 import useMentionables from '../hooks/useMentionables'
-import RichEditor from '../lib/RichEditor'
-import { EditorHandle } from '../lib/plugins/EditorRefPlugin'
+import { CollabOfflineOverlay } from './CollabOfflineOverlay'
+import EditorContainer from './EditorContainer'
 
 // Collaborative Markdown editor
 
@@ -54,8 +63,25 @@ const CollabEditor = forwardRef<EditorHandle, Props>(
     const localRef = useRef<EditorHandle>(null)
     const { handleUpload } = useFileUpload()
     const mentionables = useMentionables()
+    const labels = useEditorLabels()
+
+    // Convert legacy Lexical JSON values to markdown on the fly
+    const editorValue = useEditorValue(value)
 
     useImperativeHandle(ref, () => localRef.current!, [])
+
+    const [online, setOnline] = useState(false)
+
+    const collaboration: CollaborationConfig = useMemo(
+      () => ({
+        url: settings.yjsCollab.url,
+        docId,
+        username: currentMember?.name,
+        cursorColor: randomColor({ string: currentMember?.name || '' }),
+        onStatusChange: setOnline,
+      }),
+      [docId, currentMember?.name]
+    )
 
     // Handle every little change in the doc
     // to save it with throttling
@@ -88,15 +114,15 @@ const CollabEditor = forwardRef<EditorHandle, Props>(
       return () => clearInterval(interval)
     }, [saveEvery, isFocus, handleChange])
 
+    if (editorValue === undefined) return null
+
     return (
-      <Suspense fallback={null}>
+      <EditorContainer readOnly={readOnly} isFocused={isFocus}>
         <RichEditor
           key={docId}
           ref={localRef}
-          id={docId}
-          collaboration
-          username={currentMember?.name}
-          value={value}
+          collaboration={collaboration}
+          value={editorValue}
           placeholder={placeholder}
           emptyParagraphPlaceholder={t('common.emptyParagraphPlaceholder')}
           autoFocus={autoFocus}
@@ -104,11 +130,32 @@ const CollabEditor = forwardRef<EditorHandle, Props>(
           minH={minH}
           maxH={maxH}
           mentionables={mentionables}
+          labels={labels}
+          onUpload={handleUpload}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          onUpload={handleUpload}
         />
-      </Suspense>
+
+        {!online && <CollabOfflineOverlay />}
+
+        {!readOnly && (
+          <Tooltip
+            label={
+              online ? 'Collaboration Online' : 'Collaboration Offline'
+            }
+            placement="top"
+            hasArrow
+          >
+            <Circle
+              position="absolute"
+              top="0.4em"
+              right="0.4em"
+              size="0.5em"
+              bg={online ? 'green.500' : 'red.500'}
+            />
+          </Tooltip>
+        )}
+      </EditorContainer>
     )
   }
 )

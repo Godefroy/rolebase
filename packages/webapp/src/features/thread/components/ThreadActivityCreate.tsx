@@ -75,9 +75,14 @@ export default function ThreadActivityCreate({ thread, ...boxProps }: Props) {
   useEffect(() => {
     const draft = localStorage.getItem(draftKey)
     if (!draft) return
+    // Discard legacy Lexical JSON drafts (markdown only)
+    if (draft[0] === '{') {
+      localStorage.removeItem(draftKey)
+      return
+    }
     setTimeout(() => {
       editorRef.current?.setValue(draft)
-      editorRef.current?.editor.focus()
+      editorRef.current?.editor?.commands.focus()
     }, 100)
   }, [draftKey])
 

@@ -1,0 +1,16 @@
+/* Map Chakra theme tokens to the editor CSS variables */
+.editor,
+.editor-popup {
+  --editor-accent-color: var(--chakra-colors-brand);
+  --editor-mention-bg: rgba(128, 90, 213, 0.15);
+  --editor-menu-bg: var(--chakra-colors-white);
+  --editor-menu-color: var(--chakra-colors-gray-800);
+  --editor-selection-bg: rgba(128, 90, 213, 0.25);
+}
+
+.chakra-ui-dark .editor,
+.chakra-ui-dark .editor-popup {
+  --editor-menu-bg: var(--chakra-colors-gray-700);
+  --editor-menu-color: var(--chakra-colors-whiteAlpha-900);
+  --editor-mention-bg: rgba(128, 90, 213, 0.35);
+}
