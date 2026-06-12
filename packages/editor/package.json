@@ -1,0 +1,34 @@
+{
+  "name": "@rolebase/editor",
+  "version": "1.0.0",
+  "license": "MIT",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "echo 'No build step needed'",
+    "tsc": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@tiptap/core": "^3.26.1",
+    "@tiptap/extension-code-block-lowlight": "^3.26.1",
+    "@tiptap/extension-details": "^3.26.1",
+    "@tiptap/extension-file-handler": "^3.26.1",
+    "@tiptap/extension-image": "^3.26.1",
+    "@tiptap/extension-list": "^3.26.1",
+    "@tiptap/extension-mention": "^3.26.1",
+    "@tiptap/extension-table": "^3.26.1",
+    "@tiptap/extension-youtube": "^3.26.1",
+    "@tiptap/extensions": "^3.26.1",
+    "@tiptap/markdown": "^3.26.1",
+    "@tiptap/pm": "^3.26.1",
+    "@tiptap/starter-kit": "^3.26.1",
+    "@tiptap/static-renderer": "^3.26.1",
+    "@tiptap/suggestion": "^3.26.1",
+    "lowlight": "^3.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.8.3",
+    "typescript": "^5.2.2",
+    "vitest": "^0.34.6"
+  }
+}
