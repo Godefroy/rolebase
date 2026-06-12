@@ -23,13 +23,32 @@ export function getEmojiList(): EmojiItem[] {
   return cache
 }
 
+// Search emojis, best matches first: exact id, then id prefix,
+// then id substring, then keyword prefix, then keyword substring
 export function searchEmojis(query: string, limit = 8): EmojiItem[] {
   const lowerQuery = query.toLowerCase()
-  return getEmojiList()
-    .filter(
-      (item) =>
-        item.id.includes(lowerQuery) ||
-        item.keywords.some((keyword) => keyword.includes(lowerQuery))
-    )
+  const scored: Array<{ item: EmojiItem; score: number }> = []
+
+  for (const item of getEmojiList()) {
+    let score: number
+    if (item.id === lowerQuery) {
+      score = 0
+    } else if (item.id.startsWith(lowerQuery)) {
+      score = 1
+    } else if (item.id.includes(lowerQuery)) {
+      score = 2
+    } else if (item.keywords.some((keyword) => keyword.startsWith(lowerQuery))) {
+      score = 3
+    } else if (item.keywords.some((keyword) => keyword.includes(lowerQuery))) {
+      score = 4
+    } else {
+      continue
+    }
+    scored.push({ item, score })
+  }
+
+  return scored
+    .sort((a, b) => a.score - b.score)
     .slice(0, limit)
+    .map((entry) => entry.item)
 }
