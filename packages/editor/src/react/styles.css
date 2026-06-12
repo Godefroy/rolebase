@@ -1,0 +1,394 @@
+/* Rolebase editor styles.
+   Themable through CSS variables (override them from the app):  */
+.editor {
+  --editor-text-color: inherit;
+  --editor-muted-color: rgba(128, 128, 128, 0.7);
+  --editor-border-color: rgba(128, 128, 128, 0.3);
+  --editor-menu-bg: #fff;
+  --editor-menu-color: #1a202c;
+  --editor-menu-hover-bg: rgba(128, 90, 213, 0.12);
+  --editor-accent-color: #805ad5;
+  --editor-mention-bg: rgba(128, 90, 213, 0.15);
+  --editor-code-bg: rgba(128, 128, 128, 0.12);
+  --editor-selection-bg: rgba(128, 90, 213, 0.2);
+
+  position: relative;
+  color: var(--editor-text-color);
+}
+
+.editor .ProseMirror {
+  outline: none;
+  min-height: var(--editor-min-height, 0);
+  padding: 0.5rem 0.75rem;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.editor-readonly .ProseMirror {
+  padding: 0;
+}
+
+.editor > div:first-child {
+  max-height: var(--editor-max-height, none);
+  overflow-y: auto;
+}
+
+/* Placeholders */
+.editor .ProseMirror p.is-empty::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  color: var(--editor-muted-color);
+}
+/* Show the placeholder of non-empty documents only when focused */
+.editor
+  .ProseMirror:not(:focus-within)
+  p.is-empty:not(.is-editor-empty)::before {
+  content: none;
+}
+
+/* Spacing between blocks */
+.editor .ProseMirror > * + * {
+  margin-top: 0.5em;
+}
+
+.editor .ProseMirror h1 {
+  font-size: 1.6em;
+  font-weight: 700;
+}
+.editor .ProseMirror h2 {
+  font-size: 1.35em;
+  font-weight: 700;
+}
+.editor .ProseMirror h3 {
+  font-size: 1.15em;
+  font-weight: 700;
+}
+.editor .ProseMirror h4,
+.editor .ProseMirror h5,
+.editor .ProseMirror h6 {
+  font-weight: 700;
+}
+
+.editor .ProseMirror a {
+  color: var(--editor-accent-color);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.editor .ProseMirror blockquote {
+  border-left: 3px solid var(--editor-border-color);
+  padding-left: 0.75em;
+  color: var(--editor-muted-color);
+}
+
+.editor .ProseMirror code {
+  background: var(--editor-code-bg);
+  border-radius: 4px;
+  padding: 0.1em 0.3em;
+  font-size: 0.9em;
+}
+
+.editor .ProseMirror pre {
+  background: var(--editor-code-bg);
+  border-radius: 6px;
+  padding: 0.6em 0.8em;
+  overflow-x: auto;
+}
+.editor .ProseMirror pre code {
+  background: none;
+  padding: 0;
+}
+
+.editor .ProseMirror hr {
+  border: none;
+  border-top: 2px solid var(--editor-border-color);
+  margin: 1em 0;
+}
+
+.editor .ProseMirror ul,
+.editor .ProseMirror ol {
+  padding-left: 1.5em;
+}
+
+/* Task lists */
+.editor .ProseMirror ul[data-type='taskList'] {
+  list-style: none;
+  padding-left: 0.2em;
+}
+.editor .ProseMirror ul[data-type='taskList'] li {
+  display: flex;
+  gap: 0.5em;
+}
+.editor .ProseMirror ul[data-type='taskList'] li > label {
+  flex: 0 0 auto;
+  user-select: none;
+}
+.editor .ProseMirror ul[data-type='taskList'] li > div {
+  flex: 1 1 auto;
+}
+.editor
+  .ProseMirror
+  ul[data-type='taskList']
+  li[data-checked='true']
+  > div {
+  text-decoration: line-through;
+  color: var(--editor-muted-color);
+}
+
+/* Tables */
+.editor .ProseMirror table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+  margin: 0.5em 0;
+  overflow: hidden;
+}
+.editor .ProseMirror th,
+.editor .ProseMirror td {
+  border: 1px solid var(--editor-border-color);
+  padding: 0.3em 0.5em;
+  vertical-align: top;
+  position: relative;
+}
+.editor .ProseMirror th {
+  background: var(--editor-code-bg);
+  font-weight: 600;
+  text-align: left;
+}
+.editor .ProseMirror .selectedCell::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--editor-selection-bg);
+  pointer-events: none;
+}
+
+/* Images */
+.editor .ProseMirror img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+.editor .ProseMirror img.ProseMirror-selectednode {
+  outline: 2px solid var(--editor-accent-color);
+}
+
+/* Mentions */
+.editor .ProseMirror span[data-type='mention'],
+.md span[data-type='mention'] {
+  background: var(--editor-mention-bg, rgba(128, 90, 213, 0.15));
+  border-radius: 4px;
+  padding: 0.05em 0.25em;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* File attachments */
+.editor-file-card {
+  display: inline-block;
+}
+.editor-file-card a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  border: 1px solid var(--editor-border-color);
+  border-radius: 6px;
+  padding: 0.2em 0.6em;
+  text-decoration: none !important;
+  color: inherit !important;
+  cursor: pointer;
+}
+.editor-file-card a:hover {
+  border-color: var(--editor-accent-color);
+}
+.editor-file-size {
+  color: var(--editor-muted-color);
+  font-size: 0.85em;
+}
+.editor-file-download {
+  color: var(--editor-muted-color);
+}
+.editor .ProseMirror .editor-file-card.ProseMirror-selectednode a {
+  outline: 2px solid var(--editor-accent-color);
+}
+
+/* Collapsible (details) */
+.editor .ProseMirror details,
+.md details {
+  border: 1px solid var(--editor-border-color);
+  border-radius: 6px;
+  padding: 0.4em 0.6em;
+}
+.editor .ProseMirror details summary {
+  font-weight: 600;
+  cursor: pointer;
+}
+.editor .ProseMirror details > button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 0.3em 0 0;
+}
+.editor .ProseMirror details[open] > button {
+  transform: rotate(0);
+}
+
+/* YouTube embeds */
+.editor .ProseMirror div[data-youtube-video] iframe {
+  max-width: 100%;
+  border: none;
+  border-radius: 6px;
+  aspect-ratio: 16 / 9;
+  height: auto;
+}
+.editor .ProseMirror div[data-youtube-video].ProseMirror-selectednode iframe {
+  outline: 2px solid var(--editor-accent-color);
+}
+
+/* Selection */
+.editor .ProseMirror ::selection {
+  background: var(--editor-selection-bg);
+}
+.editor .ProseMirror-selectednode {
+  outline: 2px solid var(--editor-accent-color);
+}
+
+/* Collaboration carets */
+.editor .collaboration-caret__caret {
+  border-left: 1px solid;
+  border-right: 1px solid;
+  margin-left: -1px;
+  margin-right: -1px;
+  pointer-events: none;
+  position: relative;
+  word-break: normal;
+}
+.editor .collaboration-caret__label {
+  border-radius: 3px 3px 3px 0;
+  color: #fff;
+  font-size: 0.7em;
+  font-weight: 600;
+  left: -1px;
+  line-height: normal;
+  padding: 0.1rem 0.3rem;
+  position: absolute;
+  top: -1.4em;
+  user-select: none;
+  white-space: nowrap;
+}
+
+/* Drag handle */
+.editor-drag-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.2rem;
+  height: 1.4rem;
+  border-radius: 4px;
+  color: var(--editor-muted-color);
+  cursor: grab;
+}
+.editor-drag-handle:hover {
+  background: var(--editor-menu-hover-bg);
+}
+
+/* Popups (suggestions) */
+.editor-popup {
+  position: fixed;
+  z-index: 1500;
+}
+.editor-menu {
+  display: flex;
+  flex-direction: column;
+  min-width: 12rem;
+  max-height: 18rem;
+  overflow-y: auto;
+  background: var(--editor-menu-bg);
+  color: var(--editor-menu-color);
+  border: 1px solid var(--editor-border-color);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  padding: 0.25rem;
+}
+.editor-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  padding: 0.35rem 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.editor-menu-item.selected {
+  background: var(--editor-menu-hover-bg);
+}
+.editor-menu-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.4em;
+  color: var(--editor-muted-color);
+}
+.editor-menu-icon-text {
+  font-size: 0.8em;
+  font-weight: 700;
+}
+.editor-menu-label {
+  flex: 1;
+}
+.editor-menu-description {
+  color: var(--editor-muted-color);
+  font-size: 0.85em;
+}
+
+/* Bubble toolbar */
+.editor-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+  background: var(--editor-menu-bg);
+  color: var(--editor-menu-color);
+  border: 1px solid var(--editor-border-color);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  padding: 0.2rem;
+}
+.editor-toolbar button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border: none;
+  background: none;
+  color: inherit;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.editor-toolbar button:hover {
+  background: var(--editor-menu-hover-bg);
+}
+.editor-toolbar button.active {
+  color: var(--editor-accent-color);
+  background: var(--editor-menu-hover-bg);
+}
+.editor-toolbar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+.editor-toolbar-link input {
+  border: none;
+  outline: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  padding: 0.2rem 0.4rem;
+  min-width: 14rem;
+}

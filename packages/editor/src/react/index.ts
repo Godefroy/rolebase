@@ -1,0 +1,8 @@
+export { MentionEntities } from '../extensions/Mention'
+export type { Mentionable } from '../extensions/Mention'
+export { isEmptyMarkdown } from '../markdown/isEmptyMarkdown'
+export type { EditorHandle } from './EditorHandle'
+export { defaultLabels } from './labels'
+export type { EditorLabels } from './labels'
+export { default as RichEditor } from './RichEditor'
+export type { CollaborationConfig, RichEditorProps } from './RichEditor'

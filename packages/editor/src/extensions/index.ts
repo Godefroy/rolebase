@@ -13,16 +13,24 @@ import { Youtube } from './Youtube'
 
 const lowlight = createLowlight(common)
 
+export interface GetExtensionsOptions {
+  // Disable built-in undo/redo (collaboration provides its own history)
+  collaboration?: boolean
+}
+
 // Extensions shared between the webapp editor and headless usage (server,
 // markdown conversions). React-specific extensions (collaboration, drag
 // handle, suggestions UI) are added in src/react.
-export function getExtensions(): AnyExtension[] {
+export function getExtensions(
+  options: GetExtensionsOptions = {}
+): AnyExtension[] {
   return [
     StarterKit.configure({
       codeBlock: false,
       link: {
         openOnClick: false,
       },
+      ...(options.collaboration ? { undoRedo: false } : {}),
     }),
     CodeBlockLowlight.configure({ lowlight }),
     TableKit.configure({

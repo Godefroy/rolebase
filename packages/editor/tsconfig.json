@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-    "moduleResolution": "Node",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "target": "ES2022",
     "allowJs": true,
     "skipLibCheck": true,
@@ -12,6 +13,6 @@
     "strictNullChecks": true,
     "downlevelIteration": true,
     "noEmit": true,
-    "baseUrl": "."
+    "jsx": "react"
   }
 }

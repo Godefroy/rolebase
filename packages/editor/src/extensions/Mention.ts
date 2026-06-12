@@ -4,6 +4,12 @@ export enum MentionEntities {
   Member = 'member',
 }
 
+export interface Mentionable {
+  id: string
+  name: string
+  entity: MentionEntities
+}
+
 // Markdown syntax: [@Jane Doe](rolebase://member/uuid)
 const MENTION_MD_REGEX =
   /^\[@([^\]]+)\]\(rolebase:\/\/([a-z]+)\/([a-zA-Z0-9-]+)\)/
