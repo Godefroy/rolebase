@@ -38,7 +38,7 @@ import {
   $createCollapsibleTitleNode,
   $isCollapsibleTitleNode,
   CollapsibleTitleNode,
-} from '@rolebase/editor'
+} from '@rolebase/editor-legacy'
 
 export const INSERT_COLLAPSIBLE_COMMAND = createCommand<void>()
 export const TOGGLE_COLLAPSIBLE_COMMAND = createCommand<NodeKey>()

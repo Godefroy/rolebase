@@ -1,6 +1,6 @@
 import { $convertFromMarkdownString } from '@lexical/markdown'
 import { InitialEditorStateType } from '@lexical/react/LexicalComposer'
-import { markdownTransformers } from '@rolebase/editor'
+import { markdownTransformers } from '@rolebase/editor-legacy'
 
 export function fixInitialState(
   value?: InitialEditorStateType

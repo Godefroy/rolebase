@@ -9,7 +9,7 @@ import { BlockWithAlignableContents } from '@lexical/react/LexicalBlockWithAlign
 import {
   FigmaNode as BaseFigmaNode,
   type SerializedFigmaNode,
-} from '@rolebase/editor'
+} from '@rolebase/editor-legacy'
 import React from 'react'
 
 type FigmaComponentProps = Readonly<{
@@ -85,4 +85,4 @@ export function $createFigmaNode(documentID: string): FigmaNode {
   return new FigmaNode(documentID)
 }
 
-export { $isFigmaNode, type SerializedFigmaNode } from '@rolebase/editor'
+export { $isFigmaNode, type SerializedFigmaNode } from '@rolebase/editor-legacy'

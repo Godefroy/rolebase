@@ -7,7 +7,7 @@ Headless Lexical editor utilities for Rolebase. Provides node definitions, markd
 ### Convert Lexical JSON to Markdown
 
 ```ts
-import { exportToMarkdown } from '@rolebase/editor'
+import { exportToMarkdown } from '@rolebase/editor-legacy'
 
 const markdown = exportToMarkdown(lexicalJsonString)
 ```
@@ -15,7 +15,7 @@ const markdown = exportToMarkdown(lexicalJsonString)
 ### Use nodes and transformers
 
 ```ts
-import { nodes, markdownTransformers } from '@rolebase/editor'
+import { nodes, markdownTransformers } from '@rolebase/editor-legacy'
 ```
 
 ## Architecture

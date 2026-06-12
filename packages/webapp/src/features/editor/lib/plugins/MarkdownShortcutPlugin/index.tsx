@@ -9,7 +9,7 @@
 import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin'
 import React from 'react'
 
-import { markdownTransformers } from '@rolebase/editor'
+import { markdownTransformers } from '@rolebase/editor-legacy'
 
 export default function MarkdownPlugin() {
   return <MarkdownShortcutPlugin transformers={markdownTransformers} />

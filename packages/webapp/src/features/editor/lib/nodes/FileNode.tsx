@@ -2,7 +2,7 @@ import {
   FileNode as BaseFileNode,
   type FilePayload,
   type SerializedFileNode,
-} from '@rolebase/editor'
+} from '@rolebase/editor-legacy'
 import { $applyNodeReplacement } from 'lexical'
 import React, { Suspense } from 'react'
 import FileComponent from './FileComponent'
@@ -56,4 +56,4 @@ export function $createFileNode({
   return $applyNodeReplacement(new FileNode(url, size, name, mime, key))
 }
 
-export { $isFileNode, type FilePayload, type SerializedFileNode } from '@rolebase/editor'
+export { $isFileNode, type FilePayload, type SerializedFileNode } from '@rolebase/editor-legacy'

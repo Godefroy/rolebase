@@ -1,4 +1,4 @@
-import { exportToMarkdown as exportHeadlessEditorStateToMarkdown } from '@rolebase/editor'
+import { exportToMarkdown as exportHeadlessEditorStateToMarkdown } from '@rolebase/editor-legacy'
 import { chakra, List, ListItem, Text } from '@chakra-ui/react'
 import { diffChars } from 'diff'
 import isEqual from 'lodash.isequal'

@@ -9,7 +9,7 @@ import { BlockWithAlignableContents } from '@lexical/react/LexicalBlockWithAlign
 import {
   YouTubeNode as BaseYouTubeNode,
   type SerializedYouTubeNode,
-} from '@rolebase/editor'
+} from '@rolebase/editor-legacy'
 import React from 'react'
 
 type YouTubeComponentProps = Readonly<{
@@ -87,4 +87,4 @@ export function $createYouTubeNode(videoID: string): YouTubeNode {
   return new YouTubeNode(videoID)
 }
 
-export { $isYouTubeNode, type SerializedYouTubeNode } from '@rolebase/editor'
+export { $isYouTubeNode, type SerializedYouTubeNode } from '@rolebase/editor-legacy'

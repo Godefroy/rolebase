@@ -17,7 +17,7 @@ packages/*
 !packages/backend
 !packages/shared
 !packages/emails
-!packages/editor
+!packages/editor-legacy
 !packages/graph
 
 # Builds

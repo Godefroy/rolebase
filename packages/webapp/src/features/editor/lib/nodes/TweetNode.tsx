@@ -9,7 +9,7 @@ import { BlockWithAlignableContents } from '@lexical/react/LexicalBlockWithAlign
 import {
   TweetNode as BaseTweetNode,
   type SerializedTweetNode,
-} from '@rolebase/editor'
+} from '@rolebase/editor-legacy'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 
 const WIDGET_SCRIPT_URL = 'https://platform.twitter.com/widgets.js'
@@ -140,4 +140,4 @@ export function $createTweetNode(tweetID: string): TweetNode {
   return new TweetNode(tweetID)
 }
 
-export { $isTweetNode, type SerializedTweetNode } from '@rolebase/editor'
+export { $isTweetNode, type SerializedTweetNode } from '@rolebase/editor-legacy'

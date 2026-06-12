@@ -19,7 +19,7 @@ import throttle from 'lodash.throttle'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import * as ReactDOM from 'react-dom'
 import { MemberIcon } from 'src/icons'
-import { $createMentionNode, MentionEntities } from '@rolebase/editor'
+import { $createMentionNode, MentionEntities } from '@rolebase/editor-legacy'
 
 export interface Mentionable {
   name: string

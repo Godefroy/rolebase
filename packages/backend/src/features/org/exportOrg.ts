@@ -1,4 +1,4 @@
-import { exportToMarkdown } from '@rolebase/editor'
+import { exportToMarkdown } from '@rolebase/editor-legacy'
 import * as yup from 'yup'
 import { gql, Member_Role_Enum } from '../../gql'
 import { guardOrg } from '../../guards/guardOrg'

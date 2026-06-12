@@ -94,7 +94,7 @@ export default function EmojiPickerPlugin() {
   const [emojis, setEmojis] = useState<Array<Emoji>>([])
 
   useEffect(() => {
-    import('@rolebase/editor/src/transformers/emoji-list').then((file) => setEmojis(file.default))
+    import('@rolebase/editor-legacy/src/transformers/emoji-list').then((file) => setEmojis(file.default))
   }, [])
 
   const emojiOptions = useMemo(

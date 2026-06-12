@@ -16,7 +16,7 @@ import {
   CollapsibleTitleNode,
   KeywordNode,
   MentionNode,
-} from '@rolebase/editor'
+} from '@rolebase/editor-legacy'
 import { FigmaNode } from './FigmaNode'
 import { FileNode } from './FileNode'
 import { ImageNode } from './ImageNode'

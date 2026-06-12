@@ -36,7 +36,7 @@
     "@lexical/markdown": "^0.9.1",
     "@lexical/react": "^0.9.1",
     "@nhost/nhost-js": "^4.7.0",
-    "@rolebase/editor": "*",
+    "@rolebase/editor-legacy": "*",
     "@rolebase/graph": "*",
     "@sentry/react": "10.38.0",
     "@sentry/vite-plugin": "^4.9.0",

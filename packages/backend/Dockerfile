@@ -11,7 +11,7 @@ COPY ../../package.json ./
 COPY ../../packages/backend/package.json ./packages/backend/
 COPY ../../packages/shared/package.json ./packages/shared/
 COPY ../../packages/emails/package.json ./packages/emails/
-COPY ../../packages/editor/package.json ./packages/editor/
+COPY ../../packages/editor-legacy/package.json ./packages/editor-legacy/
 COPY ../../packages/graph/package.json ./packages/graph/
 
 ENV NODE_OPTIONS=--max-old-space-size=2048
