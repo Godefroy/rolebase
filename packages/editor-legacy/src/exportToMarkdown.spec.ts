@@ -199,6 +199,41 @@ describe('exportToMarkdown', () => {
     )
   })
 
+  it('exports files and images inserted at root level', () => {
+    const state = buildState(() => {
+      $getRoot().append(
+        $createFileNode({
+          url: 'https://example.com/report.pdf',
+          name: 'report.pdf',
+          size: 12345,
+          mime: 'application/pdf',
+        }) as any,
+        $createImageNode({
+          src: 'https://example.com/img.png',
+          alt: 'My image',
+        }) as any
+      )
+    })
+    expect(exportToMarkdown(state)).toBe(
+      '[report.pdf](https://example.com/report.pdf "file:application/pdf:12345")\n\n![My image](https://example.com/img.png)'
+    )
+  })
+
+  it('exports table cells containing multiple paragraphs on a single line', () => {
+    const state = buildState(() => {
+      const table = $createTableNode()
+      const row = $createTableRowNode()
+      const cell = $createTableCellNode(TableCellHeaderStates.NO_STATUS)
+      cell.append($paragraph('blop'), $paragraph('sdfsdf'))
+      const cell2 = $createTableCellNode(TableCellHeaderStates.NO_STATUS)
+      cell2.append($paragraph('simple'))
+      row.append(cell, cell2)
+      table.append(row)
+      $getRoot().append(table)
+    })
+    expect(exportToMarkdown(state)).toBe('| blop sdfsdf | simple |')
+  })
+
   it('exports YouTube, Figma and Tweet embeds as URLs', () => {
     const state = buildState(() => {
       $getRoot().append(

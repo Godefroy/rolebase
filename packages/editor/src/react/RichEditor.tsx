@@ -188,9 +188,10 @@ export default forwardRef<EditorHandle, RichEditorProps>(function RichEditor(
       }),
       Placeholder.configure({
         showOnlyCurrent: false,
-        placeholder: ({ editor, node }) => {
+        placeholder: ({ editor, node, hasAnchor }) => {
           if (editor.isEmpty) return placeholderRef.current ?? ''
-          if (node.type.name === 'paragraph') {
+          // Show the paragraph placeholder only where the cursor is
+          if (node.type.name === 'paragraph' && hasAnchor) {
             return emptyParagraphPlaceholderRef.current ?? ''
           }
           return ''

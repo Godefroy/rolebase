@@ -2,7 +2,6 @@ import { Editor } from '@tiptap/core'
 import React, { ReactNode } from 'react'
 import {
   FiCheckSquare,
-  FiChevronRight,
   FiCode,
   FiGrid,
   FiImage,
@@ -105,13 +104,6 @@ export function getSlashItems(
       icon: <FiMinus />,
       keywords: ['divider', 'separator', 'hr', 'rule'],
       run: (editor) => editor.chain().focus().setHorizontalRule().run(),
-    },
-    {
-      key: 'collapsible',
-      label: labels.collapsible,
-      icon: <FiChevronRight />,
-      keywords: ['collapsible', 'details', 'toggle', 'fold'],
-      run: (editor) => editor.chain().focus().setDetails().run(),
     },
     {
       key: 'image',

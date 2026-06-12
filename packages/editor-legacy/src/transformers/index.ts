@@ -267,6 +267,40 @@ const FILE: TextMatchTransformer = {
   type: 'text-match',
 }
 
+// File attachments inserted at root level (outside of a paragraph):
+// element transformer needed because text-match transformers only
+// apply to nodes inside paragraphs (export only)
+const FILE_BLOCK: ElementTransformer = {
+  dependencies: [FileNode],
+  export: (node) => {
+    if (!$isFileNode(node)) {
+      return null
+    }
+
+    return `[${node.__name}](${node.__url} "file:${node.__mime}:${node.__size}")`
+  },
+  // Import is handled by the FILE text-match transformer
+  regExp: /^<file(?!)$/,
+  replace: () => {},
+  type: 'element',
+}
+
+// Images inserted at root level (outside of a paragraph), same as FILE_BLOCK
+const IMAGE_BLOCK: ElementTransformer = {
+  dependencies: [ImageNode],
+  export: (node) => {
+    if (!$isImageNode(node)) {
+      return null
+    }
+
+    return `![${node.getAltText()}](${node.getSrc()})`
+  },
+  // Import is handled by the IMAGE text-match transformer
+  regExp: /^<image(?!)$/,
+  replace: () => {},
+  type: 'element',
+}
+
 // Collapsible sections: exported as HTML <details> blocks (export only)
 const COLLAPSIBLE: ElementTransformer = {
   dependencies: [
@@ -317,10 +351,12 @@ const TABLE: ElementTransformer = {
       for (const cell of row.getChildren()) {
         // It's TableCellNode so it's just to make flow happy
         if ($isTableCellNode(cell)) {
+          // Markdown table cells are single-line: join cell blocks
+          // with a space (same behavior as the new editor)
           rowOutput.push(
             $convertToMarkdownString(markdownTransformers, cell).replace(
-              /\n/g,
-              '\\n'
+              /\n+/g,
+              ' '
             )
           )
           if (cell.__headerState === TableCellHeaderStates.ROW) {
@@ -434,7 +470,7 @@ function getTableColumnsSize(table: TableNode) {
 }
 
 const createTableCell = (textContent: string): TableCellNode => {
-  textContent = textContent.replace(/\\n/g, '\n')
+  textContent = textContent.replace(/<br\s*\/?>/g, '\n').replace(/\\n/g, '\n')
   const cell = $createTableCellNode(TableCellHeaderStates.NO_STATUS)
   $convertFromMarkdownString(textContent, markdownTransformers, cell)
   return cell
@@ -455,8 +491,10 @@ export const markdownTransformers: Array<Transformer> = [
   EMOJI,
   HR,
   IMAGE,
+  IMAGE_BLOCK,
   MENTION,
   FILE,
+  FILE_BLOCK,
   YOUTUBE,
   FIGMA,
   TWEET,

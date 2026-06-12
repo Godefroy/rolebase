@@ -16,7 +16,6 @@ export default function useEditorLabels(): EditorLabels {
       quote: t('RichEditor.quote'),
       codeBlock: t('RichEditor.codeBlock'),
       divider: t('RichEditor.divider'),
-      collapsible: t('RichEditor.collapsible'),
       image: t('RichEditor.image'),
       file: t('RichEditor.file'),
       youtube: t('RichEditor.youtube'),

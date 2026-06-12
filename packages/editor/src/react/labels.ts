@@ -12,7 +12,6 @@ export interface EditorLabels {
   quote: string
   codeBlock: string
   divider: string
-  collapsible: string
   image: string
   file: string
   youtube: string
@@ -46,7 +45,6 @@ export const defaultLabels: EditorLabels = {
   quote: 'Quote',
   codeBlock: 'Code block',
   divider: 'Divider',
-  collapsible: 'Collapsible section',
   image: 'Image',
   file: 'File',
   youtube: 'YouTube video',

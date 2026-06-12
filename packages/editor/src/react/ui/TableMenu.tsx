@@ -1,15 +1,15 @@
 import { Editor } from '@tiptap/core'
-import { BubbleMenu } from '../menusShim'
 import React, { ReactNode } from 'react'
 import {
-  MdDeleteOutline,
-  MdOutlineTableChart,
-  MdOutlineViewColumn,
-  MdOutlineViewWeek,
-  MdPlaylistAdd,
-  MdViewHeadline,
-} from 'react-icons/md'
+  TbColumnInsertRight,
+  TbColumnRemove,
+  TbFreezeRow,
+  TbRowInsertBottom,
+  TbRowRemove,
+  TbTableOff,
+} from 'react-icons/tb'
 import { EditorLabels } from '../labels'
+import { BubbleMenu } from '../menusShim'
 
 interface Props {
   editor: Editor
@@ -26,37 +26,37 @@ export default function TableMenu({ editor, labels }: Props) {
     {
       key: 'addRow',
       label: labels.addRowBelow,
-      icon: <MdPlaylistAdd />,
+      icon: <TbRowInsertBottom />,
       onClick: () => editor.chain().focus().addRowAfter().run(),
     },
     {
       key: 'addColumn',
       label: labels.addColumnRight,
-      icon: <MdOutlineViewColumn />,
+      icon: <TbColumnInsertRight />,
       onClick: () => editor.chain().focus().addColumnAfter().run(),
     },
     {
       key: 'deleteRow',
       label: labels.deleteRow,
-      icon: <MdOutlineViewWeek />,
+      icon: <TbRowRemove />,
       onClick: () => editor.chain().focus().deleteRow().run(),
     },
     {
       key: 'deleteColumn',
       label: labels.deleteColumn,
-      icon: <MdOutlineTableChart />,
+      icon: <TbColumnRemove />,
       onClick: () => editor.chain().focus().deleteColumn().run(),
     },
     {
       key: 'toggleHeader',
       label: labels.toggleHeaderRow,
-      icon: <MdViewHeadline />,
+      icon: <TbFreezeRow />,
       onClick: () => editor.chain().focus().toggleHeaderRow().run(),
     },
     {
       key: 'deleteTable',
       label: labels.deleteTable,
-      icon: <MdDeleteOutline />,
+      icon: <TbTableOff />,
       onClick: () => editor.chain().focus().deleteTable().run(),
     },
   ]
