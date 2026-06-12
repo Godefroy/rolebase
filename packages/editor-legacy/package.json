@@ -5,7 +5,8 @@
   "main": "src/index.ts",
   "scripts": {
     "build": "echo 'No build step needed'",
-    "tsc": "tsc --noEmit"
+    "tsc": "tsc --noEmit",
+    "test": "vitest run"
   },
   "dependencies": {
     "@emoji-mart/data": "^1.2.1",
@@ -17,14 +18,15 @@
     "@lexical/mark": "^0.9.1",
     "@lexical/markdown": "^0.9.1",
     "@lexical/overflow": "^0.9.1",
-    "@lexical/rich-text": "^0.9.1",
     "@lexical/react": "^0.9.1",
+    "@lexical/rich-text": "^0.9.1",
     "@lexical/table": "^0.9.1",
     "lexical": "^0.9.1"
   },
   "devDependencies": {
     "@types/node": "^18.8.3",
     "@types/react": "^18.2.21",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "vitest": "^0.34.6"
   }
 }

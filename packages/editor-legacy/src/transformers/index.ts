@@ -45,11 +45,38 @@ import {
   $isTweetNode,
   TweetNode,
 } from '../nodes/TweetNode'
+import { $createYouTubeNode } from '../nodes/YouTubeNode'
+import { $createFigmaNode } from '../nodes/FigmaNode'
 import {
   $createHorizontalRuleNode,
   $isHorizontalRuleNode,
   HorizontalRuleNode,
 } from '../nodes/HorizontalRuleNode'
+import {
+  $createMentionNode,
+  $isMentionNode,
+  MentionEntities,
+  MentionNode,
+} from '../nodes/MentionNode'
+import {
+  $createFileNode,
+  $isFileNode,
+  FileNode,
+} from '../nodes/FileNode'
+import { $isYouTubeNode, YouTubeNode } from '../nodes/YouTubeNode'
+import { $isFigmaNode, FigmaNode } from '../nodes/FigmaNode'
+import {
+  $isCollapsibleContainerNode,
+  CollapsibleContainerNode,
+} from '../nodes/CollapsibleContainerNode'
+import {
+  $isCollapsibleTitleNode,
+  CollapsibleTitleNode,
+} from '../nodes/CollapsibleTitleNode'
+import {
+  $isCollapsibleContentNode,
+  CollapsibleContentNode,
+} from '../nodes/CollapsibleContentNode'
 import emojiList from './emoji-list'
 
 // Simple links with chevrons: <https://example.com>
@@ -150,14 +177,120 @@ const TWEET: ElementTransformer = {
       return null
     }
 
-    return `<tweet id="${node.getId()}" />`
+    return `https://twitter.com/i/status/${node.getId()}`
   },
-  regExp: /<tweet id="([^"]+?)"\s?\/>\s?$/,
+  regExp: /^https:\/\/(?:twitter|x)\.com\/[^/\s]+\/status(?:es)?\/(\d+)\s*$/,
   replace: (textNode, _1, match) => {
     const [, id] = match
     const tweetNode = $createTweetNode(id)
     textNode.replace(tweetNode)
   },
+  type: 'element',
+}
+
+// YouTube embeds: bare video URL alone in a paragraph
+const YOUTUBE: ElementTransformer = {
+  dependencies: [YouTubeNode],
+  export: (node) => {
+    if (!$isYouTubeNode(node)) {
+      return null
+    }
+
+    return `https://www.youtube.com/watch?v=${node.getId()}`
+  },
+  regExp: /^https:\/\/(?:www\.youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)\s*$/,
+  replace: (parentNode, _1, match) => {
+    const [, id] = match
+    parentNode.replace($createYouTubeNode(id))
+  },
+  type: 'element',
+}
+
+// Figma embeds: bare file URL alone in a paragraph
+const FIGMA: ElementTransformer = {
+  dependencies: [FigmaNode],
+  export: (node) => {
+    if (!$isFigmaNode(node)) {
+      return null
+    }
+
+    return `https://www.figma.com/file/${node.getId()}`
+  },
+  regExp: /^https:\/\/(?:www\.)?figma\.com\/file\/([\w-]+)\s*$/,
+  replace: (parentNode, _1, match) => {
+    const [, id] = match
+    parentNode.replace($createFigmaNode(id))
+  },
+  type: 'element',
+}
+
+// Mentions: [@Jane Doe](rolebase://member/uuid)
+const MENTION: TextMatchTransformer = {
+  dependencies: [MentionNode],
+  export: (node) => {
+    if (!$isMentionNode(node)) {
+      return null
+    }
+
+    const entity = node.__entity.toLowerCase()
+    return `[@${node.getTextContent()}](rolebase://${entity}/${node.__id})`
+  },
+  importRegExp: /\[@([^\]]+)\]\(rolebase:\/\/member\/([a-zA-Z0-9-]+)\)/,
+  regExp: /\[@([^\]]+)\]\(rolebase:\/\/member\/([a-zA-Z0-9-]+)\)$/,
+  replace: (textNode, match) => {
+    const [, name, id] = match
+    textNode.replace($createMentionNode(MentionEntities.Member, id, name))
+  },
+  trigger: ')',
+  type: 'text-match',
+}
+
+// File attachments: [name](url "file:mime:size")
+const FILE: TextMatchTransformer = {
+  dependencies: [FileNode],
+  export: (node) => {
+    if (!$isFileNode(node)) {
+      return null
+    }
+
+    return `[${node.__name}](${node.__url} "file:${node.__mime}:${node.__size}")`
+  },
+  importRegExp: /\[([^\]]+)\]\(([^\s)]+) "file:([^:"]*):(\d+)"\)/,
+  regExp: /\[([^\]]+)\]\(([^\s)]+) "file:([^:"]*):(\d+)"\)$/,
+  replace: (textNode, match) => {
+    const [, name, url, mime, size] = match
+    textNode.replace(
+      $createFileNode({ url, size: parseInt(size, 10), name, mime })
+    )
+  },
+  trigger: ')',
+  type: 'text-match',
+}
+
+// Collapsible sections: exported as HTML <details> blocks (export only)
+const COLLAPSIBLE: ElementTransformer = {
+  dependencies: [
+    CollapsibleContainerNode,
+    CollapsibleTitleNode,
+    CollapsibleContentNode,
+  ],
+  export: (node) => {
+    if (!$isCollapsibleContainerNode(node)) {
+      return null
+    }
+
+    const children = node.getChildren()
+    const title = children.find($isCollapsibleTitleNode)
+    const content = children.find($isCollapsibleContentNode)
+    const titleText = title?.getTextContent() ?? ''
+    const contentMarkdown = content
+      ? $convertToMarkdownString(markdownTransformers, content)
+      : ''
+    return `<details${node.getOpen() ? ' open' : ''}>\n<summary>${titleText}</summary>\n\n${contentMarkdown}\n\n</details>`
+  },
+  // Import is not supported (export only): this regexp never matches
+  regExp: /^<details(?!)$/,
+  replace: () => {},
   type: 'element',
 }
 
@@ -322,7 +455,12 @@ export const markdownTransformers: Array<Transformer> = [
   EMOJI,
   HR,
   IMAGE,
+  MENTION,
+  FILE,
+  YOUTUBE,
+  FIGMA,
   TWEET,
+  COLLAPSIBLE,
   CHECK_LIST,
   ...TRANSFORMERS,
 ]
