@@ -45,8 +45,7 @@ export default function NodeElement({
   // promotes them to huge composited layers (crash on mobile)
   const giant =
     !!graph &&
-    node.r * graph.zoomTransform.k * 2 >
-      3 * Math.max(graph.width, graph.height)
+    node.r * graph.zoomTransform.k * 2 > 3 * Math.max(graph.width, graph.height)
 
   const bgColor = getColor(colorMode, 94, 16, depth, hue)
   const outlineColor = getColor(colorMode, 75, 35, depth, hue)

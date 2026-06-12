@@ -64,10 +64,11 @@ export default function useGraph<Data, TGraph extends Graph<Data>>({
     onReady?.()
   }, [])
 
-  // Update data
+  // Update data, once the graph is instanciated and children
+  // components have subscribed to its events
   useEffect(() => {
-    graphRef.current?.updateData(data)
-  }, [data])
+    graph?.updateData(data)
+  }, [graph, data])
 
   // Update dimensions
   useEffect(() => {
@@ -98,13 +99,6 @@ export default function useGraph<Data, TGraph extends Graph<Data>>({
     },
     []
   )
-
-  // Re-apply data after graph is instanciated
-  useEffect(() => {
-    if (graph?.inputData) {
-      graph.updateData(graph.inputData)
-    }
-  }, [graph])
 
   // Focus on a circle
   useEffect(() => {

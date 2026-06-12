@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { memo, useEffect, useRef, useState } from 'react'
 import settings from '../../settings'
 import { NodeData, NodeType } from '../../types'
 import { useGraphRenderContext } from '../GraphRenderContext'
@@ -11,7 +11,8 @@ interface Props {
 const { baseSize, centerCoverage, gap, rate, threshold, topThreshold } =
   settings.titles
 
-export default function CircleTitleElement({ node }: Props) {
+// Memoized: a culling pass only re-renders changed elements
+export default memo(function CircleTitleElement({ node }: Props) {
   const { graph, isStatic } = useGraphRenderContext()
   const mounted = useMounted()
   const parent =
@@ -40,8 +41,7 @@ export default function CircleTitleElement({ node }: Props) {
   // See NodeElement: no transition on elements much bigger than the viewport
   const giant =
     !!graph &&
-    node.r * graph.zoomTransform.k * 2 >
-      3 * Math.max(graph.width, graph.height)
+    node.r * graph.zoomTransform.k * 2 > 3 * Math.max(graph.width, graph.height)
 
   return (
     <div
@@ -112,4 +112,4 @@ export default function CircleTitleElement({ node }: Props) {
       </div>
     </div>
   )
-}
+})

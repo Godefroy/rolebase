@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { memo, useMemo } from 'react'
 import { NodeData } from '../../types'
 import { useGraphRenderContext } from '../GraphRenderContext'
 import NodeElement from './NodeElement'
@@ -9,7 +9,8 @@ interface Props {
   levelHidden?: boolean
 }
 
-export default function MemberElement({ node, levelHidden }: Props) {
+// Memoized: a culling pass only re-renders changed elements
+export default memo(function MemberElement({ node, levelHidden }: Props) {
   const { events } = useGraphRenderContext()
 
   // Click
@@ -45,4 +46,4 @@ export default function MemberElement({ node, levelHidden }: Props) {
       </span>
     </NodeElement>
   )
-}
+})

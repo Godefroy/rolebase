@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { NodeData } from '../../types'
 import { useGraphRenderContext } from '../GraphRenderContext'
 import CircleLeadersElement from './CircleLeadersElement'
@@ -8,9 +8,18 @@ interface Props {
   node: NodeData
   selected?: boolean
   levelHidden?: boolean
+  // Mount leaders avatars (computed at culling time, like members
+  // visibility): prevents loading hundreds of images at once on page load
+  showLeaders?: boolean
 }
 
-export default function CircleElement({ node, selected, levelHidden }: Props) {
+// Memoized: a culling pass only re-renders changed elements
+export default memo(function CircleElement({
+  node,
+  selected,
+  levelHidden,
+  showLeaders = true,
+}: Props) {
   const { events } = useGraphRenderContext()
   const { onCircleClick } = events
 
@@ -33,7 +42,9 @@ export default function CircleElement({ node, selected, levelHidden }: Props) {
           : undefined
       }
     >
-      {node.data.participants && <CircleLeadersElement node={node} />}
+      {node.data.participants && showLeaders && (
+        <CircleLeadersElement node={node} />
+      )}
     </NodeElement>
   )
-}
+})
