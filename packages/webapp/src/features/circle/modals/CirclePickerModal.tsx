@@ -1,6 +1,6 @@
 import { useElementSize } from '@/common/hooks/useElementSize'
 import useWindowSize from '@/common/hooks/useWindowSize'
-import CirclesSVGGraph from '@/graph/CirclesSVGGraph'
+import CirclesGraph from '@/graph/CirclesGraph'
 import { CirclesGraphViews, GraphEvents } from '@/graph/types'
 import {
   Button,
@@ -51,7 +51,7 @@ export default function CirclePickerModal({ onSelect, ...modalProps }: Props) {
       <ModalContent border="3px solid">
         <ModalBody ref={boxRef} p={0} position="relative">
           {circles && boxSize && (
-            <CirclesSVGGraph
+            <CirclesGraph
               view={CirclesGraphViews.SimpleCircles}
               circles={circles}
               events={events}

@@ -1,0 +1,33 @@
+{
+  "name": "@rolebase/graph",
+  "version": "1.0.0",
+  "license": "MIT",
+  "main": "src/index.ts",
+  "scripts": {
+    "tsc": "tsc",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "d3": "^7.8.5",
+    "d3-hierarchy": "^3.1.2",
+    "eventemitter3": "^5.0.1",
+    "lodash.debounce": "^4.0.8",
+    "lodash.throttle": "^4.1.1",
+    "lodash.uniqby": "^4.7.0"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/d3": "^7.4.3",
+    "@types/d3-hierarchy": "^3.1.6",
+    "@types/lodash.debounce": "^4.0.7",
+    "@types/lodash.throttle": "^4.1.6",
+    "@types/lodash.uniqby": "^4.7.6",
+    "@types/react": "^18.2.21",
+    "@types/react-dom": "^18.2.7",
+    "typescript": "^5.2.2",
+    "vitest": "^0.34.6"
+  }
+}

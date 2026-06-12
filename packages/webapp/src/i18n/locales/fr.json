@@ -127,7 +127,7 @@
   "CircleExportPage": {
     "heading": "Exporter une capture",
     "download": "Télécharger au format PNG",
-    "center": "Centrer"
+    "showAllNodes": "Afficher les membres et sous-rôles"
   },
   "ExportPage": {
     "heading": "Export",

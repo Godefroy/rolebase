@@ -37,6 +37,7 @@
     "@lexical/react": "^0.9.1",
     "@nhost/nhost-js": "^4.7.0",
     "@rolebase/editor": "*",
+    "@rolebase/graph": "*",
     "@sentry/react": "10.38.0",
     "@sentry/vite-plugin": "^4.9.0",
     "@stripe/react-stripe-js": "^1.16.4",

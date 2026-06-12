@@ -3,8 +3,7 @@ import { Title } from '@/common/atoms/Title'
 import { useElementSize } from '@/common/hooks/useElementSize'
 import useOverflowHidden from '@/common/hooks/useOverflowHidden'
 import useQueryParams from '@/common/hooks/useQueryParams'
-import CirclesHTMLGraph from '@/graph/CirclesHTMLGraph'
-import CirclesSVGGraph from '@/graph/CirclesSVGGraph'
+import CirclesGraph from '@/graph/CirclesGraph'
 import { GraphProvider } from '@/graph/contexts/GraphContext'
 import useCirclesEvents from '@/graph/hooks/useGraphEvents'
 import { CirclesGraphViews } from '@/graph/types'
@@ -51,12 +50,6 @@ export default function CirclesPage() {
   const navigateOrg = useNavigateOrg()
   const org = useCurrentOrg()
   const [ready, setReady] = useState(false)
-
-  // Beta mode with query param ?beta
-  const isBeta = useMemo(
-    () => document.location.search.indexOf('beta') !== -1,
-    []
-  )
 
   // Content size
   const boxRef = useRef<HTMLDivElement>(null)
@@ -140,34 +133,19 @@ export default function CirclesPage() {
         right={0}
         overflow="hidden"
       >
-        {org &&
-          circles &&
-          boxSize &&
-          (isBeta ? (
-            <CirclesHTMLGraph
-              key={view + colorMode}
-              view={view}
-              circles={circles}
-              events={events}
-              width={boxSize.width}
-              height={boxSize.height}
-              focusCrop={focusCrop}
-              selectedCircleId={parentId ? `${parentId}_${circleId}` : circleId}
-              onReady={() => setReady(true)}
-            />
-          ) : (
-            <CirclesSVGGraph
-              key={view + colorMode}
-              view={view}
-              circles={circles}
-              events={events}
-              width={boxSize.width}
-              height={boxSize.height}
-              focusCrop={focusCrop}
-              selectedCircleId={parentId ? `${parentId}_${circleId}` : circleId}
-              onReady={() => setReady(true)}
-            />
-          ))}
+        {org && circles && boxSize && (
+          <CirclesGraph
+            key={view + colorMode}
+            view={view}
+            circles={circles}
+            events={events}
+            width={boxSize.width}
+            height={boxSize.height}
+            focusCrop={focusCrop}
+            selectedCircleId={parentId ? `${parentId}_${circleId}` : circleId}
+            onReady={() => setReady(true)}
+          />
+        )}
       </Box>
 
       {panel === Panels.Circle && circleId && (

@@ -6,7 +6,7 @@ import { useElementSize } from '@/common/hooks/useElementSize'
 import useOverflowHidden from '@/common/hooks/useOverflowHidden'
 import useQueryParams from '@/common/hooks/useQueryParams'
 import Page404 from '@/common/pages/Page404'
-import CirclesSVGGraph from '@/graph/CirclesSVGGraph'
+import CirclesGraph from '@/graph/CirclesGraph'
 import { GraphProvider } from '@/graph/contexts/GraphContext'
 import { CirclesGraphViews, GraphEvents } from '@/graph/types'
 import { Box } from '@chakra-ui/react'
@@ -147,7 +147,7 @@ export default function OrgPage() {
         )}
 
         {circles && boxSize && (
-          <CirclesSVGGraph
+          <CirclesGraph
             view={view}
             circles={circles}
             events={events}

@@ -2,27 +2,28 @@ import NumberInput from '@/common/atoms/NumberInput'
 import ScrollableLayout from '@/common/atoms/ScrollableLayout'
 import { Title } from '@/common/atoms/Title'
 import useUpdatableQueryParams from '@/common/hooks/useUpdatableQueryParams'
-import CirclesSVGGraph from '@/graph/CirclesSVGGraph'
+import CirclesGraph, { CirclesGraphInstance } from '@/graph/CirclesGraph'
 import { GraphProvider } from '@/graph/contexts/GraphContext'
-import { CirclesGraph } from '@/graph/graphs/CirclesGraph'
 import { CirclesGraphViews } from '@/graph/types'
 import { useOrgId } from '@/org/hooks/useOrgId'
 import {
   Box,
   Button,
   Center,
+  Checkbox,
   Container,
   Flex,
   Heading,
   Spacer,
   useColorMode,
+  useToast,
 } from '@chakra-ui/react'
 import { getCircleChildren } from '@rolebase/shared/helpers/getCircleChildren'
 import { useStoreState } from '@store/hooks'
-import { downloadSvgAsPng } from '@utils/downloadSvgAsPng'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { CenterIcon, DownloadIcon } from 'src/icons'
+import { DownloadIcon } from 'src/icons'
+import { trpc } from 'src/trpc'
 import CircleAndMemberFilters from '../components/CircleAndMemberFilters'
 import GraphViewsSelect from '../components/GraphViewsSelect'
 
@@ -38,13 +39,15 @@ export default function CircleExportPage() {
   const { params, changeParams } = useUpdatableQueryParams<CircleExportParams>()
   const circleId = params.circleId
   const orgId = useOrgId()
+  const toast = useToast()
   const [downloading, setDownloading] = useState(false)
   const [ready, setReady] = useState(false)
-  const graphRef = useRef<CirclesGraph>(null)
+  const graphRef = useRef<CirclesGraphInstance>(null)
 
   // Settings
   const [view, setView] = useState(CirclesGraphViews.AllCircles)
   const [width, setWidth] = useState(defaultWidth)
+  const [showAllNodes, setShowAllNodes] = useState(true)
 
   // Data
   const circles = useStoreState((state) => state.org.circles)
@@ -73,15 +76,48 @@ export default function CircleExportPage() {
     setTimeout(handleCenter, 100)
   }, [circleId, ready, width, view])
 
-  // Download as PNG
-  const handleDownload = () => {
-    const svgElement = graphRef.current?.element
-    if (!orgId || !svgElement) return
+  // Download as transparent PNG (generated server-side)
+  const handleDownload = async () => {
+    if (!orgId || !circleId) return
     setDownloading(true)
-    setTimeout(async () => {
-      await downloadSvgAsPng(svgElement as SVGSVGElement)
+
+    try {
+      const result = await trpc.org.exportOrgChart.mutate({
+        orgId,
+        circleId,
+        view,
+        width,
+        colorMode,
+        showAllNodes,
+      })
+
+      // Data is base64 encoded
+      const binary = atob(result.data)
+      const bytes = new Uint8Array(binary.length)
+      for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i)
+      }
+      const blob = new Blob([bytes], { type: result.contentType })
+
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = result.filename
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+    } catch (error) {
+      console.error(error)
+      toast({
+        title: t('common.errorOccurred'),
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    } finally {
       setDownloading(false)
-    }, 0)
+    }
   }
 
   // Reset circleId to main circle if undefined
@@ -134,14 +170,13 @@ export default function CircleExportPage() {
             onChange={setView}
           />
           <Spacer />
-          <Button
-            variant="ghost"
+          <Checkbox
+            isChecked={showAllNodes}
             size="sm"
-            leftIcon={<CenterIcon size={20} />}
-            onClick={handleCenter}
+            onChange={(event) => setShowAllNodes(event.target.checked)}
           >
-            {t('CircleExportPage.center')}
-          </Button>
+            {t('CircleExportPage.showAllNodes')}
+          </Checkbox>
         </Container>
         <Box
           width={`${width}px`}
@@ -152,25 +187,21 @@ export default function CircleExportPage() {
           borderColor="gray.200"
           borderRadius="md"
           overflow="hidden"
-          cursor="move"
           _dark={{
             bg: 'black',
             borderColor: 'gray.550',
           }}
-          sx={{
-            '.type-Member text': {
-              opacity: '1 !important',
-            },
-          }}
         >
           {orgId && selectedCircles && (
-            <CirclesSVGGraph
+            <CirclesGraph
               ref={graphRef}
               key={view + colorMode}
               view={view}
               circles={selectedCircles}
               width={width}
               height={width}
+              showAllNodes={showAllNodes}
+              panzoomDisabled
               focusCircleScale={(node) => node.r * 1.01}
               onReady={() => setReady(true)}
             />
