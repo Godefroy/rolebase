@@ -69,12 +69,11 @@ export class CirclesGraph extends Graph<CircleFullFragment[]> {
     // Update root radius
     this.updateRootRadius(nodes[0]?.r || root.r || 0)
 
-    // Zoom on root circle at first draw
+    // Zoom on root circle at first draw, synchronously before culling:
+    // nothing must render with the identity transform, it would mount
+    // a large fully-detailed subset of nodes (crash on mobile)
     if (firstDraw) {
-      setTimeout(
-        () => this.zoomTo(root.x, root.y, this.focusCircleScale(root)),
-        0
-      )
+      this.zoomTo(root.x, root.y, this.focusCircleScale(root), true)
     }
 
     // Save and dispatch nodes data

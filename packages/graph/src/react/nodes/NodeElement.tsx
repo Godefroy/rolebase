@@ -41,6 +41,13 @@ export default function NodeElement({
   const animateEnter =
     !isStatic && !!parent && !!graph?.enteringIds.has(node.data.id) && !mounted
 
+  // Nodes much bigger than the viewport must not transition: animating them
+  // promotes them to huge composited layers (crash on mobile)
+  const giant =
+    !!graph &&
+    node.r * graph.zoomTransform.k * 2 >
+      3 * Math.max(graph.width, graph.height)
+
   const bgColor = getColor(colorMode, 94, 16, depth, hue)
   const outlineColor = getColor(colorMode, 75, 35, depth, hue)
   const boxShadowColor = getColor(colorMode, 75, 35, depth, hue)
@@ -51,7 +58,9 @@ export default function NodeElement({
       id={`node-${node.data.id}`}
       className={`node ${className || ''} ${
         divProps.onClick && !selected ? 'clickable' : ''
-      } ${selected ? 'selected' : ''} ${levelHidden ? 'level-hidden' : ''}`}
+      } ${selected ? 'selected' : ''} ${levelHidden ? 'level-hidden' : ''} ${
+        giant ? 'giant' : ''
+      }`}
       style={
         {
           width: `${nodeSize}px`,

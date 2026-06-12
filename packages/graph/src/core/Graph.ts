@@ -269,18 +269,23 @@ export abstract class Graph<
       scale = 0.8
     }
 
+    const transform = new ZoomTransform(
+      scale,
+      -x * scale + this.focusOffsetX,
+      -y * scale + this.focusOffsetY
+    )
+
+    // Apply synchronously when instant
+    if (instant) {
+      this.d3Root.call(this.zoomBehaviour.transform, transform)
+      return
+    }
+
     this.d3Root
       .transition()
-      .duration(instant ? 0 : settings.zoom.duration)
+      .duration(settings.zoom.duration)
       .ease(settings.zoom.transition)
-      .call(
-        this.zoomBehaviour.transform,
-        new ZoomTransform(
-          scale,
-          -x * scale + this.focusOffsetX,
-          -y * scale + this.focusOffsetY
-        )
-      )
+      .call(this.zoomBehaviour.transform, transform)
   }
 
   // Conserve center on window resize

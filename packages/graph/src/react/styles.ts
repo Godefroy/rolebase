@@ -70,6 +70,12 @@ export const graphStyles = `
   opacity: 0;
   pointer-events: none;
 }
+/* Elements much bigger than the viewport must not transition: animating
+   them promotes them to huge composited layers (crash on mobile) */
+.rb-graph .node.giant,
+.rb-graph .circle-title.giant {
+  transition: none;
+}
 
 .rb-graph .circle-title {
   position: absolute;

@@ -37,10 +37,16 @@ export default function CircleTitleElement({ node }: Props) {
   const animateEnter =
     !isStatic && !!graph?.enteringIds.has(node.data.id) && !mounted
 
+  // See NodeElement: no transition on elements much bigger than the viewport
+  const giant =
+    !!graph &&
+    node.r * graph.zoomTransform.k * 2 >
+      3 * Math.max(graph.width, graph.height)
+
   return (
     <div
       id={`circle-title-${node.data.id}`}
-      className="circle-title"
+      className={`circle-title${giant ? ' giant' : ''}`}
       style={{
         width: `${baseSize}px`,
         height: `${baseSize}px`,
