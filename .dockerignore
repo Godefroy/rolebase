@@ -18,6 +18,7 @@ packages/*
 !packages/shared
 !packages/emails
 !packages/editor
+!packages/graph
 
 # Builds
 dist
