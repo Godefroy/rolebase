@@ -18,6 +18,10 @@ export function exportToMarkdown(value: string) {
   // Set editor state
   try {
     const state = JSON.parse(value)
+    // Empty document (Lexical refuses to parse a root without children)
+    if (state?.root?.children?.length === 0) {
+      return ''
+    }
     editor.setEditorState(editor.parseEditorState(state))
   } catch (e) {
     return value

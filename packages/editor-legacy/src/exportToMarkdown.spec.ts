@@ -59,6 +59,14 @@ describe('exportToMarkdown', () => {
     expect(exportToMarkdown('{invalid')).toBe('{invalid')
   })
 
+  it('exports empty documents as empty string', () => {
+    expect(
+      exportToMarkdown(
+        '{"root":{"children":[],"direction":null,"format":"","indent":0,"type":"root","version":1}}'
+      )
+    ).toBe('')
+  })
+
   it('exports paragraphs and text formats', () => {
     const state = buildState(() => {
       const paragraph = $createParagraphNode()
