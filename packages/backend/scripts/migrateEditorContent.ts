@@ -236,6 +236,23 @@ async function processThreadActivities() {
   )
 }
 
+// Check if a log changes payload still contains Lexical JSON values
+function hasLexicalValues(changes: Record<string, any> | null): boolean {
+  if (!changes) return false
+  for (const entityType of Object.keys(logEntityFields)) {
+    for (const change of changes[entityType] ?? []) {
+      for (const key of ['data', 'prevData', 'newData']) {
+        const entity = change[key]
+        if (!entity) continue
+        for (const field of logEntityFields[entityType]) {
+          if (isLexicalJSON(entity[field])) return true
+        }
+      }
+    }
+  }
+  return false
+}
+
 async function processLogs() {
   let after: string | undefined
   let count = 0
@@ -254,6 +271,8 @@ async function processLogs() {
     after = data.rows[data.rows.length - 1].id
 
     for (const row of data.rows) {
+      // In normal mode, skip rows whose current changes are already converted
+      if (!fromLegacy && !hasLexicalValues(row.changes)) continue
       const source = fromLegacy
         ? row.changes_legacy
         : (row.changes_legacy ?? row.changes)
@@ -280,9 +299,7 @@ async function processLogs() {
         }
       }
 
-      // In normal mode, skip if the current changes have nothing to convert
-      if (!fromLegacy && !converted) continue
-      if (fromLegacy && !converted) continue
+      if (!converted) continue
 
       count++
       if (dryRun) continue
