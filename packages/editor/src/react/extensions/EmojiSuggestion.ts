@@ -1,4 +1,5 @@
 import { Extension } from '@tiptap/core'
+import { PluginKey } from '@tiptap/pm/state'
 import Suggestion, { SuggestionOptions } from '@tiptap/suggestion'
 import { EmojiItem } from '../emojiList'
 
@@ -14,6 +15,7 @@ export const EmojiSuggestion = Extension.create<EmojiSuggestionOptions>({
   addProseMirrorPlugins() {
     return [
       Suggestion<EmojiItem>({
+        pluginKey: new PluginKey('emojiSuggestion'),
         editor: this.editor,
         char: ':',
         command: ({ editor, range, props }) => {
