@@ -258,8 +258,8 @@
   outline: 2px solid var(--editor-accent-color);
 }
 
-/* Collaboration carets */
-.editor .collaboration-caret__caret {
+/* Collaboration carets (other users' cursors with name label) */
+.editor .collaboration-carets__caret {
   border-left: 1px solid;
   border-right: 1px solid;
   margin-left: -1px;
@@ -268,10 +268,11 @@
   position: relative;
   word-break: normal;
 }
-.editor .collaboration-caret__label {
+.editor .collaboration-carets__label {
   border-radius: 3px 3px 3px 0;
   color: #fff;
   font-size: 0.7em;
+  font-style: normal;
   font-weight: 600;
   left: -1px;
   line-height: normal;
