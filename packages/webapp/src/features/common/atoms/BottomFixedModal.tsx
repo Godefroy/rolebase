@@ -21,6 +21,7 @@ export default function BottomFixedModal({
     <Slide
       direction="bottom"
       in={isOpen}
+      unmountOnExit
       style={{ zIndex: 2000, pointerEvents: 'none' }}
     >
       <Flex justifyContent="center" py={6} pl={left}>
