@@ -18,7 +18,7 @@ const { Content, headings } = await render(item)
 const dateLang = lang === 'fr' ? 'fr-FR' : 'en-US'
 ---
 
-<BlogLayout title={`${item.data.name} - ${t.glossary.definition}`} description={item.data.description}>
+<BlogLayout title={`${item.data.name} - ${t.glossary.definition}`}>
   <article class="min-w-0 flex-1">
     <header class="mb-10 pb-6 border-b border-gray-100">
       <Breadcrumb category={t.glossary.label} categoryUrl={langPath(lang, '/glossary')} title={item.data.name} hideTitle class="mb-3" />

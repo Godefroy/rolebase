@@ -46,6 +46,7 @@ const altPath = (l: string) => hasLangPrefix ? canonicalPath.replace(`/${lang}`,
     <SocialPreview image={image} />
     {import.meta.env.PROD && (
       <script
+        is:inline
         defer
         src="https://umami.internal.lonestone.io/script.js"
         data-website-id="b551cd9c-5426-410a-83ed-94d46b6a7865"></script>

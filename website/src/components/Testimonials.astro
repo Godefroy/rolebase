@@ -10,5 +10,5 @@ const { senjaId } = Astro.props
 
 <PageSection>
   <div class="senja-embed" data-id={senjaId} data-lazyload="false"></div>
-  <script async type="text/javascript" src="https://static.senja.io/dist/platform.js"></script>
+  <script is:inline async type="text/javascript" src="https://static.senja.io/dist/platform.js"></script>
 </PageSection>
