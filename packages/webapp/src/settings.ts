@@ -45,6 +45,9 @@ export default {
   memberPicture: {
     maxSize: 300, // in px
   },
+  orgIcon: {
+    maxSize: 256, // in px
+  },
 
   stripe: {
     publicKey:

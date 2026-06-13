@@ -272,6 +272,10 @@
   "DashboardMyInfosItem": {
     "footer": "Voir plus"
   },
+  "DashboardHomeNote": {
+    "title": "Note d'accueil",
+    "placeholder": "Ajoutez une note pour les membres de votre organisation…"
+  },
   "DashboardMyRoles": {
     "title": "Mes Rôles"
   },
@@ -808,10 +812,15 @@
   "OrgEditModal": {
     "heading": "Modifier l'organisation {{org}}",
     "slug": "URL",
+    "icon": "Icône",
+    "iconHelp": "Affichée à côté du nom de votre organisation dans la barre latérale.",
     "security": "Paramètres de sécurité",
     "protectGovernance": "Protéger la gouvernance",
     "protectGovernanceHelp": "Seuls les propriétaires et les représentants d'un rôle peuvent modifier ses sous-rôles directs et leurs membres.",
     "defaultGraphView": "Vue par défaut de l'organigramme"
+  },
+  "OrgIconEdit": {
+    "editIcon": "Modifier l'icône"
   },
   "OrgSlugModal": {
     "heading": "URL de l'organisation {{org}}",

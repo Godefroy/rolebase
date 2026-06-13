@@ -30,6 +30,7 @@ import settings from 'src/settings'
 import * as yup from 'yup'
 import useOrg from '../hooks/useOrg'
 import { useOrgId } from '../hooks/useOrgId'
+import OrgIconEdit from '../components/OrgIconEdit'
 import OrgDeleteModal from '../modals/OrgDeleteModal'
 import OrgSlugModal from '../modals/OrgSlugModal '
 
@@ -101,6 +102,12 @@ export default function OrgSettingsPage() {
           <FormControl isInvalid={!!errors.name}>
             <FormLabel>{t('common.name')}</FormLabel>
             <Input {...register('name')} autoComplete="off" />
+          </FormControl>
+
+          <FormControl>
+            <FormLabel>{t('OrgEditModal.icon')}</FormLabel>
+            <OrgIconEdit id={orgId} icon={org.icon} name={org.name} />
+            <FormHelperText>{t('OrgEditModal.iconHelp')}</FormHelperText>
           </FormControl>
 
           <FormControl>

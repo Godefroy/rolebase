@@ -2,6 +2,9 @@ table:
   name: org
   schema: public
 object_relationships:
+  - name: iconFile
+    using:
+      foreign_key_constraint_on: iconFileId
   - name: org_subscription
     using:
       foreign_key_constraint_on:
@@ -110,6 +113,9 @@ select_permissions:
         - archived
         - createdAt
         - defaultGraphView
+        - homeNote
+        - icon
+        - iconFileId
         - id
         - name
         - protectGovernance
@@ -126,6 +132,9 @@ update_permissions:
     permission:
       columns:
         - defaultGraphView
+        - homeNote
+        - icon
+        - iconFileId
         - name
         - protectGovernance
         - shareMembers

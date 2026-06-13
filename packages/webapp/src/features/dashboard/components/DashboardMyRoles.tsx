@@ -1,4 +1,6 @@
+import CircleMemberLink from '@/circle/components/CircleMemberLink'
 import DashboardMyInfosItem from '@/dashboard/components/DashboardMyInfosItem'
+import MemberButton from '@/member/components/MemberButton'
 import MemberRoles from '@/member/components/MemberRoles'
 import useCurrentMember from '@/member/hooks/useCurrentMember'
 import { useStoreState } from '@store/hooks'
@@ -15,7 +17,11 @@ export default function DashboardMyRoles() {
   return (
     <DashboardMyInfosItem
       title={t('DashboardMyRoles.title')}
-      path={`roles?memberId=${member.id}`}
+      actions={
+        <CircleMemberLink memberId={member.id} tabIndex={-1}>
+          <MemberButton member={member} size="sm" variant="outline" />
+        </CircleMemberLink>
+      }
     >
       <MemberRoles member={member} hideActions mx={1} mt={4} />
     </DashboardMyInfosItem>

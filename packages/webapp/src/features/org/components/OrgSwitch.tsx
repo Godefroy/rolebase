@@ -1,7 +1,9 @@
 import { SidebarContext } from '@/layout/contexts/SidebarContext'
 import { UpDownIcon } from '@chakra-ui/icons'
 import {
+  Box,
   Button,
+  HStack,
   Menu,
   MenuButton,
   MenuButtonProps,
@@ -17,10 +19,11 @@ import { UserLocalStorageKeys } from '@utils/localStorage'
 import React, { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
-import { ArrowRightIcon, CreateIcon } from 'src/icons'
+import { CreateIcon } from 'src/icons'
 import useCurrentOrg from '../hooks/useCurrentOrg'
 import { useOrgId } from '../hooks/useOrgId'
 import OrgCreateModal from '../modals/OrgCreateModal'
+import OrgIcon from './OrgIcon'
 
 export default function OrgSwitch(props: MenuButtonProps) {
   const { t } = useTranslation()
@@ -58,14 +61,6 @@ export default function OrgSwitch(props: MenuButtonProps) {
         textAlign="left"
         borderRadius="xl"
         opacity={showName ? 1 : 0}
-        rightIcon={<UpDownIcon pt={1} opacity={0.6} />}
-        sx={{
-          'span:first-of-type': {
-            flex: 1,
-            textOverflow: 'ellipsis',
-            overflow: 'hidden',
-          },
-        }}
         _hover={{
           bg: 'whiteAlpha.600',
         }}
@@ -84,7 +79,18 @@ export default function OrgSwitch(props: MenuButtonProps) {
         }}
         {...props}
       >
-        {showName ? org.name : ''}
+        <HStack spacing={3} w="100%">
+          <OrgIcon icon={org?.icon} name={org?.name} size={24} />
+          <Box
+            flex={1}
+            overflow="hidden"
+            textOverflow="ellipsis"
+            whiteSpace="nowrap"
+          >
+            {showName ? org.name : ''}
+          </Box>
+          <UpDownIcon opacity={0.6} flexShrink={0} />
+        </HStack>
       </MenuButton>
 
       <MenuList zIndex={10} shadow="lg">
@@ -95,7 +101,16 @@ export default function OrgSwitch(props: MenuButtonProps) {
               to={`${getOrgPath(org)}/`}
               onClick={() => handleOrgClick(org.id)}
             >
-              <MenuItem icon={<ArrowRightIcon size={20} />}>
+              <MenuItem
+                icon={
+                  <OrgIcon
+                    icon={org.icon}
+                    name={org.name}
+                    size={20}
+                    fallback="blank"
+                  />
+                }
+              >
                 {org.name}
               </MenuItem>
             </Link>

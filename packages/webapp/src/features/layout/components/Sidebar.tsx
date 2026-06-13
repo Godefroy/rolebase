@@ -46,7 +46,6 @@ import {
   TasksIcon,
   ThreadsIcon,
 } from 'src/icons'
-import BrandIcon from 'src/images/icon.svg'
 import { SidebarContext } from '../contexts/SidebarContext'
 import SidebarItem from './SidebarItem'
 import SidebarItemLink from './SidebarItemLink'
@@ -133,14 +132,13 @@ export default function Sidebar() {
     <SidebarLayout>
       <Flex
         h={`${height || logoContainerHeight}px`}
-        pl={isMobile ? 3 : 5}
+        pl={isMobile ? 0 : 2}
         pr={isMobile ? 2 : 5}
         align="center"
       >
         {isMobile ? (
           /* Mobile: top bar with logo and icons */
           <>
-            <BrandIcon width={24} height={24} />
             <OrgSwitch flex={1} />
 
             {!expand.isOpen && orgId && (
@@ -187,7 +185,6 @@ export default function Sidebar() {
           </>
         ) : (
           <Flex w="100%" align="center" ml={3} role="group">
-            <BrandIcon width={24} height={24} />
             <OrgSwitch />
             <Spacer />
             {!minimize.isOpen && (

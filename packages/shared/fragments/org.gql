@@ -8,6 +8,8 @@ fragment Org on org {
   shareMembers
   protectGovernance
   defaultGraphView
+  icon
+  homeNote
 }
 
 # This fragment is expensive, so we avoid using it in queries

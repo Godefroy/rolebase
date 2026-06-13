@@ -272,6 +272,10 @@
   "DashboardMyInfosItem": {
     "footer": "See more"
   },
+  "DashboardHomeNote": {
+    "title": "Home note",
+    "placeholder": "Add a note for your organization members…"
+  },
   "DashboardMyRoles": {
     "title": "My Roles"
   },
@@ -774,10 +778,15 @@
   "OrgEditModal": {
     "heading": "Edit Organization {{org}}",
     "slug": "URL",
+    "icon": "Icon",
+    "iconHelp": "Shown next to your organization name in the sidebar.",
     "security": "Security settings",
     "protectGovernance": "Protect governance",
     "protectGovernanceHelp": "Only owners and representatives of a role can modify its direct sub-roles and their members.",
     "defaultGraphView": "Default org chart view"
+  },
+  "OrgIconEdit": {
+    "editIcon": "Edit icon"
   },
   "OrgSlugModal": {
     "heading": "URL of organization {{org}}",

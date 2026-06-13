@@ -1,5 +1,6 @@
 import Loading from '@/common/atoms/Loading'
 import TextErrors from '@/common/atoms/TextErrors'
+import DashboardHomeNote from '@/dashboard/components/DashboardHomeNote'
 import NewsList from '@/news/components/NewsList'
 import useCurrentOrg from '@/org/hooks/useCurrentOrg'
 import CircleSearchButton from '@/search/components/CircleSearchButton'
@@ -32,6 +33,8 @@ export default function DashboardNews(boxProps: BoxProps) {
 
   return (
     <Stack spacing={0} {...boxProps}>
+      <DashboardHomeNote mb={4} />
+
       <Card boxShadow="none">
         <CardHeader
           display="flex"

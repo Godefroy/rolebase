@@ -5,7 +5,7 @@ import { Link as ReachLink } from 'react-router'
 
 type Props = PropsWithChildren<{
   title: string
-  path: string
+  path?: string
   actions?: ReactNode
 }>
 
@@ -15,7 +15,7 @@ export default function DashboardMyInfosItem({
   path,
   actions,
 }: Props) {
-  const pathInOrg = usePathInOrg(path)
+  const pathInOrg = usePathInOrg(path ?? '')
 
   return (
     <Card boxShadow="none">
@@ -26,9 +26,13 @@ export default function DashboardMyInfosItem({
         pb={0}
       >
         <Heading as="h2" size="md">
-          <Link as={ReachLink} to={pathInOrg}>
-            {title}
-          </Link>
+          {path ? (
+            <Link as={ReachLink} to={pathInOrg}>
+              {title}
+            </Link>
+          ) : (
+            title
+          )}
         </Heading>
 
         {actions}

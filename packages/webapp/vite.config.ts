@@ -36,6 +36,12 @@ if (
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins,
+  optimizeDeps: {
+    // react-easy-crop is only imported from lazy-loaded modals, so Vite's
+    // initial scan misses it and re-optimizes at runtime ("Outdated Optimize
+    // Dep"). Pre-bundle it upfront to avoid the reload/corrupted-module issue.
+    include: ['react-easy-crop'],
+  },
   build: {
     sourcemap: true,
     minify: 'esbuild',
