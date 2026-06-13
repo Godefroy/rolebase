@@ -70,17 +70,25 @@ export default function CircleLeadersElement({ node }: Props) {
               left: `${x}px`,
               width: `${avatarSize}px`,
               height: `${avatarSize}px`,
-              backgroundImage: leader.member.picture
-                ? // Resized: full-resolution photos decode to hundreds of MB
-                  `url(${getResizedImageUrl(
-                    leader.member.picture,
-                    AVATAR_GRAPH_WIDTH
-                  )})`
-                : undefined,
               backgroundColor: bgColor,
             }}
           >
-            {!leader.member.picture && (
+            {leader.member.picture ? (
+              // <img> (not a background-image) so the platform decodes it
+              // asynchronously and can evict it when off-screen, bounding
+              // image memory on mobile. Resized: full-resolution photos
+              // decode to hundreds of MB.
+              <img
+                className="circle-leader-image"
+                src={getResizedImageUrl(
+                  leader.member.picture,
+                  AVATAR_GRAPH_WIDTH
+                )}
+                alt=""
+                decoding="async"
+                draggable={false}
+              />
+            ) : (
               <span
                 style={{
                   color: 'white',

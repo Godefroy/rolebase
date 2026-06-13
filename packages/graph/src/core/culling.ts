@@ -1,5 +1,5 @@
 import settings from '../settings'
-import { NodeData, NodeType, VisibleNodes } from '../types'
+import { NodeData, NodeType, TitleVisibility, VisibleNodes } from '../types'
 
 export interface CullingParams {
   root: NodeData
@@ -14,6 +14,9 @@ export interface CullingParams {
   showAllNodes?: boolean
   // Bypass culling and return all nodes and titles (used for static rendering)
   renderAll?: boolean
+  // Device pixel ratio: drives more aggressive culling on high-DPR screens,
+  // where each mounted node costs DPR² as much GPU memory once composited
+  pixelRatio?: number
 }
 
 // Windowing: compute the subset of nodes to mount in the DOM.
@@ -29,9 +32,11 @@ export function computeVisibleNodes({
   showAllMembers,
   showAllNodes,
   renderAll,
+  pixelRatio = 1,
 }: CullingParams): VisibleNodes {
   const nodes: NodeData[] = []
   const titles: NodeData[] = []
+  const titleVisibility = new Map<string, TitleVisibility>()
   const levelHiddenIds = new Set<string>()
   const criticalScales: number[] = []
   const { x: tx, y: ty, k } = transform
@@ -43,8 +48,14 @@ export function computeVisibleNodes({
   } = settings.culling
   const { threshold, gap } = settings.titles
 
+  // On high-DPR/touch screens, a composited layer costs DPR² as much GPU
+  // memory, so we mount fewer nodes: drop smaller circles earlier and shrink
+  // the pre-mount margin. Factor is 1 below DPR 1.5 (no change on desktop),
+  // ~2 on a typical phone (DPR 3).
+  const dprFactor = Math.max(1, pixelRatio / 1.5)
+
   // Viewport expanded by a margin, so nodes are mounted before entering it
-  const margin = viewportMargin * Math.max(width, height)
+  const margin = (viewportMargin / dprFactor) * Math.max(width, height)
   // Members are mounted slightly before CSS shows them (when scale > 1)
   const showMembers =
     renderAll || showAllNodes || showAllMembers || k * memberScaleMargin > 1
@@ -65,7 +76,7 @@ export function computeVisibleNodes({
 
       // Cull subtree when too small to be visible
       // (children are always smaller than their parent)
-      if (screenR < minScreenRadius) return
+      if (screenR < minScreenRadius * dprFactor) return
 
       // Cull subtree when outside of the expanded viewport
       if (
@@ -84,6 +95,17 @@ export function computeVisibleNodes({
         if (levelHidden) levelHiddenIds.add(node.data.id)
         if (renderAll || isTitleVisible(node, kMin, kMax, graphMinSize)) {
           titles.push(node)
+          // Discrete center/top state at the actual scale (not the conservative
+          // mount range): this is what the title renders, with no per-frame
+          // --zoom-scale dependency.
+          titleVisibility.set(
+            node.data.id,
+            computeTitleVisibility(node, k, graphMinSize)
+          )
+          // Re-cull when this title crosses its on-screen size threshold,
+          // so its center/top state flips at the right scale (covers leaf
+          // circles, which don't push a children threshold below)
+          criticalScales.push((threshold * graphMinSize) / (node.r * 2))
         }
 
         if (!node.children) return
@@ -153,7 +175,46 @@ export function computeVisibleNodes({
   // Re-cull when all titles disappear (zoom scale 1)
   criticalScales.push(titlesMaxScale)
 
-  return { nodes, titles, levelHiddenIds, criticalScales }
+  return {
+    nodes,
+    titles,
+    titleVisibility,
+    cullScale: k,
+    levelHiddenIds,
+    criticalScales,
+  }
+}
+
+// Discrete title state at a given zoom scale, mirroring the (steep) CSS
+// opacity formulas of CircleTitleElement reduced to booleans. center and top
+// are mutually exclusive. Computed once per culling pass so the title carries
+// no per-frame --zoom-scale dependency.
+function computeTitleVisibility(
+  node: NodeData,
+  k: number,
+  graphMinSize: number
+): TitleVisibility {
+  const { threshold, topThreshold, gap, rate } = settings.titles
+  const size = node.r * 2
+  const parent = node.parent
+  const isRootChild = !parent || parent.data.id === 'root'
+  // Circle (and parent) on-screen size, relative to the visible area
+  const onScreen = (k * size) / graphMinSize
+  const parentOnScreen = parent
+    ? (k * parent.r * 2) / graphMinSize
+    : Infinity
+
+  // Center title: zoom scale below 1, circle small enough on screen,
+  // and parent circle big enough on screen
+  const center =
+    k < 1 - gap &&
+    onScreen < threshold &&
+    (isRootChild || parentOnScreen > threshold)
+
+  // Top title: zoom scale at/above 1, or circle big enough on screen
+  const top = k >= 1 - 1 / rate || onScreen >= topThreshold
+
+  return { center, top }
 }
 
 // Conservative test of a circle title visibility, derived from the CSS

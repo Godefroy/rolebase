@@ -1,5 +1,6 @@
 import React from 'react'
 import { getColor } from '../../helpers/colors'
+import { giantViewportRatio } from '../../helpers/device'
 import { NodeData, NodeType } from '../../types'
 import { useGraphRenderContext } from '../GraphRenderContext'
 import { useDragNode } from '../hooks/useDragNode'
@@ -11,6 +12,9 @@ interface Props extends React.HTMLProps<HTMLDivElement> {
   selected?: boolean
   // Inside a circle that displays its centered title: faded out, click-through
   levelHidden?: boolean
+  // Rendered inside an EnterGroup wrapper that animates the whole group as one
+  // layer: skip the per-node enter animation (the wrapper does it)
+  inEnterGroup?: boolean
   children?: React.ReactNode
 }
 
@@ -18,6 +22,8 @@ export default function NodeElement({
   node,
   selected,
   levelHidden,
+  inEnterGroup,
+  hidden,
   style,
   className,
   children,
@@ -39,13 +45,18 @@ export default function NodeElement({
   // data update. Nodes mounted because they entered the viewport (windowing)
   // are rendered directly at their position.
   const animateEnter =
-    !isStatic && !!parent && !!graph?.enteringIds.has(node.data.id) && !mounted
+    !isStatic &&
+    !inEnterGroup &&
+    !!parent &&
+    !!graph?.enteringIds.has(node.data.id) &&
+    !mounted
 
   // Nodes much bigger than the viewport must not transition: animating them
   // promotes them to huge composited layers (crash on mobile)
   const giant =
     !!graph &&
-    node.r * graph.zoomTransform.k * 2 > 3 * Math.max(graph.width, graph.height)
+    node.r * graph.zoomTransform.k * 2 >
+      giantViewportRatio * Math.max(graph.width, graph.height)
 
   const bgColor = getColor(colorMode, 94, 16, depth, hue)
   const outlineColor = getColor(colorMode, 75, 35, depth, hue)
@@ -59,7 +70,7 @@ export default function NodeElement({
         divProps.onClick && !selected ? 'clickable' : ''
       } ${selected ? 'selected' : ''} ${levelHidden ? 'level-hidden' : ''} ${
         giant ? 'giant' : ''
-      }`}
+      } ${inEnterGroup ? 'in-enter-group' : ''}`}
       style={
         {
           width: `${nodeSize}px`,
@@ -71,6 +82,8 @@ export default function NodeElement({
             : `${node.x}px ${node.y}px`,
           scale: animateEnter ? '0' : 'var(--node-scale)',
           cursor: canDrag ? `var(--node-cursor, pointer)` : 'pointer',
+          // Hidden during a select-relayout animation: no paint, no GPU layer
+          display: hidden ? 'none' : undefined,
           '--node-scale': `${(node.r * 2) / nodeSize}`,
           '--bg-color': bgColor,
           '--outline-color': outlineColor,

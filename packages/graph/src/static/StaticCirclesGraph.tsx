@@ -94,6 +94,9 @@ export default function StaticCirclesGraph({
             {
               transform: `translate(${x}px, ${y}px) scale(${k})`,
               '--zoom-scale': k.toString(),
+              // Discrete member/leader visibility (see Panzoom). show-all
+              // exports force opacity 1 via .rb-graph-show-all anyway.
+              '--members-opacity': k > 1 ? '1' : '0',
             } as React.CSSProperties
           }
         >
@@ -114,7 +117,12 @@ export default function StaticCirclesGraph({
             ) : null
           })}
           {visible.titles.map((node) => (
-            <CircleTitleElement key={node.data.id} node={node} />
+            <CircleTitleElement
+              key={node.data.id}
+              node={node}
+              visibility={visible.titleVisibility.get(node.data.id)}
+              cullScale={visible.cullScale}
+            />
           ))}
         </div>
       </div>

@@ -11,10 +11,19 @@ import { nodeSize } from '../styles'
 interface Props {
   node: NodeData
   levelHidden?: boolean
+  // Rendered inside an EnterGroup wrapper (see NodeElement)
+  inEnterGroup?: boolean
+  // Temporarily hidden during a select-relayout animation (see NodeElement)
+  hidden?: boolean
 }
 
 // Memoized: a culling pass only re-renders changed elements
-export default memo(function MemberElement({ node, levelHidden }: Props) {
+export default memo(function MemberElement({
+  node,
+  levelHidden,
+  inEnterGroup,
+  hidden,
+}: Props) {
   const { events } = useGraphRenderContext()
 
   // Click
@@ -36,15 +45,27 @@ export default memo(function MemberElement({ node, levelHidden }: Props) {
     <NodeElement
       node={node}
       levelHidden={levelHidden}
+      inEnterGroup={inEnterGroup}
+      hidden={hidden}
       className="member"
-      style={{
-        backgroundImage: node.data.picture
-          ? // Resized: full-resolution photos decode to hundreds of MB
-            `url(${getResizedImageUrl(node.data.picture, AVATAR_GRAPH_WIDTH)})`
-          : undefined,
-      }}
       onClick={handleClick}
     >
+      {node.data.picture && !inEnterGroup && (
+        // <img> (not a background-image) so the platform decodes it
+        // asynchronously and can evict it when off-screen, bounding image
+        // memory on mobile. Resized: full-resolution photos decode to
+        // hundreds of MB.
+        // Skipped during the enter animation: an <img> scaled by the group
+        // wrapper would be promoted to its own layer instead of painting into
+        // the group. It appears when the node hands off to flat rendering.
+        <img
+          className="member-image"
+          src={getResizedImageUrl(node.data.picture, AVATAR_GRAPH_WIDTH)}
+          alt=""
+          decoding="async"
+          draggable={false}
+        />
+      )}
       <span
         className="member-name"
         style={{

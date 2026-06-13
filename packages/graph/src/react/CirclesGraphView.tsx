@@ -7,6 +7,7 @@ import Nodes from './Nodes'
 import { Panzoom } from './Panzoom'
 import useCirclesGraph, { CirclesGraphProps } from './hooks/useCirclesGraph'
 import { useNodeCursor } from './hooks/useNodeCursor'
+import { useRepositioningBg } from './hooks/useRepositioningBg'
 import { graphStyles } from './styles'
 
 // Force reset with fast refresh
@@ -35,6 +36,9 @@ export default forwardRef<CirclesGraph | undefined, CirclesGraphViewProps>(
 
     // Cursor on nodes
     const cursor = useNodeCursor(graph)
+
+    // Background color shown while moved nodes are hidden (select-relayout)
+    const repositioningBg = useRepositioningBg(graph)
 
     // Click outside => unselect circle
     const handleClickOutside = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -72,6 +76,15 @@ export default forwardRef<CirclesGraph | undefined, CirclesGraphViewProps>(
         onClick={handleClickOutside}
       >
         <style>{graphStyles}</style>
+        <div
+          className="rb-graph-reposition-bg"
+          style={{
+            backgroundColor: repositioningBg,
+            // Appear instantly when set (entry); the CSS transition only plays
+            // when it clears (exit) to fade the background out
+            transition: repositioningBg ? 'none' : undefined,
+          }}
+        />
         {graph && (
           <GraphRenderContext.Provider value={renderContext}>
             <Panzoom graph={graph}>

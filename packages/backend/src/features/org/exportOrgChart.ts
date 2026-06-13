@@ -1,4 +1,5 @@
 import { renderStaticGraphPage } from '@rolebase/graph/server'
+import { fixCirclesHue } from '@rolebase/shared/helpers/fixCirclesHue'
 import { getCircleChildren } from '@rolebase/shared/helpers/getCircleChildren'
 import { CirclesGraphViews } from '@rolebase/shared/model/graph'
 import * as yup from 'yup'
@@ -35,6 +36,10 @@ export default authedProcedure
     if (!circles || circles.length === 0) {
       throw new Error('Org circles not found')
     }
+
+    // Inherit each circle color from its parent when undefined, like the web
+    // app store does (otherwise uncolored circles fall back to the default hue)
+    circles = fixCirclesHue(circles)
 
     // Keep selected circle (as root) and its children
     if (circleId) {

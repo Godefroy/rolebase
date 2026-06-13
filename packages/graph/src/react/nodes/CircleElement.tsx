@@ -11,6 +11,10 @@ interface Props {
   // Mount leaders avatars (computed at culling time, like members
   // visibility): prevents loading hundreds of images at once on page load
   showLeaders?: boolean
+  // Rendered inside an EnterGroup wrapper (see NodeElement)
+  inEnterGroup?: boolean
+  // Temporarily hidden during a select-relayout animation (see NodeElement)
+  hidden?: boolean
 }
 
 // Memoized: a culling pass only re-renders changed elements
@@ -19,6 +23,8 @@ export default memo(function CircleElement({
   selected,
   levelHidden,
   showLeaders = true,
+  inEnterGroup,
+  hidden,
 }: Props) {
   const { events } = useGraphRenderContext()
   const { onCircleClick } = events
@@ -28,6 +34,8 @@ export default memo(function CircleElement({
       node={node}
       selected={selected}
       levelHidden={levelHidden}
+      inEnterGroup={inEnterGroup}
+      hidden={hidden}
       onClick={
         onCircleClick
           ? () => {

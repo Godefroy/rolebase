@@ -14,6 +14,7 @@ import {
   ZoomFocusCircleScale,
 } from '../types'
 import { computeVisibleNodes } from './culling'
+import { isConstrainedDevice, pixelRatio } from '../helpers/device'
 
 const defaultFocusCrop: Position = {
   top: 0,
@@ -33,6 +34,9 @@ export type GraphEmitterEvents = {
   nodesData: [NodeData[]]
   visibleNodes: [VisibleNodes]
   selectCircle: [string | undefined]
+  // Background color shown behind the graph while moved nodes are hidden
+  // during a select-relayout animation (the focus circle parent color)
+  repositioningBg: [string | undefined]
 }
 
 export abstract class Graph<
@@ -47,11 +51,17 @@ export abstract class Graph<
   public visibleNodes: VisibleNodes = {
     nodes: [],
     titles: [],
+    titleVisibility: new Map(),
+    cullScale: 1,
     levelHiddenIds: new Set(),
     criticalScales: [],
   }
   // Ids of nodes added by the last data update (they animate on enter)
   public enteringIds = new Set<string>()
+  // Ids of nodes that moved on a select-relayout: hidden during the enter
+  // animation (except the focused circle) so they don't each promote a GPU
+  // layer while transitioning to their new position
+  public repositionedIds = new Set<string>()
   public selectedCircleId?: string
   // Members are visible at any zoom scale (e.g. Members view)
   public showAllMembers = false
@@ -110,6 +120,21 @@ export abstract class Graph<
         return true
       })
       .scaleExtent(settings.zoom.scaleExtent as [number, number])
+      // On constrained devices, suppress per-node CSS transitions while the
+      // view is actively panning/zooming (interactive gestures and programmatic
+      // transitions both fire start/end). Without this, properties derived from
+      // the zoom scale (member/title opacity) re-trigger a transition on every
+      // frame, keeping one GPU layer promoted per node for the whole gesture.
+      .on('start.transitions', () => {
+        if (isConstrainedDevice) {
+          this.element?.classList.add('rb-graph-zooming')
+        }
+      })
+      .on('end.transitions', () => {
+        if (isConstrainedDevice) {
+          this.element?.classList.remove('rb-graph-zooming')
+        }
+      })
       .on('zoom', (event: d3.D3ZoomEvent<RootElement, any>) => {
         if (this.unmounted) return
         const hasMoved =
@@ -150,8 +175,7 @@ export abstract class Graph<
     this.selectedCircleId = id
     this.emit('selectCircle', id)
     if (id) {
-      // Let draw first, then focus on circle
-      setTimeout(() => this.focusNodeId(id, true), 10)
+      this.focusNodeId(id, true)
     }
   }
 
@@ -175,6 +199,8 @@ export abstract class Graph<
       graphMinSize: this.graphMinSize,
       showAllMembers: this.showAllMembers,
       showAllNodes: this.showAllNodes,
+      // Cull more aggressively on high-DPR/touch devices (see culling.ts)
+      pixelRatio,
     })
     this.emit('visibleNodes', this.visibleNodes)
   }

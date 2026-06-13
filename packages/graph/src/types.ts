@@ -67,10 +67,26 @@ export interface Position {
   left: number
 }
 
+// Discrete visibility of a circle title at the culling-pass zoom scale.
+// Computed in the culling pass (not per frame from --zoom-scale) so titles
+// never recomposite during a gesture. center and top are mutually exclusive.
+export interface TitleVisibility {
+  // Big centered title, shown when the circle is small on screen (low zoom)
+  center: boolean
+  // Small label above the circle, shown when it is big enough on screen
+  top: boolean
+}
+
 // Result of the culling pass: nodes and titles to mount in the DOM
 export interface VisibleNodes {
   nodes: NodeData[]
   titles: NodeData[]
+  // Discrete title visibility, keyed by node id (see TitleVisibility)
+  titleVisibility: Map<string, TitleVisibility>
+  // Zoom scale at the moment of this culling pass. Titles read it (as a plain
+  // number that only changes between culls) to keep the top label roughly
+  // constant on screen, instead of the per-frame --zoom-scale CSS variable.
+  cullScale: number
   // Nodes inside a circle that displays its centered title:
   // faded out and click-through
   levelHiddenIds: Set<string>

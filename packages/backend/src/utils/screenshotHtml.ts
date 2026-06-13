@@ -58,25 +58,23 @@ export async function screenshotHtml(
   try {
     await page.setViewport({ width, height })
     await page.setContent(html, { waitUntil: 'load', timeout: 30000 })
-    // Wait for fonts and background images (avatars) to load
+    // Wait for fonts and avatar images to load.
+    // Avatars are rendered as <img> elements (member-image / circle-leader-image),
+    // so wait for each to finish loading before screenshotting.
     await page.evaluate(async () => {
       await document.fonts.ready
-      const urls = new Set<string>()
-      document
-        .querySelectorAll<HTMLElement>('.member, .circle-leader')
-        .forEach((element) => {
-          const background = getComputedStyle(element).backgroundImage
-          const match = background?.match(/url\("?([^")]+)"?\)/)
-          if (match) urls.add(match[1])
-        })
+      const images = Array.from(
+        document.querySelectorAll<HTMLImageElement>(
+          '.member-image, .circle-leader-image'
+        )
+      )
       await Promise.all(
-        Array.from(urls).map(
-          (url) =>
-            new Promise((resolve) => {
-              const img = new Image()
-              img.onload = img.onerror = () => resolve(undefined)
-              img.src = url
-            })
+        images.map((img) =>
+          img.complete
+            ? Promise.resolve()
+            : new Promise((resolve) => {
+                img.onload = img.onerror = () => resolve(undefined)
+              })
         )
       )
     })
