@@ -171,20 +171,18 @@ export const graphStyles = `
   background-size: cover;
   align-items: center;
   justify-content: center;
-  /* Discrete show/hide at zoom scale 1, like members (see above) */
-  opacity: var(--members-opacity, 0);
+  /* Discrete show/hide at zoom scale 1 (flipped only when crossing the
+     threshold, see Panzoom), so leaders don't re-composite every zoom frame */
+  opacity: var(--leaders-opacity, 0);
   pointer-events: none;
 }
 
 .rb-graph .member {
-  /* Show/hide at zoom scale 1, as a discrete step (--members-opacity flips
-     0<->1 only when crossing the threshold, see Panzoom). Deriving this from
-     --zoom-scale instead would re-evaluate and GPU-composite every member on
-     each zoom frame while crossing the threshold (dozens of layers at once). */
-  opacity: var(--members-opacity, 0);
-  pointer-events: var(--member-pointer-events, auto);
+  /* Members follow the level-hidden rule like circles: visible by default
+     (inherited node opacity), hidden via .node.level-hidden when their circle
+     shows its centered title. No zoom-scale gate. */
   /* Position/scale transition kept for enter and data moves; no opacity
-     transition (the step above is meant to be instant). */
+     transition (visibility is meant to be instant). */
   transition:
     translate ${moveTransition},
     scale ${moveTransition};

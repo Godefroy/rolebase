@@ -86,7 +86,7 @@ describe('computeVisibleNodes', () => {
     k: fitK,
   }
 
-  it('culls sub-pixel circles and hidden members when zoomed out', () => {
+  it('culls sub-pixel nodes and level-hides members in titled circles', () => {
     const visible = computeVisibleNodes({
       root: layout.root,
       transform: fit,
@@ -95,16 +95,22 @@ describe('computeVisibleNodes', () => {
       graphMinSize: 1000,
     })
 
-    // No member is mounted at zoom scale <= 0.8
-    expect(visible.nodes.some((n) => n.data.type === NodeType.Member)).toBe(
-      false
-    )
-    // Visible circles are bounded
-    expect(visible.nodes.length).toBeLessThanOrEqual(totalCircles)
+    // Visible nodes are bounded
     expect(visible.nodes.length).toBeGreaterThan(0)
-    // All visible circles have a screen radius above the culling threshold
+    // Every mounted node (circles and members alike) is above the screen-radius
+    // culling threshold
     for (const node of visible.nodes) {
       expect(node.r * fit.k).toBeGreaterThanOrEqual(1.5)
+    }
+    // Members follow the same rule as circles: a mounted member is hidden
+    // (level-hidden) when its containing circle displays its centered title
+    const threshold = (2 / 3) * 1000
+    for (const node of visible.nodes) {
+      if (node.data.type !== NodeType.Member) continue
+      const circle = node.parent?.parent
+      if (circle && circle.data.id !== 'root' && circle.r * 2 * fit.k < threshold / 1.3) {
+        expect(visible.levelHiddenIds.has(node.data.id)).toBe(true)
+      }
     }
   })
 

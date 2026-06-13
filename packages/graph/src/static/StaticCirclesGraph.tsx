@@ -94,9 +94,10 @@ export default function StaticCirclesGraph({
             {
               transform: `translate(${x}px, ${y}px) scale(${k})`,
               '--zoom-scale': k.toString(),
-              // Discrete member/leader visibility (see Panzoom). show-all
-              // exports force opacity 1 via .rb-graph-show-all anyway.
-              '--members-opacity': k > 1 ? '1' : '0',
+              // Discrete leader-avatar visibility (see Panzoom). Members follow
+              // the level-hidden rule; show-all exports force them visible via
+              // .rb-graph-show-all.
+              '--leaders-opacity': k > 1 ? '1' : '0',
             } as React.CSSProperties
           }
         >

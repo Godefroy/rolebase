@@ -40,12 +40,7 @@ export function computeVisibleNodes({
   const levelHiddenIds = new Set<string>()
   const criticalScales: number[] = []
   const { x: tx, y: ty, k } = transform
-  const {
-    minScreenRadius,
-    viewportMargin,
-    memberScaleMargin,
-    titleScaleMargin,
-  } = settings.culling
+  const { minScreenRadius, viewportMargin, titleScaleMargin } = settings.culling
   const { threshold, gap } = settings.titles
 
   // On high-DPR/touch screens, a composited layer costs DPR² as much GPU
@@ -56,9 +51,6 @@ export function computeVisibleNodes({
 
   // Viewport expanded by a margin, so nodes are mounted before entering it
   const margin = (viewportMargin / dprFactor) * Math.max(width, height)
-  // Members are mounted slightly before CSS shows them (when scale > 1)
-  const showMembers =
-    renderAll || showAllNodes || showAllMembers || k * memberScaleMargin > 1
   // Zoom scale uncertainty: culling is recomputed only when the scale changes
   // by recullScaleRatio, so titles visibility is tested on a scale range
   const kMin = renderAll ? k : k / titleScaleMargin
@@ -146,12 +138,14 @@ export function computeVisibleNodes({
       }
 
       case NodeType.Member:
-        if (showMembers) {
-          nodes.push(node)
-          // Members of the Members view are never hidden
-          if (levelHidden && !showAllMembers) {
-            levelHiddenIds.add(node.data.id)
-          }
+        // Members follow the same visibility rule as circles: shown when their
+        // circle is open (big enough on screen), hidden (level-hidden) when it
+        // displays its centered title. The screen-radius cull above and the
+        // parent's childrenMaybeVisible gate already bound how many are mounted.
+        nodes.push(node)
+        // Members of the Members view are never hidden
+        if (levelHidden && !showAllMembers) {
+          levelHiddenIds.add(node.data.id)
         }
         return
 
