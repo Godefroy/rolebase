@@ -5389,6 +5389,7 @@ export type Decision = {
   circleId: Scalars['uuid']['output'];
   createdAt: Scalars['timestamptz']['output'];
   description: Scalars['String']['output'];
+  description_legacy?: Maybe<Scalars['String']['output']>;
   id: Scalars['uuid']['output'];
   /** An object relationship */
   member: Member;
@@ -5473,6 +5474,7 @@ export type Decision_Bool_Exp = {
   circleId?: InputMaybe<Uuid_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   description?: InputMaybe<String_Comparison_Exp>;
+  description_legacy?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   member?: InputMaybe<Member_Bool_Exp>;
   memberId?: InputMaybe<Uuid_Comparison_Exp>;
@@ -5495,6 +5497,7 @@ export type Decision_Insert_Input = {
   circleId?: InputMaybe<Scalars['uuid']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  description_legacy?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   member?: InputMaybe<Member_Obj_Rel_Insert_Input>;
   memberId?: InputMaybe<Scalars['uuid']['input']>;
@@ -5510,6 +5513,7 @@ export type Decision_Max_Fields = {
   circleId?: Maybe<Scalars['uuid']['output']>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   description?: Maybe<Scalars['String']['output']>;
+  description_legacy?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   memberId?: Maybe<Scalars['uuid']['output']>;
   orgId?: Maybe<Scalars['uuid']['output']>;
@@ -5521,6 +5525,7 @@ export type Decision_Max_Order_By = {
   circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
+  description_legacy?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   memberId?: InputMaybe<Order_By>;
   orgId?: InputMaybe<Order_By>;
@@ -5533,6 +5538,7 @@ export type Decision_Min_Fields = {
   circleId?: Maybe<Scalars['uuid']['output']>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   description?: Maybe<Scalars['String']['output']>;
+  description_legacy?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   memberId?: Maybe<Scalars['uuid']['output']>;
   orgId?: Maybe<Scalars['uuid']['output']>;
@@ -5544,6 +5550,7 @@ export type Decision_Min_Order_By = {
   circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
+  description_legacy?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   memberId?: InputMaybe<Order_By>;
   orgId?: InputMaybe<Order_By>;
@@ -5580,6 +5587,7 @@ export type Decision_Order_By = {
   circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
+  description_legacy?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   member?: InputMaybe<Member_Order_By>;
   memberId?: InputMaybe<Order_By>;
@@ -5604,6 +5612,8 @@ export enum Decision_Select_Column {
   CreatedAt = 'createdAt',
   /** column name */
   Description = 'description',
+  /** column name */
+  DescriptionLegacy = 'description_legacy',
   /** column name */
   Id = 'id',
   /** column name */
@@ -5638,6 +5648,7 @@ export type Decision_Set_Input = {
   circleId?: InputMaybe<Scalars['uuid']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  description_legacy?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   memberId?: InputMaybe<Scalars['uuid']['input']>;
   orgId?: InputMaybe<Scalars['uuid']['input']>;
@@ -5659,6 +5670,7 @@ export type Decision_Stream_Cursor_Value_Input = {
   circleId?: InputMaybe<Scalars['uuid']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  description_legacy?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   memberId?: InputMaybe<Scalars['uuid']['input']>;
   orgId?: InputMaybe<Scalars['uuid']['input']>;
@@ -5676,6 +5688,8 @@ export enum Decision_Update_Column {
   CreatedAt = 'createdAt',
   /** column name */
   Description = 'description',
+  /** column name */
+  DescriptionLegacy = 'description_legacy',
   /** column name */
   Id = 'id',
   /** column name */
@@ -6288,6 +6302,7 @@ export type Log = {
   canceled: Scalars['Boolean']['output'];
   /** Log of changes to entities, useful to cancel */
   changes: Scalars['log_changes']['output'];
+  changes_legacy?: Maybe<Scalars['json']['output']>;
   createdAt: Scalars['timestamptz']['output'];
   /** Type of log and data to display */
   display: Scalars['log_display']['output'];
@@ -6317,6 +6332,12 @@ export type Log = {
 
 /** columns and relationships of "log" */
 export type LogChangesArgs = {
+  path?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+/** columns and relationships of "log" */
+export type LogChanges_LegacyArgs = {
   path?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -6401,6 +6422,7 @@ export type Log_Bool_Exp = {
   cancelMemberName?: InputMaybe<String_Comparison_Exp>;
   canceled?: InputMaybe<Boolean_Comparison_Exp>;
   changes?: InputMaybe<Json_Comparison_Exp>;
+  changes_legacy?: InputMaybe<Json_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   display?: InputMaybe<Json_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
@@ -6436,6 +6458,7 @@ export type Log_Insert_Input = {
   canceled?: InputMaybe<Scalars['Boolean']['input']>;
   /** Log of changes to entities, useful to cancel */
   changes?: InputMaybe<Scalars['json']['input']>;
+  changes_legacy?: InputMaybe<Scalars['json']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   /** Type of log and data to display */
   display?: InputMaybe<Scalars['json']['input']>;
@@ -6575,6 +6598,7 @@ export type Log_Order_By = {
   cancelMemberName?: InputMaybe<Order_By>;
   canceled?: InputMaybe<Order_By>;
   changes?: InputMaybe<Order_By>;
+  changes_legacy?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   display?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -6609,6 +6633,8 @@ export enum Log_Select_Column {
   Canceled = 'canceled',
   /** column name */
   Changes = 'changes',
+  /** column name */
+  ChangesLegacy = 'changes_legacy',
   /** column name */
   CreatedAt = 'createdAt',
   /** column name */
@@ -6653,6 +6679,7 @@ export type Log_Set_Input = {
   canceled?: InputMaybe<Scalars['Boolean']['input']>;
   /** Log of changes to entities, useful to cancel */
   changes?: InputMaybe<Scalars['json']['input']>;
+  changes_legacy?: InputMaybe<Scalars['json']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   /** Type of log and data to display */
   display?: InputMaybe<Scalars['json']['input']>;
@@ -6687,6 +6714,7 @@ export type Log_Stream_Cursor_Value_Input = {
   canceled?: InputMaybe<Scalars['Boolean']['input']>;
   /** Log of changes to entities, useful to cancel */
   changes?: InputMaybe<Scalars['json']['input']>;
+  changes_legacy?: InputMaybe<Scalars['json']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   /** Type of log and data to display */
   display?: InputMaybe<Scalars['json']['input']>;
@@ -6715,6 +6743,8 @@ export enum Log_Update_Column {
   Canceled = 'canceled',
   /** column name */
   Changes = 'changes',
+  /** column name */
+  ChangesLegacy = 'changes_legacy',
   /** column name */
   CreatedAt = 'createdAt',
   /** column name */
@@ -6777,6 +6807,7 @@ export type Meeting = {
   /** An aggregate relationship */
   steps_aggregate: Meeting_Step_Aggregate;
   summary: Scalars['String']['output'];
+  summary_legacy?: Maybe<Scalars['String']['output']>;
   title: Scalars['String']['output'];
   videoConf?: Maybe<Scalars['videoconf']['output']>;
 };
@@ -7173,6 +7204,7 @@ export type Meeting_Bool_Exp = {
   stepsConfig?: InputMaybe<Json_Comparison_Exp>;
   steps_aggregate?: InputMaybe<Meeting_Step_Aggregate_Bool_Exp>;
   summary?: InputMaybe<String_Comparison_Exp>;
+  summary_legacy?: InputMaybe<String_Comparison_Exp>;
   title?: InputMaybe<String_Comparison_Exp>;
   videoConf?: InputMaybe<Json_Comparison_Exp>;
 };
@@ -7206,6 +7238,7 @@ export type Meeting_Insert_Input = {
   steps?: InputMaybe<Meeting_Step_Arr_Rel_Insert_Input>;
   stepsConfig?: InputMaybe<Scalars['json']['input']>;
   summary?: InputMaybe<Scalars['String']['input']>;
+  summary_legacy?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
   videoConf?: InputMaybe<Scalars['json']['input']>;
 };
@@ -7224,6 +7257,7 @@ export type Meeting_Max_Fields = {
   recurringId?: Maybe<Scalars['uuid']['output']>;
   startDate?: Maybe<Scalars['timestamptz']['output']>;
   summary?: Maybe<Scalars['String']['output']>;
+  summary_legacy?: Maybe<Scalars['String']['output']>;
   title?: Maybe<Scalars['String']['output']>;
 };
 
@@ -7240,6 +7274,7 @@ export type Meeting_Max_Order_By = {
   recurringId?: InputMaybe<Order_By>;
   startDate?: InputMaybe<Order_By>;
   summary?: InputMaybe<Order_By>;
+  summary_legacy?: InputMaybe<Order_By>;
   title?: InputMaybe<Order_By>;
 };
 
@@ -7257,6 +7292,7 @@ export type Meeting_Min_Fields = {
   recurringId?: Maybe<Scalars['uuid']['output']>;
   startDate?: Maybe<Scalars['timestamptz']['output']>;
   summary?: Maybe<Scalars['String']['output']>;
+  summary_legacy?: Maybe<Scalars['String']['output']>;
   title?: Maybe<Scalars['String']['output']>;
 };
 
@@ -7273,6 +7309,7 @@ export type Meeting_Min_Order_By = {
   recurringId?: InputMaybe<Order_By>;
   startDate?: InputMaybe<Order_By>;
   summary?: InputMaybe<Order_By>;
+  summary_legacy?: InputMaybe<Order_By>;
   title?: InputMaybe<Order_By>;
 };
 
@@ -7322,6 +7359,7 @@ export type Meeting_Order_By = {
   stepsConfig?: InputMaybe<Order_By>;
   steps_aggregate?: InputMaybe<Meeting_Step_Aggregate_Order_By>;
   summary?: InputMaybe<Order_By>;
+  summary_legacy?: InputMaybe<Order_By>;
   title?: InputMaybe<Order_By>;
   videoConf?: InputMaybe<Order_By>;
 };
@@ -7852,6 +7890,8 @@ export enum Meeting_Select_Column {
   /** column name */
   Summary = 'summary',
   /** column name */
+  SummaryLegacy = 'summary_legacy',
+  /** column name */
   Title = 'title',
   /** column name */
   VideoConf = 'videoConf'
@@ -7899,6 +7939,7 @@ export type Meeting_Set_Input = {
   startDate?: InputMaybe<Scalars['timestamptz']['input']>;
   stepsConfig?: InputMaybe<Scalars['json']['input']>;
   summary?: InputMaybe<Scalars['String']['input']>;
+  summary_legacy?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
   videoConf?: InputMaybe<Scalars['json']['input']>;
 };
@@ -8056,6 +8097,7 @@ export type Meeting_Step = {
   meeting: Meeting;
   meetingId: Scalars['uuid']['output'];
   notes: Scalars['String']['output'];
+  notes_legacy?: Maybe<Scalars['String']['output']>;
   stepConfigId: Scalars['String']['output'];
   type: Meeting_Step_Type_Enum;
 };
@@ -8123,6 +8165,7 @@ export type Meeting_Step_Bool_Exp = {
   meeting?: InputMaybe<Meeting_Bool_Exp>;
   meetingId?: InputMaybe<Uuid_Comparison_Exp>;
   notes?: InputMaybe<String_Comparison_Exp>;
+  notes_legacy?: InputMaybe<String_Comparison_Exp>;
   stepConfigId?: InputMaybe<String_Comparison_Exp>;
   type?: InputMaybe<Meeting_Step_Type_Enum_Comparison_Exp>;
 };
@@ -8142,6 +8185,7 @@ export type Meeting_Step_Insert_Input = {
   meeting?: InputMaybe<Meeting_Obj_Rel_Insert_Input>;
   meetingId?: InputMaybe<Scalars['uuid']['input']>;
   notes?: InputMaybe<Scalars['String']['input']>;
+  notes_legacy?: InputMaybe<Scalars['String']['input']>;
   stepConfigId?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<Meeting_Step_Type_Enum>;
 };
@@ -8152,6 +8196,7 @@ export type Meeting_Step_Max_Fields = {
   id?: Maybe<Scalars['uuid']['output']>;
   meetingId?: Maybe<Scalars['uuid']['output']>;
   notes?: Maybe<Scalars['String']['output']>;
+  notes_legacy?: Maybe<Scalars['String']['output']>;
   stepConfigId?: Maybe<Scalars['String']['output']>;
 };
 
@@ -8160,6 +8205,7 @@ export type Meeting_Step_Max_Order_By = {
   id?: InputMaybe<Order_By>;
   meetingId?: InputMaybe<Order_By>;
   notes?: InputMaybe<Order_By>;
+  notes_legacy?: InputMaybe<Order_By>;
   stepConfigId?: InputMaybe<Order_By>;
 };
 
@@ -8169,6 +8215,7 @@ export type Meeting_Step_Min_Fields = {
   id?: Maybe<Scalars['uuid']['output']>;
   meetingId?: Maybe<Scalars['uuid']['output']>;
   notes?: Maybe<Scalars['String']['output']>;
+  notes_legacy?: Maybe<Scalars['String']['output']>;
   stepConfigId?: Maybe<Scalars['String']['output']>;
 };
 
@@ -8177,6 +8224,7 @@ export type Meeting_Step_Min_Order_By = {
   id?: InputMaybe<Order_By>;
   meetingId?: InputMaybe<Order_By>;
   notes?: InputMaybe<Order_By>;
+  notes_legacy?: InputMaybe<Order_By>;
   stepConfigId?: InputMaybe<Order_By>;
 };
 
@@ -8203,6 +8251,7 @@ export type Meeting_Step_Order_By = {
   meeting?: InputMaybe<Meeting_Order_By>;
   meetingId?: InputMaybe<Order_By>;
   notes?: InputMaybe<Order_By>;
+  notes_legacy?: InputMaybe<Order_By>;
   stepConfigId?: InputMaybe<Order_By>;
   type?: InputMaybe<Order_By>;
 };
@@ -8223,6 +8272,8 @@ export enum Meeting_Step_Select_Column {
   /** column name */
   Notes = 'notes',
   /** column name */
+  NotesLegacy = 'notes_legacy',
+  /** column name */
   StepConfigId = 'stepConfigId',
   /** column name */
   Type = 'type'
@@ -8234,6 +8285,7 @@ export type Meeting_Step_Set_Input = {
   id?: InputMaybe<Scalars['uuid']['input']>;
   meetingId?: InputMaybe<Scalars['uuid']['input']>;
   notes?: InputMaybe<Scalars['String']['input']>;
+  notes_legacy?: InputMaybe<Scalars['String']['input']>;
   stepConfigId?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<Meeting_Step_Type_Enum>;
 };
@@ -8252,6 +8304,7 @@ export type Meeting_Step_Stream_Cursor_Value_Input = {
   id?: InputMaybe<Scalars['uuid']['input']>;
   meetingId?: InputMaybe<Scalars['uuid']['input']>;
   notes?: InputMaybe<Scalars['String']['input']>;
+  notes_legacy?: InputMaybe<Scalars['String']['input']>;
   stepConfigId?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<Meeting_Step_Type_Enum>;
 };
@@ -8418,6 +8471,8 @@ export enum Meeting_Step_Update_Column {
   /** column name */
   Notes = 'notes',
   /** column name */
+  NotesLegacy = 'notes_legacy',
+  /** column name */
   StepConfigId = 'stepConfigId',
   /** column name */
   Type = 'type'
@@ -8456,6 +8511,7 @@ export type Meeting_Stream_Cursor_Value_Input = {
   startDate?: InputMaybe<Scalars['timestamptz']['input']>;
   stepsConfig?: InputMaybe<Scalars['json']['input']>;
   summary?: InputMaybe<Scalars['String']['input']>;
+  summary_legacy?: InputMaybe<Scalars['String']['input']>;
   title?: InputMaybe<Scalars['String']['input']>;
   videoConf?: InputMaybe<Scalars['json']['input']>;
 };
@@ -8708,6 +8764,8 @@ export enum Meeting_Update_Column {
   /** column name */
   Summary = 'summary',
   /** column name */
+  SummaryLegacy = 'summary_legacy',
+  /** column name */
   Title = 'title',
   /** column name */
   VideoConf = 'videoConf'
@@ -8729,6 +8787,7 @@ export type Member = {
   /** An aggregate relationship */
   circle_members_aggregate: Circle_Member_Aggregate;
   description: Scalars['String']['output'];
+  description_legacy?: Maybe<Scalars['String']['output']>;
   id: Scalars['uuid']['output'];
   inviteDate?: Maybe<Scalars['timestamptz']['output']>;
   inviteEmail?: Maybe<Scalars['String']['output']>;
@@ -8862,6 +8921,7 @@ export type Member_Bool_Exp = {
   circle_members?: InputMaybe<Circle_Member_Bool_Exp>;
   circle_members_aggregate?: InputMaybe<Circle_Member_Aggregate_Bool_Exp>;
   description?: InputMaybe<String_Comparison_Exp>;
+  description_legacy?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   inviteDate?: InputMaybe<Timestamptz_Comparison_Exp>;
   inviteEmail?: InputMaybe<String_Comparison_Exp>;
@@ -8891,6 +8951,7 @@ export type Member_Insert_Input = {
   archived?: InputMaybe<Scalars['Boolean']['input']>;
   circle_members?: InputMaybe<Circle_Member_Arr_Rel_Insert_Input>;
   description?: InputMaybe<Scalars['String']['input']>;
+  description_legacy?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   inviteDate?: InputMaybe<Scalars['timestamptz']['input']>;
   inviteEmail?: InputMaybe<Scalars['String']['input']>;
@@ -8910,6 +8971,7 @@ export type Member_Insert_Input = {
 export type Member_Max_Fields = {
   __typename?: 'member_max_fields';
   description?: Maybe<Scalars['String']['output']>;
+  description_legacy?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   inviteDate?: Maybe<Scalars['timestamptz']['output']>;
   inviteEmail?: Maybe<Scalars['String']['output']>;
@@ -8923,6 +8985,7 @@ export type Member_Max_Fields = {
 /** order by max() on columns of table "member" */
 export type Member_Max_Order_By = {
   description?: InputMaybe<Order_By>;
+  description_legacy?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   inviteDate?: InputMaybe<Order_By>;
   inviteEmail?: InputMaybe<Order_By>;
@@ -8937,6 +9000,7 @@ export type Member_Max_Order_By = {
 export type Member_Min_Fields = {
   __typename?: 'member_min_fields';
   description?: Maybe<Scalars['String']['output']>;
+  description_legacy?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   inviteDate?: Maybe<Scalars['timestamptz']['output']>;
   inviteEmail?: Maybe<Scalars['String']['output']>;
@@ -8950,6 +9014,7 @@ export type Member_Min_Fields = {
 /** order by min() on columns of table "member" */
 export type Member_Min_Order_By = {
   description?: InputMaybe<Order_By>;
+  description_legacy?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   inviteDate?: InputMaybe<Order_By>;
   inviteEmail?: InputMaybe<Order_By>;
@@ -8988,6 +9053,7 @@ export type Member_Order_By = {
   archived?: InputMaybe<Order_By>;
   circle_members_aggregate?: InputMaybe<Circle_Member_Aggregate_Order_By>;
   description?: InputMaybe<Order_By>;
+  description_legacy?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   inviteDate?: InputMaybe<Order_By>;
   inviteEmail?: InputMaybe<Order_By>;
@@ -9169,6 +9235,8 @@ export enum Member_Select_Column {
   /** column name */
   Description = 'description',
   /** column name */
+  DescriptionLegacy = 'description_legacy',
+  /** column name */
   Id = 'id',
   /** column name */
   InviteDate = 'inviteDate',
@@ -9204,6 +9272,7 @@ export enum Member_Select_Column_Member_Aggregate_Bool_Exp_Bool_Or_Arguments_Col
 export type Member_Set_Input = {
   archived?: InputMaybe<Scalars['Boolean']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  description_legacy?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   inviteDate?: InputMaybe<Scalars['timestamptz']['input']>;
   inviteEmail?: InputMaybe<Scalars['String']['input']>;
@@ -9227,6 +9296,7 @@ export type Member_Stream_Cursor_Input = {
 export type Member_Stream_Cursor_Value_Input = {
   archived?: InputMaybe<Scalars['Boolean']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  description_legacy?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   inviteDate?: InputMaybe<Scalars['timestamptz']['input']>;
   inviteEmail?: InputMaybe<Scalars['String']['input']>;
@@ -9244,6 +9314,8 @@ export enum Member_Update_Column {
   Archived = 'archived',
   /** column name */
   Description = 'description',
+  /** column name */
+  DescriptionLegacy = 'description_legacy',
   /** column name */
   Id = 'id',
   /** column name */
@@ -15414,24 +15486,30 @@ export type Query_RootVirusesAggregateArgs = {
 export type Role = {
   __typename?: 'role';
   accountabilities: Scalars['String']['output'];
+  accountabilities_legacy?: Maybe<Scalars['String']['output']>;
   archived: Scalars['Boolean']['output'];
   base: Scalars['Boolean']['output'];
   checklist: Scalars['String']['output'];
+  checklist_legacy?: Maybe<Scalars['String']['output']>;
   /** An array relationship */
   circles: Array<Circle>;
   /** An aggregate relationship */
   circles_aggregate: Circle_Aggregate;
   colorHue?: Maybe<Scalars['smallint']['output']>;
   domain: Scalars['String']['output'];
+  domain_legacy?: Maybe<Scalars['String']['output']>;
   id: Scalars['uuid']['output'];
   indicators: Scalars['String']['output'];
+  indicators_legacy?: Maybe<Scalars['String']['output']>;
   name: Scalars['String']['output'];
   notes: Scalars['String']['output'];
+  notes_legacy?: Maybe<Scalars['String']['output']>;
   /** An object relationship */
   org: Org;
   orgId: Scalars['uuid']['output'];
   parentLink: Scalars['Boolean']['output'];
   purpose: Scalars['String']['output'];
+  purpose_legacy?: Maybe<Scalars['String']['output']>;
   singleMember: Scalars['Boolean']['output'];
 };
 
@@ -15771,21 +15849,27 @@ export type Role_Bool_Exp = {
   _not?: InputMaybe<Role_Bool_Exp>;
   _or?: InputMaybe<Array<Role_Bool_Exp>>;
   accountabilities?: InputMaybe<String_Comparison_Exp>;
+  accountabilities_legacy?: InputMaybe<String_Comparison_Exp>;
   archived?: InputMaybe<Boolean_Comparison_Exp>;
   base?: InputMaybe<Boolean_Comparison_Exp>;
   checklist?: InputMaybe<String_Comparison_Exp>;
+  checklist_legacy?: InputMaybe<String_Comparison_Exp>;
   circles?: InputMaybe<Circle_Bool_Exp>;
   circles_aggregate?: InputMaybe<Circle_Aggregate_Bool_Exp>;
   colorHue?: InputMaybe<Smallint_Comparison_Exp>;
   domain?: InputMaybe<String_Comparison_Exp>;
+  domain_legacy?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   indicators?: InputMaybe<String_Comparison_Exp>;
+  indicators_legacy?: InputMaybe<String_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
   notes?: InputMaybe<String_Comparison_Exp>;
+  notes_legacy?: InputMaybe<String_Comparison_Exp>;
   org?: InputMaybe<Org_Bool_Exp>;
   orgId?: InputMaybe<Uuid_Comparison_Exp>;
   parentLink?: InputMaybe<Boolean_Comparison_Exp>;
   purpose?: InputMaybe<String_Comparison_Exp>;
+  purpose_legacy?: InputMaybe<String_Comparison_Exp>;
   singleMember?: InputMaybe<Boolean_Comparison_Exp>;
 };
 
@@ -15803,20 +15887,26 @@ export type Role_Inc_Input = {
 /** input type for inserting data into table "role" */
 export type Role_Insert_Input = {
   accountabilities?: InputMaybe<Scalars['String']['input']>;
+  accountabilities_legacy?: InputMaybe<Scalars['String']['input']>;
   archived?: InputMaybe<Scalars['Boolean']['input']>;
   base?: InputMaybe<Scalars['Boolean']['input']>;
   checklist?: InputMaybe<Scalars['String']['input']>;
+  checklist_legacy?: InputMaybe<Scalars['String']['input']>;
   circles?: InputMaybe<Circle_Arr_Rel_Insert_Input>;
   colorHue?: InputMaybe<Scalars['smallint']['input']>;
   domain?: InputMaybe<Scalars['String']['input']>;
+  domain_legacy?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   indicators?: InputMaybe<Scalars['String']['input']>;
+  indicators_legacy?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   notes?: InputMaybe<Scalars['String']['input']>;
+  notes_legacy?: InputMaybe<Scalars['String']['input']>;
   org?: InputMaybe<Org_Obj_Rel_Insert_Input>;
   orgId?: InputMaybe<Scalars['uuid']['input']>;
   parentLink?: InputMaybe<Scalars['Boolean']['input']>;
   purpose?: InputMaybe<Scalars['String']['input']>;
+  purpose_legacy?: InputMaybe<Scalars['String']['input']>;
   singleMember?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
@@ -15824,58 +15914,82 @@ export type Role_Insert_Input = {
 export type Role_Max_Fields = {
   __typename?: 'role_max_fields';
   accountabilities?: Maybe<Scalars['String']['output']>;
+  accountabilities_legacy?: Maybe<Scalars['String']['output']>;
   checklist?: Maybe<Scalars['String']['output']>;
+  checklist_legacy?: Maybe<Scalars['String']['output']>;
   colorHue?: Maybe<Scalars['smallint']['output']>;
   domain?: Maybe<Scalars['String']['output']>;
+  domain_legacy?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   indicators?: Maybe<Scalars['String']['output']>;
+  indicators_legacy?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   notes?: Maybe<Scalars['String']['output']>;
+  notes_legacy?: Maybe<Scalars['String']['output']>;
   orgId?: Maybe<Scalars['uuid']['output']>;
   purpose?: Maybe<Scalars['String']['output']>;
+  purpose_legacy?: Maybe<Scalars['String']['output']>;
 };
 
 /** order by max() on columns of table "role" */
 export type Role_Max_Order_By = {
   accountabilities?: InputMaybe<Order_By>;
+  accountabilities_legacy?: InputMaybe<Order_By>;
   checklist?: InputMaybe<Order_By>;
+  checklist_legacy?: InputMaybe<Order_By>;
   colorHue?: InputMaybe<Order_By>;
   domain?: InputMaybe<Order_By>;
+  domain_legacy?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   indicators?: InputMaybe<Order_By>;
+  indicators_legacy?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   notes?: InputMaybe<Order_By>;
+  notes_legacy?: InputMaybe<Order_By>;
   orgId?: InputMaybe<Order_By>;
   purpose?: InputMaybe<Order_By>;
+  purpose_legacy?: InputMaybe<Order_By>;
 };
 
 /** aggregate min on columns */
 export type Role_Min_Fields = {
   __typename?: 'role_min_fields';
   accountabilities?: Maybe<Scalars['String']['output']>;
+  accountabilities_legacy?: Maybe<Scalars['String']['output']>;
   checklist?: Maybe<Scalars['String']['output']>;
+  checklist_legacy?: Maybe<Scalars['String']['output']>;
   colorHue?: Maybe<Scalars['smallint']['output']>;
   domain?: Maybe<Scalars['String']['output']>;
+  domain_legacy?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   indicators?: Maybe<Scalars['String']['output']>;
+  indicators_legacy?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   notes?: Maybe<Scalars['String']['output']>;
+  notes_legacy?: Maybe<Scalars['String']['output']>;
   orgId?: Maybe<Scalars['uuid']['output']>;
   purpose?: Maybe<Scalars['String']['output']>;
+  purpose_legacy?: Maybe<Scalars['String']['output']>;
 };
 
 /** order by min() on columns of table "role" */
 export type Role_Min_Order_By = {
   accountabilities?: InputMaybe<Order_By>;
+  accountabilities_legacy?: InputMaybe<Order_By>;
   checklist?: InputMaybe<Order_By>;
+  checklist_legacy?: InputMaybe<Order_By>;
   colorHue?: InputMaybe<Order_By>;
   domain?: InputMaybe<Order_By>;
+  domain_legacy?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   indicators?: InputMaybe<Order_By>;
+  indicators_legacy?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   notes?: InputMaybe<Order_By>;
+  notes_legacy?: InputMaybe<Order_By>;
   orgId?: InputMaybe<Order_By>;
   purpose?: InputMaybe<Order_By>;
+  purpose_legacy?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "role" */
@@ -15904,20 +16018,26 @@ export type Role_On_Conflict = {
 /** Ordering options when selecting data from "role". */
 export type Role_Order_By = {
   accountabilities?: InputMaybe<Order_By>;
+  accountabilities_legacy?: InputMaybe<Order_By>;
   archived?: InputMaybe<Order_By>;
   base?: InputMaybe<Order_By>;
   checklist?: InputMaybe<Order_By>;
+  checklist_legacy?: InputMaybe<Order_By>;
   circles_aggregate?: InputMaybe<Circle_Aggregate_Order_By>;
   colorHue?: InputMaybe<Order_By>;
   domain?: InputMaybe<Order_By>;
+  domain_legacy?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   indicators?: InputMaybe<Order_By>;
+  indicators_legacy?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
   notes?: InputMaybe<Order_By>;
+  notes_legacy?: InputMaybe<Order_By>;
   org?: InputMaybe<Org_Order_By>;
   orgId?: InputMaybe<Order_By>;
   parentLink?: InputMaybe<Order_By>;
   purpose?: InputMaybe<Order_By>;
+  purpose_legacy?: InputMaybe<Order_By>;
   singleMember?: InputMaybe<Order_By>;
 };
 
@@ -15931,29 +16051,41 @@ export enum Role_Select_Column {
   /** column name */
   Accountabilities = 'accountabilities',
   /** column name */
+  AccountabilitiesLegacy = 'accountabilities_legacy',
+  /** column name */
   Archived = 'archived',
   /** column name */
   Base = 'base',
   /** column name */
   Checklist = 'checklist',
   /** column name */
+  ChecklistLegacy = 'checklist_legacy',
+  /** column name */
   ColorHue = 'colorHue',
   /** column name */
   Domain = 'domain',
+  /** column name */
+  DomainLegacy = 'domain_legacy',
   /** column name */
   Id = 'id',
   /** column name */
   Indicators = 'indicators',
   /** column name */
+  IndicatorsLegacy = 'indicators_legacy',
+  /** column name */
   Name = 'name',
   /** column name */
   Notes = 'notes',
+  /** column name */
+  NotesLegacy = 'notes_legacy',
   /** column name */
   OrgId = 'orgId',
   /** column name */
   ParentLink = 'parentLink',
   /** column name */
   Purpose = 'purpose',
+  /** column name */
+  PurposeLegacy = 'purpose_legacy',
   /** column name */
   SingleMember = 'singleMember'
 }
@@ -15985,18 +16117,24 @@ export enum Role_Select_Column_Role_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns
 /** input type for updating data in table "role" */
 export type Role_Set_Input = {
   accountabilities?: InputMaybe<Scalars['String']['input']>;
+  accountabilities_legacy?: InputMaybe<Scalars['String']['input']>;
   archived?: InputMaybe<Scalars['Boolean']['input']>;
   base?: InputMaybe<Scalars['Boolean']['input']>;
   checklist?: InputMaybe<Scalars['String']['input']>;
+  checklist_legacy?: InputMaybe<Scalars['String']['input']>;
   colorHue?: InputMaybe<Scalars['smallint']['input']>;
   domain?: InputMaybe<Scalars['String']['input']>;
+  domain_legacy?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   indicators?: InputMaybe<Scalars['String']['input']>;
+  indicators_legacy?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   notes?: InputMaybe<Scalars['String']['input']>;
+  notes_legacy?: InputMaybe<Scalars['String']['input']>;
   orgId?: InputMaybe<Scalars['uuid']['input']>;
   parentLink?: InputMaybe<Scalars['Boolean']['input']>;
   purpose?: InputMaybe<Scalars['String']['input']>;
+  purpose_legacy?: InputMaybe<Scalars['String']['input']>;
   singleMember?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
@@ -16044,18 +16182,24 @@ export type Role_Stream_Cursor_Input = {
 /** Initial value of the column from where the streaming should start */
 export type Role_Stream_Cursor_Value_Input = {
   accountabilities?: InputMaybe<Scalars['String']['input']>;
+  accountabilities_legacy?: InputMaybe<Scalars['String']['input']>;
   archived?: InputMaybe<Scalars['Boolean']['input']>;
   base?: InputMaybe<Scalars['Boolean']['input']>;
   checklist?: InputMaybe<Scalars['String']['input']>;
+  checklist_legacy?: InputMaybe<Scalars['String']['input']>;
   colorHue?: InputMaybe<Scalars['smallint']['input']>;
   domain?: InputMaybe<Scalars['String']['input']>;
+  domain_legacy?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   indicators?: InputMaybe<Scalars['String']['input']>;
+  indicators_legacy?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   notes?: InputMaybe<Scalars['String']['input']>;
+  notes_legacy?: InputMaybe<Scalars['String']['input']>;
   orgId?: InputMaybe<Scalars['uuid']['input']>;
   parentLink?: InputMaybe<Scalars['Boolean']['input']>;
   purpose?: InputMaybe<Scalars['String']['input']>;
+  purpose_legacy?: InputMaybe<Scalars['String']['input']>;
   singleMember?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
@@ -16075,29 +16219,41 @@ export enum Role_Update_Column {
   /** column name */
   Accountabilities = 'accountabilities',
   /** column name */
+  AccountabilitiesLegacy = 'accountabilities_legacy',
+  /** column name */
   Archived = 'archived',
   /** column name */
   Base = 'base',
   /** column name */
   Checklist = 'checklist',
   /** column name */
+  ChecklistLegacy = 'checklist_legacy',
+  /** column name */
   ColorHue = 'colorHue',
   /** column name */
   Domain = 'domain',
+  /** column name */
+  DomainLegacy = 'domain_legacy',
   /** column name */
   Id = 'id',
   /** column name */
   Indicators = 'indicators',
   /** column name */
+  IndicatorsLegacy = 'indicators_legacy',
+  /** column name */
   Name = 'name',
   /** column name */
   Notes = 'notes',
+  /** column name */
+  NotesLegacy = 'notes_legacy',
   /** column name */
   OrgId = 'orgId',
   /** column name */
   ParentLink = 'parentLink',
   /** column name */
   Purpose = 'purpose',
+  /** column name */
+  PurposeLegacy = 'purpose_legacy',
   /** column name */
   SingleMember = 'singleMember'
 }
@@ -18548,6 +18704,7 @@ export type Task = {
   circleId: Scalars['uuid']['output'];
   createdAt: Scalars['timestamptz']['output'];
   description: Scalars['String']['output'];
+  description_legacy?: Maybe<Scalars['String']['output']>;
   dueDate?: Maybe<Scalars['timestamptz']['output']>;
   id: Scalars['uuid']['output'];
   /** An array relationship */
@@ -18658,6 +18815,7 @@ export type Task_Bool_Exp = {
   circleId?: InputMaybe<Uuid_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   description?: InputMaybe<String_Comparison_Exp>;
+  description_legacy?: InputMaybe<String_Comparison_Exp>;
   dueDate?: InputMaybe<Timestamptz_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   logs?: InputMaybe<Log_Bool_Exp>;
@@ -18684,6 +18842,7 @@ export type Task_Insert_Input = {
   circleId?: InputMaybe<Scalars['uuid']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  description_legacy?: InputMaybe<Scalars['String']['input']>;
   dueDate?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   logs?: InputMaybe<Log_Arr_Rel_Insert_Input>;
@@ -18702,6 +18861,7 @@ export type Task_Max_Fields = {
   circleId?: Maybe<Scalars['uuid']['output']>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   description?: Maybe<Scalars['String']['output']>;
+  description_legacy?: Maybe<Scalars['String']['output']>;
   dueDate?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   memberId?: Maybe<Scalars['uuid']['output']>;
@@ -18714,6 +18874,7 @@ export type Task_Max_Order_By = {
   circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
+  description_legacy?: InputMaybe<Order_By>;
   dueDate?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   memberId?: InputMaybe<Order_By>;
@@ -18727,6 +18888,7 @@ export type Task_Min_Fields = {
   circleId?: Maybe<Scalars['uuid']['output']>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   description?: Maybe<Scalars['String']['output']>;
+  description_legacy?: Maybe<Scalars['String']['output']>;
   dueDate?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   memberId?: Maybe<Scalars['uuid']['output']>;
@@ -18739,6 +18901,7 @@ export type Task_Min_Order_By = {
   circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
+  description_legacy?: InputMaybe<Order_By>;
   dueDate?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   memberId?: InputMaybe<Order_By>;
@@ -18776,6 +18939,7 @@ export type Task_Order_By = {
   circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
+  description_legacy?: InputMaybe<Order_By>;
   dueDate?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   logs_aggregate?: InputMaybe<Log_Aggregate_Order_By>;
@@ -18803,6 +18967,8 @@ export enum Task_Select_Column {
   CreatedAt = 'createdAt',
   /** column name */
   Description = 'description',
+  /** column name */
+  DescriptionLegacy = 'description_legacy',
   /** column name */
   DueDate = 'dueDate',
   /** column name */
@@ -18841,6 +19007,7 @@ export type Task_Set_Input = {
   circleId?: InputMaybe<Scalars['uuid']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  description_legacy?: InputMaybe<Scalars['String']['input']>;
   dueDate?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   memberId?: InputMaybe<Scalars['uuid']['input']>;
@@ -19015,6 +19182,7 @@ export type Task_Stream_Cursor_Value_Input = {
   circleId?: InputMaybe<Scalars['uuid']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  description_legacy?: InputMaybe<Scalars['String']['input']>;
   dueDate?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   memberId?: InputMaybe<Scalars['uuid']['input']>;
@@ -19034,6 +19202,8 @@ export enum Task_Update_Column {
   CreatedAt = 'createdAt',
   /** column name */
   Description = 'description',
+  /** column name */
+  DescriptionLegacy = 'description_legacy',
   /** column name */
   DueDate = 'dueDate',
   /** column name */
@@ -19387,6 +19557,7 @@ export type Thread_Activity = {
   __typename?: 'thread_activity';
   createdAt: Scalars['timestamptz']['output'];
   data: Scalars['json']['output'];
+  data_legacy?: Maybe<Scalars['json']['output']>;
   id: Scalars['uuid']['output'];
   /** An array relationship */
   reactions: Array<Thread_Activity_Reaction>;
@@ -19416,6 +19587,12 @@ export type Thread_Activity = {
 
 /** columns and relationships of "thread_activity" */
 export type Thread_ActivityDataArgs = {
+  path?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+/** columns and relationships of "thread_activity" */
+export type Thread_ActivityData_LegacyArgs = {
   path?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -19493,6 +19670,7 @@ export type Thread_Activity_Bool_Exp = {
   _or?: InputMaybe<Array<Thread_Activity_Bool_Exp>>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   data?: InputMaybe<Json_Comparison_Exp>;
+  data_legacy?: InputMaybe<Json_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   reactions?: InputMaybe<Thread_Activity_Reaction_Bool_Exp>;
   reactions_aggregate?: InputMaybe<Thread_Activity_Reaction_Aggregate_Bool_Exp>;
@@ -19523,6 +19701,7 @@ export enum Thread_Activity_Constraint {
 export type Thread_Activity_Insert_Input = {
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   data?: InputMaybe<Scalars['json']['input']>;
+  data_legacy?: InputMaybe<Scalars['json']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   reactions?: InputMaybe<Thread_Activity_Reaction_Arr_Rel_Insert_Input>;
   refDecision?: InputMaybe<Decision_Obj_Rel_Insert_Input>;
@@ -19617,6 +19796,7 @@ export type Thread_Activity_On_Conflict = {
 export type Thread_Activity_Order_By = {
   createdAt?: InputMaybe<Order_By>;
   data?: InputMaybe<Order_By>;
+  data_legacy?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   reactions_aggregate?: InputMaybe<Thread_Activity_Reaction_Aggregate_Order_By>;
   refDecision?: InputMaybe<Decision_Order_By>;
@@ -19864,6 +20044,8 @@ export enum Thread_Activity_Select_Column {
   /** column name */
   Data = 'data',
   /** column name */
+  DataLegacy = 'data_legacy',
+  /** column name */
   Id = 'id',
   /** column name */
   RefDecisionId = 'refDecisionId',
@@ -19885,6 +20067,7 @@ export enum Thread_Activity_Select_Column {
 export type Thread_Activity_Set_Input = {
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   data?: InputMaybe<Scalars['json']['input']>;
+  data_legacy?: InputMaybe<Scalars['json']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   refDecisionId?: InputMaybe<Scalars['uuid']['input']>;
   refMeetingId?: InputMaybe<Scalars['uuid']['input']>;
@@ -19907,6 +20090,7 @@ export type Thread_Activity_Stream_Cursor_Input = {
 export type Thread_Activity_Stream_Cursor_Value_Input = {
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   data?: InputMaybe<Scalars['json']['input']>;
+  data_legacy?: InputMaybe<Scalars['json']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   refDecisionId?: InputMaybe<Scalars['uuid']['input']>;
   refMeetingId?: InputMaybe<Scalars['uuid']['input']>;
@@ -20077,6 +20261,8 @@ export enum Thread_Activity_Update_Column {
   CreatedAt = 'createdAt',
   /** column name */
   Data = 'data',
+  /** column name */
+  DataLegacy = 'data_legacy',
   /** column name */
   Id = 'id',
   /** column name */
