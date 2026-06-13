@@ -13,7 +13,6 @@ import {
   Box,
   Flex,
   Heading,
-  ModalCloseButton,
   useDisclosure,
   VStack,
 } from '@chakra-ui/react'
@@ -52,7 +51,7 @@ export default function MemberContent({ id, changeTitle, headerIcons }: Props) {
           <AlertIcon />
           <AlertTitle>{t('MemberContent.notFound')}</AlertTitle>
         </Alert>
-        <ModalCloseButton />
+        <ModalCloseStaticButton />
       </>
     )
   }

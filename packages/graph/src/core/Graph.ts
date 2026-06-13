@@ -79,6 +79,11 @@ export abstract class Graph<
   private unmounted = false
   private lastCullTransform: ZoomTransform | undefined
   private cullRequest: number | undefined
+  // Last programmatic focus, replayed against the new size when a resize
+  // interrupts its animation (e.g. opening the side panel resizes the graph)
+  private lastFocusNodeId: string | undefined
+  private lastFocusAdaptScale = false
+  private lastFocusTime = -Infinity
 
   constructor(
     public element: RootElement,
@@ -346,11 +351,19 @@ export abstract class Graph<
     this.focusOffsetX = focusOffsetX
     this.focusOffsetY = focusOffsetY
 
-    this.d3Root
-      .transition()
-      .duration(settings.zoom.duration)
-      .ease(settings.zoom.transition)
-      .call(this.zoomBehaviour.transform, transform)
+    // If a focus is still animating, this resize was likely caused by the same
+    // action (e.g. selecting a circle opens the side panel and resizes the
+    // graph). Recompute the focus against the new size so it stays centered,
+    // instead of preserving the now-stale framing.
+    if (Date.now() - this.lastFocusTime < settings.zoom.duration) {
+      this.focusNodeId(this.lastFocusNodeId, this.lastFocusAdaptScale)
+    } else {
+      this.d3Root
+        .transition()
+        .duration(settings.zoom.duration)
+        .ease(settings.zoom.transition)
+        .call(this.zoomBehaviour.transform, transform)
+    }
 
     this.emit('resize')
     this.scheduleCull()
@@ -381,6 +394,11 @@ export abstract class Graph<
         )
 
     if (!node) return
+    // Remember the request so a resize that interrupts the animation can
+    // recompute it against the new dimensions (see resize)
+    this.lastFocusNodeId = nodeId
+    this.lastFocusAdaptScale = adaptScale || false
+    this.lastFocusTime = Date.now()
     this.focusNode(node, adaptScale, instant)
   }
 

@@ -41,10 +41,15 @@ enum Panels {
 }
 
 export default function CirclesPage() {
-  useOverflowHidden()
   const { t } = useTranslation()
   const sidebarContext = useContext(SidebarContext)
   const { metadata } = useUserMetadata()
+
+  // On desktop (lg+) the panel is a fixed side panel and the page does not
+  // scroll. Below lg the graph and panel stack vertically and the whole page
+  // scrolls as one, the graph taking the first part of the screen.
+  const isSidePanel = useBreakpointValue({ base: false, lg: true }) ?? false
+  useOverflowHidden(isSidePanel)
 
   const queryParams = useQueryParams<CirclesPageParams>()
   const navigateOrg = useNavigateOrg()
@@ -70,26 +75,20 @@ export default function CirclesPage() {
 
   const handleClosePanel = useCallback(() => navigateOrg('roles'), [])
 
-  // Zoom offsets when focusing
+  // Zoom offset to keep the focused circle visible next to the side panel
   const focusCropRight =
     useBreakpointValue({
       base: 0,
       lg: panel === Panels.None ? 0 : modalPanelWidth,
-    }) || 0
-  const focusCropBottom =
-    useBreakpointValue({
-      base: 0,
-      md: panel === Panels.None ? 0 : (boxSize?.height || 0) / 2,
-      lg: 0,
     }) || 0
   const focusCrop = useMemo(
     () => ({
       top: 0,
       left: 0,
       right: focusCropRight,
-      bottom: focusCropBottom,
+      bottom: 0,
     }),
-    [focusCropRight, focusCropBottom]
+    [focusCropRight]
   )
 
   // URL params
@@ -111,6 +110,14 @@ export default function CirclesPage() {
     }
   }, [ready, JSON.stringify(queryParams)])
 
+  // When the page scrolls as one (mobile/tablet), scroll back to the top on
+  // selection change so the graph, re-focusing on the new circle/member, is
+  // visible instead of staying scrolled down in the panel.
+  useEffect(() => {
+    if (isSidePanel) return
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [circleId, memberId, isSidePanel])
+
   // Color mode
   const { colorMode } = useColorMode()
 
@@ -126,11 +133,18 @@ export default function CirclesPage() {
       <Box
         ref={boxRef}
         id="circles-graph"
-        position="absolute"
-        top={0}
-        left={0}
-        bottom={0}
-        right={0}
+        position={isSidePanel ? 'absolute' : 'relative'}
+        top={isSidePanel ? 0 : undefined}
+        left={isSidePanel ? 0 : undefined}
+        bottom={isSidePanel ? 0 : undefined}
+        right={isSidePanel ? 0 : undefined}
+        h={
+          isSidePanel
+            ? undefined
+            : panel === Panels.None
+            ? `calc(100dvh - ${sidebarContext?.height || 0}px)`
+            : '50dvh'
+        }
         overflow="hidden"
       >
         {org && circles && boxSize && (
@@ -151,7 +165,7 @@ export default function CirclesPage() {
       {panel === Panels.Circle && circleId && (
         <ModalPanel isOpen onClose={handleClosePanel}>
           <CircleProvider circleId={circleId}>
-            <CircleContent changeTitle />
+            <CircleContent changeTitle flowHeight={!isSidePanel} />
           </CircleProvider>
         </ModalPanel>
       )}
@@ -169,11 +183,15 @@ export default function CirclesPage() {
       <CirclesGraphOptions
         view={view}
         onViewChange={setView}
+        position="absolute"
+        top={0}
+        left={0}
+        right={focusCrop.right}
+        zIndex={2}
         p={2}
         pl={
           sidebarContext?.minimize.isOpen && !sidebarContext?.isMobile ? 12 : 2
         }
-        mr={focusCrop.right}
       />
 
       {/* Onboarding */}

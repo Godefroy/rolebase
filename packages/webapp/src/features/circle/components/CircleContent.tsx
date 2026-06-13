@@ -12,7 +12,6 @@ import {
   AlertTitle,
   Box,
   Flex,
-  ModalCloseButton,
   Spacer,
   TabList,
   TabPanel,
@@ -47,6 +46,9 @@ import CircleThreads from './CircleThreads'
 interface Props {
   changeTitle?: boolean
   headerIcons?: React.ReactNode
+  // When true, the content flows to its natural height instead of filling its
+  // parent with an inner scroll. Used when the whole page scrolls (mobile/tablet).
+  flowHeight?: boolean
 }
 
 enum TabsEnum {
@@ -64,7 +66,11 @@ type Params = {
   tab: TabNames
 }
 
-export default function CircleContent({ changeTitle, headerIcons }: Props) {
+export default function CircleContent({
+  changeTitle,
+  headerIcons,
+  flowHeight,
+}: Props) {
   const { t } = useTranslation()
   const isMember = useOrgMember()
   const circleContext = useContext(CircleContext)
@@ -92,7 +98,7 @@ export default function CircleContent({ changeTitle, headerIcons }: Props) {
           <AlertIcon />
           <AlertTitle>{t('CircleContent.notFound')}</AlertTitle>
         </Alert>
-        <ModalCloseButton />
+        <ModalCloseStaticButton />
       </>
     )
   }
@@ -108,9 +114,9 @@ export default function CircleContent({ changeTitle, headerIcons }: Props) {
         index={tab}
         onChange={handleTabChange}
         isLazy
-        display="flex"
-        flexDirection="column"
-        h="100%"
+        display={flowHeight ? undefined : 'flex'}
+        flexDirection={flowHeight ? undefined : 'column'}
+        h={flowHeight ? undefined : '100%'}
       >
         <Flex p={2} pl={6} bg="menulight" _dark={{ bg: 'menudark' }}>
           <CircleAndParentsLinks circle={circle} size="md" overflow="hidden" />
@@ -178,8 +184,8 @@ export default function CircleContent({ changeTitle, headerIcons }: Props) {
         </TabList>
 
         <TabPanels
-          flex={1}
-          overflowY="auto"
+          flex={flowHeight ? undefined : 1}
+          overflowY={flowHeight ? undefined : 'auto'}
           bg={tab === TabsEnum.News ? 'menulight' : undefined}
           _dark={{ bg: tab === TabsEnum.News ? 'menudark' : undefined }}
         >
