@@ -12,6 +12,8 @@ import {
   AlertTitle,
   Box,
   Flex,
+  Heading,
+  HStack,
   Spacer,
   TabList,
   TabPanel,
@@ -23,6 +25,7 @@ import React, { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   CircleIcon,
+  CircleParentLinkIcon,
   DecisionsIcon,
   MeetingsIcon,
   NewsIcon,
@@ -34,7 +37,8 @@ import { CircleContext } from '../contexts/CIrcleContext'
 import CircleCopyModal from '../modals/CircleCopyModal'
 import CircleDeleteModal from '../modals/CircleDeleteModal'
 import CircleMoveModal from '../modals/CircleMoveModal'
-import CircleAndParentsLinks from './CircleAndParentsLinks'
+import CircleBreadcrumb from './CircleBreadcrumb'
+import CircleByIdButton from './CircleByIdButton'
 import CircleDecisions from './CircleDecisions'
 import CircleMeetings from './CircleMeetings'
 import CircleNews from './CircleNews'
@@ -118,70 +122,84 @@ export default function CircleContent({
         flexDirection={flowHeight ? undefined : 'column'}
         h={flowHeight ? undefined : '100%'}
       >
-        <Flex p={2} pl={6} bg="menulight" _dark={{ bg: 'menudark' }}>
-          <CircleAndParentsLinks circle={circle} size="md" overflow="hidden" />
-          <Spacer />
+        <Box bg="menulight" _dark={{ bg: 'menudark' }}>
+          <Flex p={2} pl={6}>
+            <CircleBreadcrumb circleId={circle.id} mt={2} />
+            <Spacer />
 
-          <Box mr={1}>
-            <ParticipantsNumber participants={participants} />
-          </Box>
+            <Box mr={1}>
+              <ParticipantsNumber participants={participants} />
+            </Box>
 
-          <Box>
-            <CirclePrivacy />
-          </Box>
+            <Box>
+              <CirclePrivacy />
+            </Box>
 
-          {isMember && (
-            <ActionsMenu
-              onEdit={canEditRole ? editRoleModal.onOpen : undefined}
-              onDelete={
-                canEditCircle && circle.parentId
-                  ? deleteModal.onOpen
-                  : undefined
-              }
-              onMove={
-                canEditCircle && circle.parentId ? moveModal.onOpen : undefined
-              }
-              onDuplicate={
-                canEditCircle && circle.parentId
-                  ? duplicateModal.onOpen
-                  : undefined
-              }
-              onExport={() =>
-                navigateOrg(`export-circle?circleId=${circle.id}`)
-              }
-            />
-          )}
+            {isMember && (
+              <ActionsMenu
+                onEdit={canEditRole ? editRoleModal.onOpen : undefined}
+                onDelete={
+                  canEditCircle && circle.parentId
+                    ? deleteModal.onOpen
+                    : undefined
+                }
+                onMove={
+                  canEditCircle && circle.parentId ? moveModal.onOpen : undefined
+                }
+                onDuplicate={
+                  canEditCircle && circle.parentId
+                    ? duplicateModal.onOpen
+                    : undefined
+                }
+                onExport={() =>
+                  navigateOrg(`export-circle?circleId=${circle.id}`)
+                }
+              />
+            )}
 
-          {headerIcons}
-          <ModalCloseStaticButton />
-        </Flex>
+            {headerIcons}
+            <ModalCloseStaticButton />
+          </Flex>
 
-        <TabList
-          borderBottomWidth={0}
-          pb={2}
-          pl={6}
-          bg="menulight"
-          _dark={{ bg: 'menudark' }}
-        >
-          <Tab icon={CircleIcon} minimize>
-            {t('CircleContent.tabRole')}
-          </Tab>
-          <Tab icon={NewsIcon} minimize>
-            {t('CircleContent.tabNews')}
-          </Tab>
-          <Tab icon={ThreadsIcon} minimize>
-            {t('CircleContent.tabThreads')}
-          </Tab>
-          <Tab icon={MeetingsIcon} minimize>
-            {t('CircleContent.tabMeetings')}
-          </Tab>
-          <Tab icon={TasksIcon} minimize>
-            {t('CircleContent.tabTasks')}
-          </Tab>
-          <Tab icon={DecisionsIcon} minimize>
-            {t('CircleContent.tabDecisions')}
-          </Tab>
-        </TabList>
+          <Flex alignItems="center" gap={3} minH={10} px={6} pt={2} pb={4}>
+            <Heading as="h1" size="md" fontWeight="bold">
+              {role.name}
+            </Heading>
+            {circle.role.parentLink && circle.parentId && (
+              <>
+                <Box color="gray.500" _dark={{ color: 'gray.300' }}>
+                  <CircleParentLinkIcon size="1.5em" />
+                </Box>
+                <CircleByIdButton id={circle.parentId} size="md" />
+              </>
+            )}
+          </Flex>
+
+          <TabList
+            borderBottomWidth={0}
+            pb={2}
+            pl={6}
+          >
+            <Tab icon={CircleIcon} minimize>
+              {t('CircleContent.tabRole')}
+            </Tab>
+            <Tab icon={NewsIcon} minimize>
+              {t('CircleContent.tabNews')}
+            </Tab>
+            <Tab icon={ThreadsIcon} minimize>
+              {t('CircleContent.tabThreads')}
+            </Tab>
+            <Tab icon={MeetingsIcon} minimize>
+              {t('CircleContent.tabMeetings')}
+            </Tab>
+            <Tab icon={TasksIcon} minimize>
+              {t('CircleContent.tabTasks')}
+            </Tab>
+            <Tab icon={DecisionsIcon} minimize>
+              {t('CircleContent.tabDecisions')}
+            </Tab>
+          </TabList>
+        </Box>
 
         <TabPanels
           flex={flowHeight ? undefined : 1}

@@ -15,7 +15,7 @@ import {
 import { useStoreState } from '@store/hooks'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import CircleAndParentsLinks from '../components/CircleAndParentsLinks'
+import CircleBreadcrumbButton from '../components/CircleBreadcrumbButton'
 import useCircle from '../hooks/useCircle'
 
 interface Props extends UseModalProps {
@@ -84,7 +84,7 @@ export default function CirclePickerModal({ onSelect, ...modalProps }: Props) {
                 bg="white"
                 _dark={{ bg: 'gray.700' }}
               >
-                <CircleAndParentsLinks circle={circle} mr={8} />
+                <CircleBreadcrumbButton circle={circle} mr={8} />
                 <Button
                   variant="solid"
                   colorScheme="blue"

@@ -1,4 +1,4 @@
-import CircleAndParentsLinks from '@/circle/components/CircleAndParentsLinks'
+import CircleBreadcrumbButton from '@/circle/components/CircleBreadcrumbButton'
 import { CircleContext } from '@/circle/contexts/CIrcleContext'
 import { CircleMemberContext } from '@/circle/contexts/CircleMemberContext'
 import { Flex, IconButton, Tooltip } from '@chakra-ui/react'
@@ -38,7 +38,7 @@ export default function MemberRoleItem({
 
   return (
     <Flex alignItems="center">
-      <CircleAndParentsLinks circle={circle} flex={1} />
+      <CircleBreadcrumbButton circle={circle} flex={1} />
 
       {canFocus && !hideActions && (
         <Tooltip

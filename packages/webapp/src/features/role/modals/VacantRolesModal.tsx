@@ -1,4 +1,4 @@
-import CircleAndParentsLinks from '@/circle/components/CircleAndParentsLinks'
+import CircleBreadcrumbButton from '@/circle/components/CircleBreadcrumbButton'
 import {
   ListItem,
   Modal,
@@ -47,7 +47,7 @@ export default function VacantRolesModal(modalProps: UseModalProps) {
             <UnorderedList>
               {vacantCircles.map((circle) => (
                 <ListItem key={circle.id}>
-                  <CircleAndParentsLinks circle={circle} />
+                  <CircleBreadcrumbButton circle={circle} />
                 </ListItem>
               ))}
             </UnorderedList>
