@@ -5,10 +5,26 @@ import useOrgOwner from '@/member/hooks/useOrgOwner'
 import { useNavigateOrg } from '@/org/hooks/useNavigateOrg'
 import BaseRolesModal from '@/role/modals/BaseRolesModal'
 import VacantRolesModal from '@/role/modals/VacantRolesModal'
-import { Button, HStack, StyleProps, useDisclosure } from '@chakra-ui/react'
+import {
+  Flex,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Portal,
+  StyleProps,
+  useDisclosure,
+} from '@chakra-ui/react'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { LogsIcon, RoleIcon, ShareIcon, VacantCircle } from 'src/icons'
+import {
+  LogsIcon,
+  RoleIcon,
+  SettingsIcon,
+  ShareIcon,
+  VacantCircle,
+} from 'src/icons'
 import CirclesShareModal from '../modals/CirclesShareModal'
 import GraphViewsSelect from './GraphViewsSelect'
 
@@ -57,51 +73,65 @@ export default function CirclesGraphOptions({
   const shareModal = useDisclosure()
 
   return (
-    <HStack spacing={2} flexWrap="wrap" {...styleProps}>
+    <Flex justifyContent="space-between" {...styleProps}>
       <GraphViewsSelect
         value={view}
         onChange={onViewChange}
         {...buttonsProps}
         fontWeight="bold"
       />
+
       {isMember && (
-        <>
-          {isOwner && (
-            <Button
-              leftIcon={<RoleIcon size={20} />}
-              onClick={baseRolesModal.onOpen}
-              {...buttonsProps}
-            >
-              {t('CirclesGraphOptions.baseRoles')}
-            </Button>
-          )}
-
-          <Button
-            leftIcon={<VacantCircle size={20} />}
-            onClick={vacantRolesModal.onOpen}
+        <Menu isLazy placement="bottom-end">
+          <MenuButton
+            as={IconButton}
+            aria-label={t('CirclesGraphOptions.settings')}
+            icon={<SettingsIcon size={20} />}
             {...buttonsProps}
-          >
-            {t('CirclesGraphOptions.vacantRoles')}
-          </Button>
+          />
 
-          <Button
-            leftIcon={<LogsIcon size={20} />}
-            onClick={() => navigateOrg('logs')}
-            {...buttonsProps}
-          >
-            {t('CirclesGraphOptions.logs')}
-          </Button>
-
-          {isAdmin && (
-            <Button
-              leftIcon={<ShareIcon size={20} />}
-              onClick={shareModal.onOpen}
-              {...buttonsProps}
+          <Portal>
+            <MenuList
+              fontFamily="body"
+              fontSize="1rem"
+              fontWeight="normal"
+              shadow="lg"
+              zIndex={2000}
             >
-              {t('CirclesGraphOptions.share')}
-            </Button>
-          )}
-        </>
+              {isOwner && (
+                <MenuItem
+                  icon={<RoleIcon size={20} />}
+                  onClick={baseRolesModal.onOpen}
+                >
+                  {t('CirclesGraphOptions.baseRoles')}
+                </MenuItem>
+              )}
+
+              <MenuItem
+                icon={<VacantCircle size={20} />}
+                onClick={vacantRolesModal.onOpen}
+              >
+                {t('CirclesGraphOptions.vacantRoles')}
+              </MenuItem>
+
+              <MenuItem
+                icon={<LogsIcon size={20} />}
+                onClick={() => navigateOrg('logs')}
+              >
+                {t('CirclesGraphOptions.logs')}
+              </MenuItem>
+
+              {isAdmin && (
+                <MenuItem
+                  icon={<ShareIcon size={20} />}
+                  onClick={shareModal.onOpen}
+                >
+                  {t('CirclesGraphOptions.share')}
+                </MenuItem>
+              )}
+            </MenuList>
+          </Portal>
+        </Menu>
       )}
 
       {baseRolesModal.isOpen && (
@@ -115,6 +145,6 @@ export default function CirclesGraphOptions({
       {shareModal.isOpen && (
         <CirclesShareModal isOpen onClose={shareModal.onClose} />
       )}
-    </HStack>
+    </Flex>
   )
 }

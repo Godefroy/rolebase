@@ -242,6 +242,7 @@
     "CmdShiftClick": "Copier un rôle ou un membre avec la souris"
   },
   "CirclesGraphOptions": {
+    "settings": "Réglages",
     "baseRoles": "Rôles de base",
     "vacantRoles": "Rôles vacants",
     "logs": "Historique",

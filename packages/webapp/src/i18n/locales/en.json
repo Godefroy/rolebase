@@ -242,6 +242,7 @@
     "CmdShiftClick": "Copy a role or member with the mouse"
   },
   "CirclesGraphOptions": {
+    "settings": "Settings",
     "baseRoles": "Basic roles",
     "vacantRoles": "Vacant roles",
     "logs": "History",
