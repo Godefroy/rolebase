@@ -23,7 +23,8 @@ fragment CircleFull on circle {
       ...MemberSummary
     }
   }
-  invitedCircleLinks {
+  invitedCircleLinks(where: { archived: { _eq: false } }) {
+    id
     invitedCircle {
       id
     }

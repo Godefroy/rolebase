@@ -8,6 +8,7 @@ import member from './member'
 import org from './org'
 import orgSubscription from './orgSubscription'
 import participants from './participants'
+import proposal from './proposal'
 import search from './search'
 import trigger from './trigger'
 
@@ -20,6 +21,7 @@ export const trpcRouter = router({
   org,
   orgSubscription,
   participants,
+  proposal,
   search,
   trigger,
 

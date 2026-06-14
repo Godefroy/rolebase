@@ -53,6 +53,13 @@ interface Props {
   // When true, the content flows to its natural height instead of filling its
   // parent with an inner scroll. Used when the whole page scrolls (mobile/tablet).
   flowHeight?: boolean
+  // When true, only the Role tab is shown (no tab bar). Used by the proposal
+  // org-chart editor, which only edits roles/circles.
+  onlyRole?: boolean
+  // When true, hide editing affordances (the role panel becomes a preview).
+  readOnly?: boolean
+  // Override the header close button handler (otherwise closes the parent modal)
+  onClose?: () => void
 }
 
 enum TabsEnum {
@@ -74,9 +81,12 @@ export default function CircleContent({
   changeTitle,
   headerIcons,
   flowHeight,
+  onlyRole,
+  readOnly,
+  onClose,
 }: Props) {
   const { t } = useTranslation()
-  const isMember = useOrgMember()
+  const isMember = useOrgMember() && !readOnly
   const circleContext = useContext(CircleContext)
   const navigateOrg = useNavigateOrg()
 
@@ -115,7 +125,7 @@ export default function CircleContent({
       {changeTitle && <Title>{role.name}</Title>}
 
       <Tabs
-        index={tab}
+        index={onlyRole ? 0 : tab}
         onChange={handleTabChange}
         isLazy
         display={flowHeight ? undefined : 'flex'}
@@ -131,9 +141,11 @@ export default function CircleContent({
               <ParticipantsNumber participants={participants} />
             </Box>
 
-            <Box>
-              <CirclePrivacy />
-            </Box>
+            {!onlyRole && (
+              <Box>
+                <CirclePrivacy />
+              </Box>
+            )}
 
             {isMember && (
               <ActionsMenu
@@ -151,14 +163,16 @@ export default function CircleContent({
                     ? duplicateModal.onOpen
                     : undefined
                 }
-                onExport={() =>
-                  navigateOrg(`export-circle?circleId=${circle.id}`)
+                onExport={
+                  onlyRole
+                    ? undefined
+                    : () => navigateOrg(`export-circle?circleId=${circle.id}`)
                 }
               />
             )}
 
             {headerIcons}
-            <ModalCloseStaticButton />
+            <ModalCloseStaticButton onClose={onClose} />
           </Flex>
 
           <Flex alignItems="center" gap={3} minH={10} px={6} pt={2} pb={4}>
@@ -175,34 +189,33 @@ export default function CircleContent({
             )}
           </Flex>
 
-          <TabList
-            borderBottomWidth={0}
-            pb={2}
-            pl={6}
-          >
-            <Tab icon={CircleIcon} minimize>
-              {t('CircleContent.tabRole')}
-            </Tab>
-            <Tab icon={NewsIcon} minimize>
-              {t('CircleContent.tabNews')}
-            </Tab>
-            <Tab icon={ThreadsIcon} minimize>
-              {t('CircleContent.tabThreads')}
-            </Tab>
-            <Tab icon={MeetingsIcon} minimize>
-              {t('CircleContent.tabMeetings')}
-            </Tab>
-            <Tab icon={TasksIcon} minimize>
-              {t('CircleContent.tabTasks')}
-            </Tab>
-            <Tab icon={DecisionsIcon} minimize>
-              {t('CircleContent.tabDecisions')}
-            </Tab>
-          </TabList>
+          {!onlyRole && (
+            <TabList borderBottomWidth={0} pb={2} pl={6}>
+              <Tab icon={CircleIcon} minimize>
+                {t('CircleContent.tabRole')}
+              </Tab>
+              <Tab icon={NewsIcon} minimize>
+                {t('CircleContent.tabNews')}
+              </Tab>
+              <Tab icon={ThreadsIcon} minimize>
+                {t('CircleContent.tabThreads')}
+              </Tab>
+              <Tab icon={MeetingsIcon} minimize>
+                {t('CircleContent.tabMeetings')}
+              </Tab>
+              <Tab icon={TasksIcon} minimize>
+                {t('CircleContent.tabTasks')}
+              </Tab>
+              <Tab icon={DecisionsIcon} minimize>
+                {t('CircleContent.tabDecisions')}
+              </Tab>
+            </TabList>
+          )}
         </Box>
 
         <TabPanels
           flex={flowHeight ? undefined : 1}
+          minH={flowHeight ? undefined : 0}
           overflowY={flowHeight ? undefined : 'auto'}
           bg={tab === TabsEnum.News ? 'menulight' : undefined}
           _dark={{ bg: tab === TabsEnum.News ? 'menudark' : undefined }}
@@ -210,21 +223,31 @@ export default function CircleContent({
           <TabPanel px={6} py={10}>
             <CircleRole />
           </TabPanel>
-          <TabPanel px={6} py={10}>
-            <CircleNews circleId={circle.id} />
-          </TabPanel>
-          <TabPanel px={6} py={10}>
-            <CircleThreads circleId={circle.id} />
-          </TabPanel>
-          <TabPanel px={6} py={10}>
-            <CircleMeetings circleId={circle.id} />
-          </TabPanel>
-          <TabPanel px={6} py={10}>
-            <CircleTasks circleId={circle.id} />
-          </TabPanel>
-          <TabPanel px={6} py={10}>
-            <CircleDecisions circleId={circle.id} />
-          </TabPanel>
+          {!onlyRole && (
+            <TabPanel px={6} py={10}>
+              <CircleNews circleId={circle.id} />
+            </TabPanel>
+          )}
+          {!onlyRole && (
+            <TabPanel px={6} py={10}>
+              <CircleThreads circleId={circle.id} />
+            </TabPanel>
+          )}
+          {!onlyRole && (
+            <TabPanel px={6} py={10}>
+              <CircleMeetings circleId={circle.id} />
+            </TabPanel>
+          )}
+          {!onlyRole && (
+            <TabPanel px={6} py={10}>
+              <CircleTasks circleId={circle.id} />
+            </TabPanel>
+          )}
+          {!onlyRole && (
+            <TabPanel px={6} py={10}>
+              <CircleDecisions circleId={circle.id} />
+            </TabPanel>
+          )}
         </TabPanels>
       </Tabs>
 

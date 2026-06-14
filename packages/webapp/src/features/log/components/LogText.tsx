@@ -1,11 +1,6 @@
 import CircleLink from '@/circle/components/CircleLink'
-import DecisionLink from '@/decision/components/DecisionLink'
 import MemberLink from '@/member/components/MemberLink'
 import RoleEditLink from '@/role/components/RoleEditLink'
-import TaskLink from '@/task/components/TaskLink'
-import TaskStatusTag from '@/task/components/TaskStatusTag'
-import ThreadLink from '@/thread/components/ThreadLink'
-import ThreadStatusTag from '@/thread/components/ThreadStatusTag'
 import { LogFragment } from '@gql'
 import { LogType } from '@rolebase/shared/model/log'
 import React from 'react'
@@ -76,6 +71,24 @@ export default function LogText({ log }: Props) {
         />
       )
 
+    case LogType.CircleLinkAdd:
+    case LogType.CircleLinkRemove:
+      return (
+        <Trans
+          i18nKey={`${i18nPrefix}.${type}`}
+          components={{
+            author,
+            circle: <CircleLink id={log.display.id} name={log.display.name} />,
+            invitedCircle: (
+              <CircleLink
+                id={log.display.circleId}
+                name={log.display.circleName}
+              />
+            ),
+          }}
+        />
+      )
+
     case LogType.RoleCreate:
     case LogType.RoleUpdate:
     case LogType.RoleArchive:
@@ -85,72 +98,6 @@ export default function LogText({ log }: Props) {
           components={{
             author,
             role: <RoleEditLink id={log.display.id} name={log.display.name} />,
-          }}
-        />
-      )
-
-    case LogType.MemberCreate:
-    case LogType.MemberUpdate:
-    case LogType.MemberArchive:
-      return (
-        <Trans
-          i18nKey={`${i18nPrefix}.${type}`}
-          components={{
-            author,
-            member: <MemberLink id={log.display.id} name={log.display.name} />,
-          }}
-        />
-      )
-
-    case LogType.TaskCreate:
-    case LogType.TaskUpdate:
-    case LogType.TaskArchive:
-      return (
-        <Trans
-          i18nKey={`${i18nPrefix}.${type}`}
-          components={{
-            author,
-            task: <TaskLink id={log.display.id} name={log.display.name} />,
-          }}
-        />
-      )
-
-    case LogType.TaskStatusUpdate:
-      return (
-        <Trans
-          i18nKey={`${i18nPrefix}.${type}`}
-          components={{
-            author,
-            task: <TaskLink id={log.display.id} name={log.display.name} />,
-            status: <TaskStatusTag status={log.display.status} />,
-          }}
-        />
-      )
-
-    case LogType.ThreadStatusUpdate:
-      return (
-        <Trans
-          i18nKey={`${i18nPrefix}.${type}`}
-          components={{
-            author,
-            task: <ThreadLink id={log.display.id} name={log.display.name} />,
-            prevStatus: <ThreadStatusTag status={log.display.prevStatus} />,
-            status: <ThreadStatusTag status={log.display.status} />,
-          }}
-        />
-      )
-
-    case LogType.DecisionCreate:
-    case LogType.DecisionUpdate:
-    case LogType.DecisionArchive:
-      return (
-        <Trans
-          i18nKey={`${i18nPrefix}.${type}`}
-          components={{
-            author,
-            decision: (
-              <DecisionLink id={log.display.id} name={log.display.name} />
-            ),
           }}
         />
       )

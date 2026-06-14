@@ -1,5 +1,4 @@
 import { useHoverItemStyle } from '@/common/hooks/useHoverItemStyle'
-import useCreateLog from '@/log/hooks/useCreateLog'
 import {
   Editable,
   EditableInput,
@@ -10,7 +9,6 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { MemberFragment, useUpdateMemberMutation } from '@gql'
-import { EntityChangeType, LogType } from '@rolebase/shared/model/log'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -26,7 +24,6 @@ export default function MemberNameEditable({
 }: Props) {
   const { t } = useTranslation()
   const [updateMember] = useUpdateMemberMutation()
-  const createLog = useCreateLog()
   const toast = useToast()
   const hoverStyle = useHoverItemStyle()
 
@@ -46,29 +43,6 @@ export default function MemberNameEditable({
         values: {
           name: value,
         },
-      },
-    })
-
-    // Log change
-    createLog({
-      display: {
-        type: LogType.MemberUpdate,
-        id: member.id,
-        name: member.name,
-      },
-      changes: {
-        roles: [
-          {
-            type: EntityChangeType.Update,
-            id: member.id,
-            prevData: {
-              name: member.name,
-            },
-            newData: {
-              name: value,
-            },
-          },
-        ],
       },
     })
 

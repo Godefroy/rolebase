@@ -24,6 +24,14 @@ subscription meetingLogs($meetingId: uuid!) {
     ...Log
   }
 }
+subscription decisionLogs($decisionId: uuid!) {
+  log(
+    where: { decisionId: { _eq: $decisionId } }
+    order_by: { createdAt: asc }
+  ) {
+    ...Log
+  }
+}
 
 mutation createLog($values: log_insert_input!) {
   insert_log_one(object: $values) {

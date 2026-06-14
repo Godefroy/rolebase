@@ -25,6 +25,15 @@
     - name: x-nhost-webhook-secret
       value_from_env: NHOST_WEBHOOK_SECRET
   comment: ""
+- name: resolve-proposals
+  webhook: '{{BACKEND_URL}}/cron.resolveProposals'
+  schedule: '*/5 * * * *'
+  include_in_metadata: true
+  payload: {}
+  headers:
+    - name: x-nhost-webhook-secret
+      value_from_env: NHOST_WEBHOOK_SECRET
+  comment: ""
 - name: send-digest-emails
   webhook: '{{BACKEND_URL}}/cron.sendDigestEmails'
   schedule: 30 * * * *

@@ -42,7 +42,8 @@ fragment OrgFullLight on org {
       id
       memberId
     }
-    invitedCircleLinks {
+    invitedCircleLinks(where: { archived: { _eq: false } }) {
+      id
       invitedCircle {
         id
       }

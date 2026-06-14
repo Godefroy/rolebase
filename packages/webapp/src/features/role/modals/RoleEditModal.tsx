@@ -2,7 +2,7 @@ import ColorController from '@/common/atoms/ColorController'
 import Loading from '@/common/atoms/Loading'
 import SwitchController from '@/common/atoms/SwitchController'
 import TextError from '@/common/atoms/TextError'
-import useCreateLog from '@/log/hooks/useCreateLog'
+import { useOrgEditActions } from '@/org/contexts/OrgEditContext'
 import useCurrentMember from '@/member/hooks/useCurrentMember'
 import useOrgOwner from '@/member/hooks/useOrgOwner'
 import {
@@ -27,15 +27,9 @@ import {
   UseModalProps,
   VStack,
 } from '@chakra-ui/react'
-import {
-  RoleSummaryFragment,
-  useGetRoleQuery,
-  useUpdateRoleMutation,
-} from '@gql'
+import { RoleFragment, RoleSummaryFragment, useGetRoleQuery } from '@gql'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { getCircleLeaders } from '@rolebase/shared/helpers/getCircleLeaders'
-import { getEntityChanges } from '@rolebase/shared/helpers/log/getEntityChanges'
-import { EntityChangeType, LogType } from '@rolebase/shared/model/log'
 import { nameSchema } from '@rolebase/shared/schemas'
 import { useStoreState } from '@store/hooks'
 import React, { useEffect, useMemo } from 'react'
@@ -47,6 +41,9 @@ import * as yup from 'yup'
 interface Props extends UseModalProps {
   id?: string
   role?: RoleSummaryFragment
+  // Preview a role without editing (e.g. opened from a proposal change outside
+  // the org chart editor). No save, fields are not interactive.
+  readOnly?: boolean
 }
 
 interface Values {
@@ -71,10 +68,14 @@ function getDefaultValues(role: RoleSummaryFragment): Values {
   }
 }
 
-export default function RoleEditModal({ id, role, ...modalProps }: Props) {
+export default function RoleEditModal({
+  id,
+  role,
+  readOnly,
+  ...modalProps
+}: Props) {
   const { t } = useTranslation()
-  const [updateRole] = useUpdateRoleMutation()
-  const createLog = useCreateLog()
+  const { updateRole } = useOrgEditActions()
   const currentMember = useCurrentMember()
   const isOrgOwner = useOrgOwner()
   const circles = useStoreState((state) => state.org.circles)
@@ -130,27 +131,7 @@ export default function RoleEditModal({ id, role, ...modalProps }: Props) {
   const onSubmit = handleSubmit(async (values) => {
     if (!role) return
     modalProps.onClose()
-
-    // Update role data
-    await updateRole({ variables: { id: role.id, values } })
-
-    // Log change
-    createLog({
-      display: {
-        type: LogType.RoleUpdate,
-        id: role.id,
-        name: role.name,
-      },
-      changes: {
-        roles: [
-          {
-            type: EntityChangeType.Update,
-            id: role.id,
-            ...getEntityChanges(role, values),
-          },
-        ],
-      },
-    })
+    await updateRole(role as RoleFragment, values)
   })
 
   if (loading) return <Loading size="sm" active center />
@@ -168,7 +149,10 @@ export default function RoleEditModal({ id, role, ...modalProps }: Props) {
           <ModalCloseButton />
 
           <ModalBody>
-            <VStack spacing={6}>
+            <VStack
+              spacing={6}
+              pointerEvents={readOnly ? 'none' : undefined}
+            >
               {role.base ? (
                 <Alert status="warning">
                   <AlertIcon />
@@ -215,11 +199,13 @@ export default function RoleEditModal({ id, role, ...modalProps }: Props) {
             </VStack>
           </ModalBody>
 
-          <ModalFooter alignItems="end">
-            <Button colorScheme="blue" onClick={onSubmit}>
-              {t('common.save')}
-            </Button>
-          </ModalFooter>
+          {!readOnly && (
+            <ModalFooter alignItems="end">
+              <Button colorScheme="blue" onClick={onSubmit}>
+                {t('common.save')}
+              </Button>
+            </ModalFooter>
+          )}
         </ModalContent>
       </Modal>
     </>

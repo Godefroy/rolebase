@@ -10,10 +10,19 @@ import {
 } from '@chakra-ui/react'
 import { Thread_Activity_Type_Enum } from '@gql'
 import { ThreadActivityMeetingNoteFragment } from '@rolebase/shared/model/thread_activity'
+import useCurrentMember from '@/member/hooks/useCurrentMember'
+import { ScrollableContext } from '@/common/hooks/useScrollable'
 import { isSameDay } from 'date-fns'
-import React, { useContext, useEffect, useMemo, useState } from 'react'
+import React, {
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { useTranslation } from 'react-i18next'
 import { ThreadIcon } from 'src/icons'
+import ProposalScrollButton from '@/proposal/components/ProposalScrollButton'
 import { ThreadContext } from '../contexts/ThreadContext'
 import ThreadActivity from './ThreadActivity'
 import ThreadDaySeparator from './ThreadDaySeparator'
@@ -27,6 +36,35 @@ export default forwardRef(function ThreadActivities(
   const { t } = useTranslation()
   const { thread, activities, memberStatus } = useContext(ThreadContext)!
   const meetingState = useContext(MeetingContext)
+  const currentMember = useCurrentMember()
+  const scrollable = useContext(ScrollableContext)
+
+  // Scroll to the bottom on load, and when the last activity changes and was
+  // created by the current member. Other members' new messages are left to the
+  // scrollable layout (it keeps you at the bottom when already there).
+  const loadedRef = useRef(false)
+  const lastActivityIdRef = useRef<string | undefined>()
+
+  useEffect(() => {
+    if (!activities || !scrollable) return
+    const lastActivity = activities[activities.length - 1]
+    const lastId = lastActivity?.id
+
+    if (!loadedRef.current) {
+      loadedRef.current = true
+      lastActivityIdRef.current = lastId
+      // Pin to bottom; the layout keeps following as async content grows
+      scrollable.scrollToBottom(false)
+      return
+    }
+
+    if (lastId && lastId !== lastActivityIdRef.current) {
+      lastActivityIdRef.current = lastId
+      if (lastActivity?.userId === currentMember?.userId) {
+        scrollable.scrollToBottom(true)
+      }
+    }
+  }, [activities])
 
   // Temporary meeting note
   const tmpMeetingNoteActivity = useMemo(() => {
@@ -95,7 +133,9 @@ export default forwardRef(function ThreadActivities(
   }, [memberStatus?.lastReadActivityId])
 
   return (
-    <VStack spacing={0} mb={2} align="stretch" ref={ref} {...styleProps}>
+    <>
+      <ProposalScrollButton />
+      <VStack spacing={0} mb={2} align="stretch" ref={ref} {...styleProps}>
       {activities &&
         activities.map((activity, i) => (
           <React.Fragment key={`activity_${activity.id}`}>
@@ -138,6 +178,7 @@ export default forwardRef(function ThreadActivities(
       {tmpMeetingNoteActivity && (
         <ThreadActivity activity={tmpMeetingNoteActivity} />
       )}
-    </VStack>
+      </VStack>
+    </>
   )
 })

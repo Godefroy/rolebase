@@ -23,12 +23,8 @@ interface Props {
   step: MeetingStepTasksFragment
 }
 
-export const taskLogTypes = [
-  LogType.TaskCreate,
-  LogType.TaskUpdate,
-  LogType.TaskStatusUpdate,
-  LogType.TaskArchive,
-]
+// Tasks are no longer logged (the log system covers the org chart only).
+export const taskLogTypes: LogType[] = []
 
 export default function MeetingStepContentTasks({ step }: Props) {
   const { t } = useTranslation()

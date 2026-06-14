@@ -151,6 +151,7 @@ insert_permissions:
                               _eq: X-Hasura-User-Id
       columns:
         - archived
+        - id
         - orgId
         - parentId
         - roleId

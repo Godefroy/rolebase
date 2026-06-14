@@ -153,6 +153,10 @@
     "create": "Create a meeting",
     "recurring": "Recurring meetings"
   },
+  "CircleLinkDeleteModal": {
+    "heading": "Remove a role invitation",
+    "info": "Are you sure you want to remove the invitation of role <b>{{invitedRole}}</b> from role <b>{{role}}</b>?"
+  },
   "CircleMemberDeleteModal": {
     "heading": "Remove a member's role",
     "info": "Are you sure you want to remove remove role <b>{{role}}</b> from member <b>{{member}}</b>?"
@@ -315,6 +319,7 @@
   },
   "DecisionContent": {
     "heading": "Decision",
+    "changes": "Org chart changes",
     "private": "Private decision: Only participants of {{role}} can see the decision."
   },
   "DecisionDeleteModal": {
@@ -371,6 +376,8 @@
     "CircleArchive": "<author /> archived the role <circle />",
     "CircleMemberAdd": "<author /> added <member /> to role <circle />",
     "CircleMemberRemove": "<author /> removed <member /> from role <circle />",
+    "CircleLinkAdd": "<author /> invited role <invitedCircle /> into role <circle />",
+    "CircleLinkRemove": "<author /> removed the invitation of role <invitedCircle /> from role <circle />",
     "RoleCreate": "<author /> has created the role <role />",
     "RoleUpdate": "<author /> has modified the role <role />",
     "RoleArchive": "<author /> archived the role <role />",
@@ -1235,7 +1242,144 @@
     "archived": "This topic has been deleted. You can restore it with the menu at the top right.",
     "placeholder": "Message...",
     "poll": "Poll",
+    "proposal": "Proposal",
     "defaultEntityDescription": "Topic: {{thread}}"
+  },
+  "ProposalModal": {
+    "headingCreate": "New proposal",
+    "headingEdit": "Edit proposal",
+    "title": "Decision title",
+    "titlePlaceholder": "What is decided",
+    "description": "Description",
+    "orgChart": "Org chart changes",
+    "editOrgChart": "Edit org chart",
+    "decisionMode": "Decision mode",
+    "decisionMode_consent": "Consent",
+    "decisionMode_unanimity": "Unanimity",
+    "decisionMode_simpleMajority": "Simple majority",
+    "decisionMode_absoluteMajority": "Absolute majority",
+    "voters": "Who can vote",
+    "voters_thread": "Topic participants",
+    "voters_circle": "Role participants",
+    "allowAbstain": "Allow abstaining",
+    "showVoters": "Reveal who voted what at resolution",
+    "resolution": "Resolution",
+    "earlyResolution": "Resolve early when the outcome is certain",
+    "hasResolutionDate": "Set a resolution deadline"
+  },
+  "ProposalGraphEditor": {
+    "heading": "Edit org chart",
+    "headingView": "Modified org chart",
+    "subtitle": "These changes are saved with the proposal and applied to the org chart only once it is approved.",
+    "done": "Save",
+    "selectCircle": "Select a role to edit it.",
+    "viewCircle": "Select a role to view it.",
+    "changes": "Changes"
+  },
+  "GraphShortcutsModal": {
+    "button": "Shortcuts",
+    "heading": "Org chart shortcuts",
+    "zoom_label": "Zoom",
+    "zoom_desc": "Scroll up or down with the mouse wheel (or pinch on a trackpad).",
+    "pan_label": "Move the view",
+    "pan_desc": "Drag the empty background to pan around the chart.",
+    "open_label": "Open a role",
+    "open_desc": "Click a role to view and edit it in the side panel.",
+    "moveRole_label": "Move a role",
+    "moveRole_desc": "Drag the role and drop it onto another role.",
+    "copyRole_label": "Copy a role",
+    "copyRole_desc": "Hold Shift, then drag the role onto another role.",
+    "moveMember_label": "Move a member",
+    "moveMember_desc": "Drag the member and drop them onto another role.",
+    "addMember_label": "Add a member to another role",
+    "addMember_desc": "Hold Shift, then drag the member onto another role."
+  },
+  "ProposalLogList": {
+    "empty": "No changes yet.",
+    "error": "This change cannot be applied. Remove it to make the proposal valid again.",
+    "viewDiff": "View changes"
+  },
+  "ProposalLogDiffModal": {
+    "heading": "Changes"
+  },
+  "ProposalLog": {
+    "CircleCreate": "Create role <circle/> in <parentCircle/>",
+    "CircleMove": "Move role <circle/> to <parentCircle/>",
+    "CircleCopy": "Copy role <circle/> to <parentCircle/>",
+    "CircleArchive": "Archive role <circle/>",
+    "CircleMemberAdd": "Add <member/> to role <circle/>",
+    "CircleMemberRemove": "Remove <member/> from role <circle/>",
+    "CircleLinkAdd": "Invite role <invitedCircle/> into <circle/>",
+    "CircleLinkRemove": "Remove invitation of role <invitedCircle/> from <circle/>",
+    "RoleUpdate": "Edit role <role/>"
+  },
+  "ThreadActivityProposal": {
+    "intro": "proposes to make this decision:",
+    "cannotVote_thread": "Only the participants of this topic can vote on this proposal.",
+    "cannotVote_circle": "Only the participants of this role can vote on this proposal.",
+    "voteProgress": "{{count}}/{{total}} voted",
+    "viewOrgChart": "View modified org chart",
+    "voteMode_consent": "Consent vote",
+    "voteMode_unanimity": "Unanimous vote",
+    "voteMode_simpleMajority": "Simple majority vote",
+    "voteMode_absoluteMajority": "Absolute majority vote",
+    "approve": "I approve",
+    "consent": "I consent",
+    "object": "I object",
+    "oppose": "I oppose",
+    "abstain": "I abstain",
+    "resolve": "Resolve",
+    "resolveNow": "Resolve now",
+    "recreate": "Recreate",
+    "viewDecision": "View the saved decision",
+    "manage": "Manage",
+    "remind": "Remind to vote",
+    "cancel": "Cancel",
+    "cancelAndDuplicate": "Cancel and recreate",
+    "status_inProgress": "In progress",
+    "status_approved": "Approved",
+    "status_refused": "Refused",
+    "status_canceled": "Canceled",
+    "applyError": "The org chart changes could not be applied (an entity no longer exists)."
+  },
+  "ProposalScrollButton": {
+    "label": "Proposal in progress"
+  },
+  "ProposalCancelModal": {
+    "heading": "Cancel the proposal",
+    "info": "This proposal will be canceled. This action cannot be undone.",
+    "confirm": "Cancel the proposal",
+    "headingDuplicate": "Cancel and duplicate",
+    "infoDuplicate": "This proposal will be canceled and a new editable copy will open.",
+    "confirmDuplicate": "Cancel and duplicate",
+    "dismiss": "Keep the proposal"
+  },
+  "ProposalResolveModal": {
+    "heading": "Resolve the proposal",
+    "mode": "Decision mode:",
+    "votes": "{{approve}} approve and {{object}} object, out of {{total}} voters.",
+    "outcomeApproved": "Based on the current votes, the proposal will be approved.",
+    "outcomeRefused": "Based on the current votes, the proposal will be refused.",
+    "applyNote": "The prepared org chart changes will be applied and a decision will be recorded.",
+    "confirm": "Resolve"
+  },
+  "ThreadActivityProposalEvent": {
+    "proposal": "Proposal",
+    "canceled": "canceled the proposal <proposal>{{title}}</proposal>",
+    "voteReminder": "reminds to vote on the proposal <proposal>{{title}}</proposal>",
+    "result_approved": "The proposal <proposal>{{title}}</proposal> was approved:",
+    "result_refused": "The proposal <proposal>{{title}}</proposal> was refused:",
+    "yes": "Yes",
+    "no": "No",
+    "abstain": "Abstention"
+  },
+  "ProposalVotersModal": {
+    "heading": "Voters",
+    "tab_all": "All",
+    "tab_approve": "Yes",
+    "tab_object": "No",
+    "tab_abstain": "Abstention",
+    "empty": "No voter"
   },
   "ThreadActivityDecision": {
     "text": "has created a decision:",

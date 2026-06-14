@@ -97,7 +97,7 @@ export default function ThreadActivityPoll({ activity }: Props) {
         {t(`ThreadActivityPoll.text`)}
       </Text>
 
-      <Card mt={5} bg="gray.50" _dark={{ bg: 'gray.800' }}>
+      <Card mt={5} variant="activity">
         <CardBody>
           <VStack spacing={2} alignItems="start" role="group">
             <Markdown>{activity.data.question}</Markdown>

@@ -1,0 +1,93 @@
+table:
+  name: thread_proposal_vote
+  schema: public
+object_relationships:
+  - name: activity
+    using:
+      foreign_key_constraint_on: activityId
+insert_permissions:
+  - role: user
+    permission:
+      check:
+        activity:
+          thread:
+            org:
+              members:
+                _and:
+                  - userId:
+                      _eq: X-Hasura-User-Id
+                  - _or:
+                      - role:
+                          _eq: Member
+                      - role:
+                          _eq: Admin
+                      - role:
+                          _eq: Owner
+      set:
+        userId: x-hasura-User-Id
+      columns:
+        - activityId
+        - vote
+select_permissions:
+  - role: user
+    permission:
+      columns:
+        - activityId
+        - createdAt
+        - id
+        - userId
+        - vote
+      filter:
+        activity:
+          thread:
+            org:
+              members:
+                userId:
+                  _eq: X-Hasura-User-Id
+update_permissions:
+  - role: user
+    permission:
+      columns:
+        - vote
+      filter:
+        userId:
+          _eq: X-Hasura-User-Id
+      check: {}
+delete_permissions:
+  - role: user
+    permission:
+      filter:
+        _or:
+          - activity:
+              thread:
+                org:
+                  members:
+                    _and:
+                      - userId:
+                          _eq: X-Hasura-User-Id
+                      - _or:
+                          - role:
+                              _eq: Admin
+                          - role:
+                              _eq: Owner
+          - userId:
+              _eq: X-Hasura-User-Id
+          - activity:
+              userId:
+                _eq: X-Hasura-User-Id
+event_triggers:
+  - name: resolve-proposal-on-vote
+    definition:
+      enable_manual: false
+      insert:
+        columns: '*'
+      update:
+        columns: '*'
+    retry_conf:
+      interval_sec: 10
+      num_retries: 3
+      timeout_sec: 60
+    webhook: '{{BACKEND_URL}}/proposal.onVote'
+    headers:
+      - name: x-nhost-webhook-secret
+        value_from_env: NHOST_WEBHOOK_SECRET

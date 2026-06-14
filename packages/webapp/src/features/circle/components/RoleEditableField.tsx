@@ -1,8 +1,7 @@
 import { EditableField } from '@/common/atoms/EditableField'
-import useCreateLog from '@/log/hooks/useCreateLog'
+import { useOrgEditActions } from '@/org/contexts/OrgEditContext'
 import { Alert, AlertDescription, AlertIcon, BoxProps } from '@chakra-ui/react'
-import { RoleFragment, useUpdateRoleMutation } from '@gql'
-import { EntityChangeType, LogType } from '@rolebase/shared/model/log'
+import { RoleFragment } from '@gql'
 import React, { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CircleContext } from '../contexts/CIrcleContext'
@@ -24,8 +23,7 @@ export function RoleEditableField({
   ...boxProps
 }: Props) {
   const { t } = useTranslation()
-  const [updateRole] = useUpdateRoleMutation()
-  const createLog = useCreateLog()
+  const { updateRole } = useOrgEditActions()
 
   // Get circle context
   const circleContext = useContext(CircleContext)
@@ -37,38 +35,7 @@ export function RoleEditableField({
   const value = typeof rawValue === 'string' ? rawValue : ''
 
   const handleSave = async (newValue: string) => {
-    // Update role data
-    await updateRole({
-      variables: {
-        id: role.id,
-        values: {
-          [field]: newValue,
-        },
-      },
-    })
-
-    // Log change
-    createLog({
-      display: {
-        type: LogType.RoleUpdate,
-        id: role.id,
-        name: role.name,
-      },
-      changes: {
-        roles: [
-          {
-            type: EntityChangeType.Update,
-            id: role.id,
-            prevData: {
-              [field]: value,
-            },
-            newData: {
-              [field]: newValue,
-            },
-          },
-        ],
-      },
-    })
+    await updateRole(role, { [field]: newValue })
   }
 
   return (

@@ -5,9 +5,10 @@ import RoleEditModal from '../modals/RoleEditModal'
 interface Props {
   id: string
   name: string
+  readOnly?: boolean
 }
 
-export default function RoleEditLink({ id, name }: Props) {
+export default function RoleEditLink({ id, name, readOnly }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
@@ -16,7 +17,9 @@ export default function RoleEditLink({ id, name }: Props) {
         {name}
       </Link>
 
-      {isOpen && <RoleEditModal isOpen id={id} onClose={onClose} />}
+      {isOpen && (
+        <RoleEditModal isOpen id={id} readOnly={readOnly} onClose={onClose} />
+      )}
     </>
   )
 }

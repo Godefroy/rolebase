@@ -40,6 +40,7 @@ insert_permissions:
                     _eq: X-Hasura-User-Id
       columns:
         - circleId
+        - id
         - parentId
     comment: ""
 select_permissions:
@@ -57,11 +58,46 @@ select_permissions:
   - role: user
     permission:
       columns:
+        - archived
         - circleId
         - createdAt
         - id
         - parentId
       filter: {}
+    comment: ""
+update_permissions:
+  - role: user
+    permission:
+      columns:
+        - archived
+      filter:
+        hostCircle:
+          _or:
+            - org:
+                members:
+                  _and:
+                    - userId:
+                        _eq: X-Hasura-User-Id
+                    - role:
+                        _eq: Owner
+            - org:
+                _and:
+                  - protectGovernance:
+                      _eq: false
+                  - members:
+                      _and:
+                        - userId:
+                            _eq: X-Hasura-User-Id
+                        - _or:
+                            - role:
+                                _eq: Admin
+                            - role:
+                                _eq: Member
+            - leaders:
+                member:
+                  userId:
+                    _eq: X-Hasura-User-Id
+      check: null
     comment: ""
 delete_permissions:
   - role: user

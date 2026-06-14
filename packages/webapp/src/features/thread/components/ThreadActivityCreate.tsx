@@ -12,13 +12,9 @@ import {
   Box,
   BoxProps,
   Button,
+  Flex,
   HStack,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Spacer,
-  Text,
+  useColorModeValue,
   useDisclosure,
 } from '@chakra-ui/react'
 import {
@@ -38,10 +34,13 @@ import React, {
   useState,
 } from 'react'
 import { useTranslation } from 'react-i18next'
+import useCanEditDecisions from '@/decision/hooks/useCanEditDecisions'
+import ProposalModal from '@/proposal/modals/ProposalModal'
 import {
   CreateIcon,
   DecisionIcon,
   MeetingIcon,
+  OrgChartIcon,
   PollIcon,
   SendIcon,
   TaskIcon,
@@ -59,8 +58,19 @@ export default function ThreadActivityCreate({ thread, ...boxProps }: Props) {
   const { t } = useTranslation()
   const currentMember = useCurrentMember()
   const org = useCurrentOrg()
+  const canAddDecision = useCanEditDecisions(thread.circleId)
   const [createThreadActivity] = useCreateThreadActivityMutation()
   const editorRef = useRef<EditorHandle>(null)
+
+  // White editor, with action buttons slightly lighter than the footer
+  const editorBg = useColorModeValue('white', 'gray.900')
+  const buttonBg = useColorModeValue('whiteAlpha.600', 'whiteAlpha.100')
+  const actionButtonProps = {
+    size: 'sm',
+    variant: 'outline',
+    flexShrink: 0,
+    bg: buttonBg,
+  } as const
 
   // Save message draft
   const draftKey = UserLocalStorageKeys.ThreadDrafts.replace('{id}', thread.id)
@@ -136,6 +146,9 @@ export default function ThreadActivityCreate({ thread, ...boxProps }: Props) {
   // Poll
   const pollModal = useDisclosure()
 
+  // Proposal
+  const proposalModal = useDisclosure()
+
   // Thread
   const [entityType, setEntityType] = useState<
     | Thread_Activity_Type_Enum.Thread
@@ -196,71 +209,65 @@ export default function ThreadActivityCreate({ thread, ...boxProps }: Props) {
         value=""
         autoFocus
         maxH="50vh"
+        bg={editorBg}
         onChange={handleSaveDraft}
         onSubmit={handleSubmit}
       />
 
-      <HStack spacing={2} mt={2}>
-        <Box>
-          <Menu isLazy>
-            <MenuButton
-              as={Button}
-              size="sm"
-              leftIcon={<CreateIcon size={20} />}
+      <HStack spacing={2} mt={2} align="center">
+        <Flex gap={2} overflowX="auto" flex="1" py={1}>
+          {canAddDecision && (
+            <Button
+              {...actionButtonProps}
+              leftIcon={<DecisionIcon size={20} />}
+              onClick={() =>
+                handleEntityOpen(Thread_Activity_Type_Enum.Decision)
+              }
             >
-              {t(`common.add`)}
-            </MenuButton>
-            <MenuList>
-              <MenuItem
-                icon={<DecisionIcon size={20} />}
-                data-type={Thread_Activity_Type_Enum.Decision}
-                onClick={handleEntityOpen}
-              >
-                {t(`common.createDecision`)}
-              </MenuItem>
-              <MenuItem
-                icon={<PollIcon size={20} />}
-                onClick={pollModal.onOpen}
-              >
-                {t(`ThreadActivityCreate.poll`)}
-              </MenuItem>
-              <MenuItem
-                icon={<TaskIcon size={20} />}
-                data-type={Thread_Activity_Type_Enum.Task}
-                onClick={handleEntityOpen}
-              >
-                {t(`common.createTask`)}
-              </MenuItem>
-              <MenuItem
-                icon={<MeetingIcon size={20} />}
-                data-type={Thread_Activity_Type_Enum.Meeting}
-                onClick={handleEntityOpen}
-              >
-                {t(`common.createMeeting`)}
-              </MenuItem>
-              <MenuItem
-                icon={<ThreadIcon size={20} />}
-                data-type={Thread_Activity_Type_Enum.Thread}
-                onClick={handleEntityOpen}
-              >
-                {t(`common.createThread`)}
-              </MenuItem>
-            </MenuList>
-          </Menu>
-        </Box>
-
-        <Spacer />
-
-        <Text
-          color="gray.500"
-          _dark={{ color: 'gray.300' }}
-          fontSize="xs"
-          pr={2}
-        >{`${cmdOrCtrlKey} + Enter`}</Text>
+              {t(`common.createDecision`)}
+            </Button>
+          )}
+          <Button
+            {...actionButtonProps}
+            leftIcon={<PollIcon size={20} />}
+            onClick={pollModal.onOpen}
+          >
+            {t(`ThreadActivityCreate.poll`)}
+          </Button>
+          <Button
+            {...actionButtonProps}
+            leftIcon={<OrgChartIcon size={20} />}
+            onClick={proposalModal.onOpen}
+          >
+            {t(`ThreadActivityCreate.proposal`)}
+          </Button>
+          <Button
+            {...actionButtonProps}
+            leftIcon={<TaskIcon size={20} />}
+            onClick={() => handleEntityOpen(Thread_Activity_Type_Enum.Task)}
+          >
+            {t(`common.createTask`)}
+          </Button>
+          <Button
+            {...actionButtonProps}
+            leftIcon={<MeetingIcon size={20} />}
+            onClick={() => handleEntityOpen(Thread_Activity_Type_Enum.Meeting)}
+          >
+            {t(`common.createMeeting`)}
+          </Button>
+          <Button
+            {...actionButtonProps}
+            leftIcon={<ThreadIcon size={20} />}
+            onClick={() => handleEntityOpen(Thread_Activity_Type_Enum.Thread)}
+          >
+            {t(`common.createThread`)}
+          </Button>
+        </Flex>
 
         <Button
           colorScheme="blue"
           size="sm"
+          flexShrink={0}
           rightIcon={<SendIcon variant="Bold" />}
           onClick={() => handleSubmit()}
         >
@@ -273,6 +280,14 @@ export default function ThreadActivityCreate({ thread, ...boxProps }: Props) {
           threadId={thread.id}
           isOpen
           onClose={pollModal.onClose}
+        />
+      )}
+
+      {proposalModal.isOpen && (
+        <ProposalModal
+          threadId={thread.id}
+          isOpen
+          onClose={proposalModal.onClose}
         />
       )}
 

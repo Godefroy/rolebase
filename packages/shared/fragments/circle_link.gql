@@ -3,4 +3,5 @@ fragment CircleLink on circle_link {
   parentId
   circleId
   createdAt
+  archived
 }

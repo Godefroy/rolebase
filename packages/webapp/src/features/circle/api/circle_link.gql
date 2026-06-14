@@ -4,9 +4,32 @@ mutation createCircleLink($parentId: uuid!, $circleId: uuid!) {
   }
 }
 
-mutation deleteCircleLink($parentId: uuid!, $circleId: uuid!) {
-  delete_circle_link(
-    where: { parentId: { _eq: $parentId }, circleId: { _eq: $circleId } }
+query getCircleLink($id: uuid!) {
+  circle_link_by_pk(id: $id) {
+    ...CircleLink
+  }
+}
+
+mutation insertCircleLink($object: circle_link_insert_input!) {
+  insert_circle_link_one(object: $object) {
+    ...CircleLink
+  }
+}
+
+mutation updateCircleLink($id: uuid!, $values: circle_link_set_input!) {
+  update_circle_link_by_pk(pk_columns: { id: $id }, _set: $values) {
+    ...CircleLink
+  }
+}
+
+mutation archiveCircleLink($parentId: uuid!, $circleId: uuid!) {
+  update_circle_link(
+    where: {
+      parentId: { _eq: $parentId }
+      circleId: { _eq: $circleId }
+      archived: { _eq: false }
+    }
+    _set: { archived: true }
   ) {
     returning {
       ...CircleLink

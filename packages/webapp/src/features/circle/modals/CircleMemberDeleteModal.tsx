@@ -13,8 +13,8 @@ import {
 } from '@chakra-ui/react'
 import React, { useContext, useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { useOrgEditActions } from '@/org/contexts/OrgEditContext'
 import useCircle from '../hooks/useCircle'
-import useRemoveCircleMember from '../hooks/useRemoveCircleMember'
 
 interface Props
   extends Omit<AlertDialogProps, 'children' | 'leastDestructiveRef'> {
@@ -32,7 +32,7 @@ export default function CircleMemberDeleteModal({
   const { t } = useTranslation()
   const circle = useCircle(circleId)
   const member = useMember(memberId)
-  const removeCircleMember = useRemoveCircleMember()
+  const { removeCircleMember } = useOrgEditActions()
   const cancelRef = useRef<HTMLButtonElement>(null)
   const graphContext = useContext(GraphContext)
 

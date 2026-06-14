@@ -25,13 +25,24 @@ interface Props extends FormControlOptions {
   readOnly?: boolean
   minH?: string
   maxH?: string
+  bg?: string // override the editor container background
   onChange?(value: string): void
   onSubmit?(value: string): void // When the user presses Cmd/Ctrl + Enter
 }
 
 const SimpleEditor = forwardRef<EditorHandle, Props>(
   (
-    { value, placeholder, autoFocus, readOnly, minH, maxH, onChange, onSubmit },
+    {
+      value,
+      placeholder,
+      autoFocus,
+      readOnly,
+      minH,
+      maxH,
+      bg,
+      onChange,
+      onSubmit,
+    },
     ref
   ) => {
     const { t } = useTranslation()
@@ -79,6 +90,7 @@ const SimpleEditor = forwardRef<EditorHandle, Props>(
       <EditorContainer
         readOnly={computedReadOnly}
         isFocused={isFocused}
+        {...(bg ? { bg } : null)}
         {...ariaProps}
       >
         <RichEditor

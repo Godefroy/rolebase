@@ -1,7 +1,7 @@
+import { useOrgData } from '@/org/contexts/OrgDataContext'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import { chakra, Text, TextProps } from '@chakra-ui/react'
 import { getCircleAndParents } from '@rolebase/shared/helpers/getCircleAndParents'
-import { useStoreState } from '@store/hooks'
 import React, { useMemo } from 'react'
 import CircleLink from './CircleLink'
 
@@ -10,7 +10,7 @@ interface Props extends TextProps {
 }
 
 export default function CircleBreadcrumb({ circleId, ...textProps }: Props) {
-  const circles = useStoreState((state) => state.org.circles)
+  const { circles } = useOrgData()
 
   // Get circle parents, excluding the circle itself
   const parents = useMemo(() => {

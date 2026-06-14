@@ -48,7 +48,8 @@ const GET_PUBLIC_DATA = gql(`
           id
           memberId
         }
-        invitedCircleLinks {
+        invitedCircleLinks(where: { archived: { _eq: false } }) {
+          id
           invitedCircle {
             id
           }

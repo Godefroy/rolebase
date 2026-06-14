@@ -153,6 +153,10 @@
     "create": "Créer une réunion",
     "recurring": "Réunions récurrentes"
   },
+  "CircleLinkDeleteModal": {
+    "heading": "Supprimer une invitation de rôle",
+    "info": "Êtes-vous sûr(e) de vouloir retirer l'invitation du rôle <b>{{invitedRole}}</b> du rôle <b>{{role}}</b> ?"
+  },
   "CircleMemberDeleteModal": {
     "heading": "Supprimer le rôle d'un membre",
     "info": "Êtes-vous sûr(e) de vouloir retirer le rôle <b>{{role}}</b> du membre <b>{{member}}</b> ?"
@@ -316,6 +320,7 @@
   },
   "DecisionContent": {
     "heading": "Décision",
+    "changes": "Modifications de l'organigramme",
     "private": "Décision privée : Seuls les participants de {{role}} peuvent voir la décision."
   },
   "DecisionDeleteModal": {
@@ -405,6 +410,8 @@
     "CircleArchive": "<author /> a archivé le rôle <circle />",
     "CircleMemberAdd": "<author /> a ajouté <member /> au rôle <circle />",
     "CircleMemberRemove": "<author /> a retiré <member /> du rôle <circle />",
+    "CircleLinkAdd": "<author /> a invité le rôle <invitedCircle /> dans le rôle <circle />",
+    "CircleLinkRemove": "<author /> a retiré l'invitation du rôle <invitedCircle /> du rôle <circle />",
     "RoleCreate": "<author /> a créé le rôle <role />",
     "RoleUpdate": "<author /> a modifié le rôle <role />",
     "RoleArchive": "<author /> a archivé le rôle <role />",
@@ -1271,7 +1278,144 @@
     "archived": "Cette discussion a été supprimée. Vous pouvez la restaurer avec le menu en haut à droite.",
     "placeholder": "Message...",
     "poll": "Sondage",
+    "proposal": "Proposition",
     "defaultEntityDescription": "Discussion : {{thread}}"
+  },
+  "ProposalModal": {
+    "headingCreate": "Nouvelle proposition",
+    "headingEdit": "Modifier la proposition",
+    "title": "Titre de la décision",
+    "titlePlaceholder": "Ce qui est décidé",
+    "description": "Description",
+    "orgChart": "Modifications de l'organigramme",
+    "editOrgChart": "Modifier l'organigramme",
+    "decisionMode": "Mode de décision",
+    "decisionMode_consent": "Consentement",
+    "decisionMode_unanimity": "Unanimité",
+    "decisionMode_simpleMajority": "Majorité simple",
+    "decisionMode_absoluteMajority": "Majorité absolue",
+    "voters": "Qui peut voter",
+    "voters_thread": "Participants du sujet",
+    "voters_circle": "Participants du rôle",
+    "allowAbstain": "Autoriser l'abstention",
+    "showVoters": "Afficher qui a voté quoi à la résolution",
+    "resolution": "Résolution",
+    "earlyResolution": "Résolution anticipée si le résultat est certain",
+    "hasResolutionDate": "Définir une date limite de résolution"
+  },
+  "ProposalGraphEditor": {
+    "heading": "Modifier l'organigramme",
+    "headingView": "Organigramme modifié",
+    "subtitle": "Ces modifications sont enregistrées avec la proposition et appliquées à l'organigramme seulement une fois approuvée.",
+    "done": "Enregistrer",
+    "selectCircle": "Sélectionnez un rôle pour le modifier.",
+    "viewCircle": "Sélectionnez un rôle pour le consulter.",
+    "changes": "Modifications"
+  },
+  "GraphShortcutsModal": {
+    "button": "Raccourcis",
+    "heading": "Raccourcis de l'organigramme",
+    "zoom_label": "Zoom",
+    "zoom_desc": "Faites défiler avec la molette de la souris (ou pincez sur un pavé tactile).",
+    "pan_label": "Déplacer la vue",
+    "pan_desc": "Glissez le fond vide pour vous déplacer dans l'organigramme.",
+    "open_label": "Ouvrir un rôle",
+    "open_desc": "Cliquez sur un rôle pour le consulter et le modifier dans le panneau latéral.",
+    "moveRole_label": "Déplacer un rôle",
+    "moveRole_desc": "Glissez le rôle et déposez-le sur un autre rôle.",
+    "copyRole_label": "Copier un rôle",
+    "copyRole_desc": "Maintenez Maj, puis glissez le rôle sur un autre rôle.",
+    "moveMember_label": "Déplacer un membre",
+    "moveMember_desc": "Glissez le membre et déposez-le sur un autre rôle.",
+    "addMember_label": "Ajouter un membre à un autre rôle",
+    "addMember_desc": "Maintenez Maj, puis glissez le membre sur un autre rôle."
+  },
+  "ProposalLogList": {
+    "empty": "Aucune modification pour l'instant.",
+    "error": "Cette modification ne peut pas être appliquée. Supprimez-la pour rendre la proposition à nouveau valide.",
+    "viewDiff": "Voir les modifications"
+  },
+  "ProposalLogDiffModal": {
+    "heading": "Modifications"
+  },
+  "ProposalLog": {
+    "CircleCreate": "Créer le rôle <circle/> dans <parentCircle/>",
+    "CircleMove": "Déplacer le rôle <circle/> vers <parentCircle/>",
+    "CircleCopy": "Copier le rôle <circle/> vers <parentCircle/>",
+    "CircleArchive": "Archiver le rôle <circle/>",
+    "CircleMemberAdd": "Ajouter <member/> au rôle <circle/>",
+    "CircleMemberRemove": "Retirer <member/> du rôle <circle/>",
+    "CircleLinkAdd": "Inviter le rôle <invitedCircle/> dans <circle/>",
+    "CircleLinkRemove": "Retirer l'invitation du rôle <invitedCircle/> de <circle/>",
+    "RoleUpdate": "Modifier le rôle <role/>"
+  },
+  "ThreadActivityProposal": {
+    "intro": "propose de prendre cette décision :",
+    "cannotVote_thread": "Seuls les participants de ce sujet peuvent voter sur cette proposition.",
+    "cannotVote_circle": "Seuls les participants de ce rôle peuvent voter sur cette proposition.",
+    "voteProgress": "{{count}}/{{total}} ont voté",
+    "viewOrgChart": "Voir l'organigramme modifié",
+    "voteMode_consent": "Vote par consentement",
+    "voteMode_unanimity": "Vote à l'unanimité",
+    "voteMode_simpleMajority": "Vote à la majorité simple",
+    "voteMode_absoluteMajority": "Vote à la majorité absolue",
+    "approve": "J'approuve",
+    "consent": "Je consens",
+    "object": "J'objecte",
+    "oppose": "Je m'oppose",
+    "abstain": "Je m'abstiens",
+    "resolve": "Résoudre",
+    "resolveNow": "Résoudre maintenant",
+    "recreate": "Re-créer",
+    "viewDecision": "Voir la décision enregistrée",
+    "manage": "Gérer",
+    "remind": "Rappeler de voter",
+    "cancel": "Annuler",
+    "cancelAndDuplicate": "Annuler et re-créer",
+    "status_inProgress": "En cours",
+    "status_approved": "Approuvée",
+    "status_refused": "Refusée",
+    "status_canceled": "Annulée",
+    "applyError": "Les modifications de l'organigramme n'ont pas pu être appliquées (une entité n'existe plus)."
+  },
+  "ProposalScrollButton": {
+    "label": "Proposition en cours"
+  },
+  "ProposalCancelModal": {
+    "heading": "Annuler la proposition",
+    "info": "Cette proposition sera annulée. Cette action est définitive.",
+    "confirm": "Annuler la proposition",
+    "headingDuplicate": "Annuler et dupliquer",
+    "infoDuplicate": "Cette proposition sera annulée et une nouvelle copie modifiable s'ouvrira.",
+    "confirmDuplicate": "Annuler et dupliquer",
+    "dismiss": "Garder la proposition"
+  },
+  "ProposalResolveModal": {
+    "heading": "Résoudre la proposition",
+    "mode": "Mode de décision :",
+    "votes": "{{approve}} approuvent et {{object}} objectent, sur {{total}} votants.",
+    "outcomeApproved": "D'après les votes actuels, la proposition sera approuvée.",
+    "outcomeRefused": "D'après les votes actuels, la proposition sera refusée.",
+    "applyNote": "Les modifications préparées de l'organigramme seront appliquées et une décision sera enregistrée.",
+    "confirm": "Résoudre"
+  },
+  "ThreadActivityProposalEvent": {
+    "proposal": "Proposition",
+    "canceled": "a annulé la proposition <proposal>{{title}}</proposal>",
+    "voteReminder": "rappelle de voter sur la proposition <proposal>{{title}}</proposal>",
+    "result_approved": "La proposition <proposal>{{title}}</proposal> a été approuvée :",
+    "result_refused": "La proposition <proposal>{{title}}</proposal> a été refusée :",
+    "yes": "Oui",
+    "no": "Non",
+    "abstain": "Abstention"
+  },
+  "ProposalVotersModal": {
+    "heading": "Votants",
+    "tab_all": "Tous",
+    "tab_approve": "Oui",
+    "tab_object": "Non",
+    "tab_abstain": "Abstention",
+    "empty": "Aucun votant"
   },
   "ThreadActivityDecision": {
     "text": "a créé une décision :",

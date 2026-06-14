@@ -45,6 +45,7 @@ insert_permissions:
         - checklist
         - colorHue
         - domain
+        - id
         - indicators
         - name
         - notes

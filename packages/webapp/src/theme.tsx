@@ -115,6 +115,24 @@ const theme = extendTheme({
         },
       },
     },
+    Card: {
+      variants: {
+        // Cards displayed in thread activities (proposal, poll, meeting note, ...)
+        activity: {
+          container: {
+            maxW: '850px',
+            borderWidth: '1px',
+            boxShadow: 'none',
+            borderColor: 'gray.200',
+            bg: 'gray.50',
+            _dark: {
+              bg: 'whiteAlpha.50',
+              borderColor: 'whiteAlpha.400',
+            },
+          },
+        },
+      },
+    },
     Link: {
       baseStyle: {
         fontWeight: 'bold',

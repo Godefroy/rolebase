@@ -14,7 +14,8 @@ query getPublicCircles($orgId: uuid!) {
       id
       memberId
     }
-    invitedCircleLinks {
+    invitedCircleLinks(where: { archived: { _eq: false } }) {
+      id
       invitedCircle {
         id
       }
@@ -78,6 +79,12 @@ mutation createCircle($orgId: uuid!, $roleId: uuid!, $parentId: uuid) {
   insert_circle_one(
     object: { orgId: $orgId, roleId: $roleId, parentId: $parentId }
   ) {
+    ...Circle
+  }
+}
+
+mutation insertCircle($object: circle_insert_input!) {
+  insert_circle_one(object: $object) {
     ...Circle
   }
 }

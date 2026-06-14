@@ -96,6 +96,7 @@ export default function ThreadActivityLayout({
 
   return (
     <Flex
+      data-activity
       p={3}
       pl={6}
       _hover={{ bg: 'rgba(0, 0, 0, 0.02)' }}

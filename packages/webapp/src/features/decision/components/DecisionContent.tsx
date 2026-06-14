@@ -7,6 +7,7 @@ import { Title } from '@/common/atoms/Title'
 import useDateLocale from '@/common/hooks/useDateLocale'
 import Page404 from '@/common/pages/Page404'
 import useOrgMember from '@/member/hooks/useOrgMember'
+import LogText from '@/log/components/LogText'
 import {
   Box,
   BoxProps,
@@ -17,14 +18,16 @@ import {
   Tag,
   Text,
   Tooltip,
+  VStack,
   useDisclosure,
 } from '@chakra-ui/react'
-import { useDecisionSubscription } from '@gql'
+import { useDecisionLogsSubscription, useDecisionSubscription } from '@gql'
 import { capitalizeFirstLetter } from '@utils/capitalizeFirstLetter'
 import { format } from 'date-fns'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { PrivacyIcon } from 'src/icons'
+import useCanEditDecisions from '../hooks/useCanEditDecisions'
 import DecisionDeleteModal from '../modals/DecisionDeleteModal '
 import DecisionEditModal from '../modals/DecisionEditModal'
 
@@ -55,6 +58,14 @@ export default function DecisionContent({
   const decision = data?.decision_by_pk || undefined
 
   const circle = useCircle(decision?.circleId)
+  const canEdit = useCanEditDecisions(decision?.circleId)
+
+  // Org chart changes applied by this decision (when it came from a proposal)
+  const { data: logsData } = useDecisionLogsSubscription({
+    skip: !id,
+    variables: { decisionId: id },
+  })
+  const logs = logsData?.log
 
   if (error || (!decision && !loading)) {
     console.error(error || new Error('Decision not found'))
@@ -93,8 +104,8 @@ export default function DecisionContent({
           <Flex mr={headerIcons ? -3 : 0}>
             <ActionsMenu
               ml={3}
-              onEdit={editModal.onOpen}
-              onDelete={deleteModal.onOpen}
+              onEdit={canEdit ? editModal.onOpen : undefined}
+              onDelete={canEdit ? deleteModal.onOpen : undefined}
             />
             {headerIcons}
           </Flex>
@@ -118,6 +129,21 @@ export default function DecisionContent({
       )}
 
       <Markdown>{decision?.description || ''}</Markdown>
+
+      {logs && logs.length > 0 && (
+        <Box mt={6}>
+          <Heading as="h2" size="sm" mb={2}>
+            {t('DecisionContent.changes')}
+          </Heading>
+          <VStack align="stretch" spacing={1}>
+            {logs.map((log) => (
+              <Box key={log.id} fontSize="sm">
+                <LogText log={log} />
+              </Box>
+            ))}
+          </VStack>
+        </Box>
+      )}
 
       {editModal.isOpen && (
         <DecisionEditModal

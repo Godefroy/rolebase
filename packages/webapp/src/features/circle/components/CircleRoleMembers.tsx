@@ -1,10 +1,10 @@
 import { GraphContext } from '@/graph/contexts/GraphContext'
+import { useOrgEditActions } from '@/org/contexts/OrgEditContext'
 import { Box, Heading, useDisclosure } from '@chakra-ui/react'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import MembersMultiSelect from '../../member/components/MembersMultiSelect'
 import { CircleContext } from '../contexts/CIrcleContext'
-import useAddCircleMember from '../hooks/useAddCircleMember'
 import CircleMemberDeleteModal from '../modals/CircleMemberDeleteModal'
 
 export default function CircleRoleMembers() {
@@ -24,7 +24,7 @@ export default function CircleRoleMembers() {
 
   const highlightButton = membersIds.length === 0 && participants.length === 0
 
-  const addCircleMember = useAddCircleMember()
+  const { addCircleMember } = useOrgEditActions()
   const handleAddMember = useCallback(
     async (memberId: string) => {
       await addCircleMember(circle.id, memberId)

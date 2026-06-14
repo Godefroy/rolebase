@@ -4427,6 +4427,7 @@ export type Circle_Leader_Stream_Cursor_Value_Input = {
 /** Members that represent a circle in another circle */
 export type Circle_Link = {
   __typename?: 'circle_link';
+  archived: Scalars['Boolean'];
   circleId: Scalars['uuid'];
   createdAt: Scalars['timestamptz'];
   /** An object relationship */
@@ -4445,7 +4446,23 @@ export type Circle_Link_Aggregate = {
 };
 
 export type Circle_Link_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<Circle_Link_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<Circle_Link_Aggregate_Bool_Exp_Bool_Or>;
   count?: InputMaybe<Circle_Link_Aggregate_Bool_Exp_Count>;
+};
+
+export type Circle_Link_Aggregate_Bool_Exp_Bool_And = {
+  arguments: Circle_Link_Select_Column_Circle_Link_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Circle_Link_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Circle_Link_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: Circle_Link_Select_Column_Circle_Link_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+  filter?: InputMaybe<Circle_Link_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
 };
 
 export type Circle_Link_Aggregate_Bool_Exp_Count = {
@@ -4489,6 +4506,7 @@ export type Circle_Link_Bool_Exp = {
   _and?: InputMaybe<Array<Circle_Link_Bool_Exp>>;
   _not?: InputMaybe<Circle_Link_Bool_Exp>;
   _or?: InputMaybe<Array<Circle_Link_Bool_Exp>>;
+  archived?: InputMaybe<Boolean_Comparison_Exp>;
   circleId?: InputMaybe<Uuid_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   hostCircle?: InputMaybe<Circle_Bool_Exp>;
@@ -4499,14 +4517,13 @@ export type Circle_Link_Bool_Exp = {
 
 /** unique or primary key constraints on table "circle_link" */
 export enum Circle_Link_Constraint {
-  /** unique or primary key constraint on columns "parentId", "circleId" */
-  CircleLinkParentIdCircleIdKey = 'circle_link_parentId_circleId_key',
   /** unique or primary key constraint on columns "id" */
   CircleLinkPkey = 'circle_link_pkey'
 }
 
 /** input type for inserting data into table "circle_link" */
 export type Circle_Link_Insert_Input = {
+  archived?: InputMaybe<Scalars['Boolean']>;
   circleId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   hostCircle?: InputMaybe<Circle_Obj_Rel_Insert_Input>;
@@ -4567,6 +4584,7 @@ export type Circle_Link_On_Conflict = {
 
 /** Ordering options when selecting data from "circle_link". */
 export type Circle_Link_Order_By = {
+  archived?: InputMaybe<Order_By>;
   circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   hostCircle?: InputMaybe<Circle_Order_By>;
@@ -4583,6 +4601,8 @@ export type Circle_Link_Pk_Columns_Input = {
 /** select columns of table "circle_link" */
 export enum Circle_Link_Select_Column {
   /** column name */
+  Archived = 'archived',
+  /** column name */
   CircleId = 'circleId',
   /** column name */
   CreatedAt = 'createdAt',
@@ -4592,8 +4612,21 @@ export enum Circle_Link_Select_Column {
   ParentId = 'parentId'
 }
 
+/** select "circle_link_aggregate_bool_exp_bool_and_arguments_columns" columns of table "circle_link" */
+export enum Circle_Link_Select_Column_Circle_Link_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  Archived = 'archived'
+}
+
+/** select "circle_link_aggregate_bool_exp_bool_or_arguments_columns" columns of table "circle_link" */
+export enum Circle_Link_Select_Column_Circle_Link_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  Archived = 'archived'
+}
+
 /** input type for updating data in table "circle_link" */
 export type Circle_Link_Set_Input = {
+  archived?: InputMaybe<Scalars['Boolean']>;
   circleId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -4610,6 +4643,7 @@ export type Circle_Link_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Circle_Link_Stream_Cursor_Value_Input = {
+  archived?: InputMaybe<Scalars['Boolean']>;
   circleId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -4618,6 +4652,8 @@ export type Circle_Link_Stream_Cursor_Value_Input = {
 
 /** update columns of table "circle_link" */
 export enum Circle_Link_Update_Column {
+  /** column name */
+  Archived = 'archived',
   /** column name */
   CircleId = 'circleId',
   /** column name */
@@ -6301,6 +6337,7 @@ export type Log = {
   changes: Scalars['log_changes'];
   changes_legacy?: Maybe<Scalars['json']>;
   createdAt: Scalars['timestamptz'];
+  decisionId?: Maybe<Scalars['uuid']>;
   /** Type of log and data to display */
   display: Scalars['log_display'];
   id: Scalars['uuid'];
@@ -6421,6 +6458,7 @@ export type Log_Bool_Exp = {
   changes?: InputMaybe<Json_Comparison_Exp>;
   changes_legacy?: InputMaybe<Json_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  decisionId?: InputMaybe<Uuid_Comparison_Exp>;
   display?: InputMaybe<Json_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   meetingId?: InputMaybe<Uuid_Comparison_Exp>;
@@ -6457,6 +6495,7 @@ export type Log_Insert_Input = {
   changes?: InputMaybe<Scalars['json']>;
   changes_legacy?: InputMaybe<Scalars['json']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
+  decisionId?: InputMaybe<Scalars['uuid']>;
   /** Type of log and data to display */
   display?: InputMaybe<Scalars['json']>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -6486,6 +6525,7 @@ export type Log_Max_Fields = {
   cancelMemberId?: Maybe<Scalars['uuid']>;
   cancelMemberName?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
+  decisionId?: Maybe<Scalars['uuid']>;
   id?: Maybe<Scalars['uuid']>;
   /** Meeting during which this log was created (optional) */
   meetingId?: Maybe<Scalars['uuid']>;
@@ -6507,6 +6547,7 @@ export type Log_Max_Order_By = {
   cancelMemberId?: InputMaybe<Order_By>;
   cancelMemberName?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
+  decisionId?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   /** Meeting during which this log was created (optional) */
   meetingId?: InputMaybe<Order_By>;
@@ -6529,6 +6570,7 @@ export type Log_Min_Fields = {
   cancelMemberId?: Maybe<Scalars['uuid']>;
   cancelMemberName?: Maybe<Scalars['String']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
+  decisionId?: Maybe<Scalars['uuid']>;
   id?: Maybe<Scalars['uuid']>;
   /** Meeting during which this log was created (optional) */
   meetingId?: Maybe<Scalars['uuid']>;
@@ -6550,6 +6592,7 @@ export type Log_Min_Order_By = {
   cancelMemberId?: InputMaybe<Order_By>;
   cancelMemberName?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
+  decisionId?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   /** Meeting during which this log was created (optional) */
   meetingId?: InputMaybe<Order_By>;
@@ -6597,6 +6640,7 @@ export type Log_Order_By = {
   changes?: InputMaybe<Order_By>;
   changes_legacy?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
+  decisionId?: InputMaybe<Order_By>;
   display?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   meetingId?: InputMaybe<Order_By>;
@@ -6634,6 +6678,8 @@ export enum Log_Select_Column {
   ChangesLegacy = 'changes_legacy',
   /** column name */
   CreatedAt = 'createdAt',
+  /** column name */
+  DecisionId = 'decisionId',
   /** column name */
   Display = 'display',
   /** column name */
@@ -6678,6 +6724,7 @@ export type Log_Set_Input = {
   changes?: InputMaybe<Scalars['json']>;
   changes_legacy?: InputMaybe<Scalars['json']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
+  decisionId?: InputMaybe<Scalars['uuid']>;
   /** Type of log and data to display */
   display?: InputMaybe<Scalars['json']>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -6713,6 +6760,7 @@ export type Log_Stream_Cursor_Value_Input = {
   changes?: InputMaybe<Scalars['json']>;
   changes_legacy?: InputMaybe<Scalars['json']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
+  decisionId?: InputMaybe<Scalars['uuid']>;
   /** Type of log and data to display */
   display?: InputMaybe<Scalars['json']>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -6744,6 +6792,8 @@ export enum Log_Update_Column {
   ChangesLegacy = 'changes_legacy',
   /** column name */
   CreatedAt = 'createdAt',
+  /** column name */
+  DecisionId = 'decisionId',
   /** column name */
   Display = 'display',
   /** column name */
@@ -9543,6 +9593,10 @@ export type Mutation_Root = {
   delete_thread_poll_answer?: Maybe<Thread_Poll_Answer_Mutation_Response>;
   /** delete single row from the table: "thread_poll_answer" */
   delete_thread_poll_answer_by_pk?: Maybe<Thread_Poll_Answer>;
+  /** delete data from the table: "thread_proposal_vote" */
+  delete_thread_proposal_vote?: Maybe<Thread_Proposal_Vote_Mutation_Response>;
+  /** delete single row from the table: "thread_proposal_vote" */
+  delete_thread_proposal_vote_by_pk?: Maybe<Thread_Proposal_Vote>;
   /** delete data from the table: "thread_status" */
   delete_thread_status?: Maybe<Thread_Status_Mutation_Response>;
   /** delete single row from the table: "thread_status" */
@@ -9751,6 +9805,10 @@ export type Mutation_Root = {
   insert_thread_poll_answer?: Maybe<Thread_Poll_Answer_Mutation_Response>;
   /** insert a single row into the table: "thread_poll_answer" */
   insert_thread_poll_answer_one?: Maybe<Thread_Poll_Answer>;
+  /** insert data into the table: "thread_proposal_vote" */
+  insert_thread_proposal_vote?: Maybe<Thread_Proposal_Vote_Mutation_Response>;
+  /** insert a single row into the table: "thread_proposal_vote" */
+  insert_thread_proposal_vote_one?: Maybe<Thread_Proposal_Vote>;
   /** insert data into the table: "thread_status" */
   insert_thread_status?: Maybe<Thread_Status_Mutation_Response>;
   /** insert a single row into the table: "thread_status" */
@@ -10055,6 +10113,12 @@ export type Mutation_Root = {
   update_thread_poll_answer_by_pk?: Maybe<Thread_Poll_Answer>;
   /** update multiples rows of table: "thread_poll_answer" */
   update_thread_poll_answer_many?: Maybe<Array<Maybe<Thread_Poll_Answer_Mutation_Response>>>;
+  /** update data of the table: "thread_proposal_vote" */
+  update_thread_proposal_vote?: Maybe<Thread_Proposal_Vote_Mutation_Response>;
+  /** update single row of the table: "thread_proposal_vote" */
+  update_thread_proposal_vote_by_pk?: Maybe<Thread_Proposal_Vote>;
+  /** update multiples rows of table: "thread_proposal_vote" */
+  update_thread_proposal_vote_many?: Maybe<Array<Maybe<Thread_Proposal_Vote_Mutation_Response>>>;
   /** update data of the table: "thread_status" */
   update_thread_status?: Maybe<Thread_Status_Mutation_Response>;
   /** update single row of the table: "thread_status" */
@@ -10670,6 +10734,18 @@ export type Mutation_RootDelete_Thread_Poll_AnswerArgs = {
 
 /** mutation root */
 export type Mutation_RootDelete_Thread_Poll_Answer_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Thread_Proposal_VoteArgs = {
+  where: Thread_Proposal_Vote_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Thread_Proposal_Vote_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
@@ -11395,6 +11471,20 @@ export type Mutation_RootInsert_Thread_Poll_AnswerArgs = {
 export type Mutation_RootInsert_Thread_Poll_Answer_OneArgs = {
   object: Thread_Poll_Answer_Insert_Input;
   on_conflict?: InputMaybe<Thread_Poll_Answer_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Thread_Proposal_VoteArgs = {
+  objects: Array<Thread_Proposal_Vote_Insert_Input>;
+  on_conflict?: InputMaybe<Thread_Proposal_Vote_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Thread_Proposal_Vote_OneArgs = {
+  object: Thread_Proposal_Vote_Insert_Input;
+  on_conflict?: InputMaybe<Thread_Proposal_Vote_On_Conflict>;
 };
 
 
@@ -12353,6 +12443,11 @@ export type Mutation_RootUpdate_ThreadArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_Thread_ActivityArgs = {
+  _append?: InputMaybe<Thread_Activity_Append_Input>;
+  _delete_at_path?: InputMaybe<Thread_Activity_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<Thread_Activity_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<Thread_Activity_Delete_Key_Input>;
+  _prepend?: InputMaybe<Thread_Activity_Prepend_Input>;
   _set?: InputMaybe<Thread_Activity_Set_Input>;
   where: Thread_Activity_Bool_Exp;
 };
@@ -12360,6 +12455,11 @@ export type Mutation_RootUpdate_Thread_ActivityArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_Thread_Activity_By_PkArgs = {
+  _append?: InputMaybe<Thread_Activity_Append_Input>;
+  _delete_at_path?: InputMaybe<Thread_Activity_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<Thread_Activity_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<Thread_Activity_Delete_Key_Input>;
+  _prepend?: InputMaybe<Thread_Activity_Prepend_Input>;
   _set?: InputMaybe<Thread_Activity_Set_Input>;
   pk_columns: Thread_Activity_Pk_Columns_Input;
 };
@@ -12481,6 +12581,26 @@ export type Mutation_RootUpdate_Thread_Poll_Answer_By_PkArgs = {
 /** mutation root */
 export type Mutation_RootUpdate_Thread_Poll_Answer_ManyArgs = {
   updates: Array<Thread_Poll_Answer_Updates>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Thread_Proposal_VoteArgs = {
+  _set?: InputMaybe<Thread_Proposal_Vote_Set_Input>;
+  where: Thread_Proposal_Vote_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Thread_Proposal_Vote_By_PkArgs = {
+  _set?: InputMaybe<Thread_Proposal_Vote_Set_Input>;
+  pk_columns: Thread_Proposal_Vote_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Thread_Proposal_Vote_ManyArgs = {
+  updates: Array<Thread_Proposal_Vote_Updates>;
 };
 
 
@@ -14226,6 +14346,12 @@ export type Query_Root = {
   thread_poll_answer_aggregate: Thread_Poll_Answer_Aggregate;
   /** fetch data from the table: "thread_poll_answer" using primary key columns */
   thread_poll_answer_by_pk?: Maybe<Thread_Poll_Answer>;
+  /** fetch data from the table: "thread_proposal_vote" */
+  thread_proposal_vote: Array<Thread_Proposal_Vote>;
+  /** fetch aggregated fields from the table: "thread_proposal_vote" */
+  thread_proposal_vote_aggregate: Thread_Proposal_Vote_Aggregate;
+  /** fetch data from the table: "thread_proposal_vote" using primary key columns */
+  thread_proposal_vote_by_pk?: Maybe<Thread_Proposal_Vote>;
   /** fetch data from the table: "thread_status" */
   thread_status: Array<Thread_Status>;
   /** fetch aggregated fields from the table: "thread_status" */
@@ -15425,6 +15551,29 @@ export type Query_RootThread_Poll_Answer_AggregateArgs = {
 
 
 export type Query_RootThread_Poll_Answer_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Query_RootThread_Proposal_VoteArgs = {
+  distinct_on?: InputMaybe<Array<Thread_Proposal_Vote_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Thread_Proposal_Vote_Order_By>>;
+  where?: InputMaybe<Thread_Proposal_Vote_Bool_Exp>;
+};
+
+
+export type Query_RootThread_Proposal_Vote_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Thread_Proposal_Vote_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Thread_Proposal_Vote_Order_By>>;
+  where?: InputMaybe<Thread_Proposal_Vote_Bool_Exp>;
+};
+
+
+export type Query_RootThread_Proposal_Vote_By_PkArgs = {
   id: Scalars['uuid'];
 };
 
@@ -17037,6 +17186,14 @@ export type Subscription_Root = {
   thread_poll_answer_by_pk?: Maybe<Thread_Poll_Answer>;
   /** fetch data from the table in a streaming manner: "thread_poll_answer" */
   thread_poll_answer_stream: Array<Thread_Poll_Answer>;
+  /** fetch data from the table: "thread_proposal_vote" */
+  thread_proposal_vote: Array<Thread_Proposal_Vote>;
+  /** fetch aggregated fields from the table: "thread_proposal_vote" */
+  thread_proposal_vote_aggregate: Thread_Proposal_Vote_Aggregate;
+  /** fetch data from the table: "thread_proposal_vote" using primary key columns */
+  thread_proposal_vote_by_pk?: Maybe<Thread_Proposal_Vote>;
+  /** fetch data from the table in a streaming manner: "thread_proposal_vote" */
+  thread_proposal_vote_stream: Array<Thread_Proposal_Vote>;
   /** fetch data from the table: "thread_status" */
   thread_status: Array<Thread_Status>;
   /** fetch aggregated fields from the table: "thread_status" */
@@ -18607,6 +18764,36 @@ export type Subscription_RootThread_Poll_Answer_StreamArgs = {
 };
 
 
+export type Subscription_RootThread_Proposal_VoteArgs = {
+  distinct_on?: InputMaybe<Array<Thread_Proposal_Vote_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Thread_Proposal_Vote_Order_By>>;
+  where?: InputMaybe<Thread_Proposal_Vote_Bool_Exp>;
+};
+
+
+export type Subscription_RootThread_Proposal_Vote_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Thread_Proposal_Vote_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']>;
+  offset?: InputMaybe<Scalars['Int']>;
+  order_by?: InputMaybe<Array<Thread_Proposal_Vote_Order_By>>;
+  where?: InputMaybe<Thread_Proposal_Vote_Bool_Exp>;
+};
+
+
+export type Subscription_RootThread_Proposal_Vote_By_PkArgs = {
+  id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootThread_Proposal_Vote_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<Thread_Proposal_Vote_Stream_Cursor_Input>>;
+  where?: InputMaybe<Thread_Proposal_Vote_Bool_Exp>;
+};
+
+
 export type Subscription_RootThread_StatusArgs = {
   distinct_on?: InputMaybe<Array<Thread_Status_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -19594,7 +19781,7 @@ export type ThreadMember_Status_AggregateArgs = {
 export type Thread_Activity = {
   __typename?: 'thread_activity';
   createdAt: Scalars['timestamptz'];
-  data: Scalars['json'];
+  data: Scalars['jsonb'];
   data_legacy?: Maybe<Scalars['json']>;
   id: Scalars['uuid'];
   /** An array relationship */
@@ -19694,6 +19881,11 @@ export type Thread_Activity_Aggregate_Order_By = {
   min?: InputMaybe<Thread_Activity_Min_Order_By>;
 };
 
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type Thread_Activity_Append_Input = {
+  data?: InputMaybe<Scalars['jsonb']>;
+};
+
 /** input type for inserting array relation for remote table "thread_activity" */
 export type Thread_Activity_Arr_Rel_Insert_Input = {
   data: Array<Thread_Activity_Insert_Input>;
@@ -19707,7 +19899,7 @@ export type Thread_Activity_Bool_Exp = {
   _not?: InputMaybe<Thread_Activity_Bool_Exp>;
   _or?: InputMaybe<Array<Thread_Activity_Bool_Exp>>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
-  data?: InputMaybe<Json_Comparison_Exp>;
+  data?: InputMaybe<Jsonb_Comparison_Exp>;
   data_legacy?: InputMaybe<Json_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   reactions?: InputMaybe<Thread_Activity_Reaction_Bool_Exp>;
@@ -19735,10 +19927,25 @@ export enum Thread_Activity_Constraint {
   ThreadActivityThreadIdRefMeetingIdTypeKey = 'thread_activity_threadId_refMeetingId_type_key'
 }
 
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type Thread_Activity_Delete_At_Path_Input = {
+  data?: InputMaybe<Array<Scalars['String']>>;
+};
+
+/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+export type Thread_Activity_Delete_Elem_Input = {
+  data?: InputMaybe<Scalars['Int']>;
+};
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type Thread_Activity_Delete_Key_Input = {
+  data?: InputMaybe<Scalars['String']>;
+};
+
 /** input type for inserting data into table "thread_activity" */
 export type Thread_Activity_Insert_Input = {
   createdAt?: InputMaybe<Scalars['timestamptz']>;
-  data?: InputMaybe<Scalars['json']>;
+  data?: InputMaybe<Scalars['jsonb']>;
   data_legacy?: InputMaybe<Scalars['json']>;
   id?: InputMaybe<Scalars['uuid']>;
   reactions?: InputMaybe<Thread_Activity_Reaction_Arr_Rel_Insert_Input>;
@@ -19855,6 +20062,11 @@ export type Thread_Activity_Order_By = {
 /** primary key columns input for table: thread_activity */
 export type Thread_Activity_Pk_Columns_Input = {
   id: Scalars['uuid'];
+};
+
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type Thread_Activity_Prepend_Input = {
+  data?: InputMaybe<Scalars['jsonb']>;
 };
 
 /** columns and relationships of "thread_activity_reaction" */
@@ -20104,7 +20316,7 @@ export enum Thread_Activity_Select_Column {
 /** input type for updating data in table "thread_activity" */
 export type Thread_Activity_Set_Input = {
   createdAt?: InputMaybe<Scalars['timestamptz']>;
-  data?: InputMaybe<Scalars['json']>;
+  data?: InputMaybe<Scalars['jsonb']>;
   data_legacy?: InputMaybe<Scalars['json']>;
   id?: InputMaybe<Scalars['uuid']>;
   refDecisionId?: InputMaybe<Scalars['uuid']>;
@@ -20127,7 +20339,7 @@ export type Thread_Activity_Stream_Cursor_Input = {
 /** Initial value of the column from where the streaming should start */
 export type Thread_Activity_Stream_Cursor_Value_Input = {
   createdAt?: InputMaybe<Scalars['timestamptz']>;
-  data?: InputMaybe<Scalars['json']>;
+  data?: InputMaybe<Scalars['jsonb']>;
   data_legacy?: InputMaybe<Scalars['json']>;
   id?: InputMaybe<Scalars['uuid']>;
   refDecisionId?: InputMaybe<Scalars['uuid']>;
@@ -20190,6 +20402,8 @@ export enum Thread_Activity_Type_Enum {
   MeetingNote = 'MeetingNote',
   Message = 'Message',
   Poll = 'Poll',
+  Proposal = 'Proposal',
+  ProposalEvent = 'ProposalEvent',
   Task = 'Task',
   Thread = 'Thread'
 }
@@ -20320,6 +20534,16 @@ export enum Thread_Activity_Update_Column {
 }
 
 export type Thread_Activity_Updates = {
+  /** append existing jsonb value of filtered columns with new jsonb value */
+  _append?: InputMaybe<Thread_Activity_Append_Input>;
+  /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+  _delete_at_path?: InputMaybe<Thread_Activity_Delete_At_Path_Input>;
+  /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+  _delete_elem?: InputMaybe<Thread_Activity_Delete_Elem_Input>;
+  /** delete key/value pair or string element. key/value pairs are matched based on their key value */
+  _delete_key?: InputMaybe<Thread_Activity_Delete_Key_Input>;
+  /** prepend existing jsonb value of filtered columns with new jsonb value */
+  _prepend?: InputMaybe<Thread_Activity_Prepend_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Thread_Activity_Set_Input>;
   /** filter the rows which have to be updated */
@@ -21136,6 +21360,183 @@ export type Thread_Poll_Answer_Updates = {
   _set?: InputMaybe<Thread_Poll_Answer_Set_Input>;
   /** filter the rows which have to be updated */
   where: Thread_Poll_Answer_Bool_Exp;
+};
+
+/** columns and relationships of "thread_proposal_vote" */
+export type Thread_Proposal_Vote = {
+  __typename?: 'thread_proposal_vote';
+  /** An object relationship */
+  activity: Thread_Activity;
+  activityId: Scalars['uuid'];
+  createdAt: Scalars['timestamptz'];
+  id: Scalars['uuid'];
+  userId: Scalars['uuid'];
+  vote: Scalars['String'];
+};
+
+/** aggregated selection of "thread_proposal_vote" */
+export type Thread_Proposal_Vote_Aggregate = {
+  __typename?: 'thread_proposal_vote_aggregate';
+  aggregate?: Maybe<Thread_Proposal_Vote_Aggregate_Fields>;
+  nodes: Array<Thread_Proposal_Vote>;
+};
+
+/** aggregate fields of "thread_proposal_vote" */
+export type Thread_Proposal_Vote_Aggregate_Fields = {
+  __typename?: 'thread_proposal_vote_aggregate_fields';
+  count: Scalars['Int'];
+  max?: Maybe<Thread_Proposal_Vote_Max_Fields>;
+  min?: Maybe<Thread_Proposal_Vote_Min_Fields>;
+};
+
+
+/** aggregate fields of "thread_proposal_vote" */
+export type Thread_Proposal_Vote_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Thread_Proposal_Vote_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** Boolean expression to filter rows from the table "thread_proposal_vote". All fields are combined with a logical 'AND'. */
+export type Thread_Proposal_Vote_Bool_Exp = {
+  _and?: InputMaybe<Array<Thread_Proposal_Vote_Bool_Exp>>;
+  _not?: InputMaybe<Thread_Proposal_Vote_Bool_Exp>;
+  _or?: InputMaybe<Array<Thread_Proposal_Vote_Bool_Exp>>;
+  activity?: InputMaybe<Thread_Activity_Bool_Exp>;
+  activityId?: InputMaybe<Uuid_Comparison_Exp>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  userId?: InputMaybe<Uuid_Comparison_Exp>;
+  vote?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "thread_proposal_vote" */
+export enum Thread_Proposal_Vote_Constraint {
+  /** unique or primary key constraint on columns "userId", "activityId" */
+  ThreadProposalVoteActivityIdUserIdKey = 'thread_proposal_vote_activityId_userId_key',
+  /** unique or primary key constraint on columns "id" */
+  ThreadProposalVotePkey = 'thread_proposal_vote_pkey'
+}
+
+/** input type for inserting data into table "thread_proposal_vote" */
+export type Thread_Proposal_Vote_Insert_Input = {
+  activity?: InputMaybe<Thread_Activity_Obj_Rel_Insert_Input>;
+  activityId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  userId?: InputMaybe<Scalars['uuid']>;
+  vote?: InputMaybe<Scalars['String']>;
+};
+
+/** aggregate max on columns */
+export type Thread_Proposal_Vote_Max_Fields = {
+  __typename?: 'thread_proposal_vote_max_fields';
+  activityId?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['uuid']>;
+  userId?: Maybe<Scalars['uuid']>;
+  vote?: Maybe<Scalars['String']>;
+};
+
+/** aggregate min on columns */
+export type Thread_Proposal_Vote_Min_Fields = {
+  __typename?: 'thread_proposal_vote_min_fields';
+  activityId?: Maybe<Scalars['uuid']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
+  id?: Maybe<Scalars['uuid']>;
+  userId?: Maybe<Scalars['uuid']>;
+  vote?: Maybe<Scalars['String']>;
+};
+
+/** response of any mutation on the table "thread_proposal_vote" */
+export type Thread_Proposal_Vote_Mutation_Response = {
+  __typename?: 'thread_proposal_vote_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Thread_Proposal_Vote>;
+};
+
+/** on_conflict condition type for table "thread_proposal_vote" */
+export type Thread_Proposal_Vote_On_Conflict = {
+  constraint: Thread_Proposal_Vote_Constraint;
+  update_columns?: Array<Thread_Proposal_Vote_Update_Column>;
+  where?: InputMaybe<Thread_Proposal_Vote_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "thread_proposal_vote". */
+export type Thread_Proposal_Vote_Order_By = {
+  activity?: InputMaybe<Thread_Activity_Order_By>;
+  activityId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  userId?: InputMaybe<Order_By>;
+  vote?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: thread_proposal_vote */
+export type Thread_Proposal_Vote_Pk_Columns_Input = {
+  id: Scalars['uuid'];
+};
+
+/** select columns of table "thread_proposal_vote" */
+export enum Thread_Proposal_Vote_Select_Column {
+  /** column name */
+  ActivityId = 'activityId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  UserId = 'userId',
+  /** column name */
+  Vote = 'vote'
+}
+
+/** input type for updating data in table "thread_proposal_vote" */
+export type Thread_Proposal_Vote_Set_Input = {
+  activityId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  userId?: InputMaybe<Scalars['uuid']>;
+  vote?: InputMaybe<Scalars['String']>;
+};
+
+/** Streaming cursor of the table "thread_proposal_vote" */
+export type Thread_Proposal_Vote_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Thread_Proposal_Vote_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Thread_Proposal_Vote_Stream_Cursor_Value_Input = {
+  activityId?: InputMaybe<Scalars['uuid']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  userId?: InputMaybe<Scalars['uuid']>;
+  vote?: InputMaybe<Scalars['String']>;
+};
+
+/** update columns of table "thread_proposal_vote" */
+export enum Thread_Proposal_Vote_Update_Column {
+  /** column name */
+  ActivityId = 'activityId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  UserId = 'userId',
+  /** column name */
+  Vote = 'vote'
+}
+
+export type Thread_Proposal_Vote_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Thread_Proposal_Vote_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Thread_Proposal_Vote_Bool_Exp;
 };
 
 /** select columns of table "thread" */
@@ -22713,15 +23114,15 @@ export type CircleFragment = { __typename?: 'circle', id: string, orgId: string,
 
 export type CircleSummaryFragment = { __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean, role: { __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null } };
 
-export type CircleFullFragment = { __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean, members: Array<{ __typename?: 'circle_member', id: string, member: { __typename?: 'member', id: string, userId?: string | null, name: string, picture?: string | null } }>, invitedCircleLinks: Array<{ __typename?: 'circle_link', invitedCircle: { __typename?: 'circle', id: string } }>, role: { __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null } };
+export type CircleFullFragment = { __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean, members: Array<{ __typename?: 'circle_member', id: string, member: { __typename?: 'member', id: string, userId?: string | null, name: string, picture?: string | null } }>, invitedCircleLinks: Array<{ __typename?: 'circle_link', id: string, invitedCircle: { __typename?: 'circle', id: string } }>, role: { __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null } };
 
-export type CircleLinkFragment = { __typename?: 'circle_link', id: string, parentId: string, circleId: string, createdAt: string };
+export type CircleLinkFragment = { __typename?: 'circle_link', id: string, parentId: string, circleId: string, createdAt: string, archived: boolean };
 
 export type CircleMemberFragment = { __typename?: 'circle_member', id: string, circleId: string, memberId: string, createdAt: string, archived: boolean };
 
 export type DecisionFragment = { __typename?: 'decision', id: string, orgId: string, circleId: string, memberId: string, title: string, description: string, archived: boolean, createdAt: string, private: boolean };
 
-export type LogFragment = { __typename?: 'log', id: string, orgId: string, userId: string, memberId: string, memberName: string, meetingId?: string | null, createdAt: string, display: LogDisplay, changes: EntitiesChanges, cancelLogId?: string | null, cancelMemberId?: string | null, cancelMemberName?: string | null, canceled: boolean, threadId?: string | null, taskId?: string | null };
+export type LogFragment = { __typename?: 'log', id: string, orgId: string, userId: string, memberId: string, memberName: string, meetingId?: string | null, createdAt: string, display: LogDisplay, changes: EntitiesChanges, cancelLogId?: string | null, cancelMemberId?: string | null, cancelMemberName?: string | null, canceled: boolean, threadId?: string | null, taskId?: string | null, decisionId?: string | null };
 
 export type MeetingSummaryFragment = { __typename?: 'meeting', id: string, orgId: string, circleId: string, startDate: string, endDate: string, ended: boolean, title: string, currentStepId?: string | null, summary: string, private: boolean, meeting_attendees: Array<{ __typename?: 'meeting_attendee', id: string, meetingId: string, memberId: string, present?: boolean | null, startNotified: boolean }> };
 
@@ -22741,9 +23142,9 @@ export type NewsFragment = { __typename?: 'news', id?: string | null, createdAt?
 
 export type OrgFragment = { __typename?: 'org', id: string, name: string, archived: boolean, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, protectGovernance: boolean, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null };
 
-export type OrgFullFragment = { __typename?: 'org', id: string, name: string, archived: boolean, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, protectGovernance: boolean, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null, org_subscription?: { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum } | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean, members: Array<{ __typename?: 'circle_member', id: string, member: { __typename?: 'member', id: string, userId?: string | null, name: string, picture?: string | null } }>, invitedCircleLinks: Array<{ __typename?: 'circle_link', invitedCircle: { __typename?: 'circle', id: string } }>, role: { __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null } }>, roles: Array<{ __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null }>, members: Array<{ __typename?: 'member', id: string, orgId: string, archived: boolean, name: string, description: string, pictureFileId?: string | null, picture?: string | null, userId?: string | null, inviteEmail?: string | null, inviteDate?: string | null, role?: Member_Role_Enum | null }> };
+export type OrgFullFragment = { __typename?: 'org', id: string, name: string, archived: boolean, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, protectGovernance: boolean, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null, org_subscription?: { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum } | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean, members: Array<{ __typename?: 'circle_member', id: string, member: { __typename?: 'member', id: string, userId?: string | null, name: string, picture?: string | null } }>, invitedCircleLinks: Array<{ __typename?: 'circle_link', id: string, invitedCircle: { __typename?: 'circle', id: string } }>, role: { __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null } }>, roles: Array<{ __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null }>, members: Array<{ __typename?: 'member', id: string, orgId: string, archived: boolean, name: string, description: string, pictureFileId?: string | null, picture?: string | null, userId?: string | null, inviteEmail?: string | null, inviteDate?: string | null, role?: Member_Role_Enum | null }> };
 
-export type OrgFullLightFragment = { __typename?: 'org', id: string, name: string, archived: boolean, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, protectGovernance: boolean, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null, org_subscription?: { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum } | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean, members: Array<{ __typename?: 'circle_member', id: string, memberId: string }>, invitedCircleLinks: Array<{ __typename?: 'circle_link', invitedCircle: { __typename?: 'circle', id: string } }> }>, roles: Array<{ __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null }>, members: Array<{ __typename?: 'member', id: string, orgId: string, archived: boolean, name: string, description: string, pictureFileId?: string | null, picture?: string | null, userId?: string | null, inviteEmail?: string | null, inviteDate?: string | null, role?: Member_Role_Enum | null }> };
+export type OrgFullLightFragment = { __typename?: 'org', id: string, name: string, archived: boolean, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, protectGovernance: boolean, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null, org_subscription?: { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum } | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean, members: Array<{ __typename?: 'circle_member', id: string, memberId: string }>, invitedCircleLinks: Array<{ __typename?: 'circle_link', id: string, invitedCircle: { __typename?: 'circle', id: string } }> }>, roles: Array<{ __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null }>, members: Array<{ __typename?: 'member', id: string, orgId: string, archived: boolean, name: string, description: string, pictureFileId?: string | null, picture?: string | null, userId?: string | null, inviteEmail?: string | null, inviteDate?: string | null, role?: Member_Role_Enum | null }> };
 
 export type OrgSubscriptionFragment = { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum };
 
@@ -22772,9 +23173,9 @@ export type UserAppFragment = { __typename?: 'user_app', id: string, userId: str
 export type UserAppFullFragment = { __typename?: 'user_app', id: string, userId: string, type: App_Type_Enum, secretConfig: any, config: any, tmpData?: any | null, createdAt: any, user?: { __typename?: 'users', metadata: UserMetadata } | null };
 
 export const ApiKeyFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ApiKey"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"api_key"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"value"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]} as unknown as DocumentNode<ApiKeyFragment, unknown>;
-export const CircleLinkFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CircleLink"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle_link"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"parentId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]} as unknown as DocumentNode<CircleLinkFragment, unknown>;
+export const CircleLinkFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CircleLink"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle_link"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"parentId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}}]}}]} as unknown as DocumentNode<CircleLinkFragment, unknown>;
 export const CircleMemberFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CircleMember"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle_member"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}}]}}]} as unknown as DocumentNode<CircleMemberFragment, unknown>;
-export const LogFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Log"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"log"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"memberName"}},{"kind":"Field","name":{"kind":"Name","value":"meetingId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"display"}},{"kind":"Field","name":{"kind":"Name","value":"changes"}},{"kind":"Field","name":{"kind":"Name","value":"cancelLogId"}},{"kind":"Field","name":{"kind":"Name","value":"cancelMemberId"}},{"kind":"Field","name":{"kind":"Name","value":"cancelMemberName"}},{"kind":"Field","name":{"kind":"Name","value":"canceled"}},{"kind":"Field","name":{"kind":"Name","value":"threadId"}},{"kind":"Field","name":{"kind":"Name","value":"taskId"}}]}}]} as unknown as DocumentNode<LogFragment, unknown>;
+export const LogFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Log"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"log"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"memberName"}},{"kind":"Field","name":{"kind":"Name","value":"meetingId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"display"}},{"kind":"Field","name":{"kind":"Name","value":"changes"}},{"kind":"Field","name":{"kind":"Name","value":"cancelLogId"}},{"kind":"Field","name":{"kind":"Name","value":"cancelMemberId"}},{"kind":"Field","name":{"kind":"Name","value":"cancelMemberName"}},{"kind":"Field","name":{"kind":"Name","value":"canceled"}},{"kind":"Field","name":{"kind":"Name","value":"threadId"}},{"kind":"Field","name":{"kind":"Name","value":"taskId"}},{"kind":"Field","name":{"kind":"Name","value":"decisionId"}}]}}]} as unknown as DocumentNode<LogFragment, unknown>;
 export const MeetingAttendeeFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MeetingAttendee"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting_attendee"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"meetingId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"present"}},{"kind":"Field","name":{"kind":"Name","value":"startNotified"}}]}}]} as unknown as DocumentNode<MeetingAttendeeFragment, unknown>;
 export const MeetingSummaryFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MeetingSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"ended"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"currentStepId"}},{"kind":"Field","name":{"kind":"Name","value":"summary"}},{"kind":"Field","name":{"kind":"Name","value":"private"}},{"kind":"Field","name":{"kind":"Name","value":"meeting_attendees"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MeetingAttendee"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MeetingAttendee"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting_attendee"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"meetingId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"present"}},{"kind":"Field","name":{"kind":"Name","value":"startNotified"}}]}}]} as unknown as DocumentNode<MeetingSummaryFragment, unknown>;
 export const MeetingFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Meeting"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MeetingSummary"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"stepsConfig"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}},{"kind":"Field","name":{"kind":"Name","value":"videoConf"}},{"kind":"Field","name":{"kind":"Name","value":"recurringId"}},{"kind":"Field","name":{"kind":"Name","value":"recurringDate"}},{"kind":"Field","name":{"kind":"Name","value":"invitedReadonly"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MeetingAttendee"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting_attendee"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"meetingId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"present"}},{"kind":"Field","name":{"kind":"Name","value":"startNotified"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MeetingSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"ended"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"currentStepId"}},{"kind":"Field","name":{"kind":"Name","value":"summary"}},{"kind":"Field","name":{"kind":"Name","value":"private"}},{"kind":"Field","name":{"kind":"Name","value":"meeting_attendees"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MeetingAttendee"}}]}}]}}]} as unknown as DocumentNode<MeetingFragment, unknown>;
@@ -22794,10 +23195,10 @@ export const CircleFragmentDoc = {"kind":"Document","definitions":[{"kind":"Frag
 export const RoleSummaryFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"RoleSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"role"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"base"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"singleMember"}},{"kind":"Field","name":{"kind":"Name","value":"parentLink"}},{"kind":"Field","name":{"kind":"Name","value":"colorHue"}}]}}]} as unknown as DocumentNode<RoleSummaryFragment, unknown>;
 export const CircleSummaryFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CircleSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Circle"}},{"kind":"Field","name":{"kind":"Name","value":"role"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"RoleSummary"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Circle"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"roleId"}},{"kind":"Field","name":{"kind":"Name","value":"parentId"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"RoleSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"role"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"base"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"singleMember"}},{"kind":"Field","name":{"kind":"Name","value":"parentLink"}},{"kind":"Field","name":{"kind":"Name","value":"colorHue"}}]}}]} as unknown as DocumentNode<CircleSummaryFragment, unknown>;
 export const MemberSummaryFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MemberSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"member"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"picture"}}]}}]} as unknown as DocumentNode<MemberSummaryFragment, unknown>;
-export const CircleFullFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CircleFull"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CircleSummary"}},{"kind":"Field","name":{"kind":"Name","value":"members"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archived"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":false}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"member"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archived"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":false}}]}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"member"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MemberSummary"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"invitedCircleLinks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"invitedCircle"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Circle"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"roleId"}},{"kind":"Field","name":{"kind":"Name","value":"parentId"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"RoleSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"role"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"base"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"singleMember"}},{"kind":"Field","name":{"kind":"Name","value":"parentLink"}},{"kind":"Field","name":{"kind":"Name","value":"colorHue"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CircleSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Circle"}},{"kind":"Field","name":{"kind":"Name","value":"role"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"RoleSummary"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MemberSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"member"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"picture"}}]}}]} as unknown as DocumentNode<CircleFullFragment, unknown>;
+export const CircleFullFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CircleFull"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CircleSummary"}},{"kind":"Field","name":{"kind":"Name","value":"members"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archived"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":false}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"member"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archived"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":false}}]}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"member"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MemberSummary"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"invitedCircleLinks"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archived"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":false}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"invitedCircle"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Circle"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"roleId"}},{"kind":"Field","name":{"kind":"Name","value":"parentId"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"RoleSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"role"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"base"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"singleMember"}},{"kind":"Field","name":{"kind":"Name","value":"parentLink"}},{"kind":"Field","name":{"kind":"Name","value":"colorHue"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CircleSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Circle"}},{"kind":"Field","name":{"kind":"Name","value":"role"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"RoleSummary"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MemberSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"member"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"picture"}}]}}]} as unknown as DocumentNode<CircleFullFragment, unknown>;
 export const MemberFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Member"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"member"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"pictureFileId"}},{"kind":"Field","name":{"kind":"Name","value":"picture"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"inviteEmail"}},{"kind":"Field","name":{"kind":"Name","value":"inviteDate"}},{"kind":"Field","name":{"kind":"Name","value":"role"}}]}}]} as unknown as DocumentNode<MemberFragment, unknown>;
-export const OrgFullFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"OrgFull"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"org"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Org"}},{"kind":"Field","name":{"kind":"Name","value":"org_subscription"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"OrgSubscription"}}]}},{"kind":"Field","name":{"kind":"Name","value":"circles"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archived"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":false}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CircleFull"}}]}},{"kind":"Field","name":{"kind":"Name","value":"roles"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archived"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":false}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"base"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":true}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"RoleSummary"}}]}},{"kind":"Field","name":{"kind":"Name","value":"members"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archived"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":false}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Member"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Circle"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"roleId"}},{"kind":"Field","name":{"kind":"Name","value":"parentId"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"RoleSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"role"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"base"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"singleMember"}},{"kind":"Field","name":{"kind":"Name","value":"parentLink"}},{"kind":"Field","name":{"kind":"Name","value":"colorHue"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CircleSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Circle"}},{"kind":"Field","name":{"kind":"Name","value":"role"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"RoleSummary"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MemberSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"member"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"picture"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Org"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"org"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"shareOrg"}},{"kind":"Field","name":{"kind":"Name","value":"shareMembers"}},{"kind":"Field","name":{"kind":"Name","value":"protectGovernance"}},{"kind":"Field","name":{"kind":"Name","value":"defaultGraphView"}},{"kind":"Field","name":{"kind":"Name","value":"icon"}},{"kind":"Field","name":{"kind":"Name","value":"homeNote"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"OrgSubscription"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"org_subscription"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"stripeSubscriptionId"}},{"kind":"Field","name":{"kind":"Name","value":"stripeCustomerId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CircleFull"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CircleSummary"}},{"kind":"Field","name":{"kind":"Name","value":"members"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archived"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":false}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"member"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archived"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":false}}]}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"member"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MemberSummary"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"invitedCircleLinks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"invitedCircle"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Member"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"member"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"pictureFileId"}},{"kind":"Field","name":{"kind":"Name","value":"picture"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"inviteEmail"}},{"kind":"Field","name":{"kind":"Name","value":"inviteDate"}},{"kind":"Field","name":{"kind":"Name","value":"role"}}]}}]} as unknown as DocumentNode<OrgFullFragment, unknown>;
-export const OrgFullLightFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"OrgFullLight"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"org"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Org"}},{"kind":"Field","name":{"kind":"Name","value":"org_subscription"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"OrgSubscription"}}]}},{"kind":"Field","name":{"kind":"Name","value":"circles"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archived"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":false}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Circle"}},{"kind":"Field","name":{"kind":"Name","value":"members"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archived"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":false}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"invitedCircleLinks"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"invitedCircle"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"roles"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archived"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":false}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"RoleSummary"}}]}},{"kind":"Field","name":{"kind":"Name","value":"members"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archived"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":false}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Member"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Org"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"org"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"shareOrg"}},{"kind":"Field","name":{"kind":"Name","value":"shareMembers"}},{"kind":"Field","name":{"kind":"Name","value":"protectGovernance"}},{"kind":"Field","name":{"kind":"Name","value":"defaultGraphView"}},{"kind":"Field","name":{"kind":"Name","value":"icon"}},{"kind":"Field","name":{"kind":"Name","value":"homeNote"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"OrgSubscription"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"org_subscription"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"stripeSubscriptionId"}},{"kind":"Field","name":{"kind":"Name","value":"stripeCustomerId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Circle"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"roleId"}},{"kind":"Field","name":{"kind":"Name","value":"parentId"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"RoleSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"role"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"base"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"singleMember"}},{"kind":"Field","name":{"kind":"Name","value":"parentLink"}},{"kind":"Field","name":{"kind":"Name","value":"colorHue"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Member"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"member"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"pictureFileId"}},{"kind":"Field","name":{"kind":"Name","value":"picture"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"inviteEmail"}},{"kind":"Field","name":{"kind":"Name","value":"inviteDate"}},{"kind":"Field","name":{"kind":"Name","value":"role"}}]}}]} as unknown as DocumentNode<OrgFullLightFragment, unknown>;
+export const OrgFullFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"OrgFull"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"org"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Org"}},{"kind":"Field","name":{"kind":"Name","value":"org_subscription"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"OrgSubscription"}}]}},{"kind":"Field","name":{"kind":"Name","value":"circles"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archived"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":false}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CircleFull"}}]}},{"kind":"Field","name":{"kind":"Name","value":"roles"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archived"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":false}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"base"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":true}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"RoleSummary"}}]}},{"kind":"Field","name":{"kind":"Name","value":"members"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archived"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":false}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Member"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Circle"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"roleId"}},{"kind":"Field","name":{"kind":"Name","value":"parentId"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"RoleSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"role"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"base"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"singleMember"}},{"kind":"Field","name":{"kind":"Name","value":"parentLink"}},{"kind":"Field","name":{"kind":"Name","value":"colorHue"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CircleSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Circle"}},{"kind":"Field","name":{"kind":"Name","value":"role"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"RoleSummary"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MemberSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"member"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"picture"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Org"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"org"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"shareOrg"}},{"kind":"Field","name":{"kind":"Name","value":"shareMembers"}},{"kind":"Field","name":{"kind":"Name","value":"protectGovernance"}},{"kind":"Field","name":{"kind":"Name","value":"defaultGraphView"}},{"kind":"Field","name":{"kind":"Name","value":"icon"}},{"kind":"Field","name":{"kind":"Name","value":"homeNote"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"OrgSubscription"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"org_subscription"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"stripeSubscriptionId"}},{"kind":"Field","name":{"kind":"Name","value":"stripeCustomerId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CircleFull"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CircleSummary"}},{"kind":"Field","name":{"kind":"Name","value":"members"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archived"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":false}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"member"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archived"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":false}}]}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"member"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MemberSummary"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"invitedCircleLinks"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archived"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":false}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"invitedCircle"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Member"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"member"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"pictureFileId"}},{"kind":"Field","name":{"kind":"Name","value":"picture"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"inviteEmail"}},{"kind":"Field","name":{"kind":"Name","value":"inviteDate"}},{"kind":"Field","name":{"kind":"Name","value":"role"}}]}}]} as unknown as DocumentNode<OrgFullFragment, unknown>;
+export const OrgFullLightFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"OrgFullLight"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"org"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Org"}},{"kind":"Field","name":{"kind":"Name","value":"org_subscription"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"OrgSubscription"}}]}},{"kind":"Field","name":{"kind":"Name","value":"circles"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archived"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":false}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Circle"}},{"kind":"Field","name":{"kind":"Name","value":"members"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archived"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":false}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"invitedCircleLinks"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archived"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":false}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"invitedCircle"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"roles"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archived"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":false}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"RoleSummary"}}]}},{"kind":"Field","name":{"kind":"Name","value":"members"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archived"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":false}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Member"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Org"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"org"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"shareOrg"}},{"kind":"Field","name":{"kind":"Name","value":"shareMembers"}},{"kind":"Field","name":{"kind":"Name","value":"protectGovernance"}},{"kind":"Field","name":{"kind":"Name","value":"defaultGraphView"}},{"kind":"Field","name":{"kind":"Name","value":"icon"}},{"kind":"Field","name":{"kind":"Name","value":"homeNote"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"OrgSubscription"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"org_subscription"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"stripeSubscriptionId"}},{"kind":"Field","name":{"kind":"Name","value":"stripeCustomerId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Circle"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"roleId"}},{"kind":"Field","name":{"kind":"Name","value":"parentId"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"RoleSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"role"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"base"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"singleMember"}},{"kind":"Field","name":{"kind":"Name","value":"parentLink"}},{"kind":"Field","name":{"kind":"Name","value":"colorHue"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Member"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"member"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"pictureFileId"}},{"kind":"Field","name":{"kind":"Name","value":"picture"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"inviteEmail"}},{"kind":"Field","name":{"kind":"Name","value":"inviteDate"}},{"kind":"Field","name":{"kind":"Name","value":"role"}}]}}]} as unknown as DocumentNode<OrgFullLightFragment, unknown>;
 export const RoleFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Role"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"role"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}},{"kind":"Field","name":{"kind":"Name","value":"base"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"purpose"}},{"kind":"Field","name":{"kind":"Name","value":"domain"}},{"kind":"Field","name":{"kind":"Name","value":"accountabilities"}},{"kind":"Field","name":{"kind":"Name","value":"checklist"}},{"kind":"Field","name":{"kind":"Name","value":"indicators"}},{"kind":"Field","name":{"kind":"Name","value":"notes"}},{"kind":"Field","name":{"kind":"Name","value":"singleMember"}},{"kind":"Field","name":{"kind":"Name","value":"parentLink"}},{"kind":"Field","name":{"kind":"Name","value":"colorHue"}}]}}]} as unknown as DocumentNode<RoleFragment, unknown>;
 export const RoleAiFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"RoleAI"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"role_ai"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"purpose"}},{"kind":"Field","name":{"kind":"Name","value":"domain"}},{"kind":"Field","name":{"kind":"Name","value":"accountabilities"}},{"kind":"Field","name":{"kind":"Name","value":"checklist"}},{"kind":"Field","name":{"kind":"Name","value":"indicators"}},{"kind":"Field","name":{"kind":"Name","value":"notes"}}]}}]} as unknown as DocumentNode<RoleAiFragment, unknown>;
 export const ThreadMemberStatusFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ThreadMemberStatus"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread_member_status"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"lastReadActivityId"}},{"kind":"Field","name":{"kind":"Name","value":"lastReadDate"}}]}}]} as unknown as DocumentNode<ThreadMemberStatusFragment, unknown>;

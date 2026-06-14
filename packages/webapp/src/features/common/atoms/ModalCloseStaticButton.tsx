@@ -3,9 +3,15 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import CloseIcon from './CloseIcon'
 
-export default function ModalCloseStaticButton() {
+interface Props {
+  // Override the close handler (otherwise closes the nearest modal)
+  onClose?: () => void
+}
+
+export default function ModalCloseStaticButton({ onClose }: Props) {
   const { t } = useTranslation()
-  const { onClose } = useModalContext()
+  const modal = useModalContext()
+  const handleClose = onClose || modal?.onClose
 
   return (
     <IconButton
@@ -13,7 +19,7 @@ export default function ModalCloseStaticButton() {
       icon={<CloseIcon width="12px" height="12px" />}
       variant="ghost"
       size="sm"
-      onClick={onClose}
+      onClick={handleClose}
     />
   )
 }

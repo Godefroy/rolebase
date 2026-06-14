@@ -1,4 +1,3 @@
-import useCreateLog from '@/log/hooks/useCreateLog'
 import {
   AlertDialog,
   AlertDialogBody,
@@ -11,7 +10,6 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { TaskFragment, useArchiveTaskMutation } from '@gql'
-import { EntityChangeType, LogType } from '@rolebase/shared/model/log'
 import React, { useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
@@ -27,31 +25,12 @@ export default function TaskDeleteModal({
   ...alertProps
 }: Props) {
   const { t } = useTranslation()
-  const createLog = useCreateLog()
   const cancelRef = useRef<HTMLButtonElement>(null)
   const [archiveTask] = useArchiveTaskMutation()
 
   const handleDelete = async () => {
     await archiveTask({ variables: { id: task.id } })
     onDelete?.()
-    createLog({
-      taskId: task.id,
-      display: {
-        type: LogType.TaskArchive,
-        id: task.id,
-        name: task.title,
-      },
-      changes: {
-        tasks: [
-          {
-            type: EntityChangeType.Update,
-            id: task.id,
-            prevData: { archived: false },
-            newData: { archived: true },
-          },
-        ],
-      },
-    })
     alertProps.onClose()
   }
 

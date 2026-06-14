@@ -3,19 +3,13 @@ import {
   LogFragment,
   useCancelLogMutation,
   useGetCircleLazyQuery,
+  useGetCircleLinkLazyQuery,
   useGetCircleMemberLazyQuery,
-  useGetDecisionLazyQuery,
-  useGetMemberLazyQuery,
   useGetRoleLazyQuery,
-  useGetTaskLazyQuery,
-  useGetThreadLazyQuery,
+  useUpdateCircleLinkMutation,
   useUpdateCircleMemberMutation,
   useUpdateCircleMutation,
-  useUpdateDecisionMutation,
-  useUpdateMemberMutation,
   useUpdateRoleMutation,
-  useUpdateTaskMutation,
-  useUpdateThreadMutation,
 } from '@gql'
 import { cancelLogChanges } from '@rolebase/shared/helpers/log/cancelLogChanges'
 import { detectRecentEntitiesChanges } from '@rolebase/shared/helpers/log/detectRecentEntitiesChanges'
@@ -27,34 +21,16 @@ export function useCancelLog(log: LogFragment) {
   const createLog = useCreateLog()
   const [cancelLog] = useCancelLogMutation()
 
-  const [getMember] = useGetMemberLazyQuery()
-  const [updateMember] = useUpdateMemberMutation()
   const [getCircle] = useGetCircleLazyQuery()
   const [updateCircle] = useUpdateCircleMutation()
   const [getRole] = useGetRoleLazyQuery()
   const [updateRole] = useUpdateRoleMutation()
   const [getCircleMember] = useGetCircleMemberLazyQuery()
   const [updateCircleMember] = useUpdateCircleMemberMutation()
-  const [getTask] = useGetTaskLazyQuery()
-  const [updateTask] = useUpdateTaskMutation()
-  const [getDecision] = useGetDecisionLazyQuery()
-  const [updateDecision] = useUpdateDecisionMutation()
-  const [getThread] = useGetThreadLazyQuery()
-  const [updateThread] = useUpdateThreadMutation()
+  const [getCircleLink] = useGetCircleLinkLazyQuery()
+  const [updateCircleLink] = useUpdateCircleLinkMutation()
 
   const methods: EntitiesMethods = {
-    members: {
-      async get(id: string) {
-        const { data } = await getMember({ variables: { id } })
-        return data?.member_by_pk || undefined
-      },
-      async update(id, values) {
-        const { data } = await updateMember({ variables: { id, values } })
-        if (!data?.update_member_by_pk) {
-          throw new Error('Unauthorized')
-        }
-      },
-    },
     circles: {
       async get(id: string) {
         const { data } = await getCircle({ variables: { id } })
@@ -81,6 +57,18 @@ export function useCancelLog(log: LogFragment) {
         }
       },
     },
+    circlesLinks: {
+      async get(id: string) {
+        const { data } = await getCircleLink({ variables: { id } })
+        return data?.circle_link_by_pk || undefined
+      },
+      async update(id, values) {
+        const { data } = await updateCircleLink({ variables: { id, values } })
+        if (!data?.update_circle_link_by_pk) {
+          throw new Error('Unauthorized')
+        }
+      },
+    },
     roles: {
       async get(id: string) {
         const { data } = await getRole({ variables: { id } })
@@ -89,42 +77,6 @@ export function useCancelLog(log: LogFragment) {
       async update(id, values) {
         const { data } = await updateRole({ variables: { id, values } })
         if (!data?.update_role_by_pk) {
-          throw new Error('Unauthorized')
-        }
-      },
-    },
-    tasks: {
-      async get(id: string) {
-        const { data } = await getTask({ variables: { id } })
-        return data?.task_by_pk || undefined
-      },
-      async update(id, values) {
-        const { data } = await updateTask({ variables: { id, values } })
-        if (!data?.update_task_by_pk) {
-          throw new Error('Unauthorized')
-        }
-      },
-    },
-    decisions: {
-      async get(id: string) {
-        const { data } = await getDecision({ variables: { id } })
-        return data?.decision_by_pk || undefined
-      },
-      async update(id, values) {
-        const { data } = await updateDecision({ variables: { id, values } })
-        if (!data?.update_decision_by_pk) {
-          throw new Error('Unauthorized')
-        }
-      },
-    },
-    thread: {
-      async get(id: string) {
-        const { data } = await getThread({ variables: { id } })
-        return data?.thread_by_pk || undefined
-      },
-      async update(id, values) {
-        const { data } = await updateThread({ variables: { id, values } })
-        if (!data?.update_thread_by_pk) {
           throw new Error('Unauthorized')
         }
       },

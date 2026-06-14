@@ -28,6 +28,12 @@ mutation updateCircleMember($id: uuid!, $values: circle_member_set_input!) {
   }
 }
 
+mutation insertCircleMember($object: circle_member_insert_input!) {
+  insert_circle_member_one(object: $object) {
+    ...CircleMember
+  }
+}
+
 mutation archiveCircleMember($circleId: uuid!, $memberId: uuid!) {
   update_circle_member(
     where: {

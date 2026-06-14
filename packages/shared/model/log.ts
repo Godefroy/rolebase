@@ -1,15 +1,12 @@
 import {
   CircleFragment,
+  CircleLinkFragment,
   CircleMemberFragment,
-  DecisionFragment,
-  MemberFragment,
   RoleFragment,
-  TaskFragment,
-  Task_Status_Enum,
-  ThreadFragment,
-  Thread_Status_Enum,
 } from '../gql'
 
+// Logs concern the org chart only (circles, roles, circle members, circle
+// links). This keeps the log system identical for direct edits and proposals.
 export enum LogType {
   CircleCreate = 'CircleCreate',
   CircleMove = 'CircleMove',
@@ -17,20 +14,11 @@ export enum LogType {
   CircleArchive = 'CircleArchive',
   CircleMemberAdd = 'CircleMemberAdd',
   CircleMemberRemove = 'CircleMemberRemove',
+  CircleLinkAdd = 'CircleLinkAdd',
+  CircleLinkRemove = 'CircleLinkRemove',
   RoleCreate = 'RoleCreate',
   RoleUpdate = 'RoleUpdate',
   RoleArchive = 'RoleArchive',
-  MemberCreate = 'MemberCreate',
-  MemberUpdate = 'MemberUpdate',
-  MemberArchive = 'MemberArchive',
-  TaskCreate = 'TaskCreate',
-  TaskUpdate = 'TaskUpdate',
-  TaskStatusUpdate = 'TaskStatusUpdate',
-  ThreadStatusUpdate = 'ThreadStatusUpdate',
-  TaskArchive = 'TaskArchive',
-  DecisionCreate = 'DecisionCreate',
-  DecisionUpdate = 'DecisionUpdate',
-  DecisionArchive = 'DecisionArchive',
 }
 
 export type LogDisplay =
@@ -47,15 +35,6 @@ export type LogDisplay =
         | LogType.RoleCreate
         | LogType.RoleUpdate
         | LogType.RoleArchive
-        | LogType.MemberCreate
-        | LogType.MemberUpdate
-        | LogType.MemberArchive
-        | LogType.TaskCreate
-        | LogType.TaskUpdate
-        | LogType.TaskArchive
-        | LogType.DecisionCreate
-        | LogType.DecisionUpdate
-        | LogType.DecisionArchive
       id: string
       name: string
     }
@@ -67,17 +46,11 @@ export type LogDisplay =
       memberName: string
     }
   | {
-      type: LogType.TaskStatusUpdate
-      id: string
-      name: string
-      status: Task_Status_Enum
-    }
-  | {
-      type: LogType.ThreadStatusUpdate
-      id: string
-      name: string
-      prevStatus: Thread_Status_Enum
-      status: Thread_Status_Enum
+      type: LogType.CircleLinkAdd | LogType.CircleLinkRemove
+      id: string // host (parent) circle id
+      name: string // host (parent) circle name
+      circleId: string // invited circle id
+      circleName: string // invited circle name
     }
 
 export enum EntityChangeType {
@@ -107,11 +80,8 @@ export type EntityChange<Entity> =
 export interface EntitiesTypes {
   circles: CircleFragment
   circlesMembers: CircleMemberFragment
+  circlesLinks: CircleLinkFragment
   roles: RoleFragment
-  members: MemberFragment
-  tasks: TaskFragment
-  decisions: DecisionFragment
-  thread: ThreadFragment
 }
 
 export type EntitiesChanges = {
@@ -121,6 +91,8 @@ export type EntitiesChanges = {
 export type EntityMethodGet<Entity> = (
   id: string
 ) => Promise<Entity | undefined>
+
+export type EntityMethodCreate<Entity> = (data: Entity) => Promise<void>
 
 export type EntityMethodUpdate<Entity> = (
   id: string,
@@ -134,4 +106,15 @@ export interface EntityMethods<Entity> {
 
 export type EntitiesMethods = {
   [type in keyof EntitiesTypes]: EntityMethods<EntitiesTypes[type]>
+}
+
+// Methods to apply changes forward (replay), including creation
+export interface EntityApplyMethods<Entity> {
+  get: EntityMethodGet<Entity>
+  create: EntityMethodCreate<Entity>
+  update: EntityMethodUpdate<Entity>
+}
+
+export type EntitiesApplyMethods = {
+  [type in keyof EntitiesTypes]: EntityApplyMethods<EntitiesTypes[type]>
 }

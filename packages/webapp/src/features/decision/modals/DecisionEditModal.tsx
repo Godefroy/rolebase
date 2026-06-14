@@ -2,7 +2,6 @@ import CircleFormController from '@/circle/components/CircleFormController'
 import useCircle from '@/circle/hooks/useCircle'
 import SwitchController from '@/common/atoms/SwitchController'
 import EditorController from '@/editor/components/EditorController'
-import useCreateLog from '@/log/hooks/useCreateLog'
 import useCurrentMember from '@/member/hooks/useCurrentMember'
 import { useOrgId } from '@/org/hooks/useOrgId'
 import ParticipantsNumber from '@/participants/components/ParticipantsNumber'
@@ -33,7 +32,6 @@ import {
   useUpdateDecisionMutation,
 } from '@gql'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { EntityChangeType, LogType } from '@rolebase/shared/model/log'
 import { nameSchema } from '@rolebase/shared/schemas'
 import React from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
@@ -71,7 +69,6 @@ export default function DecisionEditModal({
   const currentMember = useCurrentMember()
   const [createDecision] = useCreateDecisionMutation()
   const [updateDecision] = useUpdateDecisionMutation()
-  const createLog = useCreateLog()
 
   const defaultValues = decision
     ? {
@@ -114,25 +111,6 @@ export default function DecisionEditModal({
     if (decision) {
       // Update decision
       await updateDecision({ variables: { id: decision.id, values } })
-
-      // Log
-      createLog({
-        display: {
-          type: LogType.DecisionUpdate,
-          id: decision.id,
-          name: decision.title,
-        },
-        changes: {
-          decisions: [
-            {
-              type: EntityChangeType.Update,
-              id: decision.id,
-              prevData: defaultValues,
-              newData: values,
-            },
-          ],
-        },
-      })
     } else {
       // Create decision
       const { data } = await createDecision({
@@ -146,24 +124,6 @@ export default function DecisionEditModal({
       })
       const newDecision = data?.insert_decision_one
       if (!newDecision) return
-
-      // Log
-      createLog({
-        display: {
-          type: LogType.DecisionCreate,
-          id: newDecision.id,
-          name: newDecision.title,
-        },
-        changes: {
-          decisions: [
-            {
-              type: EntityChangeType.Create,
-              id: newDecision.id,
-              data: newDecision,
-            },
-          ],
-        },
-      })
 
       onCreate?.(newDecision.id)
     }

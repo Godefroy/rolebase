@@ -1,7 +1,7 @@
 import Loading from '@/common/atoms/Loading'
 import TextError from '@/common/atoms/TextError'
 import EditorController from '@/editor/components/EditorController'
-import useCreateLog from '@/log/hooks/useCreateLog'
+import { useOrgEditActions } from '@/org/contexts/OrgEditContext'
 import {
   Alert,
   AlertDescription,
@@ -22,9 +22,7 @@ import {
   UseModalProps,
   VStack,
 } from '@chakra-ui/react'
-import { RoleFragment, useUpdateRoleMutation } from '@gql'
-import { getEntityChanges } from '@rolebase/shared/helpers/log/getEntityChanges'
-import { EntityChangeType, LogType } from '@rolebase/shared/model/log'
+import { RoleFragment } from '@gql'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -51,8 +49,7 @@ export default function RoleGeneratorModal({ id, role, ...modalProps }: Props) {
     t,
     i18n: { language },
   } = useTranslation()
-  const [updateRole] = useUpdateRoleMutation()
-  const createLog = useCreateLog()
+  const { updateRole } = useOrgEditActions()
 
   const [loading, setLoading] = useState(false)
   const [loaded, setLoaded] = useState(false)
@@ -92,27 +89,7 @@ export default function RoleGeneratorModal({ id, role, ...modalProps }: Props) {
   const onSubmit = handleSubmit(async (values) => {
     if (!role) return
     modalProps.onClose()
-
-    // Update role data
-    await updateRole({ variables: { id: role.id, values } })
-
-    // Log change
-    createLog({
-      display: {
-        type: LogType.RoleUpdate,
-        id: role.id,
-        name: role.name,
-      },
-      changes: {
-        roles: [
-          {
-            type: EntityChangeType.Update,
-            id: role.id,
-            ...getEntityChanges(role, values),
-          },
-        ],
-      },
-    })
+    await updateRole(role, values)
   })
 
   return (

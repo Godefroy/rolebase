@@ -1,3 +1,4 @@
+import GraphShortcutsModal from '@/graph/components/GraphShortcutsModal'
 import { CirclesGraphViews } from '@/graph/types'
 import useOrgAdmin from '@/member/hooks/useOrgAdmin'
 import useOrgMember from '@/member/hooks/useOrgMember'
@@ -19,6 +20,7 @@ import {
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import {
+  HelpIcon,
   LogsIcon,
   RoleIcon,
   SettingsIcon,
@@ -33,7 +35,7 @@ interface CirclesGraphOptionsProps extends StyleProps {
   onViewChange: (view: CirclesGraphViews) => void
 }
 
-const buttonsProps = {
+export const graphButtonsProps = {
   variant: 'outline',
   size: 'sm',
   fontWeight: 'normal',
@@ -68,6 +70,7 @@ export default function CirclesGraphOptions({
   const isOwner = useOrgOwner()
 
   // Modals
+  const shortcutsModal = useDisclosure()
   const baseRolesModal = useDisclosure()
   const vacantRolesModal = useDisclosure()
   const shareModal = useDisclosure()
@@ -77,7 +80,7 @@ export default function CirclesGraphOptions({
       <GraphViewsSelect
         value={view}
         onChange={onViewChange}
-        {...buttonsProps}
+        {...graphButtonsProps}
         fontWeight="bold"
       />
 
@@ -87,7 +90,7 @@ export default function CirclesGraphOptions({
             as={IconButton}
             aria-label={t('CirclesGraphOptions.settings')}
             icon={<SettingsIcon size={20} />}
-            {...buttonsProps}
+            {...graphButtonsProps}
           />
 
           <Portal>
@@ -98,6 +101,13 @@ export default function CirclesGraphOptions({
               shadow="lg"
               zIndex={2000}
             >
+              <MenuItem
+                icon={<HelpIcon size={20} />}
+                onClick={shortcutsModal.onOpen}
+              >
+                {t('GraphShortcutsModal.button')}
+              </MenuItem>
+
               {isOwner && (
                 <MenuItem
                   icon={<RoleIcon size={20} />}
@@ -132,6 +142,10 @@ export default function CirclesGraphOptions({
             </MenuList>
           </Portal>
         </Menu>
+      )}
+
+      {shortcutsModal.isOpen && (
+        <GraphShortcutsModal isOpen onClose={shortcutsModal.onClose} />
       )}
 
       {baseRolesModal.isOpen && (

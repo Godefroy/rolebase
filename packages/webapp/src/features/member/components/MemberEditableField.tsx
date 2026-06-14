@@ -1,8 +1,6 @@
 import { EditableField } from '@/common/atoms/EditableField'
-import useCreateLog from '@/log/hooks/useCreateLog'
 import { BoxProps } from '@chakra-ui/react'
 import { MemberFragment, useUpdateMemberMutation } from '@gql'
-import { EntityChangeType, LogType } from '@rolebase/shared/model/log'
 import React from 'react'
 
 interface Props extends BoxProps {
@@ -24,7 +22,6 @@ export function MemberEditableField({
   ...boxProps
 }: Props) {
   const [updateMember] = useUpdateMemberMutation()
-  const createLog = useCreateLog()
 
   // Value
   const rawValue = member[field]
@@ -38,29 +35,6 @@ export function MemberEditableField({
         values: {
           [field]: newValue,
         },
-      },
-    })
-
-    // Log change
-    createLog({
-      display: {
-        type: LogType.MemberUpdate,
-        id: member.id,
-        name: member.name,
-      },
-      changes: {
-        roles: [
-          {
-            type: EntityChangeType.Update,
-            id: member.id,
-            prevData: {
-              [field]: value,
-            },
-            newData: {
-              [field]: newValue,
-            },
-          },
-        ],
       },
     })
   }

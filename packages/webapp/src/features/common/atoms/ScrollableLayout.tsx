@@ -1,7 +1,10 @@
 import { SidebarContext } from '@/layout/contexts/SidebarContext'
 import { Box, BoxProps, Flex } from '@chakra-ui/react'
 import React, { ReactNode, useContext, useRef } from 'react'
-import useScrollable, { ScrollPosition } from '../hooks/useScrollable'
+import useScrollable, {
+  ScrollPosition,
+  ScrollableContext,
+} from '../hooks/useScrollable'
 
 interface Props extends BoxProps {
   header?: ReactNode
@@ -22,18 +25,15 @@ export default function ScrollableLayout({
   // Scrollable content
   const topRef = useRef<HTMLDivElement>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
-  const {
-    containerRef,
-    contentRef,
-    isScrollable,
-    scrollPosition,
-    handleScroll,
-  } = useScrollable()
+  const scrollable = useScrollable()
+  const { containerRef, contentRef, isScrollable, scrollPosition, handleScroll } =
+    scrollable
 
   const showTopbar = isScrollable && scrollPosition !== ScrollPosition.Top
   const showBottombar = isScrollable && scrollPosition !== ScrollPosition.Bottom
 
   return (
+    <ScrollableContext.Provider value={scrollable}>
     <Box
       borderRadius="lg"
       display="flex"
@@ -115,5 +115,6 @@ export default function ScrollableLayout({
         {footer}
       </Box>
     </Box>
+    </ScrollableContext.Provider>
   )
 }

@@ -83,7 +83,7 @@ import {
 import React from 'react'
 import { BsPinAngle, BsPinAngleFill } from 'react-icons/bs'
 import { FaUsers } from 'react-icons/fa'
-import { FiCheck, FiHelpCircle } from 'react-icons/fi'
+import { FiCheck, FiHelpCircle, FiMove } from 'react-icons/fi'
 import { IoSearchOutline } from 'react-icons/io5'
 
 export const AddIcon = Add
@@ -145,6 +145,7 @@ export const NewsIcon = Activity
 export const NoteIcon = Note1
 export const NotificationIcon = Notification
 export const OrgChartIcon = MouseCircle
+export const PanIcon = FiMove
 export const PinIcon = BsPinAngle
 export const PinnedIcon = BsPinAngleFill
 export const PlayIcon = Play

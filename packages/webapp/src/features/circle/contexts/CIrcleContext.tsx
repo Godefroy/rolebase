@@ -34,10 +34,20 @@ export const CircleContext = createContext<CircleContextValues | undefined>(
 
 interface Props {
   circleId: string
+  // Force the whole panel read-only (e.g. previewing a proposal's org chart)
+  readOnly?: boolean
+  // Editing a draft (proposal org chart editor): lift governance restrictions
+  // since changes are only applied on approval. Any org member can prepare them.
+  isDraft?: boolean
   children: ReactNode
 }
 
-export function CircleProvider({ circleId, children }: Props) {
+export function CircleProvider({
+  circleId,
+  readOnly,
+  isDraft,
+  children,
+}: Props) {
   const circle = useCircle(circleId)
   const role = circle?.role
   const currentMember = useCurrentMember()
@@ -71,19 +81,25 @@ export function CircleProvider({ circleId, children }: Props) {
   const owners = useCircleLeaders(ownerCircle)
   const isOwner = owners.some((p) => p.member.id === currentMember?.id)
 
+  // In a draft (proposal editor), governance protection is lifted: any org
+  // member can prepare changes since they only apply on approval.
+  const governanceOk = isDraft || !org?.protectGovernance
+
   // Can edit circle
   const canEditCircle =
-    isOrgMember && (!org?.protectGovernance || isOrgOwner || isOwner)
+    isOrgMember && (governanceOk || isOrgOwner || isOwner)
 
   // Can edit role
-  const canEditRole = role?.base ? isOrgOwner : canEditCircle
+  const canEditRole = role?.base
+    ? isDraft || isOrgOwner
+    : canEditCircle
 
   // Can edit sub circles
   const canEditSubCircles =
     isOrgMember &&
     role?.singleMember === false &&
     role?.parentLink === false &&
-    (!org?.protectGovernance || isOrgOwner || isLeader)
+    (governanceOk || isOrgOwner || isLeader)
 
   // Can edit sub-circles with parent link
   const canEditSubCirclesParentLinks =
@@ -92,7 +108,7 @@ export function CircleProvider({ circleId, children }: Props) {
   // Can edit members
   const canEditMembers =
     isOrgMember &&
-    (!org?.protectGovernance ||
+    (governanceOk ||
       isOrgOwner ||
       (hasParentLinkMembers ? isLeader : isOwner))
 
@@ -110,11 +126,13 @@ export function CircleProvider({ circleId, children }: Props) {
       isLeader,
       isParticipant,
       isOwner,
-      canEditCircle,
-      canEditRole,
-      canEditMembers,
-      canEditSubCircles,
-      canEditSubCirclesParentLinks,
+      canEditCircle: readOnly ? false : canEditCircle,
+      canEditRole: readOnly ? false : canEditRole,
+      canEditMembers: readOnly ? false : canEditMembers,
+      canEditSubCircles: readOnly ? false : canEditSubCircles,
+      canEditSubCirclesParentLinks: readOnly
+        ? false
+        : canEditSubCirclesParentLinks,
     }
 
   return (

@@ -4430,6 +4430,7 @@ export type Circle_Leader_Stream_Cursor_Value_Input = {
 /** Members that represent a circle in another circle */
 export type Circle_Link = {
   __typename?: 'circle_link';
+  archived: Scalars['Boolean']['output'];
   circleId: Scalars['uuid']['output'];
   createdAt: Scalars['timestamptz']['output'];
   /** An object relationship */
@@ -4448,7 +4449,23 @@ export type Circle_Link_Aggregate = {
 };
 
 export type Circle_Link_Aggregate_Bool_Exp = {
+  bool_and?: InputMaybe<Circle_Link_Aggregate_Bool_Exp_Bool_And>;
+  bool_or?: InputMaybe<Circle_Link_Aggregate_Bool_Exp_Bool_Or>;
   count?: InputMaybe<Circle_Link_Aggregate_Bool_Exp_Count>;
+};
+
+export type Circle_Link_Aggregate_Bool_Exp_Bool_And = {
+  arguments: Circle_Link_Select_Column_Circle_Link_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Circle_Link_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
+};
+
+export type Circle_Link_Aggregate_Bool_Exp_Bool_Or = {
+  arguments: Circle_Link_Select_Column_Circle_Link_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+  filter?: InputMaybe<Circle_Link_Bool_Exp>;
+  predicate: Boolean_Comparison_Exp;
 };
 
 export type Circle_Link_Aggregate_Bool_Exp_Count = {
@@ -4492,6 +4509,7 @@ export type Circle_Link_Bool_Exp = {
   _and?: InputMaybe<Array<Circle_Link_Bool_Exp>>;
   _not?: InputMaybe<Circle_Link_Bool_Exp>;
   _or?: InputMaybe<Array<Circle_Link_Bool_Exp>>;
+  archived?: InputMaybe<Boolean_Comparison_Exp>;
   circleId?: InputMaybe<Uuid_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   hostCircle?: InputMaybe<Circle_Bool_Exp>;
@@ -4502,14 +4520,13 @@ export type Circle_Link_Bool_Exp = {
 
 /** unique or primary key constraints on table "circle_link" */
 export enum Circle_Link_Constraint {
-  /** unique or primary key constraint on columns "parentId", "circleId" */
-  CircleLinkParentIdCircleIdKey = 'circle_link_parentId_circleId_key',
   /** unique or primary key constraint on columns "id" */
   CircleLinkPkey = 'circle_link_pkey'
 }
 
 /** input type for inserting data into table "circle_link" */
 export type Circle_Link_Insert_Input = {
+  archived?: InputMaybe<Scalars['Boolean']['input']>;
   circleId?: InputMaybe<Scalars['uuid']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   hostCircle?: InputMaybe<Circle_Obj_Rel_Insert_Input>;
@@ -4570,6 +4587,7 @@ export type Circle_Link_On_Conflict = {
 
 /** Ordering options when selecting data from "circle_link". */
 export type Circle_Link_Order_By = {
+  archived?: InputMaybe<Order_By>;
   circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   hostCircle?: InputMaybe<Circle_Order_By>;
@@ -4586,6 +4604,8 @@ export type Circle_Link_Pk_Columns_Input = {
 /** select columns of table "circle_link" */
 export enum Circle_Link_Select_Column {
   /** column name */
+  Archived = 'archived',
+  /** column name */
   CircleId = 'circleId',
   /** column name */
   CreatedAt = 'createdAt',
@@ -4595,8 +4615,21 @@ export enum Circle_Link_Select_Column {
   ParentId = 'parentId'
 }
 
+/** select "circle_link_aggregate_bool_exp_bool_and_arguments_columns" columns of table "circle_link" */
+export enum Circle_Link_Select_Column_Circle_Link_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
+  /** column name */
+  Archived = 'archived'
+}
+
+/** select "circle_link_aggregate_bool_exp_bool_or_arguments_columns" columns of table "circle_link" */
+export enum Circle_Link_Select_Column_Circle_Link_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
+  /** column name */
+  Archived = 'archived'
+}
+
 /** input type for updating data in table "circle_link" */
 export type Circle_Link_Set_Input = {
+  archived?: InputMaybe<Scalars['Boolean']['input']>;
   circleId?: InputMaybe<Scalars['uuid']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
@@ -4613,6 +4646,7 @@ export type Circle_Link_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Circle_Link_Stream_Cursor_Value_Input = {
+  archived?: InputMaybe<Scalars['Boolean']['input']>;
   circleId?: InputMaybe<Scalars['uuid']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
@@ -4621,6 +4655,8 @@ export type Circle_Link_Stream_Cursor_Value_Input = {
 
 /** update columns of table "circle_link" */
 export enum Circle_Link_Update_Column {
+  /** column name */
+  Archived = 'archived',
   /** column name */
   CircleId = 'circleId',
   /** column name */
@@ -6304,6 +6340,7 @@ export type Log = {
   changes: Scalars['log_changes']['output'];
   changes_legacy?: Maybe<Scalars['json']['output']>;
   createdAt: Scalars['timestamptz']['output'];
+  decisionId?: Maybe<Scalars['uuid']['output']>;
   /** Type of log and data to display */
   display: Scalars['log_display']['output'];
   id: Scalars['uuid']['output'];
@@ -6424,6 +6461,7 @@ export type Log_Bool_Exp = {
   changes?: InputMaybe<Json_Comparison_Exp>;
   changes_legacy?: InputMaybe<Json_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  decisionId?: InputMaybe<Uuid_Comparison_Exp>;
   display?: InputMaybe<Json_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   meetingId?: InputMaybe<Uuid_Comparison_Exp>;
@@ -6460,6 +6498,7 @@ export type Log_Insert_Input = {
   changes?: InputMaybe<Scalars['json']['input']>;
   changes_legacy?: InputMaybe<Scalars['json']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  decisionId?: InputMaybe<Scalars['uuid']['input']>;
   /** Type of log and data to display */
   display?: InputMaybe<Scalars['json']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
@@ -6489,6 +6528,7 @@ export type Log_Max_Fields = {
   cancelMemberId?: Maybe<Scalars['uuid']['output']>;
   cancelMemberName?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
+  decisionId?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   /** Meeting during which this log was created (optional) */
   meetingId?: Maybe<Scalars['uuid']['output']>;
@@ -6510,6 +6550,7 @@ export type Log_Max_Order_By = {
   cancelMemberId?: InputMaybe<Order_By>;
   cancelMemberName?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
+  decisionId?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   /** Meeting during which this log was created (optional) */
   meetingId?: InputMaybe<Order_By>;
@@ -6532,6 +6573,7 @@ export type Log_Min_Fields = {
   cancelMemberId?: Maybe<Scalars['uuid']['output']>;
   cancelMemberName?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
+  decisionId?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   /** Meeting during which this log was created (optional) */
   meetingId?: Maybe<Scalars['uuid']['output']>;
@@ -6553,6 +6595,7 @@ export type Log_Min_Order_By = {
   cancelMemberId?: InputMaybe<Order_By>;
   cancelMemberName?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
+  decisionId?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   /** Meeting during which this log was created (optional) */
   meetingId?: InputMaybe<Order_By>;
@@ -6600,6 +6643,7 @@ export type Log_Order_By = {
   changes?: InputMaybe<Order_By>;
   changes_legacy?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
+  decisionId?: InputMaybe<Order_By>;
   display?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   meetingId?: InputMaybe<Order_By>;
@@ -6637,6 +6681,8 @@ export enum Log_Select_Column {
   ChangesLegacy = 'changes_legacy',
   /** column name */
   CreatedAt = 'createdAt',
+  /** column name */
+  DecisionId = 'decisionId',
   /** column name */
   Display = 'display',
   /** column name */
@@ -6681,6 +6727,7 @@ export type Log_Set_Input = {
   changes?: InputMaybe<Scalars['json']['input']>;
   changes_legacy?: InputMaybe<Scalars['json']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  decisionId?: InputMaybe<Scalars['uuid']['input']>;
   /** Type of log and data to display */
   display?: InputMaybe<Scalars['json']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
@@ -6716,6 +6763,7 @@ export type Log_Stream_Cursor_Value_Input = {
   changes?: InputMaybe<Scalars['json']['input']>;
   changes_legacy?: InputMaybe<Scalars['json']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  decisionId?: InputMaybe<Scalars['uuid']['input']>;
   /** Type of log and data to display */
   display?: InputMaybe<Scalars['json']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
@@ -6747,6 +6795,8 @@ export enum Log_Update_Column {
   ChangesLegacy = 'changes_legacy',
   /** column name */
   CreatedAt = 'createdAt',
+  /** column name */
+  DecisionId = 'decisionId',
   /** column name */
   Display = 'display',
   /** column name */
@@ -9546,6 +9596,10 @@ export type Mutation_Root = {
   delete_thread_poll_answer?: Maybe<Thread_Poll_Answer_Mutation_Response>;
   /** delete single row from the table: "thread_poll_answer" */
   delete_thread_poll_answer_by_pk?: Maybe<Thread_Poll_Answer>;
+  /** delete data from the table: "thread_proposal_vote" */
+  delete_thread_proposal_vote?: Maybe<Thread_Proposal_Vote_Mutation_Response>;
+  /** delete single row from the table: "thread_proposal_vote" */
+  delete_thread_proposal_vote_by_pk?: Maybe<Thread_Proposal_Vote>;
   /** delete data from the table: "thread_status" */
   delete_thread_status?: Maybe<Thread_Status_Mutation_Response>;
   /** delete single row from the table: "thread_status" */
@@ -9754,6 +9808,10 @@ export type Mutation_Root = {
   insert_thread_poll_answer?: Maybe<Thread_Poll_Answer_Mutation_Response>;
   /** insert a single row into the table: "thread_poll_answer" */
   insert_thread_poll_answer_one?: Maybe<Thread_Poll_Answer>;
+  /** insert data into the table: "thread_proposal_vote" */
+  insert_thread_proposal_vote?: Maybe<Thread_Proposal_Vote_Mutation_Response>;
+  /** insert a single row into the table: "thread_proposal_vote" */
+  insert_thread_proposal_vote_one?: Maybe<Thread_Proposal_Vote>;
   /** insert data into the table: "thread_status" */
   insert_thread_status?: Maybe<Thread_Status_Mutation_Response>;
   /** insert a single row into the table: "thread_status" */
@@ -10058,6 +10116,12 @@ export type Mutation_Root = {
   update_thread_poll_answer_by_pk?: Maybe<Thread_Poll_Answer>;
   /** update multiples rows of table: "thread_poll_answer" */
   update_thread_poll_answer_many?: Maybe<Array<Maybe<Thread_Poll_Answer_Mutation_Response>>>;
+  /** update data of the table: "thread_proposal_vote" */
+  update_thread_proposal_vote?: Maybe<Thread_Proposal_Vote_Mutation_Response>;
+  /** update single row of the table: "thread_proposal_vote" */
+  update_thread_proposal_vote_by_pk?: Maybe<Thread_Proposal_Vote>;
+  /** update multiples rows of table: "thread_proposal_vote" */
+  update_thread_proposal_vote_many?: Maybe<Array<Maybe<Thread_Proposal_Vote_Mutation_Response>>>;
   /** update data of the table: "thread_status" */
   update_thread_status?: Maybe<Thread_Status_Mutation_Response>;
   /** update single row of the table: "thread_status" */
@@ -10673,6 +10737,18 @@ export type Mutation_RootDelete_Thread_Poll_AnswerArgs = {
 
 /** mutation root */
 export type Mutation_RootDelete_Thread_Poll_Answer_By_PkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Thread_Proposal_VoteArgs = {
+  where: Thread_Proposal_Vote_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Thread_Proposal_Vote_By_PkArgs = {
   id: Scalars['uuid']['input'];
 };
 
@@ -11398,6 +11474,20 @@ export type Mutation_RootInsert_Thread_Poll_AnswerArgs = {
 export type Mutation_RootInsert_Thread_Poll_Answer_OneArgs = {
   object: Thread_Poll_Answer_Insert_Input;
   on_conflict?: InputMaybe<Thread_Poll_Answer_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Thread_Proposal_VoteArgs = {
+  objects: Array<Thread_Proposal_Vote_Insert_Input>;
+  on_conflict?: InputMaybe<Thread_Proposal_Vote_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Thread_Proposal_Vote_OneArgs = {
+  object: Thread_Proposal_Vote_Insert_Input;
+  on_conflict?: InputMaybe<Thread_Proposal_Vote_On_Conflict>;
 };
 
 
@@ -12356,6 +12446,11 @@ export type Mutation_RootUpdate_ThreadArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_Thread_ActivityArgs = {
+  _append?: InputMaybe<Thread_Activity_Append_Input>;
+  _delete_at_path?: InputMaybe<Thread_Activity_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<Thread_Activity_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<Thread_Activity_Delete_Key_Input>;
+  _prepend?: InputMaybe<Thread_Activity_Prepend_Input>;
   _set?: InputMaybe<Thread_Activity_Set_Input>;
   where: Thread_Activity_Bool_Exp;
 };
@@ -12363,6 +12458,11 @@ export type Mutation_RootUpdate_Thread_ActivityArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_Thread_Activity_By_PkArgs = {
+  _append?: InputMaybe<Thread_Activity_Append_Input>;
+  _delete_at_path?: InputMaybe<Thread_Activity_Delete_At_Path_Input>;
+  _delete_elem?: InputMaybe<Thread_Activity_Delete_Elem_Input>;
+  _delete_key?: InputMaybe<Thread_Activity_Delete_Key_Input>;
+  _prepend?: InputMaybe<Thread_Activity_Prepend_Input>;
   _set?: InputMaybe<Thread_Activity_Set_Input>;
   pk_columns: Thread_Activity_Pk_Columns_Input;
 };
@@ -12484,6 +12584,26 @@ export type Mutation_RootUpdate_Thread_Poll_Answer_By_PkArgs = {
 /** mutation root */
 export type Mutation_RootUpdate_Thread_Poll_Answer_ManyArgs = {
   updates: Array<Thread_Poll_Answer_Updates>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Thread_Proposal_VoteArgs = {
+  _set?: InputMaybe<Thread_Proposal_Vote_Set_Input>;
+  where: Thread_Proposal_Vote_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Thread_Proposal_Vote_By_PkArgs = {
+  _set?: InputMaybe<Thread_Proposal_Vote_Set_Input>;
+  pk_columns: Thread_Proposal_Vote_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Thread_Proposal_Vote_ManyArgs = {
+  updates: Array<Thread_Proposal_Vote_Updates>;
 };
 
 
@@ -14229,6 +14349,12 @@ export type Query_Root = {
   thread_poll_answer_aggregate: Thread_Poll_Answer_Aggregate;
   /** fetch data from the table: "thread_poll_answer" using primary key columns */
   thread_poll_answer_by_pk?: Maybe<Thread_Poll_Answer>;
+  /** fetch data from the table: "thread_proposal_vote" */
+  thread_proposal_vote: Array<Thread_Proposal_Vote>;
+  /** fetch aggregated fields from the table: "thread_proposal_vote" */
+  thread_proposal_vote_aggregate: Thread_Proposal_Vote_Aggregate;
+  /** fetch data from the table: "thread_proposal_vote" using primary key columns */
+  thread_proposal_vote_by_pk?: Maybe<Thread_Proposal_Vote>;
   /** fetch data from the table: "thread_status" */
   thread_status: Array<Thread_Status>;
   /** fetch aggregated fields from the table: "thread_status" */
@@ -15428,6 +15554,29 @@ export type Query_RootThread_Poll_Answer_AggregateArgs = {
 
 
 export type Query_RootThread_Poll_Answer_By_PkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+export type Query_RootThread_Proposal_VoteArgs = {
+  distinct_on?: InputMaybe<Array<Thread_Proposal_Vote_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Thread_Proposal_Vote_Order_By>>;
+  where?: InputMaybe<Thread_Proposal_Vote_Bool_Exp>;
+};
+
+
+export type Query_RootThread_Proposal_Vote_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Thread_Proposal_Vote_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Thread_Proposal_Vote_Order_By>>;
+  where?: InputMaybe<Thread_Proposal_Vote_Bool_Exp>;
+};
+
+
+export type Query_RootThread_Proposal_Vote_By_PkArgs = {
   id: Scalars['uuid']['input'];
 };
 
@@ -17040,6 +17189,14 @@ export type Subscription_Root = {
   thread_poll_answer_by_pk?: Maybe<Thread_Poll_Answer>;
   /** fetch data from the table in a streaming manner: "thread_poll_answer" */
   thread_poll_answer_stream: Array<Thread_Poll_Answer>;
+  /** fetch data from the table: "thread_proposal_vote" */
+  thread_proposal_vote: Array<Thread_Proposal_Vote>;
+  /** fetch aggregated fields from the table: "thread_proposal_vote" */
+  thread_proposal_vote_aggregate: Thread_Proposal_Vote_Aggregate;
+  /** fetch data from the table: "thread_proposal_vote" using primary key columns */
+  thread_proposal_vote_by_pk?: Maybe<Thread_Proposal_Vote>;
+  /** fetch data from the table in a streaming manner: "thread_proposal_vote" */
+  thread_proposal_vote_stream: Array<Thread_Proposal_Vote>;
   /** fetch data from the table: "thread_status" */
   thread_status: Array<Thread_Status>;
   /** fetch aggregated fields from the table: "thread_status" */
@@ -18610,6 +18767,36 @@ export type Subscription_RootThread_Poll_Answer_StreamArgs = {
 };
 
 
+export type Subscription_RootThread_Proposal_VoteArgs = {
+  distinct_on?: InputMaybe<Array<Thread_Proposal_Vote_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Thread_Proposal_Vote_Order_By>>;
+  where?: InputMaybe<Thread_Proposal_Vote_Bool_Exp>;
+};
+
+
+export type Subscription_RootThread_Proposal_Vote_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Thread_Proposal_Vote_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Thread_Proposal_Vote_Order_By>>;
+  where?: InputMaybe<Thread_Proposal_Vote_Bool_Exp>;
+};
+
+
+export type Subscription_RootThread_Proposal_Vote_By_PkArgs = {
+  id: Scalars['uuid']['input'];
+};
+
+
+export type Subscription_RootThread_Proposal_Vote_StreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<Thread_Proposal_Vote_Stream_Cursor_Input>>;
+  where?: InputMaybe<Thread_Proposal_Vote_Bool_Exp>;
+};
+
+
 export type Subscription_RootThread_StatusArgs = {
   distinct_on?: InputMaybe<Array<Thread_Status_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -19597,7 +19784,7 @@ export type ThreadMember_Status_AggregateArgs = {
 export type Thread_Activity = {
   __typename?: 'thread_activity';
   createdAt: Scalars['timestamptz']['output'];
-  data: Scalars['json']['output'];
+  data: Scalars['jsonb']['output'];
   data_legacy?: Maybe<Scalars['json']['output']>;
   id: Scalars['uuid']['output'];
   /** An array relationship */
@@ -19697,6 +19884,11 @@ export type Thread_Activity_Aggregate_Order_By = {
   min?: InputMaybe<Thread_Activity_Min_Order_By>;
 };
 
+/** append existing jsonb value of filtered columns with new jsonb value */
+export type Thread_Activity_Append_Input = {
+  data?: InputMaybe<Scalars['jsonb']['input']>;
+};
+
 /** input type for inserting array relation for remote table "thread_activity" */
 export type Thread_Activity_Arr_Rel_Insert_Input = {
   data: Array<Thread_Activity_Insert_Input>;
@@ -19710,7 +19902,7 @@ export type Thread_Activity_Bool_Exp = {
   _not?: InputMaybe<Thread_Activity_Bool_Exp>;
   _or?: InputMaybe<Array<Thread_Activity_Bool_Exp>>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
-  data?: InputMaybe<Json_Comparison_Exp>;
+  data?: InputMaybe<Jsonb_Comparison_Exp>;
   data_legacy?: InputMaybe<Json_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   reactions?: InputMaybe<Thread_Activity_Reaction_Bool_Exp>;
@@ -19738,10 +19930,25 @@ export enum Thread_Activity_Constraint {
   ThreadActivityThreadIdRefMeetingIdTypeKey = 'thread_activity_threadId_refMeetingId_type_key'
 }
 
+/** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+export type Thread_Activity_Delete_At_Path_Input = {
+  data?: InputMaybe<Array<Scalars['String']['input']>>;
+};
+
+/** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+export type Thread_Activity_Delete_Elem_Input = {
+  data?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** delete key/value pair or string element. key/value pairs are matched based on their key value */
+export type Thread_Activity_Delete_Key_Input = {
+  data?: InputMaybe<Scalars['String']['input']>;
+};
+
 /** input type for inserting data into table "thread_activity" */
 export type Thread_Activity_Insert_Input = {
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  data?: InputMaybe<Scalars['json']['input']>;
+  data?: InputMaybe<Scalars['jsonb']['input']>;
   data_legacy?: InputMaybe<Scalars['json']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   reactions?: InputMaybe<Thread_Activity_Reaction_Arr_Rel_Insert_Input>;
@@ -19858,6 +20065,11 @@ export type Thread_Activity_Order_By = {
 /** primary key columns input for table: thread_activity */
 export type Thread_Activity_Pk_Columns_Input = {
   id: Scalars['uuid']['input'];
+};
+
+/** prepend existing jsonb value of filtered columns with new jsonb value */
+export type Thread_Activity_Prepend_Input = {
+  data?: InputMaybe<Scalars['jsonb']['input']>;
 };
 
 /** columns and relationships of "thread_activity_reaction" */
@@ -20107,7 +20319,7 @@ export enum Thread_Activity_Select_Column {
 /** input type for updating data in table "thread_activity" */
 export type Thread_Activity_Set_Input = {
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  data?: InputMaybe<Scalars['json']['input']>;
+  data?: InputMaybe<Scalars['jsonb']['input']>;
   data_legacy?: InputMaybe<Scalars['json']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   refDecisionId?: InputMaybe<Scalars['uuid']['input']>;
@@ -20130,7 +20342,7 @@ export type Thread_Activity_Stream_Cursor_Input = {
 /** Initial value of the column from where the streaming should start */
 export type Thread_Activity_Stream_Cursor_Value_Input = {
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
-  data?: InputMaybe<Scalars['json']['input']>;
+  data?: InputMaybe<Scalars['jsonb']['input']>;
   data_legacy?: InputMaybe<Scalars['json']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   refDecisionId?: InputMaybe<Scalars['uuid']['input']>;
@@ -20193,6 +20405,8 @@ export enum Thread_Activity_Type_Enum {
   MeetingNote = 'MeetingNote',
   Message = 'Message',
   Poll = 'Poll',
+  Proposal = 'Proposal',
+  ProposalEvent = 'ProposalEvent',
   Task = 'Task',
   Thread = 'Thread'
 }
@@ -20323,6 +20537,16 @@ export enum Thread_Activity_Update_Column {
 }
 
 export type Thread_Activity_Updates = {
+  /** append existing jsonb value of filtered columns with new jsonb value */
+  _append?: InputMaybe<Thread_Activity_Append_Input>;
+  /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
+  _delete_at_path?: InputMaybe<Thread_Activity_Delete_At_Path_Input>;
+  /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
+  _delete_elem?: InputMaybe<Thread_Activity_Delete_Elem_Input>;
+  /** delete key/value pair or string element. key/value pairs are matched based on their key value */
+  _delete_key?: InputMaybe<Thread_Activity_Delete_Key_Input>;
+  /** prepend existing jsonb value of filtered columns with new jsonb value */
+  _prepend?: InputMaybe<Thread_Activity_Prepend_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Thread_Activity_Set_Input>;
   /** filter the rows which have to be updated */
@@ -21139,6 +21363,183 @@ export type Thread_Poll_Answer_Updates = {
   _set?: InputMaybe<Thread_Poll_Answer_Set_Input>;
   /** filter the rows which have to be updated */
   where: Thread_Poll_Answer_Bool_Exp;
+};
+
+/** columns and relationships of "thread_proposal_vote" */
+export type Thread_Proposal_Vote = {
+  __typename?: 'thread_proposal_vote';
+  /** An object relationship */
+  activity: Thread_Activity;
+  activityId: Scalars['uuid']['output'];
+  createdAt: Scalars['timestamptz']['output'];
+  id: Scalars['uuid']['output'];
+  userId: Scalars['uuid']['output'];
+  vote: Scalars['String']['output'];
+};
+
+/** aggregated selection of "thread_proposal_vote" */
+export type Thread_Proposal_Vote_Aggregate = {
+  __typename?: 'thread_proposal_vote_aggregate';
+  aggregate?: Maybe<Thread_Proposal_Vote_Aggregate_Fields>;
+  nodes: Array<Thread_Proposal_Vote>;
+};
+
+/** aggregate fields of "thread_proposal_vote" */
+export type Thread_Proposal_Vote_Aggregate_Fields = {
+  __typename?: 'thread_proposal_vote_aggregate_fields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<Thread_Proposal_Vote_Max_Fields>;
+  min?: Maybe<Thread_Proposal_Vote_Min_Fields>;
+};
+
+
+/** aggregate fields of "thread_proposal_vote" */
+export type Thread_Proposal_Vote_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Thread_Proposal_Vote_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Boolean expression to filter rows from the table "thread_proposal_vote". All fields are combined with a logical 'AND'. */
+export type Thread_Proposal_Vote_Bool_Exp = {
+  _and?: InputMaybe<Array<Thread_Proposal_Vote_Bool_Exp>>;
+  _not?: InputMaybe<Thread_Proposal_Vote_Bool_Exp>;
+  _or?: InputMaybe<Array<Thread_Proposal_Vote_Bool_Exp>>;
+  activity?: InputMaybe<Thread_Activity_Bool_Exp>;
+  activityId?: InputMaybe<Uuid_Comparison_Exp>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
+  userId?: InputMaybe<Uuid_Comparison_Exp>;
+  vote?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "thread_proposal_vote" */
+export enum Thread_Proposal_Vote_Constraint {
+  /** unique or primary key constraint on columns "userId", "activityId" */
+  ThreadProposalVoteActivityIdUserIdKey = 'thread_proposal_vote_activityId_userId_key',
+  /** unique or primary key constraint on columns "id" */
+  ThreadProposalVotePkey = 'thread_proposal_vote_pkey'
+}
+
+/** input type for inserting data into table "thread_proposal_vote" */
+export type Thread_Proposal_Vote_Insert_Input = {
+  activity?: InputMaybe<Thread_Activity_Obj_Rel_Insert_Input>;
+  activityId?: InputMaybe<Scalars['uuid']['input']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  userId?: InputMaybe<Scalars['uuid']['input']>;
+  vote?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate max on columns */
+export type Thread_Proposal_Vote_Max_Fields = {
+  __typename?: 'thread_proposal_vote_max_fields';
+  activityId?: Maybe<Scalars['uuid']['output']>;
+  createdAt?: Maybe<Scalars['timestamptz']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  userId?: Maybe<Scalars['uuid']['output']>;
+  vote?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregate min on columns */
+export type Thread_Proposal_Vote_Min_Fields = {
+  __typename?: 'thread_proposal_vote_min_fields';
+  activityId?: Maybe<Scalars['uuid']['output']>;
+  createdAt?: Maybe<Scalars['timestamptz']['output']>;
+  id?: Maybe<Scalars['uuid']['output']>;
+  userId?: Maybe<Scalars['uuid']['output']>;
+  vote?: Maybe<Scalars['String']['output']>;
+};
+
+/** response of any mutation on the table "thread_proposal_vote" */
+export type Thread_Proposal_Vote_Mutation_Response = {
+  __typename?: 'thread_proposal_vote_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Thread_Proposal_Vote>;
+};
+
+/** on_conflict condition type for table "thread_proposal_vote" */
+export type Thread_Proposal_Vote_On_Conflict = {
+  constraint: Thread_Proposal_Vote_Constraint;
+  update_columns?: Array<Thread_Proposal_Vote_Update_Column>;
+  where?: InputMaybe<Thread_Proposal_Vote_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "thread_proposal_vote". */
+export type Thread_Proposal_Vote_Order_By = {
+  activity?: InputMaybe<Thread_Activity_Order_By>;
+  activityId?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  userId?: InputMaybe<Order_By>;
+  vote?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: thread_proposal_vote */
+export type Thread_Proposal_Vote_Pk_Columns_Input = {
+  id: Scalars['uuid']['input'];
+};
+
+/** select columns of table "thread_proposal_vote" */
+export enum Thread_Proposal_Vote_Select_Column {
+  /** column name */
+  ActivityId = 'activityId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  UserId = 'userId',
+  /** column name */
+  Vote = 'vote'
+}
+
+/** input type for updating data in table "thread_proposal_vote" */
+export type Thread_Proposal_Vote_Set_Input = {
+  activityId?: InputMaybe<Scalars['uuid']['input']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  userId?: InputMaybe<Scalars['uuid']['input']>;
+  vote?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Streaming cursor of the table "thread_proposal_vote" */
+export type Thread_Proposal_Vote_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Thread_Proposal_Vote_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Thread_Proposal_Vote_Stream_Cursor_Value_Input = {
+  activityId?: InputMaybe<Scalars['uuid']['input']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  id?: InputMaybe<Scalars['uuid']['input']>;
+  userId?: InputMaybe<Scalars['uuid']['input']>;
+  vote?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** update columns of table "thread_proposal_vote" */
+export enum Thread_Proposal_Vote_Update_Column {
+  /** column name */
+  ActivityId = 'activityId',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  UserId = 'userId',
+  /** column name */
+  Vote = 'vote'
+}
+
+export type Thread_Proposal_Vote_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Thread_Proposal_Vote_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Thread_Proposal_Vote_Bool_Exp;
 };
 
 /** select columns of table "thread" */
@@ -22716,15 +23117,15 @@ export type CircleFragment = { __typename?: 'circle', id: string, orgId: string,
 
 export type CircleSummaryFragment = { __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean, role: { __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null } };
 
-export type CircleFullFragment = { __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean, members: Array<{ __typename?: 'circle_member', id: string, member: { __typename?: 'member', id: string, userId?: string | null, name: string, picture?: string | null } }>, invitedCircleLinks: Array<{ __typename?: 'circle_link', invitedCircle: { __typename?: 'circle', id: string } }>, role: { __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null } };
+export type CircleFullFragment = { __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean, members: Array<{ __typename?: 'circle_member', id: string, member: { __typename?: 'member', id: string, userId?: string | null, name: string, picture?: string | null } }>, invitedCircleLinks: Array<{ __typename?: 'circle_link', id: string, invitedCircle: { __typename?: 'circle', id: string } }>, role: { __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null } };
 
-export type CircleLinkFragment = { __typename?: 'circle_link', id: string, parentId: string, circleId: string, createdAt: string };
+export type CircleLinkFragment = { __typename?: 'circle_link', id: string, parentId: string, circleId: string, createdAt: string, archived: boolean };
 
 export type CircleMemberFragment = { __typename?: 'circle_member', id: string, circleId: string, memberId: string, createdAt: string, archived: boolean };
 
 export type DecisionFragment = { __typename?: 'decision', id: string, orgId: string, circleId: string, memberId: string, title: string, description: string, archived: boolean, createdAt: string, private: boolean };
 
-export type LogFragment = { __typename?: 'log', id: string, orgId: string, userId: string, memberId: string, memberName: string, meetingId?: string | null, createdAt: string, display: LogDisplay, changes: EntitiesChanges, cancelLogId?: string | null, cancelMemberId?: string | null, cancelMemberName?: string | null, canceled: boolean, threadId?: string | null, taskId?: string | null };
+export type LogFragment = { __typename?: 'log', id: string, orgId: string, userId: string, memberId: string, memberName: string, meetingId?: string | null, createdAt: string, display: LogDisplay, changes: EntitiesChanges, cancelLogId?: string | null, cancelMemberId?: string | null, cancelMemberName?: string | null, canceled: boolean, threadId?: string | null, taskId?: string | null, decisionId?: string | null };
 
 export type MeetingSummaryFragment = { __typename?: 'meeting', id: string, orgId: string, circleId: string, startDate: string, endDate: string, ended: boolean, title: string, currentStepId?: string | null, summary: string, private: boolean, meeting_attendees: Array<{ __typename?: 'meeting_attendee', id: string, meetingId: string, memberId: string, present?: boolean | null, startNotified: boolean }> };
 
@@ -22744,9 +23145,9 @@ export type NewsFragment = { __typename?: 'news', id?: string | null, createdAt?
 
 export type OrgFragment = { __typename?: 'org', id: string, name: string, archived: boolean, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, protectGovernance: boolean, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null };
 
-export type OrgFullFragment = { __typename?: 'org', id: string, name: string, archived: boolean, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, protectGovernance: boolean, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null, org_subscription?: { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum } | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean, members: Array<{ __typename?: 'circle_member', id: string, member: { __typename?: 'member', id: string, userId?: string | null, name: string, picture?: string | null } }>, invitedCircleLinks: Array<{ __typename?: 'circle_link', invitedCircle: { __typename?: 'circle', id: string } }>, role: { __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null } }>, roles: Array<{ __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null }>, members: Array<{ __typename?: 'member', id: string, orgId: string, archived: boolean, name: string, description: string, pictureFileId?: string | null, picture?: string | null, userId?: string | null, inviteEmail?: string | null, inviteDate?: string | null, role?: Member_Role_Enum | null }> };
+export type OrgFullFragment = { __typename?: 'org', id: string, name: string, archived: boolean, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, protectGovernance: boolean, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null, org_subscription?: { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum } | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean, members: Array<{ __typename?: 'circle_member', id: string, member: { __typename?: 'member', id: string, userId?: string | null, name: string, picture?: string | null } }>, invitedCircleLinks: Array<{ __typename?: 'circle_link', id: string, invitedCircle: { __typename?: 'circle', id: string } }>, role: { __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null } }>, roles: Array<{ __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null }>, members: Array<{ __typename?: 'member', id: string, orgId: string, archived: boolean, name: string, description: string, pictureFileId?: string | null, picture?: string | null, userId?: string | null, inviteEmail?: string | null, inviteDate?: string | null, role?: Member_Role_Enum | null }> };
 
-export type OrgFullLightFragment = { __typename?: 'org', id: string, name: string, archived: boolean, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, protectGovernance: boolean, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null, org_subscription?: { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum } | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean, members: Array<{ __typename?: 'circle_member', id: string, memberId: string }>, invitedCircleLinks: Array<{ __typename?: 'circle_link', invitedCircle: { __typename?: 'circle', id: string } }> }>, roles: Array<{ __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null }>, members: Array<{ __typename?: 'member', id: string, orgId: string, archived: boolean, name: string, description: string, pictureFileId?: string | null, picture?: string | null, userId?: string | null, inviteEmail?: string | null, inviteDate?: string | null, role?: Member_Role_Enum | null }> };
+export type OrgFullLightFragment = { __typename?: 'org', id: string, name: string, archived: boolean, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, protectGovernance: boolean, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null, org_subscription?: { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum } | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean, members: Array<{ __typename?: 'circle_member', id: string, memberId: string }>, invitedCircleLinks: Array<{ __typename?: 'circle_link', id: string, invitedCircle: { __typename?: 'circle', id: string } }> }>, roles: Array<{ __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null }>, members: Array<{ __typename?: 'member', id: string, orgId: string, archived: boolean, name: string, description: string, pictureFileId?: string | null, picture?: string | null, userId?: string | null, inviteEmail?: string | null, inviteDate?: string | null, role?: Member_Role_Enum | null }> };
 
 export type OrgSubscriptionFragment = { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum };
 
@@ -22830,7 +23231,7 @@ export type GetPublicCirclesQueryVariables = Exact<{
 }>;
 
 
-export type GetPublicCirclesQuery = { __typename?: 'query_root', circle: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, members: Array<{ __typename?: 'circle_member', id: string, memberId: string }>, invitedCircleLinks: Array<{ __typename?: 'circle_link', invitedCircle: { __typename?: 'circle', id: string } }> }>, role: Array<{ __typename?: 'role', id: string, orgId: string, base: boolean, name: string, purpose: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null }>, member: Array<{ __typename?: 'member', id: string, orgId: string, name: string, picture?: string | null }> };
+export type GetPublicCirclesQuery = { __typename?: 'query_root', circle: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, members: Array<{ __typename?: 'circle_member', id: string, memberId: string }>, invitedCircleLinks: Array<{ __typename?: 'circle_link', id: string, invitedCircle: { __typename?: 'circle', id: string } }> }>, role: Array<{ __typename?: 'role', id: string, orgId: string, base: boolean, name: string, purpose: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null }>, member: Array<{ __typename?: 'member', id: string, orgId: string, name: string, picture?: string | null }> };
 
 export type GetCirclesStatsQueryVariables = Exact<{
   circlesIds: Array<Scalars['uuid']['input']> | Scalars['uuid']['input'];
@@ -22847,6 +23248,13 @@ export type CreateCircleMutationVariables = Exact<{
 
 
 export type CreateCircleMutation = { __typename?: 'mutation_root', insert_circle_one?: { __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean } | null };
+
+export type InsertCircleMutationVariables = Exact<{
+  object: Circle_Insert_Input;
+}>;
+
+
+export type InsertCircleMutation = { __typename?: 'mutation_root', insert_circle_one?: { __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean } | null };
 
 export type CreateCirclesMutationVariables = Exact<{
   circles: Array<Circle_Insert_Input> | Circle_Insert_Input;
@@ -22877,15 +23285,37 @@ export type CreateCircleLinkMutationVariables = Exact<{
 }>;
 
 
-export type CreateCircleLinkMutation = { __typename?: 'mutation_root', insert_circle_link_one?: { __typename?: 'circle_link', id: string, parentId: string, circleId: string, createdAt: string } | null };
+export type CreateCircleLinkMutation = { __typename?: 'mutation_root', insert_circle_link_one?: { __typename?: 'circle_link', id: string, parentId: string, circleId: string, createdAt: string, archived: boolean } | null };
 
-export type DeleteCircleLinkMutationVariables = Exact<{
+export type GetCircleLinkQueryVariables = Exact<{
+  id: Scalars['uuid']['input'];
+}>;
+
+
+export type GetCircleLinkQuery = { __typename?: 'query_root', circle_link_by_pk?: { __typename?: 'circle_link', id: string, parentId: string, circleId: string, createdAt: string, archived: boolean } | null };
+
+export type InsertCircleLinkMutationVariables = Exact<{
+  object: Circle_Link_Insert_Input;
+}>;
+
+
+export type InsertCircleLinkMutation = { __typename?: 'mutation_root', insert_circle_link_one?: { __typename?: 'circle_link', id: string, parentId: string, circleId: string, createdAt: string, archived: boolean } | null };
+
+export type UpdateCircleLinkMutationVariables = Exact<{
+  id: Scalars['uuid']['input'];
+  values: Circle_Link_Set_Input;
+}>;
+
+
+export type UpdateCircleLinkMutation = { __typename?: 'mutation_root', update_circle_link_by_pk?: { __typename?: 'circle_link', id: string, parentId: string, circleId: string, createdAt: string, archived: boolean } | null };
+
+export type ArchiveCircleLinkMutationVariables = Exact<{
   parentId: Scalars['uuid']['input'];
   circleId: Scalars['uuid']['input'];
 }>;
 
 
-export type DeleteCircleLinkMutation = { __typename?: 'mutation_root', delete_circle_link?: { __typename?: 'circle_link_mutation_response', returning: Array<{ __typename?: 'circle_link', id: string, parentId: string, circleId: string, createdAt: string }> } | null };
+export type ArchiveCircleLinkMutation = { __typename?: 'mutation_root', update_circle_link?: { __typename?: 'circle_link_mutation_response', returning: Array<{ __typename?: 'circle_link', id: string, parentId: string, circleId: string, createdAt: string, archived: boolean }> } | null };
 
 export type GetCircleMemberQueryVariables = Exact<{
   id: Scalars['uuid']['input'];
@@ -22909,6 +23339,13 @@ export type UpdateCircleMemberMutationVariables = Exact<{
 
 
 export type UpdateCircleMemberMutation = { __typename?: 'mutation_root', update_circle_member_by_pk?: { __typename?: 'circle_member', id: string, circleId: string, memberId: string, createdAt: string, archived: boolean } | null };
+
+export type InsertCircleMemberMutationVariables = Exact<{
+  object: Circle_Member_Insert_Input;
+}>;
+
+
+export type InsertCircleMemberMutation = { __typename?: 'mutation_root', insert_circle_member_one?: { __typename?: 'circle_member', id: string, circleId: string, memberId: string, createdAt: string, archived: boolean } | null };
 
 export type ArchiveCircleMemberMutationVariables = Exact<{
   circleId: Scalars['uuid']['input'];
@@ -22969,35 +23406,42 @@ export type LastLogsQueryVariables = Exact<{
 }>;
 
 
-export type LastLogsQuery = { __typename?: 'query_root', log: Array<{ __typename?: 'log', id: string, orgId: string, userId: string, memberId: string, memberName: string, meetingId?: string | null, createdAt: string, display: LogDisplay, changes: EntitiesChanges, cancelLogId?: string | null, cancelMemberId?: string | null, cancelMemberName?: string | null, canceled: boolean, threadId?: string | null, taskId?: string | null }>, log_aggregate: { __typename?: 'log_aggregate', aggregate?: { __typename?: 'log_aggregate_fields', count: number } | null } };
+export type LastLogsQuery = { __typename?: 'query_root', log: Array<{ __typename?: 'log', id: string, orgId: string, userId: string, memberId: string, memberName: string, meetingId?: string | null, createdAt: string, display: LogDisplay, changes: EntitiesChanges, cancelLogId?: string | null, cancelMemberId?: string | null, cancelMemberName?: string | null, canceled: boolean, threadId?: string | null, taskId?: string | null, decisionId?: string | null }>, log_aggregate: { __typename?: 'log_aggregate', aggregate?: { __typename?: 'log_aggregate_fields', count: number } | null } };
 
 export type TaskLogsSubscriptionVariables = Exact<{
   taskId: Scalars['uuid']['input'];
 }>;
 
 
-export type TaskLogsSubscription = { __typename?: 'subscription_root', log: Array<{ __typename?: 'log', id: string, orgId: string, userId: string, memberId: string, memberName: string, meetingId?: string | null, createdAt: string, display: LogDisplay, changes: EntitiesChanges, cancelLogId?: string | null, cancelMemberId?: string | null, cancelMemberName?: string | null, canceled: boolean, threadId?: string | null, taskId?: string | null }> };
+export type TaskLogsSubscription = { __typename?: 'subscription_root', log: Array<{ __typename?: 'log', id: string, orgId: string, userId: string, memberId: string, memberName: string, meetingId?: string | null, createdAt: string, display: LogDisplay, changes: EntitiesChanges, cancelLogId?: string | null, cancelMemberId?: string | null, cancelMemberName?: string | null, canceled: boolean, threadId?: string | null, taskId?: string | null, decisionId?: string | null }> };
 
 export type MeetingLogsSubscriptionVariables = Exact<{
   meetingId: Scalars['uuid']['input'];
 }>;
 
 
-export type MeetingLogsSubscription = { __typename?: 'subscription_root', log: Array<{ __typename?: 'log', id: string, orgId: string, userId: string, memberId: string, memberName: string, meetingId?: string | null, createdAt: string, display: LogDisplay, changes: EntitiesChanges, cancelLogId?: string | null, cancelMemberId?: string | null, cancelMemberName?: string | null, canceled: boolean, threadId?: string | null, taskId?: string | null }> };
+export type MeetingLogsSubscription = { __typename?: 'subscription_root', log: Array<{ __typename?: 'log', id: string, orgId: string, userId: string, memberId: string, memberName: string, meetingId?: string | null, createdAt: string, display: LogDisplay, changes: EntitiesChanges, cancelLogId?: string | null, cancelMemberId?: string | null, cancelMemberName?: string | null, canceled: boolean, threadId?: string | null, taskId?: string | null, decisionId?: string | null }> };
+
+export type DecisionLogsSubscriptionVariables = Exact<{
+  decisionId: Scalars['uuid']['input'];
+}>;
+
+
+export type DecisionLogsSubscription = { __typename?: 'subscription_root', log: Array<{ __typename?: 'log', id: string, orgId: string, userId: string, memberId: string, memberName: string, meetingId?: string | null, createdAt: string, display: LogDisplay, changes: EntitiesChanges, cancelLogId?: string | null, cancelMemberId?: string | null, cancelMemberName?: string | null, canceled: boolean, threadId?: string | null, taskId?: string | null, decisionId?: string | null }> };
 
 export type CreateLogMutationVariables = Exact<{
   values: Log_Insert_Input;
 }>;
 
 
-export type CreateLogMutation = { __typename?: 'mutation_root', insert_log_one?: { __typename?: 'log', id: string, orgId: string, userId: string, memberId: string, memberName: string, meetingId?: string | null, createdAt: string, display: LogDisplay, changes: EntitiesChanges, cancelLogId?: string | null, cancelMemberId?: string | null, cancelMemberName?: string | null, canceled: boolean, threadId?: string | null, taskId?: string | null } | null };
+export type CreateLogMutation = { __typename?: 'mutation_root', insert_log_one?: { __typename?: 'log', id: string, orgId: string, userId: string, memberId: string, memberName: string, meetingId?: string | null, createdAt: string, display: LogDisplay, changes: EntitiesChanges, cancelLogId?: string | null, cancelMemberId?: string | null, cancelMemberName?: string | null, canceled: boolean, threadId?: string | null, taskId?: string | null, decisionId?: string | null } | null };
 
 export type CancelLogMutationVariables = Exact<{
   id: Scalars['uuid']['input'];
 }>;
 
 
-export type CancelLogMutation = { __typename?: 'mutation_root', update_log_by_pk?: { __typename?: 'log', id: string, orgId: string, userId: string, memberId: string, memberName: string, meetingId?: string | null, createdAt: string, display: LogDisplay, changes: EntitiesChanges, cancelLogId?: string | null, cancelMemberId?: string | null, cancelMemberName?: string | null, canceled: boolean, threadId?: string | null, taskId?: string | null } | null };
+export type CancelLogMutation = { __typename?: 'mutation_root', update_log_by_pk?: { __typename?: 'log', id: string, orgId: string, userId: string, memberId: string, memberName: string, meetingId?: string | null, createdAt: string, display: LogDisplay, changes: EntitiesChanges, cancelLogId?: string | null, cancelMemberId?: string | null, cancelMemberName?: string | null, canceled: boolean, threadId?: string | null, taskId?: string | null, decisionId?: string | null } | null };
 
 export type MeetingSubscriptionVariables = Exact<{
   id: Scalars['uuid']['input'];
@@ -23240,21 +23684,21 @@ export type OrgsSubscriptionVariables = Exact<{
 }>;
 
 
-export type OrgsSubscription = { __typename?: 'subscription_root', member: Array<{ __typename?: 'member', org: { __typename?: 'org', id: string, name: string, archived: boolean, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, protectGovernance: boolean, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean, members: Array<{ __typename?: 'circle_member', id: string, member: { __typename?: 'member', id: string, userId?: string | null, name: string, picture?: string | null } }>, invitedCircleLinks: Array<{ __typename?: 'circle_link', invitedCircle: { __typename?: 'circle', id: string } }>, role: { __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null } }> } }> };
+export type OrgsSubscription = { __typename?: 'subscription_root', member: Array<{ __typename?: 'member', org: { __typename?: 'org', id: string, name: string, archived: boolean, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, protectGovernance: boolean, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean, members: Array<{ __typename?: 'circle_member', id: string, member: { __typename?: 'member', id: string, userId?: string | null, name: string, picture?: string | null } }>, invitedCircleLinks: Array<{ __typename?: 'circle_link', id: string, invitedCircle: { __typename?: 'circle', id: string } }>, role: { __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null } }> } }> };
 
 export type OrgSubscriptionVariables = Exact<{
   id: Scalars['uuid']['input'];
 }>;
 
 
-export type OrgSubscription = { __typename?: 'subscription_root', org_by_pk?: { __typename?: 'org', id: string, name: string, archived: boolean, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, protectGovernance: boolean, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null, org_subscription?: { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum } | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean, members: Array<{ __typename?: 'circle_member', id: string, memberId: string }>, invitedCircleLinks: Array<{ __typename?: 'circle_link', invitedCircle: { __typename?: 'circle', id: string } }> }>, roles: Array<{ __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null }>, members: Array<{ __typename?: 'member', id: string, orgId: string, archived: boolean, name: string, description: string, pictureFileId?: string | null, picture?: string | null, userId?: string | null, inviteEmail?: string | null, inviteDate?: string | null, role?: Member_Role_Enum | null }> } | null };
+export type OrgSubscription = { __typename?: 'subscription_root', org_by_pk?: { __typename?: 'org', id: string, name: string, archived: boolean, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, protectGovernance: boolean, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null, org_subscription?: { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum } | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean, members: Array<{ __typename?: 'circle_member', id: string, memberId: string }>, invitedCircleLinks: Array<{ __typename?: 'circle_link', id: string, invitedCircle: { __typename?: 'circle', id: string } }> }>, roles: Array<{ __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null }>, members: Array<{ __typename?: 'member', id: string, orgId: string, archived: boolean, name: string, description: string, pictureFileId?: string | null, picture?: string | null, userId?: string | null, inviteEmail?: string | null, inviteDate?: string | null, role?: Member_Role_Enum | null }> } | null };
 
 export type OrgBySlugSubscriptionVariables = Exact<{
   slug: Scalars['String']['input'];
 }>;
 
 
-export type OrgBySlugSubscription = { __typename?: 'subscription_root', org: Array<{ __typename?: 'org', id: string, name: string, archived: boolean, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, protectGovernance: boolean, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null, org_subscription?: { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum } | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean, members: Array<{ __typename?: 'circle_member', id: string, memberId: string }>, invitedCircleLinks: Array<{ __typename?: 'circle_link', invitedCircle: { __typename?: 'circle', id: string } }> }>, roles: Array<{ __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null }>, members: Array<{ __typename?: 'member', id: string, orgId: string, archived: boolean, name: string, description: string, pictureFileId?: string | null, picture?: string | null, userId?: string | null, inviteEmail?: string | null, inviteDate?: string | null, role?: Member_Role_Enum | null }> }> };
+export type OrgBySlugSubscription = { __typename?: 'subscription_root', org: Array<{ __typename?: 'org', id: string, name: string, archived: boolean, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, protectGovernance: boolean, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null, org_subscription?: { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum } | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean, members: Array<{ __typename?: 'circle_member', id: string, memberId: string }>, invitedCircleLinks: Array<{ __typename?: 'circle_link', id: string, invitedCircle: { __typename?: 'circle', id: string } }> }>, roles: Array<{ __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null }>, members: Array<{ __typename?: 'member', id: string, orgId: string, archived: boolean, name: string, description: string, pictureFileId?: string | null, picture?: string | null, userId?: string | null, inviteEmail?: string | null, inviteDate?: string | null, role?: Member_Role_Enum | null }> }> };
 
 export type UpdateOrgMutationVariables = Exact<{
   id: Scalars['uuid']['input'];
@@ -23263,6 +23707,30 @@ export type UpdateOrgMutationVariables = Exact<{
 
 
 export type UpdateOrgMutation = { __typename?: 'mutation_root', update_org_by_pk?: { __typename?: 'org', id: string } | null };
+
+export type ThreadProposalVoteFragment = { __typename?: 'thread_proposal_vote', id: string, activityId: string, userId: string, vote: string, createdAt: string };
+
+export type ThreadProposalVotesSubscriptionVariables = Exact<{
+  activityId: Scalars['uuid']['input'];
+}>;
+
+
+export type ThreadProposalVotesSubscription = { __typename?: 'subscription_root', thread_proposal_vote: Array<{ __typename?: 'thread_proposal_vote', id: string, activityId: string, userId: string, vote: string, createdAt: string }> };
+
+export type CreateThreadProposalVoteMutationVariables = Exact<{
+  values: Thread_Proposal_Vote_Insert_Input;
+}>;
+
+
+export type CreateThreadProposalVoteMutation = { __typename?: 'mutation_root', insert_thread_proposal_vote_one?: { __typename?: 'thread_proposal_vote', id: string, activityId: string, userId: string, vote: string, createdAt: string } | null };
+
+export type UpdateThreadProposalVoteMutationVariables = Exact<{
+  id: Scalars['uuid']['input'];
+  values: Thread_Proposal_Vote_Set_Input;
+}>;
+
+
+export type UpdateThreadProposalVoteMutation = { __typename?: 'mutation_root', update_thread_proposal_vote_by_pk?: { __typename?: 'thread_proposal_vote', id: string, activityId: string, userId: string, vote: string, createdAt: string } | null };
 
 export type GetRoleQueryVariables = Exact<{
   id: Scalars['uuid']['input'];
@@ -23491,7 +23959,7 @@ export type ThreadActivitiesLogsSubscriptionVariables = Exact<{
 }>;
 
 
-export type ThreadActivitiesLogsSubscription = { __typename?: 'subscription_root', thread_by_pk?: { __typename?: 'thread', activities: Array<{ __typename?: 'thread_activity', id: string, threadId: string, userId: string, createdAt: string, type: Thread_Activity_Type_Enum, data: any, reactions: Array<{ __typename?: 'thread_activity_reaction', id: string, userId: string, shortcode: string }>, refThread?: { __typename?: 'thread', id: string, orgId: string, circleId: string, initiatorMemberId: string, title: string, createdAt: string, archived: boolean, pinned: boolean, status: Thread_Status_Enum, private: boolean, extra_members: Array<{ __typename?: 'thread_extra_member', id: string, threadId: string, memberId: string }> } | null, refMeeting?: { __typename?: 'meeting', id: string, orgId: string, circleId: string, startDate: string, endDate: string, ended: boolean, title: string, currentStepId?: string | null, summary: string, private: boolean, meeting_attendees: Array<{ __typename?: 'meeting_attendee', id: string, meetingId: string, memberId: string, present?: boolean | null, startNotified: boolean }> } | null, refTask?: { __typename?: 'task', id: string, orgId: string, circleId: string, memberId?: string | null, title: string, description: string, archived: boolean, createdAt: string, dueDate?: string | null, status: Task_Status_Enum, private: boolean } | null, refDecision?: { __typename?: 'decision', id: string, orgId: string, circleId: string, memberId: string, title: string, description: string, archived: boolean, createdAt: string, private: boolean } | null }>, logs: Array<{ __typename?: 'log', id: string, orgId: string, userId: string, memberId: string, memberName: string, meetingId?: string | null, createdAt: string, display: LogDisplay, changes: EntitiesChanges, cancelLogId?: string | null, cancelMemberId?: string | null, cancelMemberName?: string | null, canceled: boolean, threadId?: string | null, taskId?: string | null }> } | null };
+export type ThreadActivitiesLogsSubscription = { __typename?: 'subscription_root', thread_by_pk?: { __typename?: 'thread', activities: Array<{ __typename?: 'thread_activity', id: string, threadId: string, userId: string, createdAt: string, type: Thread_Activity_Type_Enum, data: any, reactions: Array<{ __typename?: 'thread_activity_reaction', id: string, userId: string, shortcode: string }>, refThread?: { __typename?: 'thread', id: string, orgId: string, circleId: string, initiatorMemberId: string, title: string, createdAt: string, archived: boolean, pinned: boolean, status: Thread_Status_Enum, private: boolean, extra_members: Array<{ __typename?: 'thread_extra_member', id: string, threadId: string, memberId: string }> } | null, refMeeting?: { __typename?: 'meeting', id: string, orgId: string, circleId: string, startDate: string, endDate: string, ended: boolean, title: string, currentStepId?: string | null, summary: string, private: boolean, meeting_attendees: Array<{ __typename?: 'meeting_attendee', id: string, meetingId: string, memberId: string, present?: boolean | null, startNotified: boolean }> } | null, refTask?: { __typename?: 'task', id: string, orgId: string, circleId: string, memberId?: string | null, title: string, description: string, archived: boolean, createdAt: string, dueDate?: string | null, status: Task_Status_Enum, private: boolean } | null, refDecision?: { __typename?: 'decision', id: string, orgId: string, circleId: string, memberId: string, title: string, description: string, archived: boolean, createdAt: string, private: boolean } | null }>, logs: Array<{ __typename?: 'log', id: string, orgId: string, userId: string, memberId: string, memberName: string, meetingId?: string | null, createdAt: string, display: LogDisplay, changes: EntitiesChanges, cancelLogId?: string | null, cancelMemberId?: string | null, cancelMemberName?: string | null, canceled: boolean, threadId?: string | null, taskId?: string | null, decisionId?: string | null }> } | null };
 
 export type CreateThreadActivityMutationVariables = Exact<{
   values: Thread_Activity_Insert_Input;
@@ -23627,6 +24095,7 @@ export const CircleLinkFragmentDoc = gql`
   parentId
   circleId
   createdAt
+  archived
 }
     `;
 export const CircleMemberFragmentDoc = gql`
@@ -23655,6 +24124,7 @@ export const LogFragmentDoc = gql`
   canceled
   threadId
   taskId
+  decisionId
 }
     `;
 export const MeetingAttendeeFragmentDoc = gql`
@@ -23913,7 +24383,8 @@ export const CircleFullFragmentDoc = gql`
       ...MemberSummary
     }
   }
-  invitedCircleLinks {
+  invitedCircleLinks(where: {archived: {_eq: false}}) {
+    id
     invitedCircle {
       id
     }
@@ -23969,7 +24440,8 @@ export const OrgFullLightFragmentDoc = gql`
       id
       memberId
     }
-    invitedCircleLinks {
+    invitedCircleLinks(where: {archived: {_eq: false}}) {
+      id
       invitedCircle {
         id
       }
@@ -24051,6 +24523,15 @@ export const MeetingTemplateFragmentDoc = gql`
   orgId
   title
   stepsConfig
+}
+    `;
+export const ThreadProposalVoteFragmentDoc = gql`
+    fragment ThreadProposalVote on thread_proposal_vote {
+  id
+  activityId
+  userId
+  vote
+  createdAt
 }
     `;
 export const TaskViewFragmentDoc = gql`
@@ -24313,7 +24794,8 @@ export const GetPublicCirclesDocument = gql`
       id
       memberId
     }
-    invitedCircleLinks {
+    invitedCircleLinks(where: {archived: {_eq: false}}) {
+      id
       invitedCircle {
         id
       }
@@ -24465,6 +24947,39 @@ export function useCreateCircleMutation(baseOptions?: Apollo.MutationHookOptions
 export type CreateCircleMutationHookResult = ReturnType<typeof useCreateCircleMutation>;
 export type CreateCircleMutationResult = Apollo.MutationResult<CreateCircleMutation>;
 export type CreateCircleMutationOptions = Apollo.BaseMutationOptions<CreateCircleMutation, CreateCircleMutationVariables>;
+export const InsertCircleDocument = gql`
+    mutation insertCircle($object: circle_insert_input!) {
+  insert_circle_one(object: $object) {
+    ...Circle
+  }
+}
+    ${CircleFragmentDoc}`;
+export type InsertCircleMutationFn = Apollo.MutationFunction<InsertCircleMutation, InsertCircleMutationVariables>;
+
+/**
+ * __useInsertCircleMutation__
+ *
+ * To run a mutation, you first call `useInsertCircleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInsertCircleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [insertCircleMutation, { data, loading, error }] = useInsertCircleMutation({
+ *   variables: {
+ *      object: // value for 'object'
+ *   },
+ * });
+ */
+export function useInsertCircleMutation(baseOptions?: Apollo.MutationHookOptions<InsertCircleMutation, InsertCircleMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<InsertCircleMutation, InsertCircleMutationVariables>(InsertCircleDocument, options);
+      }
+export type InsertCircleMutationHookResult = ReturnType<typeof useInsertCircleMutation>;
+export type InsertCircleMutationResult = Apollo.MutationResult<InsertCircleMutation>;
+export type InsertCircleMutationOptions = Apollo.BaseMutationOptions<InsertCircleMutation, InsertCircleMutationVariables>;
 export const CreateCirclesDocument = gql`
     mutation createCircles($circles: [circle_insert_input!]!) {
   insert_circle(objects: $circles) {
@@ -24626,10 +25141,116 @@ export function useCreateCircleLinkMutation(baseOptions?: Apollo.MutationHookOpt
 export type CreateCircleLinkMutationHookResult = ReturnType<typeof useCreateCircleLinkMutation>;
 export type CreateCircleLinkMutationResult = Apollo.MutationResult<CreateCircleLinkMutation>;
 export type CreateCircleLinkMutationOptions = Apollo.BaseMutationOptions<CreateCircleLinkMutation, CreateCircleLinkMutationVariables>;
-export const DeleteCircleLinkDocument = gql`
-    mutation deleteCircleLink($parentId: uuid!, $circleId: uuid!) {
-  delete_circle_link(
-    where: {parentId: {_eq: $parentId}, circleId: {_eq: $circleId}}
+export const GetCircleLinkDocument = gql`
+    query getCircleLink($id: uuid!) {
+  circle_link_by_pk(id: $id) {
+    ...CircleLink
+  }
+}
+    ${CircleLinkFragmentDoc}`;
+
+/**
+ * __useGetCircleLinkQuery__
+ *
+ * To run a query within a React component, call `useGetCircleLinkQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCircleLinkQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCircleLinkQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetCircleLinkQuery(baseOptions: Apollo.QueryHookOptions<GetCircleLinkQuery, GetCircleLinkQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCircleLinkQuery, GetCircleLinkQueryVariables>(GetCircleLinkDocument, options);
+      }
+export function useGetCircleLinkLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCircleLinkQuery, GetCircleLinkQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCircleLinkQuery, GetCircleLinkQueryVariables>(GetCircleLinkDocument, options);
+        }
+export type GetCircleLinkQueryHookResult = ReturnType<typeof useGetCircleLinkQuery>;
+export type GetCircleLinkLazyQueryHookResult = ReturnType<typeof useGetCircleLinkLazyQuery>;
+export type GetCircleLinkQueryResult = Apollo.QueryResult<GetCircleLinkQuery, GetCircleLinkQueryVariables>;
+export function refetchGetCircleLinkQuery(variables: GetCircleLinkQueryVariables) {
+      return { query: GetCircleLinkDocument, variables: variables }
+    }
+export const InsertCircleLinkDocument = gql`
+    mutation insertCircleLink($object: circle_link_insert_input!) {
+  insert_circle_link_one(object: $object) {
+    ...CircleLink
+  }
+}
+    ${CircleLinkFragmentDoc}`;
+export type InsertCircleLinkMutationFn = Apollo.MutationFunction<InsertCircleLinkMutation, InsertCircleLinkMutationVariables>;
+
+/**
+ * __useInsertCircleLinkMutation__
+ *
+ * To run a mutation, you first call `useInsertCircleLinkMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInsertCircleLinkMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [insertCircleLinkMutation, { data, loading, error }] = useInsertCircleLinkMutation({
+ *   variables: {
+ *      object: // value for 'object'
+ *   },
+ * });
+ */
+export function useInsertCircleLinkMutation(baseOptions?: Apollo.MutationHookOptions<InsertCircleLinkMutation, InsertCircleLinkMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<InsertCircleLinkMutation, InsertCircleLinkMutationVariables>(InsertCircleLinkDocument, options);
+      }
+export type InsertCircleLinkMutationHookResult = ReturnType<typeof useInsertCircleLinkMutation>;
+export type InsertCircleLinkMutationResult = Apollo.MutationResult<InsertCircleLinkMutation>;
+export type InsertCircleLinkMutationOptions = Apollo.BaseMutationOptions<InsertCircleLinkMutation, InsertCircleLinkMutationVariables>;
+export const UpdateCircleLinkDocument = gql`
+    mutation updateCircleLink($id: uuid!, $values: circle_link_set_input!) {
+  update_circle_link_by_pk(pk_columns: {id: $id}, _set: $values) {
+    ...CircleLink
+  }
+}
+    ${CircleLinkFragmentDoc}`;
+export type UpdateCircleLinkMutationFn = Apollo.MutationFunction<UpdateCircleLinkMutation, UpdateCircleLinkMutationVariables>;
+
+/**
+ * __useUpdateCircleLinkMutation__
+ *
+ * To run a mutation, you first call `useUpdateCircleLinkMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCircleLinkMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCircleLinkMutation, { data, loading, error }] = useUpdateCircleLinkMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      values: // value for 'values'
+ *   },
+ * });
+ */
+export function useUpdateCircleLinkMutation(baseOptions?: Apollo.MutationHookOptions<UpdateCircleLinkMutation, UpdateCircleLinkMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateCircleLinkMutation, UpdateCircleLinkMutationVariables>(UpdateCircleLinkDocument, options);
+      }
+export type UpdateCircleLinkMutationHookResult = ReturnType<typeof useUpdateCircleLinkMutation>;
+export type UpdateCircleLinkMutationResult = Apollo.MutationResult<UpdateCircleLinkMutation>;
+export type UpdateCircleLinkMutationOptions = Apollo.BaseMutationOptions<UpdateCircleLinkMutation, UpdateCircleLinkMutationVariables>;
+export const ArchiveCircleLinkDocument = gql`
+    mutation archiveCircleLink($parentId: uuid!, $circleId: uuid!) {
+  update_circle_link(
+    where: {parentId: {_eq: $parentId}, circleId: {_eq: $circleId}, archived: {_eq: false}}
+    _set: {archived: true}
   ) {
     returning {
       ...CircleLink
@@ -24637,33 +25258,33 @@ export const DeleteCircleLinkDocument = gql`
   }
 }
     ${CircleLinkFragmentDoc}`;
-export type DeleteCircleLinkMutationFn = Apollo.MutationFunction<DeleteCircleLinkMutation, DeleteCircleLinkMutationVariables>;
+export type ArchiveCircleLinkMutationFn = Apollo.MutationFunction<ArchiveCircleLinkMutation, ArchiveCircleLinkMutationVariables>;
 
 /**
- * __useDeleteCircleLinkMutation__
+ * __useArchiveCircleLinkMutation__
  *
- * To run a mutation, you first call `useDeleteCircleLinkMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteCircleLinkMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useArchiveCircleLinkMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useArchiveCircleLinkMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [deleteCircleLinkMutation, { data, loading, error }] = useDeleteCircleLinkMutation({
+ * const [archiveCircleLinkMutation, { data, loading, error }] = useArchiveCircleLinkMutation({
  *   variables: {
  *      parentId: // value for 'parentId'
  *      circleId: // value for 'circleId'
  *   },
  * });
  */
-export function useDeleteCircleLinkMutation(baseOptions?: Apollo.MutationHookOptions<DeleteCircleLinkMutation, DeleteCircleLinkMutationVariables>) {
+export function useArchiveCircleLinkMutation(baseOptions?: Apollo.MutationHookOptions<ArchiveCircleLinkMutation, ArchiveCircleLinkMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteCircleLinkMutation, DeleteCircleLinkMutationVariables>(DeleteCircleLinkDocument, options);
+        return Apollo.useMutation<ArchiveCircleLinkMutation, ArchiveCircleLinkMutationVariables>(ArchiveCircleLinkDocument, options);
       }
-export type DeleteCircleLinkMutationHookResult = ReturnType<typeof useDeleteCircleLinkMutation>;
-export type DeleteCircleLinkMutationResult = Apollo.MutationResult<DeleteCircleLinkMutation>;
-export type DeleteCircleLinkMutationOptions = Apollo.BaseMutationOptions<DeleteCircleLinkMutation, DeleteCircleLinkMutationVariables>;
+export type ArchiveCircleLinkMutationHookResult = ReturnType<typeof useArchiveCircleLinkMutation>;
+export type ArchiveCircleLinkMutationResult = Apollo.MutationResult<ArchiveCircleLinkMutation>;
+export type ArchiveCircleLinkMutationOptions = Apollo.BaseMutationOptions<ArchiveCircleLinkMutation, ArchiveCircleLinkMutationVariables>;
 export const GetCircleMemberDocument = gql`
     query getCircleMember($id: uuid!) {
   circle_member_by_pk(id: $id) {
@@ -24780,6 +25401,39 @@ export function useUpdateCircleMemberMutation(baseOptions?: Apollo.MutationHookO
 export type UpdateCircleMemberMutationHookResult = ReturnType<typeof useUpdateCircleMemberMutation>;
 export type UpdateCircleMemberMutationResult = Apollo.MutationResult<UpdateCircleMemberMutation>;
 export type UpdateCircleMemberMutationOptions = Apollo.BaseMutationOptions<UpdateCircleMemberMutation, UpdateCircleMemberMutationVariables>;
+export const InsertCircleMemberDocument = gql`
+    mutation insertCircleMember($object: circle_member_insert_input!) {
+  insert_circle_member_one(object: $object) {
+    ...CircleMember
+  }
+}
+    ${CircleMemberFragmentDoc}`;
+export type InsertCircleMemberMutationFn = Apollo.MutationFunction<InsertCircleMemberMutation, InsertCircleMemberMutationVariables>;
+
+/**
+ * __useInsertCircleMemberMutation__
+ *
+ * To run a mutation, you first call `useInsertCircleMemberMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInsertCircleMemberMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [insertCircleMemberMutation, { data, loading, error }] = useInsertCircleMemberMutation({
+ *   variables: {
+ *      object: // value for 'object'
+ *   },
+ * });
+ */
+export function useInsertCircleMemberMutation(baseOptions?: Apollo.MutationHookOptions<InsertCircleMemberMutation, InsertCircleMemberMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<InsertCircleMemberMutation, InsertCircleMemberMutationVariables>(InsertCircleMemberDocument, options);
+      }
+export type InsertCircleMemberMutationHookResult = ReturnType<typeof useInsertCircleMemberMutation>;
+export type InsertCircleMemberMutationResult = Apollo.MutationResult<InsertCircleMemberMutation>;
+export type InsertCircleMemberMutationOptions = Apollo.BaseMutationOptions<InsertCircleMemberMutation, InsertCircleMemberMutationVariables>;
 export const ArchiveCircleMemberDocument = gql`
     mutation archiveCircleMember($circleId: uuid!, $memberId: uuid!) {
   update_circle_member(
@@ -25141,6 +25795,36 @@ export function useMeetingLogsSubscription(baseOptions: Apollo.SubscriptionHookO
       }
 export type MeetingLogsSubscriptionHookResult = ReturnType<typeof useMeetingLogsSubscription>;
 export type MeetingLogsSubscriptionResult = Apollo.SubscriptionResult<MeetingLogsSubscription>;
+export const DecisionLogsDocument = gql`
+    subscription decisionLogs($decisionId: uuid!) {
+  log(where: {decisionId: {_eq: $decisionId}}, order_by: {createdAt: asc}) {
+    ...Log
+  }
+}
+    ${LogFragmentDoc}`;
+
+/**
+ * __useDecisionLogsSubscription__
+ *
+ * To run a query within a React component, call `useDecisionLogsSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useDecisionLogsSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDecisionLogsSubscription({
+ *   variables: {
+ *      decisionId: // value for 'decisionId'
+ *   },
+ * });
+ */
+export function useDecisionLogsSubscription(baseOptions: Apollo.SubscriptionHookOptions<DecisionLogsSubscription, DecisionLogsSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<DecisionLogsSubscription, DecisionLogsSubscriptionVariables>(DecisionLogsDocument, options);
+      }
+export type DecisionLogsSubscriptionHookResult = ReturnType<typeof useDecisionLogsSubscription>;
+export type DecisionLogsSubscriptionResult = Apollo.SubscriptionResult<DecisionLogsSubscription>;
 export const CreateLogDocument = gql`
     mutation createLog($values: log_insert_input!) {
   insert_log_one(object: $values) {
@@ -26426,6 +27110,103 @@ export function useUpdateOrgMutation(baseOptions?: Apollo.MutationHookOptions<Up
 export type UpdateOrgMutationHookResult = ReturnType<typeof useUpdateOrgMutation>;
 export type UpdateOrgMutationResult = Apollo.MutationResult<UpdateOrgMutation>;
 export type UpdateOrgMutationOptions = Apollo.BaseMutationOptions<UpdateOrgMutation, UpdateOrgMutationVariables>;
+export const ThreadProposalVotesDocument = gql`
+    subscription threadProposalVotes($activityId: uuid!) {
+  thread_proposal_vote(where: {activityId: {_eq: $activityId}}) {
+    ...ThreadProposalVote
+  }
+}
+    ${ThreadProposalVoteFragmentDoc}`;
+
+/**
+ * __useThreadProposalVotesSubscription__
+ *
+ * To run a query within a React component, call `useThreadProposalVotesSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useThreadProposalVotesSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useThreadProposalVotesSubscription({
+ *   variables: {
+ *      activityId: // value for 'activityId'
+ *   },
+ * });
+ */
+export function useThreadProposalVotesSubscription(baseOptions: Apollo.SubscriptionHookOptions<ThreadProposalVotesSubscription, ThreadProposalVotesSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<ThreadProposalVotesSubscription, ThreadProposalVotesSubscriptionVariables>(ThreadProposalVotesDocument, options);
+      }
+export type ThreadProposalVotesSubscriptionHookResult = ReturnType<typeof useThreadProposalVotesSubscription>;
+export type ThreadProposalVotesSubscriptionResult = Apollo.SubscriptionResult<ThreadProposalVotesSubscription>;
+export const CreateThreadProposalVoteDocument = gql`
+    mutation createThreadProposalVote($values: thread_proposal_vote_insert_input!) {
+  insert_thread_proposal_vote_one(object: $values) {
+    ...ThreadProposalVote
+  }
+}
+    ${ThreadProposalVoteFragmentDoc}`;
+export type CreateThreadProposalVoteMutationFn = Apollo.MutationFunction<CreateThreadProposalVoteMutation, CreateThreadProposalVoteMutationVariables>;
+
+/**
+ * __useCreateThreadProposalVoteMutation__
+ *
+ * To run a mutation, you first call `useCreateThreadProposalVoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateThreadProposalVoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createThreadProposalVoteMutation, { data, loading, error }] = useCreateThreadProposalVoteMutation({
+ *   variables: {
+ *      values: // value for 'values'
+ *   },
+ * });
+ */
+export function useCreateThreadProposalVoteMutation(baseOptions?: Apollo.MutationHookOptions<CreateThreadProposalVoteMutation, CreateThreadProposalVoteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateThreadProposalVoteMutation, CreateThreadProposalVoteMutationVariables>(CreateThreadProposalVoteDocument, options);
+      }
+export type CreateThreadProposalVoteMutationHookResult = ReturnType<typeof useCreateThreadProposalVoteMutation>;
+export type CreateThreadProposalVoteMutationResult = Apollo.MutationResult<CreateThreadProposalVoteMutation>;
+export type CreateThreadProposalVoteMutationOptions = Apollo.BaseMutationOptions<CreateThreadProposalVoteMutation, CreateThreadProposalVoteMutationVariables>;
+export const UpdateThreadProposalVoteDocument = gql`
+    mutation updateThreadProposalVote($id: uuid!, $values: thread_proposal_vote_set_input!) {
+  update_thread_proposal_vote_by_pk(pk_columns: {id: $id}, _set: $values) {
+    ...ThreadProposalVote
+  }
+}
+    ${ThreadProposalVoteFragmentDoc}`;
+export type UpdateThreadProposalVoteMutationFn = Apollo.MutationFunction<UpdateThreadProposalVoteMutation, UpdateThreadProposalVoteMutationVariables>;
+
+/**
+ * __useUpdateThreadProposalVoteMutation__
+ *
+ * To run a mutation, you first call `useUpdateThreadProposalVoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateThreadProposalVoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateThreadProposalVoteMutation, { data, loading, error }] = useUpdateThreadProposalVoteMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      values: // value for 'values'
+ *   },
+ * });
+ */
+export function useUpdateThreadProposalVoteMutation(baseOptions?: Apollo.MutationHookOptions<UpdateThreadProposalVoteMutation, UpdateThreadProposalVoteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateThreadProposalVoteMutation, UpdateThreadProposalVoteMutationVariables>(UpdateThreadProposalVoteDocument, options);
+      }
+export type UpdateThreadProposalVoteMutationHookResult = ReturnType<typeof useUpdateThreadProposalVoteMutation>;
+export type UpdateThreadProposalVoteMutationResult = Apollo.MutationResult<UpdateThreadProposalVoteMutation>;
+export type UpdateThreadProposalVoteMutationOptions = Apollo.BaseMutationOptions<UpdateThreadProposalVoteMutation, UpdateThreadProposalVoteMutationVariables>;
 export const GetRoleDocument = gql`
     query getRole($id: uuid!) {
   role_by_pk(id: $id) {

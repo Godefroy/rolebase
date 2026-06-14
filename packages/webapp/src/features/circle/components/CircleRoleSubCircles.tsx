@@ -1,5 +1,5 @@
-import useCreateLog from '@/log/hooks/useCreateLog'
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgData } from '@/org/contexts/OrgDataContext'
+import { useOrgEditActions } from '@/org/contexts/OrgEditContext'
 import CircleSearchButton from '@/search/components/CircleSearchButton'
 import {
   Box,
@@ -10,29 +10,17 @@ import {
   IconButton,
   Tooltip,
   VStack,
+  useDisclosure,
 } from '@chakra-ui/react'
-import {
-  RoleFragment,
-  RoleSummaryFragment,
-  useCreateCircleLinkMutation,
-  useCreateCircleMutation,
-  useCreateRoleMutation,
-  useDeleteCircleLinkMutation,
-} from '@gql'
+import { RoleSummaryFragment } from '@gql'
 import { truthy } from '@rolebase/shared/helpers/truthy'
-import {
-  EntitiesChanges,
-  EntityChangeType,
-  LogType,
-} from '@rolebase/shared/model/log'
-import { useStoreState } from '@store/hooks'
-import { omit } from '@utils/omit'
-import React, { useCallback, useContext, useMemo } from 'react'
+import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FiX } from 'react-icons/fi'
 import { CircleLinkIcon, CreateIcon } from 'src/icons'
 import BaseRoleSearchButton from '../../search/components/BaseRoleSearchButton'
 import { CircleContext } from '../contexts/CIrcleContext'
+import CircleLinkDeleteModal from '../modals/CircleLinkDeleteModal'
 import CircleWithLeaderItem from './CircleWithLeaderItem'
 
 export default function CircleRoleSubCircles() {
@@ -48,14 +36,16 @@ export default function CircleRoleSubCircles() {
     canEditSubCirclesParentLinks,
   } = circleContext
 
-  const circles = useStoreState((state) => state.org.circles)
-  const roles = useStoreState((state) => state.org.baseRoles)
-  const orgId = useOrgId()
-  const [createCircle] = useCreateCircleMutation()
-  const [createRole] = useCreateRoleMutation()
-  const [createCircleLink] = useCreateCircleLinkMutation()
-  const [deleteCircleLink] = useDeleteCircleLinkMutation()
-  const createLog = useCreateLog()
+  const { circles, baseRoles: roles } = useOrgData()
+  const { createCircle, addCircleLink } = useOrgEditActions()
+
+  // CircleLinkDeleteModal
+  const [linkToDeleteId, setLinkToDeleteId] = useState<string | undefined>()
+  const {
+    isOpen: isDeleteLinkOpen,
+    onOpen: onDeleteLinkOpen,
+    onClose: onDeleteLinkClose,
+  } = useDisclosure()
 
   // Get direct circles children
   const subCircles = useMemo(
@@ -83,69 +73,11 @@ export default function CircleRoleSubCircles() {
 
   const highlightButton = subRolesIds?.length === 0 && participants.length === 0
 
-  // Create circle and open it
+  // Create sub-circle (and its role if a name is given)
   const handleCreateCircle = useCallback(
-    async (roleOrName: RoleSummaryFragment | string) => {
-      if (!orgId) return
-
-      // Create role
-      let role: RoleFragment | RoleSummaryFragment
-      if (typeof roleOrName === 'string') {
-        const { data } = await createRole({
-          variables: {
-            values: {
-              orgId,
-              name: roleOrName,
-            },
-          },
-        })
-        role = data?.insert_role_one!
-      } else {
-        role = roleOrName
-      }
-
-      // Create circle
-      const { data } = await createCircle({
-        variables: {
-          orgId,
-          roleId: role.id,
-          parentId: circle.id,
-        },
-      })
-      const newCircle = data?.insert_circle_one!
-
-      const changes: EntitiesChanges = {
-        circles: [
-          {
-            type: EntityChangeType.Create,
-            id: newCircle.id,
-            data: { ...omit(newCircle, '__typename') },
-          },
-        ],
-      }
-
-      // Log changes
-      if (typeof roleOrName === 'string') {
-        changes.roles = [
-          {
-            type: EntityChangeType.Create,
-            id: role.id,
-            data: role as RoleFragment,
-          },
-        ]
-      }
-      createLog({
-        display: {
-          type: LogType.CircleCreate,
-          id: newCircle.id,
-          name: role.name,
-          parentId: circle?.id || null,
-          parentName: circle?.role.name || null,
-        },
-        changes,
-      })
-    },
-    [orgId, circle]
+    (roleOrName: RoleSummaryFragment | string) =>
+      createCircle(circle.id, roleOrName),
+    [circle, createCircle]
   )
 
   const handleAddRole = useCallback(
@@ -183,17 +115,15 @@ export default function CircleRoleSubCircles() {
 
   const handleAddLink = useCallback(
     async (circleId: string) => {
-      createCircleLink({ variables: { parentId: circle.id, circleId } })
+      addCircleLink(circle.id, circleId)
     },
     [circle]
   )
 
-  const handleDeleteLink = useCallback(
-    async (circleId: string) => {
-      deleteCircleLink({ variables: { parentId: circle.id, circleId } })
-    },
-    [circle]
-  )
+  const handleDeleteLink = useCallback((circleId: string) => {
+    setLinkToDeleteId(circleId)
+    onDeleteLinkOpen()
+  }, [])
 
   // Hide if read only and empty
   if (
@@ -207,6 +137,15 @@ export default function CircleRoleSubCircles() {
 
   return (
     <Box>
+      {isDeleteLinkOpen && linkToDeleteId && (
+        <CircleLinkDeleteModal
+          parentId={circle.id}
+          circleId={linkToDeleteId}
+          isOpen
+          onClose={onDeleteLinkClose}
+        />
+      )}
+
       <Heading as="h3" size="sm" mb={3}>
         {t('CircleRoleSubCircles.roles')}
       </Heading>

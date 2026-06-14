@@ -1,15 +1,12 @@
-import useCreateLog from '@/log/hooks/useCreateLog'
 import {
   ThreadFragment,
   Thread_Status_Enum,
   useUpdateThreadMutation,
 } from '@gql'
-import { EntityChangeType, LogType } from '@rolebase/shared/model/log'
 import { useCallback, useEffect, useState } from 'react'
 
 export default function useThreadStatus(thread?: ThreadFragment) {
   const [updateThread] = useUpdateThreadMutation()
-  const createLog = useCreateLog()
 
   const status: Thread_Status_Enum | undefined = thread?.status || undefined
   const [cachedStatus, setCachedStatus] = useState(status)
@@ -34,28 +31,6 @@ export default function useThreadStatus(thread?: ThreadFragment) {
           values: {
             status: value,
           },
-        },
-      })
-
-      // Record log
-      await createLog({
-        threadId: thread.id,
-        display: {
-          type: LogType.ThreadStatusUpdate,
-          id: thread.id,
-          name: thread.title,
-          prevStatus: thread.status,
-          status: value,
-        },
-        changes: {
-          thread: [
-            {
-              type: EntityChangeType.Update,
-              id: thread.id,
-              prevData: { status: thread.status },
-              newData: { status: value },
-            },
-          ],
         },
       })
     },

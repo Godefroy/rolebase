@@ -1,4 +1,8 @@
 import { Log, ThreadActivityFragment, Thread_Activity_Type_Enum } from '../gql'
+import {
+  ThreadActivityDataProposal,
+  ThreadActivityDataProposalEvent,
+} from './proposal'
 
 /*** Thread Activity ***/
 
@@ -73,4 +77,17 @@ export interface ThreadActivityChangeStatusFragment
   extends ThreadActivityFragment {
   type: Thread_Activity_Type_Enum.ChangeStatus
   data: Log
+}
+
+// Proposal
+export interface ThreadActivityProposalFragment extends ThreadActivityFragment {
+  type: Thread_Activity_Type_Enum.Proposal
+  data: ThreadActivityDataProposal
+}
+
+// Proposal event (resolution, edit, cancellation, vote reminder, ...)
+export interface ThreadActivityProposalEventFragment
+  extends ThreadActivityFragment {
+  type: Thread_Activity_Type_Enum.ProposalEvent
+  data: ThreadActivityDataProposalEvent
 }

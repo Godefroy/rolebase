@@ -1,0 +1,30 @@
+fragment ThreadProposalVote on thread_proposal_vote {
+  id
+  activityId
+  userId
+  vote
+  createdAt
+}
+
+subscription threadProposalVotes($activityId: uuid!) {
+  thread_proposal_vote(where: { activityId: { _eq: $activityId } }) {
+    ...ThreadProposalVote
+  }
+}
+
+mutation createThreadProposalVote(
+  $values: thread_proposal_vote_insert_input!
+) {
+  insert_thread_proposal_vote_one(object: $values) {
+    ...ThreadProposalVote
+  }
+}
+
+mutation updateThreadProposalVote(
+  $id: uuid!
+  $values: thread_proposal_vote_set_input!
+) {
+  update_thread_proposal_vote_by_pk(pk_columns: { id: $id }, _set: $values) {
+    ...ThreadProposalVote
+  }
+}

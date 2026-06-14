@@ -48,6 +48,7 @@ insert_permissions:
         - canceled
         - changes
         - createdAt
+        - decisionId
         - display
         - meetingId
         - memberId
@@ -66,6 +67,7 @@ select_permissions:
         - canceled
         - changes
         - createdAt
+        - decisionId
         - display
         - id
         - meetingId

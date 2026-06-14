@@ -86,6 +86,7 @@ insert_permissions:
                                 _eq: X-Hasura-User-Id
       columns:
         - circleId
+        - id
         - memberId
 select_permissions:
   - role: public

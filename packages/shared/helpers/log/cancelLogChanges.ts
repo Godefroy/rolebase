@@ -17,6 +17,9 @@ export async function cancelLogChanges(
   for (const key in log.changes) {
     const type = key as keyof EntitiesTypes
 
+    // Skip legacy entity types no longer in the log model
+    if (!methods[type]) continue
+
     // Cancel each change and return new changes
     const entityChanges = (await cancelEntityChanges<{ archived: boolean }>(
       log.changes[type],

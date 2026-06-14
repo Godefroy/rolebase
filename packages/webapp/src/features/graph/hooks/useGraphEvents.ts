@@ -1,19 +1,14 @@
+import { useOrgEditActions } from '@/org/contexts/OrgEditContext'
 import { useNavigateOrg } from '@/org/hooks/useNavigateOrg'
 import { useCallback, useMemo } from 'react'
-import useAddCircleMember from '../../circle/hooks/useAddCircleMember'
-import useCopyCircle from '../../circle/hooks/useCopyCircle'
-import useMoveCircle from '../../circle/hooks/useMoveCircle'
-import useRemoveCircleMember from '../../circle/hooks/useRemoveCircleMember'
 import useOrgMember from '../../member/hooks/useOrgMember'
 import { GraphEvents } from '../types'
 
 export default function useGraphEvents(): GraphEvents {
   const isMember = useOrgMember()
   const navigateOrg = useNavigateOrg()
-  const moveCircle = useMoveCircle()
-  const copyCircle = useCopyCircle()
-  const addCircleMember = useAddCircleMember()
-  const removeCircleMember = useRemoveCircleMember()
+  const { moveCircle, copyCircle, addCircleMember, removeCircleMember } =
+    useOrgEditActions()
 
   // Navigation Events
   const onCircleClick = useCallback((circleId: string, parentId?: string) => {
@@ -40,13 +35,13 @@ export default function useGraphEvents(): GraphEvents {
       }
       await removeCircleMember(parentCircleId, memberId)
     },
-    []
+    [addCircleMember, removeCircleMember]
   )
 
   // Add a member to a circle
   const onMemberAdd = useCallback(
     (memberId: string, circleId: string) => addCircleMember(circleId, memberId),
-    []
+    [addCircleMember]
   )
 
   return useMemo(
@@ -59,6 +54,6 @@ export default function useGraphEvents(): GraphEvents {
       onMemberMove: isMember ? onMemberMove : undefined,
       onMemberAdd: isMember ? onMemberAdd : undefined,
     }),
-    [isMember]
+    [isMember, moveCircle, copyCircle, onMemberMove, onMemberAdd]
   )
 }

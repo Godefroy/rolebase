@@ -49,6 +49,7 @@
 - "!include public_thread_extra_member.yaml"
 - "!include public_thread_member_status.yaml"
 - "!include public_thread_poll_answer.yaml"
+- "!include public_thread_proposal_vote.yaml"
 - "!include public_thread_status.yaml"
 - "!include public_user_app.yaml"
 - "!include storage_buckets.yaml"

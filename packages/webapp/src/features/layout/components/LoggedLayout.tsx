@@ -1,5 +1,7 @@
 import { CircleMemberProvider } from '@/circle/contexts/CircleMemberProvider'
 import useWindowSize from '@/common/hooks/useWindowSize'
+import { OrgEditProvider } from '@/org/contexts/OrgEditContext'
+import useDbOrgEditActions from '@/org/hooks/useDbOrgEditActions'
 import { Box } from '@chakra-ui/react'
 import React, { useContext } from 'react'
 import { SidebarContext } from '../contexts/SidebarContext'
@@ -13,7 +15,12 @@ export default function LoggedLayout({ children }: Props) {
   const windowSize = useWindowSize()
   const sidebarContext = useContext(SidebarContext)
 
+  // Database-backed org edit actions, available everywhere (graph, role panel,
+  // and the global circle modal). The proposal editor overrides this locally.
+  const dbEditActions = useDbOrgEditActions()
+
   return (
+    <OrgEditProvider value={dbEditActions}>
     <CircleMemberProvider>
       <Sidebar />
       <Box
@@ -32,5 +39,6 @@ export default function LoggedLayout({ children }: Props) {
         {children}
       </Box>
     </CircleMemberProvider>
+    </OrgEditProvider>
   )
 }

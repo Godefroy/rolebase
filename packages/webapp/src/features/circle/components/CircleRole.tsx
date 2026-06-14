@@ -1,5 +1,6 @@
 import Loading from '@/common/atoms/Loading'
 import TextError from '@/common/atoms/TextError'
+import { useOrgData } from '@/org/contexts/OrgDataContext'
 import RoleGeneratorModal from '@/role/modals/RoleGeneratorModal'
 import { Button, Text, VStack, useDisclosure } from '@chakra-ui/react'
 import { RoleFragment, useRoleSubscription } from '@gql'
@@ -46,24 +47,30 @@ export default function CircleRole({ skipFetchRole }: Props) {
   if (!circleContext) return null
   const { circle, parentCircle, canEditRole } = circleContext
 
+  // In proposal draft mode, overlay the draft's pending role edits on top of
+  // the DB role (still fetched via subscription, as on the org page).
+  const { roleOverlays } = useOrgData()
+  const overlay = roleOverlays?.[circle.roleId]
+
   const { data, loading, error } = useRoleSubscription({
     skip: skipFetchRole,
     variables: { id: circle.roleId },
   })
   const role: RoleFragment = useMemo(
-    () =>
-      data?.role_by_pk || {
-        orgId: circle.orgId,
-        archived: false,
-        purpose: '',
-        accountabilities: '',
-        domain: '',
-        indicators: '',
-        checklist: '',
-        notes: '',
-        ...circle.role,
-      },
-    [data, circle]
+    () => ({
+      orgId: circle.orgId,
+      archived: false,
+      purpose: '',
+      accountabilities: '',
+      domain: '',
+      indicators: '',
+      checklist: '',
+      notes: '',
+      ...circle.role,
+      ...data?.role_by_pk,
+      ...overlay,
+    }),
+    [overlay, data, circle]
   )
 
   const sortedFields = useMemo(() => {

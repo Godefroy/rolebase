@@ -19,11 +19,11 @@ import {
 } from '@chakra-ui/react'
 import { useGetCirclesStatsQuery } from '@gql'
 import { getCircleChildren } from '@rolebase/shared/helpers/getCircleChildren'
-import { useStoreState } from '@store/hooks'
 import React, { useContext, useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { useOrgData } from '@/org/contexts/OrgDataContext'
+import { useOrgEditActions } from '@/org/contexts/OrgEditContext'
 import { CircleMemberContext } from '../contexts/CircleMemberContext'
-import useArchiveCircle from '../hooks/useArchiveCircle'
 import useCircle from '../hooks/useCircle'
 
 interface Props
@@ -39,9 +39,9 @@ export default function CircleDeleteModal({
 }: Props) {
   const { t } = useTranslation()
   const circleMemberContext = useContext(CircleMemberContext)
-  const circles = useStoreState((state) => state.org.circles)
+  const { circles } = useOrgData()
   const circle = useCircle(id)
-  const archiveCircle = useArchiveCircle()
+  const { archiveCircle } = useOrgEditActions()
   const cancelRef = useRef<HTMLButtonElement>(null)
 
   // Get all circles ids that will be archived

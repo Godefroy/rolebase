@@ -6,6 +6,8 @@ import { ThreadActivityChangeStatus } from './ThreadActivityChangeStatus'
 import ThreadActivityDecision from './ThreadActivityDecision'
 import ThreadActivityMeeting from './ThreadActivityMeeting'
 import ThreadActivityMeetingNote from './ThreadActivityMeetingNote'
+import ThreadActivityProposal from '@/proposal/components/ThreadActivityProposal'
+import ThreadActivityProposalEvent from '@/proposal/components/ThreadActivityProposalEvent'
 import ThreadActivityMessage from './ThreadActivityMessage'
 import ThreadActivityPoll from './ThreadActivityPoll'
 import ThreadActivityTask from './ThreadActivityTask'
@@ -21,6 +23,10 @@ function ThreadActivity({ activity }: Props) {
       return <ThreadActivityMessage activity={activity as any} />
     case Thread_Activity_Type_Enum.Poll:
       return <ThreadActivityPoll activity={activity as any} />
+    case Thread_Activity_Type_Enum.Proposal:
+      return <ThreadActivityProposal activity={activity as any} />
+    case Thread_Activity_Type_Enum.ProposalEvent:
+      return <ThreadActivityProposalEvent activity={activity as any} />
     case Thread_Activity_Type_Enum.Thread:
       return <ThreadActivityThread activity={activity as any} />
     case Thread_Activity_Type_Enum.Meeting:

@@ -36,7 +36,6 @@ export interface ThreadState {
   canEdit: boolean
   canParticipate: boolean
   isParticipant: boolean
-  handleScrollToActivity(activityId: string): void
   handleMarkUnread(activityId: string): void
 }
 
@@ -91,13 +90,6 @@ export default function useThreadState(threadId: string): ThreadState {
   const canEdit = isParticipant || (thread?.private === false && isMember)
   const canParticipate = canEdit
 
-  // Scroll to an activity
-  const handleScrollToActivity = useCallback((stepId: string) => {
-    document
-      .getElementById(`activity-${stepId}`)
-      ?.scrollIntoView({ behavior: 'smooth' })
-  }, [])
-
   // Mark an activity as unread
   const handleMarkUnread = useCallback(
     (activityId: string) => {
@@ -121,18 +113,6 @@ export default function useThreadState(threadId: string): ThreadState {
     },
     [activities, threadId, currentMember]
   )
-
-  // Scroll to next unread activity when activities are loaded
-  useEffect(() => {
-    const activityId = memberStatus?.lastReadActivityId
-    if (!activityId || !activities) return
-    const activityIndex = activities.findIndex((a) => a.id === activityId)
-    if (activityIndex === -1) return
-    const nextActivityId = activities[activityIndex + 1]?.id
-    setTimeout(() => {
-      handleScrollToActivity(nextActivityId || activityId)
-    }, 500)
-  }, [!thread, !activities])
 
   // Update member status when there is a new activity
   useEffect(() => {
@@ -198,7 +178,6 @@ export default function useThreadState(threadId: string): ThreadState {
     canEdit,
     canParticipate,
     isParticipant,
-    handleScrollToActivity,
     handleMarkUnread,
   }
 }

@@ -1,4 +1,3 @@
-import useCreateLog from '@/log/hooks/useCreateLog'
 import {
   AlertDialog,
   AlertDialogBody,
@@ -11,7 +10,6 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react'
-import { EntityChangeType, LogType } from '@rolebase/shared/model/log'
 import React, { useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { trpc } from 'src/trpc'
@@ -31,7 +29,6 @@ export default function MemberDeleteModal({
   const { t } = useTranslation()
   const member = useMember(id)
   const toast = useToast()
-  const createLog = useCreateLog()
   const cancelRef = useRef<HTMLButtonElement>(null)
 
   const handleDelete = async () => {
@@ -53,25 +50,6 @@ export default function MemberDeleteModal({
 
     onDelete?.()
     alertProps.onClose()
-
-    // Log change
-    createLog({
-      display: {
-        type: LogType.MemberArchive,
-        id,
-        name: member.name,
-      },
-      changes: {
-        members: [
-          {
-            type: EntityChangeType.Update,
-            id: member.id,
-            prevData: { archived: false },
-            newData: { archived: true },
-          },
-        ],
-      },
-    })
   }
 
   if (!member) return null

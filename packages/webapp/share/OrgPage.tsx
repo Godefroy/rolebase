@@ -9,6 +9,8 @@ import Page404 from '@/common/pages/Page404'
 import CirclesGraph from '@/graph/CirclesGraph'
 import { GraphProvider } from '@/graph/contexts/GraphContext'
 import { CirclesGraphViews, GraphEvents } from '@/graph/types'
+import { OrgEditProvider } from '@/org/contexts/OrgEditContext'
+import useDbOrgEditActions from '@/org/hooks/useDbOrgEditActions'
 import { Box } from '@chakra-ui/react'
 import { useStoreActions, useStoreState } from '@store/hooks'
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
@@ -122,8 +124,10 @@ export default function OrgPage() {
   // Content size
   const boxRef = useRef<HTMLDivElement>(null)
   const boxSize = useElementSize(boxRef)
+  const dbEditActions = useDbOrgEditActions()
 
   return (
+    <OrgEditProvider value={dbEditActions}>
     <GraphProvider>
       <Box
         ref={boxRef}
@@ -173,5 +177,6 @@ export default function OrgPage() {
         )}
       </Box>
     </GraphProvider>
+    </OrgEditProvider>
   )
 }

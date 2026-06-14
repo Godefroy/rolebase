@@ -1,4 +1,3 @@
-import useCreateLog from '@/log/hooks/useCreateLog'
 import {
   AlertDialog,
   AlertDialogBody,
@@ -11,7 +10,6 @@ import {
   Text,
 } from '@chakra-ui/react'
 import { DecisionFragment, useArchiveDecisionMutation } from '@gql'
-import { EntityChangeType, LogType } from '@rolebase/shared/model/log'
 import React, { useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
@@ -28,29 +26,11 @@ export default function DecisionDeleteModal({
 }: Props) {
   const { t } = useTranslation()
   const [archiveDecision] = useArchiveDecisionMutation()
-  const createLog = useCreateLog()
   const cancelRef = useRef<HTMLButtonElement>(null)
 
   const handleDelete = async () => {
     await archiveDecision({ variables: { id: decision.id } })
     onDelete?.()
-    createLog({
-      display: {
-        type: LogType.DecisionArchive,
-        id: decision.id,
-        name: decision.title,
-      },
-      changes: {
-        decisions: [
-          {
-            type: EntityChangeType.Update,
-            id: decision.id,
-            prevData: { archived: false },
-            newData: { archived: true },
-          },
-        ],
-      },
-    })
     alertProps.onClose()
   }
 
