@@ -33,7 +33,7 @@ export default function DashboardNews(boxProps: BoxProps) {
 
   return (
     <Stack spacing={0} {...boxProps}>
-      <DashboardHomeNote mb={4} />
+      <DashboardHomeNote mb={10} />
 
       <Card boxShadow="none">
         <CardHeader
