@@ -20,12 +20,12 @@ export default function CircleRoleLinkParents() {
   const invitingParentCircles = useMemo(
     () =>
       orgData
-        ?.invitingCirclesOf(circle.id)
-        .sort((a, b) =>
-          (orgData.getRole(a.roleId)?.name ?? '').localeCompare(
-            orgData.getRole(b.roleId)?.name ?? ''
+        ? [...orgData.invitingCirclesOf(circle.id)].sort((a, b) =>
+            (orgData.getRole(a.roleId)?.name ?? '').localeCompare(
+              orgData.getRole(b.roleId)?.name ?? ''
+            )
           )
-        ),
+        : undefined,
     [orgData, circle]
   )
 

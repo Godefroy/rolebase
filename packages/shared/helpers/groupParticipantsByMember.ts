@@ -2,7 +2,7 @@ import { Participant, ParticipantMember } from '../model/member'
 import { Optional } from '../model/types'
 
 export function groupParticipantsByMember(
-  participants: Optional<Participant, 'circleId'>[]
+  participants: readonly Optional<Participant, 'circleId'>[]
 ): ParticipantMember[] {
   const participantsMembers = new Map<string, ParticipantMember>()
   for (const participant of participants) {

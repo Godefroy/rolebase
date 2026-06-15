@@ -112,7 +112,7 @@ function prepareDataInternal(
 
 function membersToData(
   circleId: string,
-  members: CircleMemberJoined[],
+  members: readonly CircleMemberJoined[],
   colorHue?: number
 ): Data {
   const node: Data = {

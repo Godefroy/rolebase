@@ -95,12 +95,12 @@ export default function CircleRoleSubCircles() {
   const invitedCircles = useMemo(
     () =>
       orgData
-        ?.invitedCirclesOf(circle.id)
-        .sort((a, b) =>
-          (orgData.getRole(a.roleId)?.name ?? '').localeCompare(
-            orgData.getRole(b.roleId)?.name ?? ''
+        ? [...orgData.invitedCirclesOf(circle.id)].sort((a, b) =>
+            (orgData.getRole(a.roleId)?.name ?? '').localeCompare(
+              orgData.getRole(b.roleId)?.name ?? ''
+            )
           )
-        ),
+        : undefined,
     [orgData, circle]
   )
 

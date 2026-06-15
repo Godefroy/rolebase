@@ -38,7 +38,7 @@ export interface Data {
   colorHue?: number
   value?: number
   children?: Array<Data>
-  participants?: Participant[]
+  participants?: readonly Participant[]
 }
 
 export interface GraphEvents {

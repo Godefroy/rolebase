@@ -29,23 +29,42 @@ const byName = (a: { name: string }, b: { name: string }) =>
 // Indexed view of an org's structure: the single org data object, holding the
 // active entities and the lookups + operations over them. Nothing materializes
 // a nested CircleFull tree anymore.
+//
+// Instances are immutable after construction (callers always create a fresh
+// OrgData rather than mutating one), so pure traversals are memoized on demand.
+// All accessors return readonly views: never mutate them, doing so would corrupt
+// the indexes and caches.
 export class OrgData {
   // Active entities (archived filtered out), members sorted by name
-  readonly circles: CircleFragment[]
-  readonly members: MemberFragment[]
-  readonly roles: RoleSummaryFragment[]
+  readonly circles: readonly CircleFragment[]
+  readonly members: readonly MemberFragment[]
+  readonly roles: readonly RoleSummaryFragment[]
 
   // By-id lookups (also index archived circles/roles, so an archived
   // circle/role can still be resolved when its panel is opened)
-  readonly circleById: Map<string, CircleFragment>
-  readonly roleById: Map<string, RoleSummaryFragment>
-  readonly memberById: Map<string, MemberFragment>
+  readonly circleById: ReadonlyMap<string, CircleFragment>
+  readonly roleById: ReadonlyMap<string, RoleSummaryFragment>
+  readonly memberById: ReadonlyMap<string, MemberFragment>
 
+  // Forward and inverse relation indexes
   private readonly membersByCircle = new Map<string, CircleMemberJoined[]>()
   private readonly linksByCircle = new Map<string, CircleLinkFragment[]>()
   private readonly childrenByCircle = new Map<string, CircleFragment[]>()
+  private readonly circlesByMember = new Map<string, CircleFragment[]>()
+
+  // On-demand caches for pure derivations
   private readonly hueCache = new Map<string, number | null>()
-  private activeMembersList?: MemberFragment[]
+  private readonly leadersCache = new Map<string, readonly Participant[]>()
+  private readonly participantsCache = new Map<string, readonly Participant[]>()
+  private readonly deepParticipantsCache = new Map<
+    string,
+    readonly Participant[]
+  >()
+  private readonly participantCirclesCache = new Map<
+    string,
+    readonly CircleFragment[]
+  >()
+  private activeMembersList?: readonly MemberFragment[]
 
   constructor(
     circles: CircleFragment[],
@@ -66,13 +85,22 @@ export class OrgData {
     this.memberById = new Map(this.members.map((m) => [m.id, m]))
 
     for (const cm of circleMembers) {
-      if (cm.archived || !this.circleById.has(cm.circleId)) continue
+      if (cm.archived) continue
+      const circle = this.circleById.get(cm.circleId)
+      if (!circle) continue
       const member = this.memberById.get(cm.memberId)
       if (!member) continue
+
+      // Forward: members of a circle
       const list = this.membersByCircle.get(cm.circleId)
       const entry = { id: cm.id, member }
       if (list) list.push(entry)
       else this.membersByCircle.set(cm.circleId, [entry])
+
+      // Inverse: circles a member is a direct member of
+      const circleList = this.circlesByMember.get(cm.memberId)
+      if (circleList) circleList.push(circle)
+      else this.circlesByMember.set(cm.memberId, [circle])
     }
 
     for (const cl of circleLinks) {
@@ -90,6 +118,29 @@ export class OrgData {
     }
   }
 
+  // ---- Internal helpers ----
+
+  // Direct parent of a circle, if any.
+  private parentOf(circle: CircleFragment): CircleFragment | undefined {
+    return circle.parentId ? this.circleById.get(circle.parentId) : undefined
+  }
+
+  // Whether a circle represents its parent (a "representant" / parent link).
+  private isParentLink(circle: CircleFragment): boolean {
+    return !!this.roleById.get(circle.roleId)?.parentLink
+  }
+
+  // Members representing a circle through its parent-link sub-circles.
+  private representativesOf(circleId: string): Participant[] {
+    return this.childrenOf(circleId)
+      .filter((c) => this.isParentLink(c))
+      .flatMap((c) =>
+        this.membersOf(c.id).map(
+          ({ member }): Participant => ({ circleId: c.id, member })
+        )
+      )
+  }
+
   // ---- By-id lookups ----
 
   getCircle(id?: string): CircleFragment | undefined {
@@ -102,57 +153,53 @@ export class OrgData {
     return id ? this.memberById.get(id) : undefined
   }
   // Members linked to a user account (those who have actually joined).
-  getActiveMembers(): MemberFragment[] {
+  getActiveMembers(): readonly MemberFragment[] {
     return (this.activeMembersList ??= this.members.filter((m) => !!m.userId))
   }
 
   // ---- Relations ----
 
-  membersOf(circleId: string): CircleMemberJoined[] {
+  membersOf(circleId: string): readonly CircleMemberJoined[] {
     return this.membersByCircle.get(circleId) ?? []
   }
-  linksOf(circleId: string): CircleLinkFragment[] {
+  linksOf(circleId: string): readonly CircleLinkFragment[] {
     return this.linksByCircle.get(circleId) ?? []
   }
   // Circles that invited a circle through a link (the link host circles).
-  invitingCirclesOf(circleId: string): CircleFragment[] {
+  invitingCirclesOf(circleId: string): readonly CircleFragment[] {
     return this.circles.filter((c) =>
       this.linksOf(c.id).some((link) => link.circleId === circleId)
     )
   }
   // Circles invited into a circle through its links.
-  invitedCirclesOf(circleId: string): CircleFragment[] {
+  invitedCirclesOf(circleId: string): readonly CircleFragment[] {
     return this.linksOf(circleId)
       .map((link) => this.circleById.get(link.circleId))
       .filter((c): c is CircleFragment => c !== undefined)
   }
   // Direct children of a circle.
-  childrenOf(circleId: string): CircleFragment[] {
+  childrenOf(circleId: string): readonly CircleFragment[] {
     return this.childrenByCircle.get(circleId) ?? []
   }
   // All descendants of a circle (children, recursively).
-  descendantsOf(circleId: string): CircleFragment[] {
+  descendantsOf(circleId: string): readonly CircleFragment[] {
     return this.childrenOf(circleId).flatMap((c) => [
       c,
       ...this.descendantsOf(c.id),
     ])
   }
   // Ancestors of a circle, from the root down to its direct parent.
-  parentsOf(circle: CircleFragment): CircleFragment[] {
+  parentsOf(circle: CircleFragment): readonly CircleFragment[] {
     const parents: CircleFragment[] = []
-    let parent = circle.parentId
-      ? this.circleById.get(circle.parentId)
-      : undefined
+    let parent = this.parentOf(circle)
     while (parent) {
       parents.unshift(parent)
-      parent = parent.parentId
-        ? this.circleById.get(parent.parentId)
-        : undefined
+      parent = this.parentOf(parent)
     }
     return parents
   }
   // Ancestors of a circle plus the circle itself (root first).
-  andParentsOf(circleId: string): CircleFragment[] {
+  andParentsOf(circleId: string): readonly CircleFragment[] {
     const circle = this.circleById.get(circleId)
     if (!circle) return []
     return [...this.parentsOf(circle), circle]
@@ -174,9 +221,7 @@ export class OrgData {
         hue = role.colorHue
         break
       }
-      current = current.parentId
-        ? this.circleById.get(current.parentId)
-        : undefined
+      current = this.parentOf(current)
     }
 
     this.hueCache.set(circleId, hue)
@@ -185,17 +230,14 @@ export class OrgData {
 
   // ---- Participants ----
 
-  getLeaders(circleId: string): Participant[] {
+  getLeaders(circleId: string): readonly Participant[] {
     if (!this.circleById.has(circleId)) return []
 
+    const cached = this.leadersCache.get(circleId)
+    if (cached) return cached
+
     // Sub-circle leaders (parent-link circles)
-    const leaders = this.childrenOf(circleId)
-      .filter((c) => this.roleById.get(c.roleId)?.parentLink)
-      .flatMap((c) =>
-        this.membersOf(c.id).map(
-          ({ member }): Participant => ({ circleId: c.id, member })
-        )
-      )
+    const leaders = this.representativesOf(circleId)
 
     // If no representant, take direct members
     let result =
@@ -215,26 +257,39 @@ export class OrgData {
       result = [...result, { circleId, member: acting.member }]
     }
 
+    this.leadersCache.set(circleId, result)
     return result
   }
 
-  getParticipants(circleId: string, includeChildren = false): Participant[] {
+  getParticipants(
+    circleId: string,
+    includeChildren = false
+  ): readonly Participant[] {
     if (includeChildren) {
+      const cached = this.deepParticipantsCache.get(circleId)
+      if (cached) return cached
+
       const participants = this.getParticipants(circleId)
       const subCirclesParticipants = this.childrenOf(circleId)
         // Skip leaders (already in participants)
-        .filter((c) => !this.roleById.get(c.roleId)?.parentLink)
+        .filter((c) => !this.isParentLink(c))
         .flatMap((c) => this.getParticipants(c.id, true))
-      return [...subCirclesParticipants, ...participants]
+      const result = [...subCirclesParticipants, ...participants]
+
+      this.deepParticipantsCache.set(circleId, result)
+      return result
     }
 
     if (!this.circleById.has(circleId)) return []
+
+    const cached = this.participantsCache.get(circleId)
+    if (cached) return cached
 
     let hasLeader = false
 
     // Leaders of roles and sub-circles
     const leaders = this.childrenOf(circleId).flatMap((c) => {
-      if (this.roleById.get(c.roleId)?.parentLink) {
+      if (this.isParentLink(c)) {
         const cMembers = this.membersOf(c.id)
         if (cMembers.length > 0) hasLeader = true
         return cMembers.map(
@@ -264,37 +319,35 @@ export class OrgData {
       )
       .map((p) => ({ ...p, invited: true }))
 
-    return [...leaders, ...directParticipants, ...links]
+    const result = [...leaders, ...directParticipants, ...links]
+    this.participantsCache.set(circleId, result)
+    return result
   }
 
   // Circles where a member participates (directly or as a representant)
-  getParticipantCircles(memberId: string): CircleFragment[] {
-    const directMemberCircles = this.circles.filter((circle) =>
-      this.membersOf(circle.id).some((m) => m.member.id === memberId)
-    )
+  getParticipantCircles(memberId: string): readonly CircleFragment[] {
+    const cached = this.participantCirclesCache.get(memberId)
+    if (cached) return cached
+
+    const directMemberCircles = this.circlesByMember.get(memberId) ?? []
 
     const leaderCircles: CircleFragment[] = []
 
     const participantCircles = directMemberCircles.reduce<CircleFragment[]>(
       (acc, circle) => {
-        const parent = circle.parentId
-          ? this.circleById.get(circle.parentId)
-          : undefined
+        const parent = this.parentOf(circle)
         if (!parent) return acc
 
         const hasLeader = this.childrenOf(circle.id).some(
           (child) =>
-            this.roleById.get(child.roleId)?.parentLink &&
-            this.membersOf(child.id).length > 0
+            this.isParentLink(child) && this.membersOf(child.id).length > 0
         )
         if (hasLeader) return acc
 
         acc.push(parent)
 
-        if (this.roleById.get(circle.roleId)?.parentLink) {
-          const grandParent = parent.parentId
-            ? this.circleById.get(parent.parentId)
-            : undefined
+        if (this.isParentLink(circle)) {
+          const grandParent = this.parentOf(parent)
           if (grandParent) acc.push(grandParent)
           leaderCircles.push(parent)
         }
@@ -309,24 +362,29 @@ export class OrgData {
       )
     )
 
-    return [...directMemberCircles, ...participantCircles, ...invitedCircles]
+    const result = [
+      ...directMemberCircles,
+      ...participantCircles,
+      ...invitedCircles,
+    ]
+    this.participantCirclesCache.set(memberId, result)
+    return result
   }
 
   // Member ids included in a participants scope
   getScopeMemberIds(scope: ParticipantsScope): string[] {
-    const membersIds = [...scope.members]
+    const memberIds = new Set(scope.members)
 
     for (const circle of scope.circles) {
       const participants = this.getParticipants(circle.id, !!circle.children)
       for (const participant of participants) {
         const memberId = participant.member.id
         if (circle.excludeMembers.includes(memberId)) continue
-        if (membersIds.includes(memberId)) continue
-        membersIds.push(memberId)
+        memberIds.add(memberId)
       }
     }
 
-    return membersIds
+    return [...memberIds]
   }
 
   // ---- Filters by member ----
@@ -338,9 +396,9 @@ export class OrgData {
     if (!memberId) return data
 
     const memberCircles = this.getParticipantCircles(memberId)
-    const memberCirclesIds = memberCircles.map((c) => c.id)
-    const memberParentCircleIds = memberCircles.flatMap((circle) =>
-      this.parentsOf(circle).map((c) => c.id)
+    const memberCirclesIds = new Set(memberCircles.map((c) => c.id))
+    const memberParentCircleIds = new Set(
+      memberCircles.flatMap((circle) => this.parentsOf(circle).map((c) => c.id))
     )
 
     return data.filter(
@@ -349,8 +407,8 @@ export class OrgData {
         scope.circles.some(
           ({ id, children, excludeMembers }) =>
             !excludeMembers.includes(memberId) &&
-            (memberCirclesIds.includes(id) ||
-              (children && memberParentCircleIds.includes(id)))
+            (memberCirclesIds.has(id) ||
+              (children && memberParentCircleIds.has(id)))
         )
     )
   }
@@ -361,14 +419,14 @@ export class OrgData {
   ): Entity[] {
     if (!memberId) return threads
 
-    const memberCirclesIds = this.getParticipantCircles(memberId).map(
-      (c) => c.id
+    const memberCirclesIds = new Set(
+      this.getParticipantCircles(memberId).map((c) => c.id)
     )
 
     return threads.filter(
       ({ circleId, extra_members }) =>
         extra_members.some((em) => em.memberId === memberId) ||
-        memberCirclesIds.includes(circleId)
+        memberCirclesIds.has(circleId)
     )
   }
 }

@@ -17,7 +17,7 @@ export interface CircleData {
   parentId: string | null
   showMembers: boolean
   showLinks: boolean
-  participants?: Participant[]
+  participants?: readonly Participant[]
   // Explicit member entries to render (members view), overrides the circle's own
   memberEntries?: CircleMemberJoined[]
 }
