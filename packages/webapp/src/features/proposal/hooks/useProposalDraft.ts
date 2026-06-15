@@ -23,6 +23,11 @@ export interface ProposalDraft {
   applyLog(display: LogDisplay, changes: EntitiesChanges): Promise<void>
   // Remove a log and replay the remaining ones from scratch
   removeLog(logId: string): Promise<void>
+  // Replace a log's changes in place (keeping its position) and replay
+  replaceLog(logId: string, changes: EntitiesChanges): Promise<void>
+  // Live logs, up to date even between awaited apply/remove/replace calls
+  // (the `logs` field is the render snapshot and can lag by one edit)
+  getLogs(): ProposalLog[]
   // Read-only access to the current mutable draft data (for building changes)
   getData(): OrgDataFragment | undefined
 }
@@ -74,6 +79,9 @@ export default function useProposalDraft(
 
   const [ready, setReady] = useState(false)
   const [logs, setLogs] = useState<ProposalLog[]>([])
+  // Mirrors `logs` synchronously so apply/remove can read the latest list
+  // without waiting for a re-render.
+  const logsRef = useRef<ProposalLog[]>([])
   const [version, setVersion] = useState(0)
 
   // Replay a list of logs onto fresh working data, flagging failures
@@ -93,6 +101,7 @@ export default function useProposalDraft(
       }
       nextLogs.push(next)
     }
+    logsRef.current = nextLogs
     setLogs(nextLogs)
     setVersion((v) => v + 1)
   }, [])
@@ -116,26 +125,30 @@ export default function useProposalDraft(
 
   const applyLog = useCallback(
     async (display: LogDisplay, changes: EntitiesChanges) => {
-      const working = workingRef.current
-      if (!working) return
-      const log: ProposalLog = { id: generateId(), display, changes }
-      try {
-        await applyEntitiesChanges(changes, working.methods)
-      } catch (e) {
-        log.error = e instanceof Error ? e.message : 'error'
-      }
-      setLogs((prev) => [...prev, log])
-      setVersion((v) => v + 1)
+      if (!workingRef.current) return
+      await rebuild([...logsRef.current, { id: generateId(), display, changes }])
     },
-    []
+    [rebuild]
   )
 
   const removeLog = useCallback(
     async (logId: string) => {
-      await rebuild(logs.filter((l) => l.id !== logId))
+      await rebuild(logsRef.current.filter((l) => l.id !== logId))
     },
-    [logs, rebuild]
+    [rebuild]
   )
+
+  const replaceLog = useCallback(
+    async (logId: string, changes: EntitiesChanges) => {
+      if (!workingRef.current) return
+      await rebuild(
+        logsRef.current.map((l) => (l.id === logId ? { ...l, changes } : l))
+      )
+    },
+    [rebuild]
+  )
+
+  const getLogs = useCallback(() => logsRef.current, [])
 
   // Pending role-field edits, keyed by roleId (created roles + updates)
   const roleOverlays = useMemo(() => {
@@ -179,6 +192,8 @@ export default function useProposalDraft(
     hasError,
     applyLog,
     removeLog,
+    replaceLog,
+    getLogs,
     getData,
   }
 }
