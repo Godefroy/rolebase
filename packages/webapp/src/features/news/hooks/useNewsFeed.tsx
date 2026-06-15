@@ -1,9 +1,9 @@
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { useLastNewsQuery } from '@gql'
 import { useEffect, useRef } from 'react'
 
 export function useNewsFeed(circleId: string | undefined, limit = 8) {
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
   const bottomRef = useRef(null)
 
   // Subscribe to news

@@ -1,13 +1,13 @@
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { truthy } from '@rolebase/shared/helpers/truthy'
 import { ParticipantMember } from '@rolebase/shared/model/member'
-import { useStoreState } from '@store/hooks'
 import { useMemo } from 'react'
 
 export default function useExtraParticipants(
   participants?: ParticipantMember[],
   membersIds?: Array<string | { memberId: string }>
 ): ParticipantMember[] {
-  const members = useStoreState((state) => state.org.members)
+  const members = useOrgContext().orgData?.members
 
   return useMemo(() => {
     return [

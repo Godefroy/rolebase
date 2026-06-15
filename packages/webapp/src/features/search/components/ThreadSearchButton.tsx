@@ -1,5 +1,5 @@
 import useCurrentMember from '@/member/hooks/useCurrentMember'
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   ThreadFragment,
   Thread_Status_Enum,
@@ -22,7 +22,7 @@ export default function ThreadSearchButton({
   ...props
 }: Props) {
   const items = useThreadSearchItems(threads, excludeIds)
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
   const currentMember = useCurrentMember()
   const [createThread] = useCreateThreadMutation()
 

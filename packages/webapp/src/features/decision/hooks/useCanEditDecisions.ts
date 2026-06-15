@@ -1,9 +1,9 @@
-import useCircle from '@/circle/hooks/useCircle'
 import useCurrentMember from '@/member/hooks/useCurrentMember'
 import useOrgMember from '@/member/hooks/useOrgMember'
 import useOrgOwner from '@/member/hooks/useOrgOwner'
-import useCurrentOrg from '@/org/hooks/useCurrentOrg'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import useCircleLeaders from '@/participants/hooks/useCircleLeaders'
+import { Governance_Mode_Enum } from '@gql'
 
 // Whether the current user can add/edit/delete decisions of a circle.
 // Mirrors CircleContext.canEditMembers ("comme pour l'ajout d'un membre"):
@@ -11,12 +11,12 @@ import useCircleLeaders from '@/participants/hooks/useCircleLeaders'
 // modify the circle's members.
 export default function useCanEditDecisions(circleId?: string): boolean {
   const currentMember = useCurrentMember()
-  const org = useCurrentOrg()
+  const { governanceMode, orgData } = useOrgContext()
   const isOrgMember = useOrgMember()
   const isOrgOwner = useOrgOwner()
 
-  const circle = useCircle(circleId)
-  const role = circle?.role
+  const circle = orgData?.getCircle(circleId)
+  const role = orgData?.getRole(circle?.roleId)
 
   // Leaders of the circle
   const leaders = useCircleLeaders(circle)
@@ -26,8 +26,8 @@ export default function useCanEditDecisions(circleId?: string): boolean {
   )
 
   // Owner circle: grand parent if link to parent, else parent
-  const parentCircle = useCircle(circle?.parentId || undefined)
-  const grandParentCircle = useCircle(
+  const parentCircle = orgData?.getCircle(circle?.parentId || undefined)
+  const grandParentCircle = orgData?.getCircle(
     (role?.parentLink && parentCircle?.parentId) || undefined
   )
   const ownerCircle = grandParentCircle || parentCircle
@@ -36,7 +36,7 @@ export default function useCanEditDecisions(circleId?: string): boolean {
 
   return (
     isOrgMember &&
-    (!org?.protectGovernance ||
+    (governanceMode === Governance_Mode_Enum.Free ||
       isOrgOwner ||
       (hasParentLinkMembers ? isLeader : isOwner))
   )

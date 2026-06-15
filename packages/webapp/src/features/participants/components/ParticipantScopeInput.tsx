@@ -1,11 +1,10 @@
 import CircleMemberLink from '@/circle/components/CircleMemberLink'
 import MemberByIdButton from '@/member/components/MemberByIdButton'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import CircleSearchButton from '@/search/components/CircleSearchButton'
 import MemberSearchButton from '@/search/components/MemberSearchButton'
 import { ButtonGroup, HStack, IconButton, VStack } from '@chakra-ui/react'
-import { getScopeMemberIds } from '@rolebase/shared/helpers/getScopeMemberIds'
 import { ParticipantsScope } from '@rolebase/shared/model/participants'
-import { useStoreState } from '@store/hooks'
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FiX } from 'react-icons/fi'
@@ -24,12 +23,12 @@ export default function ParticipantScopeInput({
   onInvitedMembersChange,
 }: Props) {
   const { t } = useTranslation()
-  const circles = useStoreState((state) => state.org.circles)
+  const { orgData } = useOrgContext()
 
   // Update invited members when scope changes
   const invitedMembersIds = useMemo(
-    () => (circles ? getScopeMemberIds(participantsScope, circles) : []),
-    [circles, participantsScope]
+    () => orgData?.getScopeMemberIds(participantsScope) ?? [],
+    [orgData, participantsScope]
   )
   useEffect(() => {
     onInvitedMembersChange?.(invitedMembersIds)

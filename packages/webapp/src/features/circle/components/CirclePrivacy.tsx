@@ -1,4 +1,4 @@
-import useCurrentOrg from '@/org/hooks/useCurrentOrg'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   Button,
   Collapse,
@@ -11,9 +11,8 @@ import {
   Tooltip,
   useDisclosure,
 } from '@chakra-ui/react'
-import { MemberFragment, Member_Role_Enum } from '@gql'
+import { Governance_Mode_Enum, MemberFragment, Member_Role_Enum } from '@gql'
 import { ParticipantMember } from '@rolebase/shared/model/member'
-import { useStoreState } from '@store/hooks'
 import React, { useContext, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ChevronDownIcon, ChevronUpIcon, PrivacyIcon } from 'src/icons'
@@ -23,7 +22,7 @@ import CircleMemberLink from './CircleMemberLink'
 
 export default function CirclePrivacy() {
   const { t } = useTranslation()
-  const org = useCurrentOrg()
+  const { governanceMode, orgData } = useOrgContext()
 
   // Get circle context
   const circleContext = useContext(CircleContext)
@@ -31,13 +30,14 @@ export default function CirclePrivacy() {
   const { role, owners, leaders, hasParentLinkMembers } = circleContext
 
   // Get organization's owners
-  const members = useStoreState((state) => state.org.members)
+  const members = orgData?.members
   const orgOwners = useMemo(
     () => members?.filter((m) => m.role === Member_Role_Enum.Owner),
     [members]
   )
 
-  if (!org?.protectGovernance) return null
+  // The privacy menu is only relevant when governance is protected (not Free)
+  if (governanceMode === Governance_Mode_Enum.Free) return null
 
   return (
     <Menu isLazy autoSelect={false}>

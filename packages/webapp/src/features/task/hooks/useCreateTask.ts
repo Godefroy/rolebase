@@ -1,4 +1,4 @@
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { useToast } from '@chakra-ui/react'
 import {
   Task_Insert_Input,
@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next'
 export default function useCreateTask() {
   const { t } = useTranslation()
   const toast = useToast()
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
   const [createTask] = useCreateTaskMutation()
 
   return useCallback(

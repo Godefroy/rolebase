@@ -13,6 +13,20 @@ object_relationships:
           name: org_subscription
           schema: public
 array_relationships:
+  - name: circleLinks
+    using:
+      foreign_key_constraint_on:
+        column: orgId
+        table:
+          name: circle_link
+          schema: public
+  - name: circleMembers
+    using:
+      foreign_key_constraint_on:
+        column: orgId
+        table:
+          name: circle_member
+          schema: public
   - name: circles
     using:
       foreign_key_constraint_on:
@@ -113,12 +127,12 @@ select_permissions:
         - archived
         - createdAt
         - defaultGraphView
+        - governanceMode
         - homeNote
         - icon
         - iconFileId
         - id
         - name
-        - protectGovernance
         - shareMembers
         - shareOrg
         - slug
@@ -136,7 +150,6 @@ update_permissions:
         - icon
         - iconFileId
         - name
-        - protectGovernance
         - shareMembers
         - shareOrg
       filter:

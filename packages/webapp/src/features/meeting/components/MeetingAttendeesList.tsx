@@ -4,8 +4,8 @@ import {
   useDeleteMeetingAttendeeMutation,
   useUpdateMeetingAttendeeMutation,
 } from '@gql'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { truthy } from '@rolebase/shared/helpers/truthy'
-import { useStoreState } from '@store/hooks'
 import React, { useContext, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CreateIcon } from 'src/icons'
@@ -16,7 +16,7 @@ import MeetingAttendeeItem from './MeetingAttendeeItem'
 export default function MeetingAttendeesList(boxProps: BoxProps) {
   const { meeting, isEnded, canEdit, forceEdit } = useContext(MeetingContext)!
   const editable = canEdit && (!isEnded || forceEdit)
-  const members = useStoreState((state) => state.org.members)
+  const members = useOrgContext().orgData?.members
   const { t } = useTranslation()
   const [createAttendee] = useCreateMeetingAttendeeMutation()
   const [updateAttendee] = useUpdateMeetingAttendeeMutation()

@@ -1,5 +1,5 @@
 import { EditableField } from '@/common/atoms/EditableField'
-import { useOrgEditActions } from '@/org/contexts/OrgEditContext'
+import { useOrgEditActions } from '@/org/contexts/OrgContext'
 import { Alert, AlertDescription, AlertIcon, BoxProps } from '@chakra-ui/react'
 import { RoleFragment } from '@gql'
 import React, { useContext } from 'react'

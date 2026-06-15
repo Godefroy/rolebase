@@ -8,7 +8,7 @@ import useOrgAdmin from '@/member/hooks/useOrgAdmin'
 import useOrgOwner from '@/member/hooks/useOrgOwner'
 import OrgSwitch from '@/org/components/OrgSwitch'
 import { useNavigateOrg } from '@/org/hooks/useNavigateOrg'
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { usePathInOrg } from '@/org/hooks/usePathInOrg'
 import SearchGlobalModal from '@/search/components/SearchGlobalModal'
 import TaskModal from '@/task/modals/TaskModal'
@@ -66,7 +66,7 @@ const logoContainerHeight = 65
 export default function Sidebar() {
   const { t } = useTranslation()
   const { isAuthenticated, user } = useAuth()
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
   const orgLoading = useStoreState((state) => state.orgs.loading)
   const currentMember = useCurrentMember()
   const currentMeetingId = useStoreState(

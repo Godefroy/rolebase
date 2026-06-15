@@ -2,9 +2,9 @@ import {
   AVATAR_SM_WIDTH,
   getResizedImageUrl,
 } from '@rolebase/shared/helpers/getResizedImageUrl'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { Avatar, MenuItem, MenuItemProps, Stack, Text } from '@chakra-ui/react'
 import { MemberSummaryFragment } from '@gql'
-import { useStoreState } from '@store/hooks'
 import { textEllipsis } from '@utils/textEllipsis'
 import React, { useMemo } from 'react'
 
@@ -20,17 +20,18 @@ export default function MemberMenuItem({
   description,
   ...menuItemProps
 }: Props) {
-  const circles = useStoreState((state) => state.org.circles)
+  const { orgData } = useOrgContext()
+  const circles = orgData?.circles
 
   const circlesNames = useMemo(
     () =>
       circles && circlesIds
         ? (circles
             .filter((c) => circlesIds.includes(c.id))
-            .map((c) => c.role.name)
+            .map((c) => orgData?.getRole(c.roleId)?.name)
             .filter(Boolean) as string[])
         : [],
-    [circles, circlesIds]
+    [circles, circlesIds, orgData]
   )
 
   return (

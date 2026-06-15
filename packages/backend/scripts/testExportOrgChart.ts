@@ -2,44 +2,42 @@
 //   npx tsx scripts/testExportOrgChart.ts
 import { renderStaticGraphPage } from '@rolebase/graph/server'
 import { CirclesGraphViews } from '@rolebase/shared/model/graph'
+import { OrgData } from '@rolebase/shared/model/OrgData'
 import fs from 'fs'
 import path from 'path'
 import { screenshotHtml } from '../src/utils/screenshotHtml'
 
-function buildCircles(breadth: number, depth: number, members: number) {
+function buildOrg(breadth: number, depth: number, membersPerCircle: number): OrgData {
   const circles: any[] = []
+  const roles: any[] = []
+  const members: any[] = []
+  const circleMembers: any[] = []
   let memberIndex = 0
 
   const makeCircle = (parentId: string | null, level: number, i: number) => {
     const id = parentId ? `${parentId}-${i}` : 'c0'
-    circles.push({
-      id,
-      orgId: 'org1',
-      roleId: `role-${id}`,
-      parentId,
-      archived: false,
-      role: {
-        id: `role-${id}`,
-        base: false,
-        name: `Role ${id}`,
-        singleMember: false,
-        parentLink: false,
-        colorHue: (level * 60) % 360,
-      },
-      members: Array.from({ length: members }, () => {
-        const mid = `m${memberIndex++}`
-        return {
-          id: `cm-${mid}`,
-          member: {
-            id: mid,
-            userId: null,
-            name: `Member ${mid} Lastname`,
-            picture: null,
-          },
-        }
-      }),
-      invitedCircleLinks: [],
+    const roleId = `role-${id}`
+    circles.push({ id, orgId: 'org1', roleId, parentId, archived: false })
+    roles.push({
+      id: roleId,
+      base: false,
+      name: `Role ${id}`,
+      singleMember: false,
+      parentLink: false,
+      colorHue: (level * 60) % 360,
     })
+    for (let k = 0; k < membersPerCircle; k++) {
+      const mid = `m${memberIndex++}`
+      members.push({ id: mid, orgId: 'org1', archived: false, name: `Member ${mid} Lastname`, description: '' })
+      circleMembers.push({
+        id: `cm-${id}-${mid}`,
+        orgId: 'org1',
+        circleId: id,
+        memberId: mid,
+        createdAt: '',
+        archived: false,
+      })
+    }
     if (level < depth) {
       for (let j = 0; j < breadth; j++) {
         makeCircle(id, level + 1, j)
@@ -48,17 +46,17 @@ function buildCircles(breadth: number, depth: number, members: number) {
   }
 
   makeCircle(null, 0, 0)
-  return circles
+  return new OrgData(circles, circleMembers, [], roles, members)
 }
 
 async function main() {
-  const circles = buildCircles(3, 3, 2)
-  console.log(`Rendering ${circles.length} circles...`)
+  const org = buildOrg(3, 3, 2)
+  console.log(`Rendering ${org.circles.length} circles...`)
 
   const width = 800
   const html = renderStaticGraphPage({
     view: CirclesGraphViews.AllCircles,
-    circles,
+    org,
     width,
     height: width,
     colorMode: 'light',

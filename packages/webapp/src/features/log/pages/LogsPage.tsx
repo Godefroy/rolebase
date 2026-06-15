@@ -2,7 +2,7 @@ import Loading from '@/common/atoms/Loading'
 import ScrollableLayout from '@/common/atoms/ScrollableLayout'
 import TextErrors from '@/common/atoms/TextErrors'
 import { Title } from '@/common/atoms/Title'
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { Box, Flex, Heading } from '@chakra-ui/react'
 import { useLastLogsQuery } from '@gql'
 import React, { useEffect, useRef } from 'react'
@@ -13,7 +13,7 @@ const limit = 50
 
 export default function LogsPage() {
   const { t } = useTranslation()
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
   const bottomRef = useRef(null)
 
   // Subscribe to logs

@@ -1,25 +1,20 @@
-import { CircleFullFragment } from '@gql'
-import { getAllCircleMembersParticipants } from '@rolebase/shared/helpers/getAllCircleMembersParticipants'
-import { getCircleParticipants } from '@rolebase/shared/helpers/getCircleParticipants'
+import { useOrgContext } from '@/org/contexts/OrgContext'
+import { CircleFragment } from '@gql'
 import { groupParticipantsByMember } from '@rolebase/shared/helpers/groupParticipantsByMember'
-import { useOrgData } from '@/org/contexts/OrgDataContext'
 import { ParticipantMember } from '@rolebase/shared/model/member'
 import { useMemo } from 'react'
 
 export default function useCircleParticipants(
-  circleOrId?: string | CircleFullFragment,
+  circleOrId?: string | CircleFragment,
   includeChildren = false
 ): ParticipantMember[] {
-  const { circles } = useOrgData()
+  const { orgData } = useOrgContext()
 
   return useMemo(() => {
-    if (!circles || !circleOrId) return []
+    const id = typeof circleOrId === 'string' ? circleOrId : circleOrId?.id
+    if (!id || !orgData) return []
 
     // Compute participants and group by member
-    return groupParticipantsByMember(
-      includeChildren
-        ? getAllCircleMembersParticipants(circleOrId, circles)
-        : getCircleParticipants(circleOrId, circles)
-    )
-  }, [circleOrId, circles, includeChildren])
+    return groupParticipantsByMember(orgData.getParticipants(id, includeChildren))
+  }, [circleOrId, orgData, includeChildren])
 }

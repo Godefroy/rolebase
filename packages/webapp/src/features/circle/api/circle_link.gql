@@ -1,5 +1,7 @@
-mutation createCircleLink($parentId: uuid!, $circleId: uuid!) {
-  insert_circle_link_one(object: { circleId: $circleId, parentId: $parentId }) {
+mutation createCircleLink($parentId: uuid!, $circleId: uuid!, $orgId: uuid!) {
+  insert_circle_link_one(
+    object: { circleId: $circleId, parentId: $parentId, orgId: $orgId }
+  ) {
     ...CircleLink
   }
 }

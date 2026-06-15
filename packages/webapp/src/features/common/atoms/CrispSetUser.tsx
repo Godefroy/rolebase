@@ -1,5 +1,5 @@
 import useCurrentMember from '@/member/hooks/useCurrentMember'
-import useCurrentOrg from '@/org/hooks/useCurrentOrg'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { Crisp } from 'crisp-sdk-web'
 import { useEffect } from 'react'
 import {
@@ -11,7 +11,7 @@ import { useAuth } from '@/user/hooks/useAuth'
 export default function CrispSetUser() {
   const { user } = useAuth()
   const member = useCurrentMember()
-  const org = useCurrentOrg()
+  const { org } = useOrgContext()
 
   const email = user?.email
   const nickname = member?.name || user?.displayName

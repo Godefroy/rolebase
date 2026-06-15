@@ -1,9 +1,8 @@
 import CircleFormController from '@/circle/components/CircleFormController'
 import NumberInputController from '@/common/atoms/NumberInputController'
 import SwitchController from '@/common/atoms/SwitchController'
-import useCircle from '@/circle/hooks/useCircle'
 import useCurrentMember from '@/member/hooks/useCurrentMember'
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import ParticipantScopeInput from '@/participants/components/ParticipantScopeInput'
 import ParticipantsNumber from '@/participants/components/ParticipantsNumber'
 import useCircleParticipants from '@/participants/hooks/useCircleParticipants'
@@ -90,7 +89,7 @@ export default function MeetingRecurringEditModal({
 }: Props) {
   const { t } = useTranslation()
   const toast = useToast()
-  const orgId = useOrgId()
+  const { orgId, orgData } = useOrgContext()
   const currentMember = useCurrentMember()
   const [createMeetingRecurring] = useCreateMeetingRecurringMutation()
   const [updateMeetingRecurring] = useUpdateMeetingRecurringMutation()
@@ -128,7 +127,7 @@ export default function MeetingRecurringEditModal({
   } = formMethods
 
   const circleId = watch('circleId')
-  const circle = useCircle(circleId)
+  const circle = orgData?.getCircle(circleId)
 
   // Watch privacy fields
   const isPrivate = watch('private')
@@ -309,7 +308,7 @@ export default function MeetingRecurringEditModal({
                     <Collapse in={isPrivate}>
                       <FormHelperText ml="40px" mb={2}>
                         {t('MeetingEditModal.privateHelp', {
-                          role: circle?.role.name,
+                          role: orgData?.getRole(circle?.roleId)?.name,
                         })}
                       </FormHelperText>
                     </Collapse>
@@ -333,7 +332,7 @@ export default function MeetingRecurringEditModal({
                       <Collapse in={invitedReadonly}>
                         <FormHelperText ml="40px" mb={2}>
                           {t('MeetingEditModal.invitedReadonlyHelp', {
-                            role: circle?.role.name,
+                            role: orgData?.getRole(circle?.roleId)?.name,
                           })}
                         </FormHelperText>
                       </Collapse>
@@ -348,7 +347,7 @@ export default function MeetingRecurringEditModal({
                     <AlertIcon />
                     <AlertDescription>
                       {t('MeetingEditModal.privateNotAllowed', {
-                        role: circle?.role.name,
+                        role: orgData?.getRole(circle?.roleId)?.name,
                       })}
                     </AlertDescription>
                   </Alert>

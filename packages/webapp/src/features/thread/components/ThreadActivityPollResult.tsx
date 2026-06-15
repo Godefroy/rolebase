@@ -1,7 +1,7 @@
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { Box, Stack, StackItem, Tooltip, useColorMode } from '@chakra-ui/react'
 import { ThreadPollAnswerFragment } from '@gql'
 import { ThreadActivityPollFragment } from '@rolebase/shared/model/thread_activity'
-import { useStoreState } from '@store/hooks'
 import React, { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -13,7 +13,7 @@ interface Props {
 function ThreadActivityPollResult({ activity, answers }: Props) {
   const { t } = useTranslation()
   const { colorMode } = useColorMode()
-  const members = useStoreState((state) => state.org.members)
+  const members = useOrgContext().orgData?.members
 
   const results = useMemo(
     () =>

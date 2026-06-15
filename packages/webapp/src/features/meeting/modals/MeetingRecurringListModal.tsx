@@ -2,7 +2,7 @@ import CircleByIdButton from '@/circle/components/CircleByIdButton'
 import ListItemWithButtons from '@/common/atoms/ListItemWithButtons'
 import Loading from '@/common/atoms/Loading'
 import TextErrors from '@/common/atoms/TextErrors'
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   Box,
   Button,
@@ -36,7 +36,7 @@ export default function MeetingRecurringListModal({
   ...modalProps
 }: Props) {
   const { t } = useTranslation()
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
 
   // Subscribe to recurring meetings
   const { data, loading, error } = useMeetingRecurringsSubscription({

@@ -18,7 +18,7 @@ import {
 } from '@chakra-ui/react'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import useMember from '../hooks/useMember'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import useOrgAdmin from '../hooks/useOrgAdmin'
 import { MemberEditableField } from './MemberEditableField'
 import MemberNameEditable from './MemberNameEditable'
@@ -37,7 +37,8 @@ interface Props {
 export default function MemberContent({ id, changeTitle, headerIcons }: Props) {
   const { t } = useTranslation()
   const { user } = useAuth()
-  const member = useMember(id)
+  const { orgData } = useOrgContext()
+  const member = orgData?.getMember(id)
   const isAdmin = useOrgAdmin()
   const canEdit = isAdmin || (user ? member?.userId === user.id : false)
   const avatarSrc =

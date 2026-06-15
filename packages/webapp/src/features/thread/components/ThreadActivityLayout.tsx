@@ -4,6 +4,7 @@ import MemberLink from '@/member/components/MemberLink'
 import useCurrentMember from '@/member/hooks/useCurrentMember'
 import useOrgAdmin from '@/member/hooks/useOrgAdmin'
 import useOrgMember from '@/member/hooks/useOrgMember'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   Avatar,
   Box,
@@ -19,7 +20,6 @@ import {
   useDeleteThreadActivityReactionMutation,
 } from '@gql'
 import { ThreadActivityChangeStatusFragment } from '@rolebase/shared/model/thread_activity'
-import { useStoreState } from '@store/hooks'
 import { format } from 'date-fns'
 import React, { ReactNode, useContext, useMemo } from 'react'
 import { Link as ReachLink } from 'react-router'
@@ -46,7 +46,7 @@ export default function ThreadActivityLayout({
   const { path, handleMarkUnread } = useContext(ThreadContext)!
 
   // Retrieve author member
-  const members = useStoreState((state) => state.org.members)
+  const members = useOrgContext().orgData?.members
   const member = useMemo(
     () => members?.find((m) => m.userId === activity.userId),
     [activity.userId, members]

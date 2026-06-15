@@ -29,6 +29,9 @@ insert_permissions:
               - base:
                   _eq: false
               - org:
+                  governanceMode:
+                    _neq: Strict
+              - org:
                   members:
                     _and:
                       - userId:
@@ -90,7 +93,6 @@ update_permissions:
         - indicators
         - name
         - notes
-        - parentLink
         - purpose
         - singleMember
       filter:
@@ -108,8 +110,8 @@ update_permissions:
               - _or:
                   - org:
                       _and:
-                        - protectGovernance:
-                            _eq: false
+                        - governanceMode:
+                            _eq: Free
                         - members:
                             _and:
                               - userId:
@@ -120,6 +122,9 @@ update_permissions:
                                   - role:
                                       _eq: Member
                   - _and:
+                      - org:
+                          governanceMode:
+                            _neq: Strict
                       - parentLink:
                           _eq: false
                       - circles:
@@ -129,6 +134,9 @@ update_permissions:
                                 userId:
                                   _eq: X-Hasura-User-Id
                   - _and:
+                      - org:
+                          governanceMode:
+                            _neq: Strict
                       - parentLink:
                           _eq: true
                       - circles:
@@ -153,8 +161,8 @@ update_permissions:
               - _or:
                   - org:
                       _and:
-                        - protectGovernance:
-                            _eq: false
+                        - governanceMode:
+                            _eq: Free
                         - members:
                             _and:
                               - userId:
@@ -165,6 +173,9 @@ update_permissions:
                                   - role:
                                       _eq: Member
                   - _and:
+                      - org:
+                          governanceMode:
+                            _neq: Strict
                       - parentLink:
                           _eq: false
                       - circles:
@@ -174,6 +185,9 @@ update_permissions:
                                 userId:
                                   _eq: X-Hasura-User-Id
                   - _and:
+                      - org:
+                          governanceMode:
+                            _neq: Strict
                       - parentLink:
                           _eq: true
                       - circles:

@@ -15,7 +15,7 @@ category: 'org-members'
 | `archived` | `Boolean` | Indique si l'organisation est archivée (par défaut : false) |
 | `createdAt` | `Timestamp` | Date de création de l'organisation |
 | `defaultGraphView` | `String` | Paramètre de vue graphique par défaut (optionnel) |
-| `protectGovernance` | `Boolean` | Indique si les modifications de gouvernance sont restreintes aux leaders (par défaut : false) |
+| `governanceMode` | `governance_mode` | Qui peut modifier l'organigramme : `Free` (tous les membres), `Agile` (leaders de rôle), `Strict` (uniquement par proposition). Par défaut : `Free` |
 | `shareMembers` | `Boolean` | Indique si les informations des membres sont partagées publiquement (par défaut : false) |
 | `shareOrg` | `Boolean` | Indique si les informations de l'organisation sont partagées publiquement (par défaut : false) |
 
@@ -77,13 +77,13 @@ mutation UpdateOrganization {
     _set: {
       name: "New Organization Name"
       shareMembers: true
-      protectGovernance: true
+      governanceMode: Strict
     }
   ) {
     id
     name
     shareMembers
-    protectGovernance
+    governanceMode
   }
 }
 ```
@@ -95,9 +95,11 @@ mutation UpdateOrganization {
 - **Membre :** Peut consulter les données de l'organisation selon les paramètres de partage
 
 <Callout type="info" title="Notes">
-  Le champ `slug` doit être unique parmi toutes les organisations. Lorsque
-  `protectGovernance` est activé, seuls les leaders de cercle peuvent modifier
-  les entités liées à la gouvernance. Les indicateurs `shareMembers` et
-  `shareOrg` contrôlent la visibilité des données de l'organisation pour les
-  utilisateurs externes.
+  Le champ `slug` doit être unique parmi toutes les organisations. Le champ
+  `governanceMode` définit qui peut modifier l'organigramme : `Free` laisse
+  tous les membres l'éditer, `Agile` restreint l'édition aux leaders de rôle,
+  et `Strict` le rend en lecture seule pour que les changements passent par des
+  propositions. Seul le propriétaire peut modifier `governanceMode`. Les
+  indicateurs `shareMembers` et `shareOrg` contrôlent la visibilité des données
+  de l'organisation pour les utilisateurs externes.
 </Callout>

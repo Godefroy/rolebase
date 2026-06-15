@@ -4,9 +4,9 @@ query getCircleMember($id: uuid!) {
   }
 }
 
-mutation createCircleMember($circleId: uuid!, $memberId: uuid!) {
+mutation createCircleMember($circleId: uuid!, $memberId: uuid!, $orgId: uuid!) {
   insert_circle_member_one(
-    object: { circleId: $circleId, memberId: $memberId }
+    object: { circleId: $circleId, memberId: $memberId, orgId: $orgId }
   ) {
     ...CircleMember
     member {

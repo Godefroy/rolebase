@@ -5,7 +5,7 @@ import MeetingEditModal from '@/meeting/modals/MeetingEditModal'
 import MeetingRecurringListModal from '@/meeting/modals/MeetingRecurringListModal'
 import useCurrentMember from '@/member/hooks/useCurrentMember'
 import useOrgMember from '@/member/hooks/useOrgMember'
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { Button, useDisclosure } from '@chakra-ui/react'
 import { useNextMeetingsSubscription } from '@gql'
 import React from 'react'
@@ -17,7 +17,7 @@ const max = 5
 
 export default function DashboardMyMeetings() {
   const { t } = useTranslation()
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
   const currentMember = useCurrentMember()
   const isMember = useOrgMember()
 

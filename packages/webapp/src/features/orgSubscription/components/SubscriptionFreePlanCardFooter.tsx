@@ -1,6 +1,6 @@
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import ParticipantsGroup from '@/participants/components/ParticipantsGroup'
 import { Flex, FlexProps, Text, useBreakpointValue } from '@chakra-ui/react'
-import { useStoreState } from '@store/hooks'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -8,7 +8,7 @@ const MAX_MEMBERS_FREE = 5
 
 export default function SubscriptionFreePlanCardFooter(props: FlexProps) {
   const { t } = useTranslation()
-  const members = useStoreState((state) => state.org.members)
+  const members = useOrgContext().orgData?.members
   const filteredMembers = useMemo(
     () => members?.filter((mem) => !!mem.userId) ?? [],
     [members]

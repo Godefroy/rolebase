@@ -1,7 +1,7 @@
 import useCurrentMember from '@/member/hooks/useCurrentMember'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { HStack } from '@chakra-ui/react'
 import { ThreadActivityReactionFragment } from '@gql'
-import { useStoreState } from '@store/hooks'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import EmojiPicker, { findEmoji } from './EmojiPicker'
@@ -32,7 +32,7 @@ export default function ReactionsList({
 }: Props) {
   const { t } = useTranslation()
   const currentMember = useCurrentMember()
-  const members = useStoreState((state) => state.org.members)
+  const members = useOrgContext().orgData?.members
 
   // Aggregate reactions by emoji
   const reactionsAgg = useMemo(

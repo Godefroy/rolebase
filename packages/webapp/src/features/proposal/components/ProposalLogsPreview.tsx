@@ -4,7 +4,7 @@ import {
   CircleMemberContext,
   CircleMemberContextValue,
 } from '@/circle/contexts/CircleMemberContext'
-import { OrgDataProvider } from '@/org/contexts/OrgDataContext'
+import ReadonlyOrgProvider from '@/org/contexts/ReadonlyOrgProvider'
 import {
   Modal,
   ModalBody,
@@ -39,7 +39,10 @@ export default function ProposalLogsPreview({ logs }: Props) {
   )
 
   return (
-    <OrgDataProvider value={draft.orgData}>
+    <ReadonlyOrgProvider
+      orgData={draft.orgData}
+      roleOverlays={draft.roleOverlays}
+    >
       <CircleMemberContext.Provider value={circleMemberValue}>
         <ProposalLogList logs={logs} readOnly />
 
@@ -52,7 +55,7 @@ export default function ProposalLogsPreview({ logs }: Props) {
             <ModalOverlay />
             <ModalContent maxH="90vh"  borderRadius="lg" overflow="hidden">
               <ModalBody p={0} overflowY="auto">
-                <CircleProvider circleId={selectedCircleId} readOnly>
+                <CircleProvider circleId={selectedCircleId}>
                   <CircleContent
                     onlyRole
                     readOnly
@@ -65,6 +68,6 @@ export default function ProposalLogsPreview({ logs }: Props) {
           </Modal>
         )}
       </CircleMemberContext.Provider>
-    </OrgDataProvider>
+    </ReadonlyOrgProvider>
   )
 }

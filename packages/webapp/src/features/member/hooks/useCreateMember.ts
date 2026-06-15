@@ -1,9 +1,9 @@
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { useCreateMemberMutation } from '@gql'
 import { useCallback } from 'react'
 
 export default function useCreateMember() {
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
   const [createMember] = useCreateMemberMutation()
 
   return useCallback(

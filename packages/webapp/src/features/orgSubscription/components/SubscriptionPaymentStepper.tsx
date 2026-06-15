@@ -1,5 +1,5 @@
 import useOrg from '@/org/hooks/useOrg'
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { stripePromise } from '@/orgSubscription/api/stripe'
 import { ChevronLeftIcon } from '@chakra-ui/icons'
 import {
@@ -49,7 +49,7 @@ export default function SubscriptionPaymentStepper({
     index: 0,
     count: 3,
   })
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
   const org = useOrg(orgId)
   const [stripe, setStripe] = useState<Stripe>()
   const toast = useToast()

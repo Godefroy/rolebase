@@ -2,7 +2,7 @@ import { useElementSize } from '@/common/hooks/useElementSize'
 import CirclesGraph from '@/graph/CirclesGraph'
 import useCirclesEvents from '@/graph/hooks/useGraphEvents'
 import { CirclesGraphViews } from '@/graph/types'
-import useCurrentOrg from '@/org/hooks/useCurrentOrg'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { useNavigateOrg } from '@/org/hooks/useNavigateOrg'
 import {
   Alert,
@@ -14,14 +14,12 @@ import {
   useColorMode,
 } from '@chakra-ui/react'
 import { getOrgPath } from '@rolebase/shared/helpers/getOrgPath'
-import { useStoreState } from '@store/hooks'
 import React, { useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 
 export default function DashboardOrgChart(boxProps: BoxProps) {
   const { t } = useTranslation()
-  const org = useCurrentOrg()
   const navigateOrg = useNavigateOrg()
 
   // Content size
@@ -30,7 +28,8 @@ export default function DashboardOrgChart(boxProps: BoxProps) {
   const size = boxSize?.width // Square
 
   // Data
-  const circles = useStoreState((state) => state.org.circles)
+  const { org, orgData } = useOrgContext()
+  const circles = orgData?.circles
   const { onCircleClick, onMemberClick } = useCirclesEvents()
   const events = useMemo(() => ({ onCircleClick, onMemberClick }), [])
 
@@ -58,11 +57,11 @@ export default function DashboardOrgChart(boxProps: BoxProps) {
 
   return (
     <Box ref={boxRef} h={size} {...boxProps}>
-      {org && circles && size && (
+      {org && orgData && size && (
         <CirclesGraph
           key={colorMode}
           view={CirclesGraphViews.AllCircles}
-          circles={circles}
+          org={orgData}
           events={events}
           width={size}
           height={size}

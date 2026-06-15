@@ -1,4 +1,4 @@
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   Box,
   Button,
@@ -37,7 +37,7 @@ const resolver = yupResolver(
 
 export default function MemberCreateModal({ onCreate, ...modalProps }: Props) {
   const { t } = useTranslation()
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
   const createMember = useCreateMember()
 
   const {

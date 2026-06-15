@@ -1,9 +1,8 @@
 import CircleFormController from '@/circle/components/CircleFormController'
-import useCircle from '@/circle/hooks/useCircle'
 import SwitchController from '@/common/atoms/SwitchController'
 import useCurrentMember from '@/member/hooks/useCurrentMember'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { useNavigateOrg } from '@/org/hooks/useNavigateOrg'
-import { useOrgId } from '@/org/hooks/useOrgId'
 import ParticipantsCircleExtraMembers from '@/participants/components/ParticipantsCircleExtraMembers'
 import ParticipantsNumber from '@/participants/components/ParticipantsNumber'
 import useCircleParticipants from '@/participants/hooks/useCircleParticipants'
@@ -72,7 +71,7 @@ export default function ThreadEditModal({
 }: Props) {
   const { t } = useTranslation()
   const navigateOrg = useNavigateOrg()
-  const orgId = useOrgId()
+  const { orgId, orgData } = useOrgContext()
   const currentMember = useCurrentMember()
   const [updateThread] = useUpdateThreadMutation()
   const [createThread] = useCreateThreadMutation()
@@ -106,7 +105,7 @@ export default function ThreadEditModal({
 
   // Watch selected circle
   const circleId = watch('circleId')
-  const circle = useCircle(circleId)
+  const circle = orgData?.getCircle(circleId)
 
   // Extra members ids
   const [extraMembersIds, setExtraMembersIds] = useState<string[]>(
@@ -245,7 +244,7 @@ export default function ThreadEditModal({
                   <Collapse in={isPrivate}>
                     <FormHelperText ml="40px" mb={2}>
                       {t('ThreadEditModal.privateHelp', {
-                        role: circle?.role.name,
+                        role: orgData?.getRole(circle?.roleId)?.name,
                       })}
                     </FormHelperText>
                   </Collapse>
@@ -256,7 +255,7 @@ export default function ThreadEditModal({
                     <AlertIcon />
                     <AlertDescription>
                       {t('ThreadEditModal.privateNotAllowed', {
-                        role: circle?.role.name,
+                        role: orgData?.getRole(circle?.roleId)?.name,
                       })}
                     </AlertDescription>
                   </Alert>

@@ -1,0 +1,4 @@
+table:
+  name: governance_mode
+  schema: public
+is_enum: true

@@ -1,6 +1,6 @@
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { ButtonProps } from '@chakra-ui/react'
 import React from 'react'
-import useMember from '../hooks/useMember'
 import MemberButton from './MemberButton'
 
 interface Props extends ButtonProps {
@@ -8,6 +8,7 @@ interface Props extends ButtonProps {
 }
 
 export default function MemberByIdButton({ id, ...buttonProps }: Props) {
-  const member = useMember(id)
+  const { orgData } = useOrgContext()
+  const member = orgData?.getMember(id)
   return member ? <MemberButton member={member} {...buttonProps} /> : null
 }

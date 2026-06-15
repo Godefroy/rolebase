@@ -1,7 +1,5 @@
-import { OrgEditActions } from '@/org/contexts/OrgEditContext'
-import { useOrgId } from '@/org/hooks/useOrgId'
-import { CircleFullFragment, RoleFragment, RoleSummaryFragment } from '@gql'
-import { getCircleChildren } from '@rolebase/shared/helpers/getCircleChildren'
+import { OrgEditActions, useOrgContext } from '@/org/contexts/OrgContext'
+import { CircleFragment, RoleFragment, RoleSummaryFragment } from '@gql'
 import { generateId } from '@rolebase/shared/helpers/generateId'
 import { getEntityChanges } from '@rolebase/shared/helpers/log/getEntityChanges'
 import {
@@ -18,12 +16,16 @@ import { ProposalDraft } from './useProposalDraft'
 export default function useDraftOrgEditActions(
   draft: ProposalDraft
 ): OrgEditActions {
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
 
   return useMemo<OrgEditActions>(() => {
-    const circlesOf = () => draft.orgData.circles || []
-    const findCircle = (id: string): CircleFullFragment | undefined =>
-      circlesOf().find((c) => c.id === id)
+    const getOrg = () => draft.orgData
+    const findCircle = (id: string): CircleFragment | undefined =>
+      getOrg()?.circleById.get(id)
+    const roleName = (circle?: CircleFragment) =>
+      (circle && getOrg()?.roleById.get(circle.roleId)?.name) || ''
+    const isBaseRole = (circle: CircleFragment) =>
+      getOrg()?.roleById.get(circle.roleId)?.base ?? false
 
     // Recursively build Create changes for a copied circle subtree
     const buildCopy = (
@@ -33,20 +35,21 @@ export default function useDraftOrgEditActions(
         circlesMembers: NonNullable<EntitiesChanges['circlesMembers']>
       }
     ): string | undefined => {
-      const circle = findCircle(circleId)
-      if (!circle || !orgId) return undefined
+      const org = getOrg()
+      const circle = org?.circleById.get(circleId)
+      if (!circle || !org || !orgId) return undefined
 
       // New role if not a base role
       let roleId = circle.roleId
-      if (!circle.role.base) {
-        const fullRole = draft
-          .getFlat()
+      if (!isBaseRole(circle)) {
+        const fullRole = draft.getData()
           ?.roles.find((r) => r.id === circle.roleId)
         const newRoleId = generateId()
+        // Clone the role summary; text columns default to '' in the database
         changes.roles.push({
           type: EntityChangeType.Create,
           id: newRoleId,
-          data: { ...(fullRole as RoleFragment), id: newRoleId },
+          data: { ...fullRole, id: newRoleId, orgId } as RoleFragment,
         })
         roleId = newRoleId
       }
@@ -60,13 +63,14 @@ export default function useDraftOrgEditActions(
       })
 
       // Members
-      for (const cm of circle.members) {
+      for (const cm of org.membersOf(circleId)) {
         const id = generateId()
         changes.circlesMembers.push({
           type: EntityChangeType.Create,
           id,
           data: {
             id,
+            orgId,
             circleId: newCircleId,
             memberId: cm.member.id,
             createdAt: new Date().toISOString(),
@@ -76,7 +80,7 @@ export default function useDraftOrgEditActions(
       }
 
       // Children
-      for (const child of circlesOf().filter((c) => c.parentId === circleId)) {
+      for (const child of org.childrenOf(circleId)) {
         buildCopy(child.id, newCircleId, changes)
       }
 
@@ -92,9 +96,9 @@ export default function useDraftOrgEditActions(
           {
             type: LogType.CircleMove,
             id: circleId,
-            name: circle.role.name,
+            name: roleName(circle),
             parentId: targetCircleId,
-            parentName: target?.role.name || null,
+            parentName: target ? roleName(target) : null,
           },
           {
             circles: [
@@ -126,9 +130,9 @@ export default function useDraftOrgEditActions(
           {
             type: LogType.CircleCreate,
             id: newCircleId,
-            name: circle.role.name,
+            name: roleName(circle),
             parentId: targetCircleId,
-            parentName: target?.role.name || null,
+            parentName: target ? roleName(target) : null,
           },
           changes
         )
@@ -137,14 +141,15 @@ export default function useDraftOrgEditActions(
 
       async archiveCircle(circleId) {
         const circle = findCircle(circleId)
-        if (!circle) return
-        const children = getCircleChildren(circlesOf(), circleId)
+        const orgData = draft.orgData
+        if (!circle || !orgData) return
+        const children = orgData.descendantsOf(circleId)
         const circlesIds = [circleId, ...children.map((c) => c.id)]
         const rolesIds = [circle, ...children]
-          .filter((c) => !c.role.base)
-          .map((c) => c.role.id)
+          .filter((c) => !isBaseRole(c))
+          .map((c) => c.roleId)
         await draft.applyLog(
-          { type: LogType.CircleArchive, id: circleId, name: circle.role.name },
+          { type: LogType.CircleArchive, id: circleId, name: roleName(circle) },
           {
             circles: circlesIds.map((id) => ({
               type: EntityChangeType.Update,
@@ -209,7 +214,7 @@ export default function useDraftOrgEditActions(
             id: newCircleId,
             name: role.name,
             parentId,
-            parentName: parentCircle?.role.name || null,
+            parentName: parentCircle ? roleName(parentCircle) : null,
           },
           changes
         )
@@ -230,14 +235,14 @@ export default function useDraftOrgEditActions(
 
       async addCircleMember(circleId, memberId) {
         const circle = findCircle(circleId)
-        const member = draft.orgData.members?.find((m) => m.id === memberId)
-        if (!circle || !member) return
+        const member = getOrg()?.memberById.get(memberId)
+        if (!circle || !member || !orgId) return
         const id = generateId()
         await draft.applyLog(
           {
             type: LogType.CircleMemberAdd,
             id: circleId,
-            name: circle.role.name,
+            name: roleName(circle),
             memberId,
             memberName: member.name,
           },
@@ -248,6 +253,7 @@ export default function useDraftOrgEditActions(
                 id,
                 data: {
                   id,
+                  orgId,
                   circleId,
                   memberId,
                   createdAt: new Date().toISOString(),
@@ -260,17 +266,18 @@ export default function useDraftOrgEditActions(
       },
 
       async removeCircleMember(circleId, memberId) {
+        const org = getOrg()
         const circle = findCircle(circleId)
-        const member = draft.orgData.members?.find((m) => m.id === memberId)
-        const circleMember = circle?.members.find(
-          (cm) => cm.member.id === memberId
-        )
+        const member = org?.memberById.get(memberId)
+        const circleMember = org
+          ? org.membersOf(circleId).find((cm) => cm.member.id === memberId)
+          : undefined
         if (!circle || !member || !circleMember) return
         await draft.applyLog(
           {
             type: LogType.CircleMemberRemove,
             id: circleId,
-            name: circle.role.name,
+            name: roleName(circle),
             memberId,
             memberName: member.name,
           },
@@ -290,15 +297,15 @@ export default function useDraftOrgEditActions(
       async addCircleLink(parentId, circleId) {
         const parentCircle = findCircle(parentId)
         const invitedCircle = findCircle(circleId)
-        if (!parentCircle || !invitedCircle) return
+        if (!parentCircle || !invitedCircle || !orgId) return
         const id = generateId()
         await draft.applyLog(
           {
             type: LogType.CircleLinkAdd,
             id: parentId,
-            name: parentCircle.role.name,
+            name: roleName(parentCircle),
             circleId,
-            circleName: invitedCircle.role.name,
+            circleName: roleName(invitedCircle),
           },
           {
             circlesLinks: [
@@ -307,6 +314,7 @@ export default function useDraftOrgEditActions(
                 id,
                 data: {
                   id,
+                  orgId,
                   parentId,
                   circleId,
                   createdAt: new Date().toISOString(),
@@ -321,8 +329,7 @@ export default function useDraftOrgEditActions(
       async removeCircleLink(parentId, circleId) {
         const parentCircle = findCircle(parentId)
         const invitedCircle = findCircle(circleId)
-        const link = draft
-          .getFlat()
+        const link = draft.getData()
           ?.circleLinks.find(
             (cl) =>
               cl.parentId === parentId && cl.circleId === circleId && !cl.archived
@@ -332,9 +339,9 @@ export default function useDraftOrgEditActions(
           {
             type: LogType.CircleLinkRemove,
             id: parentId,
-            name: parentCircle.role.name,
+            name: roleName(parentCircle),
             circleId,
-            circleName: invitedCircle.role.name,
+            circleName: roleName(invitedCircle),
           },
           {
             circlesLinks: [

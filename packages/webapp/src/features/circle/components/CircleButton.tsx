@@ -1,12 +1,13 @@
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { Button, ButtonProps } from '@chakra-ui/react'
-import { CircleSummaryFragment } from '@gql'
+import { CircleFragment } from '@gql'
 import { circleColor } from '@rolebase/shared/helpers/circleColor'
 import { textEllipsis } from '@utils/textEllipsis'
 import React from 'react'
 import CircleMemberLink from './CircleMemberLink'
 
 interface Props extends ButtonProps {
-  circle: CircleSummaryFragment
+  circle: CircleFragment
   noEllipsis?: boolean
   parentId?: string
 }
@@ -17,7 +18,9 @@ export default function CircleButton({
   parentId,
   ...buttonProps
 }: Props) {
-  const hue = circle.role.colorHue ?? undefined
+  const { orgData } = useOrgContext()
+  const name = orgData?.getRole(circle.roleId)?.name ?? ''
+  const hue = orgData?.getColor(circle.id) ?? undefined
 
   return (
     <CircleMemberLink circleId={circle.id} parentId={parentId} tabIndex={-1}>
@@ -35,7 +38,7 @@ export default function CircleButton({
         {...buttonProps}
         size={buttonProps.size || 'sm'}
       >
-        {noEllipsis ? circle.role.name : textEllipsis(circle.role.name, 20)}
+        {noEllipsis ? name : textEllipsis(name, 20)}
       </Button>
     </CircleMemberLink>
   )

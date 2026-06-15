@@ -1,6 +1,6 @@
 import Loading from '@/common/atoms/Loading'
 import { useIdleCallback } from '@/common/hooks/useIdleCallback'
-import useCurrentOrg from '@/org/hooks/useCurrentOrg'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { useNavigateOrg } from '@/org/hooks/useNavigateOrg'
 import { ChevronDownIcon, SearchIcon } from '@chakra-ui/icons'
 import {
@@ -45,7 +45,7 @@ const searchTypes = [
 export default function SearchGlobalModal(modalProps: UseModalProps) {
   const { t } = useTranslation()
   const { colorMode } = useColorMode()
-  const org = useCurrentOrg()
+  const { org } = useOrgContext()
   const navigateOrg = useNavigateOrg()
 
   // Search

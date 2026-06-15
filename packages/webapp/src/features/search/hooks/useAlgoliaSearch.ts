@@ -1,4 +1,4 @@
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { GetSearchResultsQuery, useGetSearchResultsLazyQuery } from '@gql'
 import { truthy } from '@rolebase/shared/helpers/truthy'
 import {
@@ -29,7 +29,7 @@ async function getConfig(orgId: string): Promise<AlgoliaConfig> {
 }
 
 export function useAlgoliaSearch() {
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
   const [getSearchResults] = useGetSearchResultsLazyQuery()
   const [loading, setLoading] = useState(false)
   const [items, setItems] = useState<SearchItem[]>([])

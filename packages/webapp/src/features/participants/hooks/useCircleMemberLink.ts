@@ -2,7 +2,7 @@ import { CircleMemberContext } from '@/circle/contexts/CircleMemberContext'
 import { getCircleMemberUrlSearch } from '@/circle/contexts/CircleMemberProvider'
 import { useNormalClickHandler } from '@/common/hooks/useNormalClickHandler'
 import { useCallback, useContext, useMemo } from 'react'
-import { useOrgId } from '../../org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { usePathInOrg } from '../../org/hooks/usePathInOrg'
 
 export default function useCircleMemberLink(
@@ -10,7 +10,7 @@ export default function useCircleMemberLink(
   memberId?: string,
   parentId?: string
 ) {
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
   const circleMemberContext = useContext(CircleMemberContext)
   const path = usePathInOrg('roles')
 

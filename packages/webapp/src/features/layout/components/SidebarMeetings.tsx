@@ -1,6 +1,6 @@
 import MeetingsList from '@/meeting/components/MeetingsList'
 import useCurrentMember from '@/member/hooks/useCurrentMember'
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { useNextMeetingsSubscription } from '@gql'
 import React from 'react'
 import { sidebarSubItemProps } from './SidebarItem'
@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default function SidebarMeetings({ max }: Props) {
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
   const currentMember = useCurrentMember()
 
   const { data, loading } = useNextMeetingsSubscription({

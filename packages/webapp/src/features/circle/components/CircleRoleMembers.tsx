@@ -1,5 +1,5 @@
 import { GraphContext } from '@/graph/contexts/GraphContext'
-import { useOrgEditActions } from '@/org/contexts/OrgEditContext'
+import { useOrgContext, useOrgEditActions } from '@/org/contexts/OrgContext'
 import { Box, Heading, useDisclosure } from '@chakra-ui/react'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -10,6 +10,7 @@ import CircleMemberDeleteModal from '../modals/CircleMemberDeleteModal'
 export default function CircleRoleMembers() {
   const { t } = useTranslation()
   const graphContext = useContext(GraphContext)
+  const { orgData } = useOrgContext()
 
   // Get circle context
   const circleContext = useContext(CircleContext)
@@ -18,8 +19,11 @@ export default function CircleRoleMembers() {
 
   // Direct circle members ids
   const membersIds = useMemo(
-    () => circle?.members.map((cm) => cm.member.id),
-    [circle]
+    () =>
+      orgData
+        ? orgData.membersOf(circle.id).map((cm) => cm.member.id)
+        : [],
+    [orgData, circle]
   )
 
   const highlightButton = membersIds.length === 0 && participants.length === 0

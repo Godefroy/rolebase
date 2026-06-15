@@ -179,7 +179,7 @@ export default function CircleContent({
             <Heading as="h1" size="md" fontWeight="bold">
               {role.name}
             </Heading>
-            {circle.role.parentLink && circle.parentId && (
+            {role.parentLink && circle.parentId && (
               <>
                 <Box color="gray.500" _dark={{ color: 'gray.300' }}>
                   <CircleParentLinkIcon size="1.5em" />

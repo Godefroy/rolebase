@@ -5,6 +5,7 @@ import exportOrg from './exportOrg'
 import exportOrgChart from './exportOrgChart'
 import getPublicData from './getPublicData'
 import importOrg from './importOrg'
+import setGovernanceMode from './setGovernanceMode'
 import updateOrgSlug from './updateOrgSlug'
 
 export default router({
@@ -14,5 +15,6 @@ export default router({
   exportOrgChart,
   getPublicData,
   importOrg,
+  setGovernanceMode,
   updateOrgSlug,
 })

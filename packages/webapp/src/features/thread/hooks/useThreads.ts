@@ -4,8 +4,8 @@ import {
   Thread_Status_Enum,
   useThreadsSubscription,
 } from '@gql'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { useMemo } from 'react'
-import { useOrgId } from '../../org/hooks/useOrgId'
 
 export interface ThreadWithStatus extends ThreadFragment {
   read: boolean
@@ -16,7 +16,7 @@ export default function useThreads(filters?: {
   archived?: boolean
   status?: Thread_Status_Enum
 }) {
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
   const currentMember = useCurrentMember()
 
   // Subscribe to threads

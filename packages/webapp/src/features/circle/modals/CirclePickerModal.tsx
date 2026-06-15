@@ -1,5 +1,6 @@
 import { useElementSize } from '@/common/hooks/useElementSize'
 import useWindowSize from '@/common/hooks/useWindowSize'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import CirclesGraph from '@/graph/CirclesGraph'
 import { CirclesGraphViews, GraphEvents } from '@/graph/types'
 import {
@@ -12,11 +13,9 @@ import {
   ModalOverlay,
   UseModalProps,
 } from '@chakra-ui/react'
-import { useStoreState } from '@store/hooks'
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import CircleBreadcrumbButton from '../components/CircleBreadcrumbButton'
-import useCircle from '../hooks/useCircle'
 
 interface Props extends UseModalProps {
   onSelect(circleId: string): void
@@ -24,10 +23,10 @@ interface Props extends UseModalProps {
 
 export default function CirclePickerModal({ onSelect, ...modalProps }: Props) {
   const { t } = useTranslation()
-  const circles = useStoreState((state) => state.org.circles)
+  const { orgData } = useOrgContext()
 
   const [circleId, setCircleId] = useState<string | undefined>()
-  const circle = useCircle(circleId)
+  const circle = orgData?.getCircle(circleId)
 
   const events: GraphEvents = {
     onCircleClick: (circleId) => {
@@ -50,10 +49,10 @@ export default function CirclePickerModal({ onSelect, ...modalProps }: Props) {
       <ModalOverlay />
       <ModalContent border="3px solid">
         <ModalBody ref={boxRef} p={0} position="relative">
-          {circles && boxSize && (
+          {orgData && boxSize && (
             <CirclesGraph
               view={CirclesGraphViews.SimpleCircles}
-              circles={circles}
+              org={orgData}
               events={events}
               width={width}
               height={height}

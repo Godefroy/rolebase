@@ -1,4 +1,4 @@
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { Button, HStack, useToast } from '@chakra-ui/react'
 import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import {
@@ -12,7 +12,7 @@ const toastDefault = { duration: 4000, isClosable: true }
 
 export default function UpdatePaymentMethodForm() {
   const { t } = useTranslation()
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
   const toast = useToast()
   const stripe = useStripe()
   const elements = useElements()

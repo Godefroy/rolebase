@@ -2,6 +2,7 @@ import Loading from '@/common/atoms/Loading'
 import ScrollableLayout from '@/common/atoms/ScrollableLayout'
 import { Title } from '@/common/atoms/Title'
 import { useHoverItemStyle } from '@/common/hooks/useHoverItemStyle'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { usePathInOrg } from '@/org/hooks/usePathInOrg'
 import useSubscriptionData from '@/orgSubscription/hooks/useSubscriptionData'
 import { useAlgoliaSearch } from '@/search/hooks/useAlgoliaSearch'
@@ -29,7 +30,6 @@ import {
 } from '@chakra-ui/react'
 import { truthy } from '@rolebase/shared/helpers/truthy'
 import { SearchTypes } from '@rolebase/shared/model/search'
-import { useStoreState } from '@store/hooks'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link as RouterLink } from 'react-router'
@@ -44,7 +44,7 @@ export default function MembersPage() {
   const { t } = useTranslation()
   const isAdmin = useOrgAdmin()
   const isOwner = useOrgOwner()
-  const members = useStoreState((state) => state.org.members)
+  const members = useOrgContext().orgData?.members
   const hover = useHoverItemStyle()
   const subscriptionPath = usePathInOrg('subscription')
 

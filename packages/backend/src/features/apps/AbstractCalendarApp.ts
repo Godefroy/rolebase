@@ -1,5 +1,4 @@
 import { RRuleUTC } from '@rolebase/shared/helpers/RRuleUTC'
-import filterScopedEntitiesByMember from '@rolebase/shared/helpers/filterScopedEntitiesByMember'
 import getMeetingVideoConfUrl from '@rolebase/shared/helpers/getMeetingVideoConfUrl'
 import { getOrgPath } from '@rolebase/shared/helpers/getOrgPath'
 import { truthy } from '@rolebase/shared/helpers/truthy'
@@ -17,6 +16,7 @@ import {
 } from '../../gql'
 import settings from '../../settings'
 import { adminRequest } from '../../utils/adminRequest'
+import { loadOrgData } from '../org/loadOrgData'
 import AbstractApp from './AbstractApp'
 
 export interface MeetingEvent {
@@ -139,10 +139,10 @@ export default abstract class AbstractCalendarApp<
     }
 
     // Filter recurring meetings
-    const recurringMeetings = filterScopedEntitiesByMember(
+    const orgData = await loadOrgData(orgId)
+    const recurringMeetings = orgData.filterScopedEntities(
       org.meetings_recurring,
-      member.id,
-      org.circles
+      member.id
     )
 
     // Add recurring events
@@ -344,9 +344,6 @@ const GET_MEETINGS = gql(`
       id
       name
       slug
-      circles(where: { archived: { _eq: false } }) {
-        ...CircleFull
-      }
       members(where: { userId: { _eq: $userId }, archived: { _eq: false } }) {
         id
         name

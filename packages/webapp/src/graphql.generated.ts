@@ -4438,6 +4438,7 @@ export type Circle_Link = {
   id: Scalars['uuid']['output'];
   /** An object relationship */
   invitedCircle: Circle;
+  orgId: Scalars['uuid']['output'];
   parentId: Scalars['uuid']['output'];
 };
 
@@ -4515,6 +4516,7 @@ export type Circle_Link_Bool_Exp = {
   hostCircle?: InputMaybe<Circle_Bool_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   invitedCircle?: InputMaybe<Circle_Bool_Exp>;
+  orgId?: InputMaybe<Uuid_Comparison_Exp>;
   parentId?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
@@ -4532,6 +4534,7 @@ export type Circle_Link_Insert_Input = {
   hostCircle?: InputMaybe<Circle_Obj_Rel_Insert_Input>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   invitedCircle?: InputMaybe<Circle_Obj_Rel_Insert_Input>;
+  orgId?: InputMaybe<Scalars['uuid']['input']>;
   parentId?: InputMaybe<Scalars['uuid']['input']>;
 };
 
@@ -4541,6 +4544,7 @@ export type Circle_Link_Max_Fields = {
   circleId?: Maybe<Scalars['uuid']['output']>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
+  orgId?: Maybe<Scalars['uuid']['output']>;
   parentId?: Maybe<Scalars['uuid']['output']>;
 };
 
@@ -4549,6 +4553,7 @@ export type Circle_Link_Max_Order_By = {
   circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  orgId?: InputMaybe<Order_By>;
   parentId?: InputMaybe<Order_By>;
 };
 
@@ -4558,6 +4563,7 @@ export type Circle_Link_Min_Fields = {
   circleId?: Maybe<Scalars['uuid']['output']>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
+  orgId?: Maybe<Scalars['uuid']['output']>;
   parentId?: Maybe<Scalars['uuid']['output']>;
 };
 
@@ -4566,6 +4572,7 @@ export type Circle_Link_Min_Order_By = {
   circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
+  orgId?: InputMaybe<Order_By>;
   parentId?: InputMaybe<Order_By>;
 };
 
@@ -4593,6 +4600,7 @@ export type Circle_Link_Order_By = {
   hostCircle?: InputMaybe<Circle_Order_By>;
   id?: InputMaybe<Order_By>;
   invitedCircle?: InputMaybe<Circle_Order_By>;
+  orgId?: InputMaybe<Order_By>;
   parentId?: InputMaybe<Order_By>;
 };
 
@@ -4611,6 +4619,8 @@ export enum Circle_Link_Select_Column {
   CreatedAt = 'createdAt',
   /** column name */
   Id = 'id',
+  /** column name */
+  OrgId = 'orgId',
   /** column name */
   ParentId = 'parentId'
 }
@@ -4633,6 +4643,7 @@ export type Circle_Link_Set_Input = {
   circleId?: InputMaybe<Scalars['uuid']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  orgId?: InputMaybe<Scalars['uuid']['input']>;
   parentId?: InputMaybe<Scalars['uuid']['input']>;
 };
 
@@ -4650,6 +4661,7 @@ export type Circle_Link_Stream_Cursor_Value_Input = {
   circleId?: InputMaybe<Scalars['uuid']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
+  orgId?: InputMaybe<Scalars['uuid']['input']>;
   parentId?: InputMaybe<Scalars['uuid']['input']>;
 };
 
@@ -4663,6 +4675,8 @@ export enum Circle_Link_Update_Column {
   CreatedAt = 'createdAt',
   /** column name */
   Id = 'id',
+  /** column name */
+  OrgId = 'orgId',
   /** column name */
   ParentId = 'parentId'
 }
@@ -4703,6 +4717,7 @@ export type Circle_Member = {
   /** An object relationship */
   member: Member;
   memberId: Scalars['uuid']['output'];
+  orgId: Scalars['uuid']['output'];
 };
 
 /** aggregated selection of "circle_member" */
@@ -4780,6 +4795,7 @@ export type Circle_Member_Bool_Exp = {
   id?: InputMaybe<Uuid_Comparison_Exp>;
   member?: InputMaybe<Member_Bool_Exp>;
   memberId?: InputMaybe<Uuid_Comparison_Exp>;
+  orgId?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
 /** unique or primary key constraints on table "circle_member" */
@@ -4797,6 +4813,7 @@ export type Circle_Member_Insert_Input = {
   id?: InputMaybe<Scalars['uuid']['input']>;
   member?: InputMaybe<Member_Obj_Rel_Insert_Input>;
   memberId?: InputMaybe<Scalars['uuid']['input']>;
+  orgId?: InputMaybe<Scalars['uuid']['input']>;
 };
 
 /** aggregate max on columns */
@@ -4806,6 +4823,7 @@ export type Circle_Member_Max_Fields = {
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   memberId?: Maybe<Scalars['uuid']['output']>;
+  orgId?: Maybe<Scalars['uuid']['output']>;
 };
 
 /** order by max() on columns of table "circle_member" */
@@ -4814,6 +4832,7 @@ export type Circle_Member_Max_Order_By = {
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   memberId?: InputMaybe<Order_By>;
+  orgId?: InputMaybe<Order_By>;
 };
 
 /** aggregate min on columns */
@@ -4823,6 +4842,7 @@ export type Circle_Member_Min_Fields = {
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   memberId?: Maybe<Scalars['uuid']['output']>;
+  orgId?: Maybe<Scalars['uuid']['output']>;
 };
 
 /** order by min() on columns of table "circle_member" */
@@ -4831,6 +4851,7 @@ export type Circle_Member_Min_Order_By = {
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   memberId?: InputMaybe<Order_By>;
+  orgId?: InputMaybe<Order_By>;
 };
 
 /** response of any mutation on the table "circle_member" */
@@ -4858,6 +4879,7 @@ export type Circle_Member_Order_By = {
   id?: InputMaybe<Order_By>;
   member?: InputMaybe<Member_Order_By>;
   memberId?: InputMaybe<Order_By>;
+  orgId?: InputMaybe<Order_By>;
 };
 
 /** primary key columns input for table: circle_member */
@@ -4876,7 +4898,9 @@ export enum Circle_Member_Select_Column {
   /** column name */
   Id = 'id',
   /** column name */
-  MemberId = 'memberId'
+  MemberId = 'memberId',
+  /** column name */
+  OrgId = 'orgId'
 }
 
 /** select "circle_member_aggregate_bool_exp_bool_and_arguments_columns" columns of table "circle_member" */
@@ -4898,6 +4922,7 @@ export type Circle_Member_Set_Input = {
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   memberId?: InputMaybe<Scalars['uuid']['input']>;
+  orgId?: InputMaybe<Scalars['uuid']['input']>;
 };
 
 /** Streaming cursor of the table "circle_member" */
@@ -4915,6 +4940,7 @@ export type Circle_Member_Stream_Cursor_Value_Input = {
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   memberId?: InputMaybe<Scalars['uuid']['input']>;
+  orgId?: InputMaybe<Scalars['uuid']['input']>;
 };
 
 /** update columns of table "circle_member" */
@@ -4928,7 +4954,9 @@ export enum Circle_Member_Update_Column {
   /** column name */
   Id = 'id',
   /** column name */
-  MemberId = 'memberId'
+  MemberId = 'memberId',
+  /** column name */
+  OrgId = 'orgId'
 }
 
 export type Circle_Member_Updates = {
@@ -6280,6 +6308,158 @@ export type Files_Variance_Fields = {
 /** order by variance() on columns of table "storage.files" */
 export type Files_Variance_Order_By = {
   size?: InputMaybe<Order_By>;
+};
+
+/** columns and relationships of "governance_mode" */
+export type Governance_Mode = {
+  __typename?: 'governance_mode';
+  comment?: Maybe<Scalars['String']['output']>;
+  value: Scalars['String']['output'];
+};
+
+/** aggregated selection of "governance_mode" */
+export type Governance_Mode_Aggregate = {
+  __typename?: 'governance_mode_aggregate';
+  aggregate?: Maybe<Governance_Mode_Aggregate_Fields>;
+  nodes: Array<Governance_Mode>;
+};
+
+/** aggregate fields of "governance_mode" */
+export type Governance_Mode_Aggregate_Fields = {
+  __typename?: 'governance_mode_aggregate_fields';
+  count: Scalars['Int']['output'];
+  max?: Maybe<Governance_Mode_Max_Fields>;
+  min?: Maybe<Governance_Mode_Min_Fields>;
+};
+
+
+/** aggregate fields of "governance_mode" */
+export type Governance_Mode_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Governance_Mode_Select_Column>>;
+  distinct?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+/** Boolean expression to filter rows from the table "governance_mode". All fields are combined with a logical 'AND'. */
+export type Governance_Mode_Bool_Exp = {
+  _and?: InputMaybe<Array<Governance_Mode_Bool_Exp>>;
+  _not?: InputMaybe<Governance_Mode_Bool_Exp>;
+  _or?: InputMaybe<Array<Governance_Mode_Bool_Exp>>;
+  comment?: InputMaybe<String_Comparison_Exp>;
+  value?: InputMaybe<String_Comparison_Exp>;
+};
+
+/** unique or primary key constraints on table "governance_mode" */
+export enum Governance_Mode_Constraint {
+  /** unique or primary key constraint on columns "value" */
+  GovernanceModePkey = 'governance_mode_pkey'
+}
+
+export enum Governance_Mode_Enum {
+  /** Roles can be edited by their leaders */
+  Agile = 'Agile',
+  /** All members can edit the whole org chart */
+  Free = 'Free',
+  /** Roles can only be changed through proposals (Holacracy) */
+  Strict = 'Strict'
+}
+
+/** Boolean expression to compare columns of type "governance_mode_enum". All fields are combined with logical 'AND'. */
+export type Governance_Mode_Enum_Comparison_Exp = {
+  _eq?: InputMaybe<Governance_Mode_Enum>;
+  _in?: InputMaybe<Array<Governance_Mode_Enum>>;
+  _is_null?: InputMaybe<Scalars['Boolean']['input']>;
+  _neq?: InputMaybe<Governance_Mode_Enum>;
+  _nin?: InputMaybe<Array<Governance_Mode_Enum>>;
+};
+
+/** input type for inserting data into table "governance_mode" */
+export type Governance_Mode_Insert_Input = {
+  comment?: InputMaybe<Scalars['String']['input']>;
+  value?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** aggregate max on columns */
+export type Governance_Mode_Max_Fields = {
+  __typename?: 'governance_mode_max_fields';
+  comment?: Maybe<Scalars['String']['output']>;
+  value?: Maybe<Scalars['String']['output']>;
+};
+
+/** aggregate min on columns */
+export type Governance_Mode_Min_Fields = {
+  __typename?: 'governance_mode_min_fields';
+  comment?: Maybe<Scalars['String']['output']>;
+  value?: Maybe<Scalars['String']['output']>;
+};
+
+/** response of any mutation on the table "governance_mode" */
+export type Governance_Mode_Mutation_Response = {
+  __typename?: 'governance_mode_mutation_response';
+  /** number of rows affected by the mutation */
+  affected_rows: Scalars['Int']['output'];
+  /** data from the rows affected by the mutation */
+  returning: Array<Governance_Mode>;
+};
+
+/** on_conflict condition type for table "governance_mode" */
+export type Governance_Mode_On_Conflict = {
+  constraint: Governance_Mode_Constraint;
+  update_columns?: Array<Governance_Mode_Update_Column>;
+  where?: InputMaybe<Governance_Mode_Bool_Exp>;
+};
+
+/** Ordering options when selecting data from "governance_mode". */
+export type Governance_Mode_Order_By = {
+  comment?: InputMaybe<Order_By>;
+  value?: InputMaybe<Order_By>;
+};
+
+/** primary key columns input for table: governance_mode */
+export type Governance_Mode_Pk_Columns_Input = {
+  value: Scalars['String']['input'];
+};
+
+/** select columns of table "governance_mode" */
+export enum Governance_Mode_Select_Column {
+  /** column name */
+  Comment = 'comment',
+  /** column name */
+  Value = 'value'
+}
+
+/** input type for updating data in table "governance_mode" */
+export type Governance_Mode_Set_Input = {
+  comment?: InputMaybe<Scalars['String']['input']>;
+  value?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** Streaming cursor of the table "governance_mode" */
+export type Governance_Mode_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Governance_Mode_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Governance_Mode_Stream_Cursor_Value_Input = {
+  comment?: InputMaybe<Scalars['String']['input']>;
+  value?: InputMaybe<Scalars['String']['input']>;
+};
+
+/** update columns of table "governance_mode" */
+export enum Governance_Mode_Update_Column {
+  /** column name */
+  Comment = 'comment',
+  /** column name */
+  Value = 'value'
+}
+
+export type Governance_Mode_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Governance_Mode_Set_Input>;
+  /** filter the rows which have to be updated */
+  where: Governance_Mode_Bool_Exp;
 };
 
 /** Boolean expression to compare columns of type "json". All fields are combined with logical 'AND'. */
@@ -9488,6 +9668,10 @@ export type Mutation_Root = {
   delete_decision?: Maybe<Decision_Mutation_Response>;
   /** delete single row from the table: "decision" */
   delete_decision_by_pk?: Maybe<Decision>;
+  /** delete data from the table: "governance_mode" */
+  delete_governance_mode?: Maybe<Governance_Mode_Mutation_Response>;
+  /** delete single row from the table: "governance_mode" */
+  delete_governance_mode_by_pk?: Maybe<Governance_Mode>;
   /** delete data from the table: "log" */
   delete_log?: Maybe<Log_Mutation_Response>;
   /** delete single row from the table: "log" */
@@ -9700,6 +9884,10 @@ export type Mutation_Root = {
   insert_decision?: Maybe<Decision_Mutation_Response>;
   /** insert a single row into the table: "decision" */
   insert_decision_one?: Maybe<Decision>;
+  /** insert data into the table: "governance_mode" */
+  insert_governance_mode?: Maybe<Governance_Mode_Mutation_Response>;
+  /** insert a single row into the table: "governance_mode" */
+  insert_governance_mode_one?: Maybe<Governance_Mode>;
   /** insert data into the table: "log" */
   insert_log?: Maybe<Log_Mutation_Response>;
   /** insert a single row into the table: "log" */
@@ -9954,6 +10142,12 @@ export type Mutation_Root = {
   update_decision_many?: Maybe<Array<Maybe<Decision_Mutation_Response>>>;
   /** update multiples rows of table: "storage.files" */
   update_files_many?: Maybe<Array<Maybe<Files_Mutation_Response>>>;
+  /** update data of the table: "governance_mode" */
+  update_governance_mode?: Maybe<Governance_Mode_Mutation_Response>;
+  /** update single row of the table: "governance_mode" */
+  update_governance_mode_by_pk?: Maybe<Governance_Mode>;
+  /** update multiples rows of table: "governance_mode" */
+  update_governance_mode_many?: Maybe<Array<Maybe<Governance_Mode_Mutation_Response>>>;
   /** update data of the table: "log" */
   update_log?: Maybe<Log_Mutation_Response>;
   /** update single row of the table: "log" */
@@ -10414,6 +10608,18 @@ export type Mutation_RootDelete_DecisionArgs = {
 /** mutation root */
 export type Mutation_RootDelete_Decision_By_PkArgs = {
   id: Scalars['uuid']['input'];
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Governance_ModeArgs = {
+  where: Governance_Mode_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootDelete_Governance_Mode_By_PkArgs = {
+  value: Scalars['String']['input'];
 };
 
 
@@ -11096,6 +11302,20 @@ export type Mutation_RootInsert_DecisionArgs = {
 export type Mutation_RootInsert_Decision_OneArgs = {
   object: Decision_Insert_Input;
   on_conflict?: InputMaybe<Decision_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Governance_ModeArgs = {
+  objects: Array<Governance_Mode_Insert_Input>;
+  on_conflict?: InputMaybe<Governance_Mode_On_Conflict>;
+};
+
+
+/** mutation root */
+export type Mutation_RootInsert_Governance_Mode_OneArgs = {
+  object: Governance_Mode_Insert_Input;
+  on_conflict?: InputMaybe<Governance_Mode_On_Conflict>;
 };
 
 
@@ -12030,6 +12250,26 @@ export type Mutation_RootUpdate_Decision_ManyArgs = {
 /** mutation root */
 export type Mutation_RootUpdate_Files_ManyArgs = {
   updates: Array<Files_Updates>;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Governance_ModeArgs = {
+  _set?: InputMaybe<Governance_Mode_Set_Input>;
+  where: Governance_Mode_Bool_Exp;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Governance_Mode_By_PkArgs = {
+  _set?: InputMaybe<Governance_Mode_Set_Input>;
+  pk_columns: Governance_Mode_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Governance_Mode_ManyArgs = {
+  updates: Array<Governance_Mode_Updates>;
 };
 
 
@@ -13028,6 +13268,14 @@ export type Org = {
   __typename?: 'org';
   archived: Scalars['Boolean']['output'];
   /** An array relationship */
+  circleLinks: Array<Circle_Link>;
+  /** An aggregate relationship */
+  circleLinks_aggregate: Circle_Link_Aggregate;
+  /** An array relationship */
+  circleMembers: Array<Circle_Member>;
+  /** An aggregate relationship */
+  circleMembers_aggregate: Circle_Member_Aggregate;
+  /** An array relationship */
   circles: Array<Circle>;
   /** An aggregate relationship */
   circles_aggregate: Circle_Aggregate;
@@ -13041,6 +13289,7 @@ export type Org = {
   files: Array<Org_File>;
   /** An aggregate relationship */
   files_aggregate: Org_File_Aggregate;
+  governanceMode: Governance_Mode_Enum;
   homeNote?: Maybe<Scalars['String']['output']>;
   icon?: Maybe<Scalars['String']['output']>;
   /** An object relationship */
@@ -13074,7 +13323,6 @@ export type Org = {
   news_aggregate: News_Aggregate;
   /** An object relationship */
   org_subscription?: Maybe<Org_Subscription>;
-  protectGovernance: Scalars['Boolean']['output'];
   /** An array relationship */
   roles: Array<Role>;
   /** An aggregate relationship */
@@ -13094,6 +13342,46 @@ export type Org = {
   threads: Array<Thread>;
   /** An aggregate relationship */
   threads_aggregate: Thread_Aggregate;
+};
+
+
+/** columns and relationships of "org" */
+export type OrgCircleLinksArgs = {
+  distinct_on?: InputMaybe<Array<Circle_Link_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Circle_Link_Order_By>>;
+  where?: InputMaybe<Circle_Link_Bool_Exp>;
+};
+
+
+/** columns and relationships of "org" */
+export type OrgCircleLinks_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Circle_Link_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Circle_Link_Order_By>>;
+  where?: InputMaybe<Circle_Link_Bool_Exp>;
+};
+
+
+/** columns and relationships of "org" */
+export type OrgCircleMembersArgs = {
+  distinct_on?: InputMaybe<Array<Circle_Member_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Circle_Member_Order_By>>;
+  where?: InputMaybe<Circle_Member_Bool_Exp>;
+};
+
+
+/** columns and relationships of "org" */
+export type OrgCircleMembers_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Circle_Member_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Circle_Member_Order_By>>;
+  where?: InputMaybe<Circle_Member_Bool_Exp>;
 };
 
 
@@ -13384,6 +13672,10 @@ export type Org_Bool_Exp = {
   _not?: InputMaybe<Org_Bool_Exp>;
   _or?: InputMaybe<Array<Org_Bool_Exp>>;
   archived?: InputMaybe<Boolean_Comparison_Exp>;
+  circleLinks?: InputMaybe<Circle_Link_Bool_Exp>;
+  circleLinks_aggregate?: InputMaybe<Circle_Link_Aggregate_Bool_Exp>;
+  circleMembers?: InputMaybe<Circle_Member_Bool_Exp>;
+  circleMembers_aggregate?: InputMaybe<Circle_Member_Aggregate_Bool_Exp>;
   circles?: InputMaybe<Circle_Bool_Exp>;
   circles_aggregate?: InputMaybe<Circle_Aggregate_Bool_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
@@ -13392,6 +13684,7 @@ export type Org_Bool_Exp = {
   defaultGraphView?: InputMaybe<String_Comparison_Exp>;
   files?: InputMaybe<Org_File_Bool_Exp>;
   files_aggregate?: InputMaybe<Org_File_Aggregate_Bool_Exp>;
+  governanceMode?: InputMaybe<Governance_Mode_Enum_Comparison_Exp>;
   homeNote?: InputMaybe<String_Comparison_Exp>;
   icon?: InputMaybe<String_Comparison_Exp>;
   iconFile?: InputMaybe<Files_Bool_Exp>;
@@ -13411,7 +13704,6 @@ export type Org_Bool_Exp = {
   news?: InputMaybe<News_Bool_Exp>;
   news_aggregate?: InputMaybe<News_Aggregate_Bool_Exp>;
   org_subscription?: InputMaybe<Org_Subscription_Bool_Exp>;
-  protectGovernance?: InputMaybe<Boolean_Comparison_Exp>;
   roles?: InputMaybe<Role_Bool_Exp>;
   roles_aggregate?: InputMaybe<Role_Aggregate_Bool_Exp>;
   shareMembers?: InputMaybe<Boolean_Comparison_Exp>;
@@ -13631,11 +13923,14 @@ export type Org_File_Updates = {
 /** input type for inserting data into table "org" */
 export type Org_Insert_Input = {
   archived?: InputMaybe<Scalars['Boolean']['input']>;
+  circleLinks?: InputMaybe<Circle_Link_Arr_Rel_Insert_Input>;
+  circleMembers?: InputMaybe<Circle_Member_Arr_Rel_Insert_Input>;
   circles?: InputMaybe<Circle_Arr_Rel_Insert_Input>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   decisions?: InputMaybe<Decision_Arr_Rel_Insert_Input>;
   defaultGraphView?: InputMaybe<Scalars['String']['input']>;
   files?: InputMaybe<Org_File_Arr_Rel_Insert_Input>;
+  governanceMode?: InputMaybe<Governance_Mode_Enum>;
   homeNote?: InputMaybe<Scalars['String']['input']>;
   icon?: InputMaybe<Scalars['String']['input']>;
   iconFile?: InputMaybe<Files_Obj_Rel_Insert_Input>;
@@ -13649,7 +13944,6 @@ export type Org_Insert_Input = {
   name?: InputMaybe<Scalars['String']['input']>;
   news?: InputMaybe<News_Arr_Rel_Insert_Input>;
   org_subscription?: InputMaybe<Org_Subscription_Obj_Rel_Insert_Input>;
-  protectGovernance?: InputMaybe<Scalars['Boolean']['input']>;
   roles?: InputMaybe<Role_Arr_Rel_Insert_Input>;
   shareMembers?: InputMaybe<Scalars['Boolean']['input']>;
   shareOrg?: InputMaybe<Scalars['Boolean']['input']>;
@@ -13711,11 +14005,14 @@ export type Org_On_Conflict = {
 /** Ordering options when selecting data from "org". */
 export type Org_Order_By = {
   archived?: InputMaybe<Order_By>;
+  circleLinks_aggregate?: InputMaybe<Circle_Link_Aggregate_Order_By>;
+  circleMembers_aggregate?: InputMaybe<Circle_Member_Aggregate_Order_By>;
   circles_aggregate?: InputMaybe<Circle_Aggregate_Order_By>;
   createdAt?: InputMaybe<Order_By>;
   decisions_aggregate?: InputMaybe<Decision_Aggregate_Order_By>;
   defaultGraphView?: InputMaybe<Order_By>;
   files_aggregate?: InputMaybe<Org_File_Aggregate_Order_By>;
+  governanceMode?: InputMaybe<Order_By>;
   homeNote?: InputMaybe<Order_By>;
   icon?: InputMaybe<Order_By>;
   iconFile?: InputMaybe<Files_Order_By>;
@@ -13729,7 +14026,6 @@ export type Org_Order_By = {
   name?: InputMaybe<Order_By>;
   news_aggregate?: InputMaybe<News_Aggregate_Order_By>;
   org_subscription?: InputMaybe<Org_Subscription_Order_By>;
-  protectGovernance?: InputMaybe<Order_By>;
   roles_aggregate?: InputMaybe<Role_Aggregate_Order_By>;
   shareMembers?: InputMaybe<Order_By>;
   shareOrg?: InputMaybe<Order_By>;
@@ -13753,6 +14049,8 @@ export enum Org_Select_Column {
   /** column name */
   DefaultGraphView = 'defaultGraphView',
   /** column name */
+  GovernanceMode = 'governanceMode',
+  /** column name */
   HomeNote = 'homeNote',
   /** column name */
   Icon = 'icon',
@@ -13762,8 +14060,6 @@ export enum Org_Select_Column {
   Id = 'id',
   /** column name */
   Name = 'name',
-  /** column name */
-  ProtectGovernance = 'protectGovernance',
   /** column name */
   ShareMembers = 'shareMembers',
   /** column name */
@@ -13777,12 +14073,12 @@ export type Org_Set_Input = {
   archived?: InputMaybe<Scalars['Boolean']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   defaultGraphView?: InputMaybe<Scalars['String']['input']>;
+  governanceMode?: InputMaybe<Governance_Mode_Enum>;
   homeNote?: InputMaybe<Scalars['String']['input']>;
   icon?: InputMaybe<Scalars['String']['input']>;
   iconFileId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  protectGovernance?: InputMaybe<Scalars['Boolean']['input']>;
   shareMembers?: InputMaybe<Scalars['Boolean']['input']>;
   shareOrg?: InputMaybe<Scalars['Boolean']['input']>;
   slug?: InputMaybe<Scalars['String']['input']>;
@@ -13801,12 +14097,12 @@ export type Org_Stream_Cursor_Value_Input = {
   archived?: InputMaybe<Scalars['Boolean']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   defaultGraphView?: InputMaybe<Scalars['String']['input']>;
+  governanceMode?: InputMaybe<Governance_Mode_Enum>;
   homeNote?: InputMaybe<Scalars['String']['input']>;
   icon?: InputMaybe<Scalars['String']['input']>;
   iconFileId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  protectGovernance?: InputMaybe<Scalars['Boolean']['input']>;
   shareMembers?: InputMaybe<Scalars['Boolean']['input']>;
   shareOrg?: InputMaybe<Scalars['Boolean']['input']>;
   slug?: InputMaybe<Scalars['String']['input']>;
@@ -14017,6 +14313,8 @@ export enum Org_Update_Column {
   /** column name */
   DefaultGraphView = 'defaultGraphView',
   /** column name */
+  GovernanceMode = 'governanceMode',
+  /** column name */
   HomeNote = 'homeNote',
   /** column name */
   Icon = 'icon',
@@ -14026,8 +14324,6 @@ export enum Org_Update_Column {
   Id = 'id',
   /** column name */
   Name = 'name',
-  /** column name */
-  ProtectGovernance = 'protectGovernance',
   /** column name */
   ShareMembers = 'shareMembers',
   /** column name */
@@ -14179,6 +14475,12 @@ export type Query_Root = {
   files: Array<Files>;
   /** fetch aggregated fields from the table: "storage.files" */
   filesAggregate: Files_Aggregate;
+  /** fetch data from the table: "governance_mode" */
+  governance_mode: Array<Governance_Mode>;
+  /** fetch aggregated fields from the table: "governance_mode" */
+  governance_mode_aggregate: Governance_Mode_Aggregate;
+  /** fetch data from the table: "governance_mode" using primary key columns */
+  governance_mode_by_pk?: Maybe<Governance_Mode>;
   /** fetch data from the table: "log" */
   log: Array<Log>;
   /** fetch aggregated fields from the table: "log" */
@@ -14898,6 +15200,29 @@ export type Query_RootFilesAggregateArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   order_by?: InputMaybe<Array<Files_Order_By>>;
   where?: InputMaybe<Files_Bool_Exp>;
+};
+
+
+export type Query_RootGovernance_ModeArgs = {
+  distinct_on?: InputMaybe<Array<Governance_Mode_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Governance_Mode_Order_By>>;
+  where?: InputMaybe<Governance_Mode_Bool_Exp>;
+};
+
+
+export type Query_RootGovernance_Mode_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Governance_Mode_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Governance_Mode_Order_By>>;
+  where?: InputMaybe<Governance_Mode_Bool_Exp>;
+};
+
+
+export type Query_RootGovernance_Mode_By_PkArgs = {
+  value: Scalars['String']['input'];
 };
 
 
@@ -16963,6 +17288,14 @@ export type Subscription_Root = {
   filesAggregate: Files_Aggregate;
   /** fetch data from the table in a streaming manner: "storage.files" */
   files_stream: Array<Files>;
+  /** fetch data from the table: "governance_mode" */
+  governance_mode: Array<Governance_Mode>;
+  /** fetch aggregated fields from the table: "governance_mode" */
+  governance_mode_aggregate: Governance_Mode_Aggregate;
+  /** fetch data from the table: "governance_mode" using primary key columns */
+  governance_mode_by_pk?: Maybe<Governance_Mode>;
+  /** fetch data from the table in a streaming manner: "governance_mode" */
+  governance_mode_stream: Array<Governance_Mode>;
   /** fetch data from the table: "log" */
   log: Array<Log>;
   /** fetch aggregated fields from the table: "log" */
@@ -17911,6 +18244,36 @@ export type Subscription_RootFiles_StreamArgs = {
   batch_size: Scalars['Int']['input'];
   cursor: Array<InputMaybe<Files_Stream_Cursor_Input>>;
   where?: InputMaybe<Files_Bool_Exp>;
+};
+
+
+export type Subscription_RootGovernance_ModeArgs = {
+  distinct_on?: InputMaybe<Array<Governance_Mode_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Governance_Mode_Order_By>>;
+  where?: InputMaybe<Governance_Mode_Bool_Exp>;
+};
+
+
+export type Subscription_RootGovernance_Mode_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Governance_Mode_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<Governance_Mode_Order_By>>;
+  where?: InputMaybe<Governance_Mode_Bool_Exp>;
+};
+
+
+export type Subscription_RootGovernance_Mode_By_PkArgs = {
+  value: Scalars['String']['input'];
+};
+
+
+export type Subscription_RootGovernance_Mode_StreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<Governance_Mode_Stream_Cursor_Input>>;
+  where?: InputMaybe<Governance_Mode_Bool_Exp>;
 };
 
 
@@ -23117,11 +23480,9 @@ export type CircleFragment = { __typename?: 'circle', id: string, orgId: string,
 
 export type CircleSummaryFragment = { __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean, role: { __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null } };
 
-export type CircleFullFragment = { __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean, members: Array<{ __typename?: 'circle_member', id: string, member: { __typename?: 'member', id: string, userId?: string | null, name: string, picture?: string | null } }>, invitedCircleLinks: Array<{ __typename?: 'circle_link', id: string, invitedCircle: { __typename?: 'circle', id: string } }>, role: { __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null } };
+export type CircleLinkFragment = { __typename?: 'circle_link', id: string, orgId: string, parentId: string, circleId: string, createdAt: string, archived: boolean };
 
-export type CircleLinkFragment = { __typename?: 'circle_link', id: string, parentId: string, circleId: string, createdAt: string, archived: boolean };
-
-export type CircleMemberFragment = { __typename?: 'circle_member', id: string, circleId: string, memberId: string, createdAt: string, archived: boolean };
+export type CircleMemberFragment = { __typename?: 'circle_member', id: string, orgId: string, circleId: string, memberId: string, createdAt: string, archived: boolean };
 
 export type DecisionFragment = { __typename?: 'decision', id: string, orgId: string, circleId: string, memberId: string, title: string, description: string, archived: boolean, createdAt: string, private: boolean };
 
@@ -23143,11 +23504,9 @@ export type MemberSummaryFragment = { __typename?: 'member', id: string, userId?
 
 export type NewsFragment = { __typename?: 'news', id?: string | null, createdAt?: string | null, decision?: { __typename?: 'decision', id: string, orgId: string, circleId: string, memberId: string, title: string, description: string, archived: boolean, createdAt: string, private: boolean } | null, meeting?: { __typename?: 'meeting', id: string, orgId: string, circleId: string, startDate: string, endDate: string, ended: boolean, title: string, currentStepId?: string | null, summary: string, private: boolean, meeting_attendees: Array<{ __typename?: 'meeting_attendee', id: string, meetingId: string, memberId: string, present?: boolean | null, startNotified: boolean }> } | null, thread?: { __typename?: 'thread', id: string, orgId: string, circleId: string, initiatorMemberId: string, title: string, createdAt: string, archived: boolean, pinned: boolean, status: Thread_Status_Enum, private: boolean, activities: Array<{ __typename?: 'thread_activity', id: string, threadId: string, userId: string, createdAt: string, type: Thread_Activity_Type_Enum, data: any, reactions: Array<{ __typename?: 'thread_activity_reaction', id: string, userId: string, shortcode: string }>, refThread?: { __typename?: 'thread', id: string, orgId: string, circleId: string, initiatorMemberId: string, title: string, createdAt: string, archived: boolean, pinned: boolean, status: Thread_Status_Enum, private: boolean, extra_members: Array<{ __typename?: 'thread_extra_member', id: string, threadId: string, memberId: string }> } | null, refMeeting?: { __typename?: 'meeting', id: string, orgId: string, circleId: string, startDate: string, endDate: string, ended: boolean, title: string, currentStepId?: string | null, summary: string, private: boolean, meeting_attendees: Array<{ __typename?: 'meeting_attendee', id: string, meetingId: string, memberId: string, present?: boolean | null, startNotified: boolean }> } | null, refTask?: { __typename?: 'task', id: string, orgId: string, circleId: string, memberId?: string | null, title: string, description: string, archived: boolean, createdAt: string, dueDate?: string | null, status: Task_Status_Enum, private: boolean } | null, refDecision?: { __typename?: 'decision', id: string, orgId: string, circleId: string, memberId: string, title: string, description: string, archived: boolean, createdAt: string, private: boolean } | null }>, extra_members: Array<{ __typename?: 'thread_extra_member', id: string, threadId: string, memberId: string }> } | null };
 
-export type OrgFragment = { __typename?: 'org', id: string, name: string, archived: boolean, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, protectGovernance: boolean, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null };
+export type OrgFragment = { __typename?: 'org', id: string, name: string, archived: boolean, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, governanceMode: Governance_Mode_Enum, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null };
 
-export type OrgFullFragment = { __typename?: 'org', id: string, name: string, archived: boolean, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, protectGovernance: boolean, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null, org_subscription?: { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum } | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean, members: Array<{ __typename?: 'circle_member', id: string, member: { __typename?: 'member', id: string, userId?: string | null, name: string, picture?: string | null } }>, invitedCircleLinks: Array<{ __typename?: 'circle_link', id: string, invitedCircle: { __typename?: 'circle', id: string } }>, role: { __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null } }>, roles: Array<{ __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null }>, members: Array<{ __typename?: 'member', id: string, orgId: string, archived: boolean, name: string, description: string, pictureFileId?: string | null, picture?: string | null, userId?: string | null, inviteEmail?: string | null, inviteDate?: string | null, role?: Member_Role_Enum | null }> };
-
-export type OrgFullLightFragment = { __typename?: 'org', id: string, name: string, archived: boolean, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, protectGovernance: boolean, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null, org_subscription?: { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum } | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean, members: Array<{ __typename?: 'circle_member', id: string, memberId: string }>, invitedCircleLinks: Array<{ __typename?: 'circle_link', id: string, invitedCircle: { __typename?: 'circle', id: string } }> }>, roles: Array<{ __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null }>, members: Array<{ __typename?: 'member', id: string, orgId: string, archived: boolean, name: string, description: string, pictureFileId?: string | null, picture?: string | null, userId?: string | null, inviteEmail?: string | null, inviteDate?: string | null, role?: Member_Role_Enum | null }> };
+export type OrgDataFragment = { __typename?: 'org', id: string, name: string, archived: boolean, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, governanceMode: Governance_Mode_Enum, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null, org_subscription?: { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum } | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean }>, circleMembers: Array<{ __typename?: 'circle_member', id: string, orgId: string, circleId: string, memberId: string, createdAt: string, archived: boolean }>, circleLinks: Array<{ __typename?: 'circle_link', id: string, orgId: string, parentId: string, circleId: string, createdAt: string, archived: boolean }>, roles: Array<{ __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null }>, members: Array<{ __typename?: 'member', id: string, orgId: string, archived: boolean, name: string, description: string, pictureFileId?: string | null, picture?: string | null, userId?: string | null, inviteEmail?: string | null, inviteDate?: string | null, role?: Member_Role_Enum | null }> };
 
 export type OrgSubscriptionFragment = { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum };
 
@@ -23224,7 +23583,7 @@ export type GetCircleQueryVariables = Exact<{
 }>;
 
 
-export type GetCircleQuery = { __typename?: 'query_root', circle_by_pk?: { __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean } | null };
+export type GetCircleQuery = { __typename?: 'query_root', circle_by_pk?: { __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean, role: { __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null } } | null };
 
 export type GetPublicCirclesQueryVariables = Exact<{
   orgId: Scalars['uuid']['input'];
@@ -23279,27 +23638,43 @@ export type ArchiveCirclesMutationVariables = Exact<{
 
 export type ArchiveCirclesMutation = { __typename?: 'mutation_root', update_circle?: { __typename?: 'circle_mutation_response', returning: Array<{ __typename?: 'circle', id: string }> } | null, update_role?: { __typename?: 'role_mutation_response', returning: Array<{ __typename?: 'role', id: string }> } | null, delete_meeting_recurring?: { __typename?: 'meeting_recurring_mutation_response', returning: Array<{ __typename?: 'meeting_recurring', id: string }> } | null };
 
-export type CreateCircleLinkMutationVariables = Exact<{
-  parentId: Scalars['uuid']['input'];
-  circleId: Scalars['uuid']['input'];
+export type UnarchiveCirclesMutationVariables = Exact<{
+  circlesIds: Array<Scalars['uuid']['input']> | Scalars['uuid']['input'];
+  rolesIds: Array<Scalars['uuid']['input']> | Scalars['uuid']['input'];
 }>;
 
 
-export type CreateCircleLinkMutation = { __typename?: 'mutation_root', insert_circle_link_one?: { __typename?: 'circle_link', id: string, parentId: string, circleId: string, createdAt: string, archived: boolean } | null };
+export type UnarchiveCirclesMutation = { __typename?: 'mutation_root', update_circle?: { __typename?: 'circle_mutation_response', returning: Array<{ __typename?: 'circle', id: string }> } | null, update_role?: { __typename?: 'role_mutation_response', returning: Array<{ __typename?: 'role', id: string }> } | null };
+
+export type GetOrgCirclesForRestoreQueryVariables = Exact<{
+  orgId: Scalars['uuid']['input'];
+}>;
+
+
+export type GetOrgCirclesForRestoreQuery = { __typename?: 'query_root', circle: Array<{ __typename?: 'circle', id: string, parentId?: string | null, roleId: string, role: { __typename?: 'role', base: boolean } }> };
+
+export type CreateCircleLinkMutationVariables = Exact<{
+  parentId: Scalars['uuid']['input'];
+  circleId: Scalars['uuid']['input'];
+  orgId: Scalars['uuid']['input'];
+}>;
+
+
+export type CreateCircleLinkMutation = { __typename?: 'mutation_root', insert_circle_link_one?: { __typename?: 'circle_link', id: string, orgId: string, parentId: string, circleId: string, createdAt: string, archived: boolean } | null };
 
 export type GetCircleLinkQueryVariables = Exact<{
   id: Scalars['uuid']['input'];
 }>;
 
 
-export type GetCircleLinkQuery = { __typename?: 'query_root', circle_link_by_pk?: { __typename?: 'circle_link', id: string, parentId: string, circleId: string, createdAt: string, archived: boolean } | null };
+export type GetCircleLinkQuery = { __typename?: 'query_root', circle_link_by_pk?: { __typename?: 'circle_link', id: string, orgId: string, parentId: string, circleId: string, createdAt: string, archived: boolean } | null };
 
 export type InsertCircleLinkMutationVariables = Exact<{
   object: Circle_Link_Insert_Input;
 }>;
 
 
-export type InsertCircleLinkMutation = { __typename?: 'mutation_root', insert_circle_link_one?: { __typename?: 'circle_link', id: string, parentId: string, circleId: string, createdAt: string, archived: boolean } | null };
+export type InsertCircleLinkMutation = { __typename?: 'mutation_root', insert_circle_link_one?: { __typename?: 'circle_link', id: string, orgId: string, parentId: string, circleId: string, createdAt: string, archived: boolean } | null };
 
 export type UpdateCircleLinkMutationVariables = Exact<{
   id: Scalars['uuid']['input'];
@@ -23307,7 +23682,7 @@ export type UpdateCircleLinkMutationVariables = Exact<{
 }>;
 
 
-export type UpdateCircleLinkMutation = { __typename?: 'mutation_root', update_circle_link_by_pk?: { __typename?: 'circle_link', id: string, parentId: string, circleId: string, createdAt: string, archived: boolean } | null };
+export type UpdateCircleLinkMutation = { __typename?: 'mutation_root', update_circle_link_by_pk?: { __typename?: 'circle_link', id: string, orgId: string, parentId: string, circleId: string, createdAt: string, archived: boolean } | null };
 
 export type ArchiveCircleLinkMutationVariables = Exact<{
   parentId: Scalars['uuid']['input'];
@@ -23315,22 +23690,23 @@ export type ArchiveCircleLinkMutationVariables = Exact<{
 }>;
 
 
-export type ArchiveCircleLinkMutation = { __typename?: 'mutation_root', update_circle_link?: { __typename?: 'circle_link_mutation_response', returning: Array<{ __typename?: 'circle_link', id: string, parentId: string, circleId: string, createdAt: string, archived: boolean }> } | null };
+export type ArchiveCircleLinkMutation = { __typename?: 'mutation_root', update_circle_link?: { __typename?: 'circle_link_mutation_response', returning: Array<{ __typename?: 'circle_link', id: string, orgId: string, parentId: string, circleId: string, createdAt: string, archived: boolean }> } | null };
 
 export type GetCircleMemberQueryVariables = Exact<{
   id: Scalars['uuid']['input'];
 }>;
 
 
-export type GetCircleMemberQuery = { __typename?: 'query_root', circle_member_by_pk?: { __typename?: 'circle_member', id: string, circleId: string, memberId: string, createdAt: string, archived: boolean } | null };
+export type GetCircleMemberQuery = { __typename?: 'query_root', circle_member_by_pk?: { __typename?: 'circle_member', id: string, orgId: string, circleId: string, memberId: string, createdAt: string, archived: boolean } | null };
 
 export type CreateCircleMemberMutationVariables = Exact<{
   circleId: Scalars['uuid']['input'];
   memberId: Scalars['uuid']['input'];
+  orgId: Scalars['uuid']['input'];
 }>;
 
 
-export type CreateCircleMemberMutation = { __typename?: 'mutation_root', insert_circle_member_one?: { __typename?: 'circle_member', id: string, circleId: string, memberId: string, createdAt: string, archived: boolean, member: { __typename?: 'member', id: string, name: string }, circle: { __typename?: 'circle', role: { __typename?: 'role', id: string, name: string } } } | null };
+export type CreateCircleMemberMutation = { __typename?: 'mutation_root', insert_circle_member_one?: { __typename?: 'circle_member', id: string, orgId: string, circleId: string, memberId: string, createdAt: string, archived: boolean, member: { __typename?: 'member', id: string, name: string }, circle: { __typename?: 'circle', role: { __typename?: 'role', id: string, name: string } } } | null };
 
 export type UpdateCircleMemberMutationVariables = Exact<{
   id: Scalars['uuid']['input'];
@@ -23338,14 +23714,14 @@ export type UpdateCircleMemberMutationVariables = Exact<{
 }>;
 
 
-export type UpdateCircleMemberMutation = { __typename?: 'mutation_root', update_circle_member_by_pk?: { __typename?: 'circle_member', id: string, circleId: string, memberId: string, createdAt: string, archived: boolean } | null };
+export type UpdateCircleMemberMutation = { __typename?: 'mutation_root', update_circle_member_by_pk?: { __typename?: 'circle_member', id: string, orgId: string, circleId: string, memberId: string, createdAt: string, archived: boolean } | null };
 
 export type InsertCircleMemberMutationVariables = Exact<{
   object: Circle_Member_Insert_Input;
 }>;
 
 
-export type InsertCircleMemberMutation = { __typename?: 'mutation_root', insert_circle_member_one?: { __typename?: 'circle_member', id: string, circleId: string, memberId: string, createdAt: string, archived: boolean } | null };
+export type InsertCircleMemberMutation = { __typename?: 'mutation_root', insert_circle_member_one?: { __typename?: 'circle_member', id: string, orgId: string, circleId: string, memberId: string, createdAt: string, archived: boolean } | null };
 
 export type ArchiveCircleMemberMutationVariables = Exact<{
   circleId: Scalars['uuid']['input'];
@@ -23353,7 +23729,7 @@ export type ArchiveCircleMemberMutationVariables = Exact<{
 }>;
 
 
-export type ArchiveCircleMemberMutation = { __typename?: 'mutation_root', update_circle_member?: { __typename?: 'circle_member_mutation_response', returning: Array<{ __typename?: 'circle_member', id: string, circleId: string, memberId: string, createdAt: string, archived: boolean, member: { __typename?: 'member', id: string, name: string }, circle: { __typename?: 'circle', role: { __typename?: 'role', id: string, name: string } } }> } | null };
+export type ArchiveCircleMemberMutation = { __typename?: 'mutation_root', update_circle_member?: { __typename?: 'circle_member_mutation_response', returning: Array<{ __typename?: 'circle_member', id: string, orgId: string, circleId: string, memberId: string, createdAt: string, archived: boolean, member: { __typename?: 'member', id: string, name: string }, circle: { __typename?: 'circle', role: { __typename?: 'role', id: string, name: string } } }> } | null };
 
 export type GetDecisionQueryVariables = Exact<{
   id: Scalars['uuid']['input'];
@@ -23677,28 +24053,28 @@ export type GetOrgQueryVariables = Exact<{
 }>;
 
 
-export type GetOrgQuery = { __typename?: 'query_root', org_by_pk?: { __typename?: 'org', id: string, name: string, archived: boolean, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, protectGovernance: boolean, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null } | null };
+export type GetOrgQuery = { __typename?: 'query_root', org_by_pk?: { __typename?: 'org', id: string, name: string, archived: boolean, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, governanceMode: Governance_Mode_Enum, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null } | null };
 
 export type OrgsSubscriptionVariables = Exact<{
   userId: Scalars['uuid']['input'];
 }>;
 
 
-export type OrgsSubscription = { __typename?: 'subscription_root', member: Array<{ __typename?: 'member', org: { __typename?: 'org', id: string, name: string, archived: boolean, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, protectGovernance: boolean, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean, members: Array<{ __typename?: 'circle_member', id: string, member: { __typename?: 'member', id: string, userId?: string | null, name: string, picture?: string | null } }>, invitedCircleLinks: Array<{ __typename?: 'circle_link', id: string, invitedCircle: { __typename?: 'circle', id: string } }>, role: { __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null } }> } }> };
+export type OrgsSubscription = { __typename?: 'subscription_root', member: Array<{ __typename?: 'member', org: { __typename?: 'org', id: string, name: string, archived: boolean, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, governanceMode: Governance_Mode_Enum, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean, role: { __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null } }> } }> };
 
 export type OrgSubscriptionVariables = Exact<{
   id: Scalars['uuid']['input'];
 }>;
 
 
-export type OrgSubscription = { __typename?: 'subscription_root', org_by_pk?: { __typename?: 'org', id: string, name: string, archived: boolean, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, protectGovernance: boolean, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null, org_subscription?: { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum } | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean, members: Array<{ __typename?: 'circle_member', id: string, memberId: string }>, invitedCircleLinks: Array<{ __typename?: 'circle_link', id: string, invitedCircle: { __typename?: 'circle', id: string } }> }>, roles: Array<{ __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null }>, members: Array<{ __typename?: 'member', id: string, orgId: string, archived: boolean, name: string, description: string, pictureFileId?: string | null, picture?: string | null, userId?: string | null, inviteEmail?: string | null, inviteDate?: string | null, role?: Member_Role_Enum | null }> } | null };
+export type OrgSubscription = { __typename?: 'subscription_root', org_by_pk?: { __typename?: 'org', id: string, name: string, archived: boolean, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, governanceMode: Governance_Mode_Enum, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null, org_subscription?: { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum } | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean }>, circleMembers: Array<{ __typename?: 'circle_member', id: string, orgId: string, circleId: string, memberId: string, createdAt: string, archived: boolean }>, circleLinks: Array<{ __typename?: 'circle_link', id: string, orgId: string, parentId: string, circleId: string, createdAt: string, archived: boolean }>, roles: Array<{ __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null }>, members: Array<{ __typename?: 'member', id: string, orgId: string, archived: boolean, name: string, description: string, pictureFileId?: string | null, picture?: string | null, userId?: string | null, inviteEmail?: string | null, inviteDate?: string | null, role?: Member_Role_Enum | null }> } | null };
 
 export type OrgBySlugSubscriptionVariables = Exact<{
   slug: Scalars['String']['input'];
 }>;
 
 
-export type OrgBySlugSubscription = { __typename?: 'subscription_root', org: Array<{ __typename?: 'org', id: string, name: string, archived: boolean, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, protectGovernance: boolean, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null, org_subscription?: { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum } | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean, members: Array<{ __typename?: 'circle_member', id: string, memberId: string }>, invitedCircleLinks: Array<{ __typename?: 'circle_link', id: string, invitedCircle: { __typename?: 'circle', id: string } }> }>, roles: Array<{ __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null }>, members: Array<{ __typename?: 'member', id: string, orgId: string, archived: boolean, name: string, description: string, pictureFileId?: string | null, picture?: string | null, userId?: string | null, inviteEmail?: string | null, inviteDate?: string | null, role?: Member_Role_Enum | null }> }> };
+export type OrgBySlugSubscription = { __typename?: 'subscription_root', org: Array<{ __typename?: 'org', id: string, name: string, archived: boolean, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, governanceMode: Governance_Mode_Enum, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null, org_subscription?: { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum } | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean }>, circleMembers: Array<{ __typename?: 'circle_member', id: string, orgId: string, circleId: string, memberId: string, createdAt: string, archived: boolean }>, circleLinks: Array<{ __typename?: 'circle_link', id: string, orgId: string, parentId: string, circleId: string, createdAt: string, archived: boolean }>, roles: Array<{ __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null }>, members: Array<{ __typename?: 'member', id: string, orgId: string, archived: boolean, name: string, description: string, pictureFileId?: string | null, picture?: string | null, userId?: string | null, inviteEmail?: string | null, inviteDate?: string | null, role?: Member_Role_Enum | null }> }> };
 
 export type UpdateOrgMutationVariables = Exact<{
   id: Scalars['uuid']['input'];
@@ -24089,24 +24465,34 @@ export const ApiKeyFragmentDoc = gql`
   createdAt
 }
     `;
-export const CircleLinkFragmentDoc = gql`
-    fragment CircleLink on circle_link {
+export const CircleFragmentDoc = gql`
+    fragment Circle on circle {
   id
+  orgId
+  roleId
   parentId
-  circleId
-  createdAt
   archived
 }
     `;
-export const CircleMemberFragmentDoc = gql`
-    fragment CircleMember on circle_member {
+export const RoleSummaryFragmentDoc = gql`
+    fragment RoleSummary on role {
   id
-  circleId
-  memberId
-  createdAt
-  archived
+  base
+  name
+  singleMember
+  parentLink
+  colorHue
 }
     `;
+export const CircleSummaryFragmentDoc = gql`
+    fragment CircleSummary on circle {
+  ...Circle
+  role {
+    ...RoleSummary
+  }
+}
+    ${CircleFragmentDoc}
+${RoleSummaryFragmentDoc}`;
 export const LogFragmentDoc = gql`
     fragment Log on log {
   id
@@ -24198,6 +24584,14 @@ export const MeetingStepFragmentDoc = gql`
   notes
   type
   data
+}
+    `;
+export const MemberSummaryFragmentDoc = gql`
+    fragment MemberSummary on member {
+  id
+  userId
+  name
+  picture
 }
     `;
 export const DecisionFragmentDoc = gql`
@@ -24323,7 +24717,7 @@ export const OrgFragmentDoc = gql`
   slug
   shareOrg
   shareMembers
-  protectGovernance
+  governanceMode
   defaultGraphView
   icon
   homeNote
@@ -24338,60 +24732,26 @@ export const OrgSubscriptionFragmentDoc = gql`
   type
 }
     `;
-export const CircleFragmentDoc = gql`
-    fragment Circle on circle {
+export const CircleMemberFragmentDoc = gql`
+    fragment CircleMember on circle_member {
   id
   orgId
-  roleId
-  parentId
+  circleId
+  memberId
+  createdAt
   archived
 }
     `;
-export const RoleSummaryFragmentDoc = gql`
-    fragment RoleSummary on role {
+export const CircleLinkFragmentDoc = gql`
+    fragment CircleLink on circle_link {
   id
-  base
-  name
-  singleMember
-  parentLink
-  colorHue
+  orgId
+  parentId
+  circleId
+  createdAt
+  archived
 }
     `;
-export const CircleSummaryFragmentDoc = gql`
-    fragment CircleSummary on circle {
-  ...Circle
-  role {
-    ...RoleSummary
-  }
-}
-    ${CircleFragmentDoc}
-${RoleSummaryFragmentDoc}`;
-export const MemberSummaryFragmentDoc = gql`
-    fragment MemberSummary on member {
-  id
-  userId
-  name
-  picture
-}
-    `;
-export const CircleFullFragmentDoc = gql`
-    fragment CircleFull on circle {
-  ...CircleSummary
-  members(where: {archived: {_eq: false}, member: {archived: {_eq: false}}}) {
-    id
-    member {
-      ...MemberSummary
-    }
-  }
-  invitedCircleLinks(where: {archived: {_eq: false}}) {
-    id
-    invitedCircle {
-      id
-    }
-  }
-}
-    ${CircleSummaryFragmentDoc}
-${MemberSummaryFragmentDoc}`;
 export const MemberFragmentDoc = gql`
     fragment Member on member {
   id
@@ -24407,45 +24767,20 @@ export const MemberFragmentDoc = gql`
   role
 }
     `;
-export const OrgFullFragmentDoc = gql`
-    fragment OrgFull on org {
-  ...Org
-  org_subscription {
-    ...OrgSubscription
-  }
-  circles(where: {archived: {_eq: false}}) {
-    ...CircleFull
-  }
-  roles(where: {archived: {_eq: false}, base: {_eq: true}}) {
-    ...RoleSummary
-  }
-  members(where: {archived: {_eq: false}}) {
-    ...Member
-  }
-}
-    ${OrgFragmentDoc}
-${OrgSubscriptionFragmentDoc}
-${CircleFullFragmentDoc}
-${RoleSummaryFragmentDoc}
-${MemberFragmentDoc}`;
-export const OrgFullLightFragmentDoc = gql`
-    fragment OrgFullLight on org {
+export const OrgDataFragmentDoc = gql`
+    fragment OrgData on org {
   ...Org
   org_subscription {
     ...OrgSubscription
   }
   circles(where: {archived: {_eq: false}}) {
     ...Circle
-    members(where: {archived: {_eq: false}}) {
-      id
-      memberId
-    }
-    invitedCircleLinks(where: {archived: {_eq: false}}) {
-      id
-      invitedCircle {
-        id
-      }
-    }
+  }
+  circleMembers(where: {archived: {_eq: false}}) {
+    ...CircleMember
+  }
+  circleLinks(where: {archived: {_eq: false}}) {
+    ...CircleLink
   }
   roles(where: {archived: {_eq: false}}) {
     ...RoleSummary
@@ -24457,6 +24792,8 @@ export const OrgFullLightFragmentDoc = gql`
     ${OrgFragmentDoc}
 ${OrgSubscriptionFragmentDoc}
 ${CircleFragmentDoc}
+${CircleMemberFragmentDoc}
+${CircleLinkFragmentDoc}
 ${RoleSummaryFragmentDoc}
 ${MemberFragmentDoc}`;
 export const RoleFragmentDoc = gql`
@@ -24749,9 +25086,13 @@ export const GetCircleDocument = gql`
     query getCircle($id: uuid!) {
   circle_by_pk(id: $id) {
     ...Circle
+    role {
+      ...RoleSummary
+    }
   }
 }
-    ${CircleFragmentDoc}`;
+    ${CircleFragmentDoc}
+${RoleSummaryFragmentDoc}`;
 
 /**
  * __useGetCircleQuery__
@@ -25107,9 +25448,95 @@ export function useArchiveCirclesMutation(baseOptions?: Apollo.MutationHookOptio
 export type ArchiveCirclesMutationHookResult = ReturnType<typeof useArchiveCirclesMutation>;
 export type ArchiveCirclesMutationResult = Apollo.MutationResult<ArchiveCirclesMutation>;
 export type ArchiveCirclesMutationOptions = Apollo.BaseMutationOptions<ArchiveCirclesMutation, ArchiveCirclesMutationVariables>;
+export const UnarchiveCirclesDocument = gql`
+    mutation unarchiveCircles($circlesIds: [uuid!]!, $rolesIds: [uuid!]!) {
+  update_circle(where: {id: {_in: $circlesIds}}, _set: {archived: false}) {
+    returning {
+      id
+    }
+  }
+  update_role(where: {id: {_in: $rolesIds}}, _set: {archived: false}) {
+    returning {
+      id
+    }
+  }
+}
+    `;
+export type UnarchiveCirclesMutationFn = Apollo.MutationFunction<UnarchiveCirclesMutation, UnarchiveCirclesMutationVariables>;
+
+/**
+ * __useUnarchiveCirclesMutation__
+ *
+ * To run a mutation, you first call `useUnarchiveCirclesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUnarchiveCirclesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [unarchiveCirclesMutation, { data, loading, error }] = useUnarchiveCirclesMutation({
+ *   variables: {
+ *      circlesIds: // value for 'circlesIds'
+ *      rolesIds: // value for 'rolesIds'
+ *   },
+ * });
+ */
+export function useUnarchiveCirclesMutation(baseOptions?: Apollo.MutationHookOptions<UnarchiveCirclesMutation, UnarchiveCirclesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UnarchiveCirclesMutation, UnarchiveCirclesMutationVariables>(UnarchiveCirclesDocument, options);
+      }
+export type UnarchiveCirclesMutationHookResult = ReturnType<typeof useUnarchiveCirclesMutation>;
+export type UnarchiveCirclesMutationResult = Apollo.MutationResult<UnarchiveCirclesMutation>;
+export type UnarchiveCirclesMutationOptions = Apollo.BaseMutationOptions<UnarchiveCirclesMutation, UnarchiveCirclesMutationVariables>;
+export const GetOrgCirclesForRestoreDocument = gql`
+    query getOrgCirclesForRestore($orgId: uuid!) {
+  circle(where: {orgId: {_eq: $orgId}, archived: {_eq: true}}) {
+    id
+    parentId
+    roleId
+    role {
+      base
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetOrgCirclesForRestoreQuery__
+ *
+ * To run a query within a React component, call `useGetOrgCirclesForRestoreQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOrgCirclesForRestoreQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOrgCirclesForRestoreQuery({
+ *   variables: {
+ *      orgId: // value for 'orgId'
+ *   },
+ * });
+ */
+export function useGetOrgCirclesForRestoreQuery(baseOptions: Apollo.QueryHookOptions<GetOrgCirclesForRestoreQuery, GetOrgCirclesForRestoreQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetOrgCirclesForRestoreQuery, GetOrgCirclesForRestoreQueryVariables>(GetOrgCirclesForRestoreDocument, options);
+      }
+export function useGetOrgCirclesForRestoreLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetOrgCirclesForRestoreQuery, GetOrgCirclesForRestoreQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetOrgCirclesForRestoreQuery, GetOrgCirclesForRestoreQueryVariables>(GetOrgCirclesForRestoreDocument, options);
+        }
+export type GetOrgCirclesForRestoreQueryHookResult = ReturnType<typeof useGetOrgCirclesForRestoreQuery>;
+export type GetOrgCirclesForRestoreLazyQueryHookResult = ReturnType<typeof useGetOrgCirclesForRestoreLazyQuery>;
+export type GetOrgCirclesForRestoreQueryResult = Apollo.QueryResult<GetOrgCirclesForRestoreQuery, GetOrgCirclesForRestoreQueryVariables>;
+export function refetchGetOrgCirclesForRestoreQuery(variables: GetOrgCirclesForRestoreQueryVariables) {
+      return { query: GetOrgCirclesForRestoreDocument, variables: variables }
+    }
 export const CreateCircleLinkDocument = gql`
-    mutation createCircleLink($parentId: uuid!, $circleId: uuid!) {
-  insert_circle_link_one(object: {circleId: $circleId, parentId: $parentId}) {
+    mutation createCircleLink($parentId: uuid!, $circleId: uuid!, $orgId: uuid!) {
+  insert_circle_link_one(
+    object: {circleId: $circleId, parentId: $parentId, orgId: $orgId}
+  ) {
     ...CircleLink
   }
 }
@@ -25131,6 +25558,7 @@ export type CreateCircleLinkMutationFn = Apollo.MutationFunction<CreateCircleLin
  *   variables: {
  *      parentId: // value for 'parentId'
  *      circleId: // value for 'circleId'
+ *      orgId: // value for 'orgId'
  *   },
  * });
  */
@@ -25324,8 +25752,10 @@ export function refetchGetCircleMemberQuery(variables: GetCircleMemberQueryVaria
       return { query: GetCircleMemberDocument, variables: variables }
     }
 export const CreateCircleMemberDocument = gql`
-    mutation createCircleMember($circleId: uuid!, $memberId: uuid!) {
-  insert_circle_member_one(object: {circleId: $circleId, memberId: $memberId}) {
+    mutation createCircleMember($circleId: uuid!, $memberId: uuid!, $orgId: uuid!) {
+  insert_circle_member_one(
+    object: {circleId: $circleId, memberId: $memberId, orgId: $orgId}
+  ) {
     ...CircleMember
     member {
       id
@@ -25357,6 +25787,7 @@ export type CreateCircleMemberMutationFn = Apollo.MutationFunction<CreateCircleM
  *   variables: {
  *      circleId: // value for 'circleId'
  *      memberId: // value for 'memberId'
+ *      orgId: // value for 'orgId'
  *   },
  * });
  */
@@ -26986,13 +27417,13 @@ export const OrgsDocument = gql`
     org {
       ...Org
       circles(where: {parentId: {_is_null: true}, archived: {_eq: false}}, limit: 1) {
-        ...CircleFull
+        ...CircleSummary
       }
     }
   }
 }
     ${OrgFragmentDoc}
-${CircleFullFragmentDoc}`;
+${CircleSummaryFragmentDoc}`;
 
 /**
  * __useOrgsSubscription__
@@ -27019,10 +27450,10 @@ export type OrgsSubscriptionResult = Apollo.SubscriptionResult<OrgsSubscription>
 export const OrgDocument = gql`
     subscription org($id: uuid!) {
   org_by_pk(id: $id) {
-    ...OrgFullLight
+    ...OrgData
   }
 }
-    ${OrgFullLightFragmentDoc}`;
+    ${OrgDataFragmentDoc}`;
 
 /**
  * __useOrgSubscription__
@@ -27049,10 +27480,10 @@ export type OrgSubscriptionResult = Apollo.SubscriptionResult<OrgSubscription>;
 export const OrgBySlugDocument = gql`
     subscription orgBySlug($slug: String!) {
   org(where: {slug: {_eq: $slug}}, limit: 1) {
-    ...OrgFullLight
+    ...OrgData
   }
 }
-    ${OrgFullLightFragmentDoc}`;
+    ${OrgDataFragmentDoc}`;
 
 /**
  * __useOrgBySlugSubscription__

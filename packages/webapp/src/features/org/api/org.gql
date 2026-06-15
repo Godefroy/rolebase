@@ -18,7 +18,7 @@ subscription orgs($userId: uuid!) {
         where: { parentId: { _is_null: true }, archived: { _eq: false } }
         limit: 1
       ) {
-        ...CircleFull
+        ...CircleSummary
       }
     }
   }
@@ -26,13 +26,13 @@ subscription orgs($userId: uuid!) {
 
 subscription org($id: uuid!) {
   org_by_pk(id: $id) {
-    ...OrgFullLight
+    ...OrgData
   }
 }
 
 subscription orgBySlug($slug: String!) {
   org(where: { slug: { _eq: $slug } }, limit: 1) {
-    ...OrgFullLight
+    ...OrgData
   }
 }
 

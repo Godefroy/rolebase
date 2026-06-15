@@ -18,13 +18,9 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { useGetCirclesStatsQuery } from '@gql'
-import { getCircleChildren } from '@rolebase/shared/helpers/getCircleChildren'
-import React, { useContext, useRef } from 'react'
+import React, { useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { useOrgData } from '@/org/contexts/OrgDataContext'
-import { useOrgEditActions } from '@/org/contexts/OrgEditContext'
-import { CircleMemberContext } from '../contexts/CircleMemberContext'
-import useCircle from '../hooks/useCircle'
+import { useOrgContext, useOrgEditActions } from '@/org/contexts/OrgContext'
 
 interface Props
   extends Omit<AlertDialogProps, 'children' | 'leastDestructiveRef'> {
@@ -38,15 +34,15 @@ export default function CircleDeleteModal({
   ...alertProps
 }: Props) {
   const { t } = useTranslation()
-  const circleMemberContext = useContext(CircleMemberContext)
-  const { circles } = useOrgData()
-  const circle = useCircle(id)
+  const { orgData } = useOrgContext()
+  const circle = orgData?.getCircle(id)
   const { archiveCircle } = useOrgEditActions()
   const cancelRef = useRef<HTMLButtonElement>(null)
+  const roleName = orgData?.getRole(circle?.roleId)?.name ?? ''
 
   // Get all circles ids that will be archived
-  const circlesIds = circles
-    ? [id, ...getCircleChildren(circles, id).map((c) => c.id)]
+  const circlesIds = orgData
+    ? [id, ...orgData.descendantsOf(id).map((c) => c.id)]
     : [id]
 
   const { data, loading, error } = useGetCirclesStatsQuery({
@@ -72,12 +68,6 @@ export default function CircleDeleteModal({
     await archiveCircle(id)
     onDelete?.()
     alertProps.onClose()
-
-    // Open circle page/panel after animation
-    setTimeout(
-      () => circleMemberContext?.goTo(circle?.parentId || undefined),
-      1000
-    )
   }
 
   if (!circle) return null
@@ -100,7 +90,7 @@ export default function CircleDeleteModal({
                 <Text>
                   <Trans
                     i18nKey="CircleDeleteModal.info"
-                    values={{ name: circle.role.name }}
+                    values={{ name: roleName }}
                     components={{ b: <strong /> }}
                   />
                 </Text>
@@ -169,7 +159,7 @@ export default function CircleDeleteModal({
               onClick={handleDelete}
               ml={3}
             >
-              {t('CircleDeleteModal.confirmButton', { name: circle.role.name })}
+              {t('CircleDeleteModal.confirmButton', { name: roleName })}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

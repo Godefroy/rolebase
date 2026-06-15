@@ -1,45 +1,47 @@
+// Use this hook only in useDbOrgEditActions. Elsewhere, get the action from
+// useOrgEditActions() so the active OrgContext implementation applies.
 import useCreateLog from '@/log/hooks/useCreateLog'
-import {
-  CircleFullFragment,
-  Circle_Insert_Input,
-  useCreateCirclesMutation,
-} from '@gql'
+import { useOrgContext } from '@/org/contexts/OrgContext'
+import { Circle_Insert_Input, useCreateCirclesMutation } from '@gql'
+import { OrgData } from '@rolebase/shared/model/OrgData'
 import {
   EntitiesChanges,
   EntityChangeType,
   LogType,
 } from '@rolebase/shared/model/log'
-import { store } from '@store/index'
 import { omit } from '@utils/omit'
-import { pick } from '@utils/pick'
 import { useCallback } from 'react'
 
 function getCircleAndChildren(
-  circles: CircleFullFragment[],
+  org: OrgData,
   circleId: string
 ): Circle_Insert_Input | undefined {
-  const circle = circles.find((c) => c.id === circleId)
+  const circle = org.circleById.get(circleId)
   if (!circle) return
+  const role = org.roleById.get(circle.roleId)
 
   // New circle
-  const input: Circle_Insert_Input = pick(circle, 'orgId')
+  const input: Circle_Insert_Input = { orgId: circle.orgId }
 
-  if (circle.role.base) {
+  if (role?.base) {
     input.roleId = circle.roleId
-  } else {
+  } else if (role) {
     // New role
     input.role = {
       data: {
-        ...pick(circle.role, 'name', 'singleMember', 'parentLink', 'colorHue'),
+        name: role.name,
+        singleMember: role.singleMember,
+        parentLink: role.parentLink,
+        colorHue: role.colorHue,
         orgId: circle.orgId,
       },
     }
   }
 
   // Add children
-  const children = circles
-    .filter((c) => c.parentId === circleId)
-    .map((c) => getCircleAndChildren(circles, c.id))
+  const children = org
+    .childrenOf(circleId)
+    .map((c) => getCircleAndChildren(org, c.id))
     .filter(Boolean) as Circle_Insert_Input[]
 
   if (children.length) {
@@ -49,10 +51,12 @@ function getCircleAndChildren(
   }
 
   // Add members
-  if (circle.members.length) {
+  const members = org.membersOf(circleId)
+  if (members.length) {
     input.members = {
-      data: circle.members.map((cm) => ({
+      data: members.map((cm) => ({
         memberId: cm.member.id,
+        orgId: circle.orgId,
       })),
     }
   }
@@ -62,14 +66,15 @@ function getCircleAndChildren(
 export default function useCopyCircle() {
   const [createCircles] = useCreateCirclesMutation()
   const createLog = useCreateLog()
+  const { getOrgData } = useOrgContext()
 
   return useCallback(
     async (circleId: string, targetCircleId: string | null) => {
-      const { circles } = store.getState().org
-      if (!circles) return
+      const orgData = getOrgData()
+      if (!orgData) return
 
       // Prepare data for circles, roles and circle_members insertion
-      const circlesInput = getCircleAndChildren(circles, circleId)
+      const circlesInput = getCircleAndChildren(orgData, circleId)
       if (!circlesInput) return
       circlesInput.parentId = targetCircleId
 
@@ -83,8 +88,10 @@ export default function useCopyCircle() {
       if (errors || !newCircles) throw errors?.[0]
 
       // Log changes
-      const copiedCircle = circles?.find((c) => c.id === circleId)
-      const targetCircle = circles?.find((c) => c.id === targetCircleId)
+      const copiedCircle = orgData.circleById.get(circleId)
+      const targetCircle = targetCircleId
+        ? orgData.circleById.get(targetCircleId)
+        : undefined
       if (!copiedCircle) return
 
       // Build changes
@@ -111,13 +118,15 @@ export default function useCopyCircle() {
           id: newCircles[0].id,
           name: newCircles[0].role.name,
           parentId: targetCircleId,
-          parentName: targetCircle?.role.name || null,
+          parentName: targetCircle
+            ? orgData.roleById.get(targetCircle.roleId)?.name || null
+            : null,
         },
         changes,
       })
 
       return newCircles[0].id
     },
-    []
+    [getOrgData, createCircles, createLog]
   )
 }

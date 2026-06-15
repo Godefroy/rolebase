@@ -7,8 +7,8 @@ import TextErrors from '@/common/atoms/TextErrors'
 import { Title } from '@/common/atoms/Title'
 import useUpdatableQueryParams from '@/common/hooks/useUpdatableQueryParams'
 import useOrgMember from '@/member/hooks/useOrgMember'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { useNavigateOrg } from '@/org/hooks/useNavigateOrg'
-import { useOrgId } from '@/org/hooks/useOrgId'
 import useFilterScopedEntitiesByMember from '@/participants/hooks/useFilterScopedEntitiesByMember'
 import useUserMetadata from '@/user/hooks/useUserMetadata'
 import {
@@ -35,7 +35,6 @@ import { useMeetingsByDatesSubscription, useUpdateMeetingMutation } from '@gql'
 import { RRuleUTC } from '@rolebase/shared/helpers/RRuleUTC'
 import { circleColor } from '@rolebase/shared/helpers/circleColor'
 import { truthy } from '@rolebase/shared/helpers/truthy'
-import { useStoreState } from '@store/hooks'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
@@ -66,7 +65,8 @@ export default function MeetingsPage() {
   const { t } = useTranslation()
   const { params, changeParams } = useUpdatableQueryParams<Params>()
   const isMember = useOrgMember()
-  const circles = useStoreState((state) => state.org.circles)
+  const { orgId, orgData } = useOrgContext()
+  const circles = orgData?.circles
   const navigate = useNavigateOrg()
 
   // Member param
@@ -93,9 +93,6 @@ export default function MeetingsPage() {
   const [datesRange, setDatesRange] = useState<[Date, Date] | undefined>(
     undefined
   )
-
-  // Subscribe to meetings
-  const orgId = useOrgId()
 
   // Subscribe to meetings
   const { data, error, loading } = useMeetingsByDatesSubscription({
@@ -154,7 +151,9 @@ export default function MeetingsPage() {
             }
           }
 
-          const title = `${circle.role.name} - ${meeting.title}`
+          const title = `${orgData?.getRole(circle.roleId)?.name} - ${
+            meeting.title
+          }`
 
           // Can move event or change duration?
           const isStarted = meeting.currentStepId !== null
@@ -166,7 +165,7 @@ export default function MeetingsPage() {
             title,
             backgroundColor: circleColor(
               colorLightness,
-              circle.role.colorHue ?? undefined
+              orgData?.getColor(circle.id) ?? undefined
             ),
             editable: canEditConfig,
           }
@@ -186,10 +185,12 @@ export default function MeetingsPage() {
               // Only show occurrences after today
               rrule.changeStartDate(nextDate)
 
-              // Fix circle color (can be inherited from parents)
+              // Resolve circle color (can be inherited from parents)
               const circle = circles?.find((c) => c.id === mr.circleId)
               const colorHue =
-                circle?.role.colorHue ?? mr.circle.role.colorHue ?? undefined
+                (circle ? orgData?.getColor(circle.id) : undefined) ??
+                mr.circle.role.colorHue ??
+                undefined
 
               return {
                 id: mr.id,
@@ -204,7 +205,7 @@ export default function MeetingsPage() {
             })
             .filter(truthy)
         ),
-    [meetings, meetingsRecurring, circles, colorMode]
+    [meetings, meetingsRecurring, circles, colorMode, orgData]
   )
 
   // Show/hide weekends

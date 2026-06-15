@@ -1,6 +1,6 @@
 import CircleLink from '@/circle/components/CircleLink'
 import MemberLink from '@/member/components/MemberLink'
-import { useOrgData } from '@/org/contexts/OrgDataContext'
+import { useOrgData } from '@/org/contexts/OrgContext'
 import RoleEditLink from '@/role/components/RoleEditLink'
 import { LogType } from '@rolebase/shared/model/log'
 import { ProposalLog } from '@rolebase/shared/model/proposal'
@@ -16,7 +16,8 @@ interface Props {
 // Compact, author-less rendering of a prepared org-chart change.
 export default function ProposalLogItem({ log, readOnly }: Props) {
   const { display } = log
-  const { circles } = useOrgData()
+  const orgData = useOrgData()
+  const circles = orgData?.circles
   const i18nPrefix = 'ProposalLog'
 
   switch (display.type) {

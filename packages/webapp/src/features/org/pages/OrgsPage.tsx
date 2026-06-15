@@ -15,8 +15,9 @@ import {
   useColorMode,
   useDisclosure,
 } from '@chakra-ui/react'
-import { CircleFullFragment } from '@gql'
 import { getOrgPath } from '@rolebase/shared/helpers/getOrgPath'
+import { OrgData } from '@rolebase/shared/model/OrgData'
+import { truthy } from '@rolebase/shared/helpers/truthy'
 import { useStoreState } from '@store/hooks'
 import { UserLocalStorageKeys } from '@utils/localStorage'
 import React, { useEffect, useMemo, useRef } from 'react'
@@ -37,14 +38,13 @@ export default function OrgsPage() {
   const boxRef = useRef<HTMLDivElement>(null)
   const boxSize = useElementSize(boxRef)
 
-  // Circles of orgs
-  const circles = useMemo(
-    () =>
-      orgs?.map(
-        (org): CircleFullFragment => ({ ...org.circles[0], members: [] })
-      ),
-    [orgs]
-  )
+  // Root circles of all orgs, indexed for the graph
+  const orgData = useMemo(() => {
+    if (!orgs) return undefined
+    const rootCircles = orgs.map((org) => org.circles[0]).filter(truthy)
+    const roles = rootCircles.map((c) => c.role).filter(truthy)
+    return new OrgData(rootCircles, [], [], roles, [])
+  }, [orgs])
 
   // Graph events
   const events: GraphEvents = useMemo(
@@ -125,11 +125,11 @@ export default function OrgsPage() {
           right={0}
           overflow="hidden"
         >
-          {circles && boxSize && (
+          {orgData && boxSize && (
             <CirclesGraph
               key={colorMode}
               view={CirclesGraphViews.AllCircles}
-              circles={circles}
+              org={orgData}
               events={events}
               width={boxSize.width}
               height={boxSize.height}

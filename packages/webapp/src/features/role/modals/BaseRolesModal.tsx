@@ -1,4 +1,5 @@
 import ListItemWithButtons from '@/common/atoms/ListItemWithButtons'
+import useOrgBaseRoles from '@/org/hooks/useOrgBaseRoles'
 import {
   Alert,
   AlertDescription,
@@ -16,7 +17,6 @@ import {
   useDisclosure,
   UseModalProps,
 } from '@chakra-ui/react'
-import { useStoreState } from '@store/hooks'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CreateIcon, DeleteIcon } from 'src/icons'
@@ -26,7 +26,7 @@ import RoleEditModal from './RoleEditModal'
 
 export default function BaseRolesModal(modalProps: UseModalProps) {
   const { t } = useTranslation()
-  const roles = useStoreState((state) => state.org.baseRoles)
+  const roles = useOrgBaseRoles()
 
   // Modals
   const [roleId, setRoleId] = useState<string | undefined>()

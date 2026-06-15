@@ -1,6 +1,6 @@
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { ButtonProps } from '@chakra-ui/react'
 import React from 'react'
-import useCircle from '../hooks/useCircle'
 import CircleButton from './CircleButton'
 
 interface Props extends ButtonProps {
@@ -8,6 +8,7 @@ interface Props extends ButtonProps {
 }
 
 export default function CircleByIdButton({ id, ...buttonProps }: Props) {
-  const circle = useCircle(id)
+  const { orgData } = useOrgContext()
+  const circle = orgData?.getCircle(id)
   return circle ? <CircleButton circle={circle} {...buttonProps} /> : null
 }

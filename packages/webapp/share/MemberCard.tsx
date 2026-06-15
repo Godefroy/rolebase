@@ -3,7 +3,7 @@ import {
   getResizedImageUrl,
 } from '@rolebase/shared/helpers/getResizedImageUrl'
 import MemberRoles from '@/member/components/MemberRoles'
-import useMember from '@/member/hooks/useMember'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   Avatar,
   Flex,
@@ -21,7 +21,8 @@ interface Props {
 
 export default function MemberCard({ id, selectedCircleId }: Props) {
   const { t } = useTranslation()
-  const member = useMember(id)
+  const { orgData } = useOrgContext()
+  const member = orgData?.getMember(id)
 
   if (!member) return null
 

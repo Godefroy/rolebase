@@ -1,7 +1,7 @@
-import { OrgData } from '@/org/contexts/OrgDataContext'
-import { useOrgId } from '@/org/hooks/useOrgId'
-import { RoleFragment } from '@gql'
+import { useOrgContext } from '@/org/contexts/OrgContext'
+import { OrgDataFragment, RoleFragment } from '@gql'
 import { applyEntitiesChanges } from '@rolebase/shared/helpers/log/applyEntitiesChanges'
+import { ActingLeader, OrgData } from '@rolebase/shared/model/OrgData'
 import { generateId } from '@rolebase/shared/helpers/generateId'
 import {
   EntitiesApplyMethods,
@@ -11,22 +11,20 @@ import {
 } from '@rolebase/shared/model/log'
 import { ProposalLog } from '@rolebase/shared/model/proposal'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { FlatData, buildFlatFromStore } from '../utils/buildFlatFromStore'
-import { reconstructCircles } from '../utils/reconstructCircles'
-
-export type { FlatData }
 
 export interface ProposalDraft {
   ready: boolean
-  orgData: OrgData
+  // Indexed view of the current draft data (recomputed on every change)
+  orgData: OrgData | undefined
+  roleOverlays: Record<string, Partial<RoleFragment>>
   logs: ProposalLog[]
   hasError: boolean
   // Apply a change to the draft and append a log
   applyLog(display: LogDisplay, changes: EntitiesChanges): Promise<void>
   // Remove a log and replay the remaining ones from scratch
   removeLog(logId: string): Promise<void>
-  // Read-only access to the current flat draft data (for building changes)
-  getFlat(): FlatData | undefined
+  // Read-only access to the current mutable draft data (for building changes)
+  getData(): OrgDataFragment | undefined
 }
 
 function clone<T>(value: T): T {
@@ -47,26 +45,32 @@ function arrayMethods<Entity extends { id: string }>(arr: Entity[]) {
   }
 }
 
-function buildMethods(flat: FlatData): EntitiesApplyMethods {
+function buildMethods(data: OrgDataFragment): EntitiesApplyMethods {
   return {
-    roles: arrayMethods(flat.roles),
-    circles: arrayMethods(flat.circles),
-    circlesMembers: arrayMethods(flat.circleMembers),
-    circlesLinks: arrayMethods(flat.circleLinks),
+    roles: arrayMethods(data.roles),
+    circles: arrayMethods(data.circles),
+    circlesMembers: arrayMethods(data.circleMembers),
+    circlesLinks: arrayMethods(data.circleLinks),
   } as EntitiesApplyMethods
 }
 
-// In-memory proposal draft: loads the org data, replays the proposal's logs,
-// and exposes an OrgData snapshot + apply/remove operations.
+// In-memory proposal draft: clones the org subscription result, replays the
+// proposal's logs onto it, and exposes an indexed OrgData snapshot + apply/
+// remove operations. The draft mutates the flat arrays in place; role text is
+// fetched per circle by the panel and overlaid (roleOverlays).
 export default function useProposalDraft(
-  initialLogs: ProposalLog[]
+  initialLogs: ProposalLog[],
+  actingLeader?: ActingLeader
 ): ProposalDraft {
-  const orgId = useOrgId()
+  const { getOrgResult, ready: orgReady } = useOrgContext()
 
-  // Initial flat data (kept to rebuild from scratch on removeLog)
-  const initialRef = useRef<FlatData | null>(null)
-  // Working flat data + apply methods
-  const workingRef = useRef<{ flat: FlatData; methods: EntitiesApplyMethods }>()
+  // Initial data (kept to rebuild from scratch on removeLog)
+  const initialRef = useRef<OrgDataFragment | null>(null)
+  // Working data + apply methods
+  const workingRef = useRef<{
+    data: OrgDataFragment
+    methods: EntitiesApplyMethods
+  }>()
 
   const [ready, setReady] = useState(false)
   const [logs, setLogs] = useState<ProposalLog[]>([])
@@ -75,9 +79,9 @@ export default function useProposalDraft(
   // Replay a list of logs onto fresh working data, flagging failures
   const rebuild = useCallback(async (logsToApply: ProposalLog[]) => {
     if (!initialRef.current) return
-    const flat = clone(initialRef.current)
-    const methods = buildMethods(flat)
-    workingRef.current = { flat, methods }
+    const data = clone(initialRef.current)
+    const methods = buildMethods(data)
+    workingRef.current = { data, methods }
 
     const nextLogs: ProposalLog[] = []
     for (const log of logsToApply) {
@@ -93,15 +97,13 @@ export default function useProposalDraft(
     setVersion((v) => v + 1)
   }, [])
 
-  // Build the draft snapshot entirely from the org data already in the store.
-  // Roles are reconstructed as RoleSummary (the store holds no full role
-  // fields); the panel fetches full role text per circle via subscription and
-  // overlays the draft's pending edits (see roleOverlays below).
+  // Seed the draft from the org subscription result.
   useEffect(() => {
-    if (!orgId) return
+    const result = getOrgResult()
+    if (!result) return
     let canceled = false
 
-    initialRef.current = clone(buildFlatFromStore(orgId))
+    initialRef.current = clone(result)
 
     rebuild(initialLogs).then(() => {
       if (!canceled) setReady(true)
@@ -109,7 +111,8 @@ export default function useProposalDraft(
     return () => {
       canceled = true
     }
-  }, [orgId])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orgReady])
 
   const applyLog = useCallback(
     async (display: LogDisplay, changes: EntitiesChanges) => {
@@ -149,29 +152,33 @@ export default function useProposalDraft(
     return overlays
   }, [logs])
 
-  const orgData = useMemo<OrgData>(() => {
-    const flat = workingRef.current?.flat
-    if (!flat) {
-      return { circles: undefined, members: undefined, baseRoles: undefined }
-    }
-    return {
-      circles: reconstructCircles(
-        flat.circles,
-        flat.roles,
-        flat.members,
-        flat.circleMembers,
-        flat.circleLinks
-      ),
-      members: flat.members,
-      baseRoles: flat.roles.filter((r) => r.base),
-      roleOverlays,
-    }
+  const orgData = useMemo<OrgData | undefined>(() => {
+    const data = workingRef.current?.data
+    return data
+      ? new OrgData(
+          data.circles,
+          data.circleMembers,
+          data.circleLinks,
+          data.roles,
+          data.members,
+          actingLeader
+        )
+      : undefined
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [version, roleOverlays])
+  }, [version, actingLeader])
 
   const hasError = useMemo(() => logs.some((l) => l.error), [logs])
 
-  const getFlat = useCallback(() => workingRef.current?.flat, [])
+  const getData = useCallback(() => workingRef.current?.data, [])
 
-  return { ready, orgData, logs, hasError, applyLog, removeLog, getFlat }
+  return {
+    ready,
+    orgData,
+    roleOverlays,
+    logs,
+    hasError,
+    applyLog,
+    removeLog,
+    getData,
+  }
 }

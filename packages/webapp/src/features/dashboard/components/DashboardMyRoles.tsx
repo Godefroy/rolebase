@@ -3,14 +3,14 @@ import DashboardMyInfosItem from '@/dashboard/components/DashboardMyInfosItem'
 import MemberButton from '@/member/components/MemberButton'
 import MemberRoles from '@/member/components/MemberRoles'
 import useCurrentMember from '@/member/hooks/useCurrentMember'
-import { useStoreState } from '@store/hooks'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
 export default function DashboardMyRoles() {
   const { t } = useTranslation()
   const member = useCurrentMember()
-  const circles = useStoreState((state) => state.org.circles)
+  const circles = useOrgContext().orgData?.circles
 
   if (!member || circles?.length === 1) return null
 

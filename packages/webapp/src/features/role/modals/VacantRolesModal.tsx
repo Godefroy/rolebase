@@ -1,4 +1,5 @@
 import CircleBreadcrumbButton from '@/circle/components/CircleBreadcrumbButton'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   ListItem,
   Modal,
@@ -10,28 +11,28 @@ import {
   UnorderedList,
   UseModalProps,
 } from '@chakra-ui/react'
-import { CircleFullFragment } from '@gql'
-import { useStoreState } from '@store/hooks'
+import { CircleFragment } from '@gql'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 export default function VacantRolesModal(modalProps: UseModalProps) {
   const { t } = useTranslation()
-  const circles = useStoreState((state) => state.org.circles)
+  const { orgData } = useOrgContext()
+  const circles = orgData?.circles
 
   // Filter roles
-  const vacantCircles: CircleFullFragment[] = useMemo(() => {
-    if (!circles) return []
+  const vacantCircles: CircleFragment[] = useMemo(() => {
+    if (!orgData || !circles) return []
     return (
       circles
         // Keep empty circles
         ?.filter(
           (c) =>
-            c.members.length === 0 &&
+            orgData.membersOf(c.id).length === 0 &&
             !circles.some((c2) => c2.parentId === c.id)
         )
     )
-  }, [circles])
+  }, [orgData, circles])
 
   return (
     <Modal {...modalProps}>

@@ -20,16 +20,14 @@ import React, { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import { CreateIcon } from 'src/icons'
-import useCurrentOrg from '../hooks/useCurrentOrg'
-import { useOrgId } from '../hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import OrgCreateModal from '../modals/OrgCreateModal'
 import OrgIcon from './OrgIcon'
 
 export default function OrgSwitch(props: MenuButtonProps) {
   const { t } = useTranslation()
   const sidebarContext = useContext(SidebarContext)
-  const orgId = useOrgId()
-  const org = useCurrentOrg()
+  const { orgId, org } = useOrgContext()
   const orgs = useStoreState((state) => state.orgs.entries)
   const sortedOrgs = orgs?.sort((a, b) => (a.name < b.name ? -1 : 1))
   const showName = org && org.id === orgId

@@ -1,6 +1,5 @@
 import CircleByIdButton from '@/circle/components/CircleByIdButton'
 import CircleMemberLink from '@/circle/components/CircleMemberLink'
-import useCircle from '@/circle/hooks/useCircle'
 import ActionsMenu from '@/common/atoms/ActionsMenu'
 import Loading from '@/common/atoms/Loading'
 import Switch from '@/common/atoms/Switch'
@@ -13,7 +12,7 @@ import EditorController from '@/editor/components/EditorController'
 import MemberByIdButton from '@/member/components/MemberByIdButton'
 import useCurrentMember from '@/member/hooks/useCurrentMember'
 import useOrgMember from '@/member/hooks/useOrgMember'
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { usePathInOrg } from '@/org/hooks/usePathInOrg'
 import ParticipantsNumber from '@/participants/components/ParticipantsNumber'
 import useCircleParticipants from '@/participants/hooks/useCircleParticipants'
@@ -100,7 +99,7 @@ export default function TaskContent({
   ...boxProps
 }: Props) {
   const { t } = useTranslation()
-  const orgId = useOrgId()
+  const { orgId, orgData } = useOrgContext()
   const isMember = useOrgMember()
   const currentMember = useCurrentMember()
   const updateTaskStatus = useUpdateTaskStatus()
@@ -193,7 +192,7 @@ export default function TaskContent({
   }, [id, isDirty, ...Object.values(watchedData)])
 
   // Get circle and participants
-  const circle = useCircle(watchedData.circleId)
+  const circle = orgData?.getCircle(watchedData.circleId)
   const circleParticipants = useCircleParticipants(circle)
   const allParticipants = useExtraParticipants(
     circleParticipants,
@@ -269,7 +268,9 @@ export default function TaskContent({
 
         {task?.private && (
           <Tooltip
-            label={t('TaskContent.privateTooltip', { role: circle?.role.name })}
+            label={t('TaskContent.privateTooltip', {
+              role: orgData?.getRole(circle?.roleId)?.name,
+            })}
             hasArrow
           >
             <Center mr={2}>
@@ -403,7 +404,7 @@ export default function TaskContent({
             <Collapse in={watchedData.private}>
               <FormHelperText ml="40px" mb={2}>
                 {t('TaskContent.privateHelp', {
-                  role: circle?.role.name,
+                  role: orgData?.getRole(circle?.roleId)?.name,
                 })}
               </FormHelperText>
             </Collapse>
@@ -415,7 +416,7 @@ export default function TaskContent({
             <AlertIcon />
             <AlertDescription>
               {t('TaskContent.privateNotAllowed', {
-                role: circle?.role.name,
+                role: orgData?.getRole(circle?.roleId)?.name,
               })}
             </AlertDescription>
           </Alert>

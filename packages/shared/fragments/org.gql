@@ -6,48 +6,28 @@ fragment Org on org {
   slug
   shareOrg
   shareMembers
-  protectGovernance
+  governanceMode
   defaultGraphView
   icon
   homeNote
 }
 
-# This fragment is expensive, so we avoid using it in queries
-# and use OrgFullLight instead,
-# then we reconstruct OrgFull in store/org.ts
-fragment OrgFull on org {
-  ...Org
-  org_subscription {
-    ...OrgSubscription
-  }
-  circles(where: { archived: { _eq: false } }) {
-    ...CircleFull
-  }
-  roles(where: { archived: { _eq: false }, base: { _eq: true } }) {
-    ...RoleSummary
-  }
-  members(where: { archived: { _eq: false } }) {
-    ...Member
-  }
-}
-
-fragment OrgFullLight on org {
+# Flat org data: circles, members, roles and the join tables (circleMembers,
+# circleLinks) are returned as separate top-level arrays. The client indexes
+# them into a single OrgData object (new OrgData(...)).
+fragment OrgData on org {
   ...Org
   org_subscription {
     ...OrgSubscription
   }
   circles(where: { archived: { _eq: false } }) {
     ...Circle
-    members(where: { archived: { _eq: false } }) {
-      id
-      memberId
-    }
-    invitedCircleLinks(where: { archived: { _eq: false } }) {
-      id
-      invitedCircle {
-        id
-      }
-    }
+  }
+  circleMembers(where: { archived: { _eq: false } }) {
+    ...CircleMember
+  }
+  circleLinks(where: { archived: { _eq: false } }) {
+    ...CircleLink
   }
   roles(where: { archived: { _eq: false } }) {
     ...RoleSummary

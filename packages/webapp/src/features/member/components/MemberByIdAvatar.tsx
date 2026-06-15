@@ -1,6 +1,6 @@
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { AvatarProps } from '@chakra-ui/react'
 import React from 'react'
-import useMember from '../hooks/useMember'
 import MemberAvatar from './MemberAvatar'
 
 interface Props extends AvatarProps {
@@ -9,7 +9,8 @@ interface Props extends AvatarProps {
 }
 
 export default function MemberByIdAvatar({ id, ...props }: Props) {
-  const member = useMember(id)
+  const { orgData } = useOrgContext()
+  const member = orgData?.getMember(id)
 
   return member ? <MemberAvatar member={member} {...props} /> : null
 }

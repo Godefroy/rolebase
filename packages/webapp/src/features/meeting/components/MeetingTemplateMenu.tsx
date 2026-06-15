@@ -1,4 +1,4 @@
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { Button, Menu, MenuButton } from '@chakra-ui/react'
 import { MeetingTemplateFragment, useMeetingTemplatesSubscription } from '@gql'
 import React from 'react'
@@ -12,7 +12,7 @@ interface Props {
 
 export default function MeetingTemplateMenu({ onSelect }: Props) {
   const { t } = useTranslation()
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
 
   // Subscribe to templates
   const { data } = useMeetingTemplatesSubscription({

@@ -1,6 +1,5 @@
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { Box, Flex, Heading, Icon, Tooltip, VStack } from '@chakra-ui/react'
-import { useStoreState } from '@store/hooks'
-import { truthy } from '@rolebase/shared/helpers/truthy'
 import React, { useContext, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CircleLinkIcon } from 'src/icons'
@@ -15,20 +14,19 @@ export default function CircleRoleLinkParents() {
   if (!circleContext) return null
   const { circle, parentCircle, participants } = circleContext
 
-  const circles = useStoreState((state) => state.org.circles)
+  const { orgData } = useOrgContext()
 
   // Get parent circles that have invited this circle (links)
   const invitingParentCircles = useMemo(
     () =>
-      circles
-        ?.filter((c) =>
-          c.invitedCircleLinks.some(
-            (link) => link.invitedCircle.id === circle.id
+      orgData
+        ?.invitingCirclesOf(circle.id)
+        .sort((a, b) =>
+          (orgData.getRole(a.roleId)?.name ?? '').localeCompare(
+            orgData.getRole(b.roleId)?.name ?? ''
           )
-        )
-        .filter(truthy)
-        .sort((a, b) => a.role.name.localeCompare(b.role.name)),
-    [circles, circle]
+        ),
+    [orgData, circle]
   )
 
   // Hide if empty and no parent circle

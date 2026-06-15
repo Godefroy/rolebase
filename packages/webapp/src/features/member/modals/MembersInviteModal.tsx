@@ -16,7 +16,6 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { Member_Role_Enum } from '@gql'
-import { useStoreState } from '@store/hooks'
 import { nanoid } from 'nanoid'
 import React, { useContext, useEffect } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
@@ -28,6 +27,7 @@ import MemberButton from '../components/MemberButton'
 import useCreateMember from '../hooks/useCreateMember'
 import useSubscriptionData from '@/orgSubscription/hooks/useSubscriptionData'
 import SubscriptionLimitsAlert from '@/orgSubscription/components/SubscriptionLimitsAlert'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 
 interface MemberFormData {
   id: string
@@ -43,7 +43,7 @@ interface FormValues {
 export default function MembersInviteModal(modalProps: UseModalProps) {
   const { t } = useTranslation()
   const toast = useToast()
-  const members = useStoreState((state) => state.org.members)
+  const members = useOrgContext().orgData?.members
   const circleMemberContext = useContext(CircleMemberContext)
   const createMember = useCreateMember()
   const { availableSeats, subscriptionSeats } = useSubscriptionData()

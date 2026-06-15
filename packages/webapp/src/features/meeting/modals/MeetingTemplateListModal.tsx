@@ -1,7 +1,7 @@
 import ListItemWithButtons from '@/common/atoms/ListItemWithButtons'
 import Loading from '@/common/atoms/Loading'
 import TextErrors from '@/common/atoms/TextErrors'
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   Box,
   Button,
@@ -23,7 +23,7 @@ import MeetingTemplateEditModal from './MeetingTemplateEditModal'
 
 export default function MeetingTemplateListModal(modalProps: UseModalProps) {
   const { t } = useTranslation()
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
 
   // Subscribe to templates
   const { data, loading, error } = useMeetingTemplatesSubscription({

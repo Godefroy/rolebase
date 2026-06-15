@@ -1,14 +1,14 @@
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { useAuth } from '@/user/hooks/useAuth'
 import useSuperAdmin from '@/user/hooks/useSuperAdmin'
 import { MemberFragment } from '@gql'
-import { useStoreState } from '@store/hooks'
-import { store } from '@store/index'
 import { useMemo } from 'react'
 
 export default function useCurrentMember(): MemberFragment | undefined {
   const { user } = useAuth()
   const isSuperAdmin = useSuperAdmin()
-  const members = useStoreState((state) => state.org.members)
+  const { orgData, orgId } = useOrgContext()
+  const members = orgData?.members
 
   return useMemo(() => {
     if (!user) return undefined
@@ -18,7 +18,6 @@ export default function useCurrentMember(): MemberFragment | undefined {
 
     // Mock a member for super admin
     if (isSuperAdmin) {
-      const orgId = store.getState().org.currentId
       if (!orgId) return undefined
       return {
         id: '4d3e86c4-dba9-46c2-b016-ff084b9ec359',
@@ -28,5 +27,5 @@ export default function useCurrentMember(): MemberFragment | undefined {
         archived: false,
       } satisfies MemberFragment
     }
-  }, [user?.id, members])
+  }, [user?.id, members, isSuperAdmin, orgId])
 }

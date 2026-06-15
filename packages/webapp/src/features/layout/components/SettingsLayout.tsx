@@ -2,7 +2,7 @@ import ScrollableLayout from '@/common/atoms/ScrollableLayout'
 import { Title } from '@/common/atoms/Title'
 import useOrgAdmin from '@/member/hooks/useOrgAdmin'
 import useOrgOwner from '@/member/hooks/useOrgOwner'
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { usePathInOrg } from '@/org/hooks/usePathInOrg'
 import { Box, Flex, Heading, useMediaQuery, VStack } from '@chakra-ui/react'
 import React from 'react'
@@ -23,7 +23,7 @@ const sidebarWidth = '250px'
 export default function SettingsLayout() {
   const { t } = useTranslation()
   const pathBase = usePathInOrg('settings') || '/settings'
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
   const isAdmin = useOrgAdmin()
   const isOwner = useOrgOwner()
   const [isSmallScreen] = useMediaQuery('(max-width: 1024px)')

@@ -1,5 +1,5 @@
 import ModalCloseStaticButton from '@/common/atoms/ModalCloseStaticButton'
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { stripePromise } from '@/orgSubscription/api/stripe'
 import {
   HStack,
@@ -30,7 +30,7 @@ export default function UpdatePaymentMethodModal({
   ...modalProps
 }: UpdatePaymentMethodModalProps) {
   const { t, i18n } = useTranslation()
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
   const toast = useToast()
   const [loading, setLoading] = useState(false)
   const [clientSecret, setClientSecret] = useState<string | null>(null)

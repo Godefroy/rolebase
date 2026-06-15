@@ -1,7 +1,6 @@
-import { useOrgData } from '@/org/contexts/OrgDataContext'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { ChevronRightIcon } from '@chakra-ui/icons'
 import { chakra, Text, TextProps } from '@chakra-ui/react'
-import { getCircleAndParents } from '@rolebase/shared/helpers/getCircleAndParents'
 import React, { useMemo } from 'react'
 import CircleLink from './CircleLink'
 
@@ -10,14 +9,14 @@ interface Props extends TextProps {
 }
 
 export default function CircleBreadcrumb({ circleId, ...textProps }: Props) {
-  const { circles } = useOrgData()
+  const { orgData } = useOrgContext()
 
   // Get circle parents, excluding the circle itself
   const parents = useMemo(() => {
-    if (!circles) return undefined
-    const circleAndParents = getCircleAndParents(circles, circleId)
+    if (!orgData) return undefined
+    const circleAndParents = orgData.andParentsOf(circleId)
     return circleAndParents.slice(0, circleAndParents.length - 1)
-  }, [circles, circleId])
+  }, [orgData, circleId])
 
   if (!parents || parents.length === 0) return null
 
@@ -32,7 +31,7 @@ export default function CircleBreadcrumb({ circleId, ...textProps }: Props) {
         <chakra.span whiteSpace="nowrap" key={c.id}>
           <CircleLink
             id={c.id}
-            name={c.role.name}
+            name={orgData?.getRole(c.roleId)?.name ?? ''}
             color="inherit"
             fontSize="sm"
             fontWeight={400}

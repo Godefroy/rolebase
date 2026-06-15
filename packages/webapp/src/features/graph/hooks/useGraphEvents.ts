@@ -1,5 +1,6 @@
-import { useOrgEditActions } from '@/org/contexts/OrgEditContext'
+import { useOrgContext, useOrgEditActions } from '@/org/contexts/OrgContext'
 import { useNavigateOrg } from '@/org/hooks/useNavigateOrg'
+import { Governance_Mode_Enum } from '@gql'
 import { useCallback, useMemo } from 'react'
 import useOrgMember from '../../member/hooks/useOrgMember'
 import { GraphEvents } from '../types'
@@ -7,8 +8,14 @@ import { GraphEvents } from '../types'
 export default function useGraphEvents(): GraphEvents {
   const isMember = useOrgMember()
   const navigateOrg = useNavigateOrg()
+  const { editable, governanceMode } = useOrgContext()
   const { moveCircle, copyCircle, addCircleMember, removeCircleMember } =
     useOrgEditActions()
+
+  // Direct org chart edits are disabled when the chart is read-only (preview,
+  // share) and in Strict governance, where every change goes through proposals.
+  const canEdit =
+    isMember && editable && governanceMode !== Governance_Mode_Enum.Strict
 
   // Navigation Events
   const onCircleClick = useCallback((circleId: string, parentId?: string) => {
@@ -49,11 +56,11 @@ export default function useGraphEvents(): GraphEvents {
       onCircleClick,
       onMemberClick,
       onClickOutside: () => navigateOrg('roles'),
-      onCircleMove: isMember ? moveCircle : undefined,
-      onCircleCopy: isMember ? copyCircle : undefined,
-      onMemberMove: isMember ? onMemberMove : undefined,
-      onMemberAdd: isMember ? onMemberAdd : undefined,
+      onCircleMove: canEdit ? moveCircle : undefined,
+      onCircleCopy: canEdit ? copyCircle : undefined,
+      onMemberMove: canEdit ? onMemberMove : undefined,
+      onMemberAdd: canEdit ? onMemberAdd : undefined,
     }),
-    [isMember, moveCircle, copyCircle, onMemberMove, onMemberAdd]
+    [canEdit, moveCircle, copyCircle, onMemberMove, onMemberAdd]
   )
 }

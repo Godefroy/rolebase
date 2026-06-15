@@ -1,3 +1,5 @@
+// Use this hook only in useDbOrgEditActions. Elsewhere, get the action from
+// useOrgEditActions() so the active OrgContext implementation applies.
 import useCreateLog from '@/log/hooks/useCreateLog'
 import { RoleFragment, useUpdateRoleMutation } from '@gql'
 import { getEntityChanges } from '@rolebase/shared/helpers/log/getEntityChanges'

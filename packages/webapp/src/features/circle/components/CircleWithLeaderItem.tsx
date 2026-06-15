@@ -1,6 +1,7 @@
 import MemberAvatar from '@/member/components/MemberAvatar'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { Box, BoxProps, Flex, Icon, Tooltip } from '@chakra-ui/react'
-import { CircleSummaryFragment } from '@gql'
+import { CircleFragment } from '@gql'
 import { ParticipantMember } from '@rolebase/shared/model/member'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -8,8 +9,8 @@ import { CircleParentLinkIcon } from 'src/icons'
 import CircleButton from './CircleButton'
 
 interface Props extends BoxProps {
-  circle: CircleSummaryFragment
-  parentCircle: CircleSummaryFragment
+  circle: CircleFragment
+  parentCircle: CircleFragment
   participants: ParticipantMember[]
   isInvited?: boolean
 }
@@ -22,6 +23,8 @@ export default function CircleWithLeaderItem({
   ...boxProps
 }: Props) {
   const { t } = useTranslation()
+  const { orgData } = useOrgContext()
+  const role = orgData?.getRole(circle.roleId)
   const members = useMemo(
     () =>
       participants
@@ -52,10 +55,10 @@ export default function CircleWithLeaderItem({
         </>
       )}
 
-      {circle.role.parentLink && (
+      {role?.parentLink && (
         <Tooltip
           label={t('CircleWithLeaderItem.linkTooltip', {
-            role: parentCircle.role.name,
+            role: orgData?.getRole(parentCircle.roleId)?.name ?? '',
           })}
           placement="top"
           hasArrow

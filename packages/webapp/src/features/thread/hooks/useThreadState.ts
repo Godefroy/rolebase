@@ -1,9 +1,9 @@
-import useCircle from '@/circle/hooks/useCircle'
 import useCurrentMember from '@/member/hooks/useCurrentMember'
 import useOrgMember from '@/member/hooks/useOrgMember'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import useCircleParticipants from '@/participants/hooks/useCircleParticipants'
 import {
-  CircleSummaryFragment,
+  CircleFragment,
   ThreadActivityFragment,
   ThreadFragment,
   ThreadMemberStatusFragment,
@@ -31,7 +31,7 @@ export interface ThreadState {
   loading: boolean
   error: Error | undefined
   path: string
-  circle: CircleSummaryFragment | undefined
+  circle: CircleFragment | undefined
   participants: ParticipantMember[]
   canEdit: boolean
   canParticipate: boolean
@@ -42,6 +42,7 @@ export interface ThreadState {
 export default function useThreadState(threadId: string): ThreadState {
   const currentMember = useCurrentMember()
   const isMember = useOrgMember()
+  const { orgData } = useOrgContext()
   const [upsertThreadMemberStatus] = useUpsertThreadMemberStatusMutation()
 
   // Subscribe to thread
@@ -74,7 +75,7 @@ export default function useThreadState(threadId: string): ThreadState {
   const path = usePathInOrg(`threads/${thread?.id}`)
 
   // Circle
-  const circle = useCircle(thread?.circleId)
+  const circle = orgData?.getCircle(thread?.circleId)
 
   // Participants
   const circleParticipants = useCircleParticipants(circle)

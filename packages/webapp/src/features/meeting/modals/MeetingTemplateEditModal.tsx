@@ -1,4 +1,4 @@
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   Button,
   FormControl,
@@ -55,7 +55,7 @@ export default function MeetingTemplateEditModal({
 }: Props) {
   const { t } = useTranslation()
   const toast = useToast()
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
   const [createMeetingTemplate] = useCreateMeetingTemplateMutation()
   const [updateMeetingTemplate] = useUpdateMeetingTemplateMutation()
 

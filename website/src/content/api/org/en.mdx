@@ -15,7 +15,7 @@ category: 'org-members'
 | `archived` | `Boolean` | Whether the organization is archived (default: false) |
 | `createdAt` | `Timestamp` | When the organization was created |
 | `defaultGraphView` | `String` | Default graph view setting (optional) |
-| `protectGovernance` | `Boolean` | Whether governance changes are restricted to leaders (default: false) |
+| `governanceMode` | `governance_mode` | Who can change the org chart: `Free` (all members), `Agile` (role leaders), `Strict` (proposals only). Default: `Free` |
 | `shareMembers` | `Boolean` | Whether member information is publicly shared (default: false) |
 | `shareOrg` | `Boolean` | Whether organization information is publicly shared (default: false) |
 
@@ -77,13 +77,13 @@ mutation UpdateOrganization {
     _set: {
       name: "New Organization Name"
       shareMembers: true
-      protectGovernance: true
+      governanceMode: Strict
     }
   ) {
     id
     name
     shareMembers
-    protectGovernance
+    governanceMode
   }
 }
 ```
@@ -95,8 +95,10 @@ mutation UpdateOrganization {
 - **Member:** Can view organization data based on sharing settings
 
 <Callout type="info" title="Notes">
-  The `slug` field must be unique across all organizations. When
-  `protectGovernance` is enabled, only circle leaders can modify
-  governance-related entities. The `shareMembers` and `shareOrg` flags control
-  visibility of organization data to external users.
+  The `slug` field must be unique across all organizations. The
+  `governanceMode` field sets who can change the org chart: `Free` lets every
+  member edit it, `Agile` restricts edits to role leaders, and `Strict` makes
+  it read-only so changes go through proposals. Only the Owner can change
+  `governanceMode`. The `shareMembers` and `shareOrg` flags control visibility
+  of organization data to external users.
 </Callout>

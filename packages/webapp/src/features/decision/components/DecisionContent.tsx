@@ -1,5 +1,4 @@
 import CircleByIdButton from '@/circle/components/CircleByIdButton'
-import useCircle from '@/circle/hooks/useCircle'
 import ActionsMenu from '@/common/atoms/ActionsMenu'
 import Loading from '@/common/atoms/Loading'
 import Markdown from '@/common/atoms/Markdown'
@@ -7,6 +6,7 @@ import { Title } from '@/common/atoms/Title'
 import useDateLocale from '@/common/hooks/useDateLocale'
 import Page404 from '@/common/pages/Page404'
 import useOrgMember from '@/member/hooks/useOrgMember'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import LogText from '@/log/components/LogText'
 import {
   Box,
@@ -50,6 +50,7 @@ export default function DecisionContent({
   const isMember = useOrgMember()
   const editModal = useDisclosure()
   const deleteModal = useDisclosure()
+  const { orgData } = useOrgContext()
 
   // Subscribe decision
   const { data, loading, error } = useDecisionSubscription({
@@ -57,7 +58,7 @@ export default function DecisionContent({
   })
   const decision = data?.decision_by_pk || undefined
 
-  const circle = useCircle(decision?.circleId)
+  const circle = orgData?.getCircle(decision?.circleId)
   const canEdit = useCanEditDecisions(decision?.circleId)
 
   // Org chart changes applied by this decision (when it came from a proposal)
@@ -90,7 +91,7 @@ export default function DecisionContent({
         {decision?.private && (
           <Tooltip
             label={t('DecisionContent.private', {
-              role: circle?.role.name,
+              role: orgData?.getRole(circle?.roleId)?.name,
             })}
             hasArrow
           >

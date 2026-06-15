@@ -8,7 +8,7 @@ import useRemoveCircleLink from '@/circle/hooks/useRemoveCircleLink'
 import useRemoveCircleMember from '@/circle/hooks/useRemoveCircleMember'
 import useUpdateRole from '@/role/hooks/useUpdateRole'
 import { useMemo } from 'react'
-import { OrgEditActions } from '../contexts/OrgEditContext'
+import { OrgEditActions } from '../contexts/OrgContext'
 
 // Database-backed implementation of OrgEditActions (org page).
 // Each method wraps an existing hook: behavior is unchanged.
@@ -35,6 +35,16 @@ export default function useDbOrgEditActions(): OrgEditActions {
       addCircleLink,
       removeCircleLink,
     }),
-    [createCircle]
+    [
+      moveCircle,
+      copyCircle,
+      archiveCircle,
+      createCircle,
+      updateRole,
+      addCircleMember,
+      removeCircleMember,
+      addCircleLink,
+      removeCircleLink,
+    ]
   )
 }

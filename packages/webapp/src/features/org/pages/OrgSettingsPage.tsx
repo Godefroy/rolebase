@@ -1,6 +1,5 @@
 import GraphViewsSelect from '@/circle/components/GraphViewsSelect'
 import IconTextButton from '@/common/atoms/IconTextButton'
-import SwitchController from '@/common/atoms/SwitchController'
 import { Title } from '@/common/atoms/Title'
 import useCopyUrl from '@/common/hooks/useCopyUrl'
 import { CirclesGraphViews } from '@/graph/types'
@@ -18,7 +17,7 @@ import {
   useToast,
   VStack,
 } from '@chakra-ui/react'
-import { useUpdateOrgMutation } from '@gql'
+import { Governance_Mode_Enum, useUpdateOrgMutation } from '@gql'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { getOrgPath } from '@rolebase/shared/helpers/getOrgPath'
 import { nameSchema } from '@rolebase/shared/schemas'
@@ -28,15 +27,18 @@ import { useTranslation } from 'react-i18next'
 import { CopyIcon, EditIcon } from 'src/icons'
 import settings from 'src/settings'
 import * as yup from 'yup'
+import useOrgOwner from '@/member/hooks/useOrgOwner'
+import { trpc } from 'src/trpc'
 import useOrg from '../hooks/useOrg'
-import { useOrgId } from '../hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
+import GovernanceModeSelect from '../components/GovernanceModeSelect'
 import OrgIconEdit from '../components/OrgIconEdit'
 import OrgDeleteModal from '../modals/OrgDeleteModal'
 import OrgSlugModal from '../modals/OrgSlugModal '
 
 interface Values {
   name: string
-  protectGovernance: boolean
+  governanceMode: Governance_Mode_Enum
   defaultGraphView: CirclesGraphViews
 }
 
@@ -47,10 +49,11 @@ const resolver = yupResolver(
 )
 
 export default function OrgSettingsPage() {
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
   const org = useOrg(orgId)
   const { t } = useTranslation()
   const toast = useToast()
+  const isOwner = useOrgOwner()
   const [editOrg] = useUpdateOrgMutation()
 
   const deleteModal = useDisclosure()
@@ -70,12 +73,18 @@ export default function OrgSettingsPage() {
     reset({
       name: org.name,
       defaultGraphView: org.defaultGraphView || CirclesGraphViews.AllCircles,
-      protectGovernance: org.protectGovernance,
+      governanceMode: org.governanceMode,
     })
   }, [org])
 
-  const onSubmit = handleSubmit(async (values) => {
+  const onSubmit = handleSubmit(async ({ governanceMode, ...values }) => {
     await editOrg({ variables: { id: orgId!, values } })
+
+    // Governance mode is Owner-only and goes through a dedicated backend mutation
+    if (isOwner && governanceMode !== org?.governanceMode) {
+      await trpc.org.setGovernanceMode.mutate({ orgId: orgId!, governanceMode })
+    }
+
     toast({
       title: t('Settings.toastSaved'),
       status: 'success',
@@ -149,13 +158,19 @@ export default function OrgSettingsPage() {
           </FormControl>
 
           <FormControl>
-            <FormLabel>{t('OrgEditModal.security')}</FormLabel>
-            <SwitchController name="protectGovernance" control={control}>
-              {t('OrgEditModal.protectGovernance')}
-            </SwitchController>
-            <FormHelperText ml="40px">
-              {t('OrgEditModal.protectGovernanceHelp')}
-            </FormHelperText>
+            <FormLabel>{t('OrgEditModal.governance')}</FormLabel>
+            <Controller
+              name="governanceMode"
+              control={control}
+              render={({ field }) => (
+                <GovernanceModeSelect
+                  value={field.value}
+                  onChange={field.onChange}
+                  variant="outline"
+                  isDisabled={!isOwner}
+                />
+              )}
+            />
           </FormControl>
 
           <Flex w="100%" justify="space-between" pt={4}>

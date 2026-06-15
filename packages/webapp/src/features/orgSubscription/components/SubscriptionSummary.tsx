@@ -1,4 +1,4 @@
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   Box,
   Button,
@@ -43,7 +43,7 @@ export default function SubscriptionSummary({
   const [couponDuration, setCouponDuration] = useState<number>()
   const [priceData, setPriceData] =
     useState<Omit<PricePreview, 'promotionCode'>>()
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
   const parsedDetails = useMemo(() => {
     if (!billingDetails?.address) return []
 

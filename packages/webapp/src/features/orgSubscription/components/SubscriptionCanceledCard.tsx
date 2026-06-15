@@ -1,4 +1,4 @@
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { Button, Card, CardProps, Flex, Text, useToast } from '@chakra-ui/react'
 import { format } from 'date-fns'
 import React, { useState } from 'react'
@@ -17,7 +17,7 @@ export default function SubscriptionCanceledCard({
   ...cardProps
 }: SubscriptionCanceledCardProps) {
   const { t } = useTranslation()
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
   const toast = useToast()
   const [loading, setLoading] = useState<boolean>(false)
 

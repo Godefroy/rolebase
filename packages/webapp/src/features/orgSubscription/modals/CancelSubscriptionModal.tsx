@@ -1,4 +1,4 @@
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   Button,
   Flex,
@@ -29,7 +29,7 @@ export default function CancelSubscriptionModal({
   const { t } = useTranslation()
   const [loading, setLoading] = useState(false)
   const toast = useToast()
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
 
   const handleCancel = async () => {
     setLoading(true)

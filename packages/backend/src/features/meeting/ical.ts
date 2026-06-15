@@ -1,5 +1,4 @@
 import { RRuleUTC } from '@rolebase/shared/helpers/RRuleUTC'
-import filterScopedEntitiesByMember from '@rolebase/shared/helpers/filterScopedEntitiesByMember'
 import getMeetingVideoConfUrl from '@rolebase/shared/helpers/getMeetingVideoConfUrl'
 import { getOrgPath } from '@rolebase/shared/helpers/getOrgPath'
 import { TRPCError } from '@trpc/server'
@@ -12,6 +11,7 @@ import i18n from '../../i18n'
 import { route } from '../../rest/route'
 import settings from '../../settings'
 import { adminRequest } from '../../utils/adminRequest'
+import { loadOrgData } from '../org/loadOrgData'
 import { generateMeetingToken } from './generateMeetingToken'
 
 const yupSchema = yup.object().shape({
@@ -36,6 +36,9 @@ export default route(async (context) => {
   if (!org) {
     throw new TRPCError({ code: 'NOT_FOUND', message: 'Org not found' })
   }
+
+  // Load indexed org data for scope resolution
+  const orgData = await loadOrgData(orgId)
 
   // Setup calendar
   const cal = new ICalCalendar()
@@ -82,10 +85,9 @@ export default route(async (context) => {
   }
 
   // Filter recurring meetings
-  const recurringMeetings = filterScopedEntitiesByMember(
+  const recurringMeetings = orgData.filterScopedEntities(
     org.meetings_recurring,
-    memberId,
-    org.circles
+    memberId
   )
 
   // Add recurring events
@@ -147,9 +149,6 @@ const GET_MEETINGS = gql(`
       id
       name
       slug
-      circles(where: { archived: { _eq: false } }) {
-        ...CircleFull
-      }
       meetings(
         where: {
           archived: { _eq: false }

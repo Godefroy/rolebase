@@ -1,5 +1,5 @@
 import useCreateLog from '@/log/hooks/useCreateLog'
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   Button,
   FormControl,
@@ -42,7 +42,7 @@ export default function BaseRoleCreateModal({
   ...modalProps
 }: Props) {
   const { t } = useTranslation()
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
   const [createRole] = useCreateRoleMutation()
   const createLog = useCreateLog()
 

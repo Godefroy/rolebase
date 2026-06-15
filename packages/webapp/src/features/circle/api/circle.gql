@@ -1,6 +1,11 @@
+# PK lookup, ignores archived: loads a single circle and its role by id, so an
+# archived circle's role panel can still be opened.
 query getCircle($id: uuid!) {
   circle_by_pk(id: $id) {
     ...Circle
+    role {
+      ...RoleSummary
+    }
   }
 }
 
@@ -128,6 +133,32 @@ mutation archiveCircles($circlesIds: [uuid!]!, $rolesIds: [uuid!]!) {
   delete_meeting_recurring(where: { circleId: { _in: $circlesIds } }) {
     returning {
       id
+    }
+  }
+}
+
+mutation unarchiveCircles($circlesIds: [uuid!]!, $rolesIds: [uuid!]!) {
+  update_circle(where: { id: { _in: $circlesIds } }, _set: { archived: false }) {
+    returning {
+      id
+    }
+  }
+  update_role(where: { id: { _in: $rolesIds } }, _set: { archived: false }) {
+    returning {
+      id
+    }
+  }
+}
+
+# Archived circles of an org, to walk an archived subtree to restore
+# (the whole subtree of an archived circle is archived too).
+query getOrgCirclesForRestore($orgId: uuid!) {
+  circle(where: { orgId: { _eq: $orgId }, archived: { _eq: true } }) {
+    id
+    parentId
+    roleId
+    role {
+      base
     }
   }
 }

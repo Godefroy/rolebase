@@ -1,8 +1,8 @@
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { Mentionable, MentionEntities } from '@rolebase/editor/react'
-import { useStoreState } from '@store/hooks'
 
 export default function useMentionables(): Mentionable[] {
-  const members = useStoreState((state) => state.org.members)
+  const members = useOrgContext().orgData?.members
   return (
     members?.map((member) => ({
       entity: MentionEntities.Member,

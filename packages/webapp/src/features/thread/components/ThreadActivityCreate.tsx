@@ -3,7 +3,7 @@ import { EditorHandle } from '@/editor'
 import SimpleEditor from '@/editor/components/SimpleEditor'
 import MeetingEditModal from '@/meeting/modals/MeetingEditModal'
 import useCurrentMember from '@/member/hooks/useCurrentMember'
-import useCurrentOrg from '@/org/hooks/useCurrentOrg'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import TaskModal from '@/task/modals/TaskModal'
 import {
   Alert,
@@ -57,7 +57,7 @@ interface Props extends BoxProps {
 export default function ThreadActivityCreate({ thread, ...boxProps }: Props) {
   const { t } = useTranslation()
   const currentMember = useCurrentMember()
-  const org = useCurrentOrg()
+  const { org } = useOrgContext()
   const canAddDecision = useCanEditDecisions(thread.circleId)
   const [createThreadActivity] = useCreateThreadActivityMutation()
   const editorRef = useRef<EditorHandle>(null)

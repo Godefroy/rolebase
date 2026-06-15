@@ -1,6 +1,6 @@
 import NumberInputController from '@/common/atoms/NumberInputController'
 import EditorController from '@/editor/components/EditorController'
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   Accordion,
   AccordionButton,
@@ -103,7 +103,7 @@ export default function ActivityPollModal({
   ...modalProps
 }: Props) {
   const { t } = useTranslation()
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
   const [updateActivity] = useUpdateThreadActivityMutation()
   const [createActivity] = useCreateThreadActivityMutation()
   const [deletePollAnswers] = useDeleteThreadPollAnswersMutation()

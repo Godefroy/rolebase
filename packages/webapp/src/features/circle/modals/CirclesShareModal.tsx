@@ -1,7 +1,7 @@
 import Switch from '@/common/atoms/Switch'
 import useCopyUrl from '@/common/hooks/useCopyUrl'
 import { CirclesGraphViews } from '@/graph/types'
-import useCurrentOrg from '@/org/hooks/useCurrentOrg'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   Button,
   Flex,
@@ -28,7 +28,7 @@ import GraphViewsSelect from '../components/GraphViewsSelect'
 
 export default function CirclesShareModal(modalProps: UseModalProps) {
   const { t } = useTranslation()
-  const org = useCurrentOrg()
+  const { org } = useOrgContext()
   const [updateOrg] = useUpdateOrgMutation()
 
   // State

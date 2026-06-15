@@ -182,6 +182,8 @@
     "roleOwner": "Owner"
   },
   "CircleRole": {
+    "archived": "This role is archived.",
+    "restore": "Restore",
     "purpose": "Purpose",
     "purposePlaceholder": "Purpose it pursues...",
     "domain": "Domain",
@@ -787,9 +789,13 @@
     "slug": "URL",
     "icon": "Icon",
     "iconHelp": "Shown next to your organization name in the sidebar.",
-    "security": "Security settings",
-    "protectGovernance": "Protect governance",
-    "protectGovernanceHelp": "Only owners and representatives of a role can modify its direct sub-roles and their members.",
+    "governance": "Governance",
+    "governanceFree": "Free",
+    "governanceFreeHelp": "All members can edit the whole org chart.",
+    "governanceAgile": "Agile",
+    "governanceAgileHelp": "Roles can be edited by their leaders.",
+    "governanceStrict": "Strict",
+    "governanceStrictHelp": "Roles can only be changed through proposals (Holacracy).",
     "defaultGraphView": "Default org chart view"
   },
   "OrgIconEdit": {

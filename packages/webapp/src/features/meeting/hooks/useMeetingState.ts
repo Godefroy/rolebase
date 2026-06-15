@@ -1,8 +1,8 @@
-import useCircle from '@/circle/hooks/useCircle'
 import useCurrentMember from '@/member/hooks/useCurrentMember'
 import useOrgMember from '@/member/hooks/useOrgMember'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
-  CircleFullFragment,
+  CircleFragment,
   MeetingFragment,
   MeetingStepFragment,
   useMeetingSubscription,
@@ -30,7 +30,7 @@ export interface MeetingState {
   loading: boolean
   error: Error | undefined
   steps: MeetingStepFragment[] | undefined
-  circle: CircleFullFragment | undefined
+  circle: CircleFragment | undefined
   participants: ParticipantMember[]
   currentStep: MeetingStepFragment | undefined
   currentStepConfig: MeetingStepConfig | undefined
@@ -71,7 +71,8 @@ export default function useMeetingState(meetingId: string): MeetingState {
   const path = usePathInOrg(`meetings/${meeting?.id}`)
 
   // Circle
-  const circle = useCircle(meeting?.circleId)
+  const { orgData } = useOrgContext()
+  const circle = orgData?.getCircle(meeting?.circleId)
 
   // Meeting not started?
   const isEnded = !!meeting?.ended
@@ -304,8 +305,12 @@ export default function useMeetingState(meetingId: string): MeetingState {
   // Video conference URL
   const videoConfUrl = useMemo(
     () =>
-      getMeetingVideoConfUrl(meeting, circle?.role.name, currentMember?.name),
-    [meeting, circle, currentMember]
+      getMeetingVideoConfUrl(
+        meeting,
+        orgData?.getRole(circle?.roleId)?.name,
+        currentMember?.name
+      ),
+    [meeting, circle, currentMember, orgData]
   )
 
   // Set startNotified to true just before meeting start

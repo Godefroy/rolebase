@@ -12,21 +12,3 @@ fragment CircleSummary on circle {
     ...RoleSummary
   }
 }
-
-fragment CircleFull on circle {
-  ...CircleSummary
-  members(
-    where: { archived: { _eq: false }, member: { archived: { _eq: false } } }
-  ) {
-    id
-    member {
-      ...MemberSummary
-    }
-  }
-  invitedCircleLinks(where: { archived: { _eq: false } }) {
-    id
-    invitedCircle {
-      id
-    }
-  }
-}

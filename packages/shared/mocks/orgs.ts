@@ -1,4 +1,5 @@
-import { OrgFragment } from '../gql'
+import { CirclesGraphViews } from '../model/graph'
+import { Governance_Mode_Enum, OrgFragment } from '../gql'
 
 export const org: OrgFragment = {
   id: 'org-1',
@@ -7,5 +8,6 @@ export const org: OrgFragment = {
   createdAt: new Date().toISOString(),
   shareOrg: false,
   shareMembers: false,
-  protectGovernance: false,
+  governanceMode: Governance_Mode_Enum.Free,
+  defaultGraphView: CirclesGraphViews.AllCircles,
 }

@@ -1,4 +1,4 @@
-import { CircleFullFragment } from '@rolebase/shared/gql'
+import { OrgData } from '@rolebase/shared/model/OrgData'
 import React, { useMemo } from 'react'
 import { computeVisibleNodes } from '../core/culling'
 import { computeLayout } from '../core/layout'
@@ -16,7 +16,7 @@ import {
 
 export interface StaticCirclesGraphProps {
   view: CirclesGraphViews
-  circles: CircleFullFragment[]
+  org: OrgData
   width: number
   height: number
   colorMode?: GraphColorMode
@@ -32,7 +32,7 @@ export interface StaticCirclesGraphProps {
 // browser once the markup is mounted and fonts are loaded.
 export default function StaticCirclesGraph({
   view,
-  circles,
+  org,
   width,
   height,
   colorMode = 'light',
@@ -40,8 +40,8 @@ export default function StaticCirclesGraph({
   showAllNodes,
 }: StaticCirclesGraphProps) {
   const { root, nodes } = useMemo(
-    () => computeLayout(circles, view, selectedCircleId),
-    [circles, view, selectedCircleId]
+    () => computeLayout(org, view, selectedCircleId),
+    [org, view, selectedCircleId]
   )
 
   // Fit the biggest circle in the frame

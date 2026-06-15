@@ -1,9 +1,9 @@
 import { RRuleUTC } from '@rolebase/shared/helpers/RRuleUTC'
-import { getScopeMemberIds } from '@rolebase/shared/helpers/getScopeMemberIds'
 import { add } from 'date-fns'
 import { gql } from '../../gql'
 import { webhookProcedure } from '../../trpc/webhookProcedure'
 import { adminRequest } from '../../utils/adminRequest'
+import { loadOrgData } from '../org/loadOrgData'
 
 const maxAheadTime = 14 * 24 * 60 * 60 * 1000 // 2 weeks
 
@@ -34,7 +34,7 @@ export default webhookProcedure.mutation(async () => {
       { id }
     )
     if (!recurringMeeting) continue
-    const circles = recurringMeeting.org.circles
+    const orgData = await loadOrgData(recurringMeeting.orgId)
 
     // Create meeting
     const { insert_meeting_one } = await adminRequest(CREATE_MEETING, {
@@ -53,9 +53,9 @@ export default webhookProcedure.mutation(async () => {
         recurringDate: nextDate.toISOString(),
         recurringId: id,
         meeting_attendees: {
-          data: getScopeMemberIds(recurringMeeting.scope, circles).map(
-            (id) => ({ memberId: id })
-          ),
+          data: orgData
+            .getScopeMemberIds(recurringMeeting.scope)
+            .map((id) => ({ memberId: id })),
         },
       },
     })
@@ -90,11 +90,6 @@ const GET_RECURRING_MEETING = gql(`
       videoConf
       private
       invitedReadonly
-      org {
-        circles(where: { archived: { _eq: false } }) {
-          ...CircleFull
-        }
-      }
     }
   }
 `)

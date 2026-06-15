@@ -158,6 +158,7 @@ const dbMethods: EntitiesApplyMethods = {
       await adminRequest(INSERT_CIRCLE_MEMBER, {
         object: {
           id: data.id,
+          orgId: data.orgId,
           circleId: data.circleId,
           memberId: data.memberId,
         },
@@ -175,6 +176,7 @@ const dbMethods: EntitiesApplyMethods = {
       await adminRequest(INSERT_CIRCLE_LINK, {
         object: {
           id: data.id,
+          orgId: data.orgId,
           parentId: data.parentId,
           circleId: data.circleId,
         },

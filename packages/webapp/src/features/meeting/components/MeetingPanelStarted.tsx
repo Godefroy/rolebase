@@ -3,7 +3,7 @@ import IconTextButton from '@/common/atoms/IconTextButton'
 import { useNormalClickHandler } from '@/common/hooks/useNormalClickHandler'
 import DecisionEditModal from '@/decision/modals/DecisionEditModal'
 import useCurrentMember from '@/member/hooks/useCurrentMember'
-import useCurrentOrg from '@/org/hooks/useCurrentOrg'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import TaskModal from '@/task/modals/TaskModal'
 import ThreadEditModal from '@/thread/modals/ThreadEditModal'
 import {
@@ -41,7 +41,7 @@ import MeetingEditModal from '../modals/MeetingEditModal'
 export default function MeetingPanelStarted() {
   const { t } = useTranslation()
   const currentMember = useCurrentMember()
-  const org = useCurrentOrg()
+  const { org } = useOrgContext()
 
   const {
     meeting,

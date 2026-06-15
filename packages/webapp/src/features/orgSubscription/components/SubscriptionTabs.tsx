@@ -1,6 +1,6 @@
 import Tab from '@/common/atoms/Tab'
 import useCurrentMember from '@/member/hooks/useCurrentMember'
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   Box,
   Flex,
@@ -24,7 +24,7 @@ import SubscriptionTab from './SubscriptionTab'
 
 export default function SubscriptionTabs(props: FlexProps) {
   const { t } = useTranslation()
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
   const currentMember = useCurrentMember()
   const toast = useToast()
   const [subscriptionLoading, setSubscriptionLoading] = useState(true)

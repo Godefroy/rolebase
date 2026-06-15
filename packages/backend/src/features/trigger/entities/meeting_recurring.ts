@@ -1,5 +1,4 @@
 import { getOrgPath } from '@rolebase/shared/helpers/getOrgPath'
-import { getScopeMemberIds } from '@rolebase/shared/helpers/getScopeMemberIds'
 import { truthy } from '@rolebase/shared/helpers/truthy'
 import { gql, MeetingRecurringFragment } from '../../../gql'
 import settings from '../../../settings'
@@ -7,6 +6,7 @@ import { adminRequest } from '../../../utils/adminRequest'
 import { HasuraEvent } from '../../../utils/nhost'
 import { appFactory } from '../../apps'
 import AbstractCalendarApp from '../../apps/AbstractCalendarApp'
+import { loadOrgData } from '../../org/loadOrgData'
 import { IndexEntity } from './IndexEntity'
 
 // Notify calendar apps of users when one of those props changes
@@ -39,9 +39,6 @@ export class IndexMeetingRecurring extends IndexEntity<MeetingRecurringFragment>
           org_by_pk(id: $orgId) {
             id
             slug
-            circles(where: { archived: { _eq: false } }) {
-              ...CircleFull
-            }
             members(where: { archived: { _eq: false } }) {
               ...Member
               user {
@@ -61,9 +58,8 @@ export class IndexMeetingRecurring extends IndexEntity<MeetingRecurringFragment>
       meetingRecurring?.meetings.map((m) => m.recurringDate).filter(truthy) ||
       []
     const org = result.org_by_pk
-    const circles = org?.circles
     const members = org?.members
-    if (!org || !circles || !members) {
+    if (!org || !members) {
       console.error(
         `Could not find meeting_recurring data for notification: ${meetingId} -> ${JSON.stringify(
           result
@@ -72,11 +68,13 @@ export class IndexMeetingRecurring extends IndexEntity<MeetingRecurringFragment>
       return
     }
 
+    const orgData = await loadOrgData(orgId)
+
     const prevParticipants = data.old
-      ? getScopeMemberIds(data.old.scope, circles)
+      ? orgData.getScopeMemberIds(data.old.scope)
       : []
     const nextParticipants = data.new
-      ? getScopeMemberIds(data.new.scope, circles)
+      ? orgData.getScopeMemberIds(data.new.scope)
       : []
 
     const orgUrl = `${settings.url}${getOrgPath(org)}`

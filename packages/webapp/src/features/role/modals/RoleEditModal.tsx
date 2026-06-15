@@ -2,7 +2,7 @@ import ColorController from '@/common/atoms/ColorController'
 import Loading from '@/common/atoms/Loading'
 import SwitchController from '@/common/atoms/SwitchController'
 import TextError from '@/common/atoms/TextError'
-import { useOrgEditActions } from '@/org/contexts/OrgEditContext'
+import { useOrgContext, useOrgEditActions } from '@/org/contexts/OrgContext'
 import useCurrentMember from '@/member/hooks/useCurrentMember'
 import useOrgOwner from '@/member/hooks/useOrgOwner'
 import {
@@ -29,9 +29,7 @@ import {
 } from '@chakra-ui/react'
 import { RoleFragment, RoleSummaryFragment, useGetRoleQuery } from '@gql'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { getCircleLeaders } from '@rolebase/shared/helpers/getCircleLeaders'
 import { nameSchema } from '@rolebase/shared/schemas'
-import { useStoreState } from '@store/hooks'
 import React, { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -78,7 +76,8 @@ export default function RoleEditModal({
   const { updateRole } = useOrgEditActions()
   const currentMember = useCurrentMember()
   const isOrgOwner = useOrgOwner()
-  const circles = useStoreState((state) => state.org.circles)
+  const { orgData } = useOrgContext()
+  const circles = orgData?.circles
 
   const {
     handleSubmit,
@@ -108,7 +107,7 @@ export default function RoleEditModal({
   // Can change parent link?
   const canChangeParentLink = useMemo(() => {
     if (isOrgOwner) return true
-    if (!role || !circles || !currentMember) return false
+    if (!role || !circles || !orgData || !currentMember) return false
     // Get parent circle and grand parent circle
     const roleId = role.id
     const circle = circles.find((c) => c.roleId === roleId)
@@ -118,15 +117,15 @@ export default function RoleEditModal({
     if (!grandParentCircleId) return false
 
     // Get leaders of parent circle and grand parent circle
-    const parentLeaders = getCircleLeaders(parentCircle, circles)
-    const grandParentLeaders = getCircleLeaders(grandParentCircleId, circles)
+    const parentLeaders = orgData.getLeaders(parentCircle.id)
+    const grandParentLeaders = orgData.getLeaders(grandParentCircleId)
 
     // Can change parent link if leader of parent circle and grand parent circle
     return (
       parentLeaders.some((p) => p.member.id === currentMember.id) &&
       grandParentLeaders.some((p) => p.member.id === currentMember.id)
     )
-  }, [isOrgOwner, role, circles, currentMember])
+  }, [isOrgOwner, role, circles, orgData, currentMember])
 
   const onSubmit = handleSubmit(async (values) => {
     if (!role) return

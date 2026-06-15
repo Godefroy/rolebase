@@ -1,7 +1,7 @@
 import Loading from '@/common/atoms/Loading'
 import TextError from '@/common/atoms/TextError'
 import EditorController from '@/editor/components/EditorController'
-import { useOrgEditActions } from '@/org/contexts/OrgEditContext'
+import { useOrgEditActions } from '@/org/contexts/OrgContext'
 import {
   Alert,
   AlertDescription,

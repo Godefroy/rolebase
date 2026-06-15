@@ -1,7 +1,6 @@
 import { EditableField } from '@/common/atoms/EditableField'
 import useOrgAdmin from '@/member/hooks/useOrgAdmin'
-import useCurrentOrg from '@/org/hooks/useCurrentOrg'
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { Card, CardBody, CardProps } from '@chakra-ui/react'
 import { useUpdateOrgMutation } from '@gql'
 import React from 'react'
@@ -9,8 +8,7 @@ import { useTranslation } from 'react-i18next'
 
 export default function DashboardHomeNote(cardProps: CardProps) {
   const { t } = useTranslation()
-  const orgId = useOrgId()
-  const org = useCurrentOrg()
+  const { orgId, org } = useOrgContext()
   const isAdmin = useOrgAdmin()
   const [updateOrg] = useUpdateOrgMutation()
 

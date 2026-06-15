@@ -1,7 +1,7 @@
 import Loading from '@/common/atoms/Loading'
 import TextErrors from '@/common/atoms/TextErrors'
 import LogsList from '@/log/components/LogsList'
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { Box, BoxProps } from '@chakra-ui/react'
 import { useTaskLogsSubscription } from '@gql'
 import React, { ReactNode } from 'react'
@@ -12,7 +12,7 @@ interface Props extends BoxProps {
 }
 
 export const TaskLogs = ({ taskId, header, ...boxProps }: Props) => {
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
 
   // Subscribe to logs
   const { data, error, loading } = useTaskLogsSubscription({

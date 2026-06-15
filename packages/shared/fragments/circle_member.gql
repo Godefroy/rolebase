@@ -1,5 +1,6 @@
 fragment CircleMember on circle_member {
   id
+  orgId
   circleId
   memberId
   createdAt

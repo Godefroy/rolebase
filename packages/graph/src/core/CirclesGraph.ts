@@ -1,4 +1,4 @@
-import { CircleFullFragment } from '@rolebase/shared/gql'
+import { OrgData } from '@rolebase/shared/model/OrgData'
 import { getColor } from '../helpers/colors'
 import { omit } from '../helpers/omit'
 import settings from '../settings'
@@ -7,8 +7,8 @@ import { Graph } from './Graph'
 import { computeLayout } from './layout'
 import { viewStrategies } from './views'
 
-export class CirclesGraph extends Graph<CircleFullFragment[]> {
-  public origCircles: CircleFullFragment[] = []
+export class CirclesGraph extends Graph<OrgData> {
+  public org?: OrgData
   private dataIds: Set<string> | undefined
   private enterTimeout?: ReturnType<typeof setTimeout>
   // Node positions of the previous layout, to detect which nodes moved
@@ -41,8 +41,7 @@ export class CirclesGraph extends Graph<CircleFullFragment[]> {
     this.element = undefined
     // @ts-ignore
     this.params = undefined
-    // @ts-ignore
-    this.origCircles = undefined
+    this.org = undefined
 
     super.destroy()
   }
@@ -90,16 +89,12 @@ export class CirclesGraph extends Graph<CircleFullFragment[]> {
     )
   }
 
-  updateData(circles: CircleFullFragment[]) {
+  updateData(org: OrgData) {
     const firstDraw = !this.inputData
-    super.updateData(circles)
-    this.origCircles = circles
+    super.updateData(org)
+    this.org = org
 
-    const { root, nodes } = computeLayout(
-      circles,
-      this.view,
-      this.selectedCircleId
-    )
+    const { root, nodes } = computeLayout(org, this.view, this.selectedCircleId)
     this.root = root
     this.nodes = nodes
 

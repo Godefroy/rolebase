@@ -13,8 +13,8 @@ import {
   SliderTrack,
   Tooltip,
 } from '@chakra-ui/react'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { defaultCircleColorHue } from '@rolebase/shared/helpers/circleColor'
-import { useStoreState } from '@store/hooks'
 import React, { useMemo } from 'react'
 import { Control, Controller, FieldValues, Path } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -34,20 +34,18 @@ export default function ColorController<Values extends FieldValues>({
   children,
 }: Props<Values>) {
   const { t } = useTranslation()
-  const circles = useStoreState((state) => state.org.circles)
+  const { orgData } = useOrgContext()
 
-  // Determines colors palette from circles colors
+  // Determines colors palette from roles colors
   const palette = useMemo(
     () =>
-      circles &&
+      orgData &&
       [
         ...new Set(
-          circles
-            .map((circle) => circle.role.colorHue)
-            .filter(Boolean) as number[]
+          orgData.roles.map((role) => role.colorHue).filter(Boolean) as number[]
         ),
       ].sort((a, b) => a - b),
-    [circles]
+    [orgData]
   )
 
   return (

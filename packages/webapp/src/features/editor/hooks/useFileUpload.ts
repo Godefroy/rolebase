@@ -1,9 +1,9 @@
 import { uploadFile } from '@/common/api/uploads'
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { useCallback } from 'react'
 
 export default function useFileUpload() {
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
 
   const handleUpload = useCallback(
     async (file: File) => {

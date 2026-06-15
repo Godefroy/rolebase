@@ -1,5 +1,5 @@
 import { GraphContext } from '@/graph/contexts/GraphContext'
-import { useOrgEditActions } from '@/org/contexts/OrgEditContext'
+import { useOrgContext, useOrgEditActions } from '@/org/contexts/OrgContext'
 import {
   AlertDialog,
   AlertDialogBody,
@@ -13,7 +13,6 @@ import {
 } from '@chakra-ui/react'
 import React, { useContext, useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import useCircle from '../hooks/useCircle'
 
 interface Props
   extends Omit<AlertDialogProps, 'children' | 'leastDestructiveRef'> {
@@ -29,9 +28,10 @@ export default function CircleLinkDeleteModal({
   ...alertProps
 }: Props) {
   const { t } = useTranslation()
-  const parentCircle = useCircle(parentId)
-  const invitedCircle = useCircle(circleId)
   const { removeCircleLink } = useOrgEditActions()
+  const { orgData } = useOrgContext()
+  const parentCircle = orgData?.getCircle(parentId)
+  const invitedCircle = orgData?.getCircle(circleId)
   const cancelRef = useRef<HTMLButtonElement>(null)
   const graphContext = useContext(GraphContext)
 
@@ -58,8 +58,8 @@ export default function CircleLinkDeleteModal({
               <Trans
                 i18nKey="CircleLinkDeleteModal.info"
                 values={{
-                  role: parentCircle?.role.name,
-                  invitedRole: invitedCircle?.role.name,
+                  role: orgData?.getRole(parentCircle?.roleId)?.name,
+                  invitedRole: orgData?.getRole(invitedCircle?.roleId)?.name,
                 }}
                 components={{ b: <strong /> }}
               />

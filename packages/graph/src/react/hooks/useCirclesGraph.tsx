@@ -1,26 +1,23 @@
-import { CircleFullFragment } from '@rolebase/shared/gql'
+import { OrgData } from '@rolebase/shared/model/OrgData'
 import { RefObject, useMemo } from 'react'
 import { CirclesGraph } from '../../core/CirclesGraph'
 import { CirclesGraphViews, GraphParams, RootElement } from '../../types'
 import useGraph, { GraphProps } from './useGraph'
 
 export interface CirclesGraphProps
-  extends Omit<
-    GraphProps<CircleFullFragment[], CirclesGraph>,
-    'data' | 'init'
-  > {
+  extends Omit<GraphProps<OrgData, CirclesGraph>, 'data' | 'init'> {
   view: CirclesGraphViews
-  circles: CircleFullFragment[]
+  org: OrgData
 }
 
 export default function useCirclesGraph(
   elementRef: RefObject<RootElement>,
-  { view, circles, ...props }: CirclesGraphProps
+  { view, org, ...props }: CirclesGraphProps
 ) {
   const graphProps = useMemo(
     () => ({
       ...props,
-      data: circles,
+      data: org,
       init: (params: GraphParams) => {
         if (!elementRef.current) {
           throw new Error('Graph: Element ref is not set')
@@ -28,7 +25,7 @@ export default function useCirclesGraph(
         return new CirclesGraph(elementRef.current, view, params)
       },
     }),
-    [props, circles]
+    [props, org]
   )
-  return useGraph<CircleFullFragment[], CirclesGraph>(graphProps)
+  return useGraph<OrgData, CirclesGraph>(graphProps)
 }

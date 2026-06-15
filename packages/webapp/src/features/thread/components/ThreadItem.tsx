@@ -2,8 +2,8 @@ import CircleByIdButton from '@/circle/components/CircleByIdButton'
 import { useHoverItemStyle } from '@/common/hooks/useHoverItemStyle'
 import { useNormalClickHandler } from '@/common/hooks/useNormalClickHandler'
 import MemberByIdAvatar from '@/member/components/MemberByIdAvatar'
-import useMember from '@/member/hooks/useMember'
 import useOrgMember from '@/member/hooks/useOrgMember'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { usePathInOrg } from '@/org/hooks/usePathInOrg'
 import {
   Box,
@@ -57,9 +57,10 @@ const ThreadItem = forwardRef<Props, 'div'>(
     const handleOpen = useNormalClickHandler(onOpen)
     const hover = useHoverItemStyle()
     const isMember = useOrgMember()
+    const { orgData } = useOrgContext()
 
     // Get thread initiator
-    const threadInitiator = useMember(thread.initiatorMemberId)
+    const threadInitiator = orgData?.getMember(thread.initiatorMemberId)
 
     // Thread status
     const { threadStatus, setStatus } = useThreadStatus(thread)

@@ -1,5 +1,6 @@
 import Tab from '@/common/atoms/Tab'
 import MemberByIdButton from '@/member/components/MemberByIdButton'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   Badge,
   Box,
@@ -18,7 +19,6 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { ProposalVoteResult } from '@rolebase/shared/model/proposal'
-import { useStoreState } from '@store/hooks'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -46,7 +46,7 @@ export default function ProposalVotersModal({
   ...modalProps
 }: Props) {
   const { t } = useTranslation()
-  const members = useStoreState((state) => state.org.members)
+  const members = useOrgContext().orgData?.members
 
   const voteLabel = (vote: string) =>
     vote === 'approve'

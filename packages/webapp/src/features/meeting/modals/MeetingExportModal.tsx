@@ -5,7 +5,7 @@ import useCallbackState from '@/common/hooks/useCallbackState'
 import useCopyUrl from '@/common/hooks/useCopyUrl'
 import { getMeetingsIcalUrl } from '@/meeting/api/ical'
 import useCurrentMember from '@/member/hooks/useCurrentMember'
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   Alert,
   AlertDescription,
@@ -36,7 +36,7 @@ export default function MeetingExportModal(modalProps: UseModalProps) {
     t,
     i18n: { language },
   } = useTranslation()
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
   const member = useCurrentMember()
 
   // Get token

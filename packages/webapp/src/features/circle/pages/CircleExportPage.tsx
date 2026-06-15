@@ -5,7 +5,7 @@ import useUpdatableQueryParams from '@/common/hooks/useUpdatableQueryParams'
 import CirclesGraph, { CirclesGraphInstance } from '@/graph/CirclesGraph'
 import { GraphProvider } from '@/graph/contexts/GraphContext'
 import { CirclesGraphViews } from '@/graph/types'
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   Box,
   Button,
@@ -18,8 +18,7 @@ import {
   useColorMode,
   useToast,
 } from '@chakra-ui/react'
-import { getCircleChildren } from '@rolebase/shared/helpers/getCircleChildren'
-import { useStoreState } from '@store/hooks'
+import { OrgData } from '@rolebase/shared/model/OrgData'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DownloadIcon } from 'src/icons'
@@ -38,7 +37,6 @@ export default function CircleExportPage() {
   const { colorMode } = useColorMode()
   const { params, changeParams } = useUpdatableQueryParams<CircleExportParams>()
   const circleId = params.circleId
-  const orgId = useOrgId()
   const toast = useToast()
   const [downloading, setDownloading] = useState(false)
   const [ready, setReady] = useState(false)
@@ -50,19 +48,31 @@ export default function CircleExportPage() {
   const [showAllNodes, setShowAllNodes] = useState(true)
 
   // Data
-  const circles = useStoreState((state) => state.org.circles)
+  const { orgId, orgData, getOrgResult } = useOrgContext()
+  const circles = orgData?.circles
 
-  const selectedCircles = useMemo(() => {
-    if (!circles || !circleId) return undefined
+  // Build a derived org data restricted to the selected circle subtree, with
+  // the selected circle reparented as the root.
+  const selectedOrg = useMemo(() => {
+    const result = getOrgResult()
+    if (!orgData || !circleId || !result) return undefined
 
-    const circle = circles.find((c) => c.id === circleId)
+    const circle = orgData.circleById.get(circleId)
     if (!circle) return undefined
 
-    return [
+    const subCircles = [
       { ...circle, parentId: null },
-      ...getCircleChildren(circles, circleId),
+      ...orgData.descendantsOf(circleId),
     ]
-  }, [circles, circleId])
+
+    return new OrgData(
+      subCircles,
+      result.circleMembers,
+      result.circleLinks,
+      result.roles,
+      result.members
+    )
+  }, [orgData, circleId, getOrgResult])
 
   // Center graph
   const handleCenter = () => {
@@ -192,12 +202,12 @@ export default function CircleExportPage() {
             borderColor: 'gray.550',
           }}
         >
-          {orgId && selectedCircles && (
+          {orgId && selectedOrg && (
             <CirclesGraph
               ref={graphRef}
               key={view + colorMode}
               view={view}
-              circles={selectedCircles}
+              org={selectedOrg}
               width={width}
               height={width}
               showAllNodes={showAllNodes}

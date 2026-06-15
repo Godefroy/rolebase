@@ -1,5 +1,5 @@
-import { useOrgData } from '@/org/contexts/OrgDataContext'
-import { useOrgEditActions } from '@/org/contexts/OrgEditContext'
+import { useOrgContext, useOrgEditActions } from '@/org/contexts/OrgContext'
+import useOrgBaseRoles from '@/org/hooks/useOrgBaseRoles'
 import CircleSearchButton from '@/search/components/CircleSearchButton'
 import {
   Box,
@@ -13,7 +13,6 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { RoleSummaryFragment } from '@gql'
-import { truthy } from '@rolebase/shared/helpers/truthy'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FiX } from 'react-icons/fi'
@@ -36,7 +35,8 @@ export default function CircleRoleSubCircles() {
     canEditSubCirclesParentLinks,
   } = circleContext
 
-  const { circles, baseRoles: roles } = useOrgData()
+  const { orgData } = useOrgContext()
+  const roles = useOrgBaseRoles()
   const { createCircle, addCircleLink } = useOrgEditActions()
 
   // CircleLinkDeleteModal
@@ -50,24 +50,26 @@ export default function CircleRoleSubCircles() {
   // Get direct circles children
   const subCircles = useMemo(
     () =>
-      circles
-        ?.filter((c) => c.parentId === circle.id)
+      orgData?.circles
+        .filter((c) => c.parentId === circle.id)
         .sort((a, b) => {
+          const roleA = orgData.getRole(a.roleId)
+          const roleB = orgData.getRole(b.roleId)
           // Put leaders at the top
-          if (a.role.parentLink && !b.role.parentLink) {
+          if (roleA?.parentLink && !roleB?.parentLink) {
             return -1
           }
-          if (!a.role.parentLink && b.role.parentLink) {
+          if (!roleA?.parentLink && roleB?.parentLink) {
             return 1
           }
           // Sort by name
-          return a.role.name.localeCompare(b.role.name)
+          return (roleA?.name ?? '').localeCompare(roleB?.name ?? '')
         }),
-    [circles, circle]
+    [orgData, circle]
   )
 
   const subRolesIds = useMemo(
-    () => subCircles?.map((c) => c.role.id),
+    () => subCircles?.map((c) => c.roleId),
     [subCircles]
   )
 
@@ -92,11 +94,14 @@ export default function CircleRoleSubCircles() {
   // Get invited circles (links)
   const invitedCircles = useMemo(
     () =>
-      circle.invitedCircleLinks
-        .map((link) => circles?.find((c) => c.id === link.invitedCircle.id))
-        .filter(truthy)
-        .sort((a, b) => a.role.name.localeCompare(b.role.name)),
-    [circles, circle]
+      orgData
+        ?.invitedCirclesOf(circle.id)
+        .sort((a, b) =>
+          (orgData.getRole(a.roleId)?.name ?? '').localeCompare(
+            orgData.getRole(b.roleId)?.name ?? ''
+          )
+        ),
+    [orgData, circle]
   )
 
   // List of circles ids to exclude from circle search when adding a link
@@ -108,10 +113,10 @@ export default function CircleRoleSubCircles() {
     // Exclude already invited circle
     if (invitedCircles) ids.push(...invitedCircles.map((c) => c.id))
     // Exclude children circles
-    const children = circles?.filter((c) => c.parentId === circle.id)
+    const children = orgData?.circles.filter((c) => c.parentId === circle.id)
     if (children) ids.push(...children.map((c) => c.id))
     return ids
-  }, [circle, invitedCircles])
+  }, [circle, invitedCircles, orgData])
 
   const handleAddLink = useCallback(
     async (circleId: string) => {

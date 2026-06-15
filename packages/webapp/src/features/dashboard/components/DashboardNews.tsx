@@ -2,7 +2,7 @@ import Loading from '@/common/atoms/Loading'
 import TextErrors from '@/common/atoms/TextErrors'
 import DashboardHomeNote from '@/dashboard/components/DashboardHomeNote'
 import NewsList from '@/news/components/NewsList'
-import useCurrentOrg from '@/org/hooks/useCurrentOrg'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import CircleSearchButton from '@/search/components/CircleSearchButton'
 import CircleSearchInput from '@/search/components/CircleSearchInput'
 import {
@@ -25,7 +25,7 @@ import { useNewsFeed } from '../../news/hooks/useNewsFeed'
 
 export default function DashboardNews(boxProps: BoxProps) {
   const { t } = useTranslation()
-  const org = useCurrentOrg()
+  const { org } = useOrgContext()
   const [circleId, setCircleId] = useState<string | undefined>()
 
   // Subscribe to news

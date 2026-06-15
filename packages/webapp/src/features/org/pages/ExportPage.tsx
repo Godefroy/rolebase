@@ -1,6 +1,6 @@
 import { Title } from '@/common/atoms/Title'
 import useOrg from '@/org/hooks/useOrg'
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   Button,
   Checkbox,
@@ -26,7 +26,7 @@ type ExportFormat = 'xlsx' | 'json'
 
 export default function ExportPage() {
   const { t } = useTranslation()
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
   const org = useOrg(orgId)
   const toast = useToast()
 

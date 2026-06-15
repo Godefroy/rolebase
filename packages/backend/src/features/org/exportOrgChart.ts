@@ -1,13 +1,12 @@
 import { renderStaticGraphPage } from '@rolebase/graph/server'
-import { fixCirclesHue } from '@rolebase/shared/helpers/fixCirclesHue'
-import { getCircleChildren } from '@rolebase/shared/helpers/getCircleChildren'
+import { OrgData } from '@rolebase/shared/model/OrgData'
 import { CirclesGraphViews } from '@rolebase/shared/model/graph'
 import * as yup from 'yup'
-import { Member_Role_Enum, gql } from '../../gql'
+import { Member_Role_Enum } from '../../gql'
 import { guardOrg } from '../../guards/guardOrg'
 import { authedProcedure } from '../../trpc/authedProcedure'
-import { adminRequest } from '../../utils/adminRequest'
 import { screenshotHtml } from '../../utils/screenshotHtml'
+import { loadOrgFlatData } from './loadOrgData'
 
 export default authedProcedure
   .input(
@@ -30,34 +29,40 @@ export default authedProcedure
 
     await guardOrg(orgId, Member_Role_Enum.Readonly, opts.ctx)
 
-    // Get circles of the org
-    const result = await adminRequest(GET_ORG_CIRCLES, { orgId })
-    let circles = result.org_by_pk?.circles
-    if (!circles || circles.length === 0) {
+    // Get flat org data
+    const flat = await loadOrgFlatData(orgId)
+    if (flat.circles.length === 0) {
       throw new Error('Org circles not found')
     }
+    const { circleMembers, circleLinks, roles, members } = flat
 
-    // Inherit each circle color from its parent when undefined, like the web
-    // app store does (otherwise uncolored circles fall back to the default hue)
-    circles = fixCirclesHue(circles)
+    let orgData = new OrgData(
+      flat.circles,
+      circleMembers,
+      circleLinks,
+      roles,
+      members
+    )
 
-    // Keep selected circle (as root) and its children
+    // Restrict to the selected circle (as root) and its descendants. OrgData
+    // ignores circle members/links whose circle isn't kept, so no extra filter.
     if (circleId) {
-      const circle = circles.find((c) => c.id === circleId)
+      const circle = orgData.getCircle(circleId)
       if (!circle) {
         throw new Error('Circle not found')
       }
-      circles = [
+      const circles = [
         { ...circle, parentId: null },
-        ...getCircleChildren(circles, circleId),
+        ...orgData.descendantsOf(circleId),
       ]
+      orgData = new OrgData(circles, circleMembers, circleLinks, roles, members)
     }
 
     // Render the org chart in a headless browser
     // and screenshot it as a transparent PNG
     const html = renderStaticGraphPage({
       view,
-      circles,
+      org: orgData,
       width,
       height: width,
       colorMode: colorMode || 'light',
@@ -71,12 +76,3 @@ export default authedProcedure
       filename: 'rolebase.png',
     }
   })
-
-const GET_ORG_CIRCLES = gql(`
-  query getOrgCirclesForChartExport($orgId: uuid!) {
-    org_by_pk(id: $orgId) {
-      circles(where: { archived: { _eq: false } }) {
-        ...CircleFull
-      }
-    }
-  }`)

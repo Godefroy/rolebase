@@ -4,6 +4,7 @@ import Loading from '@/common/atoms/Loading'
 import ScrollableLayout from '@/common/atoms/ScrollableLayout'
 import { Title } from '@/common/atoms/Title'
 import Page404 from '@/common/pages/Page404'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import ParticipantsNumber from '@/participants/components/ParticipantsNumber'
 import {
   Box,
@@ -46,6 +47,7 @@ export default function ThreadContent({
   ...boxProps
 }: Props) {
   const { t } = useTranslation()
+  const { orgData } = useOrgContext()
   const [updateThread] = useUpdateThreadMutation()
 
   // Load thread and activities
@@ -164,7 +166,7 @@ export default function ThreadContent({
                 {thread?.private && (
                   <Tooltip
                     label={t('ThreadContent.private', {
-                      role: circle?.role.name,
+                      role: orgData?.getRole(circle?.roleId)?.name,
                     })}
                     hasArrow
                   >

@@ -1,5 +1,5 @@
 import ModalCloseStaticButton from '@/common/atoms/ModalCloseStaticButton'
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   Button,
   FormControl,
@@ -42,7 +42,7 @@ export default function BillingEmailSettingItem({
   onUpdate,
 }: BillingEmailSettingItemProps) {
   const { t } = useTranslation()
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
   const [loading, setLoading] = useState(false)

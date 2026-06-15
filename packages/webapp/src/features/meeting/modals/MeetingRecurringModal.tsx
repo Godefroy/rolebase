@@ -1,9 +1,9 @@
 import CircleButton from '@/circle/components/CircleButton'
-import useCircle from '@/circle/hooks/useCircle'
 import Loading from '@/common/atoms/Loading'
 import ModalCloseStaticButton from '@/common/atoms/ModalCloseStaticButton'
 import TextErrors from '@/common/atoms/TextErrors'
 import useDateLocale from '@/common/hooks/useDateLocale'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import ParticipantsNumber from '@/participants/components/ParticipantsNumber'
 import {
   Alert,
@@ -25,11 +25,9 @@ import {
   Wrap,
 } from '@chakra-ui/react'
 import { useMeetingRecurringSubscription } from '@gql'
-import { getScopeMemberIds } from '@rolebase/shared/helpers/getScopeMemberIds'
 import { RRuleUTC } from '@rolebase/shared/helpers/RRuleUTC'
 import { truthy } from '@rolebase/shared/helpers/truthy'
 import { ParticipantMember } from '@rolebase/shared/model/member'
-import { useStoreState } from '@store/hooks'
 import { capitalizeFirstLetter } from '@utils/capitalizeFirstLetter'
 import { add, format } from 'date-fns'
 import React, { useMemo } from 'react'
@@ -61,25 +59,26 @@ export default function MeetingRecurringModal({
 
   const meetingRecurring = data?.meeting_recurring_by_pk
 
-  // Circle
-  const circle = useCircle(meetingRecurring?.circleId)
-
   // Participants
-  const circles = useStoreState((state) => state.org.circles)
-  const members = useStoreState((state) => state.org.members)
+  const { orgData } = useOrgContext()
+  const members = orgData?.members
+
+  // Circle
+  const circle = orgData?.getCircle(meetingRecurring?.circleId)
   const participants = useMemo(
     () =>
       meetingRecurring?.scope &&
-      circles &&
+      orgData &&
       members &&
-      getScopeMemberIds(meetingRecurring?.scope, circles)
+      orgData
+        .getScopeMemberIds(meetingRecurring?.scope)
         .map((id): ParticipantMember | undefined => {
           const member = members.find((m) => m.id === id)
           if (!member) return
           return { member, circlesIds: [] }
         })
         .filter(truthy),
-    [meetingRecurring, circles]
+    [meetingRecurring, orgData]
   )
 
   // Next dates
@@ -161,7 +160,7 @@ export default function MeetingRecurringModal({
               {meetingRecurring?.private && (
                 <Tooltip
                   label={t('MeetingHeader.private', {
-                    role: circle?.role.name,
+                    role: orgData?.getRole(circle?.roleId)?.name,
                   })}
                   hasArrow
                 >

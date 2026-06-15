@@ -1,7 +1,7 @@
+import useOrgBaseRoles from '@/org/hooks/useOrgBaseRoles'
 import { RoleFragment } from '@gql'
 import { truthy } from '@rolebase/shared/helpers/truthy'
 import { SearchTypes } from '@rolebase/shared/model/search'
-import { useStoreState } from '@store/hooks'
 import { useMemo } from 'react'
 import { SearchItem } from '../searchTypes'
 
@@ -10,7 +10,7 @@ export function useBaseRoleSearchItems(
   excludeIds?: string[],
   parentLink?: boolean
 ): SearchItem[] {
-  const rolesInStore = useStoreState((state) => state.org.baseRoles)
+  const rolesInStore = useOrgBaseRoles()
 
   return useMemo(
     () =>

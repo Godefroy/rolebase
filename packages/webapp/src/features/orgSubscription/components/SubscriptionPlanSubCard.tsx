@@ -1,4 +1,5 @@
 import FadeCard from '@/common/atoms/FadeCard'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import ParticipantsGroup from '@/participants/components/ParticipantsGroup'
 import {
   Box,
@@ -9,7 +10,6 @@ import {
   Text,
   useBreakpointValue,
 } from '@chakra-ui/react'
-import { useStoreState } from '@store/hooks'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SubscriptionPlan } from '../plansTypes'
@@ -31,7 +31,7 @@ export default function SubscriptionPlanSubCard({
     base: 4,
     md: 7,
   })
-  const members = useStoreState((state) => state.org.members)
+  const members = useOrgContext().orgData?.members
   const filteredMembers = useMemo(
     () => members?.filter((mem) => !!mem.userId) ?? [],
     [members]

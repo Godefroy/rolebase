@@ -1,8 +1,7 @@
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { CircleFragment } from '@gql'
-import { getCircleAndParents } from '@rolebase/shared/helpers/getCircleAndParents'
 import { truthy } from '@rolebase/shared/helpers/truthy'
 import { SearchTypes } from '@rolebase/shared/model/search'
-import { useStoreState } from '@store/hooks'
 import { useMemo } from 'react'
 import { searchItemTitleSeparator } from '../components/SearchResultItem'
 import { SearchItem } from '../searchTypes'
@@ -12,7 +11,8 @@ export function useCircleSearchItems(
   excludeIds?: string[],
   singleMember?: boolean
 ): SearchItem[] {
-  const circlesInStore = useStoreState((state) => state.org.circles)
+  const { orgData } = useOrgContext()
+  const circlesInStore = orgData?.circles
 
   return useMemo(
     () =>
@@ -22,8 +22,8 @@ export function useCircleSearchItems(
           if (excludeIds?.includes(circle.id)) return
 
           // Get roles and ancestors
-          const circleFull = getCircleAndParents(circlesInStore, circle.id)
-          const role = circleFull[circleFull.length - 1]?.role
+          const circleFull = orgData?.andParentsOf(circle.id) ?? []
+          const role = orgData?.getRole(circleFull[circleFull.length - 1]?.roleId)
 
           // Exclude by singleMember property
           if (
@@ -39,11 +39,11 @@ export function useCircleSearchItems(
             text: role.name.toLowerCase(),
             type: SearchTypes.Circle,
             title: circleFull
-              .map((cr) => cr.role.name)
+              .map((cr) => orgData?.getRole(cr.roleId)?.name)
               .join(searchItemTitleSeparator),
           }
         })
         .filter(truthy) || [],
-    [circles, circlesInStore, excludeIds, singleMember]
+    [circles, circlesInStore, excludeIds, singleMember, orgData]
   )
 }

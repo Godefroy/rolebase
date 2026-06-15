@@ -13,7 +13,7 @@ import {
 import React, { useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { trpc } from 'src/trpc'
-import useMember from '../hooks/useMember'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 
 interface Props
   extends Omit<AlertDialogProps, 'children' | 'leastDestructiveRef'> {
@@ -27,7 +27,8 @@ export default function MemberDeleteModal({
   ...alertProps
 }: Props) {
   const { t } = useTranslation()
-  const member = useMember(id)
+  const { orgData } = useOrgContext()
+  const member = orgData?.getMember(id)
   const toast = useToast()
   const cancelRef = useRef<HTMLButtonElement>(null)
 

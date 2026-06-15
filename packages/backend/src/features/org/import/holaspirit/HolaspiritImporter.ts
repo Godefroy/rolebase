@@ -316,6 +316,7 @@ export class HolaspiritImporter extends Importer {
       }
 
       circleMembers.push({
+        orgId: this.orgId,
         circleId,
         memberId,
         createdAt: row.Since ? new Date(row.Since).toISOString() : undefined,

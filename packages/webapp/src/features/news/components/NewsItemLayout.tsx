@@ -1,7 +1,7 @@
 import useDateLocale from '@/common/hooks/useDateLocale'
 import MemberAvatar from '@/member/components/MemberAvatar'
 import MemberLink from '@/member/components/MemberLink'
-import useMember from '@/member/hooks/useMember'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   Box,
   Card,
@@ -35,7 +35,8 @@ export default function NewsItemLayout({
   const { t } = useTranslation()
   const dateLocale = useDateLocale()
   const date = useMemo(() => new Date(dateStr), [dateStr])
-  const member = useMember(memberId)
+  const { orgData } = useOrgContext()
+  const member = orgData?.getMember(memberId)
 
   return (
     <Card boxShadow="none">

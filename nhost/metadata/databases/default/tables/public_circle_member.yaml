@@ -29,6 +29,16 @@ insert_permissions:
                     - archived:
                         _eq: false
           - circle:
+              orgId:
+                _ceq:
+                  - $
+                  - orgId
+          - member:
+              orgId:
+                _ceq:
+                  - $
+                  - orgId
+          - circle:
               _or:
                 - org:
                     members:
@@ -39,8 +49,8 @@ insert_permissions:
                             _eq: Owner
                 - org:
                     _and:
-                      - protectGovernance:
-                          _eq: false
+                      - governanceMode:
+                          _eq: Free
                       - members:
                           _and:
                             - userId:
@@ -51,6 +61,9 @@ insert_permissions:
                                 - role:
                                     _eq: Member
                 - _and:
+                    - org:
+                        governanceMode:
+                          _neq: Strict
                     - role:
                         parentLink:
                           _eq: false
@@ -75,6 +88,9 @@ insert_permissions:
                                     - archived:
                                         _eq: false
                 - _and:
+                    - org:
+                        governanceMode:
+                          _neq: Strict
                     - role:
                         parentLink:
                           _eq: true
@@ -88,23 +104,8 @@ insert_permissions:
         - circleId
         - id
         - memberId
+        - orgId
 select_permissions:
-  - role: public
-    permission:
-      columns:
-        - archived
-        - circleId
-        - createdAt
-        - id
-        - memberId
-      filter:
-        _and:
-          - archived:
-              _eq: false
-          - member:
-              org:
-                shareMembers:
-                  _eq: true
   - role: user
     permission:
       columns:
@@ -113,6 +114,7 @@ select_permissions:
         - createdAt
         - id
         - memberId
+        - orgId
       filter: {}
       allow_aggregations: true
 update_permissions:
@@ -132,8 +134,8 @@ update_permissions:
                         _eq: Owner
             - org:
                 _and:
-                  - protectGovernance:
-                      _eq: false
+                  - governanceMode:
+                      _eq: Free
                   - members:
                       _and:
                         - userId:
@@ -144,6 +146,9 @@ update_permissions:
                             - role:
                                 _eq: Member
             - _and:
+                - org:
+                    governanceMode:
+                      _neq: Strict
                 - role:
                     parentLink:
                       _eq: false
@@ -168,6 +173,9 @@ update_permissions:
                                 - archived:
                                     _eq: false
             - _and:
+                - org:
+                    governanceMode:
+                      _neq: Strict
                 - role:
                     parentLink:
                       _eq: true

@@ -1,5 +1,5 @@
-import useCircle from '@/circle/hooks/useCircle'
 import useCurrentMember from '@/member/hooks/useCurrentMember'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   Alert,
   Button,
@@ -29,6 +29,7 @@ export default function ParticipantsCircleExtraMembers({
 }: Props) {
   const { t } = useTranslation()
   const currentMember = useCurrentMember()
+  const { orgData } = useOrgContext()
 
   const handleAddMember = (id: string) => {
     if (membersIds.includes(id)) return
@@ -40,7 +41,7 @@ export default function ParticipantsCircleExtraMembers({
   }
 
   // Participants
-  const circle = useCircle(circleId)
+  const circle = orgData?.getCircle(circleId)
   const participants = useCircleParticipants(circle)
 
   return (
@@ -54,7 +55,7 @@ export default function ParticipantsCircleExtraMembers({
           <ParticipantsNumber mr={2} participants={participants} />
           <Text fontSize="sm">
             {t('ParticipantsCircleExtraMembers.circleParticipants', {
-              role: circle?.role.name,
+              role: orgData?.getRole(circle?.roleId)?.name,
             })}
           </Text>
         </Flex>

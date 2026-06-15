@@ -1,7 +1,7 @@
 import IconTextButton from '@/common/atoms/IconTextButton'
 import Loading from '@/common/atoms/Loading'
 import { useAsyncMemo } from '@/common/hooks/useAsyncMemo'
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   Box,
   Button,
@@ -43,7 +43,7 @@ export default function MemberPictureCropModal({
 }: Props) {
   const { t } = useTranslation()
   const toast = useToast()
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
   const [updateMember] = useUpdateMemberMutation()
 
   // Picture

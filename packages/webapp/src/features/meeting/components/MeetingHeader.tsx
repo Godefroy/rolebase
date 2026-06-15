@@ -1,6 +1,7 @@
 import CircleButton from '@/circle/components/CircleButton'
 import { useNormalClickHandler } from '@/common/hooks/useNormalClickHandler'
 import useOrgMember from '@/member/hooks/useOrgMember'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import ParticipantsNumber from '@/participants/components/ParticipantsNumber'
 import {
   Box,
@@ -30,6 +31,7 @@ interface Props {
 export default function MeetingHeader({ headerIcons }: Props) {
   const { t } = useTranslation()
   const isMember = useOrgMember()
+  const { orgData } = useOrgContext()
 
   const { meeting, circle, participants, isStarted, path } =
     useContext(MeetingContext)!
@@ -73,7 +75,9 @@ export default function MeetingHeader({ headerIcons }: Props) {
           <HStack spacing={2}>
             {meeting?.private && (
               <Tooltip
-                label={t('MeetingHeader.private', { role: circle?.role.name })}
+                label={t('MeetingHeader.private', {
+                  role: orgData?.getRole(circle?.roleId)?.name,
+                })}
                 hasArrow
               >
                 <PrivacyIcon size={20} />

@@ -1,5 +1,4 @@
 import { GraphContext } from '@/graph/contexts/GraphContext'
-import useMember from '@/member/hooks/useMember'
 import {
   AlertDialog,
   AlertDialogBody,
@@ -13,8 +12,7 @@ import {
 } from '@chakra-ui/react'
 import React, { useContext, useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { useOrgEditActions } from '@/org/contexts/OrgEditContext'
-import useCircle from '../hooks/useCircle'
+import { useOrgContext, useOrgEditActions } from '@/org/contexts/OrgContext'
 
 interface Props
   extends Omit<AlertDialogProps, 'children' | 'leastDestructiveRef'> {
@@ -30,9 +28,10 @@ export default function CircleMemberDeleteModal({
   ...alertProps
 }: Props) {
   const { t } = useTranslation()
-  const circle = useCircle(circleId)
-  const member = useMember(memberId)
   const { removeCircleMember } = useOrgEditActions()
+  const { orgData } = useOrgContext()
+  const circle = orgData?.getCircle(circleId)
+  const member = orgData?.getMember(memberId)
   const cancelRef = useRef<HTMLButtonElement>(null)
   const graphContext = useContext(GraphContext)
 
@@ -58,7 +57,7 @@ export default function CircleMemberDeleteModal({
             <Text>
               <Trans
                 i18nKey="CircleMemberDeleteModal.info"
-                values={{ role: circle?.role.name, member: member?.name }}
+                values={{ role: orgData?.getRole(circle?.roleId)?.name, member: member?.name }}
                 components={{ b: <strong /> }}
               />
             </Text>

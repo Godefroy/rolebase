@@ -10,9 +10,9 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { MemberFragment } from '@gql'
-import { useStoreState } from '@store/hooks'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import useCurrentMember from '../hooks/useCurrentMember'
 import useOrgOwner from '../hooks/useOrgOwner'
 import MemberRoleItem from './MemberRoleItem'
@@ -29,7 +29,8 @@ export default function MemberRoles({
   ...boxProps
 }: Props) {
   const { t } = useTranslation()
-  const circles = useStoreState((state) => state.org.circles)
+  const { orgData } = useOrgContext()
+  const circles = orgData?.circles
   const circleMemberContext = useContext(CircleMemberContext)
   const currentMember = useCurrentMember()
   const isCurrentMember = currentMember?.id === member.id
@@ -40,21 +41,25 @@ export default function MemberRoles({
 
   // Get all circles and roles of member
   const memberCircles = useMemo(() => {
-    if (!circles) return []
+    if (!orgData || !circles) return []
     return circles
-      .filter((circle) => circle.members.some((m) => m.member.id === member.id))
+      .filter((circle) =>
+        orgData.membersOf(circle.id).some((m) => m.member.id === member.id)
+      )
       .sort((a, b) => {
+        const roleA = orgData.getRole(a.roleId)
+        const roleB = orgData.getRole(b.roleId)
         // Put leaders at the top
-        if (a.role.parentLink && !b.role.parentLink) {
+        if (roleA?.parentLink && !roleB?.parentLink) {
           return -1
         }
-        if (!a.role.parentLink && b.role.parentLink) {
+        if (!roleA?.parentLink && roleB?.parentLink) {
           return 1
         }
         // Sort by name
-        return a.role.name.localeCompare(b.role.name)
+        return (roleA?.name ?? '').localeCompare(roleB?.name ?? '')
       })
-  }, [member.id, circles])
+  }, [member.id, circles, orgData])
 
   // Change URL path when a circle is selected in the accordion
   const handleFocusCircle = useCallback(

@@ -1,7 +1,7 @@
 import useCurrentMember from '@/member/hooks/useCurrentMember'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { MemberFragment } from '@gql'
 import { SearchTypes } from '@rolebase/shared/model/search'
-import { useStoreState } from '@store/hooks'
 import { useMemo } from 'react'
 import { SearchItem } from '../searchTypes'
 
@@ -10,7 +10,7 @@ export function useMemberSearchItems(
   excludeIds?: string[]
 ): SearchItem[] {
   const currentMember = useCurrentMember()
-  const membersInStore = useStoreState((state) => state.org.members)
+  const membersInStore = useOrgContext().orgData?.members
 
   return useMemo(
     () =>

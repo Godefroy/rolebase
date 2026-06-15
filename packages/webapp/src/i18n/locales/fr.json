@@ -182,6 +182,8 @@
     "roleOwner": "Propriétaire"
   },
   "CircleRole": {
+    "archived": "Ce rôle est archivé.",
+    "restore": "Restaurer",
     "purpose": "Raison d'être",
     "purposePlaceholder": "But qu'il poursuit...",
     "domain": "Domaine",
@@ -821,9 +823,13 @@
     "slug": "URL",
     "icon": "Icône",
     "iconHelp": "Affichée à côté du nom de votre organisation dans la barre latérale.",
-    "security": "Paramètres de sécurité",
-    "protectGovernance": "Protéger la gouvernance",
-    "protectGovernanceHelp": "Seuls les propriétaires et les représentants d'un rôle peuvent modifier ses sous-rôles directs et leurs membres.",
+    "governance": "Gouvernance",
+    "governanceFree": "Libre",
+    "governanceFreeHelp": "Tous les membres peuvent modifier tout l'organigramme.",
+    "governanceAgile": "Agile",
+    "governanceAgileHelp": "Les rôles peuvent être modifiés par leurs leaders.",
+    "governanceStrict": "Stricte",
+    "governanceStrictHelp": "Les rôles peuvent uniquement être modifiés par proposition (Holacratie).",
     "defaultGraphView": "Vue par défaut de l'organigramme"
   },
   "OrgIconEdit": {

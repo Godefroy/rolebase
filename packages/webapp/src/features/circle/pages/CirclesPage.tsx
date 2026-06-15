@@ -9,11 +9,10 @@ import useCirclesEvents from '@/graph/hooks/useGraphEvents'
 import { CirclesGraphViews } from '@/graph/types'
 import { SidebarContext } from '@/layout/contexts/SidebarContext'
 import MemberContent from '@/member/components/MemberContent'
-import useCurrentOrg from '@/org/hooks/useCurrentOrg'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import useUserMetadata from '@/user/hooks/useUserMetadata'
 import { useNavigateOrg } from '@/org/hooks/useNavigateOrg'
 import { Box, Text, useBreakpointValue, useColorMode } from '@chakra-ui/react'
-import { useStoreState } from '@store/hooks'
 import React, {
   useCallback,
   useContext,
@@ -53,7 +52,7 @@ export default function CirclesPage() {
 
   const queryParams = useQueryParams<CirclesPageParams>()
   const navigateOrg = useNavigateOrg()
-  const org = useCurrentOrg()
+  const { org, orgData } = useOrgContext()
   const [ready, setReady] = useState(false)
 
   // Content size
@@ -70,7 +69,7 @@ export default function CirclesPage() {
   const [parentId, setParentId] = useState<string | undefined>()
 
   // Data
-  const circles = useStoreState((state) => state.org.circles)
+  const circles = orgData?.circles
   const events = useCirclesEvents()
 
   const handleClosePanel = useCallback(() => navigateOrg('roles'), [])
@@ -147,11 +146,11 @@ export default function CirclesPage() {
         }
         overflow="hidden"
       >
-        {org && circles && boxSize && (
+        {org && orgData && boxSize && (
           <CirclesGraph
             key={view + colorMode}
             view={view}
-            circles={circles}
+            org={orgData}
             events={events}
             width={boxSize.width}
             height={boxSize.height}

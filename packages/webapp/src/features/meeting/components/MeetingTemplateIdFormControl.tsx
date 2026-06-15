@@ -1,5 +1,5 @@
 import TextErrors from '@/common/atoms/TextErrors'
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   Box,
   Flex,
@@ -18,7 +18,7 @@ import MeetingTemplateMenuList from './MeetingTemplateMenuList'
 
 export default function MeetingTemplateIdFormControl() {
   const { t } = useTranslation()
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
   const {
     control,
     formState: { errors },

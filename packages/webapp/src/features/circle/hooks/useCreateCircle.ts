@@ -1,5 +1,7 @@
+// Use this hook only in useDbOrgEditActions. Elsewhere, get the action from
+// useOrgEditActions() so the active OrgContext implementation applies.
 import useCreateLog from '@/log/hooks/useCreateLog'
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   RoleFragment,
   RoleSummaryFragment,
@@ -7,17 +9,16 @@ import {
   useCreateRoleMutation,
 } from '@gql'
 import { EntitiesChanges, EntityChangeType, LogType } from '@rolebase/shared/model/log'
-import { store } from '@store/index'
 import { omit } from '@utils/omit'
 import { useCallback } from 'react'
 
 // Create a circle (and its role if a name is given) under a parent circle.
 // Returns the new circle id.
 export default function useCreateCircle() {
-  const orgId = useOrgId()
   const [createCircle] = useCreateCircleMutation()
   const [createRole] = useCreateRoleMutation()
   const createLog = useCreateLog()
+  const { orgId, getOrgData } = useOrgContext()
 
   return useCallback(
     async (
@@ -64,16 +65,15 @@ export default function useCreateCircle() {
       }
 
       // Log change
-      const parentCircle = store
-        .getState()
-        .org.circles?.find((c) => c.id === parentId)
+      const orgData = getOrgData()
+      const parentCircle = orgData?.getCircle(parentId)
       createLog({
         display: {
           type: LogType.CircleCreate,
           id: newCircle.id,
           name: role.name,
           parentId,
-          parentName: parentCircle?.role.name || null,
+          parentName: orgData?.getRole(parentCircle?.roleId)?.name || null,
         },
         changes,
       })

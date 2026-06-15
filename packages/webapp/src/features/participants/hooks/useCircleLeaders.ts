@@ -1,19 +1,19 @@
-import { CircleFullFragment } from '@gql'
-import { getCircleLeaders } from '@rolebase/shared/helpers/getCircleLeaders'
+import { useOrgContext } from '@/org/contexts/OrgContext'
+import { CircleFragment } from '@gql'
 import { groupParticipantsByMember } from '@rolebase/shared/helpers/groupParticipantsByMember'
-import { useOrgData } from '@/org/contexts/OrgDataContext'
 import { ParticipantMember } from '@rolebase/shared/model/member'
 import { useMemo } from 'react'
 
 export default function useCircleLeaders(
-  circleOrId?: string | CircleFullFragment
+  circleOrId?: string | CircleFragment
 ): ParticipantMember[] {
-  const { circles } = useOrgData()
+  const { orgData } = useOrgContext()
 
   return useMemo(() => {
-    if (!circleOrId || !circles) return []
+    const id = typeof circleOrId === 'string' ? circleOrId : circleOrId?.id
+    if (!id || !orgData) return []
 
     // Compute leaders and group by member
-    return groupParticipantsByMember(getCircleLeaders(circleOrId, circles))
-  }, [circleOrId, circles])
+    return groupParticipantsByMember(orgData.getLeaders(id))
+  }, [circleOrId, orgData])
 }

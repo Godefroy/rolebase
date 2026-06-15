@@ -1,12 +1,15 @@
+// Use this hook only in useDbOrgEditActions. Elsewhere, get the action from
+// useOrgEditActions() so the active OrgContext implementation applies.
 import useCreateLog from '@/log/hooks/useCreateLog'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { useArchiveCircleLinkMutation } from '@gql'
 import { EntityChangeType, LogType } from '@rolebase/shared/model/log'
-import { store } from '@store/index'
 import { useCallback } from 'react'
 
 export default function useRemoveCircleLink() {
   const [archiveCircleLink] = useArchiveCircleLinkMutation()
   const createLog = useCreateLog()
+  const { getOrgData } = useOrgContext()
 
   return useCallback(async (parentId: string, circleId: string) => {
     const { data, errors } = await archiveCircleLink({
@@ -17,16 +20,16 @@ export default function useRemoveCircleLink() {
     if (!circleLink) return
 
     // Log change
-    const { circles } = store.getState().org
-    const parentCircle = circles?.find((c) => c.id === parentId)
-    const invitedCircle = circles?.find((c) => c.id === circleId)
+    const orgData = getOrgData()
+    const parentCircle = orgData?.getCircle(parentId)
+    const invitedCircle = orgData?.getCircle(circleId)
     createLog({
       display: {
         type: LogType.CircleLinkRemove,
         id: parentId,
-        name: parentCircle?.role.name || '',
+        name: orgData?.getRole(parentCircle?.roleId)?.name || '',
         circleId,
-        circleName: invitedCircle?.role.name || '',
+        circleName: orgData?.getRole(invitedCircle?.roleId)?.name || '',
       },
       changes: {
         circlesLinks: [

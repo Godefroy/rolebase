@@ -1,5 +1,7 @@
-import { CircleFullFragment } from '@rolebase/shared/gql'
-import { getCircleParticipants } from '@rolebase/shared/helpers/getCircleParticipants'
+import {
+  CircleMemberJoined,
+  OrgData,
+} from '@rolebase/shared/model/OrgData'
 import { truthy } from '@rolebase/shared/helpers/truthy'
 import * as d3 from 'd3'
 import { textEllipsis } from '../helpers/textEllipsis'
@@ -17,15 +19,12 @@ export interface Layout {
 // Compute the circle packing layout of circles for a given view.
 // Pure: usable in browser and server.
 export function computeLayout(
-  circles: CircleFullFragment[],
+  org: OrgData,
   view: CirclesGraphViews,
   selectedCircleId?: string
 ): Layout {
   const strategy = viewStrategies[view]
-  const data = prepareData(
-    strategy.getCircles(circles, selectedCircleId),
-    circles
-  )
+  const data = prepareData(strategy.getCircles(org, selectedCircleId), org)
 
   // Pack data with d3.pack
   const root = packData(data, strategy.packSorting)
@@ -46,52 +45,56 @@ export function computeLayout(
   return { root, nodes: nodesMap.slice(1) }
 }
 
-function prepareData(
-  circles: CircleData[],
-  origCircles: CircleFullFragment[]
-): Data {
+function prepareData(circles: CircleData[], org: OrgData): Data {
   return {
     id: 'root',
     parentId: null,
     type: NodeType.Circle,
     name: '',
-    children: prepareDataInternal(circles, origCircles, null),
+    children: prepareDataInternal(circles, org, null),
   }
 }
 
 function prepareDataInternal(
   circles: CircleData[],
-  origCircles: CircleFullFragment[],
+  org: OrgData,
   parentId: string | null = null
 ): Data[] {
   return circles
     .filter((circle) => circle.parentId == parentId)
     .map((circle) => {
-      // Define circle data with role name
+      // Define circle data with role name and resolved color
       const data: Data = {
         id: circle.id,
         entityId: circle.id,
         parentId: circle.parentId,
-        name: circle.role.name,
+        name: org.roleById.get(circle.roleId)?.name ?? '',
         type: NodeType.Circle,
-        colorHue: circle.role.colorHue ?? undefined,
+        colorHue: org.getColor(circle.id) ?? undefined,
       }
 
       // Add sub-circles to children
-      const children: Data[] = prepareDataInternal(
-        circles,
-        origCircles,
-        circle.id
-      )
+      const children: Data[] = prepareDataInternal(circles, org, circle.id)
 
       // Add circle links
-      if (circle.invitedCircleLinks.length !== 0) {
-        children.push(...circleLinksToData(circle, origCircles))
+      if (circle.showLinks) {
+        const links = org.linksOf(circle.id)
+        if (links.length !== 0) {
+          children.push(...circleLinksToData(circle, org))
+        }
       }
 
+      // Members to render (explicit list for the members view, else the
+      // circle's own members when shown)
+      const memberEntries = circle.memberEntries
+        ? circle.memberEntries
+        : circle.showMembers
+          ? org.membersOf(circle.id)
+          : []
+
       // Add members in a circle to group them
-      if (circle.members.length !== 0 || children.length === 0) {
-        children.push(membersToData(circle, data.colorHue))
+      if (memberEntries.length !== 0 || children.length === 0) {
+        children.push(membersToData(circle.id, memberEntries, data.colorHue))
       }
 
       // Set children if there is at least one
@@ -107,19 +110,23 @@ function prepareDataInternal(
     })
 }
 
-function membersToData(circle: CircleFullFragment, colorHue?: number): Data {
+function membersToData(
+  circleId: string,
+  members: CircleMemberJoined[],
+  colorHue?: number
+): Data {
   const node: Data = {
-    id: `${circle.id}-members`,
-    parentId: circle.id,
+    id: `${circleId}-members`,
+    parentId: circleId,
     name: '',
     type: NodeType.MembersCircle,
   }
-  if (circle.members.length !== 0) {
-    node.children = circle.members.map(
+  if (members.length !== 0) {
+    node.children = members.map(
       (entry): Data => ({
         id: entry.id,
         entityId: entry.member.id,
-        parentId: circle.id,
+        parentId: circleId,
         name: textEllipsis(entry.member.name, 20),
         picture: entry.member.picture,
         type: NodeType.Member,
@@ -130,31 +137,30 @@ function membersToData(circle: CircleFullFragment, colorHue?: number): Data {
   return node
 }
 
-function circleLinksToData(
-  circle: CircleFullFragment,
-  circles: CircleFullFragment[]
-): Data[] {
-  return circle.invitedCircleLinks
-    .map(({ invitedCircle: { id } }): Data | undefined => {
-      const invitedCircle = circles.find((c) => c.id === id)
+function circleLinksToData(circle: CircleData, org: OrgData): Data[] {
+  return org.linksOf(circle.id)
+    .map((link): Data | undefined => {
+      const invitedCircle = org.circleById.get(link.circleId)
       if (!invitedCircle) return
 
       const colorHue =
-        invitedCircle.role.colorHue ?? circle.role.colorHue ?? undefined
-      const participants = getCircleParticipants(invitedCircle, circles)
+        org.getColor(invitedCircle.id) ??
+        org.getColor(circle.id) ??
+        undefined
+      const participants = org.getParticipants(invitedCircle.id)
 
       return {
-        id: `${circle.id}_${id}`,
-        entityId: id,
+        id: `${circle.id}_${link.circleId}`,
+        entityId: link.circleId,
         parentId: circle.id,
-        name: invitedCircle.role.name,
+        name: org.roleById.get(invitedCircle.roleId)?.name ?? '',
         type: NodeType.Circle,
         colorHue,
         participants,
         // Add empty children for padding
         children: [
           {
-            id: `${circle.id}_${id}-members`,
+            id: `${circle.id}_${link.circleId}-members`,
             parentId: circle.id,
             name: '',
             type: NodeType.MembersCircle,

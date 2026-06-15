@@ -1,9 +1,8 @@
 import CircleFormController from '@/circle/components/CircleFormController'
-import useCircle from '@/circle/hooks/useCircle'
 import SwitchController from '@/common/atoms/SwitchController'
 import EditorController from '@/editor/components/EditorController'
 import useCurrentMember from '@/member/hooks/useCurrentMember'
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import ParticipantsNumber from '@/participants/components/ParticipantsNumber'
 import useCircleParticipants from '@/participants/hooks/useCircleParticipants'
 import {
@@ -65,10 +64,10 @@ export default function DecisionEditModal({
   ...modalProps
 }: Props) {
   const { t } = useTranslation()
-  const orgId = useOrgId()
   const currentMember = useCurrentMember()
   const [createDecision] = useCreateDecisionMutation()
   const [updateDecision] = useUpdateDecisionMutation()
+  const { orgId, orgData } = useOrgContext()
 
   const defaultValues = decision
     ? {
@@ -98,7 +97,7 @@ export default function DecisionEditModal({
 
   // Watch selected circle
   const circleId = watch('circleId')
-  const circle = useCircle(circleId)
+  const circle = orgData?.getCircle(circleId)
   const participants = useCircleParticipants(circle)
 
   // Watch privacy field
@@ -179,7 +178,7 @@ export default function DecisionEditModal({
                   <Collapse in={isPrivate}>
                     <FormHelperText ml="40px" mb={2}>
                       {t('DecisionEditModal.privateHelp', {
-                        role: circle?.role.name,
+                        role: orgData?.getRole(circle?.roleId)?.name,
                       })}
                     </FormHelperText>
                   </Collapse>
@@ -190,7 +189,7 @@ export default function DecisionEditModal({
                     <AlertIcon />
                     <AlertDescription>
                       {t('DecisionEditModal.privateNotAllowed', {
-                        role: circle?.role.name,
+                        role: orgData?.getRole(circle?.roleId)?.name,
                       })}
                     </AlertDescription>
                   </Alert>

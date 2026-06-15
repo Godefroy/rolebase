@@ -7,7 +7,7 @@ import {
 } from '@gql'
 import { TasksViewTypes } from '@rolebase/shared/model/task'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useOrgId } from '../../org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 
 export function useTasks(
   view: TasksViewTypes,
@@ -18,7 +18,7 @@ export function useTasks(
     archived?: boolean
   }
 ) {
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
 
   const key = `${view}-${filters?.memberId || ''}-${filters?.circleId || ''}-${
     filters?.status || ''

@@ -1,4 +1,5 @@
-import { CircleFragment, CircleFullFragment } from '../gql'
+import { CircleFragment, CircleMemberFragment } from '../gql'
+import { OrgData } from '../model/OrgData'
 import { members } from './members'
 import { roles } from './roles'
 
@@ -84,30 +85,15 @@ const circlesMembers: Record<string, string[]> = {
   'circle-agence-dev-facilitator': ['member-bob'],
 }
 
-export const circlesFull: CircleFullFragment[] = circles.map((circle) => {
-  // Find role
-  const role = roles.find((role) => role.id === circle.roleId)
-  if (!role) throw new Error(`Missing mock role ${circle.roleId}`)
+export const circleMembers: CircleMemberFragment[] = circles.flatMap((circle) =>
+  (circlesMembers[circle.id] || []).map((memberId) => ({
+    id: `${circle.id}-${memberId}`,
+    orgId: circle.orgId,
+    circleId: circle.id,
+    memberId,
+    createdAt: new Date().toISOString(),
+    archived: false,
+  }))
+)
 
-  // Construct circle members
-  const circleMembers = (circlesMembers[circle.id] || []).map((memberId) => {
-    // Find member
-    const member = members.find((member) => member.id === memberId)
-    if (!member) throw new Error(`Missing mock member ${memberId}`)
-    return {
-      id: `${circle.id}-${member.id}`,
-      circleId: circle.id,
-      memberId: member.id,
-      createdAt: new Date().toISOString(),
-      archived: false,
-      member,
-    }
-  })
-
-  return {
-    ...circle,
-    role,
-    members: circleMembers,
-    invitedCircleLinks: [],
-  }
-})
+export const orgData = new OrgData(circles, circleMembers, [], roles, members)

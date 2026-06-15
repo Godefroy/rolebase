@@ -1,6 +1,6 @@
 import Loading from '@/common/atoms/Loading'
 import TextErrors from '@/common/atoms/TextErrors'
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   Box,
   BoxProps,
@@ -31,7 +31,7 @@ export default function MeetingLogs({
   hideEmpty,
   ...boxProps
 }: Props) {
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
   const showLogs = useDisclosure()
 
   // Subscribe to logs

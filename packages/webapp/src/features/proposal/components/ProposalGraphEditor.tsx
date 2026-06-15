@@ -11,8 +11,8 @@ import CirclesGraph, { CirclesGraphInstance } from '@/graph/CirclesGraph'
 import GraphShortcutsModal from '@/graph/components/GraphShortcutsModal'
 import { GraphProvider } from '@/graph/contexts/GraphContext'
 import { CirclesGraphViews, GraphEvents } from '@/graph/types'
-import { OrgDataProvider } from '@/org/contexts/OrgDataContext'
-import { OrgEditProvider } from '@/org/contexts/OrgEditContext'
+import DraftOrgProvider from '@/org/contexts/DraftOrgProvider'
+import ReadonlyOrgProvider from '@/org/contexts/ReadonlyOrgProvider'
 import {
   Box,
   Button,
@@ -22,6 +22,7 @@ import {
   useColorMode,
   useDisclosure,
 } from '@chakra-ui/react'
+import useCurrentMember from '@/member/hooks/useCurrentMember'
 import { ProposalLog } from '@rolebase/shared/model/proposal'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -50,7 +51,18 @@ export default function ProposalGraphEditor({
 }: Props) {
   const { t } = useTranslation()
   const { colorMode } = useColorMode()
-  const draft = useProposalDraft(logs)
+
+  // The current member acts as a leader of the thread's circle while editing,
+  // so they can prepare changes on it (Agile governance).
+  const currentMember = useCurrentMember()
+  const actingLeader = useMemo(
+    () =>
+      !readOnly && currentMember && circleId
+        ? { circleId, member: currentMember }
+        : undefined,
+    [readOnly, currentMember, circleId]
+  )
+  const draft = useProposalDraft(logs, actingLeader)
   const actions = useDraftOrgEditActions(draft)
 
   const boxRef = useRef<HTMLDivElement>(null)
@@ -119,11 +131,9 @@ export default function ProposalGraphEditor({
     [selectedCircleId]
   )
 
-  return (
-    <OrgDataProvider value={draft.orgData}>
-      <OrgEditProvider value={actions}>
-        <CircleMemberContext.Provider value={circleMemberValue}>
-          <GraphProvider>
+  const content = (
+    <CircleMemberContext.Provider value={circleMemberValue}>
+      <GraphProvider>
             <Flex h="100%" minH={0} flex="1" direction="column">
               <Flex
                 p={3}
@@ -169,12 +179,12 @@ export default function ProposalGraphEditor({
                   overflow="hidden"
                 >
                   {!draft.ready && <Loading active center />}
-                  {draft.ready && draft.orgData.circles && boxSize && (
+                  {draft.ready && draft.orgData && boxSize && (
                     <CirclesGraph
                       ref={graphRef}
                       key={colorMode}
                       view={CirclesGraphViews.AllCircles}
-                      circles={draft.orgData.circles}
+                      org={draft.orgData}
                       events={events}
                       width={boxSize.width}
                       height={boxSize.height}
@@ -203,11 +213,7 @@ export default function ProposalGraphEditor({
                 >
                   <Box flex="1" minH={0}>
                     {selectedCircleId ? (
-                      <CircleProvider
-                        circleId={selectedCircleId}
-                        readOnly={readOnly}
-                        isDraft={!readOnly && selectedCircleId === circleId}
-                      >
+                      <CircleProvider circleId={selectedCircleId}>
                         <CircleContent
                           onlyRole
                           readOnly={readOnly}
@@ -247,9 +253,18 @@ export default function ProposalGraphEditor({
             {shortcutsModal.isOpen && (
               <GraphShortcutsModal isOpen onClose={shortcutsModal.onClose} />
             )}
-          </GraphProvider>
-        </CircleMemberContext.Provider>
-      </OrgEditProvider>
-    </OrgDataProvider>
+      </GraphProvider>
+    </CircleMemberContext.Provider>
+  )
+
+  return readOnly ? (
+    <ReadonlyOrgProvider
+      orgData={draft.orgData}
+      roleOverlays={draft.roleOverlays}
+    >
+      {content}
+    </ReadonlyOrgProvider>
+  ) : (
+    <DraftOrgProvider draft={draft}>{content}</DraftOrgProvider>
   )
 }

@@ -1,7 +1,7 @@
 import CircleMemberLink from '@/circle/components/CircleMemberLink'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { ButtonGroup, IconButton, ThemingProps, VStack } from '@chakra-ui/react'
 import { truthy } from '@rolebase/shared/helpers/truthy'
-import { useStoreState } from '@store/hooks'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FiX } from 'react-icons/fi'
@@ -29,7 +29,7 @@ export default function MembersMultiSelect({
   onRemove,
 }: Props) {
   const { t } = useTranslation()
-  const members = useStoreState((state) => state.org.members)
+  const members = useOrgContext().orgData?.members
   const excludeMembersIdsMemo = useMemo(
     () =>
       excludeMembersIds ? membersIds.concat(excludeMembersIds) : membersIds,

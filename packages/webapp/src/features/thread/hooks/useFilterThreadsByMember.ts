@@ -1,17 +1,16 @@
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { ThreadFragment } from '@gql'
-import filterThreadsByMember from '@rolebase/shared/helpers/filterThreadsByMember'
-import { useStoreState } from '@store/hooks'
 import { useMemo } from 'react'
 
 export default function useFilterThreadsByMember<Entity extends ThreadFragment>(
   threads: Entity[] | undefined,
   memberId?: string
 ): Entity[] | undefined {
-  const circles = useStoreState((state) => state.org.circles)
+  const { orgData } = useOrgContext()
 
   // Filter entries
   return useMemo(
-    () => threads && filterThreadsByMember(threads, memberId, circles),
-    [threads, memberId, circles]
+    () => threads && (orgData ? orgData.filterThreads(threads, memberId) : threads),
+    [threads, memberId, orgData]
   )
 }

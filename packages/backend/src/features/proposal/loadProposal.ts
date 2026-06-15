@@ -1,9 +1,8 @@
-import { getCircleLeaders } from '@rolebase/shared/helpers/getCircleLeaders'
-import { getCircleParticipants } from '@rolebase/shared/helpers/getCircleParticipants'
 import { truthy } from '@rolebase/shared/helpers/truthy'
 import { ThreadActivityDataProposal } from '@rolebase/shared/model/proposal'
 import { gql } from '../../gql'
 import { adminRequest } from '../../utils/adminRequest'
+import { loadOrgData } from '../org/loadOrgData'
 
 const GET_PROPOSAL = gql(`
   query getProposalForResolution($id: uuid!) {
@@ -25,14 +24,6 @@ const GET_PROPOSAL = gql(`
           }
         }
       }
-    }
-  }
-`)
-
-const GET_ORG_CIRCLES = gql(`
-  query getOrgCirclesForResolution($orgId: uuid!) {
-    circle(where: { orgId: { _eq: $orgId }, archived: { _eq: false } }) {
-      ...CircleFull
     }
   }
 `)
@@ -71,14 +62,13 @@ export async function loadProposal(
   const data = activity.data as ThreadActivityDataProposal
   const thread = activity.thread
 
-  const [{ circle: circles }, { thread_proposal_vote: votes }] =
-    await Promise.all([
-      adminRequest(GET_ORG_CIRCLES, { orgId: thread.orgId }),
-      adminRequest(GET_VOTES, { activityId }),
-    ])
+  const [orgData, { thread_proposal_vote: votes }] = await Promise.all([
+    loadOrgData(thread.orgId),
+    adminRequest(GET_VOTES, { activityId }),
+  ])
 
   // Voters: circle participants, plus thread extra members when scope is 'thread'
-  const participants = getCircleParticipants(thread.circleId, circles as any)
+  const participants = orgData.getParticipants(thread.circleId)
   const voterUserIds = new Set(
     participants.map((p) => p.member.userId).filter(truthy)
   )
@@ -88,7 +78,7 @@ export async function loadProposal(
     }
   }
 
-  const leaders = getCircleLeaders(thread.circleId, circles as any)
+  const leaders = orgData.getLeaders(thread.circleId)
   const leaderUserIds = new Set(
     leaders.map((p) => p.member.userId).filter(truthy)
   )

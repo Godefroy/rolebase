@@ -1,7 +1,7 @@
 import { Title } from '@/common/atoms/Title'
 import DashboardMyRoles from '@/dashboard/components/DashboardMyRoles'
 import DashboardNews from '@/dashboard/components/DashboardNews'
-import useCurrentOrg from '@/org/hooks/useCurrentOrg'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { Flex, VStack } from '@chakra-ui/react'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -11,7 +11,7 @@ const margin = 10
 
 const DashboardPage = () => {
   const { t } = useTranslation()
-  const org = useCurrentOrg()
+  const { org } = useOrgContext()
 
   if (!org) return null
 

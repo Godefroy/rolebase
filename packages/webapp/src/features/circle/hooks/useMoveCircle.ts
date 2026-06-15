@@ -1,12 +1,15 @@
+// Use this hook only in useDbOrgEditActions. Elsewhere, get the action from
+// useOrgEditActions() so the active OrgContext implementation applies.
 import useCreateLog from '@/log/hooks/useCreateLog'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { useUpdateCircleMutation } from '@gql'
 import { EntityChangeType, LogType } from '@rolebase/shared/model/log'
-import { store } from '@store/index'
 import { useCallback } from 'react'
 
 export default function useMoveCircle() {
   const [updateCircle] = useUpdateCircleMutation()
   const createLog = useCreateLog()
+  const { getOrgData } = useOrgContext()
 
   return useCallback(
     async (circleId: string, targetCircleId: string | null) => {
@@ -17,8 +20,7 @@ export default function useMoveCircle() {
       if (errors || !result) throw errors?.[0]
 
       // Log changes
-      const { circles } = store.getState().org
-      const circle = circles?.find((c) => c.id === circleId)
+      const circle = getOrgData()?.getCircle(circleId)
       if (!circle) return
       createLog({
         display: {

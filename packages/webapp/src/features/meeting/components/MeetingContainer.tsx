@@ -2,6 +2,7 @@ import Loading from '@/common/atoms/Loading'
 import ScrollableLayout from '@/common/atoms/ScrollableLayout'
 import { Title } from '@/common/atoms/Title'
 import Page404 from '@/common/pages/Page404'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { BoxProps } from '@chakra-ui/react'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -30,6 +31,7 @@ export default function MeetingContainer({
   const meetingState = useMeetingState(id)
 
   const { meeting, loading, error, circle, isStarted, isEnded } = meetingState
+  const { orgData } = useOrgContext()
 
   if (error) {
     console.error(error)
@@ -41,7 +43,7 @@ export default function MeetingContainer({
       {changeTitle && (
         <Title>
           {t('MeetingContainer.title', {
-            circle: circle?.role.name || '',
+            circle: orgData?.getRole(circle?.roleId)?.name || '',
             title: meeting?.title || '…',
           })}
         </Title>

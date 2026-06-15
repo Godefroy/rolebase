@@ -1,5 +1,5 @@
 import ModalCloseStaticButton from '@/common/atoms/ModalCloseStaticButton'
-import { useOrgId } from '@/org/hooks/useOrgId'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { stripePromise } from '@/orgSubscription/api/stripe'
 import {
   Button,
@@ -41,7 +41,7 @@ export default function UpdateBillingDetailsModal({
   ...modalProps
 }: UpdateBillingDetailsModalProps) {
   const { t, i18n } = useTranslation()
-  const orgId = useOrgId()
+  const { orgId } = useOrgContext()
   const toast = useToast()
   const [loading, setLoading] = useState(false)
   const [disabled, setDisabled] = useState(true)

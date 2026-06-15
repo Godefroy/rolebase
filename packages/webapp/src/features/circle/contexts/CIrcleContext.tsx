@@ -1,18 +1,22 @@
 import useCurrentMember from '@/member/hooks/useCurrentMember'
 import useOrgMember from '@/member/hooks/useOrgMember'
 import useOrgOwner from '@/member/hooks/useOrgOwner'
-import useCurrentOrg from '@/org/hooks/useCurrentOrg'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import useCircleLeaders from '@/participants/hooks/useCircleLeaders'
 import useCircleParticipants from '@/participants/hooks/useCircleParticipants'
-import { CircleFullFragment, RoleSummaryFragment } from '@gql'
+import {
+  CircleFragment,
+  Governance_Mode_Enum,
+  RoleSummaryFragment,
+  useGetCircleQuery,
+} from '@gql'
 import { ParticipantMember } from '@rolebase/shared/model/member'
 import React, { ReactNode, createContext } from 'react'
-import useCircle from '../hooks/useCircle'
 
 interface CircleContextValues {
-  circle: CircleFullFragment
-  parentCircle?: CircleFullFragment
-  ownerCircle?: CircleFullFragment
+  circle: CircleFragment
+  parentCircle?: CircleFragment
+  ownerCircle?: CircleFragment
   role: RoleSummaryFragment
   hasParentLinkMembers: boolean
   leaders: ParticipantMember[]
@@ -34,26 +38,27 @@ export const CircleContext = createContext<CircleContextValues | undefined>(
 
 interface Props {
   circleId: string
-  // Force the whole panel read-only (e.g. previewing a proposal's org chart)
-  readOnly?: boolean
-  // Editing a draft (proposal org chart editor): lift governance restrictions
-  // since changes are only applied on approval. Any org member can prepare them.
-  isDraft?: boolean
   children: ReactNode
 }
 
-export function CircleProvider({
-  circleId,
-  readOnly,
-  isDraft,
-  children,
-}: Props) {
-  const circle = useCircle(circleId)
-  const role = circle?.role
+export function CircleProvider({ circleId, children }: Props) {
+  // Editability and governance come from the org context. In the proposal
+  // editor it is an in-memory draft (Agile, editable).
+  const { governanceMode, editable, orgData, ready } = useOrgContext()
+  const orgCircle = orgData?.getCircle(circleId)
   const currentMember = useCurrentMember()
-  const org = useCurrentOrg()
   const isOrgMember = useOrgMember()
   const isOrgOwner = useOrgOwner()
+
+  // Archived circles aren't in the org data; fetch the circle and its role by
+  // id (ignoring archived) so its panel can still be opened (with an alert).
+  const { data: fetched } = useGetCircleQuery({
+    skip: !circleId || !!orgCircle || !ready,
+    variables: { id: circleId },
+  })
+  const fetchedCircle = fetched?.circle_by_pk
+  const circle: CircleFragment | undefined = orgCircle ?? fetchedCircle ?? undefined
+  const role = orgData?.getRole(circle?.roleId) ?? fetchedCircle?.role
 
   // Participants
   const participants = useCircleParticipants(circle)
@@ -61,38 +66,41 @@ export function CircleProvider({
     (p) => p.member.id === currentMember?.id
   )
 
-  // Leaders
+  // Leaders (display list, real leaders only)
   const leaders = useCircleLeaders(circle)
-  const isLeader = leaders.some((p) => p.member.id === currentMember?.id)
   const hasParentLinkMembers = leaders.some(
     (p) => !p.circlesIds.includes(circleId)
   )
 
   // Parent circle
-  const parentCircle = useCircle(circle?.parentId || undefined)
+  const parentCircle = orgData?.getCircle(circle?.parentId || undefined)
 
   // Owner circle: grand parent circle if link to parent, else parent circle
-  const grandParentCircle = useCircle(
+  const grandParentCircle = orgData?.getCircle(
     (role?.parentLink && parentCircle?.parentId) || undefined
   )
   const ownerCircle = grandParentCircle || parentCircle
 
-  // Parent owners
+  // Owners = leaders of the owner circle. In the proposal editor the current
+  // member is added to the thread circle's leaders (see OrgData.actingLeader),
+  // which propagates here to both isLeader and isOwner.
   const owners = useCircleLeaders(ownerCircle)
+
+  const isLeader = leaders.some((p) => p.member.id === currentMember?.id)
   const isOwner = owners.some((p) => p.member.id === currentMember?.id)
 
-  // In a draft (proposal editor), governance protection is lifted: any org
-  // member can prepare changes since they only apply on approval.
-  const governanceOk = isDraft || !org?.protectGovernance
+  // Free governance: every member can edit the whole org chart.
+  const governanceOk = governanceMode === Governance_Mode_Enum.Free
+
+  // Strict governance makes the whole chart read-only (changes go through
+  // proposals). Read-only implementations (preview, share) disable edits too.
+  const readOnly = !editable || governanceMode === Governance_Mode_Enum.Strict
 
   // Can edit circle
-  const canEditCircle =
-    isOrgMember && (governanceOk || isOrgOwner || isOwner)
+  const canEditCircle = isOrgMember && (governanceOk || isOrgOwner || isOwner)
 
   // Can edit role
-  const canEditRole = role?.base
-    ? isDraft || isOrgOwner
-    : canEditCircle
+  const canEditRole = role?.base ? isOrgOwner : canEditCircle
 
   // Can edit sub circles
   const canEditSubCircles =
@@ -108,9 +116,7 @@ export function CircleProvider({
   // Can edit members
   const canEditMembers =
     isOrgMember &&
-    (governanceOk ||
-      isOrgOwner ||
-      (hasParentLinkMembers ? isLeader : isOwner))
+    (governanceOk || isOrgOwner || (hasParentLinkMembers ? isLeader : isOwner))
 
   // Prepare context value
   const value = circle &&
