@@ -18,16 +18,19 @@ export default function useGraphEvents(): GraphEvents {
     isMember && editable && governanceMode !== Governance_Mode_Enum.Strict
 
   // Navigation Events
-  const onCircleClick = useCallback((circleId: string, parentId?: string) => {
-    const params = new URLSearchParams()
-    params.set('circleId', circleId)
-    if (parentId) params.set('parentId', parentId)
-    navigateOrg(`roles?${params.toString()}`)
-  }, [])
+  const onCircleClick = useCallback(
+    (circleId: string, parentId?: string) => {
+      const params = new URLSearchParams()
+      params.set('circleId', circleId)
+      if (parentId) params.set('parentId', parentId)
+      navigateOrg(`roles?${params.toString()}`)
+    },
+    [navigateOrg]
+  )
   const onMemberClick = useCallback(
     (circleId: string, memberId: string) =>
       navigateOrg(`roles?circleId=${circleId}&memberId=${memberId}`),
-    []
+    [navigateOrg]
   )
 
   // Move a circle member to another circle
@@ -61,6 +64,15 @@ export default function useGraphEvents(): GraphEvents {
       onMemberMove: canEdit ? onMemberMove : undefined,
       onMemberAdd: canEdit ? onMemberAdd : undefined,
     }),
-    [canEdit, moveCircle, copyCircle, onMemberMove, onMemberAdd]
+    [
+      canEdit,
+      moveCircle,
+      copyCircle,
+      onMemberMove,
+      onMemberAdd,
+      navigateOrg,
+      onCircleClick,
+      onMemberClick,
+    ]
   )
 }
