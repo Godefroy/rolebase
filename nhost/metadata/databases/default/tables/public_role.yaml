@@ -93,6 +93,7 @@ update_permissions:
         - indicators
         - name
         - notes
+        - parentLink
         - purpose
         - singleMember
       filter:
