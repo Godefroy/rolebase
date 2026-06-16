@@ -79,11 +79,17 @@ const theme = extendTheme({
     },
   },
   styles: {
+    // Scoped under `.rolebase-webapp` (set on the <body> of the webapp and
+    // share apps, and on the demo island wrapper on the marketing site) so that
+    // mounting Chakra in a Tailwind-styled page does not restyle the rest of it.
     global: (props: any) => ({
-      html: {
+      '.rolebase-webapp': {
+        // Base typography/colors the CSS reset normally puts on <body>. Set
+        // here too because the reset is scoped to `.rolebase-webapp` (a div on
+        // the marketing site, not a body), so it no longer styles a body.
+        fontFamily: 'body',
         fontSize: '15px',
-      },
-      body: {
+        color: 'chakra-body-text',
         bg:
           // Set background to transparent with "transparent" param in query string
           // Useful for iframe integration (org chart share)
@@ -91,12 +97,13 @@ const theme = extendTheme({
             ? 'transparent'
             : mode('white', 'gray.900')(props),
       },
-      '*::placeholder': {
+      '.rolebase-webapp *::placeholder': {
         color: 'gray.500',
       },
-      '*, *::before, &::after': {
-        borderColor: mode('gray.200', 'whiteAlpha.400')(props),
-      },
+      '.rolebase-webapp, .rolebase-webapp *, .rolebase-webapp *::before, .rolebase-webapp *::after':
+        {
+          borderColor: mode('gray.200', 'whiteAlpha.400')(props),
+        },
     }),
   },
   fonts: {

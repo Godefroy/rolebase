@@ -4,6 +4,10 @@ description: 'Understand how Rolebase unifies circles and roles into a single co
 order: 4
 ---
 
+Roles are the building blocks of your organization in Rolebase. A role captures a clear area of responsibility: why it exists, what it decides on, and what it is expected to deliver. Rather than fixed job titles, you describe the work itself, then assign one or more people to carry it out.
+
+As your organization grows, roles nest inside one another to form your whole org chart, giving everyone a shared, always up-to-date picture of who does what. This page explains how roles work and the options you can use to shape them.
+
 ## The Unified Model
 
 In Holacracy or Sociocracy, the organizational structure is typically divided into two distinct concepts: **circles** (teams) and **roles** (individual responsibilities). In Rolebase, these two concepts are **merged into one: the role**.
@@ -14,6 +18,10 @@ A role can be a simple individual responsibility, or it can contain other roles.
   In Rolebase, a circle is simply a role that contains other roles. There is no
   separate "circle" entity. Everything is a role.
 </Callout>
+
+In the org chart below, "Product" is a role that contains the "Design" and "Engineering" roles, so it acts as a circle. Each role can hold members. To represent a role within its parent (what Holacracy calls a "Lead Link"), you add a sub-role with the "Represents its parent role" option enabled.
+
+<OrgChartView demo="demo" height="420px" focus="circle-product" showAllNodes={false} />
 
 This unified approach gives you maximum flexibility: any role can become a circle at any time by adding sub-roles to it, without needing to convert or restructure anything.
 
@@ -67,33 +75,25 @@ Organization (top-level role)
 
 ## Base Roles
 
-Some roles are **base roles**, automatically assigned to all members of the parent role (circle). This is useful for shared responsibilities that every member should hold.
+A **base role** is a predefined role you can reuse in several places in the org chart. Base roles are not assigned automatically: they give a shared definition (purpose, domain, accountabilities) and let you quickly create an instance wherever you need it. Editing a base role updates every place where it is used.
+
+This is handy for recurring roles, for example the Holacracy roles (Lead Link, Rep Link, Secretary, Facilitator) or sociocracy roles.
 
 ## Role Generation with AI
 
 Rolebase can generate role suggestions using AI. Based on the parent role's purpose and context, the AI proposes sub-roles with pre-filled purpose, domain, and accountabilities. You can review and edit the suggestions before accepting them.
 
-## Members and Leaders
-
-### Members
+## Members
 
 Members are assigned to a role directly. When a role contains sub-roles (acts as a circle), a person who holds any sub-role is also considered a member of the parent role.
 
-### Leaders
+## Representing a role in its parent
 
-A role leader (sometimes called a "Lead Link" in Holacracy) is a member with special authority over the role and its sub-roles. Leaders can:
+Rolebase has no built-in "leader". Instead, you enable the **"Represents its parent role"** option on a role: its members then represent that role within its parent and gain governance authority over it. This is how you model Holacracy's **Lead Link** and **Rep Link** (in French, *Premier lien* and *Second lien*), or any representative or coordinator role you need.
 
-- Assign members to sub-roles.
-- Modify the role's structure (when governance protection is enabled).
-- Represent the role in its parent role.
+## Invited roles
 
-### Parent Links
-
-A **parent link** connects a role to its parent, indicating who represents the sub-role's interests in the broader context. This is a core concept in Holacratic governance. It ensures information flows between levels.
-
-## Role Links
-
-**Role links** enable cross-functional collaboration between roles that are not in a direct parent-child relationship. By creating a link, a member of one role can participate in another role's governance and operations.
+You can **invite a role into another role** to enable cross-functional collaboration between roles that are not in a direct parent-child relationship. A member of the invited role can then take part in the host role's governance and operations. (This corresponds to a *link* in Holacracy.)
 
 This is useful for:
 

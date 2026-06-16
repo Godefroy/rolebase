@@ -1,5 +1,5 @@
-import useCreateMember from '@/member/hooks/useCreateMember'
 import useOrgAdmin from '@/member/hooks/useOrgAdmin'
+import { useOrgContext, useOrgEditActions } from '@/org/contexts/OrgContext'
 import { MemberFragment } from '@gql'
 import React from 'react'
 import { useMemberSearchItems } from '../hooks/useMemberSearchItems'
@@ -17,13 +17,15 @@ export default function MemberSearchButton({
 }: Props) {
   const items = useMemberSearchItems(members, excludeIds)
   const isAdmin = useOrgAdmin()
-  const handleCreate = useCreateMember()
+  const { isDraft } = useOrgContext()
+  const { createMember } = useOrgEditActions()
 
   return (
     <SearchButton
       {...props}
       items={items}
-      onCreate={isAdmin ? handleCreate : undefined}
+      // Members are readonly in a proposal draft, so no creation there.
+      onCreate={isAdmin && !isDraft ? createMember : undefined}
     />
   )
 }

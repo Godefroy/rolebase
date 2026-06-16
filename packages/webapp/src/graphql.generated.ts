@@ -4522,6 +4522,8 @@ export type Circle_Link_Bool_Exp = {
 
 /** unique or primary key constraints on table "circle_link" */
 export enum Circle_Link_Constraint {
+  /** unique or primary key constraint on columns "parentId", "circleId" */
+  CircleLinkActiveUnique = 'circle_link_active_unique',
   /** unique or primary key constraint on columns "id" */
   CircleLinkPkey = 'circle_link_pkey'
 }
@@ -4800,6 +4802,8 @@ export type Circle_Member_Bool_Exp = {
 
 /** unique or primary key constraints on table "circle_member" */
 export enum Circle_Member_Constraint {
+  /** unique or primary key constraint on columns "memberId", "circleId" */
+  CircleMemberActiveUnique = 'circle_member_active_unique',
   /** unique or primary key constraint on columns "id" */
   CircleMemberPkey = 'circle_member_pkey'
 }

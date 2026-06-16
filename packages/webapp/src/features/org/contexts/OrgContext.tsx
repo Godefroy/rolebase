@@ -1,5 +1,6 @@
 import {
   Governance_Mode_Enum,
+  MemberFragment,
   OrgDataFragment,
   OrgFragment,
   OrgSubscriptionFragment,
@@ -28,6 +29,16 @@ export interface OrgEditActions {
     roleOrName: RoleSummaryFragment | string
   ): Promise<string | undefined>
   updateRole(role: RoleFragment, values: Partial<RoleFragment>): Promise<void>
+  // Edit a member's own fields (name, description…). Readonly in draft mode:
+  // a proposal changes the org chart, not member profiles.
+  updateMember(
+    member: MemberFragment,
+    values: Partial<MemberFragment>
+  ): Promise<void>
+  // Create a new member in the org and return its id. Readonly in draft mode.
+  createMember(name: string): Promise<string | undefined>
+  // Archive (delete) a member. Readonly in draft mode.
+  archiveMember(memberId: string): Promise<void>
   addCircleMember(circleId: string, memberId: string): Promise<void>
   removeCircleMember(circleId: string, memberId: string): Promise<void>
   addCircleLink(parentId: string, circleId: string): Promise<void>
@@ -47,6 +58,10 @@ export interface OrgContextValue {
   governanceMode: Governance_Mode_Enum
   // Whole org chart editable? false in readonly implementations (preview, share)
   editable: boolean
+  // Backed by a real backend (org page). Member profile features that need it
+  // (avatar upload, org-role management) are only available then, not in an
+  // in-memory draft/demo.
+  hasBackend?: boolean
   // In-memory proposal draft (not the live database). DB-only actions like
   // restoring an archived circle don't apply here.
   isDraft: boolean
@@ -69,6 +84,9 @@ export const noopOrgEditActions: OrgEditActions = {
   archiveCircle: noop,
   createCircle: noop,
   updateRole: noop,
+  updateMember: noop,
+  createMember: noop,
+  archiveMember: noop,
   addCircleMember: noop,
   removeCircleMember: noop,
   addCircleLink: noop,

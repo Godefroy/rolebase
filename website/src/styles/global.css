@@ -45,9 +45,41 @@
   }
 }
 
-/* Base styles (Tailwind Preflight resets everything) */
+/* Base styles (Tailwind Preflight resets everything). Set the font on <body>
+   explicitly (not only <html>): the demo island's Chakra CSS reset injects an
+   unscoped `html { font-family: system-ui }`, and owning the font on <body>
+   keeps the page on its brand font regardless. */
 body {
-  @apply text-text-main leading-relaxed antialiased;
+  @apply font-sans text-text-main leading-relaxed antialiased;
+}
+
+/* Demo island (real webapp components). Chakra's global <body>/<html> styles
+   are disabled for the island (see DemoProviders) so they never leak onto the
+   marketing page; its base look is reapplied here, scoped to the island. The
+   Chakra CSS variables are still defined globally, so we reuse them. */
+/* `.chakra-portal` is the body-level wrapper Chakra uses for menus, modals and
+   tooltips (outside the island), so it gets the same base styles — except the
+   background, which would paint a box behind those overlays. */
+.rolebase-webapp,
+.chakra-portal {
+  font-size: 15px;
+  color: var(--chakra-colors-chakra-body-text);
+}
+.rolebase-webapp {
+  background: var(--chakra-colors-chakra-body-bg);
+}
+/* Include the containers themselves, not just descendants: Chakra components
+   such as the search/menu list use `border-color: inherit`, so the inherited
+   value must already be the light default at the root of the island/portal. */
+.rolebase-webapp,
+.rolebase-webapp :where(*, *::before, *::after),
+.chakra-portal,
+.chakra-portal :where(*, *::before, *::after) {
+  border-color: var(--chakra-colors-gray-200);
+}
+.rolebase-webapp ::placeholder,
+.chakra-portal ::placeholder {
+  color: var(--chakra-colors-gray-500);
 }
 
 /* Markdown styles (applied to elements with .md class, added by rehype plugin) */

@@ -1,6 +1,7 @@
 import { EditableField } from '@/common/atoms/EditableField'
+import { useOrgEditActions } from '@/org/contexts/OrgContext'
 import { BoxProps } from '@chakra-ui/react'
-import { MemberFragment, useUpdateMemberMutation } from '@gql'
+import { MemberFragment } from '@gql'
 import React from 'react'
 
 interface Props extends BoxProps {
@@ -21,22 +22,14 @@ export function MemberEditableField({
   hideTitle,
   ...boxProps
 }: Props) {
-  const [updateMember] = useUpdateMemberMutation()
+  const { updateMember } = useOrgEditActions()
 
   // Value
   const rawValue = member[field]
   const value = typeof rawValue === 'string' ? rawValue : ''
 
   const handleSave = async (newValue: string) => {
-    // Update role data
-    await updateMember({
-      variables: {
-        id: member.id,
-        values: {
-          [field]: newValue,
-        },
-      },
-    })
+    await updateMember(member, { [field]: newValue })
   }
 
   return (

@@ -62,3 +62,50 @@ footer:
     nestr: Alternative à Nestr
     glassfrog: Alternative à GlassFrog
     peerdom: Alternative à Peerdom
+
+# Organisation d'exemple affichée dans les organigrammes interactifs.
+demo:
+  ui:
+    clickRole: Cliquez sur un rôle
+    name: Nom
+    purpose: Raison d'être
+    domain: Domaine
+    accountabilities: Redevabilités
+  roles:
+    nova:
+      name: Nova
+      purpose: Concevoir des produits numériques que les gens adorent utiliser.
+    product:
+      name: Produit
+      purpose: Transformer les besoins des utilisateurs en un produit cohérent et utile.
+      domain: Feuille de route produit, spécifications, priorités.
+      accountabilities: |-
+        Tenir la feuille de route à jour.
+        Rédiger et arbitrer les spécifications.
+        Mesurer l'usage et la satisfaction.
+    design:
+      name: Design
+      purpose: Rendre chaque interaction claire, accessible et agréable.
+      domain: Design system, maquettes d'interface, recherche utilisateur.
+      accountabilities: |-
+        Maintenir le design system.
+        Produire les maquettes d'interface.
+        Mener la recherche utilisateur.
+    dev:
+      name: Développement
+      purpose: Livrer un logiciel fiable à un rythme soutenable.
+      domain: Base de code, infrastructure, qualité technique.
+      accountabilities: |-
+        Développer et relire les fonctionnalités.
+        Garder le build au vert.
+        Veiller à la performance et à la sécurité.
+    business:
+      name: Business
+      purpose: Développer le chiffre d'affaires et nouer des relations durables avec les clients.
+      domain: Vente, marketing, partenariats.
+      accountabilities: |-
+        Mener l'acquisition et la vente.
+        Entretenir la relation client.
+        Suivre le chiffre d'affaires et les indicateurs clés.
+    leader:
+      name: Leader

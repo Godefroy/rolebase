@@ -1,0 +1,41 @@
+---
+import OrgChartView from './islands/OrgChartView.tsx'
+import { getLangFromUrl, getTranslations } from '../utils/i18n'
+
+interface Props {
+  // Which example organization to render ('demo' | 'simple')
+  demo?: string
+  // Graph framing ('AllCircles' | 'Members' | ...)
+  view?: string
+  // Force members and deep circles visible at any zoom (static illustration)
+  showAllNodes?: boolean
+  // Zoom in on this circle on load
+  focus?: string
+  // Wrapper height (CSS value)
+  height?: string
+  // Extra classes for the wrapper (layout: width, margin…)
+  class?: string
+}
+
+const {
+  demo = 'demo',
+  view = 'AllCircles',
+  showAllNodes = true,
+  focus,
+  height = '420px',
+  class: className,
+} = Astro.props
+const lang = getLangFromUrl(Astro.url)
+const t = await getTranslations(lang)
+---
+
+<div class:list={['my-10', className]} style={`width:100%;height:${height}`}>
+  <OrgChartView
+    client:only="react"
+    demo={demo}
+    view={view}
+    showAllNodes={showAllNodes}
+    focus={focus}
+    texts={t.demo}
+  />
+</div>

@@ -1333,7 +1333,7 @@
     "copyRole_desc": "Maintenez Maj, puis glissez le rôle sur un autre rôle.",
     "moveMember_label": "Déplacer un membre",
     "moveMember_desc": "Glissez le membre et déposez-le sur un autre rôle.",
-    "addMember_label": "Ajouter un membre à un autre rôle",
+    "addMember_label": "Copier un membre",
     "addMember_desc": "Maintenez Maj, puis glissez le membre sur un autre rôle."
   },
   "ProposalLogList": {

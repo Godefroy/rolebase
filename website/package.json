@@ -13,19 +13,36 @@
   "dependencies": {
     "@astrojs/mdx": "^5.0.2",
     "@astrojs/netlify": "^7.0.3",
+    "@astrojs/react": "^5.0.7",
     "@astrojs/sitemap": "^3.7.1",
     "@tailwindcss/postcss": "^4.2.2",
     "astro": "^6.0.6",
     "astrocms": "^0.1.1",
+    "d3": "^7.8.5",
+    "d3-hierarchy": "^3.1.2",
+    "eventemitter3": "^5.0.1",
     "glob": "^13.0.6",
     "iconsax-astro": "^0.0.2",
+    "lodash.debounce": "^4.0.8",
+    "lodash.isequal": "^4.5.0",
+    "lodash.throttle": "^4.1.1",
+    "lodash.uniqby": "^4.7.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "tailwindcss": "^4.2.2",
     "turndown": "^7.2.2"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
+    "@types/d3": "^7.4.3",
+    "@types/d3-hierarchy": "^3.1.6",
     "@types/turndown": "^5.0.6",
     "patch-package": "^8.0.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vite-plugin-svgr": "^3.2.0"
+  },
+  "overrides": {
+    "@types/react": "18.2.21",
+    "@types/react-dom": "18.2.7"
   }
 }

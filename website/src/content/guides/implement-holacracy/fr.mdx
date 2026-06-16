@@ -1,0 +1,93 @@
+---
+title: "Mettre en place l'holacratie avec Rolebase"
+description: "Un guide pratique pas à pas pour pratiquer l'holacratie avec Rolebase : rôles, Premier et Second lien, gouvernance et réunions tactiques."
+order: 2
+---
+
+Rolebase n'est lié à aucune méthode en particulier, et pourtant il vous donne tout ce qu'il faut pour pratiquer l'holacratie : un organigramme clair de rôles, une gouvernance protégée par les propositions, et des réunions pour faire vivre les rôles. Ce guide vous accompagne étape par étape dans la mise en place d'une pratique holacratique et renvoie vers la documentation détaillée de chaque fonctionnalité.
+
+<Callout type="info" title="L'holacratie en bref">
+  L'holacratie distribue l'autorité dans des rôles clairement définis, regroupés en cercles. Les rôles évoluent par un processus de gouvernance, et le travail quotidien se coordonne en réunions tactiques. Rolebase reprend directement ces principes.
+</Callout>
+
+## Étape 1 : protéger la gouvernance
+
+En holacratie, la structure des rôles change uniquement par un processus de gouvernance explicite, jamais par des modifications unilatérales. Réglez le **mode de gouvernance** de votre organisation sur **Stricte** pour que les rôles ne puissent être modifiés que par proposition.
+
+1. Ouvrez les [paramètres de votre organisation](/fr/docs/organizations).
+2. Réglez le mode de gouvernance sur **Stricte** (« Les rôles peuvent uniquement être modifiés par proposition »).
+
+Les autres modes sont utiles tant que vous expérimentez encore. **Libre** permet à chaque membre de modifier tout l'organigramme, et **Agile** permet de modifier chaque rôle aux membres qui le représentent. Seul un propriétaire de l'organisation peut changer le mode de gouvernance.
+
+## Étape 2 : modéliser vos cercles en rôles
+
+Rolebase repose sur un [modèle unifié](/fr/docs/circles-and-roles) où un cercle est simplement un rôle qui contient d'autres rôles. Il n'y a pas d'entité « cercle » distincte, la distinction holacratique entre cercles et rôles devient donc un concept unique et souple.
+
+Partez de votre rôle de plus haut niveau, qui représente toute l'organisation, et ajoutez un sous-rôle pour chaque domaine de travail. Tout rôle contenant des sous-rôles joue le rôle de cercle. Vous construisez cette structure directement dans l'[organigramme](/fr/docs/org-chart) en ajoutant des rôles dans des rôles.
+
+## Étape 3 : définir chaque rôle
+
+Un rôle bien défini est au cœur de l'holacratie. Pour chaque rôle, décrivez sa **raison d'être** pour dire pourquoi il existe, son **domaine** pour dire ce sur quoi il a autorité, et ses **redevabilités** pour lister les activités continues qu'il assure.
+
+Vous pouvez aussi remplir une **Checklist** et des **Indicateurs**, passés en revue lors des réunions tactiques, ainsi que des **Notes** pour le reste. Consultez la page [rôles](/fr/docs/circles-and-roles) pour la liste complète des options.
+
+## Étape 4 : créer les rôles holacratiques
+
+L'holacratie s'appuie sur quelques rôles récurrents. Dans Rolebase, vous les créez une fois en tant que **rôles de base**, c'est-à-dire des rôles prédéfinis et réutilisables, puis vous en ajoutez une instance là où vous en avez besoin. Cela conserve une définition partagée dans toute l'organisation.
+
+### Premier lien et Second lien
+
+Un **Premier lien** représente un cercle depuis son parent et assigne les membres aux rôles. Un **Second lien** est élu par le cercle pour le représenter vers le haut. Les deux sont des rôles qui représentent leur rôle parent :
+
+1. Créez un rôle de base, par exemple « Premier lien » ou « Second lien ».
+2. Activez l'option **« Représente son rôle parent »**.
+3. Activez **« Ne peut être occupé que par un seul membre »** lorsque le poste n'a qu'un seul titulaire.
+4. Ajoutez une instance dans chaque cercle et assignez le membre élu.
+
+<Callout type="tip" title="Premier lien et Second lien">
+  Les deux utilisent la même option « Représente son rôle parent ». Laissez la raison d'être et les redevabilités du rôle exprimer la différence : le Premier lien veille à la raison d'être du cercle depuis le haut, tandis que le Second lien porte les tensions du cercle vers le haut.
+</Callout>
+
+### Facilitateur et Secrétaire
+
+Créez aussi **Facilitateur** et **Secrétaire** en tant que rôles de base, chacun avec ses redevabilités holacratiques, comme faciliter les réunions et tenir à jour les comptes rendus et l'organigramme. Ajoutez une instance dans chaque cercle qui en a besoin et élisez un membre.
+
+## Étape 5 : relier les rôles entre cercles
+
+Lorsqu'un rôle doit participer à un autre cercle qui n'est pas son parent direct, **invitez le rôle** dans ce cercle. Le [rôle invité](/fr/docs/circles-and-roles) participe alors à la gouvernance et aux opérations du cercle hôte, l'équivalent d'un lien transversal en holacratie.
+
+## Étape 6 : mener des réunions de gouvernance et tactiques
+
+L'holacratie distingue deux types de réunions. Dans Rolebase, vous reproduisez les deux avec des [modèles de réunion](/fr/docs/meetings) qui définissent une séquence d'étapes réutilisable.
+
+Une **réunion de gouvernance** fait évoluer les rôles. Vous captez les tensions sous forme de discussions, puis vous transformez les changements convenus en propositions (voir l'étape 7). Un modèle simple combine un tour de note libre et une étape de discussions.
+
+Une **réunion tactique** coordonne le travail. Un modèle utile combine les étapes **Checklist**, **Indicateurs**, **Tâches** et **Discussions**, pour que chaque rôle passe en revue ses actions récurrentes, ses indicateurs et ses prochaines étapes.
+
+Vous débutez avec les réunions ? Suivez d'abord le guide [animer votre première réunion](/fr/guides/run-your-first-meeting), puis enregistrez vos séquences en modèles pour les réutiliser.
+
+## Étape 7 : traiter les tensions par les propositions
+
+Les tensions sont le moteur de l'holacratie. Dans Rolebase, vous les traitez en quelques étapes :
+
+1. Captez une tension sous forme de **discussion** au sein du rôle concerné.
+2. Lorsqu'elle appelle un changement de structure, créez une **proposition**. Une proposition réunit une décision et un ensemble de modifications de l'organigramme, comme créer un rôle, le déplacer, ajouter un membre, inviter un rôle ou modifier un rôle, le tout préparé dans un éditeur dédié.
+3. Le cercle **vote** la proposition. Choisissez le mode de décision **Consentement** pour coller à l'holacratie : la proposition passe tant que personne ne soulève d'objection.
+4. Une fois approuvée, les modifications s'appliquent à l'organigramme et une **décision** est enregistrée.
+
+Consultez les pages [propositions](/fr/docs/proposals) et [décisions](/fr/docs/decisions) pour le déroulé complet.
+
+<Callout type="tip" title="Décider par consentement">
+  Rolebase propose plusieurs modes de décision (Consentement, Unanimité, Majorité simple, Majorité absolue). Le consentement est le plus proche de la prise de décision intégrative de l'holacratie : le silence vaut consentement, et seules les objections valables bloquent une proposition.
+</Callout>
+
+## Étape 8 : faire vivre la pratique
+
+Utilisez les **tâches** pour suivre les prochaines actions et les projets issus des réunions tactiques. Revisitez les rôles dès qu'une nouvelle tension montre que la structure ne convient plus. Faites de l'organigramme votre source de vérité unique, pour que chacun voie qui occupe quel rôle et de quoi chaque rôle est redevable.
+
+## Et ensuite ?
+
+- [Rôles](/fr/docs/circles-and-roles) pour découvrir les briques de base et toutes les options de rôle.
+- [Propositions](/fr/docs/proposals) pour proposer et voter des changements de gouvernance.
+- [Réunions](/fr/docs/meetings) pour configurer les modèles, les étapes et les réunions récurrentes.
+- [Décisions](/fr/docs/decisions) pour consigner les accords et les résultats de gouvernance.

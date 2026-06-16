@@ -33,7 +33,10 @@ export default function useDraftOrgEditActions(
   const { orgId } = useOrgContext()
 
   return useMemo<OrgEditActions>(() => {
-    const getOrg = () => draft.orgData
+    // Always read the live indexed view (not the render snapshot) so chained
+    // edits within one tick — and edits triggered from stale closures such as
+    // the graph's captured handlers — operate on up-to-date data.
+    const getOrg = () => draft.getOrgData()
     const findCircle = (id: string): CircleFragment | undefined =>
       getOrg()?.circleById.get(id)
     const roleName = (circle?: CircleFragment) =>
@@ -155,7 +158,7 @@ export default function useDraftOrgEditActions(
 
       async archiveCircle(circleId) {
         const circle = findCircle(circleId)
-        const orgData = draft.orgData
+        const orgData = draft.getOrgData()
         if (!circle || !orgData) return
         const children = orgData.descendantsOf(circleId)
         const circlesIds = [circleId, ...children.map((c) => c.id)]
@@ -340,10 +343,22 @@ export default function useDraftOrgEditActions(
         )
       },
 
+      // Members are readonly in a proposal draft: a proposal changes the org
+      // chart, not member profiles.
+      async updateMember() {},
+      async createMember() {
+        return undefined
+      },
+      async archiveMember() {},
+
       async addCircleMember(circleId, memberId) {
+        const org = getOrg()
         const circle = findCircle(circleId)
-        const member = getOrg()?.memberById.get(memberId)
+        const member = org?.memberById.get(memberId)
         if (!circle || !member || !orgId) return
+        // Already a member of this circle: nothing to do (avoid duplicates).
+        if (org.membersOf(circleId).some((cm) => cm.member.id === memberId))
+          return
         const id = generateId()
         await draft.applyLog(
           {

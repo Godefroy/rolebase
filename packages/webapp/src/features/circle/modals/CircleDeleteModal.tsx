@@ -34,7 +34,7 @@ export default function CircleDeleteModal({
   ...alertProps
 }: Props) {
   const { t } = useTranslation()
-  const { orgData } = useOrgContext()
+  const { orgData, isDraft } = useOrgContext()
   const circle = orgData?.getCircle(id)
   const { archiveCircle } = useOrgEditActions()
   const cancelRef = useRef<HTMLButtonElement>(null)
@@ -45,17 +45,19 @@ export default function CircleDeleteModal({
     ? [id, ...orgData.descendantsOf(id).map((c) => c.id)]
     : [id]
 
+  // No linked DB entities to count in a draft (in-memory) org.
   const { data, loading, error } = useGetCirclesStatsQuery({
     variables: { circlesIds },
+    skip: isDraft,
   })
 
   // Stats of entities linked to circle
-  const threadsCount = data?.thread_aggregate.aggregate?.count || 0
-  const meetingsCount = data?.meeting_aggregate.aggregate?.count || 0
+  const threadsCount = data?.thread_aggregate?.aggregate?.count || 0
+  const meetingsCount = data?.meeting_aggregate?.aggregate?.count || 0
   const recurringMeetingsCount =
-    data?.meeting_recurring_aggregate.aggregate?.count || 0
-  const tasksCount = data?.task_aggregate.aggregate?.count || 0
-  const decisionsCount = data?.decision_aggregate.aggregate?.count || 0
+    data?.meeting_recurring_aggregate?.aggregate?.count || 0
+  const tasksCount = data?.task_aggregate?.aggregate?.count || 0
+  const decisionsCount = data?.decision_aggregate?.aggregate?.count || 0
 
   const hasEntitiesToMove =
     threadsCount > 0 ||

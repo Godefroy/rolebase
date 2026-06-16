@@ -30,6 +30,11 @@ export interface ProposalDraft {
   getLogs(): ProposalLog[]
   // Read-only access to the current mutable draft data (for building changes)
   getData(): OrgDataFragment | undefined
+  // Live indexed view, always up to date even between awaited apply/remove/
+  // replace calls within the same tick (unlike `orgData`, the render snapshot
+  // that lags by one edit). Edit actions read this so chained operations
+  // (e.g. create a member then add it to a circle) see each other's changes.
+  getOrgData(): OrgData | undefined
 }
 
 function clone<T>(value: T): T {
@@ -84,27 +89,51 @@ export default function useProposalDraft(
   const logsRef = useRef<ProposalLog[]>([])
   const [version, setVersion] = useState(0)
 
-  // Replay a list of logs onto fresh working data, flagging failures
-  const rebuild = useCallback(async (logsToApply: ProposalLog[]) => {
-    if (!initialRef.current) return
-    const data = clone(initialRef.current)
-    const methods = buildMethods(data)
-    workingRef.current = { data, methods }
-
-    const nextLogs: ProposalLog[] = []
-    for (const log of logsToApply) {
-      const next: ProposalLog = { ...log, error: undefined }
-      try {
-        await applyEntitiesChanges(log.changes, methods)
-      } catch (e) {
-        next.error = e instanceof Error ? e.message : 'error'
-      }
-      nextLogs.push(next)
-    }
-    logsRef.current = nextLogs
-    setLogs(nextLogs)
-    setVersion((v) => v + 1)
+  // Live indexed view, rebuilt synchronously on every change and kept in a
+  // stable ref so edit actions always read the latest data (the memoized
+  // `orgData` below only refreshes on the next render, lagging chained edits).
+  const orgDataRef = useRef<OrgData>()
+  const actingLeaderRef = useRef(actingLeader)
+  actingLeaderRef.current = actingLeader
+  const indexOrgData = useCallback(() => {
+    const data = workingRef.current?.data
+    orgDataRef.current = data
+      ? new OrgData(
+          data.circles,
+          data.circleMembers,
+          data.circleLinks,
+          data.roles,
+          data.members,
+          actingLeaderRef.current
+        )
+      : undefined
   }, [])
+
+  // Replay a list of logs onto fresh working data, flagging failures
+  const rebuild = useCallback(
+    async (logsToApply: ProposalLog[]) => {
+      if (!initialRef.current) return
+      const data = clone(initialRef.current)
+      const methods = buildMethods(data)
+      workingRef.current = { data, methods }
+
+      const nextLogs: ProposalLog[] = []
+      for (const log of logsToApply) {
+        const next: ProposalLog = { ...log, error: undefined }
+        try {
+          await applyEntitiesChanges(log.changes, methods)
+        } catch (e) {
+          next.error = e instanceof Error ? e.message : 'error'
+        }
+        nextLogs.push(next)
+      }
+      logsRef.current = nextLogs
+      indexOrgData()
+      setLogs(nextLogs)
+      setVersion((v) => v + 1)
+    },
+    [indexOrgData]
+  )
 
   // Seed the draft from the org subscription result.
   useEffect(() => {
@@ -165,24 +194,26 @@ export default function useProposalDraft(
     return overlays
   }, [logs])
 
-  const orgData = useMemo<OrgData | undefined>(() => {
-    const data = workingRef.current?.data
-    return data
-      ? new OrgData(
-          data.circles,
-          data.circleMembers,
-          data.circleLinks,
-          data.roles,
-          data.members,
-          actingLeader
-        )
-      : undefined
+  // Render snapshot: the same instance the actions just built, exposed as a
+  // new reference on every change so consumers re-render.
+  const orgData = useMemo<OrgData | undefined>(
+    () => orgDataRef.current,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [version, actingLeader])
+    [version]
+  )
+
+  // Re-index when the acting leader changes (it affects derived leadership data)
+  useEffect(() => {
+    if (!workingRef.current) return
+    indexOrgData()
+    setVersion((v) => v + 1)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [actingLeader])
 
   const hasError = useMemo(() => logs.some((l) => l.error), [logs])
 
   const getData = useCallback(() => workingRef.current?.data, [])
+  const getOrgData = useCallback(() => orgDataRef.current, [])
 
   return {
     ready,
@@ -195,5 +226,6 @@ export default function useProposalDraft(
     replaceLog,
     getLogs,
     getData,
+    getOrgData,
   }
 }

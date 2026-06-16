@@ -1,0 +1,27 @@
+---
+import DemoOrgEditor from './islands/demo/DemoOrgEditor.tsx'
+import { getLangFromUrl, getTranslations } from '../utils/i18n'
+
+interface Props {
+  // Which example organization to render ('demo' | 'simple')
+  demo?: string
+  // Wrapper height (CSS value)
+  height?: string
+  // Extra classes for the wrapper (layout: width, margin…)
+  class?: string
+}
+
+const { demo = 'demo', height = '560px', class: className } = Astro.props
+const lang = getLangFromUrl(Astro.url)
+const t = await getTranslations(lang)
+---
+
+<div class={className} style="width:100%">
+  <DemoOrgEditor
+    client:only="react"
+    demo={demo}
+    texts={t.demo}
+    lang={lang}
+    height={height}
+  />
+</div>

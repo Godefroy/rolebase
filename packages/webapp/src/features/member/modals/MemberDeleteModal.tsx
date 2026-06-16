@@ -12,8 +12,7 @@ import {
 } from '@chakra-ui/react'
 import React, { useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { trpc } from 'src/trpc'
-import { useOrgContext } from '@/org/contexts/OrgContext'
+import { useOrgContext, useOrgEditActions } from '@/org/contexts/OrgContext'
 
 interface Props
   extends Omit<AlertDialogProps, 'children' | 'leastDestructiveRef'> {
@@ -28,6 +27,7 @@ export default function MemberDeleteModal({
 }: Props) {
   const { t } = useTranslation()
   const { orgData } = useOrgContext()
+  const { archiveMember } = useOrgEditActions()
   const member = orgData?.getMember(id)
   const toast = useToast()
   const cancelRef = useRef<HTMLButtonElement>(null)
@@ -36,7 +36,7 @@ export default function MemberDeleteModal({
     if (!member) return
 
     try {
-      await trpc.member.archiveMember.mutate({ memberId: id })
+      await archiveMember(id)
     } catch (error: any) {
       toast({
         title: t('common.error'),

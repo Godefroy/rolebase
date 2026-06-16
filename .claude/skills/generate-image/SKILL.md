@@ -20,9 +20,10 @@ Generate an image using Google Nano Banana Pro (Gemini image generation), styled
 
 The script auto-injects the Rolebase brand into every prompt (warm cream background `#FDF6EA`, primary purple `#9870F0`, warm orange `#FB9803`, warm gray neutrals, friendly human-centric mood). You do not need to restate brand colors in your prompt.
 
-Two modes:
+Three modes:
 - **Illustration** (default) — no text, conceptual editorial style. Thumbnails, hero visuals, metaphors.
 - **Infographic** (`--infographic`) — renders text, numbers, labels. Breakdowns, comparisons, numbered steps, decision matrices.
+- **Avatar** (`--avatar`) — a uniform flat-vector head-and-shoulders portrait on a plain background. For member/people avatars (e.g. the demo org chart) where a whole set must match.
 
 ## Usage
 
@@ -36,6 +37,9 @@ npx tsx scripts/generate-image.ts "<prompt>" <output-path> [WxH]
 
 # Infographic (text and numbers rendered as written in the prompt)
 npx tsx scripts/generate-image.ts "<prompt>" <output-path> [WxH] --infographic
+
+# Avatar (uniform flat-vector portrait; defaults to a 512x512 square)
+npx tsx scripts/generate-image.ts "<person description>" <output-path> --avatar
 ```
 
 Examples:
@@ -48,7 +52,18 @@ npx tsx scripts/generate-image.ts "Four numbered cards showing handover steps...
 
 # Square format
 npx tsx scripts/generate-image.ts "An icon..." src/assets/icon.png 1080x1080
+
+# Avatar (only describe the person — style, framing and plain background are enforced by the mode)
+npx tsx scripts/generate-image.ts "a woman with shoulder-length wavy auburn hair and light skin, gentle smile" public/demo-avatars/alice.png --avatar
 ```
+
+## Avatar mode
+
+`--avatar` produces a flat 2D vector head-and-shoulders portrait with a strict, self-contained style so a whole set of avatars matches: same art style (flat vector, not realistic/3D), same framing and zoom (shoulders and upper chest visible, shoulders at the bottom edge, head not oversized), and a plain flat background (no circle, frame, scene or props — the UI clips avatars to a circle itself). It deliberately skips the editorial brand guidelines, which add scene/context and break uniformity.
+
+- **Only describe the person** in the prompt (hair, skin, facial hair, glasses, simple top). Do not restate style, framing or background — the mode enforces them.
+- The model outputs ~1024px PNG regardless of the requested size; downscale and compress afterwards for web use, e.g. `sips -s format jpeg -s formatOptions 80 -Z 192 in.png --out out.jpg` (≈8 KB each).
+- Generate every avatar of a set with identical wording (vary only the person) so they stay consistent.
 
 ## Picking the mode
 

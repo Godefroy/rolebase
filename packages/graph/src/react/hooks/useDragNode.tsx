@@ -48,7 +48,12 @@ export function useDragNode(graph: Graph | undefined, node: NodeData) {
   // Apply drag action
   // @returns true if the node has been moved, false if its position has to be reset
   const handleDragEnd = async (event: MouseEvent): Promise<boolean> => {
-    if (!graph || !events) return false
+    if (!graph) return false
+    // Read the handlers live: they are rebuilt after each edit and only the
+    // graph holds the latest ones (see useGraph). The captured `events` above
+    // can lag a render, which would make a second move read stale org data.
+    const events = graph.params.events
+    if (!events) return false
     if (!dragTargets.current || !dragTarget.current) return false
     const targetCircleId = dragTarget.current.node.data.id
 

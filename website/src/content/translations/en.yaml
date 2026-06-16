@@ -62,3 +62,50 @@ footer:
     nestr: Alternative to Nestr
     glassfrog: Alternative to GlassFrog
     peerdom: Alternative to Peerdom
+
+# Example organization rendered in the interactive org-chart islands.
+demo:
+  ui:
+    clickRole: Click on a role
+    name: Name
+    purpose: Purpose
+    domain: Domain
+    accountabilities: Accountabilities
+  roles:
+    nova:
+      name: Nova
+      purpose: Build digital products people love to use.
+    product:
+      name: Product
+      purpose: Turn user needs into a coherent, valuable product.
+      domain: Product roadmap, specifications, priorities.
+      accountabilities: |-
+        Maintain the roadmap.
+        Write and arbitrate specifications.
+        Measure usage and satisfaction.
+    design:
+      name: Design
+      purpose: Make every interaction clear, accessible and delightful.
+      domain: Design system, interface mockups, user research.
+      accountabilities: |-
+        Maintain the design system.
+        Produce interface mockups.
+        Run user research.
+    dev:
+      name: Development
+      purpose: Ship reliable software at a sustainable pace.
+      domain: Codebase, infrastructure, technical quality.
+      accountabilities: |-
+        Develop and review features.
+        Keep the build green.
+        Watch over performance and security.
+    business:
+      name: Business
+      purpose: Grow revenue and build lasting relationships with customers.
+      domain: Sales, marketing, partnerships.
+      accountabilities: |-
+        Run acquisition and sales.
+        Nurture customer relationships.
+        Track revenue and key metrics.
+    leader:
+      name: Leader

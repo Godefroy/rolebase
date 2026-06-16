@@ -14,10 +14,8 @@ import {
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import {
-  AddIcon,
   CirclePick,
   CopyIcon,
-  MemberIcon,
   MoveIcon,
   PanIcon,
   SearchIcon,
@@ -40,8 +38,8 @@ const shortcuts: { key: ShortcutKey; Icon: IconComponent }[] = [
   { key: 'open', Icon: CirclePick },
   { key: 'moveRole', Icon: MoveIcon },
   { key: 'copyRole', Icon: CopyIcon },
-  { key: 'moveMember', Icon: MemberIcon },
-  { key: 'addMember', Icon: AddIcon },
+  { key: 'moveMember', Icon: MoveIcon },
+  { key: 'addMember', Icon: CopyIcon },
 ]
 
 export default function GraphShortcutsModal(modalProps: UseModalProps) {

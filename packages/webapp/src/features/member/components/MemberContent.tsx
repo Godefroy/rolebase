@@ -32,15 +32,31 @@ interface Props {
   id: string
   changeTitle?: boolean
   headerIcons?: React.ReactNode
+  // Override the close handler (otherwise closes the nearest modal). Needed
+  // when MemberContent is rendered outside a modal, e.g. the website demo.
+  onClose?: () => void
 }
 
-export default function MemberContent({ id, changeTitle, headerIcons }: Props) {
+export default function MemberContent({
+  id,
+  changeTitle,
+  headerIcons,
+  onClose,
+}: Props) {
   const { t } = useTranslation()
   const { user } = useAuth()
-  const { orgData } = useOrgContext()
+  const { orgData, isDraft, editable, hasBackend } = useOrgContext()
   const member = orgData?.getMember(id)
   const isAdmin = useOrgAdmin()
-  const canEdit = isAdmin || (user ? member?.userId === user.id : false)
+  // Members are readonly in a proposal draft (a proposal changes the org chart,
+  // not member profiles) and in read-only orgs.
+  const canEdit =
+    editable &&
+    !isDraft &&
+    (isAdmin || (user ? member?.userId === user.id : false))
+  // Avatar upload and org-role management need a real backend, so they are only
+  // available on the org page, not in an in-memory draft/demo.
+  const canEditProfile = canEdit && !!hasBackend
   const avatarSrc =
     getResizedImageUrl(member?.picture, AVATAR_HEADING_WIDTH) || undefined
   const deleteModal = useDisclosure()
@@ -64,12 +80,14 @@ export default function MemberContent({ id, changeTitle, headerIcons }: Props) {
       <Box pt={3} pb={10} position="relative">
         <Box position="absolute" top={2} right={2}>
           {headerIcons}
-          {isAdmin && <ActionsMenu onDelete={deleteModal.onOpen} />}
-          <ModalCloseStaticButton />
+          {isAdmin && editable && !isDraft && (
+            <ActionsMenu onDelete={deleteModal.onOpen} />
+          )}
+          <ModalCloseStaticButton onClose={onClose} />
         </Box>
 
         <Flex flexDirection="column" alignItems="center">
-          {canEdit ? (
+          {canEditProfile ? (
             <MemberPictureEdit
               id={id}
               name={member.name}
@@ -88,7 +106,9 @@ export default function MemberContent({ id, changeTitle, headerIcons }: Props) {
 
           <MemberNameEditable member={member} isDisabled={!canEdit} mt={2} />
 
-          {canEdit && <MemberOrgRoleSelect member={member} size="sm" mt={2} />}
+          {canEditProfile && (
+            <MemberOrgRoleSelect member={member} size="sm" mt={2} />
+          )}
         </Flex>
       </Box>
 

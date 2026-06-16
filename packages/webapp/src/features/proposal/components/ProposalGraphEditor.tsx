@@ -1,5 +1,4 @@
 import CircleContent from '@/circle/components/CircleContent'
-import { graphButtonsProps } from '@/circle/components/CirclesGraphOptions'
 import { CircleProvider } from '@/circle/contexts/CIrcleContext'
 import {
   CircleMemberContext,
@@ -8,25 +7,16 @@ import {
 import Loading from '@/common/atoms/Loading'
 import { useElementSize } from '@/common/hooks/useElementSize'
 import CirclesGraph, { CirclesGraphInstance } from '@/graph/CirclesGraph'
-import GraphShortcutsModal from '@/graph/components/GraphShortcutsModal'
+import GraphShortcutsButton from '@/graph/components/GraphShortcutsButton'
 import { GraphProvider } from '@/graph/contexts/GraphContext'
 import { CirclesGraphViews, GraphEvents } from '@/graph/types'
 import DraftOrgProvider from '@/org/contexts/DraftOrgProvider'
 import ReadonlyOrgProvider from '@/org/contexts/ReadonlyOrgProvider'
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  Text,
-  useColorMode,
-  useDisclosure,
-} from '@chakra-ui/react'
+import { Box, Button, Flex, Heading, Text, useColorMode } from '@chakra-ui/react'
 import useCurrentMember from '@/member/hooks/useCurrentMember'
 import { ProposalLog } from '@rolebase/shared/model/proposal'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { HelpIcon } from 'src/icons'
 import useDraftOrgEditActions from '../hooks/useDraftOrgEditActions'
 import useProposalDraft from '../hooks/useProposalDraft'
 import ProposalLogList from './ProposalLogList'
@@ -68,7 +58,6 @@ export default function ProposalGraphEditor({
   const boxRef = useRef<HTMLDivElement>(null)
   const boxSize = useElementSize(boxRef)
   const graphRef = useRef<CirclesGraphInstance>()
-  const shortcutsModal = useDisclosure()
 
   // Selected circle (local, no URL navigation in the editor). Open on the
   // thread's circle, the one the proposal concerns.
@@ -191,16 +180,11 @@ export default function ProposalGraphEditor({
                       selectedCircleId={selectedCircleId}
                     />
                   )}
-                  <Button
+                  <GraphShortcutsButton
                     position="absolute"
                     top={2}
                     right={2}
-                    {...graphButtonsProps}
-                    leftIcon={<HelpIcon size={18} />}
-                    onClick={shortcutsModal.onOpen}
-                  >
-                    {t('GraphShortcutsModal.button')}
-                  </Button>
+                  />
                 </Box>
 
                 {/* Side panel: role (with header) + logs */}
@@ -249,10 +233,6 @@ export default function ProposalGraphEditor({
                 </Flex>
               </Flex>
             </Flex>
-
-            {shortcutsModal.isOpen && (
-              <GraphShortcutsModal isOpen onClose={shortcutsModal.onClose} />
-            )}
       </GraphProvider>
     </CircleMemberContext.Provider>
   )

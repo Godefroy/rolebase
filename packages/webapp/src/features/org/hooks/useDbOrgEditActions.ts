@@ -6,8 +6,11 @@ import useCopyCircle from '@/circle/hooks/useCopyCircle'
 import useMoveCircle from '@/circle/hooks/useMoveCircle'
 import useRemoveCircleLink from '@/circle/hooks/useRemoveCircleLink'
 import useRemoveCircleMember from '@/circle/hooks/useRemoveCircleMember'
+import useCreateMember from '@/member/hooks/useCreateMember'
 import useUpdateRole from '@/role/hooks/useUpdateRole'
-import { useMemo } from 'react'
+import { useUpdateMemberMutation } from '@gql'
+import { useCallback, useMemo } from 'react'
+import { trpc } from 'src/trpc'
 import { OrgEditActions } from '../contexts/OrgContext'
 
 // Database-backed implementation of OrgEditActions (org page).
@@ -23,6 +26,21 @@ export default function useDbOrgEditActions(): OrgEditActions {
   const addCircleLink = useAddCircleLink()
   const removeCircleLink = useRemoveCircleLink()
 
+  const [updateMemberMutation] = useUpdateMemberMutation()
+  const updateMember = useCallback<OrgEditActions['updateMember']>(
+    async (member, values) => {
+      await updateMemberMutation({ variables: { id: member.id, values } })
+    },
+    [updateMemberMutation]
+  )
+  const createMember = useCreateMember()
+  const archiveMember = useCallback<OrgEditActions['archiveMember']>(
+    async (memberId) => {
+      await trpc.member.archiveMember.mutate({ memberId })
+    },
+    []
+  )
+
   return useMemo(
     () => ({
       moveCircle,
@@ -30,6 +48,9 @@ export default function useDbOrgEditActions(): OrgEditActions {
       archiveCircle,
       createCircle,
       updateRole,
+      updateMember,
+      createMember,
+      archiveMember,
       addCircleMember,
       removeCircleMember,
       addCircleLink,
@@ -41,6 +62,9 @@ export default function useDbOrgEditActions(): OrgEditActions {
       archiveCircle,
       createCircle,
       updateRole,
+      updateMember,
+      createMember,
+      archiveMember,
       addCircleMember,
       removeCircleMember,
       addCircleLink,

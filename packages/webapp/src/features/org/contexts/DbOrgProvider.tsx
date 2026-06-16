@@ -92,6 +92,7 @@ export default function DbOrgProvider({ orgId, slug, children }: Props) {
       governanceMode,
       editable: true,
       isDraft: false,
+      hasBackend: true,
       loading,
       error,
       ready: !!orgData,

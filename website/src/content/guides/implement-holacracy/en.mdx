@@ -1,0 +1,93 @@
+---
+title: 'Implement Holacracy with Rolebase'
+description: 'A practical, step-by-step guide to running Holacracy with Rolebase: roles, Lead and Rep Links, governance, and tactical meetings.'
+order: 2
+---
+
+Rolebase is not tied to a single method, yet it gives you everything you need to practice Holacracy: a clear org chart of roles, governance protected by proposals, and meetings to keep roles alive. This guide walks you through setting up a Holacracy practice step by step and points to the detailed documentation for each feature.
+
+<Callout type="info" title="Holacracy in a nutshell">
+  Holacracy distributes authority into clearly defined roles grouped in circles. Roles evolve through a governance process, and the day-to-day work is coordinated in tactical meetings. Rolebase maps directly onto these ideas.
+</Callout>
+
+## Step 1: Protect governance
+
+In Holacracy, the structure of roles changes only through an explicit governance process, never through unilateral edits. Set your organization's **governance mode** to **Strict** so that roles can only be changed through proposals.
+
+1. Open your [organization settings](/en/docs/organizations).
+2. Set the governance mode to **Strict** ("Roles can only be changed through proposals").
+
+The other modes are useful while you are still experimenting. **Free** lets every member edit the whole org chart, and **Agile** lets each role be edited by the members who represent it. Only an organization owner can change the governance mode.
+
+## Step 2: Model your circles as roles
+
+Rolebase uses a [unified model](/en/docs/circles-and-roles) where a circle is simply a role that contains other roles. There is no separate "circle" entity, so the Holacracy distinction between circles and roles becomes a single, flexible concept.
+
+Start from your top-level role, which represents the whole organization, and add a sub-role for each domain of work. Any role that holds sub-roles acts as a circle. You build this structure directly in the [org chart](/en/docs/org-chart) by adding roles inside roles.
+
+## Step 3: Define each role
+
+A well-defined role is the heart of Holacracy. For every role, describe its **purpose** to say why it exists, its **domain** to say what it has authority over, and its **accountabilities** to list the ongoing activities it performs.
+
+You can also fill in a **Checklist** and **Indicators**, which are reviewed during tactical meetings, and **Notes** for anything else. See [roles](/en/docs/circles-and-roles) for the full list of options.
+
+## Step 4: Create the Holacracy roles
+
+Holacracy relies on a few recurring roles. In Rolebase you create them once as **base roles**, which are reusable, predefined roles, then add an instance wherever you need one. This keeps a shared definition across the whole organization.
+
+### Lead Link and Rep Link
+
+A **Lead Link** represents a circle from its parent and assigns members to roles. A **Rep Link** is elected by the circle to represent it upward. Both are roles that represent their parent role:
+
+1. Create a base role, for example "Lead Link" or "Rep Link".
+2. Enable the option **"Represents its parent role"**.
+3. Enable **"Can only be occupied by a single member"** when the position has a single holder.
+4. Add an instance inside each circle and assign the elected member.
+
+<Callout type="tip" title="Lead Link vs Rep Link">
+  Both use the same "Represents its parent role" option. Let the role's purpose and accountabilities capture the difference: a Lead Link looks after the circle's purpose from above, while a Rep Link carries the circle's tensions upward.
+</Callout>
+
+### Facilitator and Secretary
+
+Create **Facilitator** and **Secretary** as base roles too, each with their Holacracy accountabilities such as facilitating meetings and keeping records and the org chart up to date. Add an instance in each circle that needs them and elect a member.
+
+## Step 5: Connect roles across circles
+
+When a role needs to take part in another circle that is not its direct parent, **invite the role** into that circle. The [invited role](/en/docs/circles-and-roles) then participates in the host circle's governance and operations, the equivalent of a cross-circle link in Holacracy.
+
+## Step 6: Run governance and tactical meetings
+
+Holacracy separates two kinds of meetings. In Rolebase you reproduce both with [meeting templates](/en/docs/meetings) that define a reusable sequence of steps.
+
+A **governance meeting** evolves the roles. You capture tensions as topics, then turn the agreed changes into proposals (see Step 7). A simple template uses a free-note round and a topics step.
+
+A **tactical meeting** coordinates the work. A useful template combines the **Checklist**, **Indicators**, **Tasks**, and **Topics** steps so each role reviews its recurring actions, metrics, and next steps.
+
+New to meetings? Follow the [run your first meeting](/en/guides/run-your-first-meeting) guide first, then save your sequences as templates to reuse them.
+
+## Step 7: Process tensions through proposals
+
+Tensions are the engine of Holacracy. In Rolebase you process them in a few steps:
+
+1. Capture a tension as a **topic**, which is a discussion within the relevant role.
+2. When it calls for a structural change, create a **proposal**. A proposal bundles a decision together with a set of org-chart changes such as creating a role, moving it, adding a member, inviting a role, or editing a role, all prepared in a dedicated editor.
+3. The circle **votes** on the proposal. Choose the **Consent** decision mode to match Holacracy, so the proposal passes unless someone raises an objection.
+4. Once approved, the changes are applied to the live org chart and a **decision** is recorded.
+
+See [proposals](/en/docs/proposals) and [decisions](/en/docs/decisions) for the full flow.
+
+<Callout type="tip" title="Decide by consent">
+  Rolebase offers several decision modes (Consent, Unanimity, Simple majority, Absolute majority). Consent is the closest to Holacracy's integrative decision-making: silence means consent, and only valid objections block a proposal.
+</Callout>
+
+## Step 8: Keep the practice alive
+
+Use **tasks** to track the next actions and projects that come out of tactical meetings. Revisit roles whenever a new tension shows that the structure no longer fits. Let the org chart stay your single source of truth, so everyone can see who holds which role and what each role is accountable for.
+
+## What's next?
+
+- [Roles](/en/docs/circles-and-roles) to learn the building blocks and all role options.
+- [Proposals](/en/docs/proposals) to propose and vote on governance changes.
+- [Meetings](/en/docs/meetings) to set up templates, steps, and recurring meetings.
+- [Decisions](/en/docs/decisions) to record agreements and governance outcomes.

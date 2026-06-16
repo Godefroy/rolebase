@@ -64,6 +64,15 @@ export default function useGraph<Data, TGraph extends Graph<Data>>({
     onReady?.()
   }, [])
 
+  // Keep the event handlers up to date. The graph captures `events` only once
+  // at init, but the handlers are rebuilt on every edit (the draft actions
+  // close over the latest org data). Without this, every interaction after the
+  // first would keep operating on the initial org data — e.g. moving a member a
+  // second time would read stale state and silently turn the move into a copy.
+  useEffect(() => {
+    if (graphRef.current) graphRef.current.params.events = events || {}
+  }, [events])
+
   // Update data, once the graph is instanciated and children
   // components have subscribed to its events
   useEffect(() => {

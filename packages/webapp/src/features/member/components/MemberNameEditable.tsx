@@ -8,7 +8,8 @@ import {
   Tooltip,
   useToast,
 } from '@chakra-ui/react'
-import { MemberFragment, useUpdateMemberMutation } from '@gql'
+import { useOrgEditActions } from '@/org/contexts/OrgContext'
+import { MemberFragment } from '@gql'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -23,7 +24,7 @@ export default function MemberNameEditable({
   ...styleProps
 }: Props) {
   const { t } = useTranslation()
-  const [updateMember] = useUpdateMemberMutation()
+  const { updateMember } = useOrgEditActions()
   const toast = useToast()
   const hoverStyle = useHoverItemStyle()
 
@@ -36,15 +37,7 @@ export default function MemberNameEditable({
   const handleSave = async () => {
     if (value === member.name) return
 
-    // Update member data
-    await updateMember({
-      variables: {
-        id: member.id,
-        values: {
-          name: value,
-        },
-      },
-    })
+    await updateMember(member, { name: value })
 
     // Show success toast
     toast({

@@ -15,6 +15,7 @@ import {
   ArrowRotateLeft,
   ArrowRotateRight,
   ArrowSquareLeft,
+  ArrowUp,
   ArrowUp2,
   Briefcase,
   Calendar2,
@@ -91,6 +92,7 @@ export const ArchiveIcon = ArchiveBox
 export const ApiIcon = Code
 export const AppsIcon = ArrangeHorizontalSquare
 export const ArrowRightIcon = ArrowRight
+export const ArrowUpIcon = ArrowUp
 export const BackIcon = ArrowSquareLeft
 export const CancelIcon = ArrowRotateLeft
 export const CenterIcon = Maximize1

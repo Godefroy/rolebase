@@ -1297,7 +1297,7 @@
     "copyRole_desc": "Hold Shift, then drag the role onto another role.",
     "moveMember_label": "Move a member",
     "moveMember_desc": "Drag the member and drop them onto another role.",
-    "addMember_label": "Add a member to another role",
+    "addMember_label": "Copy a member",
     "addMember_desc": "Hold Shift, then drag the member onto another role."
   },
   "ProposalLogList": {

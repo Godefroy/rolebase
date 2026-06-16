@@ -6,6 +6,6 @@ interface Props {
 const { class: className } = Astro.props
 ---
 
-<section class:list={['flex flex-col items-center px-6 text-center', className]}>
+<section class:list={['flex flex-col items-center text-center', className]}>
   <slot />
 </section>

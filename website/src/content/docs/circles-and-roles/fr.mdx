@@ -4,6 +4,10 @@ description: 'Comprendre comment Rolebase fusionne cercles et rôles en un seul 
 order: 4
 ---
 
+Les rôles sont les briques de base de votre organisation dans Rolebase. Un rôle décrit une responsabilité claire : pourquoi il existe, ce sur quoi il décide et ce qu'on attend de lui. Plutôt que des intitulés de poste figés, vous décrivez le travail lui-même, puis vous y assignez une ou plusieurs personnes pour l'assurer.
+
+À mesure que votre organisation grandit, les rôles s'imbriquent les uns dans les autres pour former tout votre organigramme, offrant à chacun une vision partagée et toujours à jour de qui fait quoi. Cette page explique comment fonctionnent les rôles et les options qui permettent de les façonner.
+
 ## Le modèle unifié
 
 En Holacratie ou Sociocratie, la structure organisationnelle est typiquement divisée en deux concepts distincts : les **cercles** (équipes) et les **rôles** (responsabilités individuelles). Dans Rolebase, ces deux concepts sont **fusionnés en un seul : le rôle**.
@@ -14,6 +18,10 @@ Un rôle peut être une simple responsabilité individuelle, ou il peut contenir
   Dans Rolebase, un cercle est simplement un rôle qui contient d'autres rôles.
   Il n'y a pas d'entité « cercle » séparée : tout est un rôle.
 </Callout>
+
+Dans l'organigramme ci-dessous, « Produit » est un rôle qui contient les rôles « Design » et « Ingénierie », il joue donc le rôle de cercle. Chaque rôle peut accueillir des membres. Pour représenter un rôle au sein de son parent (ce que l'holacratie appelle un « Premier lien »), on ajoute un sous-rôle avec l'option « Représente son rôle parent » activée.
+
+<OrgChartView demo="demo" height="420px" focus="circle-product" showAllNodes={false} />
 
 Cette approche unifiée vous offre une flexibilité maximale : n'importe quel rôle peut devenir un cercle à tout moment en y ajoutant des sous-rôles, sans avoir besoin de convertir ou restructurer quoi que ce soit.
 
@@ -67,33 +75,25 @@ Organisation (rôle de premier niveau)
 
 ## Rôles de base
 
-Certains rôles sont des **rôles de base**, automatiquement assignés à tous les membres du rôle parent (cercle). C'est utile pour les responsabilités partagées que chaque membre devrait détenir.
+Un **rôle de base** est un rôle prédéfini que vous pouvez réutiliser à plusieurs endroits de l'organigramme. Les rôles de base ne sont pas assignés automatiquement : ils fournissent une définition partagée (raison d'être, domaine, redevabilités) et permettent de créer rapidement une instance là où vous en avez besoin. Modifier un rôle de base met à jour tous les endroits où il est utilisé.
+
+Pratique pour les rôles récurrents, par exemple les rôles d'holacratie (Premier lien, Second lien, Secrétaire, Facilitateur) ou de sociocratie.
 
 ## Génération de rôles par IA
 
 Rolebase peut générer des suggestions de rôles en utilisant l'IA. En se basant sur la raison d'être et le contexte du rôle parent, l'IA propose des sous-rôles avec une raison d'être, un domaine et des redevabilités pré-remplis. Vous pouvez examiner et modifier les suggestions avant de les accepter.
 
-## Membres et leaders
-
-### Membres
+## Membres
 
 Les membres sont assignés directement à un rôle. Lorsqu'un rôle contient des sous-rôles (agit comme un cercle), une personne qui détient n'importe quel sous-rôle est également considérée comme membre du rôle parent.
 
-### Leaders
+## Représenter un rôle dans son parent
 
-Un leader de rôle (parfois appelé « Premier Lien » en Holacratie) est un membre avec une autorité spéciale sur le rôle et ses sous-rôles. Les leaders peuvent :
+Rolebase n'a pas de « leader » intégré. À la place, vous activez l'option **« Représente son rôle parent »** sur un rôle : ses membres représentent alors ce rôle au sein de son parent et obtiennent une autorité de gouvernance sur lui. C'est ainsi que l'on modélise le **Premier lien** et le **Second lien** de l'holacratie (en anglais *Lead Link* et *Rep Link*), ou tout rôle de représentant ou de coordinateur dont vous avez besoin.
 
-- Assigner des membres aux sous-rôles.
-- Modifier la structure du rôle (lorsque la protection de la gouvernance est activée).
-- Représenter le rôle dans son rôle parent.
+## Rôles invités
 
-### Liens parents
-
-Un **lien parent** connecte un rôle à son parent, indiquant qui représente les intérêts du sous-rôle dans le contexte plus large. C'est un concept fondamental de la gouvernance holacratique, car il garantit que l'information circule entre les niveaux.
-
-## Liens entre rôles
-
-Les **liens entre rôles** permettent la collaboration transversale entre des rôles qui ne sont pas dans une relation parent-enfant directe. En créant un lien, un membre d'un rôle peut participer à la gouvernance et aux opérations d'un autre rôle.
+Vous pouvez **inviter un rôle dans un autre rôle** pour permettre la collaboration transversale entre des rôles qui ne sont pas dans une relation parent-enfant directe. Un membre du rôle invité peut alors participer à la gouvernance et aux opérations du rôle hôte. (Cela correspond à un *lien* en holacratie.)
 
 C'est utile pour :
 

@@ -1,3 +1,17 @@
 {
-  "extends": "astro/tsconfigs/strict"
+  "extends": "astro/tsconfigs/strict",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@rolebase/graph": ["../packages/graph/src/index.ts"],
+      "@rolebase/shared/*": ["../packages/shared/*"],
+      "@gql": ["../packages/webapp/src/graphql.generated.ts"],
+      "@/*": ["../packages/webapp/src/features/*"],
+      "@images/*": ["../packages/webapp/src/images/*"],
+      "@store/*": ["../packages/webapp/src/store/*"],
+      "@utils/*": ["../packages/webapp/src/utils/*"],
+      "src/*": ["../packages/webapp/src/*"]
+    }
+  }
 }
