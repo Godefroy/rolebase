@@ -14,9 +14,8 @@ export function getLangFromUrl(url: URL): Lang {
   return langs.includes(first as Lang) ? (first as Lang) : defaultLang
 }
 
-export function getOtherLangHref(path: string, lang: Lang): string {
-  const other = lang === langs[0] ? langs[1] : langs[0]
-  return path.replace(`/${lang}`, `/${other}`)
+export function getLangHref(path: string, currentLang: Lang, targetLang: Lang): string {
+  return path.replace(`/${currentLang}`, `/${targetLang}`)
 }
 
 /** Extract the slug (folder name) from a content collection entry ID like "my-slug/en" */

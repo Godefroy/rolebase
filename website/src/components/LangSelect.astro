@@ -1,0 +1,50 @@
+---
+import config from '../../website.config'
+import { getTranslations, getLangFromUrl, getLangHref, type Lang } from '../utils/i18n'
+
+const lang = getLangFromUrl(Astro.url)
+
+interface Props {
+  currentPath?: string
+  class?: string
+}
+
+const { currentPath = Astro.url.pathname, class: className } = Astro.props
+
+// Build one entry per locale. Each option uses its own native name
+// (so "Français" appears as "Français" regardless of the current UI language).
+const langOptions = await Promise.all(
+  config.langs.map(async (l) => {
+    const t = await getTranslations(l as Lang)
+    return {
+      lang: l as Lang,
+      name: (t.languageName as string) ?? l,
+      href: getLangHref(currentPath, lang, l as Lang),
+    }
+  })
+)
+---
+
+{langOptions.length > 1 && (
+  <select
+    aria-label="Language"
+    class:list={[
+      'text-xs font-semibold px-2 py-1 border border-border rounded bg-white text-text-secondary hover:bg-border cursor-pointer',
+      className,
+    ]}
+    data-lang-select
+  >
+    {langOptions.map((o) => (
+      <option value={o.href} selected={o.lang === lang} lang={o.lang} data-lang={o.lang}>{o.name}</option>
+    ))}
+  </select>
+)}
+
+<script>
+  // Navigate when the user picks a language.
+  document.querySelectorAll<HTMLSelectElement>('[data-lang-select]').forEach((select) => {
+    select.addEventListener('change', () => {
+      if (select.value) window.location.href = select.value
+    })
+  })
+</script>

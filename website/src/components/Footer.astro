@@ -2,6 +2,7 @@
 import { getTranslations, getLangFromUrl, langPath } from '../utils/i18n'
 import Icon from './Icon.astro'
 import Logo from './Logo.astro'
+import LangSelect from './LangSelect.astro'
 
 const lang = getLangFromUrl(Astro.url)
 const t = await getTranslations(lang)
@@ -29,6 +30,7 @@ const linkClass = 'no-underline hover:underline'
           <Icon icon="github" class="w-5 h-5" />
           GitHub
         </a>
+        <LangSelect class="mt-4 self-start" />
       </div>
 
       <div class="flex flex-col gap-2">
