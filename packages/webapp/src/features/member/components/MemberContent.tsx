@@ -21,6 +21,7 @@ import { useGetMemberQuery } from '@gql'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useOrgContext, useOrgEditActions } from '@/org/contexts/OrgContext'
+import useCurrentMember from '../hooks/useCurrentMember'
 import useOrgAdmin from '../hooks/useOrgAdmin'
 import { MemberEditableField } from './MemberEditableField'
 import MemberNameEditable from './MemberNameEditable'
@@ -57,6 +58,9 @@ export default function MemberContent({
   })
   const member = orgMember ?? fetched?.member_by_pk ?? undefined
   const isAdmin = useOrgAdmin()
+  const currentMember = useCurrentMember()
+  // Members can't archive themselves.
+  const isSelf = !!currentMember && currentMember.id === id
   // Members are readonly in a proposal draft (a proposal changes the org chart,
   // not member profiles) and in read-only orgs.
   const canEdit =
@@ -102,7 +106,7 @@ export default function MemberContent({
       <Box pt={3} pb={10} position="relative">
         <Box position="absolute" top={2} right={2}>
           {headerIcons}
-          {isAdmin && editable && !isDraft && (
+          {isAdmin && editable && !isDraft && !isSelf && (
             <ActionsMenu onDelete={deleteModal.onOpen} />
           )}
           <ModalCloseStaticButton onClose={onClose} />

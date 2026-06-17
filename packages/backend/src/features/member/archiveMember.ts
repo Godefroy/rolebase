@@ -29,6 +29,14 @@ export default authedProcedure
       })
     }
 
+    // Members can't archive themselves.
+    if (memberToArchive.userId && memberToArchive.userId === opts.ctx.userId) {
+      throw new TRPCError({
+        code: 'FORBIDDEN',
+        message: 'You cannot archive yourself',
+      })
+    }
+
     await guardOrg(
       memberToArchive.orgId,
       memberToArchive.role === Member_Role_Enum.Owner
