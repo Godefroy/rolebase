@@ -1,5 +1,6 @@
 import CircleButton from '@/circle/components/CircleButton'
 import ActionsMenu from '@/common/atoms/ActionsMenu'
+import TitleLink from '@/common/atoms/TitleLink'
 import Loading from '@/common/atoms/Loading'
 import ScrollableLayout from '@/common/atoms/ScrollableLayout'
 import { Title } from '@/common/atoms/Title'
@@ -13,7 +14,6 @@ import {
   Heading,
   HStack,
   IconButton,
-  Link,
   Spacer,
   Tag,
   Tooltip,
@@ -113,9 +113,9 @@ export default function ThreadContent({
 
                 <Heading as="h1" size="md">
                   {canEdit ? (
-                    <Link href="#" onClick={editModal.onOpen}>
+                    <TitleLink href="#" onClick={editModal.onOpen}>
                       {title}
-                    </Link>
+                    </TitleLink>
                   ) : (
                     title
                   )}

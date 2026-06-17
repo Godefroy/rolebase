@@ -1,4 +1,5 @@
 import ActionsMenu from '@/common/atoms/ActionsMenu'
+import TitleLink from '@/common/atoms/TitleLink'
 import ModalCloseStaticButton from '@/common/atoms/ModalCloseStaticButton'
 import Tab from '@/common/atoms/Tab'
 import { Title } from '@/common/atoms/Title'
@@ -177,7 +178,13 @@ export default function CircleContent({
 
           <Flex alignItems="center" gap={3} minH={10} px={6} pt={2} pb={4}>
             <Heading as="h1" size="md" fontWeight="bold">
-              {role.name}
+              {isMember && canEditRole ? (
+                <TitleLink href="#" onClick={editRoleModal.onOpen}>
+                  {role.name}
+                </TitleLink>
+              ) : (
+                role.name
+              )}
             </Heading>
             {role.parentLink && circle.parentId && (
               <>

@@ -1,4 +1,5 @@
 import CircleButton from '@/circle/components/CircleButton'
+import TitleLink from '@/common/atoms/TitleLink'
 import { useNormalClickHandler } from '@/common/hooks/useNormalClickHandler'
 import useOrgMember from '@/member/hooks/useOrgMember'
 import { useOrgContext } from '@/org/contexts/OrgContext'
@@ -62,11 +63,11 @@ export default function MeetingHeader({ headerIcons }: Props) {
               <MeetingIcon />
             </Center>
             <Heading as="h1" size="md">
-              <Link href={path} onClick={handleEdit}>
+              <TitleLink href={path} onClick={handleEdit}>
                 {t('MeetingHeader.heading', {
                   title: meeting?.title || '…',
                 })}
-              </Link>
+              </TitleLink>
             </Heading>
           </HStack>
 
