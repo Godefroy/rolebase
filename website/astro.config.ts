@@ -71,6 +71,7 @@ export default defineConfig({
       dedupe: [
         'react',
         'react-dom',
+        'react-router',
         'react-i18next',
         'i18next',
         '@emotion/react',
