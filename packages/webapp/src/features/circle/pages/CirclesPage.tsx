@@ -5,7 +5,7 @@ import useOverflowHidden from '@/common/hooks/useOverflowHidden'
 import useQueryParams from '@/common/hooks/useQueryParams'
 import CirclesGraph from '@/graph/CirclesGraph'
 import { GraphProvider } from '@/graph/contexts/GraphContext'
-import useCirclesEvents from '@/graph/hooks/useGraphEvents'
+import useGraphEvents from '@/graph/hooks/useGraphEvents'
 import { CirclesGraphViews } from '@/graph/types'
 import { SidebarContext } from '@/layout/contexts/SidebarContext'
 import MemberContent from '@/member/components/MemberContent'
@@ -70,7 +70,7 @@ export default function CirclesPage() {
 
   // Data
   const circles = orgData?.circles
-  const events = useCirclesEvents()
+  const events = useGraphEvents()
 
   const handleClosePanel = useCallback(() => navigateOrg('roles'), [])
 

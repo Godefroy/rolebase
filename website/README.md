@@ -9,7 +9,7 @@ npm install
 npm run dev
 ```
 
-Starts the Astro dev server on port 4321.
+Starts the Astro dev server on port 4324.
 
 ## Scripts
 

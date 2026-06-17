@@ -1,6 +1,6 @@
 import { useElementSize } from '@/common/hooks/useElementSize'
 import CirclesGraph from '@/graph/CirclesGraph'
-import useCirclesEvents from '@/graph/hooks/useGraphEvents'
+import useGraphEvents from '@/graph/hooks/useGraphEvents'
 import { CirclesGraphViews } from '@/graph/types'
 import { useOrgContext } from '@/org/contexts/OrgContext'
 import { useNavigateOrg } from '@/org/hooks/useNavigateOrg'
@@ -30,7 +30,7 @@ export default function DashboardOrgChart(boxProps: BoxProps) {
   // Data
   const { org, orgData } = useOrgContext()
   const circles = orgData?.circles
-  const { onCircleClick, onMemberClick } = useCirclesEvents()
+  const { onCircleClick, onMemberClick } = useGraphEvents()
   const events = useMemo(() => ({ onCircleClick, onMemberClick }), [])
 
   // Color mode

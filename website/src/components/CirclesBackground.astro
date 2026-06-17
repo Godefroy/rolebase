@@ -81,6 +81,9 @@ const circles = [
     s.ty = Math.sin(angle) * dist
   }
 
+  // Global multiplier on the drift speed (lower = slower wandering).
+  const DRIFT_SPEED_SCALE = 0.5
+
   let lastTime = performance.now()
 
   function animate(now: number) {
@@ -117,8 +120,8 @@ const circles = [
         s.vy = (s.vy / speed) * maxSpeed
       }
 
-      s.x += s.vx * dt * 60
-      s.y += s.vy * dt * 60
+      s.x += s.vx * dt * 60 * DRIFT_SPEED_SCALE
+      s.y += s.vy * dt * 60 * DRIFT_SPEED_SCALE
 
       // Combine drift + parallax
       const totalX = s.x + scrollY * s.parallaxX

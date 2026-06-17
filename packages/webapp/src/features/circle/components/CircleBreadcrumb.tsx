@@ -25,20 +25,25 @@ export default function CircleBreadcrumb({ circleId, ...textProps }: Props) {
       lineHeight="1em"
       color="gray.500"
       _dark={{ color: 'gray.300' }}
+      minW={0}
       {...textProps}
     >
       {parents.map((c) => (
-        <chakra.span whiteSpace="nowrap" key={c.id}>
-          <CircleLink
-            id={c.id}
-            name={orgData?.getRole(c.roleId)?.name ?? ''}
-            color="inherit"
-            fontSize="sm"
-            fontWeight={400}
-            whiteSpace="normal"
-          />
-          <ChevronRightIcon mx="0.1rem" />
-        </chakra.span>
+        <React.Fragment key={c.id}>
+          {/* Keep each role name and its chevron together; only allow line
+              breaks between segments (the <wbr/>), not inside a name. */}
+          <chakra.span whiteSpace="nowrap">
+            <CircleLink
+              id={c.id}
+              name={orgData?.getRole(c.roleId)?.name ?? ''}
+              color="inherit"
+              fontSize="sm"
+              fontWeight={400}
+            />
+            <ChevronRightIcon mx="0.1rem" />
+          </chakra.span>
+          <wbr />
+        </React.Fragment>
       ))}
     </Text>
   )
