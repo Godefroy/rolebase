@@ -70,10 +70,15 @@ export function useDragNode(graph: Graph | undefined, node: NodeData) {
             graph.focusNodeIdAfterData(targetCircleId, true)
           }
         } else if (differentParent) {
-          // Move circle to another circle
-          await events.onCircleMove?.(node.data.entityId, targetCircleId)
-          graph.focusNodeIdAfterData(targetCircleId, true)
-          return true
+          // Move circle to another circle (reset the drag if it was refused)
+          const moved = await events.onCircleMove?.(
+            node.data.entityId,
+            targetCircleId
+          )
+          if (moved) {
+            graph.focusNodeIdAfterData(targetCircleId, true)
+            return true
+          }
         }
       } else if (
         node.data.type === NodeType.Member &&
@@ -84,18 +89,20 @@ export function useDragNode(graph: Graph | undefined, node: NodeData) {
       ) {
         const memberId = node.data.entityId
         if (event.shiftKey) {
-          // Copy member to another circle
-          await events.onMemberAdd?.(memberId, targetCircleId)
-          graph.focusNodeIdAfterData(targetCircleId, true)
+          // Copy member to another circle (focus only if it was added)
+          const added = await events.onMemberAdd?.(memberId, targetCircleId)
+          if (added) graph.focusNodeIdAfterData(targetCircleId, true)
         } else {
-          // Move member to another circle
-          await events.onMemberMove?.(
+          // Move member to another circle (reset the drag if it was refused)
+          const moved = await events.onMemberMove?.(
             node.data.entityId,
             node.data.parentId,
             targetCircleId
           )
-          graph.focusNodeIdAfterData(targetCircleId, true)
-          return true
+          if (moved) {
+            graph.focusNodeIdAfterData(targetCircleId, true)
+            return true
+          }
         }
       }
     } catch (error) {

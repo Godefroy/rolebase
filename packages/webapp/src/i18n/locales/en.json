@@ -259,6 +259,10 @@
     "logs": "History",
     "share": "Share"
   },
+  "GraphActions": {
+    "noPermission": "You don't have permission to do this",
+    "singleMemberFull": "This role can only have one member"
+  },
   "CircleWithLeaderItem": {
     "linkTooltip": "Represent the role {{role}}"
   },

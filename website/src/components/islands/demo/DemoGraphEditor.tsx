@@ -9,10 +9,11 @@ import CirclesGraph from '@/graph/CirclesGraph'
 import GraphShortcutsButton from '@/graph/components/GraphShortcutsButton'
 import MemberContent from '@/member/components/MemberContent'
 import { useOrgContext, useOrgEditActions } from '@/org/contexts/OrgContext'
-import { Box, Flex, useColorMode } from '@chakra-ui/react'
+import { Box, Flex, useColorMode, useToast } from '@chakra-ui/react'
 import { ArrowUpIcon } from 'src/icons'
 import { CirclesGraphViews, type GraphEvents } from '@rolebase/graph'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { DemoUiText } from '../../../demo/orgDemoData'
 
 interface Selection {
@@ -31,6 +32,8 @@ interface Props {
 // Desktop: graph and panel side by side. Mobile: square graph (capped at
 // 80dvh) with the panel stacked below, so the island grows instead of scrolling.
 export default function DemoGraphEditor({ ui, height = '560px' }: Props) {
+  const { t } = useTranslation()
+  const toast = useToast()
   const { colorMode } = useColorMode()
   const { orgData, ready } = useOrgContext()
   const actions = useOrgEditActions()
@@ -52,22 +55,47 @@ export default function DemoGraphEditor({ ui, height = '560px' }: Props) {
     }
   }, [orgData, ready, selection.circleId, selection.memberId])
 
-  const events: GraphEvents = useMemo(
-    () => ({
+  const events: GraphEvents = useMemo(() => {
+    // A single-member role can hold only one member; warn and refuse otherwise.
+    const memberAddRefused = (circleId: string) => {
+      const circle = orgData?.getCircle(circleId)
+      const role = circle && orgData?.getRole(circle.roleId)
+      if (
+        role?.singleMember &&
+        (orgData?.membersOf(circleId).length ?? 0) >= 1
+      ) {
+        toast({
+          title: t('GraphActions.singleMemberFull'),
+          status: 'warning',
+          duration: 4000,
+          isClosable: true,
+        })
+        return true
+      }
+      return false
+    }
+    return {
       onCircleClick: (circleId) => setSelection({ circleId }),
       onMemberClick: (circleId, memberId) => setSelection({ circleId, memberId }),
       onClickOutside: () => setSelection({}),
-      onCircleMove: actions.moveCircle,
+      onCircleMove: async (circleId, targetCircleId) => {
+        await actions.moveCircle(circleId, targetCircleId)
+        return true
+      },
       onCircleCopy: actions.copyCircle,
       onMemberMove: async (memberId, parentCircleId, targetCircleId) => {
+        if (targetCircleId && memberAddRefused(targetCircleId)) return false
         if (targetCircleId) await actions.addCircleMember(targetCircleId, memberId)
         await actions.removeCircleMember(parentCircleId, memberId)
+        return true
       },
-      onMemberAdd: (memberId, circleId) =>
-        actions.addCircleMember(circleId, memberId),
-    }),
-    [actions]
-  )
+      onMemberAdd: async (memberId, circleId) => {
+        if (memberAddRefused(circleId)) return false
+        await actions.addCircleMember(circleId, memberId)
+        return true
+      },
+    }
+  }, [actions, orgData, toast, t])
 
   const circleMemberValue = useMemo<CircleMemberContextValue>(
     () => ({

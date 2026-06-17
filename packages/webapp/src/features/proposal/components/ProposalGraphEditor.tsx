@@ -89,15 +89,21 @@ export default function ProposalGraphEditor({
             onCircleClick: (circleId) => setSelectedCircleId(circleId),
             onMemberClick: (circleId) => setSelectedCircleId(circleId),
             onClickOutside: () => setSelectedCircleId(undefined),
-            onCircleMove: actions.moveCircle,
+            onCircleMove: async (circleId, targetCircleId) => {
+              await actions.moveCircle(circleId, targetCircleId)
+              return true
+            },
             onCircleCopy: actions.copyCircle,
             onMemberMove: async (memberId, parentCircleId, targetCircleId) => {
               if (targetCircleId)
                 await actions.addCircleMember(targetCircleId, memberId)
               await actions.removeCircleMember(parentCircleId, memberId)
+              return true
             },
-            onMemberAdd: (memberId, circleId) =>
-              actions.addCircleMember(circleId, memberId),
+            onMemberAdd: async (memberId, circleId) => {
+              await actions.addCircleMember(circleId, memberId)
+              return true
+            },
           },
     [actions, readOnly]
   )

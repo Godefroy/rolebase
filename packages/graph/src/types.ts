@@ -43,7 +43,10 @@ export interface Data {
 
 export interface GraphEvents {
   onCircleClick?(circleId: string, parentId?: string): void
-  onCircleMove?(circleId: string, targetCircleId: string | null): Promise<void>
+  // Move handlers return whether the move was applied: the graph keeps the node
+  // at its new place (true) or resets the drag (false, e.g. refused by
+  // permissions). Backend rejections throw and are treated as not moved too.
+  onCircleMove?(circleId: string, targetCircleId: string | null): Promise<boolean>
   onCircleCopy?(
     circleId: string,
     targetCircleId: string | null
@@ -53,8 +56,8 @@ export interface GraphEvents {
     memberId: string,
     parentCircleId: string,
     targetCircleId: string | null
-  ): Promise<void>
-  onMemberAdd?(memberId: string, targetCircleId: string): Promise<void>
+  ): Promise<boolean>
+  onMemberAdd?(memberId: string, targetCircleId: string): Promise<boolean>
   onClickOutside?(): void
 }
 
