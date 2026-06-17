@@ -21,11 +21,17 @@ import {
 } from '@chakra-ui/react'
 import {
   Thread_Activity_Type_Enum,
+  Thread_Status_Enum,
   useCreateThreadActivityMutation,
+  useCreateThreadMutation,
   useUpdateThreadActivityMutation,
 } from '@gql'
 import { yupResolver } from '@hookform/resolvers/yup'
 import ParticipantsNumber from '@/participants/components/ParticipantsNumber'
+import CircleFormController from '@/circle/components/CircleFormController'
+import useCurrentMember from '@/member/hooks/useCurrentMember'
+import { useOrgContext } from '@/org/contexts/OrgContext'
+import { useNavigateOrg } from '@/org/hooks/useNavigateOrg'
 import {
   ProposalDecisionMode,
   ProposalLog,
@@ -36,7 +42,7 @@ import { ThreadActivityProposalFragment } from '@rolebase/shared/model/thread_ac
 import { getDateTimeLocal } from '@utils/dates'
 import { ThreadContext } from '@/thread/contexts/ThreadContext'
 import React, { useContext, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { OrgChartIcon } from 'src/icons'
 import * as yup from 'yup'
@@ -45,13 +51,17 @@ import ProposalGraphEditorModal from './ProposalGraphEditorModal'
 import useProposalVoters from '../hooks/useProposalVoters'
 
 interface Props extends UseModalProps {
-  threadId?: string // To create
+  threadId?: string // To create a proposal in an existing thread
+  // When there is no thread yet (e.g. opened from a role's Security menu), a
+  // thread is created on the fly. This pre-fills the circle picker.
+  circleId?: string
   activity?: ThreadActivityProposalFragment // To update
   defaults?: Partial<ThreadActivityDataProposal> // To prefill a new proposal
 }
 
 interface Values {
   title: string
+  circleId: string
   description: string
   decisionMode: ProposalDecisionMode
   votersScope: ProposalVotersScope
@@ -70,29 +80,32 @@ const resolver = yupResolver(
 
 export default function ProposalModal({
   threadId,
+  circleId,
   activity,
   defaults,
   ...modalProps
 }: Props) {
   const { t } = useTranslation()
   const { circle } = useContext(ThreadContext) ?? {}
+  const { orgId } = useOrgContext()
+  const currentMember = useCurrentMember()
+  const navigateOrg = useNavigateOrg()
   const [createActivity] = useCreateThreadActivityMutation()
   const [updateActivity] = useUpdateThreadActivityMutation()
+  const [createThread] = useCreateThreadMutation()
+
+  // When there is no existing thread/activity, a thread is created on submit.
+  const needsThread = !activity && !threadId
 
   const base = activity?.data || defaults
   const [logs, setLogs] = useState<ProposalLog[]>(base?.logs || [])
   const editor = useDisclosure()
 
-  const {
-    handleSubmit,
-    register,
-    control,
-    watch,
-    formState: { errors },
-  } = useForm<Values>({
+  const form = useForm<Values>({
     resolver,
     defaultValues: {
       title: base?.title || '',
+      circleId: circleId || '',
       description: base?.description || '',
       decisionMode: base?.decisionMode || 'consent',
       votersScope: base?.votersScope || 'circle',
@@ -105,11 +118,24 @@ export default function ProposalModal({
         : null,
     },
   })
+  const {
+    handleSubmit,
+    register,
+    control,
+    watch,
+    setError,
+    formState: { errors },
+  } = form
 
   const hasResolutionDate = watch('hasResolutionDate')
   const votersScope = watch('votersScope')
   const decisionMode = watch('decisionMode')
-  const voters = useProposalVoters(votersScope)
+  const selectedCircleId = watch('circleId')
+
+  // Circle used by the org-chart editor and voters: the thread's circle,
+  // otherwise the one picked (or pre-filled) when creating a thread on the fly.
+  const editorCircleId = circle?.id || selectedCircleId || undefined
+  const voters = useProposalVoters(votersScope, editorCircleId)
 
   const onSubmit = handleSubmit(async (values) => {
     const data = {
@@ -132,16 +158,43 @@ export default function ProposalModal({
 
     if (activity) {
       await updateActivity({ variables: { id: activity.id, values: { data } } })
-    } else if (threadId) {
+    } else {
+      // Use the given thread, or create one named after the proposal.
+      let targetThreadId = threadId
+      const createdThread = !targetThreadId
+      if (!targetThreadId) {
+        if (!values.circleId) {
+          setError('circleId', { message: t('ProposalModal.circleRequired') })
+          return
+        }
+        if (!orgId || !currentMember) return
+        const { data: threadData } = await createThread({
+          variables: {
+            values: {
+              orgId,
+              title: values.title,
+              circleId: values.circleId,
+              initiatorMemberId: currentMember.id,
+              status: Thread_Status_Enum.Active,
+            },
+          },
+        })
+        targetThreadId = threadData?.insert_thread_one?.id
+      }
+      if (!targetThreadId) return
       await createActivity({
         variables: {
           values: {
-            threadId,
+            threadId: targetThreadId,
             type: Thread_Activity_Type_Enum.Proposal,
             data,
           },
         },
       })
+      // When the thread was created on the fly, open its page.
+      if (createdThread) {
+        navigateOrg(`threads/${targetThreadId}`)
+      }
     }
     modalProps.onClose()
   })
@@ -156,8 +209,9 @@ export default function ProposalModal({
         <ModalCloseButton />
 
         <ModalBody>
-          <form onSubmit={onSubmit}>
-            <VStack spacing={5} align="stretch">
+          <FormProvider {...form}>
+            <form onSubmit={onSubmit}>
+              <VStack spacing={5} align="stretch">
               <FormControl isInvalid={!!errors.title}>
                 <FormLabel>{t('ProposalModal.title')}</FormLabel>
                 <Input
@@ -166,6 +220,8 @@ export default function ProposalModal({
                   autoFocus
                 />
               </FormControl>
+
+              {needsThread && <CircleFormController />}
 
               <FormControl>
                 <FormLabel>{t('ProposalModal.description')}</FormLabel>
@@ -272,7 +328,8 @@ export default function ProposalModal({
                 </Button>
               </Box>
             </VStack>
-          </form>
+            </form>
+          </FormProvider>
         </ModalBody>
       </ModalContent>
 
@@ -281,7 +338,7 @@ export default function ProposalModal({
           isOpen
           onClose={editor.onClose}
           logs={logs}
-          circleId={circle?.id}
+          circleId={editorCircleId}
           onChange={setLogs}
         />
       )}

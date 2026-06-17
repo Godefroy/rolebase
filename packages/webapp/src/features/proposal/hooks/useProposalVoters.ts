@@ -5,10 +5,17 @@ import { ProposalVotersScope } from '@rolebase/shared/model/proposal'
 import { useContext } from 'react'
 
 // Resolve who can vote on a proposal: participants of the topic or of the role.
+// There may be no thread yet (a proposal created from a role's Security menu),
+// so the thread context is optional and a circle id can be passed as fallback.
 export default function useProposalVoters(
-  votersScope: ProposalVotersScope
+  votersScope: ProposalVotersScope,
+  circleId?: string
 ): ParticipantMember[] {
-  const { participants, circle } = useContext(ThreadContext)!
-  const circleParticipants = useCircleParticipants(circle?.id)
-  return votersScope === 'circle' ? circleParticipants : participants
+  const threadContext = useContext(ThreadContext)
+  const circleParticipants = useCircleParticipants(
+    threadContext?.circle?.id ?? circleId
+  )
+  return votersScope === 'circle'
+    ? circleParticipants
+    : threadContext?.participants ?? []
 }

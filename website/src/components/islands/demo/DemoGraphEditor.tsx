@@ -12,7 +12,7 @@ import { useOrgContext, useOrgEditActions } from '@/org/contexts/OrgContext'
 import { Box, Flex, useColorMode } from '@chakra-ui/react'
 import { ArrowUpIcon } from 'src/icons'
 import { CirclesGraphViews, type GraphEvents } from '@rolebase/graph'
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { DemoUiText } from '../../../demo/orgDemoData'
 
 interface Selection {
@@ -39,6 +39,18 @@ export default function DemoGraphEditor({ ui, height = '560px' }: Props) {
   const boxSize = useElementSize(boxRef)
   const [selection, setSelection] = useState<Selection>({})
   const hasSelection = !!(selection.circleId || selection.memberId)
+
+  // When the selected role or member is archived it leaves the org data, so
+  // close the panel.
+  useEffect(() => {
+    if (!ready || !orgData) return
+    if (
+      (selection.circleId && !orgData.getCircle(selection.circleId)) ||
+      (selection.memberId && !orgData.getMember(selection.memberId))
+    ) {
+      setSelection({})
+    }
+  }, [orgData, ready, selection.circleId, selection.memberId])
 
   const events: GraphEvents = useMemo(
     () => ({

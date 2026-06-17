@@ -2,6 +2,7 @@ import {
   CircleFragment,
   CircleLinkFragment,
   CircleMemberFragment,
+  Governance_Mode_Enum,
   MemberFragment,
   RoleSummaryFragment,
   ThreadFragment,
@@ -13,6 +14,25 @@ import { EntityWithScope, ParticipantsScope } from '../model/participants'
 export interface CircleMemberJoined {
   id: string
   member: MemberFragment
+}
+
+// What a member is allowed to edit on a circle (before the read-only `editable`
+// gate applied by the caller). Mirrored by the Hasura permissions on the
+// circle, role, circle_link and circle_member tables.
+export interface CirclePermissions {
+  canEditCircle: boolean
+  canEditRole: boolean
+  canEditMembers: boolean
+  canEditSubCircles: boolean
+  canEditSubCirclesParentLinks: boolean
+}
+
+const noCirclePermissions: CirclePermissions = {
+  canEditCircle: false,
+  canEditRole: false,
+  canEditMembers: false,
+  canEditSubCircles: false,
+  canEditSubCirclesParentLinks: false,
 }
 
 // The current member acting as a leader of a circle (proposal editor): they are
@@ -74,11 +94,12 @@ export class OrgData {
     members: MemberFragment[],
     private readonly actingLeader?: ActingLeader
   ) {
-    // Exclude archived circles: the subscription returns only active ones, but
-    // the proposal draft marks circles archived in place (in-memory "delete").
+    // Exclude archived circles and members: the subscription returns only
+    // active ones, but the proposal draft and the demo mark them archived in
+    // place (in-memory "delete").
     const activeCircles = circles.filter((c) => !c.archived)
     this.circles = activeCircles
-    this.members = [...members].sort(byName)
+    this.members = members.filter((m) => !m.archived).sort(byName)
     this.roles = roles
     this.circleById = new Map(activeCircles.map((c) => [c.id, c]))
     this.roleById = new Map(roles.map((r) => [r.id, r]))
@@ -369,6 +390,93 @@ export class OrgData {
     ]
     this.participantCirclesCache.set(memberId, result)
     return result
+  }
+
+  // ---- Permissions ----
+
+  // Whether a circle is led through parent-link sub-circles (representatives),
+  // as opposed to its own direct members.
+  hasRepresentatives(circleId: string): boolean {
+    return this.representativesOf(circleId).length > 0
+  }
+
+  // Whether a member leads a circle (one of its leaders: representatives if any,
+  // otherwise its direct members; plus the acting leader in a proposal draft).
+  isCircleLeader(circleId: string, memberId?: string): boolean {
+    if (!memberId) return false
+    return this.getLeaders(circleId).some((p) => p.member.id === memberId)
+  }
+
+  // The circle whose leaders "own" a circle: its grandparent if the circle's
+  // role is a parent link (representative), otherwise its direct parent.
+  ownerCircleOf(circle: CircleFragment): CircleFragment | undefined {
+    const role = this.roleById.get(circle.roleId)
+    const parent = this.getCircle(circle.parentId || undefined)
+    if (role?.parentLink && parent?.parentId) {
+      return this.getCircle(parent.parentId)
+    }
+    return parent
+  }
+
+  // Whether a member owns a circle (leads its owner circle).
+  isCircleOwner(circle: CircleFragment, memberId?: string): boolean {
+    const ownerCircle = this.ownerCircleOf(circle)
+    return !!ownerCircle && this.isCircleLeader(ownerCircle.id, memberId)
+  }
+
+  // What a member may edit on a circle, given the org governance mode and the
+  // member's org-level standing. Single source of truth shared with the Hasura
+  // permissions; the caller still gates the result with an `editable` flag for
+  // read-only contexts (preview, share, in-memory draft). Takes the circle and
+  // role explicitly so an archived circle (resolved outside the active index)
+  // can still be evaluated.
+  //
+  // - Org owners may always edit everything, in any mode.
+  // - Free: every member edits the whole chart.
+  // - Agile: the circle's owner/leader edits it directly.
+  // - Strict: structural edits go through proposals; only member assignment
+  //   stays open, to the circle's lead (representatives, else the owner).
+  getCirclePermissions(
+    circle: CircleFragment,
+    role: RoleSummaryFragment,
+    memberId: string | undefined,
+    governanceMode: Governance_Mode_Enum,
+    isOrgMember: boolean,
+    isOrgOwner: boolean
+  ): CirclePermissions {
+    if (!isOrgMember) return noCirclePermissions
+
+    const isFree = governanceMode === Governance_Mode_Enum.Free
+    const isStrict = governanceMode === Governance_Mode_Enum.Strict
+    const isLeader = this.isCircleLeader(circle.id, memberId)
+    const isOwner = this.isCircleOwner(circle, memberId)
+    // Sub-circles can only be added under a real circle (not a single-member or
+    // parent-link role).
+    const subCircles =
+      role.singleMember === false && role.parentLink === false
+
+    // Structural edits: owner always, otherwise the relevant lead, and never
+    // directly under strict governance (changes go through proposals).
+    const canEditCircle = isOrgOwner || (!isStrict && (isFree || isOwner))
+    const canEditRole = role.base ? isOrgOwner : canEditCircle
+    const canEditSubCircles =
+      subCircles && (isOrgOwner || (!isStrict && (isFree || isLeader)))
+    const canEditSubCirclesParentLinks = subCircles && canEditCircle
+
+    // Member assignment is operational: the circle's lead keeps it in every
+    // mode (representatives if any, otherwise the owner). Org owner always.
+    const canEditMembers =
+      isOrgOwner ||
+      isFree ||
+      (this.hasRepresentatives(circle.id) ? isLeader : isOwner)
+
+    return {
+      canEditCircle,
+      canEditRole,
+      canEditMembers,
+      canEditSubCircles,
+      canEditSubCirclesParentLinks,
+    }
   }
 
   // Member ids included in a participants scope

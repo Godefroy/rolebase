@@ -350,12 +350,13 @@ export default function useDraftOrgEditActions(
         return undefined
       },
       async archiveMember() {},
+      async restoreMember() {},
 
       async addCircleMember(circleId, memberId) {
         const org = getOrg()
         const circle = findCircle(circleId)
         const member = org?.memberById.get(memberId)
-        if (!circle || !member || !orgId) return
+        if (!org || !circle || !member || !orgId) return
         // Already a member of this circle: nothing to do (avoid duplicates).
         if (org.membersOf(circleId).some((cm) => cm.member.id === memberId))
           return

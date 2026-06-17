@@ -49,6 +49,12 @@ export default function MemberDeleteModal({
       return
     }
 
+    toast({
+      title: t('MemberDeleteModal.toast', { name: member.name }),
+      status: 'success',
+      duration: 2000,
+      isClosable: true,
+    })
     onDelete?.()
     alertProps.onClose()
   }

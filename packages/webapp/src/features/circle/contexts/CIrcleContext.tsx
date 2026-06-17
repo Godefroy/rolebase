@@ -4,12 +4,7 @@ import useOrgOwner from '@/member/hooks/useOrgOwner'
 import { useOrgContext } from '@/org/contexts/OrgContext'
 import useCircleLeaders from '@/participants/hooks/useCircleLeaders'
 import useCircleParticipants from '@/participants/hooks/useCircleParticipants'
-import {
-  CircleFragment,
-  Governance_Mode_Enum,
-  RoleSummaryFragment,
-  useGetCircleQuery,
-} from '@gql'
+import { CircleFragment, RoleSummaryFragment, useGetCircleQuery } from '@gql'
 import { ParticipantMember } from '@rolebase/shared/model/member'
 import React, { ReactNode, createContext } from 'react'
 
@@ -89,34 +84,20 @@ export function CircleProvider({ circleId, children }: Props) {
   const isLeader = leaders.some((p) => p.member.id === currentMember?.id)
   const isOwner = owners.some((p) => p.member.id === currentMember?.id)
 
-  // Free governance: every member can edit the whole org chart.
-  const governanceOk = governanceMode === Governance_Mode_Enum.Free
-
-  // Strict governance makes the whole chart read-only (changes go through
-  // proposals). Read-only implementations (preview, share) disable edits too.
-  const readOnly = !editable || governanceMode === Governance_Mode_Enum.Strict
-
-  // Can edit circle
-  const canEditCircle = isOrgMember && (governanceOk || isOrgOwner || isOwner)
-
-  // Can edit role
-  const canEditRole = role?.base ? isOrgOwner : canEditCircle
-
-  // Can edit sub circles
-  const canEditSubCircles =
-    isOrgMember &&
-    role?.singleMember === false &&
-    role?.parentLink === false &&
-    (governanceOk || isOrgOwner || isLeader)
-
-  // Can edit sub-circles with parent link
-  const canEditSubCirclesParentLinks =
-    canEditCircle && role?.singleMember === false && role?.parentLink === false
-
-  // Can edit members
-  const canEditMembers =
-    isOrgMember &&
-    (governanceOk || isOrgOwner || (hasParentLinkMembers ? isLeader : isOwner))
+  // Permissions: the rules live in OrgData (single source of truth, mirrored by
+  // the Hasura permissions). The caller gates them with `editable`, which is
+  // false in read-only contexts (preview, share, in-memory draft).
+  const perms =
+    circle && role && orgData
+      ? orgData.getCirclePermissions(
+          circle,
+          role,
+          currentMember?.id,
+          governanceMode,
+          isOrgMember,
+          isOrgOwner
+        )
+      : undefined
 
   // Prepare context value
   const value = circle &&
@@ -132,13 +113,12 @@ export function CircleProvider({ circleId, children }: Props) {
       isLeader,
       isParticipant,
       isOwner,
-      canEditCircle: readOnly ? false : canEditCircle,
-      canEditRole: readOnly ? false : canEditRole,
-      canEditMembers: readOnly ? false : canEditMembers,
-      canEditSubCircles: readOnly ? false : canEditSubCircles,
-      canEditSubCirclesParentLinks: readOnly
-        ? false
-        : canEditSubCirclesParentLinks,
+      canEditCircle: editable && !!perms?.canEditCircle,
+      canEditRole: editable && !!perms?.canEditRole,
+      canEditMembers: editable && !!perms?.canEditMembers,
+      canEditSubCircles: editable && !!perms?.canEditSubCircles,
+      canEditSubCirclesParentLinks:
+        editable && !!perms?.canEditSubCirclesParentLinks,
     }
 
   return (

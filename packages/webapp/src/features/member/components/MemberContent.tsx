@@ -11,14 +11,16 @@ import {
   AlertTitle,
   Avatar,
   Box,
+  Button,
   Flex,
   Heading,
   useDisclosure,
   VStack,
 } from '@chakra-ui/react'
-import React from 'react'
+import { useGetMemberQuery } from '@gql'
+import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useOrgContext } from '@/org/contexts/OrgContext'
+import { useOrgContext, useOrgEditActions } from '@/org/contexts/OrgContext'
 import useOrgAdmin from '../hooks/useOrgAdmin'
 import { MemberEditableField } from './MemberEditableField'
 import MemberNameEditable from './MemberNameEditable'
@@ -45,8 +47,15 @@ export default function MemberContent({
 }: Props) {
   const { t } = useTranslation()
   const { user } = useAuth()
-  const { orgData, isDraft, editable, hasBackend } = useOrgContext()
-  const member = orgData?.getMember(id)
+  const { orgData, isDraft, editable, hasBackend, ready } = useOrgContext()
+  const orgMember = orgData?.getMember(id)
+  // Archived members aren't in the org data; fetch by id (ignoring archived) so
+  // the panel can still be shown with a restore option (backend only).
+  const { data: fetched } = useGetMemberQuery({
+    skip: !id || !!orgMember || !hasBackend || !ready,
+    variables: { id },
+  })
+  const member = orgMember ?? fetched?.member_by_pk ?? undefined
   const isAdmin = useOrgAdmin()
   // Members are readonly in a proposal draft (a proposal changes the org chart,
   // not member profiles) and in read-only orgs.
@@ -60,6 +69,19 @@ export default function MemberContent({
   const avatarSrc =
     getResizedImageUrl(member?.picture, AVATAR_HEADING_WIDTH) || undefined
   const deleteModal = useDisclosure()
+
+  // Restore an archived member (backend only, admins).
+  const canRestore = isAdmin && !!hasBackend && !isDraft
+  const { restoreMember } = useOrgEditActions()
+  const [restoring, setRestoring] = useState(false)
+  const handleRestore = async () => {
+    setRestoring(true)
+    try {
+      await restoreMember(id)
+    } finally {
+      setRestoring(false)
+    }
+  }
 
   if (!member) {
     return (
@@ -106,8 +128,26 @@ export default function MemberContent({
 
           <MemberNameEditable member={member} isDisabled={!canEdit} mt={2} />
 
-          {canEditProfile && (
-            <MemberOrgRoleSelect member={member} size="sm" mt={2} />
+          {member.archived ? (
+            <Alert status="warning" borderRadius="md" maxW="sm" mt={3}>
+              <AlertIcon />
+              <Box flex="1">{t('MemberContent.archived')}</Box>
+              {canRestore && (
+                <Button
+                  size="sm"
+                  colorScheme="orange"
+                  isLoading={restoring}
+                  onClick={handleRestore}
+                  ml={2}
+                >
+                  {t('MemberContent.restore')}
+                </Button>
+              )}
+            </Alert>
+          ) : (
+            canEditProfile && (
+              <MemberOrgRoleSelect member={member} size="sm" mt={2} />
+            )
           )}
         </Flex>
       </Box>

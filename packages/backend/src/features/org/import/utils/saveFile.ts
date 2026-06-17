@@ -4,7 +4,7 @@ import { nhost } from '../../../../utils/nhost'
 
 export async function saveFile(
   name: string,
-  buffer: Buffer
+  buffer: Uint8Array
 ): Promise<{ fileId: string; url: string }> {
   // Check if file already exists
   const { files } = await adminRequest(

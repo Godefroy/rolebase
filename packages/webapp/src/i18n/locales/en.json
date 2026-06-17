@@ -111,6 +111,7 @@
   "CircleDeleteModal": {
     "heading": "Delete role",
     "info": "Are you sure you want to delete the role <b>{{name}}</b>?",
+    "toast": "Role \"{{name}}\" archived",
     "confirmButton": "Delete {{name}}",
     "recurringMeetings": "{{count}} recurring meetings will be deleted.",
     "recurringMeetings_one": "1 recurring meeting will be deleted.",
@@ -179,7 +180,10 @@
     "subRoles_members": "Who can modify sub-roles and members:",
     "ownersShowMore": "+{{count}} owners",
     "ownersShowMore_one": "+{{count}} owner",
-    "roleOwner": "Owner"
+    "roleOwner": "Owner",
+    "strictExplanation": "This role is protected by strict governance. Changes go through a proposal.",
+    "createProposal": "Create a proposal",
+    "whoCanAssignMembers": "Who can assign members:"
   },
   "CircleRole": {
     "archived": "This role is archived.",
@@ -207,6 +211,7 @@
   "CircleRoleSubCircles": {
     "roles": "Roles",
     "addRole": "Create a role",
+    "addRepresentative": "Add a representative",
     "inviteRole": "Invite a role",
     "linkTooltip": "Invited role",
     "removeLink": "Remove invited role"
@@ -607,6 +612,8 @@
   },
   "MemberContent": {
     "notFound": "Member not found",
+    "archived": "This member is archived.",
+    "restore": "Restore",
     "memberRolesHeading": "Assigned roles",
     "description": "Description",
     "descriptionPlaceholder": "Who is {{name}}?"
@@ -620,7 +627,8 @@
   },
   "MemberDeleteModal": {
     "heading": "Remove Member",
-    "info": "Are you sure you want to delete member <b>{{name}}</b>?"
+    "info": "Are you sure you want to delete member <b>{{name}}</b>?",
+    "toast": "Member \"{{name}}\" archived"
   },
   "MemberEditModal": {
     "heading": "Edit member {{member}}",
@@ -1256,6 +1264,7 @@
     "headingEdit": "Edit proposal",
     "title": "Decision title",
     "titlePlaceholder": "What is decided",
+    "circleRequired": "Please choose a role",
     "description": "Description",
     "orgChart": "Org chart changes",
     "editOrgChart": "Edit org chart",

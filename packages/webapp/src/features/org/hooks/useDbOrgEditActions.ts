@@ -40,6 +40,12 @@ export default function useDbOrgEditActions(): OrgEditActions {
     },
     []
   )
+  const restoreMember = useCallback<OrgEditActions['restoreMember']>(
+    async (memberId) => {
+      await trpc.member.restoreMember.mutate({ memberId })
+    },
+    []
+  )
 
   return useMemo(
     () => ({
@@ -51,6 +57,7 @@ export default function useDbOrgEditActions(): OrgEditActions {
       updateMember,
       createMember,
       archiveMember,
+      restoreMember,
       addCircleMember,
       removeCircleMember,
       addCircleLink,
@@ -65,6 +72,7 @@ export default function useDbOrgEditActions(): OrgEditActions {
       updateMember,
       createMember,
       archiveMember,
+      restoreMember,
       addCircleMember,
       removeCircleMember,
       addCircleLink,

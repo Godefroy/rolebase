@@ -117,7 +117,7 @@ export default function CircleRole({ skipFetchRole }: Props) {
 
   return (
     <>
-      {role.archived && (
+      {(circle.archived || role.archived) && (
         <Alert status="warning" borderRadius="md" mb={fieldsGap}>
           <AlertIcon />
           <Box flex="1">{t('CircleRole.archived')}</Box>

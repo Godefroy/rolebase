@@ -39,6 +39,8 @@ export interface OrgEditActions {
   createMember(name: string): Promise<string | undefined>
   // Archive (delete) a member. Readonly in draft mode.
   archiveMember(memberId: string): Promise<void>
+  // Restore an archived member. Backend only (org page).
+  restoreMember(memberId: string): Promise<void>
   addCircleMember(circleId: string, memberId: string): Promise<void>
   removeCircleMember(circleId: string, memberId: string): Promise<void>
   addCircleLink(parentId: string, circleId: string): Promise<void>
@@ -87,6 +89,7 @@ export const noopOrgEditActions: OrgEditActions = {
   updateMember: noop,
   createMember: noop,
   archiveMember: noop,
+  restoreMember: noop,
   addCircleMember: noop,
   removeCircleMember: noop,
   addCircleLink: noop,

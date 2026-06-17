@@ -61,9 +61,6 @@ insert_permissions:
                                 - role:
                                     _eq: Member
                 - _and:
-                    - org:
-                        governanceMode:
-                          _neq: Strict
                     - role:
                         parentLink:
                           _eq: false
@@ -88,9 +85,6 @@ insert_permissions:
                                     - archived:
                                         _eq: false
                 - _and:
-                    - org:
-                        governanceMode:
-                          _neq: Strict
                     - role:
                         parentLink:
                           _eq: true
@@ -146,9 +140,6 @@ update_permissions:
                             - role:
                                 _eq: Member
             - _and:
-                - org:
-                    governanceMode:
-                      _neq: Strict
                 - role:
                     parentLink:
                       _eq: false
@@ -173,9 +164,6 @@ update_permissions:
                                 - archived:
                                     _eq: false
             - _and:
-                - org:
-                    governanceMode:
-                      _neq: Strict
                 - role:
                     parentLink:
                       _eq: true

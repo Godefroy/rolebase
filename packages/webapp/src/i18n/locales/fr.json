@@ -111,6 +111,7 @@
   "CircleDeleteModal": {
     "heading": "Supprimer un rôle",
     "info": "Êtes-vous sûr(e) de vouloir supprimer le rôle <b>{{name}}</b> ?",
+    "toast": "Rôle « {{name}} » archivé",
     "confirmButton": "Supprimer {{name}}",
     "recurringMeetings": "{{count}} réunions récurrentes seront supprimées.",
     "recurringMeetings_one": "1 réunion récurrente sera supprimée.",
@@ -172,14 +173,17 @@
     "action4": "Déposez-le dans le rôle souhaité."
   },
   "CirclePrivacy": {
-    "tooltip": "Securité",
+    "tooltip": "Sécurité",
     "role": "Qui peut modifier le rôle {{role}} :",
     "role_members": "Qui peut modifier le rôle {{role}} et ses membres :",
     "subRoles": "Qui peut modifier les sous-rôles :",
     "subRoles_members": "Qui peut modifier les sous-rôles et les membres :",
     "ownersShowMore": "+{{count}} propriétaires",
     "ownersShowMore_one": "+ {{count}} propriétaire",
-    "roleOwner": "Propriétaire"
+    "roleOwner": "Propriétaire",
+    "strictExplanation": "Ce rôle est protégé par la gouvernance stricte. Les changements passent par une proposition.",
+    "createProposal": "Créer une proposition",
+    "whoCanAssignMembers": "Qui peut assigner des membres :"
   },
   "CircleRole": {
     "archived": "Ce rôle est archivé.",
@@ -207,6 +211,7 @@
   "CircleRoleSubCircles": {
     "roles": "Rôles",
     "addRole": "Créer un rôle",
+    "addRepresentative": "Ajouter un représentant",
     "inviteRole": "Inviter un rôle",
     "linkTooltip": "Rôle invité",
     "removeLink": "Retirer le rôle invité"
@@ -641,6 +646,8 @@
   },
   "MemberContent": {
     "notFound": "Membre introuvable",
+    "archived": "Ce membre est archivé.",
+    "restore": "Restaurer",
     "memberRolesHeading": "Rôles assignés",
     "description": "Description",
     "descriptionPlaceholder": "Qui est {{name}} ?"
@@ -654,7 +661,8 @@
   },
   "MemberDeleteModal": {
     "heading": "Supprimer un membre",
-    "info": "Êtes-vous sûr(e) de vouloir supprimer le membre <b>{{name}}</b> ?"
+    "info": "Êtes-vous sûr(e) de vouloir supprimer le membre <b>{{name}}</b> ?",
+    "toast": "Membre « {{name}} » archivé"
   },
   "MemberEditModal": {
     "heading": "Modifier le membre {{member}}",
@@ -1292,6 +1300,7 @@
     "headingEdit": "Modifier la proposition",
     "title": "Titre de la décision",
     "titlePlaceholder": "Ce qui est décidé",
+    "circleRequired": "Veuillez choisir un rôle",
     "description": "Description",
     "orgChart": "Modifications de l'organigramme",
     "editOrgChart": "Modifier l'organigramme",

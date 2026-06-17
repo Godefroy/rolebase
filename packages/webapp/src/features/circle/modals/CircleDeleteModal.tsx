@@ -16,6 +16,7 @@ import {
   Text,
   UnorderedList,
   VStack,
+  useToast,
 } from '@chakra-ui/react'
 import { useGetCirclesStatsQuery } from '@gql'
 import React, { useRef } from 'react'
@@ -37,6 +38,7 @@ export default function CircleDeleteModal({
   const { orgData, isDraft } = useOrgContext()
   const circle = orgData?.getCircle(id)
   const { archiveCircle } = useOrgEditActions()
+  const toast = useToast()
   const cancelRef = useRef<HTMLButtonElement>(null)
   const roleName = orgData?.getRole(circle?.roleId)?.name ?? ''
 
@@ -68,6 +70,12 @@ export default function CircleDeleteModal({
   const handleDelete = async () => {
     if (!circle) return
     await archiveCircle(id)
+    toast({
+      title: t('CircleDeleteModal.toast', { name: roleName }),
+      status: 'success',
+      duration: 2000,
+      isClosable: true,
+    })
     onDelete?.()
     alertProps.onClose()
   }

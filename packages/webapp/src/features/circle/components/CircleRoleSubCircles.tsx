@@ -91,6 +91,10 @@ export default function CircleRoleSubCircles() {
     [handleCreateCircle, roles]
   )
 
+  // When the user only leads the parent circle (not this one), they can only
+  // add a representative (parent-link) sub-circle, not create roles here.
+  const onlyParentLink = canEditSubCirclesParentLinks && !canEditSubCircles
+
   // Get invited circles (links)
   const invitedCircles = useMemo(
     () =>
@@ -210,7 +214,7 @@ export default function CircleRoleSubCircles() {
               colorScheme={highlightButton ? 'blue' : undefined}
               borderRadius="full"
               parentLink={
-                canEditSubCirclesParentLinks && !canEditSubCircles
+                onlyParentLink
                   ? true
                   : !canEditSubCirclesParentLinks && canEditSubCircles
                   ? false
@@ -220,7 +224,11 @@ export default function CircleRoleSubCircles() {
               onSelect={handleAddRole}
               onCreate={canEditSubCircles ? handleCreateCircle : undefined}
             >
-              {t('CircleRoleSubCircles.addRole')}
+              {t(
+                onlyParentLink
+                  ? 'CircleRoleSubCircles.addRepresentative'
+                  : 'CircleRoleSubCircles.addRole'
+              )}
             </BaseRoleSearchButton>
           )}
 

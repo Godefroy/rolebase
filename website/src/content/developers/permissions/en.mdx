@@ -1,0 +1,120 @@
+---
+title: 'Permissions'
+description: 'How authorization works in Rolebase: org roles, circle leadership, governance modes, and how the rules are enforced in Hasura and mirrored in the app.'
+order: 1.5
+---
+
+Rolebase authorization combines two dimensions: a member's **organization role** and their **structural standing** in the org chart, filtered by the organization's **governance mode**. The same rules are enforced server-side by Hasura row-level permissions and mirrored client-side so the UI never offers an action the server would refuse.
+
+<Callout type="info" title="Data model reminder">
+  A `role` is a reusable definition (purpose, domain, accountabilities). A `circle` is an instance of a role placed in the org chart, with a parent and members. The user-facing app shows both as "roles"; the API keeps the two entities. See the API reference for fields.
+</Callout>
+
+## Organization roles
+
+Every member has one organization-level role, stored on the `member` entity:
+
+| Role | Meaning |
+| --- | --- |
+| `Owner` | Full control. Can always edit everything, in any governance mode, and is the only role that can change the governance mode or manage billing. |
+| `Admin` | Member privileges plus member management (create and invite members). |
+| `Member` | Participates and edits according to the governance mode and structural standing. |
+| `Readonly` | Can view but not edit. |
+
+Throughout this page, "org member" means a member whose role is not `Readonly`.
+
+## Structural standing
+
+Authorization over a specific circle depends on the member's position in the org chart, expressed through the `circle_leader` view.
+
+A circle is **led** by:
+
+- the members of its **parent-link sub-circles** (its *representatives*), when it has any, otherwise
+- its **direct members**.
+
+```sql
+-- circle_leader (simplified): representatives, else direct members
+WITH sub_circle_leader AS (
+  SELECT sub."parentId" AS "circleId", cm."memberId"
+  FROM circle sub
+  JOIN role r ON sub."roleId" = r.id
+  JOIN circle_member cm ON cm."circleId" = sub.id
+  WHERE r."parentLink" = true AND sub.archived = false AND cm.archived = false
+)
+SELECT c.id AS "circleId", cm."memberId"
+  FROM circle c
+  LEFT JOIN circle_member cm ON cm."circleId" = c.id
+  WHERE NOT EXISTS (SELECT 1 FROM sub_circle_leader s WHERE s."circleId" = c.id)
+    AND cm.archived = false
+UNION
+SELECT "circleId", "memberId" FROM sub_circle_leader;
+```
+
+From this view we derive three predicates:
+
+- **leader of a circle**: the member is in `circle_leader` for that circle.
+- **owner of a circle**: the member leads the circle's *owner circle*, which is its grandparent when the circle's role is a parent link, otherwise its direct parent.
+- **representative**: a member of a parent-link sub-circle, that is, a leader of the circle that sub-circle stands for.
+
+<Callout type="tip" title="Use the view, do not re-derive it">
+  Hasura clauses reference the `leaders` relationship (for example `parent.leaders`) rather than re-deriving "representatives or direct members". The app uses the same logic through `OrgData.getCirclePermissions`, so both layers stay in sync.
+</Callout>
+
+## Governance modes
+
+The organization's `governanceMode` selects which standings may act directly:
+
+- **Free**: every org member edits the whole org chart.
+- **Agile**: the relevant lead edits directly; structure changes are not gated by a decision process.
+- **Strict**: structure changes go through proposals, so no direct structural edits. Member assignment stays open to leads.
+
+The `Owner` org role bypasses governance for editing and may always act, in every mode.
+
+## What each member may do
+
+The matrix below describes non-owner org members. The `Owner` may always do everything.
+
+### Structure: `circle`, `role`, `circle_link`
+
+| Mode | Who may create / move / archive a circle, edit a role, or manage links |
+| --- | --- |
+| Free | Any `Admin` or `Member` |
+| Agile | The lead of the parent circle (for a parent-link circle, the lead of the grandparent); for `circle_link`, the lead of the host circle |
+| Strict | No one directly. Changes are applied when a proposal is resolved (server-side, with admin rights). |
+
+Base roles (`role.base = true`) are reserved for the `Owner` regardless of mode.
+
+### Membership: `circle_member`
+
+| Mode | Who may add / remove a circle's members |
+| --- | --- |
+| Free | Any `Admin` or `Member` |
+| Agile | The circle's lead: its representatives, or its owner when it has none |
+| Strict | The circle's lead, exactly as in Agile (member assignment is operational, not structural) |
+
+This is why a representative can staff the circle it leads and that circle's sub-circles even under strict governance.
+
+## Enforcement
+
+### Server (Hasura)
+
+Row-level permissions on each table carry the rules for the `user` role:
+
+- `nhost/metadata/databases/default/tables/public_circle.yaml`
+- `nhost/metadata/databases/default/tables/public_role.yaml`
+- `nhost/metadata/databases/default/tables/public_circle_link.yaml`
+- `nhost/metadata/databases/default/tables/public_circle_member.yaml`
+
+Each `_or` of permission clauses follows the same shape: an unconditional `Owner` clause, a `Free` clause for `Admin`/`Member`, and leader clauses built on the `leaders` relationship (gated to non-strict for structure, ungated for `circle_member`). After editing a YAML file, apply it so the running instance matches the source of truth.
+
+### Client (app)
+
+The same logic lives in `OrgData.getCirclePermissions(circle, role, memberId, governanceMode, isOrgMember, isOrgOwner)`, which returns `canEditCircle`, `canEditRole`, `canEditMembers`, `canEditSubCircles` and `canEditSubCirclesParentLinks`. The circle context applies an `editable` gate on top for read-only contexts (preview, share, in-memory draft). The UI only offers actions the server allows; the server enforces them regardless of the UI.
+
+<Callout type="warning" title="Change both layers together">
+  A permission is encoded twice. When you change a rule, update the Hasura clause(s) for insert and update and the matching logic in `OrgData`, then confirm the two agree.
+</Callout>
+
+## API access
+
+User access tokens carry the permissions of the authenticated user, so API calls are subject to the same rules described here. See [Custom integrations](/en/developers/custom-integrations) for authentication, and [Governance modes](/en/docs/governance-modes) for the user-facing view of these rules.

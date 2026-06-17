@@ -1,0 +1,120 @@
+---
+title: 'Permissions'
+description: "Comment fonctionne l'autorisation dans Rolebase : rôles d'organisation, pilotage des circles, modes de gouvernance, et application des règles dans Hasura et dans l'application."
+order: 1.5
+---
+
+L'autorisation dans Rolebase combine deux dimensions : le **rôle d'organisation** d'un membre et sa **position structurelle** dans l'organigramme, filtrées par le **mode de gouvernance** de l'organisation. Les mêmes règles sont appliquées côté serveur par les permissions au niveau ligne de Hasura et reproduites côté client, pour que l'interface ne propose jamais une action que le serveur refuserait.
+
+<Callout type="info" title="Rappel sur le modèle de données">
+  Un `role` est une définition réutilisable (raison d'être, domaine, redevabilités). Un `circle` est une instance d'un rôle placée dans l'organigramme, avec un parent et des membres. L'application présente les deux comme des « rôles » ; l'API conserve les deux entités. Voir la référence API pour les champs.
+</Callout>
+
+## Rôles d'organisation
+
+Chaque membre possède un rôle au niveau de l'organisation, stocké sur l'entité `member` :
+
+| Rôle | Signification |
+| --- | --- |
+| `Owner` | Contrôle total. Peut toujours tout modifier, dans tous les modes de gouvernance, et reste le seul rôle pouvant changer le mode de gouvernance ou gérer la facturation. |
+| `Admin` | Privilèges de membre, plus la gestion des membres (créer et inviter des membres). |
+| `Member` | Participe et modifie selon le mode de gouvernance et sa position structurelle. |
+| `Readonly` | Peut consulter sans modifier. |
+
+Dans cette page, « membre de l'org » désigne un membre dont le rôle n'est pas `Readonly`.
+
+## Position structurelle
+
+L'autorisation sur un circle donné dépend de la position du membre dans l'organigramme, exprimée via la vue `circle_leader`.
+
+Un circle est **piloté** par :
+
+- les membres de ses **sous-circles de lien parent** (ses *représentants*), s'il en a, sinon
+- ses **membres directs**.
+
+```sql
+-- circle_leader (simplifié) : représentants, sinon membres directs
+WITH sub_circle_leader AS (
+  SELECT sub."parentId" AS "circleId", cm."memberId"
+  FROM circle sub
+  JOIN role r ON sub."roleId" = r.id
+  JOIN circle_member cm ON cm."circleId" = sub.id
+  WHERE r."parentLink" = true AND sub.archived = false AND cm.archived = false
+)
+SELECT c.id AS "circleId", cm."memberId"
+  FROM circle c
+  LEFT JOIN circle_member cm ON cm."circleId" = c.id
+  WHERE NOT EXISTS (SELECT 1 FROM sub_circle_leader s WHERE s."circleId" = c.id)
+    AND cm.archived = false
+UNION
+SELECT "circleId", "memberId" FROM sub_circle_leader;
+```
+
+De cette vue découlent trois prédicats :
+
+- **leader d'un circle** : le membre figure dans `circle_leader` pour ce circle.
+- **owner d'un circle** : le membre pilote le *circle propriétaire*, c'est-à-dire son grand-parent quand le rôle du circle est un lien parent, sinon son parent direct.
+- **représentant** : un membre d'un sous-circle de lien parent, donc un leader du circle que ce sous-circle représente.
+
+<Callout type="tip" title="Utilisez la vue, ne la redérivez pas">
+  Les clauses Hasura utilisent la relation `leaders` (par exemple `parent.leaders`) plutôt que de redériver « représentants ou membres directs ». L'application emploie la même logique via `OrgData.getCirclePermissions`, de sorte que les deux couches restent cohérentes.
+</Callout>
+
+## Modes de gouvernance
+
+Le `governanceMode` de l'organisation sélectionne quelles positions peuvent agir directement :
+
+- **Free** : chaque membre de l'org modifie tout l'organigramme.
+- **Agile** : le leader concerné modifie directement ; les changements de structure ne passent pas par un processus de décision.
+- **Strict** : les changements de structure passent par des propositions, donc aucune modification structurelle directe. L'assignation des membres reste ouverte aux leaders.
+
+Le rôle d'organisation `Owner` outrepasse la gouvernance pour l'édition et peut toujours agir, dans tous les modes.
+
+## Ce que chaque membre peut faire
+
+Le tableau ci-dessous décrit les membres de l'org qui ne sont pas `Owner`. Le `Owner` peut toujours tout faire.
+
+### Structure : `circle`, `role`, `circle_link`
+
+| Mode | Qui peut créer / déplacer / archiver un circle, modifier un role, ou gérer les liens |
+| --- | --- |
+| Free | Tout `Admin` ou `Member` |
+| Agile | Le leader du circle parent (pour un circle de lien parent, le leader du grand-parent) ; pour `circle_link`, le leader du circle hôte |
+| Strict | Personne directement. Les changements sont appliqués à la résolution d'une proposition (côté serveur, avec les droits admin). |
+
+Les rôles de base (`role.base = true`) sont réservés au `Owner`, quel que soit le mode.
+
+### Appartenance : `circle_member`
+
+| Mode | Qui peut ajouter / retirer les membres d'un circle |
+| --- | --- |
+| Free | Tout `Admin` ou `Member` |
+| Agile | Le leader du circle : ses représentants, ou son owner s'il n'en a pas |
+| Strict | Le leader du circle, exactement comme en Agile (l'assignation des membres est opérationnelle, pas structurelle) |
+
+C'est pourquoi un représentant peut composer le circle qu'il pilote et les sous-circles de ce circle, même en gouvernance stricte.
+
+## Application des règles
+
+### Serveur (Hasura)
+
+Les permissions au niveau ligne de chaque table portent les règles du rôle `user` :
+
+- `nhost/metadata/databases/default/tables/public_circle.yaml`
+- `nhost/metadata/databases/default/tables/public_role.yaml`
+- `nhost/metadata/databases/default/tables/public_circle_link.yaml`
+- `nhost/metadata/databases/default/tables/public_circle_member.yaml`
+
+Chaque `_or` de clauses suit la même forme : une clause `Owner` inconditionnelle, une clause `Free` pour `Admin`/`Member`, et des clauses de leader construites sur la relation `leaders` (réservées au non-strict pour la structure, sans restriction pour `circle_member`). Après modification d'un fichier YAML, appliquez-le pour que l'instance en cours corresponde à la source de vérité.
+
+### Client (application)
+
+La même logique vit dans `OrgData.getCirclePermissions(circle, role, memberId, governanceMode, isOrgMember, isOrgOwner)`, qui renvoie `canEditCircle`, `canEditRole`, `canEditMembers`, `canEditSubCircles` et `canEditSubCirclesParentLinks`. Le contexte du circle applique par-dessus un indicateur `editable` pour les contextes en lecture seule (aperçu, partage, brouillon en mémoire). L'interface ne propose que les actions autorisées par le serveur ; le serveur les applique indépendamment de l'interface.
+
+<Callout type="warning" title="Modifiez les deux couches ensemble">
+  Une permission est encodée deux fois. Quand vous changez une règle, mettez à jour la ou les clauses Hasura pour insert et update et la logique correspondante dans `OrgData`, puis vérifiez que les deux concordent.
+</Callout>
+
+## Accès API
+
+Les jetons d'accès utilisateur portent les permissions de l'utilisateur authentifié ; les appels API sont donc soumis aux mêmes règles que celles décrites ici. Voir [Intégrations personnalisées](/fr/developers/custom-integrations) pour l'authentification, et [Modes de gouvernance](/fr/docs/governance-modes) pour la vue côté utilisateur de ces règles.
