@@ -179,9 +179,17 @@ export function useDragNode(graph: Graph | undefined, node: NodeData) {
     if (dragNodes.current && !actionMoved) {
       dragNodes.current.forEach((d) => {
         setTimeout(() => {
-          d.element.style.translate = `${d.node.x}px ${d.node.y}px`
+          // Read the node's current layout position rather than the one
+          // captured at drag start. On a copy, the data updates and a
+          // re-layout builds new node objects, so the captured `d.node`
+          // holds a stale position. Using it here would override React's
+          // correct render when the action resolves faster than this reset.
+          const current = graph?.nodes.find((n) => n.data.id === d.node.data.id)
+          const x = current ? current.x : d.node.x
+          const y = current ? current.y : d.node.y
+          d.element.style.translate = `${x}px ${y}px`
           if (d.title) {
-            d.title.style.translate = `${d.node.x}px ${d.node.y}px`
+            d.title.style.translate = `${x}px ${y}px`
           }
         }, 0)
       })
