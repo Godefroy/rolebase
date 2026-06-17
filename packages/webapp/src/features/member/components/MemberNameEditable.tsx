@@ -1,4 +1,3 @@
-import { useHoverItemStyle } from '@/common/hooks/useHoverItemStyle'
 import {
   Editable,
   EditableInput,
@@ -26,7 +25,6 @@ export default function MemberNameEditable({
   const { t } = useTranslation()
   const { updateMember } = useOrgEditActions()
   const toast = useToast()
-  const hoverStyle = useHoverItemStyle()
 
   const [value, setValue] = useState(member.name)
 
@@ -80,7 +78,7 @@ export default function MemberNameEditable({
           fontWeight="bold"
           textAlign="center"
           cursor="pointer"
-          _hover={hoverStyle}
+          _hover={{ bg: 'bgItemHover' }}
           px={2}
           py={1}
           borderRadius="md"

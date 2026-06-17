@@ -1,7 +1,6 @@
 import Loading from '@/common/atoms/Loading'
 import ScrollableLayout from '@/common/atoms/ScrollableLayout'
 import { Title } from '@/common/atoms/Title'
-import { useHoverItemStyle } from '@/common/hooks/useHoverItemStyle'
 import { useOrgContext } from '@/org/contexts/OrgContext'
 import { usePathInOrg } from '@/org/hooks/usePathInOrg'
 import useSubscriptionData from '@/orgSubscription/hooks/useSubscriptionData'
@@ -45,7 +44,6 @@ export default function MembersPage() {
   const isAdmin = useOrgAdmin()
   const isOwner = useOrgOwner()
   const members = useOrgContext().orgData?.members
-  const hover = useHoverItemStyle()
   const subscriptionPath = usePathInOrg('subscription')
 
   // Invite modal
@@ -145,7 +143,7 @@ export default function MembersPage() {
         <Box maxW="2xl" my={10} px={{ base: 5, sm: 10 }}>
           {/* Member List */}
           {filteredMembers?.map((member) => (
-            <LinkBox key={member.id} px={2} py={1} _hover={hover}>
+            <LinkBox key={member.id} px={2} py={1} _hover={{ bg: 'bgItemHover' }}>
               <HStack>
                 <MemberLinkOverlay member={member} />
                 <MemberOrgRoleSelect member={member} size="sm" />

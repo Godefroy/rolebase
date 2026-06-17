@@ -1,7 +1,6 @@
 import { HStack, LinkBox, LinkBoxProps, LinkOverlay } from '@chakra-ui/react'
 import React from 'react'
 import { Link as ReachLink } from 'react-router'
-import { useHoverItemStyle } from '../hooks/useHoverItemStyle'
 
 interface Props extends LinkBoxProps {
   children: React.ReactNode
@@ -15,8 +14,6 @@ export default function ListItemWithButtons({
   onClick,
   ...linkBoxProps
 }: Props) {
-  const hover = useHoverItemStyle()
-
   return (
     <LinkBox
       mx={-2}
@@ -26,7 +23,7 @@ export default function ListItemWithButtons({
       minH="32px"
       alignItems="center"
       role="group"
-      _hover={hover}
+      _hover={{ bg: 'bgItemHover' }}
       {...linkBoxProps}
     >
       <LinkOverlay

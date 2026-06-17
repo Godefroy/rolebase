@@ -1,6 +1,5 @@
 import CircleByIdButton from '@/circle/components/CircleByIdButton'
 import useDateLocale from '@/common/hooks/useDateLocale'
-import { useHoverItemStyle } from '@/common/hooks/useHoverItemStyle'
 import { useNormalClickHandler } from '@/common/hooks/useNormalClickHandler'
 import MemberByIdAvatar from '@/member/components/MemberByIdAvatar'
 import useOrgMember from '@/member/hooks/useOrgMember'
@@ -52,7 +51,6 @@ const TaskItem = forwardRef<Props, 'div'>(
     ref
   ) => {
     const isMember = useOrgMember()
-    const hover = useHoverItemStyle()
     const updateTaskStatus = useUpdateTaskStatus()
     const dateLocale = useDateLocale()
 
@@ -76,7 +74,7 @@ const TaskItem = forwardRef<Props, 'div'>(
           boxShadow={isDragging ? 'lg' : 'none'}
           bg={isDragging ? 'gray.50' : undefined}
           _dark={{ bg: isDragging ? 'gray.700' : undefined }}
-          _hover={hover}
+          _hover={{ bg: 'bgItemHover' }}
           {...linkBoxProps}
           tabIndex={
             // Remove tabIndex because it's redondant with link

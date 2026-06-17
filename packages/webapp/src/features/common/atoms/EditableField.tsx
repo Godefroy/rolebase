@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next'
 import { EditIcon } from 'src/icons'
 import { fieldsGap } from '../../circle/components/CircleRole'
 import useEscKey from '../hooks/useEscKey'
-import { useHoverItemStyle } from '../hooks/useHoverItemStyle'
 
 interface Props extends Omit<BoxProps, 'value'> {
   label: string
@@ -31,7 +30,6 @@ export function EditableField({
   ...boxProps
 }: Props) {
   const { t } = useTranslation()
-  const hoverStyle = useHoverItemStyle()
 
   // State
   const [isEditing, setIsEditing] = useState(false)
@@ -108,7 +106,7 @@ export function EditableField({
                       top: '-4px',
                       bottom: '-4px',
                       zIndex: -1,
-                      ...hoverStyle,
+                      bg: 'bgItemHover',
                     },
                   }
                 : undefined

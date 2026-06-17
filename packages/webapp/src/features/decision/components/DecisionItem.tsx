@@ -1,5 +1,4 @@
 import CircleByIdButton from '@/circle/components/CircleByIdButton'
-import { useHoverItemStyle } from '@/common/hooks/useHoverItemStyle'
 import { useNormalClickHandler } from '@/common/hooks/useNormalClickHandler'
 import { usePathInOrg } from '@/org/hooks/usePathInOrg'
 import {
@@ -27,14 +26,13 @@ const DecisionItem = forwardRef<Props, 'div'>(
     const path = usePathInOrg(`decisions/${decision.id}`)
     const { isOpen, onOpen, onClose } = useDisclosure()
     const handleOpen = useNormalClickHandler(onOpen)
-    const hover = useHoverItemStyle()
 
     return (
       <>
         <LinkBox
           ref={ref}
           p={1}
-          _hover={hover}
+          _hover={{ bg: 'bgItemHover' }}
           {...linkBoxProps}
           tabIndex={
             // Remove tabIndex because it's redondant with link

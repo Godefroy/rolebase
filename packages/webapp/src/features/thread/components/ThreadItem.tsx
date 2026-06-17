@@ -1,5 +1,4 @@
 import CircleByIdButton from '@/circle/components/CircleByIdButton'
-import { useHoverItemStyle } from '@/common/hooks/useHoverItemStyle'
 import { useNormalClickHandler } from '@/common/hooks/useNormalClickHandler'
 import MemberByIdAvatar from '@/member/components/MemberByIdAvatar'
 import useOrgMember from '@/member/hooks/useOrgMember'
@@ -55,7 +54,6 @@ const ThreadItem = forwardRef<Props, 'div'>(
     const path = usePathInOrg(`threads/${thread.id}`)
     const { isOpen, onOpen, onClose } = useDisclosure()
     const handleOpen = useNormalClickHandler(onOpen)
-    const hover = useHoverItemStyle()
     const isMember = useOrgMember()
     const { orgData } = useOrgContext()
 
@@ -77,7 +75,7 @@ const ThreadItem = forwardRef<Props, 'div'>(
           boxShadow={isDragging ? 'lg' : 'none'}
           bg={isDragging ? 'gray.50' : undefined}
           _dark={{ bg: isDragging ? 'gray.700' : undefined }}
-          _hover={hover}
+          _hover={{ bg: 'bgItemHover' }}
           {...linkBoxProps}
           tabIndex={
             // Remove tabIndex because it's redundant with link

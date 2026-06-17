@@ -1,6 +1,5 @@
 import CircleByIdButton from '@/circle/components/CircleByIdButton'
 import useDateLocale from '@/common/hooks/useDateLocale'
-import { useHoverItemStyle } from '@/common/hooks/useHoverItemStyle'
 import { useNormalClickHandler } from '@/common/hooks/useNormalClickHandler'
 import { usePathInOrg } from '@/org/hooks/usePathInOrg'
 import {
@@ -48,7 +47,6 @@ const MeetingItem = forwardRef<Props, 'div'>(
     const path = usePathInOrg(`meetings/${meeting.id}`)
     const { isOpen, onOpen, onClose } = useDisclosure()
     const handleOpen = useNormalClickHandler(onOpen)
-    const hover = useHoverItemStyle()
     const dateLocale = useDateLocale()
     const startDate = new Date(meeting.startDate)
 
@@ -61,7 +59,7 @@ const MeetingItem = forwardRef<Props, 'div'>(
         <LinkBox
           ref={ref}
           p={1}
-          _hover={hover}
+          _hover={{ bg: 'bgItemHover' }}
           {...linkBoxProps}
           tabIndex={
             // Remove tabIndex because it's redondant with link

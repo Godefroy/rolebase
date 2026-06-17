@@ -114,6 +114,15 @@ const theme = extendTheme({
   shadows: {
     outline: `0 0 0 3px hsl(35 97% 50%)`,
   },
+  semanticTokens: {
+    colors: {
+      // Background of hovered list items, resolves automatically by color mode
+      bgItemHover: {
+        default: 'blackAlpha.50',
+        _dark: 'whiteAlpha.100',
+      },
+    },
+  },
   components: {
     Alert: {
       baseStyle: {
