@@ -8,7 +8,7 @@ dotenv.config({
 
 export default {
   port: 8888,
-  url: process.env.WEBAPP_URL || 'http://localhost:3000',
+  url: process.env.WEBAPP_URL || 'http://localhost:5175',
   backendUrl: process.env.BACKEND_URL || 'http://localhost:8888',
 
   defaultTimezone: 'Europe/Paris',

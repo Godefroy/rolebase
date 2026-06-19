@@ -1,11 +1,4 @@
 [global]
-[[global.environment]]
-name = 'WEBAPP_URL'
-value = '{{ secrets.WEBAPP_URL }}'
-
-[[global.environment]]
-name = 'BACKEND_URL'
-value = '{{ secrets.BACKEND_URL }}'
 
 [hasura]
 version = 'v2.48.10-ce'
@@ -13,8 +6,10 @@ adminSecret = '{{ secrets.HASURA_GRAPHQL_ADMIN_SECRET }}'
 webhookSecret = '{{ secrets.NHOST_WEBHOOK_SECRET }}'
 
 [[hasura.jwtSecrets]]
-type = 'HS256'
-key = '{{ secrets.HASURA_GRAPHQL_JWT_SECRET }}'
+type = 'RS256'
+key = '{{ secrets.NHOST_JWT_PUBLIC_KEY }}'
+signingKey = '{{ secrets.NHOST_JWT_PRIVATE_KEY }}'
+kid = '{{ secrets.NHOST_JWT_KID }}'
 
 [hasura.settings]
 corsDomain = ['*']
@@ -23,6 +18,9 @@ enableAllowList = false
 enableConsole = true
 enableRemoteSchemaPermissions = false
 enabledAPIs = ['metadata', 'graphql', 'pgdump', 'config']
+inferFunctionPermissions = true
+liveQueriesMultiplexedRefetchInterval = 1000
+stringifyNumericTypes = false
 
 [hasura.logs]
 level = 'warn'
@@ -30,40 +28,23 @@ level = 'warn'
 [hasura.events]
 httpPoolSize = 100
 
-[hasura.resources]
-replicas = 1
-
-[hasura.resources.compute]
-cpu = 500
-memory = 1536
-
-[hasura.resources.networking]
-[[hasura.resources.networking.ingresses]]
-fqdn = ['hasura.rolebase.io']
-
 [functions]
 [functions.node]
 version = 22
 
 [auth]
-version = '0.50.0'
+version = '0.49.1'
 
-[auth.resources]
-replicas = 1
-
-[auth.resources.compute]
-cpu = 250
-memory = 256
-
-[auth.resources.networking]
-[[auth.resources.networking.ingresses]]
-fqdn = ['auth.rolebase.io']
+[auth.elevatedPrivileges]
+mode = 'disabled'
 
 [auth.redirections]
-clientUrl = '{{ secrets.WEBAPP_URL }}'
+clientUrl = 'http://localhost:5175'
 
 [auth.signUp]
 enabled = true
+disableNewUsers = false
+disableAutoSignup = false
 
 [auth.user]
 [auth.user.roles]
@@ -72,10 +53,10 @@ allowed = ['user', 'me']
 
 [auth.user.locale]
 default = 'en'
-allowed = ['en', 'fr']
+allowed = ['en']
 
 [auth.user.gravatar]
-enabled = false
+enabled = true
 default = 'blank'
 rating = 'g'
 
@@ -95,12 +76,16 @@ expiresIn = 2592000
 enabled = false
 
 [auth.method.emailPasswordless]
-enabled = true
+enabled = false
+
+[auth.method.otp]
+[auth.method.otp.email]
+enabled = false
 
 [auth.method.emailPassword]
 hibpEnabled = false
-emailVerificationRequired = false
-passwordMinLength = 8
+emailVerificationRequired = true
+passwordMinLength = 9
 
 [auth.method.smsPasswordless]
 enabled = false
@@ -117,6 +102,10 @@ enabled = false
 enabled = false
 
 [auth.method.oauth.discord]
+enabled = false
+
+[auth.method.oauth.entraid]
+tenant = 'common'
 enabled = false
 
 [auth.method.oauth.facebook]
@@ -155,53 +144,69 @@ enabled = false
 [auth.method.webauthn]
 enabled = false
 
-[auth.method.webauthn.relyingParty]
-name = 'Rolebase'
-
 [auth.method.webauthn.attestation]
-timeout = 0
-
-[auth.method.otp.email]
-enabled = true
+timeout = 60000
 
 [auth.totp]
 enabled = false
-issuer = 'nhost'
+
+[auth.oauth2Provider]
+enabled = false
+
+[auth.oauth2Provider.accessToken]
+expiresIn = 900
+
+[auth.oauth2Provider.refreshToken]
+expiresIn = 2592000
+
+[auth.oauth2Provider.clientIdMetadataDocument]
+enabled = false
+
+[auth.misc]
+concealErrors = false
+
+[auth.rateLimit]
+[auth.rateLimit.emails]
+limit = 10
+interval = '1h'
+
+[auth.rateLimit.sms]
+limit = 10
+interval = '1h'
+
+[auth.rateLimit.bruteForce]
+limit = 10
+interval = '5m'
+
+[auth.rateLimit.signups]
+limit = 10
+interval = '5m'
+
+[auth.rateLimit.global]
+limit = 100
+interval = '1m'
+
+[auth.rateLimit.oauth2Server]
+limit = 100
+interval = '5m'
 
 [postgres]
 version = '14.20-20251217-1'
 
 [postgres.resources]
-replicas = 1
-enablePublicAccess = true
-
-[postgres.resources.compute]
-cpu = 1000
-memory = 2048
-
 [postgres.resources.storage]
-capacity = 10
+capacity = 1
 
 [provider]
-[provider.smtp]
-user = '{{ secrets.MAILJET_PUBIC_KEY }}'
-password = '{{ secrets.MAILJET_SMTP_PASSWORD }}'
-sender = 'noreply@rolebase.io'
-host = 'smtp-relay.brevo.com'
-port = 465
-secure = true
-method = 'PLAIN'
 
 [storage]
-version = '0.13.0'
-
-[storage.resources]
-replicas = 1
-
-[storage.resources.compute]
-cpu = 250
-memory = 256
+version = '0.14.0'
 
 [observability]
 [observability.grafana]
 adminPassword = '{{ secrets.GRAFANA_ADMIN_PASSWORD }}'
+
+[observability.grafana.alerting]
+enabled = false
+
+[observability.grafana.contacts]

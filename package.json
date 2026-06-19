@@ -32,6 +32,10 @@
     "eslint-plugin-storybook": "^0.6.13",
     "patch-package": "^8.0.0",
     "prettier": "^3.0.3",
-    "turbo": "^2.0.6"
+    "turbo": "^2.9.18"
+  },
+  "dependencies": {
+    "astro": "^6.4.8",
+    "chakra": "^0.0.3"
   }
 }

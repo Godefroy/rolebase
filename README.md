@@ -11,6 +11,7 @@ It's an open source SaaS that helps various organizations implement Holacracy, S
 Install npm dependencies in all packages:
 
 ```
+npm install -g turbo
 npm i
 ```
 
@@ -20,7 +21,7 @@ Rolebase's backend is built with [Nhost](https://nhost.io). Follow these steps t
 
 1.  Create an account on nhost.io : https://app.nhost.io.
 
-2.  Install Nhost CLI (https://docs.nhost.io/platform/overview/get-started-with-nhost-cli)
+2.  Install Nhost CLI (https://docs.nhost.io/getting-started/quickstart/cli)
 
 ```
 sudo curl -L https://raw.githubusercontent.com/nhost/cli/main/get.sh | bash
@@ -60,7 +61,7 @@ nhost up
 npm run dev
 ```
 
-3.  Open in browser: http://localhost:3000
+3.  Open in browser: http://localhost:5175
 
 ### Storybook
 
@@ -82,6 +83,13 @@ Rolebase uses [Mailjet](https://www.mailjet.com/) to send some of its mail.
 
    - `MAILJET_PUBIC_KEY` : API Key displayed by Mailjet upon account creation or when resetting secret tokens
    - `MAILJET_PRIVATE_KEY` : Secret Key displayed by Mailjet upon account creation or when resetting secret tokens
+
+-> dans .secrets ? ou dans .env ?
+
+ajouter aussi (sinon erreurs dans Hasura)
+
+BACKEND_URL="http://host.docker.internal:8888"
+WEBAPP_URL="http://localhost:5175"
 
 ### Algolia
 
