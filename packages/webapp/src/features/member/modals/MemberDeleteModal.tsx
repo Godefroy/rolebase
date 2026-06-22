@@ -83,8 +83,8 @@ export default function MemberDeleteModal({
             <Button ref={cancelRef} onClick={alertProps.onClose}>
               {t('common.cancel')}
             </Button>
-            <Button colorScheme="red" onClick={handleDelete} ml={3}>
-              {t('common.delete')}
+            <Button colorScheme="orange" onClick={handleDelete} ml={3}>
+              {t('common.archive')}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -634,8 +634,8 @@
     "heading": "Add Member"
   },
   "MemberDeleteModal": {
-    "heading": "Remove Member",
-    "info": "Are you sure you want to delete member <b>{{name}}</b>?",
+    "heading": "Archive Member",
+    "info": "Are you sure you want to archive member <b>{{name}}</b>?",
     "toast": "Member \"{{name}}\" archived"
   },
   "MemberEditModal": {
@@ -738,8 +738,11 @@
     "stats": {
       "active": "Active members",
       "invited": "Invited members",
-      "inactive": "Inactive members"
+      "inactive": "Uninvited members"
     },
+    "showArchived": "View archived members",
+    "hideArchived": "Hide archived members",
+    "noArchived": "No archived members",
     "encouragement": {
       "message": "Invite members to your organization to unlock the full potential of Rolebase!",
       "limitWarning": "You are currently on the free plan with a limit of {{limit}} active members.",

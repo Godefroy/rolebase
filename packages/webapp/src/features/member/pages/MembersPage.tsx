@@ -2,6 +2,7 @@ import Loading from '@/common/atoms/Loading'
 import ScrollableLayout from '@/common/atoms/ScrollableLayout'
 import { Title } from '@/common/atoms/Title'
 import { useOrgContext } from '@/org/contexts/OrgContext'
+import { useMembersSubscription } from '@gql'
 import { usePathInOrg } from '@/org/hooks/usePathInOrg'
 import useSubscriptionData from '@/orgSubscription/hooks/useSubscriptionData'
 import { useAlgoliaSearch } from '@/search/hooks/useAlgoliaSearch'
@@ -43,8 +44,17 @@ export default function MembersPage() {
   const { t } = useTranslation()
   const isAdmin = useOrgAdmin()
   const isOwner = useOrgOwner()
+  const orgId = useOrgContext().orgId
   const members = useOrgContext().orgData?.members
   const subscriptionPath = usePathInOrg('subscription')
+
+  // Archived members (loaded on demand)
+  const [showArchived, setShowArchived] = useState(false)
+  const { data: archivedData } = useMembersSubscription({
+    skip: !showArchived || !orgId,
+    variables: { orgId: orgId!, active: false },
+  })
+  const archivedMembers = archivedData?.member
 
   // Invite modal
   const {
@@ -172,6 +182,42 @@ export default function MembersPage() {
               <Text color="gray.500">{t('MembersPage.stats.inactive')}</Text>
             </Flex>
           </HStack>
+
+          {/* Archived members */}
+          <Box mt={2} ml={2}>
+            <Link
+              fontSize="sm"
+              color="blue.500"
+              cursor="pointer"
+              onClick={() => setShowArchived((show) => !show)}
+            >
+              {showArchived
+                ? t('MembersPage.hideArchived')
+                : t('MembersPage.showArchived')}
+            </Link>
+          </Box>
+
+          {showArchived &&
+            (archivedMembers && archivedMembers.length > 0 ? (
+              <Box mt={5}>
+                {archivedMembers.map((member) => (
+                  <LinkBox
+                    key={member.id}
+                    px={2}
+                    py={1}
+                    _hover={{ bg: 'bgItemHover' }}
+                  >
+                    <HStack>
+                      <MemberLinkOverlay member={member} />
+                    </HStack>
+                  </LinkBox>
+                ))}
+              </Box>
+            ) : (
+              <Text mt={2} ml={2} fontSize="sm" color="gray.500">
+                {t('MembersPage.noArchived')}
+              </Text>
+            ))}
 
           {/* Subscription info */}
           {isOwner && !orgSubscription.isActive && (

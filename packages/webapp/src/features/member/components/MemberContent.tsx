@@ -107,7 +107,7 @@ export default function MemberContent({
         <Box position="absolute" top={2} right={2}>
           {headerIcons}
           {isAdmin && editable && !isDraft && !isSelf && (
-            <ActionsMenu onDelete={deleteModal.onOpen} />
+            <ActionsMenu onArchive={deleteModal.onOpen} />
           )}
           <ModalCloseStaticButton onClose={onClose} />
         </Box>

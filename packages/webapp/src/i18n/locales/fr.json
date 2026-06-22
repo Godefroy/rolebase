@@ -668,8 +668,8 @@
     "heading": "Ajouter un membre"
   },
   "MemberDeleteModal": {
-    "heading": "Supprimer un membre",
-    "info": "Êtes-vous sûr(e) de vouloir supprimer le membre <b>{{name}}</b> ?",
+    "heading": "Archiver un membre",
+    "info": "Êtes-vous sûr(e) de vouloir archiver le membre <b>{{name}}</b> ?",
     "toast": "Membre « {{name}} » archivé"
   },
   "MemberEditModal": {
@@ -772,8 +772,11 @@
     "stats": {
       "active": "Membres actifs",
       "invited": "Membres invités",
-      "inactive": "Membres inactifs"
+      "inactive": "Membres non invités"
     },
+    "showArchived": "Voir les membres archivés",
+    "hideArchived": "Masquer les membres archivés",
+    "noArchived": "Aucun membre archivé",
     "encouragement": {
       "message": "Invitez des membres dans votre organisation pour exploiter tout le potentiel de Rolebase !",
       "limitWarning": "Vous êtes actuellement sur le plan gratuit avec une limite de {{limit}} membres actifs.",
