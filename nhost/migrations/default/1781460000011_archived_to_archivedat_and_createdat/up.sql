@@ -4,6 +4,34 @@
 -- constraints apply to active rows only, and recreate the dependent views.
 
 -- ============================================================================
+-- 0. Lock every modified table up front, in one deterministic statement, so the
+-- long backfills below never acquire a new table lock mid-transaction and
+-- deadlock with live reads (event triggers, cron, participants cache, ...).
+-- lock_timeout makes a contended start abort fast and retryable instead of
+-- hanging or being picked as the deadlock victim after the slow backfills.
+-- ============================================================================
+SET lock_timeout = '15s';
+LOCK TABLE
+  "public"."api_key",
+  "public"."circle",
+  "public"."circle_link",
+  "public"."circle_member",
+  "public"."decision",
+  "public"."meeting",
+  "public"."meeting_recurring",
+  "public"."meeting_template",
+  "public"."member",
+  "public"."org",
+  "public"."org_file",
+  "public"."org_subscription",
+  "public"."role",
+  "public"."task",
+  "public"."thread",
+  "public"."thread_activity",
+  "public"."user_app"
+  IN ACCESS EXCLUSIVE MODE;
+
+-- ============================================================================
 -- 1. Add `createdAt` columns
 -- ============================================================================
 
