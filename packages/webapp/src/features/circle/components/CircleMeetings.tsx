@@ -40,6 +40,7 @@ export default function CircleMeetings({ circleId }: Props) {
         {isMember && (
           <Button
             size="sm"
+            colorScheme="blue"
             leftIcon={<CreateIcon size={20} />}
             onClick={createModal.onOpen}
           >

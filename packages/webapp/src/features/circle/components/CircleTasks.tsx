@@ -43,6 +43,7 @@ export default function CircleTasks({ circleId }: Props) {
         {isMember && (
           <Button
             size="sm"
+            colorScheme="blue"
             leftIcon={<CreateIcon size={20} />}
             onClick={onCreateOpen}
           >

@@ -40,6 +40,7 @@ export default function CircleDecisions({ circleId }: Props) {
         <Button
           size="sm"
           mb={4}
+          colorScheme="blue"
           leftIcon={<CreateIcon size={20} />}
           onClick={editModal.onOpen}
         >
