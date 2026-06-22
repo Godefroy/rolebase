@@ -29,6 +29,8 @@ select_permissions:
   - role: user
     permission:
       columns:
+        - archivedAt
+        - createdAt
         - stepsConfig
         - title
         - id
@@ -43,6 +45,7 @@ update_permissions:
   - role: user
     permission:
       columns:
+        - archivedAt
         - stepsConfig
         - title
       filter:

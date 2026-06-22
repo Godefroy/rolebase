@@ -24,7 +24,10 @@ export default authedProcedure
       await deleteStripeSubscription(stripeSubscriptionId)
     }
 
-    await adminRequest(ARCHIVE_ORG, { orgId })
+    await adminRequest(ARCHIVE_ORG, {
+      orgId,
+      archivedAt: new Date().toISOString(),
+    })
 
     return orgId
   })
@@ -39,8 +42,8 @@ const GET_ORG_SUBSCRIPTION = gql(`
     }`)
 
 const ARCHIVE_ORG = gql(`
-  mutation archiveOrg($orgId: uuid!) {
-    update_org_by_pk(pk_columns: {id: $orgId}, _set: {archived: true}) {
+  mutation archiveOrg($orgId: uuid!, $archivedAt: timestamptz!) {
+    update_org_by_pk(pk_columns: {id: $orgId}, _set: {archivedAt: $archivedAt}) {
       id
     }
   }`)

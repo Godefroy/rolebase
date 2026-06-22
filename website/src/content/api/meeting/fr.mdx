@@ -18,7 +18,7 @@ category: 'meetings'
 | `endDate` | `Timestamp` | Date et heure de fin de la réunion |
 | `createdAt` | `Timestamp` | Date de création de la réunion |
 | `ended` | `Boolean` | Indique si la réunion est terminée (par défaut : false) |
-| `archived` | `Boolean` | Indique si la réunion est archivée (par défaut : false) |
+| `archivedAt` | `Timestamp` | Date d'archivage de la réunion ; null si actif |
 | `private` | `Boolean` | Indique si la réunion est privée (par défaut : false) |
 | `invitedReadonly` | `Boolean` | Indique si les membres invités sont en lecture seule (par défaut : false) |
 | `currentStepId` | `uuid` | ID de l'étape active actuelle (optionnel) |
@@ -46,7 +46,7 @@ category: 'meetings'
 
 ```graphql
 query GetMeetings($orgId: uuid!) {
-  meeting(where: { archived: { _eq: false }, orgId: { _eq: $orgId } }) {
+  meeting(where: { archivedAt: { _is_null: true }, orgId: { _eq: $orgId } }) {
     id
     title
     startDate

@@ -44,7 +44,7 @@ export class IndexMember extends IndexEntity<MemberFragment> {
     const { member } = await adminRequest(
       gql(`
         query GetMembersForSearch {
-          member(where: { archived: { _eq: false } }) {
+          member(where: { archivedAt: { _is_null: true } }) {
             ...MemberSearch
           }
         }

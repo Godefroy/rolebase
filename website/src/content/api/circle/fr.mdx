@@ -13,7 +13,8 @@ category: 'circles-roles'
 | `orgId` | `uuid` | Référence à l'organisation |
 | `roleId` | `uuid` | Référence au rôle associé à ce cercle |
 | `parentId` | `uuid` | Référence au cercle parent (optionnel, null pour les cercles de premier niveau) |
-| `archived` | `Boolean` | Indique si le cercle est archivé (par défaut : false) |
+| `archivedAt` | `Timestamp` | Date d'archivage du cercle ; null si actif |
+| `createdAt` | `Timestamp` | Date de création du cercle |
 
 ## Relations
 
@@ -104,23 +105,33 @@ mutation CreateCircle {
 }
 ```
 
-### Mettre à jour un cercle
+### Déplacer un cercle
+
+Le seul champ d'un cercle modifiable directement est son `parentId` (le déplacer sous un autre cercle).
 
 ```graphql
-mutation UpdateCircle {
+mutation MoveCircle {
   update_circle_by_pk(
     pk_columns: { id: "circle-id" }
-    _set: { archived: true }
+    _set: { parentId: "new-parent-circle-id" }
   ) {
     id
-    archived
+    parentId
   }
 }
 ```
 
+<Callout type="info" title="Archivage">
+  `archivedAt` n'est pas modifiable directement sur un cercle. L'archivage d'un
+  cercle est une opération imbriquée gérée par l'application : elle archive
+  ensemble le rôle, les membres, les rôles invités, les réunions, les réunions
+  récurrentes, les discussions, les tâches et les décisions de tout le
+  sous-arbre, et reste réversible depuis l'historique.
+</Callout>
+
 ## Permissions
 
-L'accès aux cercles suit les règles de l'organisation et de gouvernance. Lorsque `protectGovernance` est activé sur l'organisation, seuls les leaders de cercle peuvent modifier la structure des cercles.
+L'accès aux cercles suit le [`governanceMode`](/fr/docs/governance-modes) de l'organisation. En mode `Free`, tout membre peut modifier l'organigramme. En mode `Agile`, les leaders d'un cercle le modifient directement. En mode `Strict`, les changements de structure passent par des propositions, tandis que les propriétaires de l'organisation peuvent toujours modifier.
 
 <Callout type="info" title="Notes">
   Les cercles forment un arbre hiérarchique via la relation `parentId`. Chaque

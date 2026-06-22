@@ -1,5 +1,5 @@
 query AdminStats($dauSince: timestamptz!, $mauSince: timestamptz!) {
-  org_aggregate(where: { archived: { _eq: false } }) {
+  org_aggregate(where: { archivedAt: { _is_null: true } }) {
     aggregate {
       count
     }

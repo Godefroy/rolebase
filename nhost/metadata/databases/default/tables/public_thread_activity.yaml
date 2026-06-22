@@ -96,6 +96,7 @@ select_permissions:
   - role: user
     permission:
       columns:
+        - archivedAt
         - createdAt
         - data
         - id
@@ -130,6 +131,7 @@ update_permissions:
   - role: user
     permission:
       columns:
+        - archivedAt
         - data
       filter:
         _or:

@@ -2,6 +2,7 @@
 //   npx tsx scripts/testExportOrgChart.ts
 import { renderStaticGraphPage } from '@rolebase/graph/server'
 import { CirclesGraphViews } from '@rolebase/shared/model/graph'
+import { Governance_Mode_Enum } from '@rolebase/shared/gql'
 import { OrgData } from '@rolebase/shared/model/OrgData'
 import fs from 'fs'
 import path from 'path'
@@ -46,7 +47,7 @@ function buildOrg(breadth: number, depth: number, membersPerCircle: number): Org
   }
 
   makeCircle(null, 0, 0)
-  return new OrgData(circles, circleMembers, [], roles, members)
+  return new OrgData({ circles, circleMembers, circleLinks: [], roles, members, governanceMode: Governance_Mode_Enum.Strict })
 }
 
 async function main() {

@@ -20,7 +20,7 @@ export default function CircleDecisions({ circleId }: Props) {
 
   // Subscribe to decisions
   const { data, error, loading } = useCircleDecisionsSubscription({
-    variables: { circleId, archived: false },
+    variables: { circleId, active: true },
   })
   const decisions = data?.decision
 

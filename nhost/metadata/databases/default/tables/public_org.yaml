@@ -124,7 +124,7 @@ select_permissions:
   - role: user
     permission:
       columns:
-        - archived
+        - archivedAt
         - createdAt
         - defaultGraphView
         - governanceMode

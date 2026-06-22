@@ -8,14 +8,14 @@ subscription orgs($userId: uuid!) {
   member(
     where: {
       userId: { _eq: $userId }
-      archived: { _eq: false }
-      org: { archived: { _eq: false } }
+      archivedAt: { _is_null: true }
+      org: { archivedAt: { _is_null: true } }
     }
   ) {
     org {
       ...Org
       circles(
-        where: { parentId: { _is_null: true }, archived: { _eq: false } }
+        where: { parentId: { _is_null: true }, archivedAt: { _is_null: true } }
         limit: 1
       ) {
         ...CircleSummary

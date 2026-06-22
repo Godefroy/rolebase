@@ -15,6 +15,7 @@ category: 'threads'
 | `type` | `Thread_Activity_Type_Enum` | Type of activity: Message, Poll, Thread, Meeting, Task, Decision, MeetingNote, or ChangeStatus |
 | `data` | `JSON` | Activity content (format depends on type) |
 | `createdAt` | `timestamptz` | When the activity was created (defaults to current timestamp) |
+| `archivedAt` | `timestamptz` | When the activity was archived; null if active |
 | `refThreadId` | `uuid` | Optional reference to another thread |
 | `refMeetingId` | `uuid` | Optional reference to a meeting |
 | `refTaskId` | `uuid` | Optional reference to a task |

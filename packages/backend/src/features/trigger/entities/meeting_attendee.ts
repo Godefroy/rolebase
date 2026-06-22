@@ -40,12 +40,12 @@ export class IndexMeetingAttendee extends IndexEntity<MeetingAttendeeFragment> {
           member_by_pk(id: $memberId) {
             id
             name
-            archived
+            archivedAt
             user {
               email
               locale
               metadata
-              apps {
+              apps(where: { archivedAt: { _is_null: true } }) {
                 ...UserAppFull
               }
             }
@@ -113,7 +113,7 @@ export class IndexMeetingAttendee extends IndexEntity<MeetingAttendeeFragment> {
     for (const userApp of userApps) {
       try {
         const app = appFactory(userApp)
-        if (data.new && !meeting.archived) {
+        if (data.new && !meeting.archivedAt) {
           // Create/Update event
           await app.upsertMeetingEvent(
             app.transformMeetingToEvent(meeting, orgUrl, roleName, member.name)

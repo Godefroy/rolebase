@@ -151,7 +151,7 @@ const GET_MEETINGS = gql(`
       slug
       meetings(
         where: {
-          archived: { _eq: false }
+          archivedAt: { _is_null: true }
           meeting_attendees: { memberId: { _eq: $memberId } }
         }
         order_by: { startDate: asc }
@@ -163,7 +163,7 @@ const GET_MEETINGS = gql(`
           }
         }
       }
-      meetings_recurring {
+      meetings_recurring(where: { archivedAt: { _is_null: true } }) {
         ...MeetingRecurring
         meetings {
           recurringDate

@@ -11,15 +11,19 @@ import {
   useUpdateCircleMutation,
   useUpdateRoleMutation,
 } from '@gql'
+import useArchiveCircle from '@/circle/hooks/useArchiveCircle'
+import useRestoreCircle from '@/circle/hooks/useRestoreCircle'
 import { cancelLogChanges } from '@rolebase/shared/helpers/log/cancelLogChanges'
 import { detectRecentEntitiesChanges } from '@rolebase/shared/helpers/log/detectRecentEntitiesChanges'
-import { EntitiesMethods } from '@rolebase/shared/model/log'
+import { EntitiesMethods, LogDisplay, LogType } from '@rolebase/shared/model/log'
 import { useCallback } from 'react'
 import useCreateLog from './useCreateLog'
 
 export function useCancelLog(log: LogFragment) {
   const createLog = useCreateLog()
   const [cancelLog] = useCancelLogMutation()
+  const restoreCircle = useRestoreCircle()
+  const archiveCircle = useArchiveCircle()
 
   const [getCircle] = useGetCircleLazyQuery()
   const [updateCircle] = useUpdateCircleMutation()
@@ -33,7 +37,10 @@ export function useCancelLog(log: LogFragment) {
   const methods: EntitiesMethods = {
     circles: {
       async get(id: string) {
-        const { data } = await getCircle({ variables: { id } })
+        const { data } = await getCircle({
+          variables: { id },
+          fetchPolicy: 'network-only',
+        })
         return data?.circle_by_pk || undefined
       },
       async update(id, values) {
@@ -45,7 +52,10 @@ export function useCancelLog(log: LogFragment) {
     },
     circlesMembers: {
       async get(id: string) {
-        const { data } = await getCircleMember({ variables: { id } })
+        const { data } = await getCircleMember({
+          variables: { id },
+          fetchPolicy: 'network-only',
+        })
         return data?.circle_member_by_pk || undefined
       },
       async update(id, values) {
@@ -59,7 +69,10 @@ export function useCancelLog(log: LogFragment) {
     },
     circlesLinks: {
       async get(id: string) {
-        const { data } = await getCircleLink({ variables: { id } })
+        const { data } = await getCircleLink({
+          variables: { id },
+          fetchPolicy: 'network-only',
+        })
         return data?.circle_link_by_pk || undefined
       },
       async update(id, values) {
@@ -71,7 +84,10 @@ export function useCancelLog(log: LogFragment) {
     },
     roles: {
       async get(id: string) {
-        const { data } = await getRole({ variables: { id } })
+        const { data } = await getRole({
+          variables: { id },
+          fetchPolicy: 'network-only',
+        })
         return data?.role_by_pk || undefined
       },
       async update(id, values) {
@@ -92,6 +108,24 @@ export function useCancelLog(log: LogFragment) {
 
   // Cancel log
   const cancel = useCallback(async () => {
+    const display = log.display as LogDisplay
+
+    // Circle archive/create cascade to the whole subtree server-side, so undo
+    // them through the dedicated routes (no client write to circle.archivedAt),
+    // not the partial entity revert below.
+    if (display.type === LogType.CircleArchive) {
+      // Restore the subtree; this also cancels the archive log.
+      await restoreCircle(display.id)
+      return
+    }
+    if (display.type === LogType.CircleCreate) {
+      // Undo a circle creation/copy = archive the created subtree (logs its own
+      // CircleArchive entry), then mark this creation log cancelled.
+      await archiveCircle(display.id)
+      await cancelLog({ variables: { id: log.id } })
+      return
+    }
+
     // Revert changes
     const changes = await cancelLogChanges(log, methods)
 
@@ -115,7 +149,7 @@ export function useCancelLog(log: LogFragment) {
           }
         : {}),
     })
-  }, [log])
+  }, [log, restoreCircle, archiveCircle, cancelLog])
 
   return {
     hasChanged,

@@ -34,15 +34,7 @@ export default authedProcedure
     if (flat.circles.length === 0) {
       throw new Error('Org circles not found')
     }
-    const { circleMembers, circleLinks, roles, members } = flat
-
-    let orgData = new OrgData(
-      flat.circles,
-      circleMembers,
-      circleLinks,
-      roles,
-      members
-    )
+    let orgData = new OrgData(flat)
 
     // Restrict to the selected circle (as root) and its descendants. OrgData
     // ignores circle members/links whose circle isn't kept, so no extra filter.
@@ -55,7 +47,7 @@ export default authedProcedure
         { ...circle, parentId: null },
         ...orgData.descendantsOf(circleId),
       ]
-      orgData = new OrgData(circles, circleMembers, circleLinks, roles, members)
+      orgData = new OrgData({ ...flat, circles })
     }
 
     // Render the org chart in a headless browser

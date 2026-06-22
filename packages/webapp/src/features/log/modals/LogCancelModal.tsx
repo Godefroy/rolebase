@@ -29,9 +29,14 @@ import { useCancelLog } from '../hooks/useCancelLog'
 
 interface Props extends UseModalProps {
   log: LogFragment
+  onCancelled?(): void
 }
 
-export default function LogCancelModal({ log, ...modalProps }: Props) {
+export default function LogCancelModal({
+  log,
+  onCancelled,
+  ...modalProps
+}: Props) {
   const { t } = useTranslation()
   const toast = useToast()
   const { hasChanged, cancel } = useCancelLog(log)
@@ -45,6 +50,7 @@ export default function LogCancelModal({ log, ...modalProps }: Props) {
   // Cancel log
   const handleCancelLog = async () => {
     await cancel()
+    onCancelled?.()
     modalProps.onClose()
 
     toast({

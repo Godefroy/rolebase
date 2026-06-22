@@ -1,7 +1,7 @@
 fragment Member on member {
   id
   orgId
-  archived
+  archivedAt
   name
   description
   pictureFileId

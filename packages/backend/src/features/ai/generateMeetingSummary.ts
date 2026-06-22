@@ -141,6 +141,7 @@ const GET_THREADS = gql(`
       activities(
         where: {
           _and: { type: { _eq: MeetingNote }, refMeetingId: { _eq: $meetingId } }
+          archivedAt: { _is_null: true }
         }
       ) {
         type

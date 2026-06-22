@@ -5,6 +5,7 @@ import type {
   MemberFragment,
   RoleFragment,
 } from '@rolebase/shared/gql'
+import { Governance_Mode_Enum } from '@rolebase/shared/gql'
 import { OrgData } from '@rolebase/shared/model/OrgData'
 
 // Static, backend-free example organizations used by the website islands:
@@ -66,7 +67,7 @@ const ROLE_SPECS: RoleSpec[] = [
 
 const ROLE_BASE = {
   orgId: ORG_ID,
-  archived: false,
+  archivedAt: null,
   base: false,
   purpose: '',
   domain: '',
@@ -143,7 +144,7 @@ function buildMembers(): MemberFragment[] {
         inviteDate: null,
         // Current member is an org owner so the demo can edit any member.
         role: m.id === CURRENT_MEMBER_ID ? ('Owner' as MemberFragment['role']) : null,
-        archived: false,
+        archivedAt: null,
       }) as MemberFragment
   )
 }
@@ -207,7 +208,7 @@ function buildCircles(): {
       circleId,
       memberId,
       createdAt: now,
-      archived: false,
+      archivedAt: null,
     } as CircleMemberFragment)
   }
 
@@ -217,7 +218,7 @@ function buildCircles(): {
       orgId: ORG_ID,
       roleId: spec.roleId,
       parentId: spec.parentId,
-      archived: false,
+      archivedAt: null,
     } as CircleFragment)
 
     for (const memberId of spec.members ?? []) addMember(spec.id, memberId)
@@ -229,7 +230,7 @@ function buildCircles(): {
         orgId: ORG_ID,
         roleId: 'role-leader',
         parentId: spec.id,
-        archived: false,
+        archivedAt: null,
       } as CircleFragment)
       addMember(leaderCircleId, spec.leader)
     }
@@ -255,6 +256,7 @@ export interface DemoFragments {
   circleLinks: CircleLinkFragment[]
   roles: RoleFragment[]
   members: MemberFragment[]
+  governanceMode: Governance_Mode_Enum
 }
 
 // Raw fragments for a demo org (used to seed the editable proposal draft).
@@ -272,12 +274,18 @@ export function getDemoFragments(
     circleMembers = circleMembers.filter((cm) => keptCircleIds.has(cm.circleId))
   }
 
-  return { circles, circleMembers, circleLinks: [], roles, members }
+  // Free governance so the demo is fully editable by the current member.
+  return {
+    circles,
+    circleMembers,
+    circleLinks: [],
+    roles,
+    members,
+    governanceMode: Governance_Mode_Enum.Free,
+  }
 }
 
 // Indexed OrgData for a demo org (used by the read-only graph view).
 export function getDemoOrgData(key: DemoOrgKey, texts: DemoTexts): OrgData {
-  const { circles, circleMembers, circleLinks, roles, members } =
-    getDemoFragments(key, texts)
-  return new OrgData(circles, circleMembers, circleLinks, roles, members)
+  return new OrgData(getDemoFragments(key, texts))
 }

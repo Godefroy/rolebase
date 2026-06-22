@@ -13,6 +13,8 @@ category: 'meetings'
 | `orgId` | `uuid` | Reference to the organization |
 | `title` | `String` | Title of the template |
 | `stepsConfig` | `[meeting_step_config]` | Array of step configurations defining the meeting structure |
+| `createdAt` | `Timestamp` | When the template was created |
+| `archivedAt` | `Timestamp` | When the template was archived; null if active |
 
 ## Relationships
 
@@ -90,11 +92,16 @@ mutation updateMeetingTemplate($id: uuid!) {
 }
 ```
 
-### Delete a Meeting Template
+### Archive a Meeting Template
+
+Templates are archived (soft-deleted) by setting `archivedAt`, not physically deleted.
 
 ```graphql
-mutation deleteMeetingTemplate($id: uuid!) {
-  delete_meeting_template_by_pk(id: $id) {
+mutation archiveMeetingTemplate($id: uuid!) {
+  update_meeting_template_by_pk(
+    pk_columns: { id: $id }
+    _set: { archivedAt: "2024-01-01T00:00:00Z" }
+  ) {
     id
   }
 }

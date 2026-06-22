@@ -103,7 +103,7 @@ export default function MeetingsPage() {
       toDate: datesRange?.[1].toISOString()!,
       filters: [
         {
-          archived: { _eq: false },
+          archivedAt: { _is_null: true },
         },
         ...(circleId ? [{ circleId: { _eq: circleId } }] : []),
         ...(memberId

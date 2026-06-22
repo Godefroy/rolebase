@@ -29,7 +29,7 @@ export default function TaskDeleteModal({
   const [archiveTask] = useArchiveTaskMutation()
 
   const handleDelete = async () => {
-    await archiveTask({ variables: { id: task.id } })
+    await archiveTask({ variables: { id: task.id, archivedAt: new Date().toISOString() } })
     onDelete?.()
     alertProps.onClose()
   }

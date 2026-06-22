@@ -18,7 +18,8 @@ category: 'circles-roles'
 | `checklist` | `String` | Liste de vérification des responsabilités récurrentes |
 | `indicators` | `String` | Indicateurs de performance à suivre |
 | `notes` | `String` | Notes supplémentaires |
-| `archived` | `Boolean` | Indique si le rôle est archivé (par défaut : false) |
+| `archivedAt` | `Timestamp` | Date d'archivage du rôle ; null si actif |
+| `createdAt` | `Timestamp` | Date de création du rôle |
 | `base` | `Boolean` | Indique si c'est un rôle de base (par défaut : false) |
 | `singleMember` | `Boolean` | Indique si le rôle ne peut avoir qu'un seul membre (par défaut : false) |
 | `parentLink` | `Boolean` | Indique si le rôle peut être lié aux cercles parents (par défaut : false) |
@@ -112,7 +113,7 @@ mutation UpdateRole {
 
 - **Consultation** — Tous les membres de l'organisation peuvent consulter les rôles
 - **Création** — Les propriétaires peuvent créer tous les rôles. Les administrateurs et membres peuvent créer les rôles non-base
-- **Modification** — Les propriétaires peuvent modifier tous les rôles. Pour les rôles non-base : si l'organisation a `protectGovernance` désactivé, les administrateurs et membres peuvent les modifier. Les leaders de cercle peuvent également modifier les rôles au sein de leurs cercles
+- **Modification** — Les propriétaires peuvent modifier tous les rôles. Pour les rôles non-base, l'accès dépend du [`governanceMode`](/fr/docs/governance-modes) de l'organisation : en mode `Free`, les administrateurs et membres peuvent les modifier ; en mode `Agile`, les leaders du cercle le peuvent ; en mode `Strict`, les changements de structure passent par des propositions
 - **Suppression** — Uniquement disponible via l'API admin Hasura
 
 <Callout type="info" title="Notes">

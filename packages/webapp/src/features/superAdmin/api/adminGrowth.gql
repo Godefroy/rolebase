@@ -1,6 +1,6 @@
 query AdminGrowth($since: timestamptz!) {
   org(
-    where: { createdAt: { _gte: $since }, archived: { _eq: false } }
+    where: { createdAt: { _gte: $since }, archivedAt: { _is_null: true } }
     order_by: { createdAt: asc }
   ) {
     createdAt
@@ -12,7 +12,7 @@ query AdminGrowth($since: timestamptz!) {
     createdAt
   }
   org_aggregate(
-    where: { createdAt: { _lt: $since }, archived: { _eq: false } }
+    where: { createdAt: { _lt: $since }, archivedAt: { _is_null: true } }
   ) {
     aggregate {
       count

@@ -4,7 +4,7 @@ import { Governance_Mode_Enum, OrgFragment } from '../gql'
 export const org: OrgFragment = {
   id: 'org-1',
   name: 'SuperOrga',
-  archived: false,
+  archivedAt: null,
   createdAt: new Date().toISOString(),
   shareOrg: false,
   shareMembers: false,

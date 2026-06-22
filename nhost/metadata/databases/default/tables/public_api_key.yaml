@@ -19,6 +19,7 @@ select_permissions:
   - role: user
     permission:
       columns:
+        - archivedAt
         - createdAt
         - id
         - name
@@ -32,6 +33,7 @@ update_permissions:
   - role: user
     permission:
       columns:
+        - archivedAt
         - name
       filter:
         userId:

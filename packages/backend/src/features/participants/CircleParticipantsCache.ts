@@ -8,7 +8,7 @@ export default class CircleParticipantsCache {
         query getAllParticipantsForRecompute {
           circle_participant(where: {
             circle: {
-              archived: { _eq: false }
+              archivedAt: { _is_null: true }
             }
           }) {
             circleId
@@ -27,7 +27,7 @@ export default class CircleParticipantsCache {
           circle_participant(where: {
             circle: {
               orgId: { _eq: $orgId },
-              archived: { _eq: false }
+              archivedAt: { _is_null: true }
             }
           }) {
             circleId

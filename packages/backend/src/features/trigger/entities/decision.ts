@@ -43,7 +43,7 @@ export class IndexDecision extends IndexEntity<DecisionFragment> {
     const { decision } = await adminRequest(
       gql(`
         query GetDecisionsForSearch {
-          decision(where: { archived: { _eq: false } }) {
+          decision(where: { archivedAt: { _is_null: true } }) {
             ...DecisionSearch
           }
         }

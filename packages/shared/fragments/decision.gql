@@ -5,7 +5,7 @@ fragment Decision on decision {
   memberId
   title
   description
-  archived
+  archivedAt
   createdAt
   private
 }

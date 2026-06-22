@@ -1,9 +1,15 @@
 import { applyEntitiesChanges } from '@rolebase/shared/helpers/log/applyEntitiesChanges'
 import { resolveProposal } from '@rolebase/shared/helpers/resolveProposal'
-import { EntitiesApplyMethods } from '@rolebase/shared/model/log'
+import {
+  EntitiesApplyMethods,
+  LogDisplay,
+  LogType,
+} from '@rolebase/shared/model/log'
 import { ProposalVoteValue } from '@rolebase/shared/model/proposal'
 import { gql, Thread_Activity_Type_Enum } from '../../gql'
 import { adminRequest } from '../../utils/adminRequest'
+import { loadOrgData } from '../org/loadOrgData'
+import { performArchiveCircle } from '../circle/utils/performArchiveCircle'
 import { LoadedProposal } from './loadProposal'
 
 const GET_AUTHOR_MEMBER = gql(`
@@ -12,7 +18,7 @@ const GET_AUTHOR_MEMBER = gql(`
       where: {
         orgId: { _eq: $orgId }
         userId: { _eq: $userId }
-        archived: { _eq: false }
+        archivedAt: { _is_null: true }
       }
       limit: 1
     ) {
@@ -132,7 +138,7 @@ const dbMethods: EntitiesApplyMethods = {
           orgId: data.orgId,
           roleId: data.roleId,
           parentId: data.parentId,
-          archived: data.archived,
+          archivedAt: data.archivedAt,
         },
       })
     },
@@ -222,8 +228,36 @@ export async function applyResolution(loaded: LoadedProposal): Promise<void> {
     })
     decisionId = decision.insert_decision_one?.id ?? null
 
+    // Load the org data once (not per log) when the proposal archives a circle,
+    // since the archive cascade needs it and loading is intensive.
+    const archivesCircle = data.logs.some(
+      (log) => (log.display as LogDisplay).type === LogType.CircleArchive
+    )
+    const orgData =
+      archivesCircle && author ? await loadOrgData(loaded.orgId) : undefined
+
     // Apply each prepared change and record a real log linked to the decision
     for (const log of data.logs) {
+      const display = log.display as LogDisplay
+
+      // Archiving a circle must run the full nested cascade (members, links,
+      // meetings, recurring, threads, tasks, decisions), not just replay the
+      // logged circle/role updates, so route it through the shared archive path.
+      if (display.type === LogType.CircleArchive && author && orgData) {
+        await performArchiveCircle({
+          orgData,
+          orgId: loaded.orgId,
+          circleId: display.id,
+          author: {
+            userId: loaded.authorUserId,
+            memberId: author.id,
+            memberName: author.name,
+          },
+          decisionId,
+        })
+        continue
+      }
+
       await applyEntitiesChanges(log.changes, dbMethods)
       await adminRequest(INSERT_LOG, {
         values: {

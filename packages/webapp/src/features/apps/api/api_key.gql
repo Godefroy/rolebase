@@ -1,5 +1,5 @@
 subscription apiKeys($userId: uuid!) {
-  api_key(where: { userId: { _eq: $userId } }) {
+  api_key(where: { userId: { _eq: $userId }, archivedAt: { _is_null: true } }) {
     ...ApiKey
   }
 }
@@ -16,8 +16,11 @@ mutation renameApiKey($id: uuid!, $name: String!) {
   }
 }
 
-mutation deleteApiKey($id: uuid!) {
-  delete_api_key_by_pk(id: $id) {
+mutation archiveApiKey($id: uuid!, $archivedAt: timestamptz!) {
+  update_api_key_by_pk(
+    pk_columns: { id: $id }
+    _set: { archivedAt: $archivedAt }
+  ) {
     id
   }
 }

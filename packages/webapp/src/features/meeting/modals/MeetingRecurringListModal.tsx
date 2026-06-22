@@ -42,9 +42,12 @@ export default function MeetingRecurringListModal({
   const { data, loading, error } = useMeetingRecurringsSubscription({
     skip: !orgId,
     variables: {
-      where: circleId
-        ? { circleId: { _eq: circleId } }
-        : { orgId: { _eq: orgId } },
+      where: {
+        archivedAt: { _is_null: true },
+        ...(circleId
+          ? { circleId: { _eq: circleId } }
+          : { orgId: { _eq: orgId } }),
+      },
     },
   })
 

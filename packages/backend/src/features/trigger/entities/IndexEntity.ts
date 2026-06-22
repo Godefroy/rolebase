@@ -4,18 +4,18 @@ import { HasuraEvent } from '../../../utils/nhost'
 import getAlgoliaIndex from '../../search/utils/getAlgoliaClient'
 
 export abstract class IndexEntity<
-  Entity extends { id: string; archived?: boolean },
+  Entity extends { id: string; archivedAt?: string | null },
 > {
   protected index = getAlgoliaIndex()
 
   public async applyEvent(event: HasuraEvent<Entity>) {
     const { data, op } = event.event
     const id = data.new?.id ?? data.old?.id
-    const archived = data.new?.archived
+    const archivedAt = data.new?.archivedAt
 
     if (!id) throw new RestError(400, 'No id found in event')
 
-    if ((op === 'INSERT' || op === 'UPDATE') && !archived) {
+    if ((op === 'INSERT' || op === 'UPDATE') && !archivedAt) {
       const searchDoc = await this.getById(id)
       if (searchDoc) {
         // Insert or update object

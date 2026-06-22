@@ -16,7 +16,7 @@ category: 'other'
 | `title` | `String` | Titre de la décision |
 | `description` | `String` | Description détaillée de la décision (supporte le texte riche) |
 | `createdAt` | `Timestamp` | Date de création de la décision (par défaut : horodatage actuel) |
-| `archived` | `Boolean` | Indique si la décision est archivée (par défaut : false) |
+| `archivedAt` | `Timestamp` | Date d'archivage de la décision ; null si actif |
 | `private` | `Boolean` | Indique si la décision est privée (par défaut : false) |
 
 ## Relations
@@ -38,7 +38,7 @@ category: 'other'
 
 ```graphql
 query GetDecisions($orgId: uuid!) {
-  decision(where: { archived: { _eq: false }, orgId: { _eq: $orgId } }) {
+  decision(where: { archivedAt: { _is_null: true }, orgId: { _eq: $orgId } }) {
     id
     title
     description
@@ -73,7 +73,7 @@ query GetDecision($decisionId: uuid!) {
       name
     }
     private
-    archived
+    archivedAt
   }
 }
 ```
@@ -125,7 +125,7 @@ mutation UpdateDecision {
 mutation ArchiveDecision {
   update_decision_by_pk(
     pk_columns: { id: "decision-id" }
-    _set: { archived: true }
+    _set: { archivedAt: "2024-01-01T00:00:00Z" }
   ) {
     id
   }

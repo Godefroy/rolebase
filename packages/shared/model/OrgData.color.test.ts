@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { CircleFragment, RoleSummaryFragment } from '../gql'
+import { CircleFragment, Governance_Mode_Enum, RoleSummaryFragment } from '../gql'
 import { orgData } from '../mocks/circles'
 import { OrgData } from './OrgData'
 
@@ -21,7 +21,7 @@ const circle = (
   orgId: 'org-1',
   roleId,
   parentId,
-  archived: false,
+  archivedAt: null,
 })
 
 describe('OrgData getColor', () => {
@@ -36,13 +36,7 @@ describe('OrgData getColor', () => {
   })
 
   it('inherits the nearest ancestor hue', () => {
-    const data = new OrgData(
-      [circle('c-parent', 'role-parent'), circle('c-child', 'role-child', 'c-parent')],
-      [],
-      [],
-      [role('role-parent', 200), role('role-child', null)],
-      []
-    )
+    const data = new OrgData({ circles: [circle('c-parent', 'role-parent'), circle('c-child', 'role-child', 'c-parent')], circleMembers: [], circleLinks: [], roles: [role('role-parent', 200), role('role-child', null)], members: [], governanceMode: Governance_Mode_Enum.Free })
     expect(data.getColor('c-child')).toBe(200)
     expect(data.getColor('c-parent')).toBe(200)
   })

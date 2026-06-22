@@ -71,11 +71,11 @@ export default function ThreadContent({
 
   // Archive / unarchive
   const handleArchive = useCallback(
-    () => updateThread({ variables: { id, values: { archived: true } } }),
+    () => updateThread({ variables: { id, values: { archivedAt: new Date().toISOString() } } }),
     [id]
   )
   const handleUnarchive = useCallback(
-    () => updateThread({ variables: { id, values: { archived: false } } }),
+    () => updateThread({ variables: { id, values: { archivedAt: null } } }),
     [id]
   )
 
@@ -175,7 +175,7 @@ export default function ThreadContent({
                 )}
 
                 <Box>
-                  {canEdit && threadStatus && !thread?.archived && (
+                  {canEdit && threadStatus && !thread?.archivedAt && (
                     <ThreadStatusMenu
                       value={threadStatus}
                       onChange={setStatus}
@@ -183,7 +183,7 @@ export default function ThreadContent({
                   )}
                 </Box>
 
-                {thread?.archived && <Tag>{t('common.archived')}</Tag>}
+                {thread?.archivedAt && <Tag>{t('common.archived')}</Tag>}
 
                 {circle && <CircleButton circle={circle} />}
 
@@ -198,8 +198,8 @@ export default function ThreadContent({
                 <ActionsMenu
                   copyLinkUrl={`${settings.url}${path}`}
                   onEdit={editModal.onOpen}
-                  onDelete={!thread?.archived ? handleArchive : undefined}
-                  onUnarchive={thread?.archived ? handleUnarchive : undefined}
+                  onDelete={!thread?.archivedAt ? handleArchive : undefined}
+                  onUnarchive={thread?.archivedAt ? handleUnarchive : undefined}
                   ml={2}
                 />
               )}

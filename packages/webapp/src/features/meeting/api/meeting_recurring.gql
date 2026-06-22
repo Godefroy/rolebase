@@ -29,8 +29,11 @@ mutation updateMeetingRecurring(
   }
 }
 
-mutation deleteMeetingRecurring($id: uuid!) {
-  delete_meeting_recurring_by_pk(id: $id) {
+mutation archiveMeetingRecurring($id: uuid!, $archivedAt: timestamptz!) {
+  update_meeting_recurring_by_pk(
+    pk_columns: { id: $id }
+    _set: { archivedAt: $archivedAt }
+  ) {
     id
   }
 }

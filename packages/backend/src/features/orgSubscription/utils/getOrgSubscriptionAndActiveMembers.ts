@@ -19,7 +19,7 @@ const GET_ORG_SUB_AND_ACTIVE_MEMBERS = gql(`
         ...OrgSubscription
       }
       active_members: members_aggregate(where: {
-        archived: { _eq: false },
+        archivedAt: { _is_null: true },
         userId: { _is_null: false }
       }) {
         aggregate {
@@ -27,7 +27,7 @@ const GET_ORG_SUB_AND_ACTIVE_MEMBERS = gql(`
         }
       }
       invited_members: members_aggregate(where: {
-        archived: { _eq: false },
+        archivedAt: { _is_null: true },
         _and: [
           {
             userId: { _is_null: true },

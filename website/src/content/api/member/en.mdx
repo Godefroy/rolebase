@@ -13,7 +13,8 @@ category: 'org-members'
 | `orgId` | `uuid` | Reference to the organization |
 | `name` | `String` | Display name of the member |
 | `description` | `String` | Description or bio of the member |
-| `archived` | `Boolean` | Whether the member is archived (default: false) |
+| `archivedAt` | `Timestamp` | When the member was archived; null if active |
+| `createdAt` | `Timestamp` | When the member was created |
 | `picture` | `String` | URL of the member's profile picture (optional) |
 | `pictureFileId` | `uuid` | Reference to the stored profile picture file (optional) |
 | `userId` | `uuid` | Reference to the associated user account (optional) |

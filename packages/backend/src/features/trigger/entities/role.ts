@@ -29,7 +29,7 @@ export class IndexRole extends IndexEntity<RoleFragment> {
           query GetRoleCirclesForSearch($id: uuid!) {
             circle(where: {
               roleId: { _eq: $id },
-              archived: { _eq: false }
+              archivedAt: { _is_null: true }
             }) {
               ...CircleSearch
             }

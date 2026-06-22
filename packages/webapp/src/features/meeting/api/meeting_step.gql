@@ -12,7 +12,7 @@ query getPrevMeetingSteps(
   meeting(
     where: {
       startDate: { _lt: $beforeDate }
-      archived: { _eq: false }
+      archivedAt: { _is_null: true }
       circleId: { _eq: $circleId }
       steps: { stepConfigId: { _in: $stepsIds } }
     }

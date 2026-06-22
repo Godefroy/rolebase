@@ -22,7 +22,10 @@ export default class AbstractApp<SecretConfig, Config> {
   }
 
   public async uninstall() {
-    await adminRequest(DELETE_USER_APP, { id: this.userApp.id })
+    await adminRequest(ARCHIVE_USER_APP, {
+      id: this.userApp.id,
+      archivedAt: new Date().toISOString(),
+    })
   }
 
   protected async updateSecretConfig(values: Partial<SecretConfig>) {
@@ -58,9 +61,9 @@ const UPDATE_USER_APP = gql(`
   }
 `)
 
-const DELETE_USER_APP = gql(`
-  mutation deleteUserApp($id: uuid!) {
-    delete_user_app_by_pk(id: $id) {
+const ARCHIVE_USER_APP = gql(`
+  mutation archiveUserApp($id: uuid!, $archivedAt: timestamptz!) {
+    update_user_app_by_pk(pk_columns: { id: $id }, _set: { archivedAt: $archivedAt }) {
       id
     }
   }

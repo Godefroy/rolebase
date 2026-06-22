@@ -4,5 +4,5 @@ fragment CircleMember on circle_member {
   circleId
   memberId
   createdAt
-  archived
+  archivedAt
 }

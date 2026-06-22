@@ -1,7 +1,7 @@
 import { RoleFragment } from '../gql'
 
 export const defaultSeedRole = {
-  archived: false,
+  archivedAt: null,
   base: true,
   purpose: '',
   domain: '',

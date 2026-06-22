@@ -10,9 +10,9 @@ subscription role($id: uuid!) {
   }
 }
 
-subscription roles($orgId: uuid!, $archived: Boolean!) {
+subscription roles($orgId: uuid!, $active: Boolean!) {
   role(
-    where: { orgId: { _eq: $orgId }, archived: { _eq: $archived } }
+    where: { orgId: { _eq: $orgId }, archivedAt: { _is_null: $active } }
     order_by: { name: asc }
   ) {
     ...Role
@@ -31,8 +31,9 @@ mutation updateRole($id: uuid!, $values: role_set_input!) {
   }
 }
 
-mutation archiveRole($id: uuid!) {
-  update_role_by_pk(pk_columns: { id: $id }, _set: { archived: true }) {
+mutation archiveRole($id: uuid!, $archivedAt: timestamptz!) {
+  update_role_by_pk(pk_columns: { id: $id }, _set: { archivedAt: $archivedAt }) {
     id
+    archivedAt
   }
 }

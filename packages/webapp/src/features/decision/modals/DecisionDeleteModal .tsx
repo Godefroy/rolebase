@@ -29,7 +29,7 @@ export default function DecisionDeleteModal({
   const cancelRef = useRef<HTMLButtonElement>(null)
 
   const handleDelete = async () => {
-    await archiveDecision({ variables: { id: decision.id } })
+    await archiveDecision({ variables: { id: decision.id, archivedAt: new Date().toISOString() } })
     onDelete?.()
     alertProps.onClose()
   }

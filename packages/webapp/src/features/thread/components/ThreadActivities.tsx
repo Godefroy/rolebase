@@ -155,7 +155,7 @@ export default forwardRef(function ThreadActivities(
 
       {activities?.length === 0 &&
         !tmpMeetingNoteActivity &&
-        !thread?.archived && (
+        !thread?.archivedAt && (
           <Alert
             status="success"
             variant="subtle"

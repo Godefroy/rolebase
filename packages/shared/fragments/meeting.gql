@@ -18,7 +18,7 @@ fragment Meeting on meeting {
   ...MeetingSummary
   createdAt
   stepsConfig
-  archived
+  archivedAt
   videoConf
   recurringId
   recurringDate

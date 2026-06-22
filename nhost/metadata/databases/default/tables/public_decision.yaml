@@ -37,7 +37,7 @@ insert_permissions:
                   userId:
                     _eq: X-Hasura-User-Id
       columns:
-        - archived
+        - archivedAt
         - circleId
         - createdAt
         - description
@@ -49,7 +49,7 @@ select_permissions:
   - role: user
     permission:
       columns:
-        - archived
+        - archivedAt
         - circleId
         - createdAt
         - description
@@ -77,7 +77,7 @@ update_permissions:
   - role: user
     permission:
       columns:
-        - archived
+        - archivedAt
         - circleId
         - description
         - memberId

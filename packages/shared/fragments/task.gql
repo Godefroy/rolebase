@@ -5,7 +5,7 @@ fragment Task on task {
   memberId
   title
   description
-  archived
+  archivedAt
   createdAt
   dueDate
   status

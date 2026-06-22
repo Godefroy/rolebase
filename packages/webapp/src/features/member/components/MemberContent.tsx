@@ -132,7 +132,7 @@ export default function MemberContent({
 
           <MemberNameEditable member={member} isDisabled={!canEdit} mt={2} />
 
-          {member.archived ? (
+          {member.archivedAt ? (
             <Alert status="warning" borderRadius="md" maxW="sm" mt={3}>
               <AlertIcon />
               <Box flex="1">{t('MemberContent.archived')}</Box>

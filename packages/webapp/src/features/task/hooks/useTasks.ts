@@ -35,8 +35,9 @@ export function useTasks(
       orgId: orgId!,
       filters: [
         {
-          archived: {
-            _eq: filters?.archived === undefined ? false : filters.archived,
+          archivedAt: {
+            _is_null:
+              filters?.archived === undefined ? true : !filters.archived,
           },
         },
         {

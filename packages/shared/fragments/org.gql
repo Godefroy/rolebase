@@ -1,7 +1,7 @@
 fragment Org on org {
   id
   name
-  archived
+  archivedAt
   createdAt
   slug
   shareOrg
@@ -20,19 +20,19 @@ fragment OrgData on org {
   org_subscription {
     ...OrgSubscription
   }
-  circles(where: { archived: { _eq: false } }) {
+  circles(where: { archivedAt: { _is_null: true } }) {
     ...Circle
   }
-  circleMembers(where: { archived: { _eq: false } }) {
+  circleMembers(where: { archivedAt: { _is_null: true } }) {
     ...CircleMember
   }
-  circleLinks(where: { archived: { _eq: false } }) {
+  circleLinks(where: { archivedAt: { _is_null: true } }) {
     ...CircleLink
   }
-  roles(where: { archived: { _eq: false } }) {
+  roles(where: { archivedAt: { _is_null: true } }) {
     ...RoleSummary
   }
-  members(where: { archived: { _eq: false } }) {
+  members(where: { archivedAt: { _is_null: true } }) {
     ...Member
   }
 }

@@ -48,7 +48,7 @@ insert_permissions:
                           - role:
                               _eq: Owner
       columns:
-        - archived
+        - archivedAt
         - circleId
         - description
         - dueDate
@@ -61,7 +61,7 @@ select_permissions:
   - role: user
     permission:
       columns:
-        - archived
+        - archivedAt
         - circleId
         - createdAt
         - description
@@ -94,7 +94,7 @@ update_permissions:
   - role: user
     permission:
       columns:
-        - archived
+        - archivedAt
         - circleId
         - description
         - dueDate

@@ -58,7 +58,7 @@ export class IndexThread extends IndexEntity<ThreadFragment> {
     const { thread } = await adminRequest(
       gql(`
         query GetThreadsForSearch {
-          thread(where: { archived: { _eq: false } }) {
+          thread(where: { archivedAt: { _is_null: true } }) {
             ...ThreadSearch
           }
         }

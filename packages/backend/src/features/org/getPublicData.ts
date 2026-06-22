@@ -36,26 +36,26 @@ export default publicProcedure
 const GET_PUBLIC_DATA = gql(`
   query getPublicData($orgId: uuid!) {
     org_by_pk(id: $orgId) {
-      archived
+      archivedAt
       shareOrg
       shareMembers
-      circles(where: { archived: { _eq: false } }) {
+      circles(where: { archivedAt: { _is_null: true } }) {
         id
         orgId
         roleId
         parentId
-        members(where: { archived: { _eq: false } }) {
+        members(where: { archivedAt: { _is_null: true } }) {
           id
           memberId
         }
-        invitedCircleLinks(where: { archived: { _eq: false } }) {
+        invitedCircleLinks(where: { archivedAt: { _is_null: true } }) {
           id
           invitedCircle {
             id
           }
         }
       }
-      roles(where: { archived: { _eq: false } }) {
+      roles(where: { archivedAt: { _is_null: true } }) {
         id
         orgId
         base
@@ -65,7 +65,7 @@ const GET_PUBLIC_DATA = gql(`
         parentLink
         colorHue
       }
-      members(where: { archived: { _eq: false } }) {
+      members(where: { archivedAt: { _is_null: true } }) {
         id
         orgId
         name

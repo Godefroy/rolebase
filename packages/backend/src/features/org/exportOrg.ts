@@ -232,7 +232,7 @@ const GET_ORG_EXPORT_DATA = gql(`
         inviteEmail
         role
         description
-        archived
+        archivedAt
       }
       roles(order_by: {name: asc}) {
         id
@@ -245,13 +245,13 @@ const GET_ORG_EXPORT_DATA = gql(`
         notes
         singleMember
         base
-        archived
+        archivedAt
       }
       circles(order_by: {id: asc}) {
         id
         roleId
         parentId
-        archived
+        archivedAt
       }
       decisions(order_by: {createdAt: desc}) {
         id
@@ -260,7 +260,7 @@ const GET_ORG_EXPORT_DATA = gql(`
         circleId
         memberId
         createdAt
-        archived
+        archivedAt
       }
       tasks(order_by: {createdAt: desc}) {
         id
@@ -271,7 +271,7 @@ const GET_ORG_EXPORT_DATA = gql(`
         status
         dueDate
         createdAt
-        archived
+        archivedAt
       }
       threads(order_by: {createdAt: desc}) {
         id
@@ -280,7 +280,7 @@ const GET_ORG_EXPORT_DATA = gql(`
         initiatorMemberId
         status
         createdAt
-        archived
+        archivedAt
       }
       meetings(order_by: {startDate: desc}) {
         id
@@ -292,7 +292,7 @@ const GET_ORG_EXPORT_DATA = gql(`
         summary
         recurringId
         createdAt
-        archived
+        archivedAt
       }
       meetings_recurring(order_by: {createdAt: desc}) {
         id
@@ -313,7 +313,7 @@ const GET_ORG_EXPORT_DATA = gql(`
       circleId
       memberId
       createdAt
-      archived
+      archivedAt
     }
     circle_link(where: {hostCircle: {orgId: {_eq: $orgId}}}, order_by: {createdAt: asc}) {
       id

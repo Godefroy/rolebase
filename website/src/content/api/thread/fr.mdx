@@ -15,7 +15,7 @@ category: 'threads'
 | `initiatorMemberId` | `uuid` | Référence au membre qui a initié la discussion |
 | `title` | `String` | Titre de la discussion |
 | `createdAt` | `Timestamp` | Date de création de la discussion (par défaut : horodatage actuel) |
-| `archived` | `Boolean` | Indique si la discussion est archivée (par défaut : false) |
+| `archivedAt` | `Timestamp` | Date d'archivage de la discussion ; null si actif |
 | `pinned` | `Boolean` | Indique si la discussion est épinglée pour tout le monde, ce qui la place en premier dans les listes (par défaut : false) |
 | `private` | `Boolean` | Indique si la discussion est privée (par défaut : false) |
 | `status` | `Thread_Status_Enum` | Statut actuel de la discussion (ex. : Active, Preparation, Closed) |

@@ -1,3 +1,4 @@
+import { Governance_Mode_Enum } from '@rolebase/shared/gql'
 import { OrgData } from '@rolebase/shared/model/OrgData'
 import { describe, expect, it } from 'vitest'
 import { computeVisibleNodes } from '../src/core/culling'
@@ -49,7 +50,7 @@ function buildOrg(
   }
 
   makeCircle(null, 0, 0)
-  return new OrgData(circles, circleMembers, [], roles, members)
+  return new OrgData({ circles, circleMembers, circleLinks: [], roles, members, governanceMode: Governance_Mode_Enum.Strict })
 }
 
 describe('computeLayout', () => {

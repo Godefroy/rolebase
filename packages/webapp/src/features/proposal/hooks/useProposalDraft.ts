@@ -98,14 +98,7 @@ export default function useProposalDraft(
   const indexOrgData = useCallback(() => {
     const data = workingRef.current?.data
     orgDataRef.current = data
-      ? new OrgData(
-          data.circles,
-          data.circleMembers,
-          data.circleLinks,
-          data.roles,
-          data.members,
-          actingLeaderRef.current
-        )
+      ? new OrgData({ ...data, actingLeader: actingLeaderRef.current })
       : undefined
   }, [])
 

@@ -10,6 +10,7 @@ import CirclesGraph from '@/graph/CirclesGraph'
 import { GraphProvider } from '@/graph/contexts/GraphContext'
 import { CirclesGraphViews, GraphEvents } from '@/graph/types'
 import ReadonlyOrgProvider from '@/org/contexts/ReadonlyOrgProvider'
+import { Governance_Mode_Enum } from '@gql'
 import { OrgData } from '@rolebase/shared/model/OrgData'
 import { Box } from '@chakra-ui/react'
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
@@ -99,7 +100,7 @@ export default function OrgPage() {
       }))
     )
 
-    return new OrgData(circles, circleMembers, circleLinks, data.roles, members)
+    return new OrgData({ circles, circleMembers, circleLinks, roles: data.roles, members, governanceMode: Governance_Mode_Enum.Strict })
   }, [data, queryParams.orgId])
 
   // Selected circle & member

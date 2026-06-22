@@ -15,7 +15,9 @@ select_permissions:
   - role: user
     permission:
       columns:
+        - archivedAt
         - config
+        - createdAt
         - id
         - type
         - userId

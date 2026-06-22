@@ -76,7 +76,7 @@ select_permissions:
   - role: user
     permission:
       columns:
-        - archived
+        - archivedAt
         - circleId
         - createdAt
         - currentStepId
@@ -116,7 +116,7 @@ update_permissions:
   - role: user
     permission:
       columns:
-        - archived
+        - archivedAt
         - circleId
         - currentStepId
         - endDate
@@ -207,7 +207,7 @@ event_triggers:
           - endDate
           - ended
           - currentStepId
-          - archived
+          - archivedAt
           - circleId
           - videoConf
           - recurringId

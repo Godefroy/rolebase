@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import { Governance_Mode_Enum } from '../gql'
-import { orgData } from '../mocks/circles'
+import { circleMembers, circles, orgData } from '../mocks/circles'
+import { members } from '../mocks/members'
+import { roles } from '../mocks/roles'
+import { OrgData } from './OrgData'
 
 const { Free, Agile, Strict } = Governance_Mode_Enum
 
@@ -22,16 +25,10 @@ const perms = (
   isOrgMember = true,
   isOrgOwner = false
 ) => {
-  const circle = orgData.getCircle(circleId)!
-  const role = orgData.getRole(circle.roleId)!
-  return orgData.getCirclePermissions(
-    circle,
-    role,
-    memberId,
-    mode,
-    isOrgMember,
-    isOrgOwner
-  )
+  const data = new OrgData({ circles, circleMembers, circleLinks: [], roles, members, governanceMode: mode })
+  const circle = data.getCircle(circleId)!
+  const role = data.getRole(circle.roleId)!
+  return data.getCirclePermissions(circle, role, memberId, isOrgMember, isOrgOwner)
 }
 
 describe('OrgData permission helpers', () => {

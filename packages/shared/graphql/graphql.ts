@@ -118,6 +118,7 @@ export type String_Comparison_Exp = {
 /** Users API keys */
 export type Api_Key = {
   __typename?: 'api_key';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   createdAt: Scalars['timestamptz'];
   id: Scalars['uuid'];
   name: Scalars['String'];
@@ -154,6 +155,7 @@ export type Api_Key_Bool_Exp = {
   _and?: InputMaybe<Array<Api_Key_Bool_Exp>>;
   _not?: InputMaybe<Api_Key_Bool_Exp>;
   _or?: InputMaybe<Array<Api_Key_Bool_Exp>>;
+  archivedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
@@ -170,6 +172,7 @@ export enum Api_Key_Constraint {
 
 /** input type for inserting data into table "api_key" */
 export type Api_Key_Insert_Input = {
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
   name?: InputMaybe<Scalars['String']>;
@@ -181,6 +184,7 @@ export type Api_Key_Insert_Input = {
 /** aggregate max on columns */
 export type Api_Key_Max_Fields = {
   __typename?: 'api_key_max_fields';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['uuid']>;
   name?: Maybe<Scalars['String']>;
@@ -191,6 +195,7 @@ export type Api_Key_Max_Fields = {
 /** aggregate min on columns */
 export type Api_Key_Min_Fields = {
   __typename?: 'api_key_min_fields';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['uuid']>;
   name?: Maybe<Scalars['String']>;
@@ -216,6 +221,7 @@ export type Api_Key_On_Conflict = {
 
 /** Ordering options when selecting data from "api_key". */
 export type Api_Key_Order_By = {
+  archivedAt?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   name?: InputMaybe<Order_By>;
@@ -232,6 +238,8 @@ export type Api_Key_Pk_Columns_Input = {
 /** select columns of table "api_key" */
 export enum Api_Key_Select_Column {
   /** column name */
+  ArchivedAt = 'archivedAt',
+  /** column name */
   CreatedAt = 'createdAt',
   /** column name */
   Id = 'id',
@@ -245,6 +253,7 @@ export enum Api_Key_Select_Column {
 
 /** input type for updating data in table "api_key" */
 export type Api_Key_Set_Input = {
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
   name?: InputMaybe<Scalars['String']>;
@@ -262,6 +271,7 @@ export type Api_Key_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Api_Key_Stream_Cursor_Value_Input = {
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
   name?: InputMaybe<Scalars['String']>;
@@ -271,6 +281,8 @@ export type Api_Key_Stream_Cursor_Value_Input = {
 
 /** update columns of table "api_key" */
 export enum Api_Key_Update_Column {
+  /** column name */
+  ArchivedAt = 'archivedAt',
   /** column name */
   CreatedAt = 'createdAt',
   /** column name */
@@ -3876,11 +3888,12 @@ export type Bytea_Comparison_Exp = {
 /** columns and relationships of "circle" */
 export type Circle = {
   __typename?: 'circle';
-  archived: Scalars['Boolean'];
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   /** An array relationship */
   children: Array<Circle>;
   /** An aggregate relationship */
   children_aggregate: Circle_Aggregate;
+  createdAt: Scalars['timestamptz'];
   /** An array relationship */
   decisions: Array<Decision>;
   /** An aggregate relationship */
@@ -4161,23 +4174,7 @@ export type Circle_Aggregate = {
 };
 
 export type Circle_Aggregate_Bool_Exp = {
-  bool_and?: InputMaybe<Circle_Aggregate_Bool_Exp_Bool_And>;
-  bool_or?: InputMaybe<Circle_Aggregate_Bool_Exp_Bool_Or>;
   count?: InputMaybe<Circle_Aggregate_Bool_Exp_Count>;
-};
-
-export type Circle_Aggregate_Bool_Exp_Bool_And = {
-  arguments: Circle_Select_Column_Circle_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-  filter?: InputMaybe<Circle_Bool_Exp>;
-  predicate: Boolean_Comparison_Exp;
-};
-
-export type Circle_Aggregate_Bool_Exp_Bool_Or = {
-  arguments: Circle_Select_Column_Circle_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-  filter?: InputMaybe<Circle_Bool_Exp>;
-  predicate: Boolean_Comparison_Exp;
 };
 
 export type Circle_Aggregate_Bool_Exp_Count = {
@@ -4221,9 +4218,10 @@ export type Circle_Bool_Exp = {
   _and?: InputMaybe<Array<Circle_Bool_Exp>>;
   _not?: InputMaybe<Circle_Bool_Exp>;
   _or?: InputMaybe<Array<Circle_Bool_Exp>>;
-  archived?: InputMaybe<Boolean_Comparison_Exp>;
+  archivedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   children?: InputMaybe<Circle_Bool_Exp>;
   children_aggregate?: InputMaybe<Circle_Aggregate_Bool_Exp>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   decisions?: InputMaybe<Decision_Bool_Exp>;
   decisions_aggregate?: InputMaybe<Decision_Aggregate_Bool_Exp>;
   hostCircleLinks?: InputMaybe<Circle_Link_Bool_Exp>;
@@ -4261,8 +4259,9 @@ export enum Circle_Constraint {
 
 /** input type for inserting data into table "circle" */
 export type Circle_Insert_Input = {
-  archived?: InputMaybe<Scalars['Boolean']>;
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   children?: InputMaybe<Circle_Arr_Rel_Insert_Input>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
   decisions?: InputMaybe<Decision_Arr_Rel_Insert_Input>;
   hostCircleLinks?: InputMaybe<Circle_Link_Arr_Rel_Insert_Input>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -4427,7 +4426,7 @@ export type Circle_Leader_Stream_Cursor_Value_Input = {
 /** Members that represent a circle in another circle */
 export type Circle_Link = {
   __typename?: 'circle_link';
-  archived: Scalars['Boolean'];
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   circleId: Scalars['uuid'];
   createdAt: Scalars['timestamptz'];
   /** An object relationship */
@@ -4447,23 +4446,7 @@ export type Circle_Link_Aggregate = {
 };
 
 export type Circle_Link_Aggregate_Bool_Exp = {
-  bool_and?: InputMaybe<Circle_Link_Aggregate_Bool_Exp_Bool_And>;
-  bool_or?: InputMaybe<Circle_Link_Aggregate_Bool_Exp_Bool_Or>;
   count?: InputMaybe<Circle_Link_Aggregate_Bool_Exp_Count>;
-};
-
-export type Circle_Link_Aggregate_Bool_Exp_Bool_And = {
-  arguments: Circle_Link_Select_Column_Circle_Link_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-  filter?: InputMaybe<Circle_Link_Bool_Exp>;
-  predicate: Boolean_Comparison_Exp;
-};
-
-export type Circle_Link_Aggregate_Bool_Exp_Bool_Or = {
-  arguments: Circle_Link_Select_Column_Circle_Link_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-  filter?: InputMaybe<Circle_Link_Bool_Exp>;
-  predicate: Boolean_Comparison_Exp;
 };
 
 export type Circle_Link_Aggregate_Bool_Exp_Count = {
@@ -4507,7 +4490,7 @@ export type Circle_Link_Bool_Exp = {
   _and?: InputMaybe<Array<Circle_Link_Bool_Exp>>;
   _not?: InputMaybe<Circle_Link_Bool_Exp>;
   _or?: InputMaybe<Array<Circle_Link_Bool_Exp>>;
-  archived?: InputMaybe<Boolean_Comparison_Exp>;
+  archivedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   circleId?: InputMaybe<Uuid_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   hostCircle?: InputMaybe<Circle_Bool_Exp>;
@@ -4527,7 +4510,7 @@ export enum Circle_Link_Constraint {
 
 /** input type for inserting data into table "circle_link" */
 export type Circle_Link_Insert_Input = {
-  archived?: InputMaybe<Scalars['Boolean']>;
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   circleId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   hostCircle?: InputMaybe<Circle_Obj_Rel_Insert_Input>;
@@ -4540,6 +4523,7 @@ export type Circle_Link_Insert_Input = {
 /** aggregate max on columns */
 export type Circle_Link_Max_Fields = {
   __typename?: 'circle_link_max_fields';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   circleId?: Maybe<Scalars['uuid']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['uuid']>;
@@ -4549,6 +4533,7 @@ export type Circle_Link_Max_Fields = {
 
 /** order by max() on columns of table "circle_link" */
 export type Circle_Link_Max_Order_By = {
+  archivedAt?: InputMaybe<Order_By>;
   circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -4559,6 +4544,7 @@ export type Circle_Link_Max_Order_By = {
 /** aggregate min on columns */
 export type Circle_Link_Min_Fields = {
   __typename?: 'circle_link_min_fields';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   circleId?: Maybe<Scalars['uuid']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['uuid']>;
@@ -4568,6 +4554,7 @@ export type Circle_Link_Min_Fields = {
 
 /** order by min() on columns of table "circle_link" */
 export type Circle_Link_Min_Order_By = {
+  archivedAt?: InputMaybe<Order_By>;
   circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -4593,7 +4580,7 @@ export type Circle_Link_On_Conflict = {
 
 /** Ordering options when selecting data from "circle_link". */
 export type Circle_Link_Order_By = {
-  archived?: InputMaybe<Order_By>;
+  archivedAt?: InputMaybe<Order_By>;
   circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   hostCircle?: InputMaybe<Circle_Order_By>;
@@ -4611,7 +4598,7 @@ export type Circle_Link_Pk_Columns_Input = {
 /** select columns of table "circle_link" */
 export enum Circle_Link_Select_Column {
   /** column name */
-  Archived = 'archived',
+  ArchivedAt = 'archivedAt',
   /** column name */
   CircleId = 'circleId',
   /** column name */
@@ -4624,21 +4611,9 @@ export enum Circle_Link_Select_Column {
   ParentId = 'parentId'
 }
 
-/** select "circle_link_aggregate_bool_exp_bool_and_arguments_columns" columns of table "circle_link" */
-export enum Circle_Link_Select_Column_Circle_Link_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
-  /** column name */
-  Archived = 'archived'
-}
-
-/** select "circle_link_aggregate_bool_exp_bool_or_arguments_columns" columns of table "circle_link" */
-export enum Circle_Link_Select_Column_Circle_Link_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
-  /** column name */
-  Archived = 'archived'
-}
-
 /** input type for updating data in table "circle_link" */
 export type Circle_Link_Set_Input = {
-  archived?: InputMaybe<Scalars['Boolean']>;
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   circleId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -4656,7 +4631,7 @@ export type Circle_Link_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Circle_Link_Stream_Cursor_Value_Input = {
-  archived?: InputMaybe<Scalars['Boolean']>;
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   circleId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -4667,7 +4642,7 @@ export type Circle_Link_Stream_Cursor_Value_Input = {
 /** update columns of table "circle_link" */
 export enum Circle_Link_Update_Column {
   /** column name */
-  Archived = 'archived',
+  ArchivedAt = 'archivedAt',
   /** column name */
   CircleId = 'circleId',
   /** column name */
@@ -4690,6 +4665,8 @@ export type Circle_Link_Updates = {
 /** aggregate max on columns */
 export type Circle_Max_Fields = {
   __typename?: 'circle_max_fields';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['uuid']>;
   orgId?: Maybe<Scalars['uuid']>;
   parentId?: Maybe<Scalars['uuid']>;
@@ -4698,6 +4675,8 @@ export type Circle_Max_Fields = {
 
 /** order by max() on columns of table "circle" */
 export type Circle_Max_Order_By = {
+  archivedAt?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   orgId?: InputMaybe<Order_By>;
   parentId?: InputMaybe<Order_By>;
@@ -4707,7 +4686,7 @@ export type Circle_Max_Order_By = {
 /** columns and relationships of "circle_member" */
 export type Circle_Member = {
   __typename?: 'circle_member';
-  archived: Scalars['Boolean'];
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   /** An object relationship */
   circle: Circle;
   circleId: Scalars['uuid'];
@@ -4727,23 +4706,7 @@ export type Circle_Member_Aggregate = {
 };
 
 export type Circle_Member_Aggregate_Bool_Exp = {
-  bool_and?: InputMaybe<Circle_Member_Aggregate_Bool_Exp_Bool_And>;
-  bool_or?: InputMaybe<Circle_Member_Aggregate_Bool_Exp_Bool_Or>;
   count?: InputMaybe<Circle_Member_Aggregate_Bool_Exp_Count>;
-};
-
-export type Circle_Member_Aggregate_Bool_Exp_Bool_And = {
-  arguments: Circle_Member_Select_Column_Circle_Member_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-  filter?: InputMaybe<Circle_Member_Bool_Exp>;
-  predicate: Boolean_Comparison_Exp;
-};
-
-export type Circle_Member_Aggregate_Bool_Exp_Bool_Or = {
-  arguments: Circle_Member_Select_Column_Circle_Member_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-  filter?: InputMaybe<Circle_Member_Bool_Exp>;
-  predicate: Boolean_Comparison_Exp;
 };
 
 export type Circle_Member_Aggregate_Bool_Exp_Count = {
@@ -4787,7 +4750,7 @@ export type Circle_Member_Bool_Exp = {
   _and?: InputMaybe<Array<Circle_Member_Bool_Exp>>;
   _not?: InputMaybe<Circle_Member_Bool_Exp>;
   _or?: InputMaybe<Array<Circle_Member_Bool_Exp>>;
-  archived?: InputMaybe<Boolean_Comparison_Exp>;
+  archivedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   circle?: InputMaybe<Circle_Bool_Exp>;
   circleId?: InputMaybe<Uuid_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
@@ -4807,7 +4770,7 @@ export enum Circle_Member_Constraint {
 
 /** input type for inserting data into table "circle_member" */
 export type Circle_Member_Insert_Input = {
-  archived?: InputMaybe<Scalars['Boolean']>;
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   circle?: InputMaybe<Circle_Obj_Rel_Insert_Input>;
   circleId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
@@ -4820,6 +4783,7 @@ export type Circle_Member_Insert_Input = {
 /** aggregate max on columns */
 export type Circle_Member_Max_Fields = {
   __typename?: 'circle_member_max_fields';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   circleId?: Maybe<Scalars['uuid']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['uuid']>;
@@ -4829,6 +4793,7 @@ export type Circle_Member_Max_Fields = {
 
 /** order by max() on columns of table "circle_member" */
 export type Circle_Member_Max_Order_By = {
+  archivedAt?: InputMaybe<Order_By>;
   circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -4839,6 +4804,7 @@ export type Circle_Member_Max_Order_By = {
 /** aggregate min on columns */
 export type Circle_Member_Min_Fields = {
   __typename?: 'circle_member_min_fields';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   circleId?: Maybe<Scalars['uuid']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['uuid']>;
@@ -4848,6 +4814,7 @@ export type Circle_Member_Min_Fields = {
 
 /** order by min() on columns of table "circle_member" */
 export type Circle_Member_Min_Order_By = {
+  archivedAt?: InputMaybe<Order_By>;
   circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -4873,7 +4840,7 @@ export type Circle_Member_On_Conflict = {
 
 /** Ordering options when selecting data from "circle_member". */
 export type Circle_Member_Order_By = {
-  archived?: InputMaybe<Order_By>;
+  archivedAt?: InputMaybe<Order_By>;
   circle?: InputMaybe<Circle_Order_By>;
   circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
@@ -4891,7 +4858,7 @@ export type Circle_Member_Pk_Columns_Input = {
 /** select columns of table "circle_member" */
 export enum Circle_Member_Select_Column {
   /** column name */
-  Archived = 'archived',
+  ArchivedAt = 'archivedAt',
   /** column name */
   CircleId = 'circleId',
   /** column name */
@@ -4904,21 +4871,9 @@ export enum Circle_Member_Select_Column {
   OrgId = 'orgId'
 }
 
-/** select "circle_member_aggregate_bool_exp_bool_and_arguments_columns" columns of table "circle_member" */
-export enum Circle_Member_Select_Column_Circle_Member_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
-  /** column name */
-  Archived = 'archived'
-}
-
-/** select "circle_member_aggregate_bool_exp_bool_or_arguments_columns" columns of table "circle_member" */
-export enum Circle_Member_Select_Column_Circle_Member_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
-  /** column name */
-  Archived = 'archived'
-}
-
 /** input type for updating data in table "circle_member" */
 export type Circle_Member_Set_Input = {
-  archived?: InputMaybe<Scalars['Boolean']>;
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   circleId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -4936,7 +4891,7 @@ export type Circle_Member_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Circle_Member_Stream_Cursor_Value_Input = {
-  archived?: InputMaybe<Scalars['Boolean']>;
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   circleId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -4947,7 +4902,7 @@ export type Circle_Member_Stream_Cursor_Value_Input = {
 /** update columns of table "circle_member" */
 export enum Circle_Member_Update_Column {
   /** column name */
-  Archived = 'archived',
+  ArchivedAt = 'archivedAt',
   /** column name */
   CircleId = 'circleId',
   /** column name */
@@ -4970,6 +4925,8 @@ export type Circle_Member_Updates = {
 /** aggregate min on columns */
 export type Circle_Min_Fields = {
   __typename?: 'circle_min_fields';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['uuid']>;
   orgId?: Maybe<Scalars['uuid']>;
   parentId?: Maybe<Scalars['uuid']>;
@@ -4978,6 +4935,8 @@ export type Circle_Min_Fields = {
 
 /** order by min() on columns of table "circle" */
 export type Circle_Min_Order_By = {
+  archivedAt?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   orgId?: InputMaybe<Order_By>;
   parentId?: InputMaybe<Order_By>;
@@ -5009,8 +4968,9 @@ export type Circle_On_Conflict = {
 
 /** Ordering options when selecting data from "circle". */
 export type Circle_Order_By = {
-  archived?: InputMaybe<Order_By>;
+  archivedAt?: InputMaybe<Order_By>;
   children_aggregate?: InputMaybe<Circle_Aggregate_Order_By>;
+  createdAt?: InputMaybe<Order_By>;
   decisions_aggregate?: InputMaybe<Decision_Aggregate_Order_By>;
   hostCircleLinks_aggregate?: InputMaybe<Circle_Link_Aggregate_Order_By>;
   id?: InputMaybe<Order_By>;
@@ -5321,7 +5281,9 @@ export type Circle_Pk_Columns_Input = {
 /** select columns of table "circle" */
 export enum Circle_Select_Column {
   /** column name */
-  Archived = 'archived',
+  ArchivedAt = 'archivedAt',
+  /** column name */
+  CreatedAt = 'createdAt',
   /** column name */
   Id = 'id',
   /** column name */
@@ -5332,21 +5294,10 @@ export enum Circle_Select_Column {
   RoleId = 'roleId'
 }
 
-/** select "circle_aggregate_bool_exp_bool_and_arguments_columns" columns of table "circle" */
-export enum Circle_Select_Column_Circle_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
-  /** column name */
-  Archived = 'archived'
-}
-
-/** select "circle_aggregate_bool_exp_bool_or_arguments_columns" columns of table "circle" */
-export enum Circle_Select_Column_Circle_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
-  /** column name */
-  Archived = 'archived'
-}
-
 /** input type for updating data in table "circle" */
 export type Circle_Set_Input = {
-  archived?: InputMaybe<Scalars['Boolean']>;
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
   orgId?: InputMaybe<Scalars['uuid']>;
   parentId?: InputMaybe<Scalars['uuid']>;
@@ -5363,7 +5314,8 @@ export type Circle_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Circle_Stream_Cursor_Value_Input = {
-  archived?: InputMaybe<Scalars['Boolean']>;
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
   orgId?: InputMaybe<Scalars['uuid']>;
   parentId?: InputMaybe<Scalars['uuid']>;
@@ -5373,7 +5325,9 @@ export type Circle_Stream_Cursor_Value_Input = {
 /** update columns of table "circle" */
 export enum Circle_Update_Column {
   /** column name */
-  Archived = 'archived',
+  ArchivedAt = 'archivedAt',
+  /** column name */
+  CreatedAt = 'createdAt',
   /** column name */
   Id = 'id',
   /** column name */
@@ -5448,7 +5402,7 @@ export type Date_Comparison_Exp = {
 /** columns and relationships of "decision" */
 export type Decision = {
   __typename?: 'decision';
-  archived: Scalars['Boolean'];
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   /** An object relationship */
   circle: Circle;
   circleId: Scalars['uuid'];
@@ -5534,7 +5488,7 @@ export type Decision_Bool_Exp = {
   _and?: InputMaybe<Array<Decision_Bool_Exp>>;
   _not?: InputMaybe<Decision_Bool_Exp>;
   _or?: InputMaybe<Array<Decision_Bool_Exp>>;
-  archived?: InputMaybe<Boolean_Comparison_Exp>;
+  archivedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   circle?: InputMaybe<Circle_Bool_Exp>;
   circleId?: InputMaybe<Uuid_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
@@ -5557,7 +5511,7 @@ export enum Decision_Constraint {
 
 /** input type for inserting data into table "decision" */
 export type Decision_Insert_Input = {
-  archived?: InputMaybe<Scalars['Boolean']>;
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   circle?: InputMaybe<Circle_Obj_Rel_Insert_Input>;
   circleId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
@@ -5575,6 +5529,7 @@ export type Decision_Insert_Input = {
 /** aggregate max on columns */
 export type Decision_Max_Fields = {
   __typename?: 'decision_max_fields';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   circleId?: Maybe<Scalars['uuid']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
   description?: Maybe<Scalars['String']>;
@@ -5587,6 +5542,7 @@ export type Decision_Max_Fields = {
 
 /** order by max() on columns of table "decision" */
 export type Decision_Max_Order_By = {
+  archivedAt?: InputMaybe<Order_By>;
   circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
@@ -5600,6 +5556,7 @@ export type Decision_Max_Order_By = {
 /** aggregate min on columns */
 export type Decision_Min_Fields = {
   __typename?: 'decision_min_fields';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   circleId?: Maybe<Scalars['uuid']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
   description?: Maybe<Scalars['String']>;
@@ -5612,6 +5569,7 @@ export type Decision_Min_Fields = {
 
 /** order by min() on columns of table "decision" */
 export type Decision_Min_Order_By = {
+  archivedAt?: InputMaybe<Order_By>;
   circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
@@ -5647,7 +5605,7 @@ export type Decision_On_Conflict = {
 
 /** Ordering options when selecting data from "decision". */
 export type Decision_Order_By = {
-  archived?: InputMaybe<Order_By>;
+  archivedAt?: InputMaybe<Order_By>;
   circle?: InputMaybe<Circle_Order_By>;
   circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
@@ -5670,7 +5628,7 @@ export type Decision_Pk_Columns_Input = {
 /** select columns of table "decision" */
 export enum Decision_Select_Column {
   /** column name */
-  Archived = 'archived',
+  ArchivedAt = 'archivedAt',
   /** column name */
   CircleId = 'circleId',
   /** column name */
@@ -5694,22 +5652,18 @@ export enum Decision_Select_Column {
 /** select "decision_aggregate_bool_exp_bool_and_arguments_columns" columns of table "decision" */
 export enum Decision_Select_Column_Decision_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
   /** column name */
-  Archived = 'archived',
-  /** column name */
   Private = 'private'
 }
 
 /** select "decision_aggregate_bool_exp_bool_or_arguments_columns" columns of table "decision" */
 export enum Decision_Select_Column_Decision_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
   /** column name */
-  Archived = 'archived',
-  /** column name */
   Private = 'private'
 }
 
 /** input type for updating data in table "decision" */
 export type Decision_Set_Input = {
-  archived?: InputMaybe<Scalars['Boolean']>;
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   circleId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   description?: InputMaybe<Scalars['String']>;
@@ -5731,7 +5685,7 @@ export type Decision_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Decision_Stream_Cursor_Value_Input = {
-  archived?: InputMaybe<Scalars['Boolean']>;
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   circleId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   description?: InputMaybe<Scalars['String']>;
@@ -5746,7 +5700,7 @@ export type Decision_Stream_Cursor_Value_Input = {
 /** update columns of table "decision" */
 export enum Decision_Update_Column {
   /** column name */
-  Archived = 'archived',
+  ArchivedAt = 'archivedAt',
   /** column name */
   CircleId = 'circleId',
   /** column name */
@@ -7008,7 +6962,7 @@ export type Log_Updates = {
 /** columns and relationships of "meeting" */
 export type Meeting = {
   __typename?: 'meeting';
-  archived: Scalars['Boolean'];
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   /** An object relationship */
   circle: Circle;
   circleId: Scalars['uuid'];
@@ -7412,7 +7366,7 @@ export type Meeting_Bool_Exp = {
   _and?: InputMaybe<Array<Meeting_Bool_Exp>>;
   _not?: InputMaybe<Meeting_Bool_Exp>;
   _or?: InputMaybe<Array<Meeting_Bool_Exp>>;
-  archived?: InputMaybe<Boolean_Comparison_Exp>;
+  archivedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   circle?: InputMaybe<Circle_Bool_Exp>;
   circleId?: InputMaybe<Uuid_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
@@ -7448,7 +7402,7 @@ export enum Meeting_Constraint {
 
 /** input type for inserting data into table "meeting" */
 export type Meeting_Insert_Input = {
-  archived?: InputMaybe<Scalars['Boolean']>;
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   circle?: InputMaybe<Circle_Obj_Rel_Insert_Input>;
   circleId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
@@ -7477,6 +7431,7 @@ export type Meeting_Insert_Input = {
 /** aggregate max on columns */
 export type Meeting_Max_Fields = {
   __typename?: 'meeting_max_fields';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   circleId?: Maybe<Scalars['uuid']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
   currentStepId?: Maybe<Scalars['uuid']>;
@@ -7494,6 +7449,7 @@ export type Meeting_Max_Fields = {
 
 /** order by max() on columns of table "meeting" */
 export type Meeting_Max_Order_By = {
+  archivedAt?: InputMaybe<Order_By>;
   circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   currentStepId?: InputMaybe<Order_By>;
@@ -7512,6 +7468,7 @@ export type Meeting_Max_Order_By = {
 /** aggregate min on columns */
 export type Meeting_Min_Fields = {
   __typename?: 'meeting_min_fields';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   circleId?: Maybe<Scalars['uuid']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
   currentStepId?: Maybe<Scalars['uuid']>;
@@ -7529,6 +7486,7 @@ export type Meeting_Min_Fields = {
 
 /** order by min() on columns of table "meeting" */
 export type Meeting_Min_Order_By = {
+  archivedAt?: InputMaybe<Order_By>;
   circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   currentStepId?: InputMaybe<Order_By>;
@@ -7569,7 +7527,7 @@ export type Meeting_On_Conflict = {
 
 /** Ordering options when selecting data from "meeting". */
 export type Meeting_Order_By = {
-  archived?: InputMaybe<Order_By>;
+  archivedAt?: InputMaybe<Order_By>;
   circle?: InputMaybe<Circle_Order_By>;
   circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
@@ -7603,6 +7561,7 @@ export type Meeting_Pk_Columns_Input = {
 /** columns and relationships of "meeting_recurring" */
 export type Meeting_Recurring = {
   __typename?: 'meeting_recurring';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   /** An object relationship */
   circle: Circle;
   circleId: Scalars['uuid'];
@@ -7753,6 +7712,7 @@ export type Meeting_Recurring_Bool_Exp = {
   _and?: InputMaybe<Array<Meeting_Recurring_Bool_Exp>>;
   _not?: InputMaybe<Meeting_Recurring_Bool_Exp>;
   _or?: InputMaybe<Array<Meeting_Recurring_Bool_Exp>>;
+  archivedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   circle?: InputMaybe<Circle_Bool_Exp>;
   circleId?: InputMaybe<Uuid_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
@@ -7784,6 +7744,7 @@ export type Meeting_Recurring_Inc_Input = {
 
 /** input type for inserting data into table "meeting_recurring" */
 export type Meeting_Recurring_Insert_Input = {
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   circle?: InputMaybe<Circle_Obj_Rel_Insert_Input>;
   circleId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
@@ -7804,6 +7765,7 @@ export type Meeting_Recurring_Insert_Input = {
 /** aggregate max on columns */
 export type Meeting_Recurring_Max_Fields = {
   __typename?: 'meeting_recurring_max_fields';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   circleId?: Maybe<Scalars['uuid']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
   duration?: Maybe<Scalars['smallint']>;
@@ -7815,6 +7777,7 @@ export type Meeting_Recurring_Max_Fields = {
 
 /** order by max() on columns of table "meeting_recurring" */
 export type Meeting_Recurring_Max_Order_By = {
+  archivedAt?: InputMaybe<Order_By>;
   circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   duration?: InputMaybe<Order_By>;
@@ -7827,6 +7790,7 @@ export type Meeting_Recurring_Max_Order_By = {
 /** aggregate min on columns */
 export type Meeting_Recurring_Min_Fields = {
   __typename?: 'meeting_recurring_min_fields';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   circleId?: Maybe<Scalars['uuid']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
   duration?: Maybe<Scalars['smallint']>;
@@ -7838,6 +7802,7 @@ export type Meeting_Recurring_Min_Fields = {
 
 /** order by min() on columns of table "meeting_recurring" */
 export type Meeting_Recurring_Min_Order_By = {
+  archivedAt?: InputMaybe<Order_By>;
   circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   duration?: InputMaybe<Order_By>;
@@ -7872,6 +7837,7 @@ export type Meeting_Recurring_On_Conflict = {
 
 /** Ordering options when selecting data from "meeting_recurring". */
 export type Meeting_Recurring_Order_By = {
+  archivedAt?: InputMaybe<Order_By>;
   circle?: InputMaybe<Circle_Order_By>;
   circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
@@ -7896,6 +7862,8 @@ export type Meeting_Recurring_Pk_Columns_Input = {
 
 /** select columns of table "meeting_recurring" */
 export enum Meeting_Recurring_Select_Column {
+  /** column name */
+  ArchivedAt = 'archivedAt',
   /** column name */
   CircleId = 'circleId',
   /** column name */
@@ -7938,6 +7906,7 @@ export enum Meeting_Recurring_Select_Column_Meeting_Recurring_Aggregate_Bool_Exp
 
 /** input type for updating data in table "meeting_recurring" */
 export type Meeting_Recurring_Set_Input = {
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   circleId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   duration?: InputMaybe<Scalars['smallint']>;
@@ -7994,6 +7963,7 @@ export type Meeting_Recurring_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Meeting_Recurring_Stream_Cursor_Value_Input = {
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   circleId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   duration?: InputMaybe<Scalars['smallint']>;
@@ -8020,6 +7990,8 @@ export type Meeting_Recurring_Sum_Order_By = {
 
 /** update columns of table "meeting_recurring" */
 export enum Meeting_Recurring_Update_Column {
+  /** column name */
+  ArchivedAt = 'archivedAt',
   /** column name */
   CircleId = 'circleId',
   /** column name */
@@ -8089,7 +8061,7 @@ export type Meeting_Recurring_Variance_Order_By = {
 /** select columns of table "meeting" */
 export enum Meeting_Select_Column {
   /** column name */
-  Archived = 'archived',
+  ArchivedAt = 'archivedAt',
   /** column name */
   CircleId = 'circleId',
   /** column name */
@@ -8131,8 +8103,6 @@ export enum Meeting_Select_Column {
 /** select "meeting_aggregate_bool_exp_bool_and_arguments_columns" columns of table "meeting" */
 export enum Meeting_Select_Column_Meeting_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
   /** column name */
-  Archived = 'archived',
-  /** column name */
   Ended = 'ended',
   /** column name */
   InvitedReadonly = 'invitedReadonly',
@@ -8143,8 +8113,6 @@ export enum Meeting_Select_Column_Meeting_Aggregate_Bool_Exp_Bool_And_Arguments_
 /** select "meeting_aggregate_bool_exp_bool_or_arguments_columns" columns of table "meeting" */
 export enum Meeting_Select_Column_Meeting_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
   /** column name */
-  Archived = 'archived',
-  /** column name */
   Ended = 'ended',
   /** column name */
   InvitedReadonly = 'invitedReadonly',
@@ -8154,7 +8122,7 @@ export enum Meeting_Select_Column_Meeting_Aggregate_Bool_Exp_Bool_Or_Arguments_C
 
 /** input type for updating data in table "meeting" */
 export type Meeting_Set_Input = {
-  archived?: InputMaybe<Scalars['Boolean']>;
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   circleId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   currentStepId?: InputMaybe<Scalars['uuid']>;
@@ -8726,7 +8694,7 @@ export type Meeting_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Meeting_Stream_Cursor_Value_Input = {
-  archived?: InputMaybe<Scalars['Boolean']>;
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   circleId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   currentStepId?: InputMaybe<Scalars['uuid']>;
@@ -8750,6 +8718,8 @@ export type Meeting_Stream_Cursor_Value_Input = {
 /** columns and relationships of "meeting_template" */
 export type Meeting_Template = {
   __typename?: 'meeting_template';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
+  createdAt: Scalars['timestamptz'];
   id: Scalars['uuid'];
   /** An object relationship */
   org: Org;
@@ -8816,6 +8786,8 @@ export type Meeting_Template_Bool_Exp = {
   _and?: InputMaybe<Array<Meeting_Template_Bool_Exp>>;
   _not?: InputMaybe<Meeting_Template_Bool_Exp>;
   _or?: InputMaybe<Array<Meeting_Template_Bool_Exp>>;
+  archivedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   org?: InputMaybe<Org_Bool_Exp>;
   orgId?: InputMaybe<Uuid_Comparison_Exp>;
@@ -8831,6 +8803,8 @@ export enum Meeting_Template_Constraint {
 
 /** input type for inserting data into table "meeting_template" */
 export type Meeting_Template_Insert_Input = {
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
   org?: InputMaybe<Org_Obj_Rel_Insert_Input>;
   orgId?: InputMaybe<Scalars['uuid']>;
@@ -8841,6 +8815,8 @@ export type Meeting_Template_Insert_Input = {
 /** aggregate max on columns */
 export type Meeting_Template_Max_Fields = {
   __typename?: 'meeting_template_max_fields';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['uuid']>;
   orgId?: Maybe<Scalars['uuid']>;
   title?: Maybe<Scalars['String']>;
@@ -8848,6 +8824,8 @@ export type Meeting_Template_Max_Fields = {
 
 /** order by max() on columns of table "meeting_template" */
 export type Meeting_Template_Max_Order_By = {
+  archivedAt?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   orgId?: InputMaybe<Order_By>;
   title?: InputMaybe<Order_By>;
@@ -8856,6 +8834,8 @@ export type Meeting_Template_Max_Order_By = {
 /** aggregate min on columns */
 export type Meeting_Template_Min_Fields = {
   __typename?: 'meeting_template_min_fields';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['uuid']>;
   orgId?: Maybe<Scalars['uuid']>;
   title?: Maybe<Scalars['String']>;
@@ -8863,6 +8843,8 @@ export type Meeting_Template_Min_Fields = {
 
 /** order by min() on columns of table "meeting_template" */
 export type Meeting_Template_Min_Order_By = {
+  archivedAt?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   orgId?: InputMaybe<Order_By>;
   title?: InputMaybe<Order_By>;
@@ -8893,6 +8875,8 @@ export type Meeting_Template_On_Conflict = {
 
 /** Ordering options when selecting data from "meeting_template". */
 export type Meeting_Template_Order_By = {
+  archivedAt?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   org?: InputMaybe<Org_Order_By>;
   orgId?: InputMaybe<Order_By>;
@@ -8908,6 +8892,10 @@ export type Meeting_Template_Pk_Columns_Input = {
 /** select columns of table "meeting_template" */
 export enum Meeting_Template_Select_Column {
   /** column name */
+  ArchivedAt = 'archivedAt',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
   Id = 'id',
   /** column name */
   OrgId = 'orgId',
@@ -8919,6 +8907,8 @@ export enum Meeting_Template_Select_Column {
 
 /** input type for updating data in table "meeting_template" */
 export type Meeting_Template_Set_Input = {
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
   orgId?: InputMaybe<Scalars['uuid']>;
   stepsConfig?: InputMaybe<Scalars['json']>;
@@ -8935,6 +8925,8 @@ export type Meeting_Template_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Meeting_Template_Stream_Cursor_Value_Input = {
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
   orgId?: InputMaybe<Scalars['uuid']>;
   stepsConfig?: InputMaybe<Scalars['json']>;
@@ -8943,6 +8935,10 @@ export type Meeting_Template_Stream_Cursor_Value_Input = {
 
 /** update columns of table "meeting_template" */
 export enum Meeting_Template_Update_Column {
+  /** column name */
+  ArchivedAt = 'archivedAt',
+  /** column name */
+  CreatedAt = 'createdAt',
   /** column name */
   Id = 'id',
   /** column name */
@@ -8963,7 +8959,7 @@ export type Meeting_Template_Updates = {
 /** update columns of table "meeting" */
 export enum Meeting_Update_Column {
   /** column name */
-  Archived = 'archived',
+  ArchivedAt = 'archivedAt',
   /** column name */
   CircleId = 'circleId',
   /** column name */
@@ -9012,11 +9008,12 @@ export type Meeting_Updates = {
 /** columns and relationships of "member" */
 export type Member = {
   __typename?: 'member';
-  archived: Scalars['Boolean'];
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   /** An array relationship */
   circle_members: Array<Circle_Member>;
   /** An aggregate relationship */
   circle_members_aggregate: Circle_Member_Aggregate;
+  createdAt: Scalars['timestamptz'];
   description: Scalars['String'];
   description_legacy?: Maybe<Scalars['String']>;
   id: Scalars['uuid'];
@@ -9088,23 +9085,7 @@ export type Member_Aggregate = {
 };
 
 export type Member_Aggregate_Bool_Exp = {
-  bool_and?: InputMaybe<Member_Aggregate_Bool_Exp_Bool_And>;
-  bool_or?: InputMaybe<Member_Aggregate_Bool_Exp_Bool_Or>;
   count?: InputMaybe<Member_Aggregate_Bool_Exp_Count>;
-};
-
-export type Member_Aggregate_Bool_Exp_Bool_And = {
-  arguments: Member_Select_Column_Member_Aggregate_Bool_Exp_Bool_And_Arguments_Columns;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-  filter?: InputMaybe<Member_Bool_Exp>;
-  predicate: Boolean_Comparison_Exp;
-};
-
-export type Member_Aggregate_Bool_Exp_Bool_Or = {
-  arguments: Member_Select_Column_Member_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns;
-  distinct?: InputMaybe<Scalars['Boolean']>;
-  filter?: InputMaybe<Member_Bool_Exp>;
-  predicate: Boolean_Comparison_Exp;
 };
 
 export type Member_Aggregate_Bool_Exp_Count = {
@@ -9148,9 +9129,10 @@ export type Member_Bool_Exp = {
   _and?: InputMaybe<Array<Member_Bool_Exp>>;
   _not?: InputMaybe<Member_Bool_Exp>;
   _or?: InputMaybe<Array<Member_Bool_Exp>>;
-  archived?: InputMaybe<Boolean_Comparison_Exp>;
+  archivedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   circle_members?: InputMaybe<Circle_Member_Bool_Exp>;
   circle_members_aggregate?: InputMaybe<Circle_Member_Aggregate_Bool_Exp>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   description?: InputMaybe<String_Comparison_Exp>;
   description_legacy?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
@@ -9179,8 +9161,9 @@ export enum Member_Constraint {
 
 /** input type for inserting data into table "member" */
 export type Member_Insert_Input = {
-  archived?: InputMaybe<Scalars['Boolean']>;
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   circle_members?: InputMaybe<Circle_Member_Arr_Rel_Insert_Input>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
   description?: InputMaybe<Scalars['String']>;
   description_legacy?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -9201,6 +9184,8 @@ export type Member_Insert_Input = {
 /** aggregate max on columns */
 export type Member_Max_Fields = {
   __typename?: 'member_max_fields';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
   description?: Maybe<Scalars['String']>;
   description_legacy?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['uuid']>;
@@ -9215,6 +9200,8 @@ export type Member_Max_Fields = {
 
 /** order by max() on columns of table "member" */
 export type Member_Max_Order_By = {
+  archivedAt?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
   description_legacy?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -9230,6 +9217,8 @@ export type Member_Max_Order_By = {
 /** aggregate min on columns */
 export type Member_Min_Fields = {
   __typename?: 'member_min_fields';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
   description?: Maybe<Scalars['String']>;
   description_legacy?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['uuid']>;
@@ -9244,6 +9233,8 @@ export type Member_Min_Fields = {
 
 /** order by min() on columns of table "member" */
 export type Member_Min_Order_By = {
+  archivedAt?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
   description_legacy?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -9281,8 +9272,9 @@ export type Member_On_Conflict = {
 
 /** Ordering options when selecting data from "member". */
 export type Member_Order_By = {
-  archived?: InputMaybe<Order_By>;
+  archivedAt?: InputMaybe<Order_By>;
   circle_members_aggregate?: InputMaybe<Circle_Member_Aggregate_Order_By>;
+  createdAt?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
   description_legacy?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -9462,7 +9454,9 @@ export type Member_Role_Updates = {
 /** select columns of table "member" */
 export enum Member_Select_Column {
   /** column name */
-  Archived = 'archived',
+  ArchivedAt = 'archivedAt',
+  /** column name */
+  CreatedAt = 'createdAt',
   /** column name */
   Description = 'description',
   /** column name */
@@ -9487,21 +9481,10 @@ export enum Member_Select_Column {
   UserId = 'userId'
 }
 
-/** select "member_aggregate_bool_exp_bool_and_arguments_columns" columns of table "member" */
-export enum Member_Select_Column_Member_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
-  /** column name */
-  Archived = 'archived'
-}
-
-/** select "member_aggregate_bool_exp_bool_or_arguments_columns" columns of table "member" */
-export enum Member_Select_Column_Member_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
-  /** column name */
-  Archived = 'archived'
-}
-
 /** input type for updating data in table "member" */
 export type Member_Set_Input = {
-  archived?: InputMaybe<Scalars['Boolean']>;
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
   description?: InputMaybe<Scalars['String']>;
   description_legacy?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -9525,7 +9508,8 @@ export type Member_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Member_Stream_Cursor_Value_Input = {
-  archived?: InputMaybe<Scalars['Boolean']>;
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
   description?: InputMaybe<Scalars['String']>;
   description_legacy?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -9542,7 +9526,9 @@ export type Member_Stream_Cursor_Value_Input = {
 /** update columns of table "member" */
 export enum Member_Update_Column {
   /** column name */
-  Archived = 'archived',
+  ArchivedAt = 'archivedAt',
+  /** column name */
+  CreatedAt = 'createdAt',
   /** column name */
   Description = 'description',
   /** column name */
@@ -13267,7 +13253,7 @@ export enum Order_By {
 /** columns and relationships of "org" */
 export type Org = {
   __typename?: 'org';
-  archived: Scalars['Boolean'];
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   /** An array relationship */
   circleLinks: Array<Circle_Link>;
   /** An aggregate relationship */
@@ -13672,7 +13658,7 @@ export type Org_Bool_Exp = {
   _and?: InputMaybe<Array<Org_Bool_Exp>>;
   _not?: InputMaybe<Org_Bool_Exp>;
   _or?: InputMaybe<Array<Org_Bool_Exp>>;
-  archived?: InputMaybe<Boolean_Comparison_Exp>;
+  archivedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   circleLinks?: InputMaybe<Circle_Link_Bool_Exp>;
   circleLinks_aggregate?: InputMaybe<Circle_Link_Aggregate_Bool_Exp>;
   circleMembers?: InputMaybe<Circle_Member_Bool_Exp>;
@@ -13729,6 +13715,7 @@ export enum Org_Constraint {
 /** columns and relationships of "org_file" */
 export type Org_File = {
   __typename?: 'org_file';
+  createdAt: Scalars['timestamptz'];
   /** An object relationship */
   file: Files;
   fileId: Scalars['uuid'];
@@ -13790,6 +13777,7 @@ export type Org_File_Bool_Exp = {
   _and?: InputMaybe<Array<Org_File_Bool_Exp>>;
   _not?: InputMaybe<Org_File_Bool_Exp>;
   _or?: InputMaybe<Array<Org_File_Bool_Exp>>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   file?: InputMaybe<Files_Bool_Exp>;
   fileId?: InputMaybe<Uuid_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
@@ -13805,6 +13793,7 @@ export enum Org_File_Constraint {
 
 /** input type for inserting data into table "org_file" */
 export type Org_File_Insert_Input = {
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
   file?: InputMaybe<Files_Obj_Rel_Insert_Input>;
   fileId?: InputMaybe<Scalars['uuid']>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -13815,6 +13804,7 @@ export type Org_File_Insert_Input = {
 /** aggregate max on columns */
 export type Org_File_Max_Fields = {
   __typename?: 'org_file_max_fields';
+  createdAt?: Maybe<Scalars['timestamptz']>;
   fileId?: Maybe<Scalars['uuid']>;
   id?: Maybe<Scalars['uuid']>;
   orgId?: Maybe<Scalars['uuid']>;
@@ -13822,6 +13812,7 @@ export type Org_File_Max_Fields = {
 
 /** order by max() on columns of table "org_file" */
 export type Org_File_Max_Order_By = {
+  createdAt?: InputMaybe<Order_By>;
   fileId?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   orgId?: InputMaybe<Order_By>;
@@ -13830,6 +13821,7 @@ export type Org_File_Max_Order_By = {
 /** aggregate min on columns */
 export type Org_File_Min_Fields = {
   __typename?: 'org_file_min_fields';
+  createdAt?: Maybe<Scalars['timestamptz']>;
   fileId?: Maybe<Scalars['uuid']>;
   id?: Maybe<Scalars['uuid']>;
   orgId?: Maybe<Scalars['uuid']>;
@@ -13837,6 +13829,7 @@ export type Org_File_Min_Fields = {
 
 /** order by min() on columns of table "org_file" */
 export type Org_File_Min_Order_By = {
+  createdAt?: InputMaybe<Order_By>;
   fileId?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   orgId?: InputMaybe<Order_By>;
@@ -13860,6 +13853,7 @@ export type Org_File_On_Conflict = {
 
 /** Ordering options when selecting data from "org_file". */
 export type Org_File_Order_By = {
+  createdAt?: InputMaybe<Order_By>;
   file?: InputMaybe<Files_Order_By>;
   fileId?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -13875,6 +13869,8 @@ export type Org_File_Pk_Columns_Input = {
 /** select columns of table "org_file" */
 export enum Org_File_Select_Column {
   /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
   FileId = 'fileId',
   /** column name */
   Id = 'id',
@@ -13884,6 +13880,7 @@ export enum Org_File_Select_Column {
 
 /** input type for updating data in table "org_file" */
 export type Org_File_Set_Input = {
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
   fileId?: InputMaybe<Scalars['uuid']>;
   id?: InputMaybe<Scalars['uuid']>;
   orgId?: InputMaybe<Scalars['uuid']>;
@@ -13899,6 +13896,7 @@ export type Org_File_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Org_File_Stream_Cursor_Value_Input = {
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
   fileId?: InputMaybe<Scalars['uuid']>;
   id?: InputMaybe<Scalars['uuid']>;
   orgId?: InputMaybe<Scalars['uuid']>;
@@ -13906,6 +13904,8 @@ export type Org_File_Stream_Cursor_Value_Input = {
 
 /** update columns of table "org_file" */
 export enum Org_File_Update_Column {
+  /** column name */
+  CreatedAt = 'createdAt',
   /** column name */
   FileId = 'fileId',
   /** column name */
@@ -13923,7 +13923,7 @@ export type Org_File_Updates = {
 
 /** input type for inserting data into table "org" */
 export type Org_Insert_Input = {
-  archived?: InputMaybe<Scalars['Boolean']>;
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   circleLinks?: InputMaybe<Circle_Link_Arr_Rel_Insert_Input>;
   circleMembers?: InputMaybe<Circle_Member_Arr_Rel_Insert_Input>;
   circles?: InputMaybe<Circle_Arr_Rel_Insert_Input>;
@@ -13957,6 +13957,7 @@ export type Org_Insert_Input = {
 /** aggregate max on columns */
 export type Org_Max_Fields = {
   __typename?: 'org_max_fields';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
   defaultGraphView?: Maybe<Scalars['String']>;
   homeNote?: Maybe<Scalars['String']>;
@@ -13970,6 +13971,7 @@ export type Org_Max_Fields = {
 /** aggregate min on columns */
 export type Org_Min_Fields = {
   __typename?: 'org_min_fields';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
   defaultGraphView?: Maybe<Scalars['String']>;
   homeNote?: Maybe<Scalars['String']>;
@@ -14005,7 +14007,7 @@ export type Org_On_Conflict = {
 
 /** Ordering options when selecting data from "org". */
 export type Org_Order_By = {
-  archived?: InputMaybe<Order_By>;
+  archivedAt?: InputMaybe<Order_By>;
   circleLinks_aggregate?: InputMaybe<Circle_Link_Aggregate_Order_By>;
   circleMembers_aggregate?: InputMaybe<Circle_Member_Aggregate_Order_By>;
   circles_aggregate?: InputMaybe<Circle_Aggregate_Order_By>;
@@ -14044,7 +14046,7 @@ export type Org_Pk_Columns_Input = {
 /** select columns of table "org" */
 export enum Org_Select_Column {
   /** column name */
-  Archived = 'archived',
+  ArchivedAt = 'archivedAt',
   /** column name */
   CreatedAt = 'createdAt',
   /** column name */
@@ -14071,7 +14073,7 @@ export enum Org_Select_Column {
 
 /** input type for updating data in table "org" */
 export type Org_Set_Input = {
-  archived?: InputMaybe<Scalars['Boolean']>;
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   defaultGraphView?: InputMaybe<Scalars['String']>;
   governanceMode?: InputMaybe<Governance_Mode_Enum>;
@@ -14095,7 +14097,7 @@ export type Org_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Org_Stream_Cursor_Value_Input = {
-  archived?: InputMaybe<Scalars['Boolean']>;
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   defaultGraphView?: InputMaybe<Scalars['String']>;
   governanceMode?: InputMaybe<Governance_Mode_Enum>;
@@ -14112,6 +14114,8 @@ export type Org_Stream_Cursor_Value_Input = {
 /** Abonnement lié à une organisation */
 export type Org_Subscription = {
   __typename?: 'org_subscription';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
+  createdAt: Scalars['timestamptz'];
   id: Scalars['uuid'];
   /** An object relationship */
   org: Org;
@@ -14149,6 +14153,8 @@ export type Org_Subscription_Bool_Exp = {
   _and?: InputMaybe<Array<Org_Subscription_Bool_Exp>>;
   _not?: InputMaybe<Org_Subscription_Bool_Exp>;
   _or?: InputMaybe<Array<Org_Subscription_Bool_Exp>>;
+  archivedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   org?: InputMaybe<Org_Bool_Exp>;
   orgId?: InputMaybe<Uuid_Comparison_Exp>;
@@ -14172,6 +14178,8 @@ export enum Org_Subscription_Constraint {
 
 /** input type for inserting data into table "org_subscription" */
 export type Org_Subscription_Insert_Input = {
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
   org?: InputMaybe<Org_Obj_Rel_Insert_Input>;
   orgId?: InputMaybe<Scalars['uuid']>;
@@ -14184,6 +14192,8 @@ export type Org_Subscription_Insert_Input = {
 /** aggregate max on columns */
 export type Org_Subscription_Max_Fields = {
   __typename?: 'org_subscription_max_fields';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['uuid']>;
   orgId?: Maybe<Scalars['uuid']>;
   stripeCustomerId?: Maybe<Scalars['String']>;
@@ -14193,6 +14203,8 @@ export type Org_Subscription_Max_Fields = {
 /** aggregate min on columns */
 export type Org_Subscription_Min_Fields = {
   __typename?: 'org_subscription_min_fields';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['uuid']>;
   orgId?: Maybe<Scalars['uuid']>;
   stripeCustomerId?: Maybe<Scalars['String']>;
@@ -14224,6 +14236,8 @@ export type Org_Subscription_On_Conflict = {
 
 /** Ordering options when selecting data from "org_subscription". */
 export type Org_Subscription_Order_By = {
+  archivedAt?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   org?: InputMaybe<Org_Order_By>;
   orgId?: InputMaybe<Order_By>;
@@ -14241,6 +14255,10 @@ export type Org_Subscription_Pk_Columns_Input = {
 /** select columns of table "org_subscription" */
 export enum Org_Subscription_Select_Column {
   /** column name */
+  ArchivedAt = 'archivedAt',
+  /** column name */
+  CreatedAt = 'createdAt',
+  /** column name */
   Id = 'id',
   /** column name */
   OrgId = 'orgId',
@@ -14256,6 +14274,8 @@ export enum Org_Subscription_Select_Column {
 
 /** input type for updating data in table "org_subscription" */
 export type Org_Subscription_Set_Input = {
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
   orgId?: InputMaybe<Scalars['uuid']>;
   status?: InputMaybe<Subscription_Payment_Status_Enum>;
@@ -14274,6 +14294,8 @@ export type Org_Subscription_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Org_Subscription_Stream_Cursor_Value_Input = {
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
   orgId?: InputMaybe<Scalars['uuid']>;
   status?: InputMaybe<Subscription_Payment_Status_Enum>;
@@ -14284,6 +14306,10 @@ export type Org_Subscription_Stream_Cursor_Value_Input = {
 
 /** update columns of table "org_subscription" */
 export enum Org_Subscription_Update_Column {
+  /** column name */
+  ArchivedAt = 'archivedAt',
+  /** column name */
+  CreatedAt = 'createdAt',
   /** column name */
   Id = 'id',
   /** column name */
@@ -14308,7 +14334,7 @@ export type Org_Subscription_Updates = {
 /** update columns of table "org" */
 export enum Org_Update_Column {
   /** column name */
-  Archived = 'archived',
+  ArchivedAt = 'archivedAt',
   /** column name */
   CreatedAt = 'createdAt',
   /** column name */
@@ -16003,7 +16029,7 @@ export type Role = {
   __typename?: 'role';
   accountabilities: Scalars['String'];
   accountabilities_legacy?: Maybe<Scalars['String']>;
-  archived: Scalars['Boolean'];
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   base: Scalars['Boolean'];
   checklist: Scalars['String'];
   checklist_legacy?: Maybe<Scalars['String']>;
@@ -16012,6 +16038,7 @@ export type Role = {
   /** An aggregate relationship */
   circles_aggregate: Circle_Aggregate;
   colorHue?: Maybe<Scalars['smallint']>;
+  createdAt: Scalars['timestamptz'];
   domain: Scalars['String'];
   domain_legacy?: Maybe<Scalars['String']>;
   id: Scalars['uuid'];
@@ -16366,13 +16393,14 @@ export type Role_Bool_Exp = {
   _or?: InputMaybe<Array<Role_Bool_Exp>>;
   accountabilities?: InputMaybe<String_Comparison_Exp>;
   accountabilities_legacy?: InputMaybe<String_Comparison_Exp>;
-  archived?: InputMaybe<Boolean_Comparison_Exp>;
+  archivedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   base?: InputMaybe<Boolean_Comparison_Exp>;
   checklist?: InputMaybe<String_Comparison_Exp>;
   checklist_legacy?: InputMaybe<String_Comparison_Exp>;
   circles?: InputMaybe<Circle_Bool_Exp>;
   circles_aggregate?: InputMaybe<Circle_Aggregate_Bool_Exp>;
   colorHue?: InputMaybe<Smallint_Comparison_Exp>;
+  createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   domain?: InputMaybe<String_Comparison_Exp>;
   domain_legacy?: InputMaybe<String_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
@@ -16404,12 +16432,13 @@ export type Role_Inc_Input = {
 export type Role_Insert_Input = {
   accountabilities?: InputMaybe<Scalars['String']>;
   accountabilities_legacy?: InputMaybe<Scalars['String']>;
-  archived?: InputMaybe<Scalars['Boolean']>;
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   base?: InputMaybe<Scalars['Boolean']>;
   checklist?: InputMaybe<Scalars['String']>;
   checklist_legacy?: InputMaybe<Scalars['String']>;
   circles?: InputMaybe<Circle_Arr_Rel_Insert_Input>;
   colorHue?: InputMaybe<Scalars['smallint']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
   domain?: InputMaybe<Scalars['String']>;
   domain_legacy?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -16431,9 +16460,11 @@ export type Role_Max_Fields = {
   __typename?: 'role_max_fields';
   accountabilities?: Maybe<Scalars['String']>;
   accountabilities_legacy?: Maybe<Scalars['String']>;
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   checklist?: Maybe<Scalars['String']>;
   checklist_legacy?: Maybe<Scalars['String']>;
   colorHue?: Maybe<Scalars['smallint']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
   domain?: Maybe<Scalars['String']>;
   domain_legacy?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['uuid']>;
@@ -16451,9 +16482,11 @@ export type Role_Max_Fields = {
 export type Role_Max_Order_By = {
   accountabilities?: InputMaybe<Order_By>;
   accountabilities_legacy?: InputMaybe<Order_By>;
+  archivedAt?: InputMaybe<Order_By>;
   checklist?: InputMaybe<Order_By>;
   checklist_legacy?: InputMaybe<Order_By>;
   colorHue?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
   domain?: InputMaybe<Order_By>;
   domain_legacy?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -16472,9 +16505,11 @@ export type Role_Min_Fields = {
   __typename?: 'role_min_fields';
   accountabilities?: Maybe<Scalars['String']>;
   accountabilities_legacy?: Maybe<Scalars['String']>;
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   checklist?: Maybe<Scalars['String']>;
   checklist_legacy?: Maybe<Scalars['String']>;
   colorHue?: Maybe<Scalars['smallint']>;
+  createdAt?: Maybe<Scalars['timestamptz']>;
   domain?: Maybe<Scalars['String']>;
   domain_legacy?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['uuid']>;
@@ -16492,9 +16527,11 @@ export type Role_Min_Fields = {
 export type Role_Min_Order_By = {
   accountabilities?: InputMaybe<Order_By>;
   accountabilities_legacy?: InputMaybe<Order_By>;
+  archivedAt?: InputMaybe<Order_By>;
   checklist?: InputMaybe<Order_By>;
   checklist_legacy?: InputMaybe<Order_By>;
   colorHue?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
   domain?: InputMaybe<Order_By>;
   domain_legacy?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -16535,12 +16572,13 @@ export type Role_On_Conflict = {
 export type Role_Order_By = {
   accountabilities?: InputMaybe<Order_By>;
   accountabilities_legacy?: InputMaybe<Order_By>;
-  archived?: InputMaybe<Order_By>;
+  archivedAt?: InputMaybe<Order_By>;
   base?: InputMaybe<Order_By>;
   checklist?: InputMaybe<Order_By>;
   checklist_legacy?: InputMaybe<Order_By>;
   circles_aggregate?: InputMaybe<Circle_Aggregate_Order_By>;
   colorHue?: InputMaybe<Order_By>;
+  createdAt?: InputMaybe<Order_By>;
   domain?: InputMaybe<Order_By>;
   domain_legacy?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -16569,7 +16607,7 @@ export enum Role_Select_Column {
   /** column name */
   AccountabilitiesLegacy = 'accountabilities_legacy',
   /** column name */
-  Archived = 'archived',
+  ArchivedAt = 'archivedAt',
   /** column name */
   Base = 'base',
   /** column name */
@@ -16578,6 +16616,8 @@ export enum Role_Select_Column {
   ChecklistLegacy = 'checklist_legacy',
   /** column name */
   ColorHue = 'colorHue',
+  /** column name */
+  CreatedAt = 'createdAt',
   /** column name */
   Domain = 'domain',
   /** column name */
@@ -16609,8 +16649,6 @@ export enum Role_Select_Column {
 /** select "role_aggregate_bool_exp_bool_and_arguments_columns" columns of table "role" */
 export enum Role_Select_Column_Role_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
   /** column name */
-  Archived = 'archived',
-  /** column name */
   Base = 'base',
   /** column name */
   ParentLink = 'parentLink',
@@ -16620,8 +16658,6 @@ export enum Role_Select_Column_Role_Aggregate_Bool_Exp_Bool_And_Arguments_Column
 
 /** select "role_aggregate_bool_exp_bool_or_arguments_columns" columns of table "role" */
 export enum Role_Select_Column_Role_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
-  /** column name */
-  Archived = 'archived',
   /** column name */
   Base = 'base',
   /** column name */
@@ -16634,11 +16670,12 @@ export enum Role_Select_Column_Role_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns
 export type Role_Set_Input = {
   accountabilities?: InputMaybe<Scalars['String']>;
   accountabilities_legacy?: InputMaybe<Scalars['String']>;
-  archived?: InputMaybe<Scalars['Boolean']>;
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   base?: InputMaybe<Scalars['Boolean']>;
   checklist?: InputMaybe<Scalars['String']>;
   checklist_legacy?: InputMaybe<Scalars['String']>;
   colorHue?: InputMaybe<Scalars['smallint']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
   domain?: InputMaybe<Scalars['String']>;
   domain_legacy?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -16699,11 +16736,12 @@ export type Role_Stream_Cursor_Input = {
 export type Role_Stream_Cursor_Value_Input = {
   accountabilities?: InputMaybe<Scalars['String']>;
   accountabilities_legacy?: InputMaybe<Scalars['String']>;
-  archived?: InputMaybe<Scalars['Boolean']>;
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   base?: InputMaybe<Scalars['Boolean']>;
   checklist?: InputMaybe<Scalars['String']>;
   checklist_legacy?: InputMaybe<Scalars['String']>;
   colorHue?: InputMaybe<Scalars['smallint']>;
+  createdAt?: InputMaybe<Scalars['timestamptz']>;
   domain?: InputMaybe<Scalars['String']>;
   domain_legacy?: InputMaybe<Scalars['String']>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -16737,7 +16775,7 @@ export enum Role_Update_Column {
   /** column name */
   AccountabilitiesLegacy = 'accountabilities_legacy',
   /** column name */
-  Archived = 'archived',
+  ArchivedAt = 'archivedAt',
   /** column name */
   Base = 'base',
   /** column name */
@@ -16746,6 +16784,8 @@ export enum Role_Update_Column {
   ChecklistLegacy = 'checklist_legacy',
   /** column name */
   ColorHue = 'colorHue',
+  /** column name */
+  CreatedAt = 'createdAt',
   /** column name */
   Domain = 'domain',
   /** column name */
@@ -19290,7 +19330,7 @@ export type Subscription_RootVirusesAggregateArgs = {
 /** columns and relationships of "task" */
 export type Task = {
   __typename?: 'task';
-  archived: Scalars['Boolean'];
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   /** An object relationship */
   circle: Circle;
   circleId: Scalars['uuid'];
@@ -19402,7 +19442,7 @@ export type Task_Bool_Exp = {
   _and?: InputMaybe<Array<Task_Bool_Exp>>;
   _not?: InputMaybe<Task_Bool_Exp>;
   _or?: InputMaybe<Array<Task_Bool_Exp>>;
-  archived?: InputMaybe<Boolean_Comparison_Exp>;
+  archivedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   circle?: InputMaybe<Circle_Bool_Exp>;
   circleId?: InputMaybe<Uuid_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
@@ -19429,7 +19469,7 @@ export enum Task_Constraint {
 
 /** input type for inserting data into table "task" */
 export type Task_Insert_Input = {
-  archived?: InputMaybe<Scalars['Boolean']>;
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   circle?: InputMaybe<Circle_Obj_Rel_Insert_Input>;
   circleId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
@@ -19450,6 +19490,7 @@ export type Task_Insert_Input = {
 /** aggregate max on columns */
 export type Task_Max_Fields = {
   __typename?: 'task_max_fields';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   circleId?: Maybe<Scalars['uuid']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
   description?: Maybe<Scalars['String']>;
@@ -19463,6 +19504,7 @@ export type Task_Max_Fields = {
 
 /** order by max() on columns of table "task" */
 export type Task_Max_Order_By = {
+  archivedAt?: InputMaybe<Order_By>;
   circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
@@ -19477,6 +19519,7 @@ export type Task_Max_Order_By = {
 /** aggregate min on columns */
 export type Task_Min_Fields = {
   __typename?: 'task_min_fields';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   circleId?: Maybe<Scalars['uuid']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
   description?: Maybe<Scalars['String']>;
@@ -19490,6 +19533,7 @@ export type Task_Min_Fields = {
 
 /** order by min() on columns of table "task" */
 export type Task_Min_Order_By = {
+  archivedAt?: InputMaybe<Order_By>;
   circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   description?: InputMaybe<Order_By>;
@@ -19526,7 +19570,7 @@ export type Task_On_Conflict = {
 
 /** Ordering options when selecting data from "task". */
 export type Task_Order_By = {
-  archived?: InputMaybe<Order_By>;
+  archivedAt?: InputMaybe<Order_By>;
   circle?: InputMaybe<Circle_Order_By>;
   circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
@@ -19552,7 +19596,7 @@ export type Task_Pk_Columns_Input = {
 /** select columns of table "task" */
 export enum Task_Select_Column {
   /** column name */
-  Archived = 'archived',
+  ArchivedAt = 'archivedAt',
   /** column name */
   CircleId = 'circleId',
   /** column name */
@@ -19580,22 +19624,18 @@ export enum Task_Select_Column {
 /** select "task_aggregate_bool_exp_bool_and_arguments_columns" columns of table "task" */
 export enum Task_Select_Column_Task_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
   /** column name */
-  Archived = 'archived',
-  /** column name */
   Private = 'private'
 }
 
 /** select "task_aggregate_bool_exp_bool_or_arguments_columns" columns of table "task" */
 export enum Task_Select_Column_Task_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
   /** column name */
-  Archived = 'archived',
-  /** column name */
   Private = 'private'
 }
 
 /** input type for updating data in table "task" */
 export type Task_Set_Input = {
-  archived?: InputMaybe<Scalars['Boolean']>;
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   circleId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   description?: InputMaybe<Scalars['String']>;
@@ -19770,7 +19810,7 @@ export type Task_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Task_Stream_Cursor_Value_Input = {
-  archived?: InputMaybe<Scalars['Boolean']>;
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   circleId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   description?: InputMaybe<Scalars['String']>;
@@ -19787,7 +19827,7 @@ export type Task_Stream_Cursor_Value_Input = {
 /** update columns of table "task" */
 export enum Task_Update_Column {
   /** column name */
-  Archived = 'archived',
+  ArchivedAt = 'archivedAt',
   /** column name */
   CircleId = 'circleId',
   /** column name */
@@ -20034,7 +20074,7 @@ export type Thread = {
   activities: Array<Thread_Activity>;
   /** An aggregate relationship */
   activities_aggregate: Thread_Activity_Aggregate;
-  archived: Scalars['Boolean'];
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   /** An object relationship */
   circle: Circle;
   circleId: Scalars['uuid'];
@@ -20147,6 +20187,7 @@ export type ThreadMember_Status_AggregateArgs = {
 /** columns and relationships of "thread_activity" */
 export type Thread_Activity = {
   __typename?: 'thread_activity';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   createdAt: Scalars['timestamptz'];
   data: Scalars['jsonb'];
   data_legacy?: Maybe<Scalars['json']>;
@@ -20265,6 +20306,7 @@ export type Thread_Activity_Bool_Exp = {
   _and?: InputMaybe<Array<Thread_Activity_Bool_Exp>>;
   _not?: InputMaybe<Thread_Activity_Bool_Exp>;
   _or?: InputMaybe<Array<Thread_Activity_Bool_Exp>>;
+  archivedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   data?: InputMaybe<Jsonb_Comparison_Exp>;
   data_legacy?: InputMaybe<Json_Comparison_Exp>;
@@ -20288,10 +20330,10 @@ export type Thread_Activity_Bool_Exp = {
 
 /** unique or primary key constraints on table "thread_activity" */
 export enum Thread_Activity_Constraint {
-  /** unique or primary key constraint on columns "id" */
-  ThreadActivityPkey = 'thread_activity_pkey',
   /** unique or primary key constraint on columns "refMeetingId", "type", "threadId" */
-  ThreadActivityThreadIdRefMeetingIdTypeKey = 'thread_activity_threadId_refMeetingId_type_key'
+  ThreadActivityActiveUnique = 'thread_activity_active_unique',
+  /** unique or primary key constraint on columns "id" */
+  ThreadActivityPkey = 'thread_activity_pkey'
 }
 
 /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
@@ -20311,6 +20353,7 @@ export type Thread_Activity_Delete_Key_Input = {
 
 /** input type for inserting data into table "thread_activity" */
 export type Thread_Activity_Insert_Input = {
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   data?: InputMaybe<Scalars['jsonb']>;
   data_legacy?: InputMaybe<Scalars['json']>;
@@ -20334,6 +20377,7 @@ export type Thread_Activity_Insert_Input = {
 /** aggregate max on columns */
 export type Thread_Activity_Max_Fields = {
   __typename?: 'thread_activity_max_fields';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['uuid']>;
   refDecisionId?: Maybe<Scalars['uuid']>;
@@ -20346,6 +20390,7 @@ export type Thread_Activity_Max_Fields = {
 
 /** order by max() on columns of table "thread_activity" */
 export type Thread_Activity_Max_Order_By = {
+  archivedAt?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   refDecisionId?: InputMaybe<Order_By>;
@@ -20359,6 +20404,7 @@ export type Thread_Activity_Max_Order_By = {
 /** aggregate min on columns */
 export type Thread_Activity_Min_Fields = {
   __typename?: 'thread_activity_min_fields';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['uuid']>;
   refDecisionId?: Maybe<Scalars['uuid']>;
@@ -20371,6 +20417,7 @@ export type Thread_Activity_Min_Fields = {
 
 /** order by min() on columns of table "thread_activity" */
 export type Thread_Activity_Min_Order_By = {
+  archivedAt?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   refDecisionId?: InputMaybe<Order_By>;
@@ -20406,6 +20453,7 @@ export type Thread_Activity_On_Conflict = {
 
 /** Ordering options when selecting data from "thread_activity". */
 export type Thread_Activity_Order_By = {
+  archivedAt?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   data?: InputMaybe<Order_By>;
   data_legacy?: InputMaybe<Order_By>;
@@ -20657,6 +20705,8 @@ export type Thread_Activity_Reaction_Updates = {
 /** select columns of table "thread_activity" */
 export enum Thread_Activity_Select_Column {
   /** column name */
+  ArchivedAt = 'archivedAt',
+  /** column name */
   CreatedAt = 'createdAt',
   /** column name */
   Data = 'data',
@@ -20682,6 +20732,7 @@ export enum Thread_Activity_Select_Column {
 
 /** input type for updating data in table "thread_activity" */
 export type Thread_Activity_Set_Input = {
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   data?: InputMaybe<Scalars['jsonb']>;
   data_legacy?: InputMaybe<Scalars['json']>;
@@ -20705,6 +20756,7 @@ export type Thread_Activity_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Thread_Activity_Stream_Cursor_Value_Input = {
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   data?: InputMaybe<Scalars['jsonb']>;
   data_legacy?: InputMaybe<Scalars['json']>;
@@ -20877,6 +20929,8 @@ export type Thread_Activity_Type_Updates = {
 /** update columns of table "thread_activity" */
 export enum Thread_Activity_Update_Column {
   /** column name */
+  ArchivedAt = 'archivedAt',
+  /** column name */
   CreatedAt = 'createdAt',
   /** column name */
   Data = 'data',
@@ -20987,7 +21041,7 @@ export type Thread_Bool_Exp = {
   _or?: InputMaybe<Array<Thread_Bool_Exp>>;
   activities?: InputMaybe<Thread_Activity_Bool_Exp>;
   activities_aggregate?: InputMaybe<Thread_Activity_Aggregate_Bool_Exp>;
-  archived?: InputMaybe<Boolean_Comparison_Exp>;
+  archivedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   circle?: InputMaybe<Circle_Bool_Exp>;
   circleId?: InputMaybe<Uuid_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
@@ -21214,7 +21268,7 @@ export type Thread_Extra_Member_Updates = {
 /** input type for inserting data into table "thread" */
 export type Thread_Insert_Input = {
   activities?: InputMaybe<Thread_Activity_Arr_Rel_Insert_Input>;
-  archived?: InputMaybe<Scalars['Boolean']>;
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   circle?: InputMaybe<Circle_Obj_Rel_Insert_Input>;
   circleId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
@@ -21235,6 +21289,7 @@ export type Thread_Insert_Input = {
 /** aggregate max on columns */
 export type Thread_Max_Fields = {
   __typename?: 'thread_max_fields';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   circleId?: Maybe<Scalars['uuid']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['uuid']>;
@@ -21245,6 +21300,7 @@ export type Thread_Max_Fields = {
 
 /** order by max() on columns of table "thread" */
 export type Thread_Max_Order_By = {
+  archivedAt?: InputMaybe<Order_By>;
   circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -21481,6 +21537,7 @@ export type Thread_Member_Status_Updates = {
 /** aggregate min on columns */
 export type Thread_Min_Fields = {
   __typename?: 'thread_min_fields';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   circleId?: Maybe<Scalars['uuid']>;
   createdAt?: Maybe<Scalars['timestamptz']>;
   id?: Maybe<Scalars['uuid']>;
@@ -21491,6 +21548,7 @@ export type Thread_Min_Fields = {
 
 /** order by min() on columns of table "thread" */
 export type Thread_Min_Order_By = {
+  archivedAt?: InputMaybe<Order_By>;
   circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -21525,7 +21583,7 @@ export type Thread_On_Conflict = {
 /** Ordering options when selecting data from "thread". */
 export type Thread_Order_By = {
   activities_aggregate?: InputMaybe<Thread_Activity_Aggregate_Order_By>;
-  archived?: InputMaybe<Order_By>;
+  archivedAt?: InputMaybe<Order_By>;
   circle?: InputMaybe<Circle_Order_By>;
   circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
@@ -21909,7 +21967,7 @@ export type Thread_Proposal_Vote_Updates = {
 /** select columns of table "thread" */
 export enum Thread_Select_Column {
   /** column name */
-  Archived = 'archived',
+  ArchivedAt = 'archivedAt',
   /** column name */
   CircleId = 'circleId',
   /** column name */
@@ -21933,8 +21991,6 @@ export enum Thread_Select_Column {
 /** select "thread_aggregate_bool_exp_bool_and_arguments_columns" columns of table "thread" */
 export enum Thread_Select_Column_Thread_Aggregate_Bool_Exp_Bool_And_Arguments_Columns {
   /** column name */
-  Archived = 'archived',
-  /** column name */
   Pinned = 'pinned',
   /** column name */
   Private = 'private'
@@ -21943,8 +21999,6 @@ export enum Thread_Select_Column_Thread_Aggregate_Bool_Exp_Bool_And_Arguments_Co
 /** select "thread_aggregate_bool_exp_bool_or_arguments_columns" columns of table "thread" */
 export enum Thread_Select_Column_Thread_Aggregate_Bool_Exp_Bool_Or_Arguments_Columns {
   /** column name */
-  Archived = 'archived',
-  /** column name */
   Pinned = 'pinned',
   /** column name */
   Private = 'private'
@@ -21952,7 +22006,7 @@ export enum Thread_Select_Column_Thread_Aggregate_Bool_Exp_Bool_Or_Arguments_Col
 
 /** input type for updating data in table "thread" */
 export type Thread_Set_Input = {
-  archived?: InputMaybe<Scalars['Boolean']>;
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   circleId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -22124,7 +22178,7 @@ export type Thread_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Thread_Stream_Cursor_Value_Input = {
-  archived?: InputMaybe<Scalars['Boolean']>;
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   circleId?: InputMaybe<Scalars['uuid']>;
   createdAt?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -22139,7 +22193,7 @@ export type Thread_Stream_Cursor_Value_Input = {
 /** update columns of table "thread" */
 export enum Thread_Update_Column {
   /** column name */
-  Archived = 'archived',
+  ArchivedAt = 'archivedAt',
   /** column name */
   CircleId = 'circleId',
   /** column name */
@@ -22183,6 +22237,7 @@ export type Timestamptz_Comparison_Exp = {
 /** columns and relationships of "user_app" */
 export type User_App = {
   __typename?: 'user_app';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   config: Scalars['json'];
   createdAt: Scalars['date'];
   id: Scalars['uuid'];
@@ -22264,6 +22319,7 @@ export type User_App_Bool_Exp = {
   _and?: InputMaybe<Array<User_App_Bool_Exp>>;
   _not?: InputMaybe<User_App_Bool_Exp>;
   _or?: InputMaybe<Array<User_App_Bool_Exp>>;
+  archivedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   config?: InputMaybe<Json_Comparison_Exp>;
   createdAt?: InputMaybe<Date_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
@@ -22276,14 +22332,15 @@ export type User_App_Bool_Exp = {
 
 /** unique or primary key constraints on table "user_app" */
 export enum User_App_Constraint {
-  /** unique or primary key constraint on columns "id" */
-  UserAppPkey = 'user_app_pkey',
   /** unique or primary key constraint on columns "userId", "type" */
-  UserAppUserIdTypeKey = 'user_app_userId_type_key'
+  UserAppActiveUnique = 'user_app_active_unique',
+  /** unique or primary key constraint on columns "id" */
+  UserAppPkey = 'user_app_pkey'
 }
 
 /** input type for inserting data into table "user_app" */
 export type User_App_Insert_Input = {
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   config?: InputMaybe<Scalars['json']>;
   createdAt?: InputMaybe<Scalars['date']>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -22297,6 +22354,7 @@ export type User_App_Insert_Input = {
 /** aggregate max on columns */
 export type User_App_Max_Fields = {
   __typename?: 'user_app_max_fields';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   createdAt?: Maybe<Scalars['date']>;
   id?: Maybe<Scalars['uuid']>;
   userId?: Maybe<Scalars['uuid']>;
@@ -22304,6 +22362,7 @@ export type User_App_Max_Fields = {
 
 /** order by max() on columns of table "user_app" */
 export type User_App_Max_Order_By = {
+  archivedAt?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   userId?: InputMaybe<Order_By>;
@@ -22312,6 +22371,7 @@ export type User_App_Max_Order_By = {
 /** aggregate min on columns */
 export type User_App_Min_Fields = {
   __typename?: 'user_app_min_fields';
+  archivedAt?: Maybe<Scalars['timestamptz']>;
   createdAt?: Maybe<Scalars['date']>;
   id?: Maybe<Scalars['uuid']>;
   userId?: Maybe<Scalars['uuid']>;
@@ -22319,6 +22379,7 @@ export type User_App_Min_Fields = {
 
 /** order by min() on columns of table "user_app" */
 export type User_App_Min_Order_By = {
+  archivedAt?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   userId?: InputMaybe<Order_By>;
@@ -22342,6 +22403,7 @@ export type User_App_On_Conflict = {
 
 /** Ordering options when selecting data from "user_app". */
 export type User_App_Order_By = {
+  archivedAt?: InputMaybe<Order_By>;
   config?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
@@ -22360,6 +22422,8 @@ export type User_App_Pk_Columns_Input = {
 /** select columns of table "user_app" */
 export enum User_App_Select_Column {
   /** column name */
+  ArchivedAt = 'archivedAt',
+  /** column name */
   Config = 'config',
   /** column name */
   CreatedAt = 'createdAt',
@@ -22377,6 +22441,7 @@ export enum User_App_Select_Column {
 
 /** input type for updating data in table "user_app" */
 export type User_App_Set_Input = {
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   config?: InputMaybe<Scalars['json']>;
   createdAt?: InputMaybe<Scalars['date']>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -22396,6 +22461,7 @@ export type User_App_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type User_App_Stream_Cursor_Value_Input = {
+  archivedAt?: InputMaybe<Scalars['timestamptz']>;
   config?: InputMaybe<Scalars['json']>;
   createdAt?: InputMaybe<Scalars['date']>;
   id?: InputMaybe<Scalars['uuid']>;
@@ -22407,6 +22473,8 @@ export type User_App_Stream_Cursor_Value_Input = {
 
 /** update columns of table "user_app" */
 export enum User_App_Update_Column {
+  /** column name */
+  ArchivedAt = 'archivedAt',
   /** column name */
   Config = 'config',
   /** column name */
@@ -23477,21 +23545,21 @@ export type Virus_Updates = {
 
 export type ApiKeyFragment = { __typename?: 'api_key', id: string, name: string, value: string, createdAt: string };
 
-export type CircleFragment = { __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean };
+export type CircleFragment = { __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archivedAt?: string | null };
 
-export type CircleSummaryFragment = { __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean, role: { __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null } };
+export type CircleSummaryFragment = { __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archivedAt?: string | null, role: { __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null } };
 
-export type CircleLinkFragment = { __typename?: 'circle_link', id: string, orgId: string, parentId: string, circleId: string, createdAt: string, archived: boolean };
+export type CircleLinkFragment = { __typename?: 'circle_link', id: string, orgId: string, parentId: string, circleId: string, createdAt: string, archivedAt?: string | null };
 
-export type CircleMemberFragment = { __typename?: 'circle_member', id: string, orgId: string, circleId: string, memberId: string, createdAt: string, archived: boolean };
+export type CircleMemberFragment = { __typename?: 'circle_member', id: string, orgId: string, circleId: string, memberId: string, createdAt: string, archivedAt?: string | null };
 
-export type DecisionFragment = { __typename?: 'decision', id: string, orgId: string, circleId: string, memberId: string, title: string, description: string, archived: boolean, createdAt: string, private: boolean };
+export type DecisionFragment = { __typename?: 'decision', id: string, orgId: string, circleId: string, memberId: string, title: string, description: string, archivedAt?: string | null, createdAt: string, private: boolean };
 
 export type LogFragment = { __typename?: 'log', id: string, orgId: string, userId: string, memberId: string, memberName: string, meetingId?: string | null, createdAt: string, display: LogDisplay, changes: EntitiesChanges, cancelLogId?: string | null, cancelMemberId?: string | null, cancelMemberName?: string | null, canceled: boolean, threadId?: string | null, taskId?: string | null, decisionId?: string | null };
 
 export type MeetingSummaryFragment = { __typename?: 'meeting', id: string, orgId: string, circleId: string, startDate: string, endDate: string, ended: boolean, title: string, currentStepId?: string | null, summary: string, private: boolean, meeting_attendees: Array<{ __typename?: 'meeting_attendee', id: string, meetingId: string, memberId: string, present?: boolean | null, startNotified: boolean }> };
 
-export type MeetingFragment = { __typename?: 'meeting', createdAt: string, stepsConfig: Array<MeetingStepConfig>, archived: boolean, videoConf?: VideoConf | null, recurringId?: string | null, recurringDate?: string | null, invitedReadonly: boolean, id: string, orgId: string, circleId: string, startDate: string, endDate: string, ended: boolean, title: string, currentStepId?: string | null, summary: string, private: boolean, meeting_attendees: Array<{ __typename?: 'meeting_attendee', id: string, meetingId: string, memberId: string, present?: boolean | null, startNotified: boolean }> };
+export type MeetingFragment = { __typename?: 'meeting', createdAt: string, stepsConfig: Array<MeetingStepConfig>, archivedAt?: string | null, videoConf?: VideoConf | null, recurringId?: string | null, recurringDate?: string | null, invitedReadonly: boolean, id: string, orgId: string, circleId: string, startDate: string, endDate: string, ended: boolean, title: string, currentStepId?: string | null, summary: string, private: boolean, meeting_attendees: Array<{ __typename?: 'meeting_attendee', id: string, meetingId: string, memberId: string, present?: boolean | null, startNotified: boolean }> };
 
 export type MeetingAttendeeFragment = { __typename?: 'meeting_attendee', id: string, meetingId: string, memberId: string, present?: boolean | null, startNotified: boolean };
 
@@ -23499,33 +23567,33 @@ export type MeetingRecurringFragment = { __typename?: 'meeting_recurring', id: s
 
 export type MeetingStepFragment = { __typename?: 'meeting_step', id: string, meetingId: string, stepConfigId: string, notes: string, type: Meeting_Step_Type_Enum, data: MeetingStepData };
 
-export type MemberFragment = { __typename?: 'member', id: string, orgId: string, archived: boolean, name: string, description: string, pictureFileId?: string | null, picture?: string | null, userId?: string | null, inviteEmail?: string | null, inviteDate?: string | null, role?: Member_Role_Enum | null };
+export type MemberFragment = { __typename?: 'member', id: string, orgId: string, archivedAt?: string | null, name: string, description: string, pictureFileId?: string | null, picture?: string | null, userId?: string | null, inviteEmail?: string | null, inviteDate?: string | null, role?: Member_Role_Enum | null };
 
 export type MemberSummaryFragment = { __typename?: 'member', id: string, userId?: string | null, name: string, picture?: string | null };
 
-export type NewsFragment = { __typename?: 'news', id?: string | null, createdAt?: string | null, decision?: { __typename?: 'decision', id: string, orgId: string, circleId: string, memberId: string, title: string, description: string, archived: boolean, createdAt: string, private: boolean } | null, meeting?: { __typename?: 'meeting', id: string, orgId: string, circleId: string, startDate: string, endDate: string, ended: boolean, title: string, currentStepId?: string | null, summary: string, private: boolean, meeting_attendees: Array<{ __typename?: 'meeting_attendee', id: string, meetingId: string, memberId: string, present?: boolean | null, startNotified: boolean }> } | null, thread?: { __typename?: 'thread', id: string, orgId: string, circleId: string, initiatorMemberId: string, title: string, createdAt: string, archived: boolean, pinned: boolean, status: Thread_Status_Enum, private: boolean, activities: Array<{ __typename?: 'thread_activity', id: string, threadId: string, userId: string, createdAt: string, type: Thread_Activity_Type_Enum, data: any, reactions: Array<{ __typename?: 'thread_activity_reaction', id: string, userId: string, shortcode: string }>, refThread?: { __typename?: 'thread', id: string, orgId: string, circleId: string, initiatorMemberId: string, title: string, createdAt: string, archived: boolean, pinned: boolean, status: Thread_Status_Enum, private: boolean, extra_members: Array<{ __typename?: 'thread_extra_member', id: string, threadId: string, memberId: string }> } | null, refMeeting?: { __typename?: 'meeting', id: string, orgId: string, circleId: string, startDate: string, endDate: string, ended: boolean, title: string, currentStepId?: string | null, summary: string, private: boolean, meeting_attendees: Array<{ __typename?: 'meeting_attendee', id: string, meetingId: string, memberId: string, present?: boolean | null, startNotified: boolean }> } | null, refTask?: { __typename?: 'task', id: string, orgId: string, circleId: string, memberId?: string | null, title: string, description: string, archived: boolean, createdAt: string, dueDate?: string | null, status: Task_Status_Enum, private: boolean } | null, refDecision?: { __typename?: 'decision', id: string, orgId: string, circleId: string, memberId: string, title: string, description: string, archived: boolean, createdAt: string, private: boolean } | null }>, extra_members: Array<{ __typename?: 'thread_extra_member', id: string, threadId: string, memberId: string }> } | null };
+export type NewsFragment = { __typename?: 'news', id?: string | null, createdAt?: string | null, decision?: { __typename?: 'decision', id: string, orgId: string, circleId: string, memberId: string, title: string, description: string, archivedAt?: string | null, createdAt: string, private: boolean } | null, meeting?: { __typename?: 'meeting', id: string, orgId: string, circleId: string, startDate: string, endDate: string, ended: boolean, title: string, currentStepId?: string | null, summary: string, private: boolean, meeting_attendees: Array<{ __typename?: 'meeting_attendee', id: string, meetingId: string, memberId: string, present?: boolean | null, startNotified: boolean }> } | null, thread?: { __typename?: 'thread', id: string, orgId: string, circleId: string, initiatorMemberId: string, title: string, createdAt: string, archivedAt?: string | null, pinned: boolean, status: Thread_Status_Enum, private: boolean, activities: Array<{ __typename?: 'thread_activity', id: string, threadId: string, userId: string, createdAt: string, type: Thread_Activity_Type_Enum, data: any, reactions: Array<{ __typename?: 'thread_activity_reaction', id: string, userId: string, shortcode: string }>, refThread?: { __typename?: 'thread', id: string, orgId: string, circleId: string, initiatorMemberId: string, title: string, createdAt: string, archivedAt?: string | null, pinned: boolean, status: Thread_Status_Enum, private: boolean, extra_members: Array<{ __typename?: 'thread_extra_member', id: string, threadId: string, memberId: string }> } | null, refMeeting?: { __typename?: 'meeting', id: string, orgId: string, circleId: string, startDate: string, endDate: string, ended: boolean, title: string, currentStepId?: string | null, summary: string, private: boolean, meeting_attendees: Array<{ __typename?: 'meeting_attendee', id: string, meetingId: string, memberId: string, present?: boolean | null, startNotified: boolean }> } | null, refTask?: { __typename?: 'task', id: string, orgId: string, circleId: string, memberId?: string | null, title: string, description: string, archivedAt?: string | null, createdAt: string, dueDate?: string | null, status: Task_Status_Enum, private: boolean } | null, refDecision?: { __typename?: 'decision', id: string, orgId: string, circleId: string, memberId: string, title: string, description: string, archivedAt?: string | null, createdAt: string, private: boolean } | null }>, extra_members: Array<{ __typename?: 'thread_extra_member', id: string, threadId: string, memberId: string }> } | null };
 
-export type OrgFragment = { __typename?: 'org', id: string, name: string, archived: boolean, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, governanceMode: Governance_Mode_Enum, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null };
+export type OrgFragment = { __typename?: 'org', id: string, name: string, archivedAt?: string | null, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, governanceMode: Governance_Mode_Enum, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null };
 
-export type OrgDataFragment = { __typename?: 'org', id: string, name: string, archived: boolean, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, governanceMode: Governance_Mode_Enum, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null, org_subscription?: { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum } | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archived: boolean }>, circleMembers: Array<{ __typename?: 'circle_member', id: string, orgId: string, circleId: string, memberId: string, createdAt: string, archived: boolean }>, circleLinks: Array<{ __typename?: 'circle_link', id: string, orgId: string, parentId: string, circleId: string, createdAt: string, archived: boolean }>, roles: Array<{ __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null }>, members: Array<{ __typename?: 'member', id: string, orgId: string, archived: boolean, name: string, description: string, pictureFileId?: string | null, picture?: string | null, userId?: string | null, inviteEmail?: string | null, inviteDate?: string | null, role?: Member_Role_Enum | null }> };
+export type OrgDataFragment = { __typename?: 'org', id: string, name: string, archivedAt?: string | null, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, governanceMode: Governance_Mode_Enum, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null, org_subscription?: { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum } | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archivedAt?: string | null }>, circleMembers: Array<{ __typename?: 'circle_member', id: string, orgId: string, circleId: string, memberId: string, createdAt: string, archivedAt?: string | null }>, circleLinks: Array<{ __typename?: 'circle_link', id: string, orgId: string, parentId: string, circleId: string, createdAt: string, archivedAt?: string | null }>, roles: Array<{ __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null }>, members: Array<{ __typename?: 'member', id: string, orgId: string, archivedAt?: string | null, name: string, description: string, pictureFileId?: string | null, picture?: string | null, userId?: string | null, inviteEmail?: string | null, inviteDate?: string | null, role?: Member_Role_Enum | null }> };
 
 export type OrgSubscriptionFragment = { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum };
 
-export type RoleFragment = { __typename?: 'role', id: string, orgId: string, archived: boolean, base: boolean, name: string, purpose: string, domain: string, accountabilities: string, checklist: string, indicators: string, notes: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null };
+export type RoleFragment = { __typename?: 'role', id: string, orgId: string, archivedAt?: string | null, base: boolean, name: string, purpose: string, domain: string, accountabilities: string, checklist: string, indicators: string, notes: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null };
 
 export type RoleSummaryFragment = { __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null };
 
 export type RoleAiFragment = { __typename?: 'role_ai', id: string, name: string, purpose: string, domain: string, accountabilities: string, checklist: string, indicators: string, notes: string };
 
-export type TaskFragment = { __typename?: 'task', id: string, orgId: string, circleId: string, memberId?: string | null, title: string, description: string, archived: boolean, createdAt: string, dueDate?: string | null, status: Task_Status_Enum, private: boolean };
+export type TaskFragment = { __typename?: 'task', id: string, orgId: string, circleId: string, memberId?: string | null, title: string, description: string, archivedAt?: string | null, createdAt: string, dueDate?: string | null, status: Task_Status_Enum, private: boolean };
 
-export type ThreadFragment = { __typename?: 'thread', id: string, orgId: string, circleId: string, initiatorMemberId: string, title: string, createdAt: string, archived: boolean, pinned: boolean, status: Thread_Status_Enum, private: boolean, extra_members: Array<{ __typename?: 'thread_extra_member', id: string, threadId: string, memberId: string }> };
+export type ThreadFragment = { __typename?: 'thread', id: string, orgId: string, circleId: string, initiatorMemberId: string, title: string, createdAt: string, archivedAt?: string | null, pinned: boolean, status: Thread_Status_Enum, private: boolean, extra_members: Array<{ __typename?: 'thread_extra_member', id: string, threadId: string, memberId: string }> };
 
 export type ThreadMemberStatusFragment = { __typename?: 'thread_member_status', lastReadActivityId?: string | null, lastReadDate: string };
 
-export type ThreadWithFirstActivityFragment = { __typename?: 'thread', id: string, orgId: string, circleId: string, initiatorMemberId: string, title: string, createdAt: string, archived: boolean, pinned: boolean, status: Thread_Status_Enum, private: boolean, activities: Array<{ __typename?: 'thread_activity', id: string, threadId: string, userId: string, createdAt: string, type: Thread_Activity_Type_Enum, data: any, reactions: Array<{ __typename?: 'thread_activity_reaction', id: string, userId: string, shortcode: string }>, refThread?: { __typename?: 'thread', id: string, orgId: string, circleId: string, initiatorMemberId: string, title: string, createdAt: string, archived: boolean, pinned: boolean, status: Thread_Status_Enum, private: boolean, extra_members: Array<{ __typename?: 'thread_extra_member', id: string, threadId: string, memberId: string }> } | null, refMeeting?: { __typename?: 'meeting', id: string, orgId: string, circleId: string, startDate: string, endDate: string, ended: boolean, title: string, currentStepId?: string | null, summary: string, private: boolean, meeting_attendees: Array<{ __typename?: 'meeting_attendee', id: string, meetingId: string, memberId: string, present?: boolean | null, startNotified: boolean }> } | null, refTask?: { __typename?: 'task', id: string, orgId: string, circleId: string, memberId?: string | null, title: string, description: string, archived: boolean, createdAt: string, dueDate?: string | null, status: Task_Status_Enum, private: boolean } | null, refDecision?: { __typename?: 'decision', id: string, orgId: string, circleId: string, memberId: string, title: string, description: string, archived: boolean, createdAt: string, private: boolean } | null }>, extra_members: Array<{ __typename?: 'thread_extra_member', id: string, threadId: string, memberId: string }> };
+export type ThreadWithFirstActivityFragment = { __typename?: 'thread', id: string, orgId: string, circleId: string, initiatorMemberId: string, title: string, createdAt: string, archivedAt?: string | null, pinned: boolean, status: Thread_Status_Enum, private: boolean, activities: Array<{ __typename?: 'thread_activity', id: string, threadId: string, userId: string, createdAt: string, type: Thread_Activity_Type_Enum, data: any, reactions: Array<{ __typename?: 'thread_activity_reaction', id: string, userId: string, shortcode: string }>, refThread?: { __typename?: 'thread', id: string, orgId: string, circleId: string, initiatorMemberId: string, title: string, createdAt: string, archivedAt?: string | null, pinned: boolean, status: Thread_Status_Enum, private: boolean, extra_members: Array<{ __typename?: 'thread_extra_member', id: string, threadId: string, memberId: string }> } | null, refMeeting?: { __typename?: 'meeting', id: string, orgId: string, circleId: string, startDate: string, endDate: string, ended: boolean, title: string, currentStepId?: string | null, summary: string, private: boolean, meeting_attendees: Array<{ __typename?: 'meeting_attendee', id: string, meetingId: string, memberId: string, present?: boolean | null, startNotified: boolean }> } | null, refTask?: { __typename?: 'task', id: string, orgId: string, circleId: string, memberId?: string | null, title: string, description: string, archivedAt?: string | null, createdAt: string, dueDate?: string | null, status: Task_Status_Enum, private: boolean } | null, refDecision?: { __typename?: 'decision', id: string, orgId: string, circleId: string, memberId: string, title: string, description: string, archivedAt?: string | null, createdAt: string, private: boolean } | null }>, extra_members: Array<{ __typename?: 'thread_extra_member', id: string, threadId: string, memberId: string }> };
 
-export type ThreadActivityFragment = { __typename?: 'thread_activity', id: string, threadId: string, userId: string, createdAt: string, type: Thread_Activity_Type_Enum, data: any, reactions: Array<{ __typename?: 'thread_activity_reaction', id: string, userId: string, shortcode: string }>, refThread?: { __typename?: 'thread', id: string, orgId: string, circleId: string, initiatorMemberId: string, title: string, createdAt: string, archived: boolean, pinned: boolean, status: Thread_Status_Enum, private: boolean, extra_members: Array<{ __typename?: 'thread_extra_member', id: string, threadId: string, memberId: string }> } | null, refMeeting?: { __typename?: 'meeting', id: string, orgId: string, circleId: string, startDate: string, endDate: string, ended: boolean, title: string, currentStepId?: string | null, summary: string, private: boolean, meeting_attendees: Array<{ __typename?: 'meeting_attendee', id: string, meetingId: string, memberId: string, present?: boolean | null, startNotified: boolean }> } | null, refTask?: { __typename?: 'task', id: string, orgId: string, circleId: string, memberId?: string | null, title: string, description: string, archived: boolean, createdAt: string, dueDate?: string | null, status: Task_Status_Enum, private: boolean } | null, refDecision?: { __typename?: 'decision', id: string, orgId: string, circleId: string, memberId: string, title: string, description: string, archived: boolean, createdAt: string, private: boolean } | null };
+export type ThreadActivityFragment = { __typename?: 'thread_activity', id: string, threadId: string, userId: string, createdAt: string, type: Thread_Activity_Type_Enum, data: any, reactions: Array<{ __typename?: 'thread_activity_reaction', id: string, userId: string, shortcode: string }>, refThread?: { __typename?: 'thread', id: string, orgId: string, circleId: string, initiatorMemberId: string, title: string, createdAt: string, archivedAt?: string | null, pinned: boolean, status: Thread_Status_Enum, private: boolean, extra_members: Array<{ __typename?: 'thread_extra_member', id: string, threadId: string, memberId: string }> } | null, refMeeting?: { __typename?: 'meeting', id: string, orgId: string, circleId: string, startDate: string, endDate: string, ended: boolean, title: string, currentStepId?: string | null, summary: string, private: boolean, meeting_attendees: Array<{ __typename?: 'meeting_attendee', id: string, meetingId: string, memberId: string, present?: boolean | null, startNotified: boolean }> } | null, refTask?: { __typename?: 'task', id: string, orgId: string, circleId: string, memberId?: string | null, title: string, description: string, archivedAt?: string | null, createdAt: string, dueDate?: string | null, status: Task_Status_Enum, private: boolean } | null, refDecision?: { __typename?: 'decision', id: string, orgId: string, circleId: string, memberId: string, title: string, description: string, archivedAt?: string | null, createdAt: string, private: boolean } | null };
 
 export type ThreadActivityReactionFragment = { __typename?: 'thread_activity_reaction', id: string, userId: string, shortcode: string };
 
@@ -23536,31 +23604,31 @@ export type UserAppFragment = { __typename?: 'user_app', id: string, userId: str
 export type UserAppFullFragment = { __typename?: 'user_app', id: string, userId: string, type: App_Type_Enum, secretConfig: any, config: any, tmpData?: any | null, createdAt: any, user?: { __typename?: 'users', metadata: UserMetadata } | null };
 
 export const ApiKeyFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ApiKey"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"api_key"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"value"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]} as unknown as DocumentNode<ApiKeyFragment, unknown>;
-export const CircleFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Circle"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"roleId"}},{"kind":"Field","name":{"kind":"Name","value":"parentId"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}}]}}]} as unknown as DocumentNode<CircleFragment, unknown>;
+export const CircleFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Circle"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"roleId"}},{"kind":"Field","name":{"kind":"Name","value":"parentId"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}}]}}]} as unknown as DocumentNode<CircleFragment, unknown>;
 export const RoleSummaryFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"RoleSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"role"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"base"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"singleMember"}},{"kind":"Field","name":{"kind":"Name","value":"parentLink"}},{"kind":"Field","name":{"kind":"Name","value":"colorHue"}}]}}]} as unknown as DocumentNode<RoleSummaryFragment, unknown>;
-export const CircleSummaryFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CircleSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Circle"}},{"kind":"Field","name":{"kind":"Name","value":"role"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"RoleSummary"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Circle"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"roleId"}},{"kind":"Field","name":{"kind":"Name","value":"parentId"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"RoleSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"role"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"base"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"singleMember"}},{"kind":"Field","name":{"kind":"Name","value":"parentLink"}},{"kind":"Field","name":{"kind":"Name","value":"colorHue"}}]}}]} as unknown as DocumentNode<CircleSummaryFragment, unknown>;
+export const CircleSummaryFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CircleSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Circle"}},{"kind":"Field","name":{"kind":"Name","value":"role"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"RoleSummary"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Circle"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"roleId"}},{"kind":"Field","name":{"kind":"Name","value":"parentId"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"RoleSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"role"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"base"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"singleMember"}},{"kind":"Field","name":{"kind":"Name","value":"parentLink"}},{"kind":"Field","name":{"kind":"Name","value":"colorHue"}}]}}]} as unknown as DocumentNode<CircleSummaryFragment, unknown>;
 export const LogFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Log"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"log"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"memberName"}},{"kind":"Field","name":{"kind":"Name","value":"meetingId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"display"}},{"kind":"Field","name":{"kind":"Name","value":"changes"}},{"kind":"Field","name":{"kind":"Name","value":"cancelLogId"}},{"kind":"Field","name":{"kind":"Name","value":"cancelMemberId"}},{"kind":"Field","name":{"kind":"Name","value":"cancelMemberName"}},{"kind":"Field","name":{"kind":"Name","value":"canceled"}},{"kind":"Field","name":{"kind":"Name","value":"threadId"}},{"kind":"Field","name":{"kind":"Name","value":"taskId"}},{"kind":"Field","name":{"kind":"Name","value":"decisionId"}}]}}]} as unknown as DocumentNode<LogFragment, unknown>;
 export const MeetingAttendeeFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MeetingAttendee"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting_attendee"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"meetingId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"present"}},{"kind":"Field","name":{"kind":"Name","value":"startNotified"}}]}}]} as unknown as DocumentNode<MeetingAttendeeFragment, unknown>;
 export const MeetingSummaryFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MeetingSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"ended"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"currentStepId"}},{"kind":"Field","name":{"kind":"Name","value":"summary"}},{"kind":"Field","name":{"kind":"Name","value":"private"}},{"kind":"Field","name":{"kind":"Name","value":"meeting_attendees"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MeetingAttendee"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MeetingAttendee"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting_attendee"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"meetingId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"present"}},{"kind":"Field","name":{"kind":"Name","value":"startNotified"}}]}}]} as unknown as DocumentNode<MeetingSummaryFragment, unknown>;
-export const MeetingFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Meeting"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MeetingSummary"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"stepsConfig"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}},{"kind":"Field","name":{"kind":"Name","value":"videoConf"}},{"kind":"Field","name":{"kind":"Name","value":"recurringId"}},{"kind":"Field","name":{"kind":"Name","value":"recurringDate"}},{"kind":"Field","name":{"kind":"Name","value":"invitedReadonly"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MeetingAttendee"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting_attendee"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"meetingId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"present"}},{"kind":"Field","name":{"kind":"Name","value":"startNotified"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MeetingSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"ended"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"currentStepId"}},{"kind":"Field","name":{"kind":"Name","value":"summary"}},{"kind":"Field","name":{"kind":"Name","value":"private"}},{"kind":"Field","name":{"kind":"Name","value":"meeting_attendees"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MeetingAttendee"}}]}}]}}]} as unknown as DocumentNode<MeetingFragment, unknown>;
+export const MeetingFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Meeting"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MeetingSummary"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"stepsConfig"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}},{"kind":"Field","name":{"kind":"Name","value":"videoConf"}},{"kind":"Field","name":{"kind":"Name","value":"recurringId"}},{"kind":"Field","name":{"kind":"Name","value":"recurringDate"}},{"kind":"Field","name":{"kind":"Name","value":"invitedReadonly"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MeetingAttendee"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting_attendee"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"meetingId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"present"}},{"kind":"Field","name":{"kind":"Name","value":"startNotified"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MeetingSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"ended"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"currentStepId"}},{"kind":"Field","name":{"kind":"Name","value":"summary"}},{"kind":"Field","name":{"kind":"Name","value":"private"}},{"kind":"Field","name":{"kind":"Name","value":"meeting_attendees"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MeetingAttendee"}}]}}]}}]} as unknown as DocumentNode<MeetingFragment, unknown>;
 export const MeetingRecurringFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MeetingRecurring"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting_recurring"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"circle"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"role"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"colorHue"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"scope"}},{"kind":"Field","name":{"kind":"Name","value":"templateId"}},{"kind":"Field","name":{"kind":"Name","value":"template"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"stepsConfig"}}]}},{"kind":"Field","name":{"kind":"Name","value":"rrule"}},{"kind":"Field","name":{"kind":"Name","value":"duration"}},{"kind":"Field","name":{"kind":"Name","value":"videoConf"}},{"kind":"Field","name":{"kind":"Name","value":"private"}},{"kind":"Field","name":{"kind":"Name","value":"invitedReadonly"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]} as unknown as DocumentNode<MeetingRecurringFragment, unknown>;
 export const MeetingStepFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MeetingStep"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting_step"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"meetingId"}},{"kind":"Field","name":{"kind":"Name","value":"stepConfigId"}},{"kind":"Field","name":{"kind":"Name","value":"notes"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"data"}}]}}]} as unknown as DocumentNode<MeetingStepFragment, unknown>;
 export const MemberSummaryFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MemberSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"member"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"picture"}}]}}]} as unknown as DocumentNode<MemberSummaryFragment, unknown>;
-export const DecisionFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Decision"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"decision"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"private"}}]}}]} as unknown as DocumentNode<DecisionFragment, unknown>;
+export const DecisionFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Decision"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"decision"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"private"}}]}}]} as unknown as DocumentNode<DecisionFragment, unknown>;
 export const ThreadExtraMemberFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ThreadExtraMember"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread_extra_member"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"threadId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}}]}}]} as unknown as DocumentNode<ThreadExtraMemberFragment, unknown>;
-export const ThreadFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Thread"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"initiatorMemberId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}},{"kind":"Field","name":{"kind":"Name","value":"pinned"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"private"}},{"kind":"Field","name":{"kind":"Name","value":"extra_members"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ThreadExtraMember"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ThreadExtraMember"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread_extra_member"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"threadId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}}]}}]} as unknown as DocumentNode<ThreadFragment, unknown>;
+export const ThreadFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Thread"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"initiatorMemberId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}},{"kind":"Field","name":{"kind":"Name","value":"pinned"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"private"}},{"kind":"Field","name":{"kind":"Name","value":"extra_members"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ThreadExtraMember"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ThreadExtraMember"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread_extra_member"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"threadId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}}]}}]} as unknown as DocumentNode<ThreadFragment, unknown>;
 export const ThreadActivityReactionFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ThreadActivityReaction"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread_activity_reaction"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"shortcode"}}]}}]} as unknown as DocumentNode<ThreadActivityReactionFragment, unknown>;
-export const TaskFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Task"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"task"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"dueDate"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"private"}}]}}]} as unknown as DocumentNode<TaskFragment, unknown>;
-export const ThreadActivityFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ThreadActivity"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread_activity"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"threadId"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"data"}},{"kind":"Field","name":{"kind":"Name","value":"reactions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ThreadActivityReaction"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refThread"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Thread"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refMeeting"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MeetingSummary"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refTask"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Task"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refDecision"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Decision"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ThreadExtraMember"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread_extra_member"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"threadId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MeetingAttendee"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting_attendee"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"meetingId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"present"}},{"kind":"Field","name":{"kind":"Name","value":"startNotified"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ThreadActivityReaction"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread_activity_reaction"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"shortcode"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Thread"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"initiatorMemberId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}},{"kind":"Field","name":{"kind":"Name","value":"pinned"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"private"}},{"kind":"Field","name":{"kind":"Name","value":"extra_members"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ThreadExtraMember"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MeetingSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"ended"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"currentStepId"}},{"kind":"Field","name":{"kind":"Name","value":"summary"}},{"kind":"Field","name":{"kind":"Name","value":"private"}},{"kind":"Field","name":{"kind":"Name","value":"meeting_attendees"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MeetingAttendee"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Task"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"task"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"dueDate"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"private"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Decision"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"decision"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"private"}}]}}]} as unknown as DocumentNode<ThreadActivityFragment, unknown>;
-export const ThreadWithFirstActivityFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ThreadWithFirstActivity"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Thread"}},{"kind":"Field","name":{"kind":"Name","value":"activities"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"type"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"EnumValue","value":"Message"}}]}}]}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"createdAt"},"value":{"kind":"EnumValue","value":"asc"}}]}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"1"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ThreadActivity"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ThreadExtraMember"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread_extra_member"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"threadId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ThreadActivityReaction"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread_activity_reaction"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"shortcode"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Thread"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"initiatorMemberId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}},{"kind":"Field","name":{"kind":"Name","value":"pinned"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"private"}},{"kind":"Field","name":{"kind":"Name","value":"extra_members"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ThreadExtraMember"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MeetingAttendee"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting_attendee"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"meetingId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"present"}},{"kind":"Field","name":{"kind":"Name","value":"startNotified"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MeetingSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"ended"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"currentStepId"}},{"kind":"Field","name":{"kind":"Name","value":"summary"}},{"kind":"Field","name":{"kind":"Name","value":"private"}},{"kind":"Field","name":{"kind":"Name","value":"meeting_attendees"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MeetingAttendee"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Task"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"task"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"dueDate"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"private"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Decision"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"decision"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"private"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ThreadActivity"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread_activity"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"threadId"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"data"}},{"kind":"Field","name":{"kind":"Name","value":"reactions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ThreadActivityReaction"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refThread"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Thread"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refMeeting"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MeetingSummary"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refTask"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Task"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refDecision"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Decision"}}]}}]}}]} as unknown as DocumentNode<ThreadWithFirstActivityFragment, unknown>;
-export const NewsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"News"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"news"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"decision"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Decision"}}]}},{"kind":"Field","name":{"kind":"Name","value":"meeting"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MeetingSummary"}}]}},{"kind":"Field","name":{"kind":"Name","value":"thread"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ThreadWithFirstActivity"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MeetingAttendee"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting_attendee"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"meetingId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"present"}},{"kind":"Field","name":{"kind":"Name","value":"startNotified"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ThreadExtraMember"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread_extra_member"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"threadId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Thread"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"initiatorMemberId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}},{"kind":"Field","name":{"kind":"Name","value":"pinned"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"private"}},{"kind":"Field","name":{"kind":"Name","value":"extra_members"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ThreadExtraMember"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ThreadActivityReaction"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread_activity_reaction"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"shortcode"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MeetingSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"ended"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"currentStepId"}},{"kind":"Field","name":{"kind":"Name","value":"summary"}},{"kind":"Field","name":{"kind":"Name","value":"private"}},{"kind":"Field","name":{"kind":"Name","value":"meeting_attendees"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MeetingAttendee"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Task"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"task"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"dueDate"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"private"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Decision"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"decision"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"private"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ThreadActivity"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread_activity"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"threadId"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"data"}},{"kind":"Field","name":{"kind":"Name","value":"reactions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ThreadActivityReaction"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refThread"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Thread"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refMeeting"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MeetingSummary"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refTask"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Task"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refDecision"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Decision"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ThreadWithFirstActivity"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Thread"}},{"kind":"Field","name":{"kind":"Name","value":"activities"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"type"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"EnumValue","value":"Message"}}]}}]}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"createdAt"},"value":{"kind":"EnumValue","value":"asc"}}]}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"1"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ThreadActivity"}}]}}]}}]} as unknown as DocumentNode<NewsFragment, unknown>;
-export const OrgFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Org"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"org"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"shareOrg"}},{"kind":"Field","name":{"kind":"Name","value":"shareMembers"}},{"kind":"Field","name":{"kind":"Name","value":"governanceMode"}},{"kind":"Field","name":{"kind":"Name","value":"defaultGraphView"}},{"kind":"Field","name":{"kind":"Name","value":"icon"}},{"kind":"Field","name":{"kind":"Name","value":"homeNote"}}]}}]} as unknown as DocumentNode<OrgFragment, unknown>;
+export const TaskFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Task"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"task"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"dueDate"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"private"}}]}}]} as unknown as DocumentNode<TaskFragment, unknown>;
+export const ThreadActivityFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ThreadActivity"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread_activity"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"threadId"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"data"}},{"kind":"Field","name":{"kind":"Name","value":"reactions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ThreadActivityReaction"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refThread"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Thread"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refMeeting"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MeetingSummary"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refTask"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Task"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refDecision"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Decision"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ThreadExtraMember"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread_extra_member"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"threadId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MeetingAttendee"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting_attendee"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"meetingId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"present"}},{"kind":"Field","name":{"kind":"Name","value":"startNotified"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ThreadActivityReaction"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread_activity_reaction"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"shortcode"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Thread"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"initiatorMemberId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}},{"kind":"Field","name":{"kind":"Name","value":"pinned"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"private"}},{"kind":"Field","name":{"kind":"Name","value":"extra_members"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ThreadExtraMember"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MeetingSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"ended"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"currentStepId"}},{"kind":"Field","name":{"kind":"Name","value":"summary"}},{"kind":"Field","name":{"kind":"Name","value":"private"}},{"kind":"Field","name":{"kind":"Name","value":"meeting_attendees"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MeetingAttendee"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Task"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"task"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"dueDate"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"private"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Decision"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"decision"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"private"}}]}}]} as unknown as DocumentNode<ThreadActivityFragment, unknown>;
+export const ThreadWithFirstActivityFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ThreadWithFirstActivity"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Thread"}},{"kind":"Field","name":{"kind":"Name","value":"activities"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"type"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"EnumValue","value":"Message"}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"archivedAt"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_is_null"},"value":{"kind":"BooleanValue","value":true}}]}}]}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"createdAt"},"value":{"kind":"EnumValue","value":"asc"}}]}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"1"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ThreadActivity"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ThreadExtraMember"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread_extra_member"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"threadId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ThreadActivityReaction"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread_activity_reaction"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"shortcode"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Thread"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"initiatorMemberId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}},{"kind":"Field","name":{"kind":"Name","value":"pinned"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"private"}},{"kind":"Field","name":{"kind":"Name","value":"extra_members"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ThreadExtraMember"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MeetingAttendee"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting_attendee"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"meetingId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"present"}},{"kind":"Field","name":{"kind":"Name","value":"startNotified"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MeetingSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"ended"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"currentStepId"}},{"kind":"Field","name":{"kind":"Name","value":"summary"}},{"kind":"Field","name":{"kind":"Name","value":"private"}},{"kind":"Field","name":{"kind":"Name","value":"meeting_attendees"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MeetingAttendee"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Task"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"task"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"dueDate"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"private"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Decision"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"decision"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"private"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ThreadActivity"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread_activity"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"threadId"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"data"}},{"kind":"Field","name":{"kind":"Name","value":"reactions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ThreadActivityReaction"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refThread"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Thread"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refMeeting"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MeetingSummary"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refTask"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Task"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refDecision"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Decision"}}]}}]}}]} as unknown as DocumentNode<ThreadWithFirstActivityFragment, unknown>;
+export const NewsFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"News"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"news"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"decision"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Decision"}}]}},{"kind":"Field","name":{"kind":"Name","value":"meeting"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MeetingSummary"}}]}},{"kind":"Field","name":{"kind":"Name","value":"thread"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ThreadWithFirstActivity"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MeetingAttendee"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting_attendee"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"meetingId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"present"}},{"kind":"Field","name":{"kind":"Name","value":"startNotified"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ThreadExtraMember"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread_extra_member"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"threadId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Thread"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"initiatorMemberId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}},{"kind":"Field","name":{"kind":"Name","value":"pinned"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"private"}},{"kind":"Field","name":{"kind":"Name","value":"extra_members"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ThreadExtraMember"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ThreadActivityReaction"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread_activity_reaction"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"shortcode"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MeetingSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"ended"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"currentStepId"}},{"kind":"Field","name":{"kind":"Name","value":"summary"}},{"kind":"Field","name":{"kind":"Name","value":"private"}},{"kind":"Field","name":{"kind":"Name","value":"meeting_attendees"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MeetingAttendee"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Task"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"task"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"dueDate"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"private"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Decision"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"decision"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"private"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ThreadActivity"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread_activity"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"threadId"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"data"}},{"kind":"Field","name":{"kind":"Name","value":"reactions"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ThreadActivityReaction"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refThread"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Thread"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refMeeting"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MeetingSummary"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refTask"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Task"}}]}},{"kind":"Field","name":{"kind":"Name","value":"refDecision"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Decision"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ThreadWithFirstActivity"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Thread"}},{"kind":"Field","name":{"kind":"Name","value":"activities"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"type"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"EnumValue","value":"Message"}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"archivedAt"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_is_null"},"value":{"kind":"BooleanValue","value":true}}]}}]}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"createdAt"},"value":{"kind":"EnumValue","value":"asc"}}]}},{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"IntValue","value":"1"}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"ThreadActivity"}}]}}]}}]} as unknown as DocumentNode<NewsFragment, unknown>;
+export const OrgFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Org"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"org"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"shareOrg"}},{"kind":"Field","name":{"kind":"Name","value":"shareMembers"}},{"kind":"Field","name":{"kind":"Name","value":"governanceMode"}},{"kind":"Field","name":{"kind":"Name","value":"defaultGraphView"}},{"kind":"Field","name":{"kind":"Name","value":"icon"}},{"kind":"Field","name":{"kind":"Name","value":"homeNote"}}]}}]} as unknown as DocumentNode<OrgFragment, unknown>;
 export const OrgSubscriptionFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"OrgSubscription"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"org_subscription"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"stripeSubscriptionId"}},{"kind":"Field","name":{"kind":"Name","value":"stripeCustomerId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}}]} as unknown as DocumentNode<OrgSubscriptionFragment, unknown>;
-export const CircleMemberFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CircleMember"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle_member"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}}]}}]} as unknown as DocumentNode<CircleMemberFragment, unknown>;
-export const CircleLinkFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CircleLink"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle_link"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"parentId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}}]}}]} as unknown as DocumentNode<CircleLinkFragment, unknown>;
-export const MemberFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Member"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"member"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"pictureFileId"}},{"kind":"Field","name":{"kind":"Name","value":"picture"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"inviteEmail"}},{"kind":"Field","name":{"kind":"Name","value":"inviteDate"}},{"kind":"Field","name":{"kind":"Name","value":"role"}}]}}]} as unknown as DocumentNode<MemberFragment, unknown>;
-export const OrgDataFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"OrgData"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"org"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Org"}},{"kind":"Field","name":{"kind":"Name","value":"org_subscription"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"OrgSubscription"}}]}},{"kind":"Field","name":{"kind":"Name","value":"circles"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archived"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":false}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Circle"}}]}},{"kind":"Field","name":{"kind":"Name","value":"circleMembers"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archived"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":false}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CircleMember"}}]}},{"kind":"Field","name":{"kind":"Name","value":"circleLinks"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archived"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":false}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CircleLink"}}]}},{"kind":"Field","name":{"kind":"Name","value":"roles"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archived"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":false}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"RoleSummary"}}]}},{"kind":"Field","name":{"kind":"Name","value":"members"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archived"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"BooleanValue","value":false}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Member"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Org"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"org"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"shareOrg"}},{"kind":"Field","name":{"kind":"Name","value":"shareMembers"}},{"kind":"Field","name":{"kind":"Name","value":"governanceMode"}},{"kind":"Field","name":{"kind":"Name","value":"defaultGraphView"}},{"kind":"Field","name":{"kind":"Name","value":"icon"}},{"kind":"Field","name":{"kind":"Name","value":"homeNote"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"OrgSubscription"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"org_subscription"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"stripeSubscriptionId"}},{"kind":"Field","name":{"kind":"Name","value":"stripeCustomerId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Circle"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"roleId"}},{"kind":"Field","name":{"kind":"Name","value":"parentId"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CircleMember"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle_member"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CircleLink"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle_link"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"parentId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"RoleSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"role"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"base"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"singleMember"}},{"kind":"Field","name":{"kind":"Name","value":"parentLink"}},{"kind":"Field","name":{"kind":"Name","value":"colorHue"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Member"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"member"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"pictureFileId"}},{"kind":"Field","name":{"kind":"Name","value":"picture"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"inviteEmail"}},{"kind":"Field","name":{"kind":"Name","value":"inviteDate"}},{"kind":"Field","name":{"kind":"Name","value":"role"}}]}}]} as unknown as DocumentNode<OrgDataFragment, unknown>;
-export const RoleFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Role"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"role"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"archived"}},{"kind":"Field","name":{"kind":"Name","value":"base"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"purpose"}},{"kind":"Field","name":{"kind":"Name","value":"domain"}},{"kind":"Field","name":{"kind":"Name","value":"accountabilities"}},{"kind":"Field","name":{"kind":"Name","value":"checklist"}},{"kind":"Field","name":{"kind":"Name","value":"indicators"}},{"kind":"Field","name":{"kind":"Name","value":"notes"}},{"kind":"Field","name":{"kind":"Name","value":"singleMember"}},{"kind":"Field","name":{"kind":"Name","value":"parentLink"}},{"kind":"Field","name":{"kind":"Name","value":"colorHue"}}]}}]} as unknown as DocumentNode<RoleFragment, unknown>;
+export const CircleMemberFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CircleMember"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle_member"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}}]}}]} as unknown as DocumentNode<CircleMemberFragment, unknown>;
+export const CircleLinkFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CircleLink"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle_link"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"parentId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}}]}}]} as unknown as DocumentNode<CircleLinkFragment, unknown>;
+export const MemberFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Member"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"member"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"pictureFileId"}},{"kind":"Field","name":{"kind":"Name","value":"picture"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"inviteEmail"}},{"kind":"Field","name":{"kind":"Name","value":"inviteDate"}},{"kind":"Field","name":{"kind":"Name","value":"role"}}]}}]} as unknown as DocumentNode<MemberFragment, unknown>;
+export const OrgDataFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"OrgData"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"org"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Org"}},{"kind":"Field","name":{"kind":"Name","value":"org_subscription"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"OrgSubscription"}}]}},{"kind":"Field","name":{"kind":"Name","value":"circles"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archivedAt"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_is_null"},"value":{"kind":"BooleanValue","value":true}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Circle"}}]}},{"kind":"Field","name":{"kind":"Name","value":"circleMembers"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archivedAt"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_is_null"},"value":{"kind":"BooleanValue","value":true}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CircleMember"}}]}},{"kind":"Field","name":{"kind":"Name","value":"circleLinks"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archivedAt"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_is_null"},"value":{"kind":"BooleanValue","value":true}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CircleLink"}}]}},{"kind":"Field","name":{"kind":"Name","value":"roles"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archivedAt"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_is_null"},"value":{"kind":"BooleanValue","value":true}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"RoleSummary"}}]}},{"kind":"Field","name":{"kind":"Name","value":"members"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archivedAt"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_is_null"},"value":{"kind":"BooleanValue","value":true}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Member"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Org"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"org"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"slug"}},{"kind":"Field","name":{"kind":"Name","value":"shareOrg"}},{"kind":"Field","name":{"kind":"Name","value":"shareMembers"}},{"kind":"Field","name":{"kind":"Name","value":"governanceMode"}},{"kind":"Field","name":{"kind":"Name","value":"defaultGraphView"}},{"kind":"Field","name":{"kind":"Name","value":"icon"}},{"kind":"Field","name":{"kind":"Name","value":"homeNote"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"OrgSubscription"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"org_subscription"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"stripeSubscriptionId"}},{"kind":"Field","name":{"kind":"Name","value":"stripeCustomerId"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"type"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Circle"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"roleId"}},{"kind":"Field","name":{"kind":"Name","value":"parentId"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CircleMember"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle_member"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CircleLink"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle_link"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"parentId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"RoleSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"role"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"base"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"singleMember"}},{"kind":"Field","name":{"kind":"Name","value":"parentLink"}},{"kind":"Field","name":{"kind":"Name","value":"colorHue"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Member"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"member"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"description"}},{"kind":"Field","name":{"kind":"Name","value":"pictureFileId"}},{"kind":"Field","name":{"kind":"Name","value":"picture"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"inviteEmail"}},{"kind":"Field","name":{"kind":"Name","value":"inviteDate"}},{"kind":"Field","name":{"kind":"Name","value":"role"}}]}}]} as unknown as DocumentNode<OrgDataFragment, unknown>;
+export const RoleFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Role"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"role"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}},{"kind":"Field","name":{"kind":"Name","value":"base"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"purpose"}},{"kind":"Field","name":{"kind":"Name","value":"domain"}},{"kind":"Field","name":{"kind":"Name","value":"accountabilities"}},{"kind":"Field","name":{"kind":"Name","value":"checklist"}},{"kind":"Field","name":{"kind":"Name","value":"indicators"}},{"kind":"Field","name":{"kind":"Name","value":"notes"}},{"kind":"Field","name":{"kind":"Name","value":"singleMember"}},{"kind":"Field","name":{"kind":"Name","value":"parentLink"}},{"kind":"Field","name":{"kind":"Name","value":"colorHue"}}]}}]} as unknown as DocumentNode<RoleFragment, unknown>;
 export const RoleAiFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"RoleAI"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"role_ai"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"purpose"}},{"kind":"Field","name":{"kind":"Name","value":"domain"}},{"kind":"Field","name":{"kind":"Name","value":"accountabilities"}},{"kind":"Field","name":{"kind":"Name","value":"checklist"}},{"kind":"Field","name":{"kind":"Name","value":"indicators"}},{"kind":"Field","name":{"kind":"Name","value":"notes"}}]}}]} as unknown as DocumentNode<RoleAiFragment, unknown>;
 export const ThreadMemberStatusFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"ThreadMemberStatus"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"thread_member_status"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"lastReadActivityId"}},{"kind":"Field","name":{"kind":"Name","value":"lastReadDate"}}]}}]} as unknown as DocumentNode<ThreadMemberStatusFragment, unknown>;
 export const UserAppFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"UserApp"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"user_app"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"config"}}]}}]} as unknown as DocumentNode<UserAppFragment, unknown>;

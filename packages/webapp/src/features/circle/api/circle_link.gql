@@ -24,14 +24,14 @@ mutation updateCircleLink($id: uuid!, $values: circle_link_set_input!) {
   }
 }
 
-mutation archiveCircleLink($parentId: uuid!, $circleId: uuid!) {
+mutation archiveCircleLink($parentId: uuid!, $circleId: uuid!, $archivedAt: timestamptz!) {
   update_circle_link(
     where: {
       parentId: { _eq: $parentId }
       circleId: { _eq: $circleId }
-      archived: { _eq: false }
+      archivedAt: { _is_null: true }
     }
-    _set: { archived: true }
+    _set: { archivedAt: $archivedAt }
   ) {
     returning {
       ...CircleLink

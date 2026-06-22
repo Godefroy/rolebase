@@ -64,6 +64,7 @@ export default function CircleDeleteModal({
   const hasEntitiesToMove =
     threadsCount > 0 ||
     meetingsCount > 0 ||
+    recurringMeetingsCount > 0 ||
     tasksCount > 0 ||
     decisionsCount > 0
 
@@ -105,16 +106,7 @@ export default function CircleDeleteModal({
                   />
                 </Text>
 
-                {recurringMeetingsCount > 0 && (
-                  <Alert status="warning">
-                    <AlertIcon />
-                    <AlertDescription>
-                      {t('CircleDeleteModal.recurringMeetings', {
-                        count: recurringMeetingsCount,
-                      })}
-                    </AlertDescription>
-                  </Alert>
-                )}
+                <Text>{t('CircleDeleteModal.restoreNote')}</Text>
 
                 {hasEntitiesToMove && (
                   <Alert status="info">
@@ -134,6 +126,13 @@ export default function CircleDeleteModal({
                           <ListItem>
                             {t('CircleDeleteModal.meetings', {
                               count: meetingsCount,
+                            })}
+                          </ListItem>
+                        )}
+                        {recurringMeetingsCount > 0 && (
+                          <ListItem>
+                            {t('CircleDeleteModal.recurringMeetings', {
+                              count: recurringMeetingsCount,
                             })}
                           </ListItem>
                         )}

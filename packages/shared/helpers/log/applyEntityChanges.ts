@@ -18,7 +18,7 @@ export class EntityChangeError extends Error {
 // Update => apply newData.
 // Delete => archive (symmetric with the archive convention used everywhere).
 export async function applyEntityChanges<
-  Entity extends { id: string; archived: boolean }
+  Entity extends { id: string; archivedAt?: string | null }
 >(
   entityChanges: EntityChange<Entity>[] | undefined,
   methods: EntityApplyMethods<Entity>
@@ -35,7 +35,9 @@ export async function applyEntityChanges<
     } else if (change.type === EntityChangeType.Delete) {
       const current = await methods.get(change.id)
       if (!current) throw new EntityChangeError(change.id)
-      await methods.update(change.id, { archived: true } as Partial<Entity>)
+      await methods.update(change.id, {
+        archivedAt: new Date().toISOString(),
+      } as Partial<Entity>)
     }
   }
 }

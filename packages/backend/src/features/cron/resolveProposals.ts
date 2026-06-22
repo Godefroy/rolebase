@@ -13,6 +13,7 @@ const GET_PROPOSALS = gql(`
       where: {
         type: { _eq: $type }
         data: { _contains: { status: "inProgress" } }
+        archivedAt: { _is_null: true }
       }
     ) {
       id

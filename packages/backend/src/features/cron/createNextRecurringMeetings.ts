@@ -66,7 +66,7 @@ export default webhookProcedure.mutation(async () => {
 
 const GET_RECURRING_MEETINGS = gql(`
   query GetRecurringMeetings {
-    meeting_recurring {
+    meeting_recurring(where: { archivedAt: { _is_null: true } }) {
       id
       rrule
       meetings(where: { recurringDate: { _gt: "now()" } }) {

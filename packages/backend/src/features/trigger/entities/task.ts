@@ -43,7 +43,7 @@ export class IndexTask extends IndexEntity<TaskFragment> {
     const { task } = await adminRequest(
       gql(`
         query GetTasksForSearch {
-          task(where: { archived: { _eq: false } }) {
+          task(where: { archivedAt: { _is_null: true } }) {
             ...TaskSearch
           }
         }

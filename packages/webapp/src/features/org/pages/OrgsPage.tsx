@@ -1,4 +1,5 @@
 import Loading from '@/common/atoms/Loading'
+import { Governance_Mode_Enum } from '@gql'
 import ScrollableLayout from '@/common/atoms/ScrollableLayout'
 import TextErrors from '@/common/atoms/TextErrors'
 import { Title } from '@/common/atoms/Title'
@@ -43,7 +44,8 @@ export default function OrgsPage() {
     if (!orgs) return undefined
     const rootCircles = orgs.map((org) => org.circles[0]).filter(truthy)
     const roles = rootCircles.map((c) => c.role).filter(truthy)
-    return new OrgData(rootCircles, [], [], roles, [])
+    // Multi-org display graph (no permission checks): governance mode is inert.
+    return new OrgData({ circles: rootCircles, circleMembers: [], circleLinks: [], roles, members: [], governanceMode: Governance_Mode_Enum.Strict })
   }, [orgs])
 
   // Graph events

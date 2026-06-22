@@ -173,7 +173,6 @@ insert_permissions:
                             userId:
                               _eq: X-Hasura-User-Id
       columns:
-        - archived
         - id
         - orgId
         - parentId
@@ -182,7 +181,8 @@ select_permissions:
   - role: user
     permission:
       columns:
-        - archived
+        - archivedAt
+        - createdAt
         - id
         - orgId
         - parentId
@@ -193,7 +193,6 @@ update_permissions:
   - role: user
     permission:
       columns:
-        - archived
         - parentId
       filter:
         _or:

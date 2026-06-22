@@ -13,7 +13,7 @@ category: 'circles-roles'
 | `circleId` | `uuid` | Référence au cercle |
 | `memberId` | `uuid` | Référence au membre |
 | `createdAt` | `Timestamp` | Date de création de l'appartenance |
-| `archived` | `Boolean` | Indique si l'appartenance est archivée (par défaut : false) |
+| `archivedAt` | `Timestamp` | Date d'archivage de l'appartenance ; null si actif |
 
 ## Relations
 
@@ -29,7 +29,7 @@ category: 'circles-roles'
 ```graphql
 query GetCircleMembers($circleId: uuid!) {
   circle_member(
-    where: { circleId: { _eq: $circleId }, archived: { _eq: false } }
+    where: { circleId: { _eq: $circleId }, archivedAt: { _is_null: true } }
   ) {
     id
     circle {
@@ -77,10 +77,10 @@ mutation AddCircleMember {
 mutation UpdateCircleMember {
   update_circle_member_by_pk(
     pk_columns: { id: "circle-member-id" }
-    _set: { archived: true }
+    _set: { archivedAt: "2024-01-01T00:00:00Z" }
   ) {
     id
-    archived
+    archivedAt
   }
 }
 ```
@@ -93,7 +93,7 @@ mutation UpdateCircleMember {
 - Un membre ne peut pas être ajouté à un cercle s'il a déjà une appartenance active
 
 <Callout type="info" title="Notes">
-  L'indicateur `archived` préserve l'historique des appartenances tout en
+  L'horodatage `archivedAt` préserve l'historique des appartenances tout en
   marquant les appartenances inactives. L'appartenance à un cercle détermine
   l'accès aux ressources du cercle comme les réunions, tâches et décisions. Les
   membres peuvent appartenir à plusieurs cercles simultanément.

@@ -65,13 +65,7 @@ export default function CircleExportPage() {
       ...orgData.descendantsOf(circleId),
     ]
 
-    return new OrgData(
-      subCircles,
-      result.circleMembers,
-      result.circleLinks,
-      result.roles,
-      result.members
-    )
+    return new OrgData({ ...result, circles: subCircles })
   }, [orgData, circleId, getOrgResult])
 
   // Center graph

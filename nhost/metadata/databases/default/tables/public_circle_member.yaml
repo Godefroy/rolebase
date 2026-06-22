@@ -26,8 +26,8 @@ insert_permissions:
                         _ceq: circleId
                     - memberId:
                         _ceq: memberId
-                    - archived:
-                        _eq: false
+                    - archivedAt:
+                        _is_null: true
           - circle:
               orgId:
                 _ceq:
@@ -75,15 +75,15 @@ insert_permissions:
                               - role:
                                   parentLink:
                                     _eq: true
-                              - archived:
-                                  _eq: false
+                              - archivedAt:
+                                  _is_null: true
                               - members:
                                   _and:
                                     - member:
                                         userId:
                                           _eq: X-Hasura-User-Id
-                                    - archived:
-                                        _eq: false
+                                    - archivedAt:
+                                        _is_null: true
                 - _and:
                     - role:
                         parentLink:
@@ -103,7 +103,7 @@ select_permissions:
   - role: user
     permission:
       columns:
-        - archived
+        - archivedAt
         - circleId
         - createdAt
         - id
@@ -115,7 +115,7 @@ update_permissions:
   - role: user
     permission:
       columns:
-        - archived
+        - archivedAt
       filter:
         circle:
           _or:
@@ -154,15 +154,15 @@ update_permissions:
                           - role:
                               parentLink:
                                 _eq: true
-                          - archived:
-                              _eq: false
+                          - archivedAt:
+                              _is_null: true
                           - members:
                               _and:
                                 - member:
                                     userId:
                                       _eq: X-Hasura-User-Id
-                                - archived:
-                                    _eq: false
+                                - archivedAt:
+                                    _is_null: true
             - _and:
                 - role:
                     parentLink:

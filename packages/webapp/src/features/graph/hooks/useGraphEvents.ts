@@ -66,12 +66,11 @@ export default function useGraphEvents(): GraphEvents {
         circle,
         role,
         currentMember?.id,
-        governanceMode,
         isMember,
         isOrgOwner
       )
     },
-    [orgData, editable, currentMember, governanceMode, isMember, isOrgOwner]
+    [orgData, editable, currentMember, isMember, isOrgOwner]
   )
 
   // Whether a sub-circle (parent-link or normal) may be added under a target

@@ -13,7 +13,7 @@ category: 'circles-roles'
 | `circleId` | `uuid` | Reference to the circle |
 | `memberId` | `uuid` | Reference to the member |
 | `createdAt` | `Timestamp` | When the membership was created |
-| `archived` | `Boolean` | Whether the membership is archived (default: false) |
+| `archivedAt` | `Timestamp` | When the membership was archived; null if active |
 
 ## Relationships
 
@@ -29,7 +29,7 @@ category: 'circles-roles'
 ```graphql
 query GetCircleMembers($circleId: uuid!) {
   circle_member(
-    where: { circleId: { _eq: $circleId }, archived: { _eq: false } }
+    where: { circleId: { _eq: $circleId }, archivedAt: { _is_null: true } }
   ) {
     id
     circle {
@@ -77,10 +77,10 @@ mutation AddCircleMember {
 mutation UpdateCircleMember {
   update_circle_member_by_pk(
     pk_columns: { id: "circle-member-id" }
-    _set: { archived: true }
+    _set: { archivedAt: "2024-01-01T00:00:00Z" }
   ) {
     id
-    archived
+    archivedAt
   }
 }
 ```
@@ -93,7 +93,7 @@ mutation UpdateCircleMember {
 - A member cannot be added to a circle if they already have an active membership
 
 <Callout type="info" title="Notes">
-  The `archived` flag preserves membership history while marking inactive
+  The `archivedAt` timestamp preserves membership history while marking inactive
   memberships. Circle membership determines access to circle resources like
   meetings, tasks, and decisions. Members can belong to multiple circles
   simultaneously.

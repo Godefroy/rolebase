@@ -10,8 +10,8 @@ export class IndexCircleMember extends IndexEntity<CircleMemberFragment> {
     const { data } = event.event
     const circleId = data.new?.circleId
 
-    // Only if archived has changed
-    if (data.new?.archived === data.old?.archived || !circleId) {
+    // Only if archivedAt has changed
+    if (data.new?.archivedAt === data.old?.archivedAt || !circleId) {
       return
     }
 

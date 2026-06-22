@@ -10,9 +10,9 @@ subscription decision($id: uuid!) {
   }
 }
 
-subscription circleDecisions($circleId: uuid!, $archived: Boolean!) {
+subscription circleDecisions($circleId: uuid!, $active: Boolean!) {
   decision(
-    where: { circleId: { _eq: $circleId }, archived: { _eq: $archived } }
+    where: { circleId: { _eq: $circleId }, archivedAt: { _is_null: $active } }
     order_by: { createdAt: desc }
   ) {
     ...Decision
@@ -31,8 +31,8 @@ mutation updateDecision($id: uuid!, $values: decision_set_input!) {
   }
 }
 
-mutation archiveDecision($id: uuid!) {
-  update_decision_by_pk(pk_columns: { id: $id }, _set: { archived: true }) {
+mutation archiveDecision($id: uuid!, $archivedAt: timestamptz!) {
+  update_decision_by_pk(pk_columns: { id: $id }, _set: { archivedAt: $archivedAt }) {
     id
   }
 }

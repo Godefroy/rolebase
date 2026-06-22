@@ -46,7 +46,7 @@ export class IndexCircle extends IndexEntity<CircleFragment> {
     const { circle } = await adminRequest(
       gql(`
         query GetCirclesForSearch {
-          circle(where: { archived: { _eq: false } }) {
+          circle(where: { archivedAt: { _is_null: true } }) {
             ...CircleSearch
           }
         }

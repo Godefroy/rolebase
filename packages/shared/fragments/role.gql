@@ -1,7 +1,7 @@
 fragment Role on role {
   id
   orgId
-  archived
+  archivedAt
   base
   name
   purpose

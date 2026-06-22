@@ -9,7 +9,7 @@ import {
 } from '@chakra-ui/react'
 import {
   ApiKeyFragment,
-  useDeleteApiKeyMutation,
+  useArchiveApiKeyMutation,
   useRenameApiKeyMutation,
 } from '@gql'
 import React, { useEffect, useState } from 'react'
@@ -46,7 +46,7 @@ export default function APIKeyCard({ apiKey }: APIKeyCardProps) {
 
   // Mutations
   const [renameApiKey] = useRenameApiKeyMutation()
-  const [deleteApiKey] = useDeleteApiKeyMutation()
+  const [archiveApiKey] = useArchiveApiKeyMutation()
 
   const handleUpdateName = async () => {
     if (newName === apiKey.name) return
@@ -72,8 +72,8 @@ export default function APIKeyCard({ apiKey }: APIKeyCardProps) {
   const handleDelete = async () => {
     if (!confirm(t('APIKeyCard.deleteConfirm', { name: apiKey.name }))) return
     try {
-      await deleteApiKey({
-        variables: { id: apiKey.id },
+      await archiveApiKey({
+        variables: { id: apiKey.id, archivedAt: new Date().toISOString() },
       })
 
       toast({

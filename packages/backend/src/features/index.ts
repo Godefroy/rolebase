@@ -1,6 +1,7 @@
 import { publicProcedure, router } from '../trpc'
 import ai from './ai'
 import apps from './apps'
+import circle from './circle'
 import cron from './cron'
 import './graphql'
 import meeting from './meeting'
@@ -15,6 +16,7 @@ import trigger from './trigger'
 export const trpcRouter = router({
   ai,
   apps,
+  circle,
   cron,
   meeting,
   member,

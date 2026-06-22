@@ -24,7 +24,7 @@ export default function useCurrentMember(): MemberFragment | undefined {
         name: 'Superadmin',
         orgId: orgId,
         description: '',
-        archived: false,
+        archivedAt: null,
       } satisfies MemberFragment
     }
   }, [user?.id, members, isSuperAdmin, orgId])

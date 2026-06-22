@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { CircleFragment, CircleLinkFragment } from '../gql'
+import { CircleFragment, CircleLinkFragment, Governance_Mode_Enum } from '../gql'
 import { orgData } from '../mocks/circles'
 import { OrgData } from './OrgData'
 
@@ -8,7 +8,7 @@ const circle = (id: string, parentId: string | null = null): CircleFragment => (
   orgId: 'org-1',
   roleId: 'role',
   parentId,
-  archived: false,
+  archivedAt: null,
 })
 
 const link = (id: string, parentId: string, circleId: string): CircleLinkFragment => ({
@@ -17,7 +17,7 @@ const link = (id: string, parentId: string, circleId: string): CircleLinkFragmen
   parentId,
   circleId,
   createdAt: '',
-  archived: false,
+  archivedAt: null,
 })
 
 describe('OrgData relations', () => {
@@ -92,13 +92,7 @@ describe('OrgData relations', () => {
   })
 
   describe('links', () => {
-    const data = new OrgData(
-      [circle('host'), circle('target')],
-      [],
-      [link('link-1', 'host', 'target')],
-      [],
-      []
-    )
+    const data = new OrgData({ circles: [circle('host'), circle('target')], circleMembers: [], circleLinks: [link('link-1', 'host', 'target')], roles: [], members: [], governanceMode: Governance_Mode_Enum.Free })
 
     it('linksOf returns links hosted by a circle', () => {
       expect(data.linksOf('host').map((l) => l.circleId)).toEqual(['target'])

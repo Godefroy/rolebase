@@ -37,8 +37,8 @@ mutation updateTask($id: uuid!, $values: task_set_input!) {
   }
 }
 
-mutation archiveTask($id: uuid!) {
-  update_task_by_pk(pk_columns: { id: $id }, _set: { archived: true }) {
+mutation archiveTask($id: uuid!, $archivedAt: timestamptz!) {
+  update_task_by_pk(pk_columns: { id: $id }, _set: { archivedAt: $archivedAt }) {
     id
   }
 }

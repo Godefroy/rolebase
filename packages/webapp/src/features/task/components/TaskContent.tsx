@@ -262,7 +262,7 @@ export default function TaskContent({
 
         {id && loading && <Loading active size="sm" ml={5} />}
 
-        {task?.archived && <Tag ml={2}>{t('common.archived')}</Tag>}
+        {task?.archivedAt && <Tag ml={2}>{t('common.archived')}</Tag>}
 
         <Spacer />
 

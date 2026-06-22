@@ -13,6 +13,8 @@ category: 'meetings'
 | `orgId` | `uuid` | Référence à l'organisation |
 | `title` | `String` | Titre du modèle |
 | `stepsConfig` | `[meeting_step_config]` | Tableau de configurations d'étapes définissant la structure de la réunion |
+| `createdAt` | `Timestamp` | Date de création du modèle |
+| `archivedAt` | `Timestamp` | Date d'archivage du modèle ; null si actif |
 
 ## Relations
 
@@ -90,11 +92,16 @@ mutation updateMeetingTemplate($id: uuid!) {
 }
 ```
 
-### Supprimer un modèle de réunion
+### Archiver un modèle de réunion
+
+Les modèles sont archivés (suppression douce) en renseignant `archivedAt`, sans suppression physique.
 
 ```graphql
-mutation deleteMeetingTemplate($id: uuid!) {
-  delete_meeting_template_by_pk(id: $id) {
+mutation archiveMeetingTemplate($id: uuid!) {
+  update_meeting_template_by_pk(
+    pk_columns: { id: $id }
+    _set: { archivedAt: "2024-01-01T00:00:00Z" }
+  ) {
     id
   }
 }
@@ -102,7 +109,7 @@ mutation deleteMeetingTemplate($id: uuid!) {
 
 ## Permissions
 
-Les membres de l'organisation peuvent consulter, créer, mettre à jour et supprimer des modèles au sein de leur organisation. Les modèles sont des ressources à l'échelle de l'organisation, accessibles à tous les membres.
+Les membres de l'organisation peuvent consulter, créer, mettre à jour et archiver des modèles au sein de leur organisation. Les modèles sont des ressources à l'échelle de l'organisation, accessibles à tous les membres.
 
 <Callout type="info" title="Notes">
   Les modèles peuvent être utilisés pour des réunions ponctuelles et

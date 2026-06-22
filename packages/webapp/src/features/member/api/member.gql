@@ -4,9 +4,9 @@ query getMember($id: uuid!) {
   }
 }
 
-subscription members($orgId: uuid!, $archived: Boolean!) {
+subscription members($orgId: uuid!, $active: Boolean!) {
   member(
-    where: { orgId: { _eq: $orgId }, archived: { _eq: $archived } }
+    where: { orgId: { _eq: $orgId }, archivedAt: { _is_null: $active } }
     order_by: { name: asc }
   ) {
     ...Member
@@ -20,7 +20,7 @@ subscription currentMeetings($memberId: uuid!) {
         where: {
           currentStepId: { _is_null: false }
           ended: { _eq: false }
-          archived: { _eq: false }
+          archivedAt: { _is_null: true }
           meeting_attendees: { memberId: { _eq: $memberId } }
         }
       ) {

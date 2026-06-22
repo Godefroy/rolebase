@@ -76,7 +76,7 @@ export default authedProcedure
     return updateMember(memberId, {
       userId: null,
       role: null,
-      archived: true,
+      archivedAt: new Date().toISOString(),
       inviteDate: null,
       inviteEmail: null,
     })

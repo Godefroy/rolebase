@@ -8,9 +8,12 @@ import LogItem from './LogItem'
 
 interface Props extends BoxProps {
   logs: LogFragment[]
+  // Called after a log is cancelled, so query-backed lists can refetch
+  // (subscription-backed lists update on their own and can omit it).
+  onCancelled?(): void
 }
 
-export default function LogsList({ logs, ...boxProps }: Props) {
+export default function LogsList({ logs, onCancelled, ...boxProps }: Props) {
   const { t } = useTranslation()
   const isMember = useOrgMember()
 
@@ -42,7 +45,12 @@ export default function LogsList({ logs, ...boxProps }: Props) {
       ))}
 
       {isCancelOpen && cancelLog && (
-        <LogCancelModal log={cancelLog} isOpen onClose={onCancelClose} />
+        <LogCancelModal
+          log={cancelLog}
+          isOpen
+          onClose={onCancelClose}
+          onCancelled={onCancelled}
+        />
       )}
     </Box>
   )

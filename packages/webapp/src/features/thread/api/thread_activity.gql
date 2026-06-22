@@ -1,6 +1,6 @@
 subscription threadActivitiesLogs($id: uuid!) {
   thread_by_pk(id: $id) {
-    activities {
+    activities(where: { archivedAt: { _is_null: true } }) {
       ...ThreadActivity
     }
     logs {
@@ -21,8 +21,11 @@ mutation updateThreadActivity($id: uuid!, $values: thread_activity_set_input!) {
   }
 }
 
-mutation deleteThreadActivity($id: uuid!) {
-  delete_thread_activity_by_pk(id: $id) {
+mutation archiveThreadActivity($id: uuid!, $archivedAt: timestamptz!) {
+  update_thread_activity_by_pk(
+    pk_columns: { id: $id }
+    _set: { archivedAt: $archivedAt }
+  ) {
     id
   }
 }

@@ -84,7 +84,7 @@ export default function DecisionContent({
 
         {decision && <CircleByIdButton id={decision.circleId} ml={3} />}
 
-        {decision?.archived && <Tag ml={2}>{t('common.archived')}</Tag>}
+        {decision?.archivedAt && <Tag ml={2}>{t('common.archived')}</Tag>}
 
         <Spacer />
 

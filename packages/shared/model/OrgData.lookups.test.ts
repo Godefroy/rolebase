@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { CircleFragment, MemberFragment, RoleSummaryFragment } from '../gql'
+import { CircleFragment, Governance_Mode_Enum, MemberFragment, RoleSummaryFragment } from '../gql'
 import { circles, orgData } from '../mocks/circles'
 import { OrgData } from './OrgData'
 
@@ -20,7 +20,7 @@ const circle = (id: string, over: Partial<CircleFragment> = {}) =>
     orgId: 'org-1',
     roleId: 'role',
     parentId: null,
-    archived: false,
+    archivedAt: null,
     ...over,
   }) as CircleFragment
 
@@ -30,7 +30,7 @@ const member = (id: string, name: string, over: Partial<MemberFragment> = {}) =>
     orgId: 'org-1',
     name,
     description: '',
-    archived: false,
+    archivedAt: null,
     ...over,
   }) as MemberFragment
 
@@ -57,16 +57,10 @@ describe('OrgData lookups', () => {
 
   describe('getActiveMembers', () => {
     it('keeps only members linked to a user account', () => {
-      const data = new OrgData(
-        [],
-        [],
-        [],
-        [],
-        [
+      const data = new OrgData({ circles: [], circleMembers: [], circleLinks: [], roles: [], members: [
           member('member-joined', 'Joined', { userId: 'user-1' }),
           member('member-pending', 'Pending'),
-        ]
-      )
+        ], governanceMode: Governance_Mode_Enum.Free })
       expect(data.getActiveMembers().map((m) => m.id)).toEqual(['member-joined'])
     })
 
@@ -77,29 +71,17 @@ describe('OrgData lookups', () => {
 
   describe('constructor', () => {
     it('excludes archived circles from the active list and lookups', () => {
-      const data = new OrgData(
-        [circle('circle-a'), circle('circle-archived', { archived: true })],
-        [],
-        [],
-        [],
-        []
-      )
+      const data = new OrgData({ circles: [circle('circle-a'), circle('circle-archived', { archivedAt: '2024-01-01T00:00:00.000Z' })], circleMembers: [], circleLinks: [], roles: [], members: [], governanceMode: Governance_Mode_Enum.Free })
       expect(data.circles.map((c) => c.id)).toEqual(['circle-a'])
       expect(data.getCircle('circle-archived')).toBeUndefined()
     })
 
     it('sorts members by name', () => {
-      const data = new OrgData(
-        [],
-        [],
-        [],
-        [],
-        [
+      const data = new OrgData({ circles: [], circleMembers: [], circleLinks: [], roles: [], members: [
           member('m-charlie', 'Charlie'),
           member('m-alice', 'Alice'),
           member('m-bob', 'Bob'),
-        ]
-      )
+        ], governanceMode: Governance_Mode_Enum.Free })
       expect(data.members.map((m) => m.name)).toEqual([
         'Alice',
         'Bob',
@@ -114,16 +96,14 @@ describe('OrgData lookups', () => {
     })
 
     it('ignores membership rows pointing to unknown circles or members', () => {
-      const data = new OrgData(
-        [circle('circle-a', { roleId: 'role' })],
-        [
+      const data = new OrgData({ circles: [circle('circle-a', { roleId: 'role' })], circleMembers: [
           {
             id: 'cm-ok',
             orgId: 'org-1',
             circleId: 'circle-a',
             memberId: 'member-a',
             createdAt: '',
-            archived: false,
+            archivedAt: null,
           },
           {
             id: 'cm-unknown-circle',
@@ -131,7 +111,7 @@ describe('OrgData lookups', () => {
             circleId: 'circle-missing',
             memberId: 'member-a',
             createdAt: '',
-            archived: false,
+            archivedAt: null,
           },
           {
             id: 'cm-unknown-member',
@@ -139,13 +119,9 @@ describe('OrgData lookups', () => {
             circleId: 'circle-a',
             memberId: 'member-missing',
             createdAt: '',
-            archived: false,
+            archivedAt: null,
           },
-        ],
-        [],
-        [role('role')],
-        [member('member-a', 'A')]
-      )
+        ], circleLinks: [], roles: [role('role')], members: [member('member-a', 'A')], governanceMode: Governance_Mode_Enum.Free })
       expect(data.membersOf('circle-a').map((m) => m.member.id)).toEqual([
         'member-a',
       ])

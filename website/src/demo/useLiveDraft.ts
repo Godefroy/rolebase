@@ -43,16 +43,6 @@ function buildMethods(data: DemoFragments): EntitiesApplyMethods {
   } as EntitiesApplyMethods
 }
 
-function indexFragments(data: DemoFragments): OrgData {
-  return new OrgData(
-    data.circles,
-    data.circleMembers,
-    data.circleLinks,
-    data.roles,
-    data.members
-  )
-}
-
 export interface LiveDraft {
   ready: boolean
   orgData: OrgData
@@ -87,13 +77,14 @@ export default function useLiveDraft(initial: DemoFragments): LiveDraft {
   // Live indexed view, rebuilt synchronously on every change and kept in a
   // stable ref so edit actions always read the latest data within one tick.
   const orgDataRef = useRef<OrgData>()
-  if (!orgDataRef.current) orgDataRef.current = indexFragments(workingRef.current.data)
+  if (!orgDataRef.current)
+    orgDataRef.current = new OrgData(workingRef.current.data)
 
   const [version, setVersion] = useState(0)
 
   // Rebuild the live indexed view, then trigger a re-render.
   const refresh = useCallback(() => {
-    orgDataRef.current = indexFragments(workingRef.current!.data)
+    orgDataRef.current = new OrgData(workingRef.current!.data)
     setVersion((v) => v + 1)
   }, [])
 
@@ -134,7 +125,7 @@ export default function useLiveDraft(initial: DemoFragments): LiveDraft {
       inviteEmail: null,
       inviteDate: null,
       role: null,
-      archived: false,
+      archivedAt: null,
     } as MemberFragment)
     refresh()
     return id
@@ -144,9 +135,9 @@ export default function useLiveDraft(initial: DemoFragments): LiveDraft {
     const data = workingRef.current?.data
     if (!data) return
     const member = data.members.find((m) => m.id === memberId)
-    if (member) member.archived = true
+    if (member) member.archivedAt = new Date().toISOString()
     for (const cm of data.circleMembers) {
-      if (cm.memberId === memberId) cm.archived = true
+      if (cm.memberId === memberId) cm.archivedAt = new Date().toISOString()
     }
     refresh()
   }, [refresh])

@@ -39,10 +39,10 @@ export class IndexMeetingRecurring extends IndexEntity<MeetingRecurringFragment>
           org_by_pk(id: $orgId) {
             id
             slug
-            members(where: { archived: { _eq: false } }) {
+            members(where: { archivedAt: { _is_null: true } }) {
               ...Member
               user {
-                apps {
+                apps(where: { archivedAt: { _is_null: true } }) {
                   ...UserAppFull
                 }
               }

@@ -33,9 +33,16 @@ export default function RoleDeleteModal({
 
   const handleDelete = async () => {
     if (!role) return
-    await archiveRole({ variables: { id: role.id } })
+    const { data } = await archiveRole({
+      variables: { id: role.id, archivedAt: new Date().toISOString() },
+    })
     onDelete?.()
     alertProps.onClose()
+
+    // Use the DB-returned value (timestamptz "...+00:00"), not the "...Z" input,
+    // so "data changed since" comparisons stay accurate.
+    const archivedAt = data?.update_role_by_pk?.archivedAt
+    if (!archivedAt) return
 
     // Log change
     createLog({
@@ -49,8 +56,8 @@ export default function RoleDeleteModal({
           {
             type: EntityChangeType.Update,
             id: role.id,
-            prevData: { archived: false },
-            newData: { archived: true },
+            prevData: { archivedAt: null },
+            newData: { archivedAt },
           },
         ],
       },

@@ -24,7 +24,7 @@ export async function applyEntitiesChanges(
     const entityChanges = changes[type]
     if (!entityChanges) continue
     await applyEntityChanges(
-      entityChanges as EntityChange<{ id: string; archived: boolean }>[],
+      entityChanges as EntityChange<{ id: string; archivedAt?: string | null }>[],
       methods[type] as any
     )
   }

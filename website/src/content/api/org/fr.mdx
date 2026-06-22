@@ -12,7 +12,7 @@ category: 'org-members'
 | `id` | `uuid` | Identifiant unique de l'organisation |
 | `name` | `String` | Nom de l'organisation |
 | `slug` | `String` | Identifiant unique adapté aux URL (optionnel) |
-| `archived` | `Boolean` | Indique si l'organisation est archivée (par défaut : false) |
+| `archivedAt` | `Timestamp` | Date d'archivage de l'organisation ; null si actif |
 | `createdAt` | `Timestamp` | Date de création de l'organisation |
 | `defaultGraphView` | `String` | Paramètre de vue graphique par défaut (optionnel) |
 | `governanceMode` | `governance_mode` | Qui peut modifier l'organigramme : `Free` (tous les membres), `Agile` (leaders de rôle), `Strict` (uniquement par proposition). Par défaut : `Free` |
@@ -51,7 +51,7 @@ query GetOrganization($id: uuid!) {
     id
     name
     slug
-    archived
+    archivedAt
     createdAt
     members {
       id

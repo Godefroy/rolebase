@@ -39,7 +39,7 @@ interface Props {
 export function CircleProvider({ circleId, children }: Props) {
   // Editability and governance come from the org context. In the proposal
   // editor it is an in-memory draft (Agile, editable).
-  const { governanceMode, editable, orgData, ready } = useOrgContext()
+  const { editable, orgData, ready } = useOrgContext()
   const orgCircle = orgData?.getCircle(circleId)
   const currentMember = useCurrentMember()
   const isOrgMember = useOrgMember()
@@ -93,7 +93,6 @@ export function CircleProvider({ circleId, children }: Props) {
           circle,
           role,
           currentMember?.id,
-          governanceMode,
           isOrgMember,
           isOrgOwner
         )

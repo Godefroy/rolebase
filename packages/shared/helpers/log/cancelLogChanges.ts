@@ -21,7 +21,7 @@ export async function cancelLogChanges(
     if (!methods[type]) continue
 
     // Cancel each change and return new changes
-    const entityChanges = (await cancelEntityChanges<{ archived: boolean }>(
+    const entityChanges = (await cancelEntityChanges<{ archivedAt?: string | null }>(
       log.changes[type],
       methods[type].get,
       methods[type].update

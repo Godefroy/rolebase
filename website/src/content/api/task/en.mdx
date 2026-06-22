@@ -18,7 +18,7 @@ category: 'tasks'
 | `status` | `Task_Status_Enum` | Current status: Open, InProgress, InReview, Blocked, or Done |
 | `dueDate` | `Timestamp` | When the task is due (optional) |
 | `createdAt` | `Timestamp` | When the task was created (defaults to current timestamp) |
-| `archived` | `Boolean` | Whether the task is archived (defaults to false) |
+| `archivedAt` | `Timestamp` | When the task was archived; null if active |
 | `private` | `Boolean` | Whether the task is private (defaults to false) |
 
 ## Task Status

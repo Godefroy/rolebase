@@ -175,7 +175,7 @@ export default abstract class AbstractCalendarApp<
     })
 
     const meeting = orgResult.meeting_by_pk
-    if (!meeting || meeting.orgId !== orgId || meeting.archived) return
+    if (!meeting || meeting.orgId !== orgId || meeting.archivedAt) return
     const member = meeting.org.members[0]
     if (!member) return
 
@@ -344,14 +344,14 @@ const GET_MEETINGS = gql(`
       id
       name
       slug
-      members(where: { userId: { _eq: $userId }, archived: { _eq: false } }) {
+      members(where: { userId: { _eq: $userId }, archivedAt: { _is_null: true } }) {
         id
         name
       }
       meetings(
         where: {
           startDate: { _gt: $afterDate }
-          archived: { _eq: false }
+          archivedAt: { _is_null: true }
           meeting_attendees: { member: { userId: { _eq: $userId } } }
         }
         order_by: { startDate: asc }
@@ -363,7 +363,7 @@ const GET_MEETINGS = gql(`
           }
         }
       }
-      meetings_recurring {
+      meetings_recurring(where: { archivedAt: { _is_null: true } }) {
         ...MeetingRecurring
         meetings {
           recurringDate
@@ -389,7 +389,7 @@ const GET_MEETING = gql(`
         slug
         members(where: {
           userId: { _eq: $userId }
-          archived: { _eq: false }
+          archivedAt: { _is_null: true }
         }) {
           id
           name
@@ -412,7 +412,7 @@ const GET_MEETING_RECURRING = gql(`
         slug
         members(where: {
           userId: { _eq: $userId }
-          archived: { _eq: false }
+          archivedAt: { _is_null: true }
         }) {
           id
           name

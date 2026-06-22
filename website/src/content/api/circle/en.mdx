@@ -13,7 +13,8 @@ category: 'circles-roles'
 | `orgId` | `uuid` | Reference to the organization |
 | `roleId` | `uuid` | Reference to the role associated with this circle |
 | `parentId` | `uuid` | Reference to the parent circle (optional, null for top-level circles) |
-| `archived` | `Boolean` | Whether the circle is archived (default: false) |
+| `archivedAt` | `Timestamp` | When the circle was archived; null if active |
+| `createdAt` | `Timestamp` | When the circle was created |
 
 ## Relationships
 
@@ -104,23 +105,32 @@ mutation CreateCircle {
 }
 ```
 
-### Update a Circle
+### Move a Circle
+
+A circle's only directly updatable field is its `parentId` (moving it under another circle).
 
 ```graphql
-mutation UpdateCircle {
+mutation MoveCircle {
   update_circle_by_pk(
     pk_columns: { id: "circle-id" }
-    _set: { archived: true }
+    _set: { parentId: "new-parent-circle-id" }
   ) {
     id
-    archived
+    parentId
   }
 }
 ```
 
+<Callout type="info" title="Archiving">
+  `archivedAt` is not writable on a circle directly. Archiving a circle is a
+  nested operation handled by the application: it archives the role, members,
+  invited roles, meetings, recurring meetings, topics, tasks and decisions of
+  the whole subtree together, and is reversible from the history.
+</Callout>
+
 ## Permissions
 
-Circle access follows organization and governance rules. When `protectGovernance` is enabled on the organization, only circle leaders can modify circle structure.
+Circle access follows the organization's [`governanceMode`](/en/docs/governance-modes). In `Free` mode any member can modify the org chart. In `Agile` mode a circle's leaders modify it directly. In `Strict` mode structural changes go through proposals, while organization owners can always edit.
 
 <Callout type="info" title="Notes">
   Circles form a hierarchical tree through the `parentId` relationship. Each

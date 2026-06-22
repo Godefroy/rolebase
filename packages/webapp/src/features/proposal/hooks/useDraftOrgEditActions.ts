@@ -76,7 +76,7 @@ export default function useDraftOrgEditActions(
       changes.circles.push({
         type: EntityChangeType.Create,
         id: newCircleId,
-        data: { id: newCircleId, orgId, roleId, parentId: newParentId, archived: false },
+        data: { id: newCircleId, orgId, roleId, parentId: newParentId, archivedAt: null },
       })
 
       // Members
@@ -91,7 +91,7 @@ export default function useDraftOrgEditActions(
             circleId: newCircleId,
             memberId: cm.member.id,
             createdAt: new Date().toISOString(),
-            archived: false,
+            archivedAt: null,
           },
         })
       }
@@ -213,14 +213,14 @@ export default function useDraftOrgEditActions(
               circles: archiveCircleIds.map((id) => ({
                 type: EntityChangeType.Update,
                 id,
-                prevData: { archived: false },
-                newData: { archived: true },
+                prevData: { archivedAt: null },
+                newData: { archivedAt: new Date().toISOString() },
               })),
               roles: archiveRoleIds.map((id) => ({
                 type: EntityChangeType.Update,
                 id,
-                prevData: { archived: false },
-                newData: { archived: true },
+                prevData: { archivedAt: null },
+                newData: { archivedAt: new Date().toISOString() },
               })),
             }
           )
@@ -237,7 +237,7 @@ export default function useDraftOrgEditActions(
           const newRole: RoleFragment = {
             id: generateId(),
             orgId,
-            archived: false,
+            archivedAt: null,
             base: false,
             name: roleOrName,
             purpose: '',
@@ -263,7 +263,7 @@ export default function useDraftOrgEditActions(
           {
             type: EntityChangeType.Create,
             id: newCircleId,
-            data: { id: newCircleId, orgId, roleId: role.id, parentId, archived: false },
+            data: { id: newCircleId, orgId, roleId: role.id, parentId, archivedAt: null },
           },
         ]
 
@@ -380,7 +380,7 @@ export default function useDraftOrgEditActions(
                   circleId,
                   memberId,
                   createdAt: new Date().toISOString(),
-                  archived: false,
+                  archivedAt: null,
                 },
               },
             ],
@@ -421,8 +421,8 @@ export default function useDraftOrgEditActions(
               {
                 type: EntityChangeType.Update,
                 id: circleMember.id,
-                prevData: { archived: false },
-                newData: { archived: true },
+                prevData: { archivedAt: null },
+                newData: { archivedAt: new Date().toISOString() },
               },
             ],
           }
@@ -453,7 +453,7 @@ export default function useDraftOrgEditActions(
                   parentId,
                   circleId,
                   createdAt: new Date().toISOString(),
-                  archived: false,
+                  archivedAt: null,
                 },
               },
             ],
@@ -467,7 +467,9 @@ export default function useDraftOrgEditActions(
         const link = draft.getData()
           ?.circleLinks.find(
             (cl) =>
-              cl.parentId === parentId && cl.circleId === circleId && !cl.archived
+              cl.parentId === parentId &&
+              cl.circleId === circleId &&
+              cl.archivedAt == null
           )
         if (!parentCircle || !invitedCircle || !link) return
 
@@ -495,8 +497,8 @@ export default function useDraftOrgEditActions(
               {
                 type: EntityChangeType.Update,
                 id: link.id,
-                prevData: { archived: false },
-                newData: { archived: true },
+                prevData: { archivedAt: null },
+                newData: { archivedAt: new Date().toISOString() },
               },
             ],
           }

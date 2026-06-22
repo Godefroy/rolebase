@@ -10,7 +10,7 @@ import {
   Button,
   Text,
 } from '@chakra-ui/react'
-import { ThreadActivityFragment, useDeleteThreadActivityMutation } from '@gql'
+import { ThreadActivityFragment, useArchiveThreadActivityMutation } from '@gql'
 import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import ThreadActivity from '../components/ThreadActivity'
@@ -27,11 +27,11 @@ export default function ActivityDeleteModal({
   ...alertProps
 }: Props) {
   const { t } = useTranslation()
-  const [deleteActivity] = useDeleteThreadActivityMutation()
+  const [archiveActivity] = useArchiveThreadActivityMutation()
   const cancelRef = useRef<HTMLButtonElement>(null)
 
   const handleDelete = () => {
-    deleteActivity({ variables: { id: activity.id } })
+    archiveActivity({ variables: { id: activity.id, archivedAt: new Date().toISOString() } })
     onDelete?.()
     alertProps.onClose()
   }

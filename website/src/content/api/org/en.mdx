@@ -12,7 +12,7 @@ category: 'org-members'
 | `id` | `uuid` | Unique identifier for the organization |
 | `name` | `String` | Name of the organization |
 | `slug` | `String` | URL-friendly unique identifier (optional) |
-| `archived` | `Boolean` | Whether the organization is archived (default: false) |
+| `archivedAt` | `Timestamp` | When the organization was archived; null if active |
 | `createdAt` | `Timestamp` | When the organization was created |
 | `defaultGraphView` | `String` | Default graph view setting (optional) |
 | `governanceMode` | `governance_mode` | Who can change the org chart: `Free` (all members), `Agile` (role leaders), `Strict` (proposals only). Default: `Free` |
@@ -51,7 +51,7 @@ query GetOrganization($id: uuid!) {
     id
     name
     slug
-    archived
+    archivedAt
     createdAt
     members {
       id

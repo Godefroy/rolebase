@@ -43,10 +43,11 @@ insert_permissions:
                               _eq: Member
       columns:
         - accountabilities
-        - archived
+        - archivedAt
         - base
         - checklist
         - colorHue
+        - createdAt
         - domain
         - id
         - indicators
@@ -61,7 +62,7 @@ select_permissions:
     permission:
       columns:
         - accountabilities
-        - archived
+        - archivedAt
         - base
         - checklist
         - colorHue
@@ -85,7 +86,7 @@ update_permissions:
     permission:
       columns:
         - accountabilities
-        - archived
+        - archivedAt
         - base
         - checklist
         - colorHue

@@ -10,23 +10,23 @@ query getCircle($id: uuid!) {
 }
 
 query getPublicCircles($orgId: uuid!) {
-  circle(where: { orgId: { _eq: $orgId }, archived: { _eq: false } }) {
+  circle(where: { orgId: { _eq: $orgId }, archivedAt: { _is_null: true } }) {
     id
     orgId
     roleId
     parentId
-    members(where: { archived: { _eq: false } }) {
+    members(where: { archivedAt: { _is_null: true } }) {
       id
       memberId
     }
-    invitedCircleLinks(where: { archived: { _eq: false } }) {
+    invitedCircleLinks(where: { archivedAt: { _is_null: true } }) {
       id
       invitedCircle {
         id
       }
     }
   }
-  role(where: { orgId: { _eq: $orgId }, archived: { _eq: false } }) {
+  role(where: { orgId: { _eq: $orgId }, archivedAt: { _is_null: true } }) {
     id
     orgId
     base
@@ -36,7 +36,7 @@ query getPublicCircles($orgId: uuid!) {
     parentLink
     colorHue
   }
-  member(where: { orgId: { _eq: $orgId }, archived: { _eq: false } }) {
+  member(where: { orgId: { _eq: $orgId }, archivedAt: { _is_null: true } }) {
     id
     orgId
     name
@@ -46,33 +46,35 @@ query getPublicCircles($orgId: uuid!) {
 
 query getCirclesStats($circlesIds: [uuid!]!) {
   thread_aggregate(
-    where: { circleId: { _in: $circlesIds }, archived: { _eq: false } }
+    where: { circleId: { _in: $circlesIds }, archivedAt: { _is_null: true } }
   ) {
     aggregate {
       count
     }
   }
   meeting_aggregate(
-    where: { circleId: { _in: $circlesIds }, archived: { _eq: false } }
+    where: { circleId: { _in: $circlesIds }, archivedAt: { _is_null: true } }
   ) {
     aggregate {
       count
     }
   }
-  meeting_recurring_aggregate(where: { circleId: { _in: $circlesIds } }) {
+  meeting_recurring_aggregate(
+    where: { circleId: { _in: $circlesIds }, archivedAt: { _is_null: true } }
+  ) {
     aggregate {
       count
     }
   }
   task_aggregate(
-    where: { circleId: { _in: $circlesIds }, archived: { _eq: false } }
+    where: { circleId: { _in: $circlesIds }, archivedAt: { _is_null: true } }
   ) {
     aggregate {
       count
     }
   }
   decision_aggregate(
-    where: { circleId: { _in: $circlesIds }, archived: { _eq: false } }
+    where: { circleId: { _in: $circlesIds }, archivedAt: { _is_null: true } }
   ) {
     aggregate {
       count
@@ -119,46 +121,7 @@ mutation updateCircle($id: uuid!, $values: circle_set_input!) {
   }
 }
 
-mutation archiveCircles($circlesIds: [uuid!]!, $rolesIds: [uuid!]!) {
-  update_circle(where: { id: { _in: $circlesIds } }, _set: { archived: true }) {
-    returning {
-      id
-    }
-  }
-  update_role(where: { id: { _in: $rolesIds } }, _set: { archived: true }) {
-    returning {
-      id
-    }
-  }
-  delete_meeting_recurring(where: { circleId: { _in: $circlesIds } }) {
-    returning {
-      id
-    }
-  }
-}
-
-mutation unarchiveCircles($circlesIds: [uuid!]!, $rolesIds: [uuid!]!) {
-  update_circle(where: { id: { _in: $circlesIds } }, _set: { archived: false }) {
-    returning {
-      id
-    }
-  }
-  update_role(where: { id: { _in: $rolesIds } }, _set: { archived: false }) {
-    returning {
-      id
-    }
-  }
-}
-
-# Archived circles of an org, to walk an archived subtree to restore
-# (the whole subtree of an archived circle is archived too).
-query getOrgCirclesForRestore($orgId: uuid!) {
-  circle(where: { orgId: { _eq: $orgId }, archived: { _eq: true } }) {
-    id
-    parentId
-    roleId
-    role {
-      base
-    }
-  }
-}
+# Circle archive/restore (full nested cascade) is handled server-side by the
+# backend tRPC mutations trpc.circle.archiveCircle / restoreCircle, so the
+# archiveCircles / unarchiveCircles / getOrgCirclesForRestore operations have
+# been removed from the client.

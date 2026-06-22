@@ -13,7 +13,8 @@ category: 'org-members'
 | `orgId` | `uuid` | Référence à l'organisation |
 | `name` | `String` | Nom d'affichage du membre |
 | `description` | `String` | Description ou biographie du membre |
-| `archived` | `Boolean` | Indique si le membre est archivé (par défaut : false) |
+| `archivedAt` | `Timestamp` | Date d'archivage du membre ; null si actif |
+| `createdAt` | `Timestamp` | Date de création du membre |
 | `picture` | `String` | URL de la photo de profil du membre (optionnel) |
 | `pictureFileId` | `uuid` | Référence au fichier de photo de profil stocké (optionnel) |
 | `userId` | `uuid` | Référence au compte utilisateur associé (optionnel) |

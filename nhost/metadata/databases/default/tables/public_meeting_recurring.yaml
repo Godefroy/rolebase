@@ -58,6 +58,7 @@ select_permissions:
   - role: user
     permission:
       columns:
+        - archivedAt
         - circleId
         - createdAt
         - duration
@@ -88,6 +89,7 @@ update_permissions:
   - role: user
     permission:
       columns:
+        - archivedAt
         - circleId
         - duration
         - invitedReadonly

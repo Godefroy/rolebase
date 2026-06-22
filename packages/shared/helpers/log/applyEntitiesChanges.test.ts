@@ -42,7 +42,7 @@ describe('applyEntitiesChanges', () => {
       orgId: 'org-1',
       roleId: 'role-dev',
       parentId: 'circle-super',
-      archived: false,
+      archivedAt: null,
     }
     const changes: EntitiesChanges = {
       circles: [{ type: EntityChangeType.Create, id: 'circle-new', data: newCircle }],

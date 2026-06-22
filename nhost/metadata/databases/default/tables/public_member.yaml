@@ -47,7 +47,7 @@ insert_permissions:
               - userId:
                   _eq: X-Hasura-User-Id
       columns:
-        - archived
+        - archivedAt
         - description
         - name
         - orgId
@@ -56,7 +56,8 @@ select_permissions:
   - role: user
     permission:
       columns:
-        - archived
+        - archivedAt
+        - createdAt
         - description
         - id
         - inviteDate
@@ -107,7 +108,7 @@ event_triggers:
       update:
         columns:
           - orgId
-          - archived
+          - archivedAt
           - name
           - description
     retry_conf:

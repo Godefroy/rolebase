@@ -63,7 +63,7 @@ select_permissions:
   - role: user
     permission:
       columns:
-        - archived
+        - archivedAt
         - circleId
         - createdAt
         - id
@@ -75,7 +75,7 @@ update_permissions:
   - role: user
     permission:
       columns:
-        - archived
+        - archivedAt
       filter:
         hostCircle:
           _or:

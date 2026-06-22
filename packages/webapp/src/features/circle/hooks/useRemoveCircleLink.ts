@@ -12,8 +12,9 @@ export default function useRemoveCircleLink() {
   const { getOrgData } = useOrgContext()
 
   return useCallback(async (parentId: string, circleId: string) => {
+    const archivedAt = new Date().toISOString()
     const { data, errors } = await archiveCircleLink({
-      variables: { parentId, circleId },
+      variables: { parentId, circleId, archivedAt },
     })
     if (errors?.length) throw errors[0]
     const circleLink = data?.update_circle_link?.returning[0]
@@ -36,8 +37,10 @@ export default function useRemoveCircleLink() {
           {
             type: EntityChangeType.Update,
             id: circleLink.id,
-            prevData: { archived: false },
-            newData: { archived: true },
+            prevData: { archivedAt: null },
+            // Use the DB-returned value (timestamptz "...+00:00"), not the
+            // "...Z" input, so "data changed since" comparisons stay accurate.
+            newData: { archivedAt: circleLink.archivedAt },
           },
         ],
       },

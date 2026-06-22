@@ -151,7 +151,7 @@ export default function CircleContent({
             {isMember && (
               <ActionsMenu
                 onEdit={canEditRole ? editRoleModal.onOpen : undefined}
-                onDelete={
+                onArchive={
                   canEditCircle && circle.parentId
                     ? deleteModal.onOpen
                     : undefined

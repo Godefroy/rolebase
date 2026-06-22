@@ -1,7 +1,7 @@
 import { RoleFragment } from '../gql'
 
 const roleBase = {
-  archived: false,
+  archivedAt: null,
   base: false,
   purpose: '',
   domain: '',

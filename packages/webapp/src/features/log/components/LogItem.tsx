@@ -42,7 +42,8 @@ export default function LogItem({ log, onCancel }: Props) {
 
       <Spacer />
 
-      {onCancel && !log.canceled && (
+      {/* A cancellation entry (cancelLogId set) can't itself be cancelled. */}
+      {onCancel && !log.canceled && !log.cancelLogId && (
         <IconTextButton
           aria-label={t('LogItem.open')}
           size="sm"

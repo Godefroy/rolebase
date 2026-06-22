@@ -188,8 +188,8 @@ const GET_USER_DIGEST_DATA = gql(`
     member(
       where: {
         userId: { _eq: $userId }
-        archived: { _eq: false }
-        org: { archived: { _eq: false } }
+        archivedAt: { _is_null: true }
+        org: { archivedAt: { _is_null: true } }
       }
     ) {
       id
@@ -214,7 +214,7 @@ const GET_USER_DIGEST_DATA = gql(`
                   { extra_members: { member: { userId: { _eq: $userId } } } }
                 ]
               }
-              { archived: { _eq: false } }
+              { archivedAt: { _is_null: true } }
             ]
           }
         ) {
@@ -226,7 +226,9 @@ const GET_USER_DIGEST_DATA = gql(`
               colorHue
             }
           }
-          activities(where: { createdAt: { _gt: $date } }) {
+          activities(
+            where: { createdAt: { _gt: $date }, archivedAt: { _is_null: true } }
+          ) {
             ...ThreadActivity
           }
         }
@@ -241,7 +243,7 @@ const GET_USER_DIGEST_DATA = gql(`
               { circle: { participants: { member: { userId: { _eq: $userId } } } } }
               { meeting_attendees: { member: { userId: { _eq: $userId } } } }
             ]
-            archived: { _eq: false }
+            archivedAt: { _is_null: true }
           }
           order_by: { endDate: desc }
         ) {

@@ -83,7 +83,7 @@ export default function CircleRole({ skipFetchRole }: Props) {
   const role: RoleFragment = useMemo(
     () => ({
       orgId: circle.orgId,
-      archived: false,
+      archivedAt: null,
       purpose: '',
       accountabilities: '',
       domain: '',
@@ -117,7 +117,7 @@ export default function CircleRole({ skipFetchRole }: Props) {
 
   return (
     <>
-      {(circle.archived || role.archived) && (
+      {(circle.archivedAt || role.archivedAt) && (
         <Alert status="warning" borderRadius="md" mb={fieldsGap}>
           <AlertIcon />
           <Box flex="1">{t('CircleRole.archived')}</Box>

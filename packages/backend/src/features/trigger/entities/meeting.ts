@@ -41,7 +41,7 @@ const appNotifyProps: Array<keyof MeetingFragment> = [
   'startDate',
   'endDate',
   'title',
-  'archived',
+  'archivedAt',
   'videoConf',
 ]
 
@@ -67,7 +67,7 @@ export class IndexMeeting extends IndexEntity<MeetingFragment> {
     const { meeting } = await adminRequest(
       gql(`
         query GetMeetingsForSearch {
-          meeting(where: { archived: { _eq: false } }) {
+          meeting(where: { archivedAt: { _is_null: true } }) {
             ...MeetingSearch
           }
         }
@@ -115,12 +115,12 @@ export class IndexMeeting extends IndexEntity<MeetingFragment> {
               member {
                 id
                 name
-                archived
+                archivedAt
                 user {
                   email
                   locale
                   metadata
-                  apps {
+                  apps(where: { archivedAt: { _is_null: true } }) {
                     ...UserAppFull
                   }
                 }
@@ -154,7 +154,7 @@ export class IndexMeeting extends IndexEntity<MeetingFragment> {
         // Send start notification to new attendee if meeting is started
         const attendeesToNotify = attendees.filter(
           (attendee) =>
-            attendee.member.archived === false &&
+            attendee.member.archivedAt == null &&
             // Attendee is present and have not been notified
             attendee.startNotified === false &&
             attendee.present !== false &&
@@ -208,7 +208,7 @@ export class IndexMeeting extends IndexEntity<MeetingFragment> {
     const orgUrl = `${settings.url}${getOrgPath(org)}`
 
     for (const { member } of attendees) {
-      if (member.archived) continue
+      if (member.archivedAt) continue
 
       const userApps = member.user?.apps || []
       for (const userApp of userApps) {
@@ -219,7 +219,7 @@ export class IndexMeeting extends IndexEntity<MeetingFragment> {
           const app = appFactory(userApp)
 
           if (data.old) {
-            if (meeting.archived) {
+            if (meeting.archivedAt) {
               // Delete event if meeting is archived
               await app.deleteMeetingEvent(meeting.id, meeting.orgId)
             } else {

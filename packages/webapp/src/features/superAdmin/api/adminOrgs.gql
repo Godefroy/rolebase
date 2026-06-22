@@ -2,14 +2,14 @@ query AdminOrgs($limit: Int!, $offset: Int!, $search: String!) {
   org(
     limit: $limit
     offset: $offset
-    where: { name: { _ilike: $search }, archived: { _eq: false } }
+    where: { name: { _ilike: $search }, archivedAt: { _is_null: true } }
     order_by: { createdAt: desc }
   ) {
     id
     name
     slug
     createdAt
-    archived
+    archivedAt
     org_subscription {
       id
       status
@@ -22,7 +22,7 @@ query AdminOrgs($limit: Int!, $offset: Int!, $search: String!) {
     }
   }
   org_aggregate(
-    where: { name: { _ilike: $search }, archived: { _eq: false } }
+    where: { name: { _ilike: $search }, archivedAt: { _is_null: true } }
   ) {
     aggregate {
       count

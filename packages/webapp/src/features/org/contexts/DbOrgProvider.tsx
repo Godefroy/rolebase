@@ -42,15 +42,7 @@ export default function DbOrgProvider({ orgId, slug, children }: Props) {
 
   const orgData = useMemo<OrgData | undefined>(
     () =>
-      result
-        ? new OrgData(
-            result.circles,
-            result.circleMembers,
-            result.circleLinks,
-            result.roles,
-            result.members
-          )
-        : undefined,
+      result ? new OrgData(result) : undefined,
     [result]
   )
 

@@ -5,7 +5,7 @@ fragment Thread on thread {
   initiatorMemberId
   title
   createdAt
-  archived
+  archivedAt
   pinned
   status
   private
@@ -22,7 +22,7 @@ fragment ThreadMemberStatus on thread_member_status {
 fragment ThreadWithFirstActivity on thread {
   ...Thread
   activities(
-    where: { type: { _eq: Message } }
+    where: { type: { _eq: Message }, archivedAt: { _is_null: true } }
     order_by: { createdAt: asc }
     limit: 1
   ) {

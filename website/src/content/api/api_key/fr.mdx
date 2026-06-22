@@ -14,6 +14,7 @@ category: 'other'
 | `name` | `String` | Nom descriptif de la clé API |
 | `value` | `String` | Valeur de la clé API (générée automatiquement, affichée une seule fois à la création) |
 | `createdAt` | `Timestamp` | Date de création de la clé API (par défaut : horodatage actuel) |
+| `archivedAt` | `Timestamp` | Date d'archivage de la clé API ; null si actif |
 
 ## Relations
 
@@ -64,11 +65,16 @@ mutation renameApiKey($id: uuid!, $name: String!) {
 }
 ```
 
-### Supprimer une clé API
+### Archiver une clé API
+
+Les clés API sont archivées (suppression douce) en renseignant `archivedAt`, sans suppression physique.
 
 ```graphql
-mutation deleteApiKey($id: uuid!) {
-  delete_api_key_by_pk(id: $id) {
+mutation archiveApiKey($id: uuid!) {
+  update_api_key_by_pk(
+    pk_columns: { id: $id }
+    _set: { archivedAt: "2024-01-01T00:00:00Z" }
+  ) {
     id
   }
 }
@@ -78,7 +84,7 @@ mutation deleteApiKey($id: uuid!) {
 
 La gestion des clés API est restreinte à l'utilisateur propriétaire :
 
-- Les utilisateurs peuvent créer, consulter, renommer et supprimer uniquement leurs propres clés API
+- Les utilisateurs peuvent créer, consulter, renommer et archiver uniquement leurs propres clés API
 
 <Callout type="info">
   La `value` de la clé n'est affichée qu'une seule fois à la création --

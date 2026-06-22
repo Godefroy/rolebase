@@ -14,6 +14,7 @@ category: 'other'
 | `name` | `String` | Descriptive name for the API key |
 | `value` | `String` | The actual API key value (auto-generated, shown once on creation) |
 | `createdAt` | `Timestamp` | When the API key was created (defaults to current timestamp) |
+| `archivedAt` | `Timestamp` | When the API key was archived; null if active |
 
 ## Relationships
 
@@ -64,11 +65,16 @@ mutation renameApiKey($id: uuid!, $name: String!) {
 }
 ```
 
-### Delete an API Key
+### Archive an API Key
+
+API keys are archived (soft-deleted) by setting `archivedAt`, not physically deleted.
 
 ```graphql
-mutation deleteApiKey($id: uuid!) {
-  delete_api_key_by_pk(id: $id) {
+mutation archiveApiKey($id: uuid!) {
+  update_api_key_by_pk(
+    pk_columns: { id: $id }
+    _set: { archivedAt: "2024-01-01T00:00:00Z" }
+  ) {
     id
   }
 }
@@ -78,7 +84,7 @@ mutation deleteApiKey($id: uuid!) {
 
 API key management is restricted to the owning user:
 
-- Users can create, view, rename, and delete their own API keys only
+- Users can create, view, rename, and archive their own API keys only
 
 <Callout type="info">
   The key `value` is only shown once upon creation — store it securely. Best

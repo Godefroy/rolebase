@@ -20,7 +20,7 @@ subscription meetingsByDates(
     ) {
       ...MeetingSummary
     }
-    meetings_recurring {
+    meetings_recurring(where: { archivedAt: { _is_null: true } }) {
       ...MeetingRecurring
       meetings(
         where: {
@@ -39,7 +39,7 @@ subscription nextMeetings($orgId: uuid!, $memberId: uuid!) {
   meeting(
     where: {
       orgId: { _eq: $orgId }
-      archived: { _eq: false }
+      archivedAt: { _is_null: true }
       endDate: { _gt: "now()" } # Include meetings that are still in progress
       meeting_attendees: { memberId: { _eq: $memberId } }
     }
@@ -51,7 +51,7 @@ subscription nextMeetings($orgId: uuid!, $memberId: uuid!) {
 
 subscription circleMeetings($circleId: uuid!) {
   meeting(
-    where: { circleId: { _eq: $circleId }, archived: { _eq: false } }
+    where: { circleId: { _eq: $circleId }, archivedAt: { _is_null: true } }
     order_by: { startDate: desc }
   ) {
     ...MeetingSummary
@@ -70,10 +70,10 @@ mutation updateMeeting($id: uuid!, $values: meeting_set_input!) {
   }
 }
 
-mutation archiveMeeting($id: uuid!) {
+mutation archiveMeeting($id: uuid!, $archivedAt: timestamptz!) {
   update_meeting_by_pk(
     pk_columns: { id: $id }
-    _set: { archived: true, currentStepId: null }
+    _set: { archivedAt: $archivedAt, currentStepId: null }
   ) {
     id
   }

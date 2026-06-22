@@ -1,11 +1,14 @@
 subscription userApps($userId: uuid!) {
-  user_app(where: { userId: { _eq: $userId } }) {
+  user_app(where: { userId: { _eq: $userId }, archivedAt: { _is_null: true } }) {
     ...UserApp
   }
 }
 
-mutation deleteUserApp($id: uuid!) {
-  delete_user_app_by_pk(id: $id) {
+mutation archiveUserApp($id: uuid!, $archivedAt: timestamptz!) {
+  update_user_app_by_pk(
+    pk_columns: { id: $id }
+    _set: { archivedAt: $archivedAt }
+  ) {
     id
   }
 }

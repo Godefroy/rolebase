@@ -28,5 +28,5 @@ export default authedProcedure
 
     await guardOrg(member.orgId, Member_Role_Enum.Admin, opts.ctx)
 
-    return updateMember(memberId, { archived: false })
+    return updateMember(memberId, { archivedAt: null })
   })

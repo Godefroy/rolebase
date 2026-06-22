@@ -5,7 +5,9 @@ import {
   EntityMethodUpdate,
 } from '../../model/log'
 
-export async function cancelEntityChanges<Entity extends { archived: boolean }>(
+export async function cancelEntityChanges<
+  Entity extends { archivedAt?: string | null }
+>(
   entityChanges: EntityChange<Entity>[] | undefined,
   getEntity: EntityMethodGet<Entity>,
   updateEntity: EntityMethodUpdate<Entity>
@@ -22,15 +24,16 @@ export async function cancelEntityChanges<Entity extends { archived: boolean }>(
 
     if (entityChange.type === EntityChangeType.Create) {
       // Revert creation = archive entity
-      if (currentEntity.archived) {
+      if (currentEntity.archivedAt) {
         continue
       }
-      await updateEntity(entityChange.id, { archived: true } as Partial<Entity>)
+      const archivedAt = new Date().toISOString()
+      await updateEntity(entityChange.id, { archivedAt } as Partial<Entity>)
       changes.push({
         type: EntityChangeType.Update,
         id: entityChange.id,
-        prevData: { archived: false } as Partial<Entity>,
-        newData: { archived: true } as Partial<Entity>,
+        prevData: { archivedAt: null } as Partial<Entity>,
+        newData: { archivedAt } as Partial<Entity>,
       })
     } else if (entityChange.type === EntityChangeType.Update) {
       // Revert update

@@ -145,7 +145,7 @@ export class HolaspiritImporter extends Importer {
         picture,
         role,
         description: member.Phone,
-        archived: member.Suspended,
+        archivedAt: member.Suspended ? new Date().toISOString() : null,
       }
 
       if (member.Email === user.email) {

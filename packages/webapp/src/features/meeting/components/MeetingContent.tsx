@@ -74,7 +74,7 @@ export default function MeetingContent() {
         </Alert>
       )}
 
-      {meeting.archived && (
+      {meeting.archivedAt && (
         <Alert status="info" mb={16}>
           <AlertIcon />
           <AlertDescription>{t('MeetingContent.archived')}</AlertDescription>
@@ -82,7 +82,7 @@ export default function MeetingContent() {
       )}
 
       {isParticipant &&
-        !meeting.archived &&
+        !meeting.archivedAt &&
         (steps?.length === 0 && meeting.stepsConfig.length !== 0 ? (
           <MeetingContentEmpty />
         ) : isNotStarted ? (

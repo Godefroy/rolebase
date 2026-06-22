@@ -18,7 +18,7 @@ category: 'meetings'
 | `endDate` | `Timestamp` | When the meeting ends |
 | `createdAt` | `Timestamp` | When the meeting was created |
 | `ended` | `Boolean` | Whether the meeting has ended (default: false) |
-| `archived` | `Boolean` | Whether the meeting is archived (default: false) |
+| `archivedAt` | `Timestamp` | When the meeting was archived; null if active |
 | `private` | `Boolean` | Whether the meeting is private (default: false) |
 | `invitedReadonly` | `Boolean` | Whether invited members are read-only (default: false) |
 | `currentStepId` | `uuid` | ID of the current active step (optional) |
@@ -46,7 +46,7 @@ category: 'meetings'
 
 ```graphql
 query GetMeetings($orgId: uuid!) {
-  meeting(where: { archived: { _eq: false }, orgId: { _eq: $orgId } }) {
+  meeting(where: { archivedAt: { _is_null: true }, orgId: { _eq: $orgId } }) {
     id
     title
     startDate

@@ -46,6 +46,24 @@ export interface ActingLeader {
 const byName = (a: { name: string }, b: { name: string }) =>
   a.name.localeCompare(b.name)
 
+// Inputs to build an OrgData. The first five fields match the OrgData GraphQL
+// fragment, so a query result can be passed almost as-is.
+export interface OrgDataInput {
+  circles: CircleFragment[]
+  circleMembers: CircleMemberFragment[]
+  circleLinks: CircleLinkFragment[]
+  roles: RoleSummaryFragment[]
+  members: MemberFragment[]
+  // The org's governance mode, used by getCirclePermissions.
+  governanceMode: Governance_Mode_Enum
+  // The current member acting as a leader of a circle (proposal editor).
+  actingLeader?: ActingLeader
+  // When true, archived circles/roles are indexed too (so an archived subtree
+  // can be walked, e.g. to restore it). Members and links stay active-only so
+  // leadership and permission checks remain correct.
+  includeArchived?: boolean
+}
+
 // Indexed view of an org's structure: the single org data object, holding the
 // active entities and the lookups + operations over them. Nothing materializes
 // a nested CircleFull tree anymore.
@@ -59,6 +77,11 @@ export class OrgData {
   readonly circles: readonly CircleFragment[]
   readonly members: readonly MemberFragment[]
   readonly roles: readonly RoleSummaryFragment[]
+
+  // The org's governance mode, used by getCirclePermissions.
+  readonly governanceMode: Governance_Mode_Enum
+  // The current member acting as a leader of a circle (proposal editor).
+  private readonly actingLeader?: ActingLeader
 
   // By-id lookups (also index archived circles/roles, so an archived
   // circle/role can still be resolved when its panel is opened)
@@ -86,27 +109,35 @@ export class OrgData {
   >()
   private activeMembersList?: readonly MemberFragment[]
 
-  constructor(
-    circles: CircleFragment[],
-    circleMembers: CircleMemberFragment[],
-    circleLinks: CircleLinkFragment[],
-    roles: RoleSummaryFragment[],
-    members: MemberFragment[],
-    private readonly actingLeader?: ActingLeader
-  ) {
+  constructor(input: OrgDataInput) {
+    const {
+      circles,
+      circleMembers,
+      circleLinks,
+      roles,
+      members,
+      governanceMode,
+      actingLeader,
+      includeArchived = false,
+    } = input
+    this.governanceMode = governanceMode
+    this.actingLeader = actingLeader
+
     // Exclude archived circles and members: the subscription returns only
     // active ones, but the proposal draft and the demo mark them archived in
     // place (in-memory "delete").
-    const activeCircles = circles.filter((c) => !c.archived)
-    this.circles = activeCircles
-    this.members = members.filter((m) => !m.archived).sort(byName)
+    const indexedCircles = includeArchived
+      ? circles
+      : circles.filter((c) => c.archivedAt == null)
+    this.circles = indexedCircles
+    this.members = members.filter((m) => m.archivedAt == null).sort(byName)
     this.roles = roles
-    this.circleById = new Map(activeCircles.map((c) => [c.id, c]))
+    this.circleById = new Map(indexedCircles.map((c) => [c.id, c]))
     this.roleById = new Map(roles.map((r) => [r.id, r]))
     this.memberById = new Map(this.members.map((m) => [m.id, m]))
 
     for (const cm of circleMembers) {
-      if (cm.archived) continue
+      if (cm.archivedAt != null) continue
       const circle = this.circleById.get(cm.circleId)
       if (!circle) continue
       const member = this.memberById.get(cm.memberId)
@@ -125,13 +156,13 @@ export class OrgData {
     }
 
     for (const cl of circleLinks) {
-      if (cl.archived || !this.circleById.has(cl.parentId)) continue
+      if (cl.archivedAt != null || !this.circleById.has(cl.parentId)) continue
       const list = this.linksByCircle.get(cl.parentId)
       if (list) list.push(cl)
       else this.linksByCircle.set(cl.parentId, [cl])
     }
 
-    for (const c of activeCircles) {
+    for (const c of indexedCircles) {
       if (!c.parentId) continue
       const list = this.childrenByCircle.get(c.parentId)
       if (list) list.push(c)
@@ -440,14 +471,13 @@ export class OrgData {
     circle: CircleFragment,
     role: RoleSummaryFragment,
     memberId: string | undefined,
-    governanceMode: Governance_Mode_Enum,
     isOrgMember: boolean,
     isOrgOwner: boolean
   ): CirclePermissions {
     if (!isOrgMember) return noCirclePermissions
 
-    const isFree = governanceMode === Governance_Mode_Enum.Free
-    const isStrict = governanceMode === Governance_Mode_Enum.Strict
+    const isFree = this.governanceMode === Governance_Mode_Enum.Free
+    const isStrict = this.governanceMode === Governance_Mode_Enum.Strict
     const isLeader = this.isCircleLeader(circle.id, memberId)
     const isOwner = this.isCircleOwner(circle, memberId)
     // Sub-circles can only be added under a real circle (not a single-member or

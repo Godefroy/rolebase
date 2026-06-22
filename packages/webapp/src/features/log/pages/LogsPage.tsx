@@ -17,7 +17,7 @@ export default function LogsPage() {
   const bottomRef = useRef(null)
 
   // Subscribe to logs
-  const { data, error, loading, fetchMore } = useLastLogsQuery({
+  const { data, error, loading, fetchMore, refetch } = useLastLogsQuery({
     skip: !orgId,
     variables: { orgId: orgId!, limit },
     fetchPolicy: 'cache-and-network',
@@ -77,7 +77,7 @@ export default function LogsPage() {
       <Title>{t('LogsPage.heading')}</Title>
 
       <Box maxW="3xl" p={{ base: 5, sm: 10 }}>
-        {logs && <LogsList logs={logs} />}
+        {logs && <LogsList logs={logs} onCancelled={() => refetch()} />}
 
         <Box ref={bottomRef} mt={3} textAlign="center">
           {loading && <Loading active />}

@@ -18,7 +18,8 @@ category: 'circles-roles'
 | `checklist` | `String` | Checklist of recurring responsibilities |
 | `indicators` | `String` | Performance indicators to track |
 | `notes` | `String` | Additional notes |
-| `archived` | `Boolean` | Whether the role is archived (default: false) |
+| `archivedAt` | `Timestamp` | When the role was archived; null if active |
+| `createdAt` | `Timestamp` | When the role was created |
 | `base` | `Boolean` | Whether this is a base role (default: false) |
 | `singleMember` | `Boolean` | Whether the role can only have one member (default: false) |
 | `parentLink` | `Boolean` | Whether the role can be linked to parent circles (default: false) |
@@ -112,7 +113,7 @@ mutation UpdateRole {
 
 - **View** — All organization members can view roles
 - **Create** — Owners can create any role. Admins and Members can create non-base roles
-- **Update** — Owners can update any role. For non-base roles: if the organization has `protectGovernance` disabled, Admins and Members can update them. Circle leaders can also update roles within their circles
+- **Update** — Owners can update any role. For non-base roles, access depends on the organization's [`governanceMode`](/en/docs/governance-modes): in `Free` mode Admins and Members can update them; in `Agile` mode the circle's leaders can; in `Strict` mode structural changes go through proposals
 - **Delete** — Only available through the Hasura admin API
 
 <Callout type="info" title="Notes">

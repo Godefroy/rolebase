@@ -60,7 +60,7 @@ const GET_PENDING_INVITATIONS = gql(`
   query getPendingInvitations {
     member(
       where: {
-        archived: { _eq: false }
+        archivedAt: { _is_null: true }
         userId: { _is_null: true }
         inviteEmail: { _is_null: false }
         inviteDate: { _is_null: false }
@@ -77,7 +77,7 @@ const GET_PENDING_INVITATIONS = gql(`
           where: {
             role: { _in: [Owner, Admin] }
             userId: { _is_null: false }
-            archived: { _eq: false }
+            archivedAt: { _is_null: true }
           }
           limit: 1
         ) {

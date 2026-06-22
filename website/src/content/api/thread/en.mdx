@@ -15,7 +15,7 @@ category: 'threads'
 | `initiatorMemberId` | `uuid` | Reference to the member who started the thread |
 | `title` | `String` | Title of the thread |
 | `createdAt` | `Timestamp` | When the thread was created (defaults to current timestamp) |
-| `archived` | `Boolean` | Whether the thread is archived (defaults to false) |
+| `archivedAt` | `Timestamp` | When the thread was archived; null if active |
 | `pinned` | `Boolean` | Whether the thread is pinned for everyone, surfacing it first in thread lists (defaults to false) |
 | `private` | `Boolean` | Whether the thread is private (defaults to false) |
 | `status` | `Thread_Status_Enum` | Current status of the thread (e.g., Active, Preparation, Closed) |

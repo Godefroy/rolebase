@@ -55,7 +55,10 @@ export default function MeetingActionsMenu({
   const setArchive = (archived: boolean) => {
     if (!meeting) return
     updateMeeting({
-      variables: { id: meeting.id, values: { archived } },
+      variables: {
+        id: meeting.id,
+        values: { archivedAt: archived ? new Date().toISOString() : null },
+      },
     })
   }
   const handleCopyLink = useCopyUrl(`${settings.url}${path}`)
@@ -124,13 +127,13 @@ export default function MeetingActionsMenu({
 
         {canEdit && (
           <>
-            {!meeting?.archived && !isStarted && (
+            {!meeting?.archivedAt && !isStarted && (
               <MenuItem icon={<DeleteIcon size={20} />} onClick={handleArchive}>
                 {t('common.delete')}
               </MenuItem>
             )}
 
-            {meeting?.archived && (
+            {meeting?.archivedAt && (
               <MenuItem
                 icon={<RestoreIcon size={20} />}
                 onClick={handleUnarchive}

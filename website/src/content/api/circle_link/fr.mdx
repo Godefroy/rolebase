@@ -13,6 +13,7 @@ category: 'circles-roles'
 | `parentId` | `uuid` | Référence au cercle hôte |
 | `circleId` | `uuid` | Référence au cercle invité |
 | `createdAt` | `Timestamp` | Date de création du lien de cercle |
+| `archivedAt` | `Timestamp` | Date d'archivage du lien de cercle ; null si actif |
 
 ## Relations
 
@@ -72,13 +73,17 @@ mutation CreateCircleLink {
 
 ### Supprimer un lien de cercle
 
+Les liens sont archivés (suppression douce) en renseignant `archivedAt`, sans suppression physique.
+
 ```graphql
-mutation RemoveCircleLink {
-  delete_circle_link(
+mutation ArchiveCircleLink {
+  update_circle_link(
     where: {
       parentId: { _eq: "host-circle-id" }
       circleId: { _eq: "invited-circle-id" }
+      archivedAt: { _is_null: true }
     }
+    _set: { archivedAt: "2024-01-01T00:00:00Z" }
   ) {
     affected_rows
   }

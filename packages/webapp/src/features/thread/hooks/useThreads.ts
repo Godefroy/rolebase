@@ -31,8 +31,9 @@ export default function useThreads(filters?: {
       filters: [
         { orgId: { _eq: orgId! } },
         {
-          archived: {
-            _eq: filters?.archived === undefined ? false : filters.archived,
+          archivedAt: {
+            _is_null:
+              filters?.archived === undefined ? true : !filters.archived,
           },
         },
         {

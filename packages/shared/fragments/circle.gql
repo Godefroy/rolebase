@@ -3,7 +3,7 @@ fragment Circle on circle {
   orgId
   roleId
   parentId
-  archived
+  archivedAt
 }
 
 fragment CircleSummary on circle {

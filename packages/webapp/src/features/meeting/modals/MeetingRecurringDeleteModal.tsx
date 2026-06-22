@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react'
 import {
   MeetingRecurringFragment,
-  useDeleteMeetingRecurringMutation,
+  useArchiveMeetingRecurringMutation,
 } from '@gql'
 import React, { useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
@@ -28,10 +28,15 @@ export default function MeetingRecurringDeleteModal({
 }: Props) {
   const { t } = useTranslation()
   const cancelRef = useRef<HTMLButtonElement>(null)
-  const [deleteMeetingRecurring] = useDeleteMeetingRecurringMutation()
+  const [archiveMeetingRecurring] = useArchiveMeetingRecurringMutation()
 
   const handleDelete = () => {
-    deleteMeetingRecurring({ variables: { id: meetingRecurring.id } })
+    archiveMeetingRecurring({
+      variables: {
+        id: meetingRecurring.id,
+        archivedAt: new Date().toISOString(),
+      },
+    })
     onDelete?.()
     alertProps.onClose()
   }

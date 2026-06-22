@@ -3,7 +3,7 @@ query getCircleThreadsIds($circleId: uuid!) {
     where: {
       circleId: { _eq: $circleId }
       status: { _neq: Closed }
-      archived: { _eq: false }
+      archivedAt: { _is_null: true }
     }
   ) {
     id
@@ -28,7 +28,11 @@ subscription thread($id: uuid!, $memberId: uuid!) {
 subscription threads($filters: [thread_bool_exp!], $memberId: uuid!) {
   thread(where: { _and: $filters }) {
     ...Thread
-    lastActivity: activities(order_by: { createdAt: desc }, limit: 1) {
+    lastActivity: activities(
+      where: { archivedAt: { _is_null: true } }
+      order_by: { createdAt: desc }
+      limit: 1
+    ) {
       id
       createdAt
     }
@@ -43,7 +47,7 @@ subscription circleThreads($circleId: uuid!) {
     where: {
       circleId: { _eq: $circleId }
       status: { _neq: Closed }
-      archived: { _eq: false }
+      archivedAt: { _is_null: true }
     }
   ) {
     ...Thread
@@ -56,6 +60,7 @@ subscription threadsWithMeetingNote($threadsIds: [uuid!]!, $meetingId: uuid!) {
     activities(
       where: {
         _and: { type: { _eq: MeetingNote }, refMeetingId: { _eq: $meetingId } }
+        archivedAt: { _is_null: true }
       }
     ) {
       ...ThreadActivity
@@ -75,8 +80,8 @@ mutation updateThread($id: uuid!, $values: thread_set_input!) {
   }
 }
 
-mutation archiveThread($id: uuid!) {
-  update_thread_by_pk(pk_columns: { id: $id }, _set: { archived: true }) {
+mutation archiveThread($id: uuid!, $archivedAt: timestamptz!) {
+  update_thread_by_pk(pk_columns: { id: $id }, _set: { archivedAt: $archivedAt }) {
     id
   }
 }

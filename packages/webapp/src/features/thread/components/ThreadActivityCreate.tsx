@@ -188,7 +188,7 @@ export default function ThreadActivityCreate({ thread, ...boxProps }: Props) {
     }
   )
 
-  if (thread.archived) {
+  if (thread.archivedAt) {
     return (
       <Box {...boxProps}>
         <Alert status="info" maxW="500px" m="0 auto">

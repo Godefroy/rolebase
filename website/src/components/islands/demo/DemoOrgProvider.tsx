@@ -74,7 +74,7 @@ export default function DemoOrgProvider({ demo, texts, children }: Props) {
       ({
         id: ORG_ID,
         name: 'Nova',
-        archived: false,
+        archivedAt: null,
         createdAt: '2024-01-01T00:00:00.000Z',
         shareOrg: false,
         shareMembers: false,
