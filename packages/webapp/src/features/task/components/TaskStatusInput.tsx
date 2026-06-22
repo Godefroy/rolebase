@@ -33,6 +33,7 @@ export default function TaskStatusInput({
         as={Tag}
         tabIndex={0}
         colorScheme={taskStatusColors[value]}
+        fontSize="xs"
         height="fit-content"
         cursor="pointer"
         disabled={readOnly}

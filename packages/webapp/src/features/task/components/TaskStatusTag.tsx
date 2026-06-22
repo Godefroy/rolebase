@@ -11,7 +11,7 @@ interface Props extends TagProps {
 export default function TaskStatusTag({ status, ...tagProps }: Props) {
   const { t } = useTranslation()
   return (
-    <Tag colorScheme={taskStatusColors[status]} {...tagProps}>
+    <Tag colorScheme={taskStatusColors[status]} fontSize="xs" {...tagProps}>
       {t(`common.taskStatus.${status}`)}
     </Tag>
   )
