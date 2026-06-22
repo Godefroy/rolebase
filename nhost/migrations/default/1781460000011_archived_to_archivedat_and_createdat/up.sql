@@ -4,32 +4,53 @@
 -- constraints apply to active rows only, and recreate the dependent views.
 
 -- ============================================================================
--- 0. Lock every modified table up front, in one deterministic statement, so the
--- long backfills below never acquire a new table lock mid-transaction and
--- deadlock with live reads (event triggers, cron, participants cache, ...).
--- lock_timeout makes a contended start abort fast and retryable instead of
--- hanging or being picked as the deadlock victim after the slow backfills.
+-- 0. Lock every modified table up front so the long backfills below never
+-- acquire a new table lock mid-transaction and deadlock with live reads (event
+-- triggers, cron, participants cache, ...).
+--
+-- Acquire with NOWAIT inside a retry loop: NOWAIT never waits on a lock, so it
+-- can't be part of a deadlock cycle. Each attempt grabs every table atomically
+-- (the subtransaction releases any partial locks on failure) or backs off and
+-- retries, instead of holding some locks while waiting for others. After all
+-- locks are held, the rest of the migration acquires no new table locks.
 -- ============================================================================
-SET lock_timeout = '15s';
-LOCK TABLE
-  "public"."api_key",
-  "public"."circle",
-  "public"."circle_link",
-  "public"."circle_member",
-  "public"."decision",
-  "public"."meeting",
-  "public"."meeting_recurring",
-  "public"."meeting_template",
-  "public"."member",
-  "public"."org",
-  "public"."org_file",
-  "public"."org_subscription",
-  "public"."role",
-  "public"."task",
-  "public"."thread",
-  "public"."thread_activity",
-  "public"."user_app"
-  IN ACCESS EXCLUSIVE MODE;
+SET lock_timeout = '5s';
+DO $$
+DECLARE
+  locked boolean := false;
+BEGIN
+  FOR i IN 1..100 LOOP
+    BEGIN
+      LOCK TABLE
+        "public"."api_key",
+        "public"."circle",
+        "public"."circle_link",
+        "public"."circle_member",
+        "public"."decision",
+        "public"."meeting",
+        "public"."meeting_recurring",
+        "public"."meeting_template",
+        "public"."member",
+        "public"."org",
+        "public"."org_file",
+        "public"."org_subscription",
+        "public"."role",
+        "public"."task",
+        "public"."thread",
+        "public"."thread_activity",
+        "public"."user_app"
+        IN ACCESS EXCLUSIVE MODE NOWAIT;
+      locked := true;
+    EXCEPTION
+      WHEN lock_not_available THEN
+        PERFORM pg_sleep(0.3);
+    END;
+    EXIT WHEN locked;
+  END LOOP;
+  IF NOT locked THEN
+    RAISE EXCEPTION 'Could not acquire table locks for the migration after retries (database too busy); retry the deploy';
+  END IF;
+END $$;
 
 -- ============================================================================
 -- 1. Add `createdAt` columns
