@@ -200,7 +200,15 @@ export default function ProposalModal({
   })
 
   return (
-    <Modal size="2xl" {...modalProps}>
+    <Modal
+      size="2xl"
+      {...modalProps}
+      // Drop the scroll lock while the full-screen org-chart editor is open:
+      // its panels are portaled outside React's #root event root, where
+      // react-remove-scroll can't whitelist their wheel scrolling, so any lock
+      // (this one included) blocks it. See ProposalGraphEditorModal.
+      blockScrollOnMount={!editor.isOpen}
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>

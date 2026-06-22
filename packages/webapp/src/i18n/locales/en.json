@@ -1303,7 +1303,7 @@
     "heading": "Edit org chart",
     "headingView": "Modified org chart",
     "subtitle": "These changes are saved with the proposal and applied to the org chart only once it is approved.",
-    "done": "Save",
+    "done": "Confirm",
     "selectCircle": "Select a role to edit it.",
     "viewCircle": "Select a role to view it.",
     "changes": "Changes"

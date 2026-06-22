@@ -1339,7 +1339,7 @@
     "heading": "Modifier l'organigramme",
     "headingView": "Organigramme modifié",
     "subtitle": "Ces modifications sont enregistrées avec la proposition et appliquées à l'organigramme seulement une fois approuvée.",
-    "done": "Enregistrer",
+    "done": "Valider",
     "selectCircle": "Sélectionnez un rôle pour le modifier.",
     "viewCircle": "Sélectionnez un rôle pour le consulter.",
     "changes": "Modifications"

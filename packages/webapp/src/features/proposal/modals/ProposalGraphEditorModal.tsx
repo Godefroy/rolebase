@@ -27,9 +27,13 @@ export default function ProposalGraphEditorModal({
       onClose={onClose}
       size="full"
       closeOnOverlayClick={false}
-      // Full-screen modal: the body behind is hidden, so the scroll lock is
-      // unneeded. It also mis-attributes wheel scrolling between the nested
-      // scroll areas (role panel vs changes list), blocking the wheel there.
+      // No scroll lock: react-remove-scroll whitelists a modal's own scroll
+      // areas through React's synthetic onWheelCapture, but Chakra portals the
+      // modal to document.body, outside React's #root event root, so that
+      // handler never fires here and the lock would block the wheel inside the
+      // panels (role/changes lists). The full-screen modal hides the body
+      // anyway, so the lock is unneeded. ProposalModal also drops its own lock
+      // while this is open (see blockScrollOnMount there).
       blockScrollOnMount={false}
     >
       <ModalOverlay />
