@@ -85,6 +85,7 @@ const api = defineCollection({
     description: z.string().optional(),
     entity: z.string().optional(),
     category: z.string().optional(),
+    wide: z.boolean().optional(),
   }),
 })
 

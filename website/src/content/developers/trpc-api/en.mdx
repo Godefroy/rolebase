@@ -1,0 +1,166 @@
+---
+title: 'tRPC API'
+description: 'Call the Rolebase backend procedures (tRPC) that complement the GraphQL API.'
+order: 3
+---
+
+## Overview
+
+Most data in Rolebase is read and written through the [GraphQL API](/en/api), which is the recommended surface for integrations. Alongside it, the backend exposes a **tRPC API**: the typed RPC layer that the web app uses for operations that go beyond plain CRUD, such as creating an organization with its seed roles, archiving a circle and its descendants, exporting data, or inviting a member.
+
+This page documents the procedures that are useful from outside the app. Internal procedures (webhooks, scheduled jobs, search indexing, billing internals) are listed at the end for reference and are not meant to be called directly.
+
+<Callout type="info" title="GraphQL first">
+  For reading and writing entities, prefer the GraphQL API. Reach for tRPC only
+  for the actions below, which encapsulate business logic the GraphQL layer does
+  not expose.
+</Callout>
+
+## Endpoint
+
+The tRPC API is served at the backend root:
+
+- **Production:** `https://api.rolebase.io`
+- **Local development:** `http://localhost:8888`
+
+It speaks the standard tRPC HTTP protocol (queries over `GET`, mutations over `POST`), so it works with any [tRPC client](https://trpc.io/docs/client/introduction) or with plain HTTP.
+
+## Authentication
+
+tRPC procedures require a **user authentication token** (the Nhost access token of a signed-in user). Send it as a bearer token:
+
+```
+Authorization: Bearer <your-access-token>
+```
+
+The procedures run with that user's permissions. API keys (the `x-api-key` header) authenticate the GraphQL API only, so they are kept separate from tRPC. A few procedures are public (such as reading an invitation or a shared org), and the internal procedures use a webhook secret instead.
+
+## Type-safe client
+
+The cleanest way to call the API is a typed tRPC client that imports the router type from the backend package:
+
+```typescript
+import { createTRPCClient, httpBatchLink } from '@trpc/client'
+import type { AppRouter } from '@rolebase/backend'
+
+const trpc = createTRPCClient<AppRouter>({
+  links: [
+    httpBatchLink({
+      url: 'https://api.rolebase.io',
+      headers: () => ({
+        Authorization: `Bearer ${accessToken}`,
+      }),
+    }),
+  ],
+})
+
+// Query
+const data = await trpc.org.getPublicData.query({ orgId })
+
+// Mutation
+const { id } = await trpc.org.createOrg.mutate({ name: 'Acme', slug: 'acme' })
+```
+
+## Raw HTTP
+
+You can also call procedures over plain HTTP without a tRPC client.
+
+```bash
+# Query: GET /<procedure>?input=<url-encoded-json>
+curl 'https://api.rolebase.io/org.getPublicData?input=%7B%22orgId%22%3A%22YOUR_ORG_ID%22%7D' \
+  -H 'Authorization: Bearer YOUR_ACCESS_TOKEN'
+
+# Mutation: POST /<procedure> with the input as the JSON body
+curl -X POST 'https://api.rolebase.io/circle.archiveCircle' \
+  -H 'Authorization: Bearer YOUR_ACCESS_TOKEN' \
+  -H 'Content-Type: application/json' \
+  -d '{"circleId": "YOUR_CIRCLE_ID"}'
+```
+
+The response is wrapped as `{ "result": { "data": <value> } }`.
+
+## Procedures
+
+### Organizations (`org`)
+
+| Procedure | Type | Input | Description |
+| --------- | ---- | ----- | ----------- |
+| `createOrg` | Mutation | `{ name, slug }` | Create an organization with its root circle, the creator as Owner, and seed roles. |
+| `updateOrgSlug` | Mutation | `{ orgId, slug }` | Change the organization URL slug. Requires Admin. |
+| `setGovernanceMode` | Mutation | `{ orgId, governanceMode }` | Set the governance mode. Requires Owner. |
+| `exportOrg` | Mutation | `{ orgId, format, entities }` | Export org data as JSON or Excel. Requires Owner. |
+| `exportOrgChart` | Mutation | `{ orgId, view, width, ... }` | Render the org chart as a PNG (base64). Requires at least Readonly. |
+| `importOrg` | Mutation | `{ provider, fileId }` | Import an organization from an uploaded file (Holaspirit format). |
+| `getPublicData` | Query | `{ orgId }` | Read public org data when sharing is enabled. Public. |
+| `archiveOrg` | Mutation | `{ orgId }` | Archive an organization. Requires Owner. |
+
+### Members (`member`)
+
+| Procedure | Type | Input | Description |
+| --------- | ---- | ----- | ----------- |
+| `inviteMember` | Mutation | `{ memberId, email, role }` | Send an invitation email to a member. Requires Admin. |
+| `getMemberInvitationInfo` | Query | `{ memberId, token }` | Read the org name and email for an invitation. Public. |
+| `acceptMemberInvitation` | Mutation | `{ memberId, token }` | Accept an invitation and link the member to the current user. |
+| `updateMemberRole` | Mutation | `{ memberId, role }` | Change or remove a member access role. |
+| `archiveMember` | Mutation | `{ memberId }` | Archive a member. Requires Admin or Owner. |
+| `restoreMember` | Mutation | `{ memberId }` | Restore an archived member. Requires Admin. |
+
+### Circles (`circle`)
+
+| Procedure | Type | Input | Description |
+| --------- | ---- | ----- | ----------- |
+| `archiveCircle` | Mutation | `{ circleId, meetingId? }` | Archive a circle together with all its nested descendants. |
+| `restoreCircle` | Mutation | `{ circleId, meetingId? }` | Restore an archived circle and the descendants archived with it. |
+
+### Proposals (`proposal`)
+
+| Procedure | Type | Input | Description |
+| --------- | ---- | ----- | ----------- |
+| `resolve` | Mutation | `{ activityId }` | Resolve an in-progress proposal. Allowed for the author, circle leader, or org admin. |
+
+### Meetings (`meeting`)
+
+| Procedure | Type | Input | Description |
+| --------- | ---- | ----- | ----------- |
+| `getMeetingsToken` | Query | `{ orgId }` | Get a token for video meeting access. Requires at least Readonly. |
+
+### Search (`search`)
+
+| Procedure | Type | Input | Description |
+| --------- | ---- | ----- | ----------- |
+| `getAlgoliaConfig` | Query | `{ orgId }` | Get a scoped Algolia search key for the organization. Requires at least Readonly. |
+
+### AI (`ai`)
+
+| Procedure | Type | Input | Description |
+| --------- | ---- | ----- | ----------- |
+| `generateRole` | Query | `{ name, lang }` | Generate a role draft (purpose, domain, accountabilities) from its name. |
+| `generateMeetingSummary` | Query | `{ meetingId, lang }` | Summarize a meeting from its notes and threads. |
+
+### Calendar apps (`apps`)
+
+| Procedure | Type | Input | Description |
+| --------- | ---- | ----- | ----------- |
+| `listCalendars` | Query | `{ id }` | List the calendars available from a connected app. |
+| `selectCalendars` | Mutation | `{ id, availabilityCalendars, orgsCalendars }` | Choose which calendars to sync. |
+| `uninstall` | Mutation | `{ id }` | Disconnect a calendar app. |
+
+### Subscriptions (`orgSubscription`)
+
+Billing procedures for Stripe-backed subscriptions (price previews, invoices, payment methods, subscribe and cancel). They require the Owner role and are driven by the in-app billing screens. See the [`org_subscription`](/en/api/org_subscription) entity for the stored data.
+
+## Internal procedures
+
+These run on schedules or webhooks and authenticate with a server secret. They are documented here for completeness and are not callable as a user.
+
+- `cron.*`: recurring meeting creation, ending old meetings, invitation reminders, proposal resolution, digest emails.
+- `trigger`: syncs database changes to the search index from Hasura events.
+- `proposal.onVote`: resolves a proposal automatically once the outcome is certain.
+- `participants.recomputeCache`: rebuilds the circle participants cache (admin).
+- `search.reindexAll`: clears and rebuilds the search index (admin).
+
+## Next steps
+
+- Browse the [GraphQL API Reference](/en/api) for entities, queries, and mutations.
+- Try queries live in the [GraphQL Playground](/en/api/playground).
+- [Set up the development environment](/en/developers/getting-started) to explore the backend source.

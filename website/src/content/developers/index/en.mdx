@@ -18,8 +18,12 @@ Rolebase is structured as an npm workspace monorepo with the following packages:
 | ------------------ | ------------------------------------- |
 | `packages/webapp`  | React frontend (Vite, Chakra UI)      |
 | `packages/backend` | tRPC backend and serverless functions |
-| `packages/shared`  | Shared types and utilities            |
-| `website`          | Documentation site (Astro)            |
+| `packages/shared`  | Shared types and utilities                  |
+| `packages/graph`   | Org chart rendering engine (React, d3)      |
+| `packages/editor`  | Headless rich-text editor (Tiptap)          |
+| `packages/collab`  | Real-time collaboration server (Yjs)        |
+| `packages/emails`  | Transactional email templates (React Email) |
+| `website`          | Marketing and documentation site (Astro)    |
 
 The backend runs on [Nhost](https://nhost.io), which provides authentication, a PostgreSQL database exposed via [Hasura](https://hasura.io) (GraphQL), and file storage.
 
@@ -36,6 +40,7 @@ The backend runs on [Nhost](https://nhost.io), which provides authentication, a 
 | [Getting Started](/en/developers/getting-started)         | Set up the development environment and run Rolebase locally |
 | [Custom Integrations](/en/developers/custom-integrations) | Build integrations using the GraphQL API                    |
 | [API Reference](/en/api)                                  | Browse the full GraphQL schema and entity documentation     |
+| [tRPC API](/en/developers/trpc-api)                       | Call backend procedures that complement the GraphQL API     |
 
 <Callout type="tip" title="Open Source">
   The source code is available at

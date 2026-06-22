@@ -20,9 +20,9 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props
-const { Content } = await render(entry)
+const { Content, headings } = await render(entry)
 ---
 
-<DocPage title={entry.data.title} section="developers" description={entry.data.description}>
+<DocPage title={entry.data.title} section="developers" description={entry.data.description} headings={headings}>
   <Content components={mdxComponents} />
 </DocPage>

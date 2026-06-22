@@ -1,0 +1,92 @@
+---
+// Interactive GraphiQL playground loaded from CDN (no npm dependency, keeping
+// the website's standalone build untouched). Text shown to users lives in the
+// MDX page that renders this component; only generic GraphQL code stays here.
+interface Props {
+  endpoint?: string
+}
+
+// Hit the local backend when the site runs in dev, the production API once
+// built and deployed. Resolved at render time (SSG), so the right URL is baked
+// into the page.
+const defaultEndpoint = import.meta.env.DEV
+  ? 'http://localhost:8888/graphql'
+  : 'https://api.rolebase.io/graphql'
+
+const { endpoint = defaultEndpoint } = Astro.props
+
+const defaultQuery = `# Set your API key in the "Headers" tab below, then run a query.
+#   { "x-api-key": "YOUR_API_KEY_HERE" }
+
+query GetOrganizations {
+  org {
+    id
+    name
+    slug
+  }
+}
+`
+
+const defaultHeaders = JSON.stringify(
+  { 'x-api-key': 'YOUR_API_KEY_HERE' },
+  null,
+  2
+)
+---
+
+<link rel="stylesheet" href="https://unpkg.com/graphiql@3/dist/style.css" />
+
+<div
+  id="graphiql"
+  class="not-prose h-[75vh] min-h-[480px] overflow-hidden rounded-lg border border-border"
+>
+</div>
+
+<script
+  is:inline
+  src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script
+  is:inline
+  src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script
+  is:inline
+  src="https://unpkg.com/graphiql@3/dist/index.umd.js"></script>
+
+<script is:inline define:vars={{ endpoint, defaultQuery, defaultHeaders }}>
+  // Force the light theme so the playground matches the site. GraphiQL applies
+  // its dark palette through `@media (prefers-color-scheme: dark)` unless the
+  // `graphiql-light` class is present on <body>, so we set both the persisted
+  // theme and the class up front.
+  try {
+    window.localStorage.setItem('graphiql:theme', 'light')
+  } catch (e) {}
+  document.body.classList.add('graphiql-light')
+
+  const root = ReactDOM.createRoot(document.getElementById('graphiql'))
+  // The endpoint answers non-JSON errors (for example a plain "Missing API key"
+  // when no key is set yet). Wrap fetch so those surface as a clean GraphQL
+  // error instead of a "JSON.parse" crash before the user adds their key.
+  const fetcher = GraphiQL.createFetcher({
+    url: endpoint,
+    fetch: async (input, init) => {
+      const response = await fetch(input, init)
+      const contentType = response.headers.get('content-type') || ''
+      if (contentType.includes('application/json')) {
+        return response
+      }
+      const message = (await response.text()).trim() || response.statusText
+      return new Response(JSON.stringify({ errors: [{ message }] }), {
+        status: 200,
+        headers: { 'content-type': 'application/json' },
+      })
+    },
+  })
+  root.render(
+    React.createElement(GraphiQL, {
+      fetcher,
+      defaultQuery,
+      defaultHeaders,
+      shouldPersistHeaders: true,
+    })
+  )
+</script>

@@ -117,23 +117,23 @@ Routing pages (`src/pages/[lang]/{section}/[slug].astro`) use a `[lang]` param a
 - **New page**: Create a folder `src/content/{collection}/{slug}/` with `en.mdx` and `fr.mdx`. Add frontmatter (title, description). Update sidebar links in `src/utils/i18n.ts` if applicable.
 - **New image**: Place the image file directly in the content folder next to the MDX files. Reference it with a relative path (`./image.jpg`) in frontmatter or body. Use `image()` schema helper in `content.config.ts` for frontmatter image fields.
 - **Renamed or removed page**: Delete the folder, add a redirect in `src/redirects.ts`. Update sidebar links.
-- **Modified entity fields**: Update `src/content/api/{entity}/en.mdx` and `fr.mdx`.
 
 ### Maintenance rules — Keep docs in sync with product changes
 
-When modifying the product, update the documentation accordingly **in both EN and FR**:
+When modifying the product, update the documentation accordingly **in all languages** (the locales defined in `website.config.ts`):
 
 1. **New feature or entity**: Add docs in `content/docs/{slug}/`, optionally API ref in `content/api/{entity}/`, optionally guide in `content/guides/{slug}/`. Update sidebar links in `src/utils/i18n.ts`.
-2. **Modified entity fields**: Update `content/api/{entity}/en.mdx` and `fr.mdx`.
-3. **Renamed or removed feature**: Remove or update the corresponding content folder in both locales. Update sidebar links. Add redirect.
-4. **New GraphQL query/mutation**: Add examples to the relevant API reference page in both locales.
-5. **Changed statuses or enums**: Update both the guide page and the API page, in both locales.
-6. **New integration or app**: Update `content/docs/apps-integrations/` in both locales.
-7. **Changed subscription plans**: Update `content/docs/subscriptions/` and `content/api/org_subscription/` in both locales.
+2. **Modified entity fields**: Update `content/api/{entity}/`.
+3. **Renamed or removed feature**: Remove or update the corresponding content folder. Update sidebar links. Add redirect.
+4. **New GraphQL query/mutation**: Add examples to the relevant API reference page.
+5. **Changed statuses or enums**: Update both the guide page and the API page.
+6. **New integration or app**: Update `content/docs/apps-integrations/`.
+7. **Changed subscription plans**: Update `content/docs/subscriptions/` and `content/api/org_subscription/`.
+8. **New, changed, or removed tRPC route**: Keep the tRPC API reference (`content/developers/trpc-api/`) in sync. Update the procedure tables when a backend tRPC procedure is added, renamed, removed, or changes its input, placing it in the user-facing or internal section as appropriate.
 
 #### Before every commit
 
-Before creating any commit, review the staged product changes (`packages/`, `nhost/`, etc.) against the rules above and update the affected documentation and guides (in both EN and FR) as part of the same change.
+Before creating any commit, review the staged product changes (`packages/`, `nhost/`, etc.) against the rules above and update the affected documentation and guides (in all languages) as part of the same change.
 
 - If updating the product makes any documentation or guide change necessary, make those doc edits **before** committing.
 - Whenever a commit includes documentation or guide changes (whether you just made them or they were already staged), do not create the commit straight away. First ask the user to review the doc changes, and only create the commit once they confirm.
@@ -155,7 +155,7 @@ Before creating any commit, review the staged product changes (`packages/`, `nho
 - Documentation and guides are written for non-technical users. Keep developer/technical content (API, GraphQL, self-hosting, code) in the Developers section.
 - Sidebar links for documentation and guides are defined in `src/utils/i18n.ts` (`docsLinks` and `guidesLinks`).
 - Always verify in the webapp code (`packages/webapp`) how a feature actually works before describing it in documentation. Check components, modals, pages, and translations to describe the exact user flow.
-- All user-facing text in Astro components must use translations from `src/content/i18n/` via `await getTranslations(lang)` from `src/utils/i18n.ts`. No hardcoded strings or inline ternaries for EN/FR.
+- All user-facing text in Astro components must use translations from `src/content/i18n/` via `await getTranslations(lang)` from `src/utils/i18n.ts`. No hardcoded strings or inline ternaries per language.
 - Avoid putting non-generic texts in reusable components (`src/components/`). All content specific to pages belongs in MDX files or in Astro components in `src/pages/`.
 - All content is in MDX files in content collections, not in Astro components or pages.
 - In MDX pages, write content directly using component calls (no JSON arrays or JS logic). Data lives in the markup, not in frontmatter variables or script blocks.
@@ -165,8 +165,8 @@ Before creating any commit, review the staged product changes (`packages/`, `nho
 - Use `<Callout type="info|warning|tip">` for callouts.
 - Use markdown tables for entity field tables in API pages. Columns are `Field | Type | Description` (EN) or `Champ | Type | Description` (FR), with field and type names wrapped in backticks.
 - Keep GraphQL examples up to date with the actual schema.
-- EN pages are written in English; FR pages are written in French.
-- GraphQL code, field names, entity names, and type names stay in English in both locales.
+- Each locale's pages are written in that locale's language.
+- GraphQL code, field names, entity names, and type names stay in English in all locales.
 - **Rolebase data model**: The data model has two distinct entities: `role` (a role definition with purpose, domain, accountabilities) and `circle` (an instance of a role in the org chart, with members and leaders). In user-facing interfaces and docs, only the term "role" (EN) / "rôle" (FR) is used, never "circle". The concept of "circle" only appears in the `circles-and-roles` doc page which explains the unified model for users. Use "org chart" (EN) / "organigramme" (FR) instead of "graph" / "graphe" for the organizational visualization.
 - Never use em dashes. Use other formulations instead.
 - Prefer positive formulations over negative ones. Instead of "X, pas Y" or "ne pas Z", reformulate positively (e.g. "rester indépendant" instead of "ne pas dépendre", "dès le premier sprint" instead of "pas à la fin").

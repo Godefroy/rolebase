@@ -18,8 +18,12 @@ Rolebase est structuré comme un monorepo avec des workspaces npm :
 | ------------------ | ------------------------------------ |
 | `packages/webapp`  | Frontend React (Vite, Chakra UI)     |
 | `packages/backend` | Backend tRPC et fonctions serverless |
-| `packages/shared`  | Types et utilitaires partagés        |
-| `website`          | Site de documentation (Astro)        |
+| `packages/shared`  | Types et utilitaires partagés                    |
+| `packages/graph`   | Moteur de rendu de l'organigramme (React, d3)    |
+| `packages/editor`  | Éditeur de texte riche headless (Tiptap)         |
+| `packages/collab`  | Serveur de collaboration en temps réel (Yjs)     |
+| `packages/emails`  | Templates d'emails transactionnels (React Email) |
+| `website`          | Site marketing et de documentation (Astro)       |
 
 Le backend fonctionne sur [Nhost](https://nhost.io), qui fournit l'authentification, une base de données PostgreSQL exposée via [Hasura](https://hasura.io) (GraphQL) et le stockage de fichiers.
 
@@ -36,6 +40,7 @@ Le backend fonctionne sur [Nhost](https://nhost.io), qui fournit l'authentificat
 | [Premiers pas](/fr/developers/getting-started)                    | Configurer l'environnement de développement et lancer Rolebase en local |
 | [Intégrations personnalisées](/fr/developers/custom-integrations) | Créer des intégrations via l'API GraphQL                                |
 | [Référence API](/fr/api)                                          | Parcourir le schéma GraphQL complet et la documentation des entités     |
+| [API tRPC](/fr/developers/trpc-api)                               | Appeler les procédures backend qui complètent l'API GraphQL             |
 
 <Callout type="tip" title="Open Source">
   Le code source est disponible sur

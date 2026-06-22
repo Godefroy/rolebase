@@ -62,7 +62,10 @@ if (section === 'docs' || section === 'guides') {
   sections.push({
     title: t.api.reference,
     basePath: '/api',
-    links: [{ slug: '', label: t.api.introduction }],
+    links: [
+      { slug: '', label: t.api.introduction },
+      { slug: 'playground', label: t.api.playground },
+    ],
   })
 
   // Load API entities from content collection

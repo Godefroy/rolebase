@@ -1,0 +1,166 @@
+---
+title: 'API tRPC'
+description: 'Appelez les procédures backend de Rolebase (tRPC) qui complètent l’API GraphQL.'
+order: 3
+---
+
+## Vue d’ensemble
+
+La plupart des données de Rolebase se lisent et s’écrivent via l’[API GraphQL](/fr/api), qui reste la surface recommandée pour les intégrations. À côté, le backend expose une **API tRPC** : la couche RPC typée utilisée par l’application pour les opérations qui vont au-delà du simple CRUD, comme créer une organisation avec ses rôles de départ, archiver un rôle et ses descendants, exporter des données ou inviter un membre.
+
+Cette page documente les procédures utiles depuis l’extérieur de l’application. Les procédures internes (webhooks, tâches planifiées, indexation de recherche, facturation) sont listées à la fin pour référence et ne sont pas destinées à être appelées directement.
+
+<Callout type="info" title="GraphQL d’abord">
+  Pour lire et écrire des entités, préférez l’API GraphQL. Utilisez tRPC
+  uniquement pour les actions ci-dessous, qui encapsulent une logique métier que
+  la couche GraphQL n’expose pas.
+</Callout>
+
+## Endpoint
+
+L’API tRPC est servie à la racine du backend :
+
+- **Production :** `https://api.rolebase.io`
+- **Développement local :** `http://localhost:8888`
+
+Elle suit le protocole HTTP standard de tRPC (requêtes en `GET`, mutations en `POST`), et fonctionne donc avec n’importe quel [client tRPC](https://trpc.io/docs/client/introduction) ou en HTTP simple.
+
+## Authentification
+
+Les procédures tRPC requièrent un **token d’authentification utilisateur** (le token d’accès Nhost d’un utilisateur connecté). Envoyez-le en bearer token :
+
+```
+Authorization: Bearer <votre-token-d-acces>
+```
+
+Les procédures s’exécutent avec les permissions de cet utilisateur. Les clés API (l’en-tête `x-api-key`) authentifient uniquement l’API GraphQL et restent donc distinctes de tRPC. Quelques procédures sont publiques (lire une invitation ou une organisation partagée), et les procédures internes utilisent plutôt un secret de webhook.
+
+## Client typé
+
+La façon la plus propre d’appeler l’API est un client tRPC typé qui importe le type du routeur depuis le package backend :
+
+```typescript
+import { createTRPCClient, httpBatchLink } from '@trpc/client'
+import type { AppRouter } from '@rolebase/backend'
+
+const trpc = createTRPCClient<AppRouter>({
+  links: [
+    httpBatchLink({
+      url: 'https://api.rolebase.io',
+      headers: () => ({
+        Authorization: `Bearer ${accessToken}`,
+      }),
+    }),
+  ],
+})
+
+// Requête
+const data = await trpc.org.getPublicData.query({ orgId })
+
+// Mutation
+const { id } = await trpc.org.createOrg.mutate({ name: 'Acme', slug: 'acme' })
+```
+
+## HTTP brut
+
+Vous pouvez aussi appeler les procédures en HTTP simple, sans client tRPC.
+
+```bash
+# Requête : GET /<procedure>?input=<json-encode-url>
+curl 'https://api.rolebase.io/org.getPublicData?input=%7B%22orgId%22%3A%22VOTRE_ORG_ID%22%7D' \
+  -H 'Authorization: Bearer VOTRE_TOKEN_ACCES'
+
+# Mutation : POST /<procedure> avec l’input en corps JSON
+curl -X POST 'https://api.rolebase.io/circle.archiveCircle' \
+  -H 'Authorization: Bearer VOTRE_TOKEN_ACCES' \
+  -H 'Content-Type: application/json' \
+  -d '{"circleId": "VOTRE_CIRCLE_ID"}'
+```
+
+La réponse est encapsulée sous la forme `{ "result": { "data": <valeur> } }`.
+
+## Procédures
+
+### Organisations (`org`)
+
+| Procédure | Type | Input | Description |
+| --------- | ---- | ----- | ----------- |
+| `createOrg` | Mutation | `{ name, slug }` | Créer une organisation avec son cercle racine, le créateur comme Owner et des rôles de départ. |
+| `updateOrgSlug` | Mutation | `{ orgId, slug }` | Changer le slug d’URL de l’organisation. Requiert Admin. |
+| `setGovernanceMode` | Mutation | `{ orgId, governanceMode }` | Définir le mode de gouvernance. Requiert Owner. |
+| `exportOrg` | Mutation | `{ orgId, format, entities }` | Exporter les données en JSON ou Excel. Requiert Owner. |
+| `exportOrgChart` | Mutation | `{ orgId, view, width, ... }` | Générer l’organigramme en PNG (base64). Requiert au moins Readonly. |
+| `importOrg` | Mutation | `{ provider, fileId }` | Importer une organisation depuis un fichier déposé (format Holaspirit). |
+| `getPublicData` | Requête | `{ orgId }` | Lire les données publiques d’une organisation quand le partage est activé. Public. |
+| `archiveOrg` | Mutation | `{ orgId }` | Archiver une organisation. Requiert Owner. |
+
+### Membres (`member`)
+
+| Procédure | Type | Input | Description |
+| --------- | ---- | ----- | ----------- |
+| `inviteMember` | Mutation | `{ memberId, email, role }` | Envoyer un email d’invitation à un membre. Requiert Admin. |
+| `getMemberInvitationInfo` | Requête | `{ memberId, token }` | Lire le nom de l’organisation et l’email d’une invitation. Public. |
+| `acceptMemberInvitation` | Mutation | `{ memberId, token }` | Accepter une invitation et rattacher le membre à l’utilisateur courant. |
+| `updateMemberRole` | Mutation | `{ memberId, role }` | Changer ou retirer le rôle d’accès d’un membre. |
+| `archiveMember` | Mutation | `{ memberId }` | Archiver un membre. Requiert Admin ou Owner. |
+| `restoreMember` | Mutation | `{ memberId }` | Restaurer un membre archivé. Requiert Admin. |
+
+### Rôles (`circle`)
+
+| Procédure | Type | Input | Description |
+| --------- | ---- | ----- | ----------- |
+| `archiveCircle` | Mutation | `{ circleId, meetingId? }` | Archiver un rôle ainsi que tous ses descendants imbriqués. |
+| `restoreCircle` | Mutation | `{ circleId, meetingId? }` | Restaurer un rôle archivé et les descendants archivés avec lui. |
+
+### Propositions (`proposal`)
+
+| Procédure | Type | Input | Description |
+| --------- | ---- | ----- | ----------- |
+| `resolve` | Mutation | `{ activityId }` | Résoudre une proposition en cours. Autorisé pour l’auteur, le leader du rôle ou un admin. |
+
+### Réunions (`meeting`)
+
+| Procédure | Type | Input | Description |
+| --------- | ---- | ----- | ----------- |
+| `getMeetingsToken` | Requête | `{ orgId }` | Obtenir un token d’accès aux réunions vidéo. Requiert au moins Readonly. |
+
+### Recherche (`search`)
+
+| Procédure | Type | Input | Description |
+| --------- | ---- | ----- | ----------- |
+| `getAlgoliaConfig` | Requête | `{ orgId }` | Obtenir une clé de recherche Algolia restreinte à l’organisation. Requiert au moins Readonly. |
+
+### IA (`ai`)
+
+| Procédure | Type | Input | Description |
+| --------- | ---- | ----- | ----------- |
+| `generateRole` | Requête | `{ name, lang }` | Générer un brouillon de rôle (raison d’être, domaine, redevabilités) à partir de son nom. |
+| `generateMeetingSummary` | Requête | `{ meetingId, lang }` | Résumer une réunion à partir de ses notes et fils de discussion. |
+
+### Applications de calendrier (`apps`)
+
+| Procédure | Type | Input | Description |
+| --------- | ---- | ----- | ----------- |
+| `listCalendars` | Requête | `{ id }` | Lister les calendriers disponibles d’une application connectée. |
+| `selectCalendars` | Mutation | `{ id, availabilityCalendars, orgsCalendars }` | Choisir les calendriers à synchroniser. |
+| `uninstall` | Mutation | `{ id }` | Déconnecter une application de calendrier. |
+
+### Abonnements (`orgSubscription`)
+
+Procédures de facturation pour les abonnements gérés par Stripe (aperçus de prix, factures, moyens de paiement, souscription et résiliation). Elles requièrent le rôle Owner et sont pilotées par les écrans de facturation de l’application. Voir l’entité [`org_subscription`](/fr/api/org_subscription) pour les données stockées.
+
+## Procédures internes
+
+Ces procédures s’exécutent sur des planifications ou des webhooks et s’authentifient avec un secret serveur. Elles figurent ici pour information et ne sont pas appelables en tant qu’utilisateur.
+
+- `cron.*` : création des réunions récurrentes, clôture des réunions anciennes, rappels d’invitation, résolution des propositions, emails de digest.
+- `trigger` : synchronise les changements de base vers l’index de recherche depuis les événements Hasura.
+- `proposal.onVote` : résout automatiquement une proposition dès que l’issue est certaine.
+- `participants.recomputeCache` : reconstruit le cache des participants des rôles (admin).
+- `search.reindexAll` : vide et reconstruit l’index de recherche (admin).
+
+## Étapes suivantes
+
+- Parcourez la [référence de l’API GraphQL](/fr/api) pour les entités, requêtes et mutations.
+- Testez des requêtes en direct dans le [Playground GraphQL](/fr/api/playground).
+- [Configurez l’environnement de développement](/fr/developers/getting-started) pour explorer le code du backend.

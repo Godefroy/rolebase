@@ -1,0 +1,29 @@
+---
+import { getTocItems, type Heading } from '../utils/toc'
+import { getLangFromUrl, getTranslations } from '../utils/i18n'
+
+interface Props {
+  headings: Heading[]
+  class?: string
+}
+
+const { headings, class: className } = Astro.props
+const items = getTocItems(headings)
+const lang = getLangFromUrl(Astro.url)
+const t = await getTranslations(lang)
+---
+
+{items.length > 0 && (
+  <nav id="toc-nav" class:list={['flex flex-col', className]}>
+    <p class="px-2 mb-2 text-xs uppercase tracking-wide text-text-secondary">{t.toc}</p>
+    {items.map((h) => (
+      <a
+        href={`#${h.slug}`}
+        data-heading={h.slug}
+        class="block px-2 py-1.5 text-sm leading-snug text-text-secondary transition-colors hover:text-text-main"
+      >
+        {h.text}
+      </a>
+    ))}
+  </nav>
+)}

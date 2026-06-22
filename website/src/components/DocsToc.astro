@@ -1,0 +1,22 @@
+---
+import TableOfContents from './TableOfContents.astro'
+import type { Heading } from '../utils/toc'
+
+interface Props {
+  headings: Heading[]
+}
+
+const { headings } = Astro.props
+---
+
+<aside
+  class="hidden xl:block fixed right-0 top-14 w-72 max-h-[calc(100vh-3.5rem)] overflow-y-auto px-6 py-8"
+>
+  <TableOfContents headings={headings} />
+</aside>
+
+<script>
+  import { initTocActive } from '../scripts/toc-active'
+
+  initTocActive()
+</script>

@@ -21,16 +21,16 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props
-const { Content } = await render(entry)
+const { Content, headings } = await render(entry)
 const isEntityPage = !!entry.data.entity
 ---
 
 {isEntityPage ? (
-  <ApiReference title={entry.data.title} entity={entry.data.entity!} description={entry.data.description}>
+  <ApiReference title={entry.data.title} entity={entry.data.entity!} description={entry.data.description} headings={headings}>
     <Content components={mdxComponents} />
   </ApiReference>
 ) : (
-  <DocPage title={entry.data.title} section="api" description={entry.data.description}>
+  <DocPage title={entry.data.title} section="api" description={entry.data.description} wide={entry.data.wide} headings={headings}>
     <Content components={mdxComponents} />
   </DocPage>
 )}

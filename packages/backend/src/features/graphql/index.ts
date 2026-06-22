@@ -11,6 +11,7 @@ import { nhost } from '../../utils/nhost'
 const payloadSchema = yup.object({
   query: yup.string().required(),
   variables: yup.object().optional(),
+  operationName: yup.string().optional(),
 })
 
 registerRestRoutes(async (app) => {
@@ -34,11 +35,17 @@ registerRestRoutes(async (app) => {
       }
 
       try {
-        const { query, variables } = await payloadSchema.validate(req.body)
+        const { query, variables, operationName } =
+          await payloadSchema.validate(req.body)
         const { body } = await nhost.graphql.request(
-          { query, variables },
+          { query, variables, operationName },
           {
             headers: {
+              // The SDK spreads these options over its base fetch init, which
+              // replaces the whole `headers` object and drops the default
+              // Content-Type. Without it Hasura cannot parse the body and fails
+              // with "key query not found", so re-add it here.
+              'Content-Type': 'application/json',
               // Mandatory to scope to the user
               'X-Hasura-User-Id': userId,
               'X-Hasura-Role': 'user',

@@ -2,14 +2,16 @@
 import DocsLayout from './DocsLayout.astro'
 import Breadcrumb from '../components/Breadcrumb.astro'
 import { getLangFromUrl, getTranslations, langPath } from '../utils/i18n'
+import type { Heading } from '../utils/toc'
 
 interface Props {
   title: string
   section?: 'docs' | 'guides'
   description?: string
+  headings?: Heading[]
 }
 
-const { title, section = 'docs', description } = Astro.props
+const { title, section = 'docs', description, headings = [] } = Astro.props
 const lang = getLangFromUrl(Astro.url)
 const t = await getTranslations(lang)
 
@@ -20,7 +22,7 @@ const categoryMap = {
 const cat = categoryMap[section]
 ---
 
-<DocsLayout title={title} section={section}>
+<DocsLayout title={title} section={section} headings={headings}>
   <article>
     <header class="mb-8">
       <Breadcrumb category={cat.label} categoryUrl={langPath(lang, cat.path)} title={title} hideTitle class="mb-3" />

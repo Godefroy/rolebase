@@ -1,6 +1,7 @@
 documentation: Documentation
 guides: Guides
 developers: Développeurs
+toc: Sur cette page
 terms: Mentions légales
 languageName: Français
 bookDemo: Demander une démo
@@ -51,6 +52,7 @@ sidebar:
 api:
   reference: Référence API
   introduction: Introduction
+  playground: Playground GraphQL
 
 footer:
   product: Produit
