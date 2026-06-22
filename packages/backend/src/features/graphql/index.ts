@@ -18,7 +18,9 @@ registerRestRoutes(async (app) => {
     app.post('/graphql', async (req, res) => {
       const apiKey = req.headers['x-api-key'] as string
       if (!apiKey) {
-        res.status(403).send('Missing API key')
+        // GraphQL-shaped JSON error so any client (including the playground)
+        // renders it instead of failing to parse a plain-text body.
+        res.status(403).send({ errors: [{ message: 'Missing API key' }] })
         return
       }
 
@@ -27,7 +29,7 @@ registerRestRoutes(async (app) => {
       })
       const userId = apiKeys.api_key[0]?.userId
       if (!userId) {
-        res.status(403).send('Invalid API key')
+        res.status(403).send({ errors: [{ message: 'Invalid API key' }] })
         return
       }
 
@@ -43,9 +45,11 @@ registerRestRoutes(async (app) => {
             },
           }
         )
-        res.send({ data: body.data })
+        // Forward both data and errors so query errors surface to the client.
+        res.send({ data: body.data, errors: body.errors })
       } catch (error) {
-        res.status(500).send(error)
+        const message = error instanceof Error ? error.message : String(error)
+        res.status(400).send({ errors: [{ message }] })
       }
     })
   })
@@ -53,7 +57,9 @@ registerRestRoutes(async (app) => {
 
 const GET_USER_ID = gql(`
   query getApiKeyUserId($value: String!) {
-    api_key(where: { value: { _eq: $value } }) {
+    api_key(
+      where: { value: { _eq: $value }, archivedAt: { _is_null: true } }
+    ) {
       userId
     }
   }
