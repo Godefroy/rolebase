@@ -23,7 +23,12 @@ import React, {
 import { useTranslation } from 'react-i18next'
 import { ThreadIcon } from 'src/icons'
 import ProposalScrollButton from '@/proposal/components/ProposalScrollButton'
+import { useLocation } from 'react-router'
 import { ThreadContext } from '../contexts/ThreadContext'
+import {
+  getActivityIdFromHash,
+  scrollAndHighlightActivity,
+} from '../utils/scrollAndHighlightActivity'
 import ThreadActivity from './ThreadActivity'
 import ThreadDaySeparator from './ThreadDaySeparator'
 
@@ -38,6 +43,7 @@ export default forwardRef(function ThreadActivities(
   const meetingState = useContext(MeetingContext)
   const currentMember = useCurrentMember()
   const scrollable = useContext(ScrollableContext)
+  const { hash } = useLocation()
 
   // Scroll to the bottom on load, and when the last activity changes and was
   // created by the current member. Other members' new messages are left to the
@@ -53,6 +59,16 @@ export default forwardRef(function ThreadActivities(
     if (!loadedRef.current) {
       loadedRef.current = true
       lastActivityIdRef.current = lastId
+
+      // If the URL targets a specific activity (#activity-{id}), scroll to and
+      // highlight it instead of pinning to the bottom. Deferred so the activity
+      // is rendered before we scroll to it.
+      const hashActivityId = getActivityIdFromHash(hash)
+      if (hashActivityId && activities.some((a) => a.id === hashActivityId)) {
+        setTimeout(() => scrollAndHighlightActivity(hashActivityId), 100)
+        return
+      }
+
       // Pin to bottom; the layout keeps following as async content grows
       scrollable.scrollToBottom(false)
       return

@@ -10,3 +10,8 @@ export function scrollAndHighlightActivity(activityId: string) {
   container?.scrollIntoView({ behavior: 'smooth', block: 'center' })
   highlightElement(container)
 }
+
+// Extract an activity id from a URL hash like "#activity-{id}".
+export function getActivityIdFromHash(hash: string): string | undefined {
+  return hash.match(/^#activity-(.+)$/)?.[1]
+}

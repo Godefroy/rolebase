@@ -24,6 +24,7 @@ import React, { ReactNode, useContext, useMemo } from 'react'
 import { Link as ReachLink } from 'react-router'
 import { ThreadContext } from '../contexts/ThreadContext'
 import ActivityDeleteModal from '../modals/ActivityDeleteModal'
+import { scrollAndHighlightActivity } from '../utils/scrollAndHighlightActivity'
 import ThreadActivityAnchor from './ThreadActivityAnchor'
 import EmojiPicker from './reactions/EmojiPicker'
 import ReactionMenuButton from './reactions/ReactionMenuButton'
@@ -145,6 +146,7 @@ export default function ThreadActivityLayout({
           <Link
             as={ReachLink}
             to={`${path}#activity-${activity.id}`}
+            onClick={() => scrollAndHighlightActivity(activity.id)}
             fontSize="sm"
             fontWeight="normal"
             ml={2}
