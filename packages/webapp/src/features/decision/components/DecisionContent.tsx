@@ -21,7 +21,12 @@ import {
   VStack,
   useDisclosure,
 } from '@chakra-ui/react'
-import { useDecisionLogsSubscription, useDecisionSubscription } from '@gql'
+import ThreadItem from '@/thread/components/ThreadItem'
+import {
+  useDecisionLogsSubscription,
+  useDecisionSubscription,
+  useDecisionThreadsQuery,
+} from '@gql'
 import { capitalizeFirstLetter } from '@utils/capitalizeFirstLetter'
 import { format } from 'date-fns'
 import React from 'react'
@@ -67,6 +72,13 @@ export default function DecisionContent({
     variables: { decisionId: id },
   })
   const logs = logsData?.log
+
+  // Threads that reference this decision (in a thread activity)
+  const { data: threadsData } = useDecisionThreadsQuery({
+    skip: !id,
+    variables: { decisionId: id },
+  })
+  const threadActivities = threadsData?.thread_activity
 
   if (error || (!decision && !loading)) {
     console.error(error || new Error('Decision not found'))
@@ -144,6 +156,23 @@ export default function DecisionContent({
             ))}
           </VStack>
         </Box>
+      )}
+
+      {threadActivities && threadActivities.length > 0 && (
+        <VStack align="stretch" spacing={1} mt={6}>
+          {threadActivities.map(
+            (activity) =>
+              activity.thread && (
+                <ThreadItem
+                  key={activity.id}
+                  thread={activity.thread}
+                  showIcon
+                  showCircle
+                  openButton
+                />
+              )
+          )}
+        </VStack>
       )}
 
       {editModal.isOpen && (

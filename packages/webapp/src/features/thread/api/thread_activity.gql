@@ -1,10 +1,7 @@
-subscription threadActivitiesLogs($id: uuid!) {
+subscription threadActivities($id: uuid!) {
   thread_by_pk(id: $id) {
     activities(where: { archivedAt: { _is_null: true } }) {
       ...ThreadActivity
-    }
-    logs {
-      ...Log
     }
   }
 }

@@ -337,6 +337,9 @@
     "changes": "Org chart changes",
     "private": "Private decision: Only participants of {{role}} can see the decision."
   },
+  "DecisionItem": {
+    "open": "Open decision"
+  },
   "DecisionDeleteModal": {
     "heading": "Delete decision",
     "info": "Are you sure you want to delete decision <b>{{name}}</b>?"
@@ -508,7 +511,8 @@
     "help": "Synchronization is one-way and may take a few minutes. For fast and two-way synchronization, connect a calendar (see <apps>Integrations</apps>)"
   },
   "MeetingItem": {
-    "title": "Meeting {{title}}"
+    "title": "Meeting {{title}}",
+    "open": "Open meeting"
   },
   "MeetingOpenCurrent": {
     "heading": "Meeting in progress",
@@ -522,8 +526,7 @@
   },
   "MeetingPanelStarted": {
     "next": "Next step",
-    "end": "End meeting",
-    "defaultEntityDescription": "Meeting: {{meeting}}"
+    "end": "End meeting"
   },
   "MeetingRecurringDeleteModal": {
     "heading": "Delete a recurring meeting",
@@ -1228,12 +1231,14 @@
     "privateTooltip": "Private task: Only participants of {{role}} and the assigned member can see and modify the task.",
     "private": "Private task",
     "privateHelp": "Only participants of {{role}} and the assigned member can see and modify the task.",
-    "privateNotAllowed": "You must be a participant of {{role}} or be assigned to the task to make it private.",
-    "logs": "History"
+    "privateNotAllowed": "You must be a participant of {{role}} or be assigned to the task to make it private."
   },
   "TaskDeleteModal": {
     "heading": "Delete task",
     "info": "Are you sure you want to delete task <b>{{name}}</b>?"
+  },
+  "TaskItem": {
+    "open": "Open task"
   },
   "TasksKanban": {
     "createTask": "Add a task",
@@ -1269,8 +1274,7 @@
     "archived": "This topic has been deleted. You can restore it with the menu at the top right.",
     "placeholder": "Message...",
     "poll": "Poll",
-    "proposal": "Proposal",
-    "defaultEntityDescription": "Topic: {{thread}}"
+    "proposal": "Proposal"
   },
   "ProposalModal": {
     "headingCreate": "New proposal",
@@ -1457,9 +1461,6 @@
     "text": "has created a topic:",
     "notAllowed": "You do not have access to this topic."
   },
-  "ThreadActivityChangeStatus": {
-    "text": "has changed status topic : <status />"
-  },
   "ThreadContent": {
     "private": "Private topic: Only participants of {{role}} and additional guests can see the topic.",
     "pin": "Pin for everyone",
@@ -1475,6 +1476,9 @@
     "private": "Private topic",
     "privateHelp": "Only participants of {{role}} and additional guests can see the topic.",
     "privateNotAllowed": "You must be a participant of {{role}} or be invited to the topic to make it private."
+  },
+  "ThreadItem": {
+    "open": "Open topic"
   },
   "ThreadsList": {
     "empty": "No topic."

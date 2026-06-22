@@ -18,7 +18,13 @@ export default function ThreadActivityMeeting({ activity }: Props) {
         {t(`ThreadActivityMeeting.text`)}
       </Text>
       {activity.refMeeting ? (
-        <MeetingItem meeting={activity.refMeeting} showDate showIcon />
+        <MeetingItem
+          meeting={activity.refMeeting}
+          showDate
+          showIcon
+          openButton
+          maxW="2xl"
+        />
       ) : (
         <Alert status="warning">
           <AlertIcon />

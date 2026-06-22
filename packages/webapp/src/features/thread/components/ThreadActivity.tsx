@@ -1,8 +1,6 @@
 import { Text } from '@chakra-ui/react'
 import { ThreadActivityFragment, Thread_Activity_Type_Enum } from '@gql'
-import { ThreadActivityChangeStatusFragment } from '@rolebase/shared/model/thread_activity'
 import React, { memo } from 'react'
-import { ThreadActivityChangeStatus } from './ThreadActivityChangeStatus'
 import ThreadActivityDecision from './ThreadActivityDecision'
 import ThreadActivityMeeting from './ThreadActivityMeeting'
 import ThreadActivityMeetingNote from './ThreadActivityMeetingNote'
@@ -14,7 +12,7 @@ import ThreadActivityTask from './ThreadActivityTask'
 import ThreadActivityThread from './ThreadActivityThread'
 
 interface Props {
-  activity: ThreadActivityFragment | ThreadActivityChangeStatusFragment
+  activity: ThreadActivityFragment
 }
 
 function ThreadActivity({ activity }: Props) {
@@ -37,8 +35,6 @@ function ThreadActivity({ activity }: Props) {
       return <ThreadActivityTask activity={activity as any} />
     case Thread_Activity_Type_Enum.Decision:
       return <ThreadActivityDecision activity={activity as any} />
-    case Thread_Activity_Type_Enum.ChangeStatus:
-      return <ThreadActivityChangeStatus activity={activity as any} />
     default:
       return <Text>{JSON.stringify(activity)}</Text>
   }

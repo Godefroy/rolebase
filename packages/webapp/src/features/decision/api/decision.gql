@@ -10,6 +10,21 @@ subscription decision($id: uuid!) {
   }
 }
 
+query decisionThreads($decisionId: uuid!) {
+  thread_activity(
+    where: {
+      refDecisionId: { _eq: $decisionId }
+      archivedAt: { _is_null: true }
+    }
+    order_by: { createdAt: asc }
+  ) {
+    id
+    thread {
+      ...Thread
+    }
+  }
+}
+
 subscription circleDecisions($circleId: uuid!, $active: Boolean!) {
   decision(
     where: { circleId: { _eq: $circleId }, archivedAt: { _is_null: $active } }

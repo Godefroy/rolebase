@@ -6,6 +6,7 @@ import { useOrgContext } from '@/org/contexts/OrgContext'
 import { usePathInOrg } from '@/org/hooks/usePathInOrg'
 import {
   Box,
+  Button,
   Center,
   Circle,
   forwardRef,
@@ -13,11 +14,13 @@ import {
   LinkBox,
   LinkBoxProps,
   LinkOverlay,
+  Text,
   TypographyProps,
   useDisclosure,
 } from '@chakra-ui/react'
 import { ThreadFragment } from '@gql'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link as ReachLink, useLocation } from 'react-router'
 import { PinnedIcon, PrivacyIcon } from 'src/icons'
 import useThreadStatus from '../hooks/useThreadStatus'
@@ -27,6 +30,7 @@ import ThreadStatusIcon from './ThreadStatusIcon'
 interface Props extends LinkBoxProps {
   thread: ThreadFragment
   noModal?: boolean
+  openButton?: boolean
   unread?: boolean
   showIcon?: boolean
   showCircle?: boolean
@@ -40,6 +44,7 @@ const ThreadItem = forwardRef<Props, 'div'>(
     {
       thread,
       noModal,
+      openButton,
       unread,
       showIcon,
       showCircle,
@@ -51,6 +56,7 @@ const ThreadItem = forwardRef<Props, 'div'>(
     },
     ref
   ) => {
+    const { t } = useTranslation()
     const path = usePathInOrg(`threads/${thread.id}`)
     const { isOpen, onOpen, onClose } = useDisclosure()
     const handleOpen = useNormalClickHandler(onOpen)
@@ -75,7 +81,7 @@ const ThreadItem = forwardRef<Props, 'div'>(
           boxShadow={isDragging ? 'lg' : 'none'}
           bg={isDragging ? 'gray.50' : undefined}
           _dark={{ bg: isDragging ? 'gray.700' : undefined }}
-          _hover={{ bg: 'bgItemHover' }}
+          _hover={openButton ? undefined : { bg: 'bgItemHover' }}
           {...linkBoxProps}
           tabIndex={
             // Remove tabIndex because it's redundant with link
@@ -104,20 +110,34 @@ const ThreadItem = forwardRef<Props, 'div'>(
               </Center>
             )}
 
-            <LinkOverlay
-              as={ReachLink}
-              to={path}
-              flex={1}
-              w="0"
-              whiteSpace="nowrap"
-              overflow="hidden"
-              textOverflow="ellipsis"
-              fontWeight={unread ? 'bold' : undefined}
-              {...labelProps}
-              onClick={noModal ? undefined : handleOpen}
-            >
-              {thread.title}
-            </LinkOverlay>
+            {openButton ? (
+              <Text
+                flex={1}
+                w="0"
+                whiteSpace="nowrap"
+                overflow="hidden"
+                textOverflow="ellipsis"
+                fontWeight={unread ? 'bold' : undefined}
+                {...labelProps}
+              >
+                {thread.title}
+              </Text>
+            ) : (
+              <LinkOverlay
+                as={ReachLink}
+                to={path}
+                flex={1}
+                w="0"
+                whiteSpace="nowrap"
+                overflow="hidden"
+                textOverflow="ellipsis"
+                fontWeight={unread ? 'bold' : undefined}
+                {...labelProps}
+                onClick={noModal ? undefined : handleOpen}
+              >
+                {thread.title}
+              </LinkOverlay>
+            )}
 
             {thread?.pinned && (
               <Box color="yellow.500">
@@ -140,6 +160,12 @@ const ThreadItem = forwardRef<Props, 'div'>(
             {showCircle && <CircleByIdButton id={thread.circleId} size="xs" />}
 
             {children}
+
+            {openButton && (
+              <Button size="sm" variant="outline" onClick={onOpen}>
+                {t('ThreadItem.open')}
+              </Button>
+            )}
           </HStack>
         </LinkBox>
 

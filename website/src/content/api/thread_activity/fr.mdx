@@ -12,7 +12,7 @@ category: 'threads'
 | `id` | `uuid` | Identifiant unique de l'activité (généré automatiquement) |
 | `threadId` | `uuid` | Référence à la discussion parente |
 | `userId` | `uuid` | Référence à l'utilisateur qui a créé l'activité |
-| `type` | `Thread_Activity_Type_Enum` | Type d'activité : Message, Poll, Thread, Meeting, Task, Decision, MeetingNote ou ChangeStatus |
+| `type` | `Thread_Activity_Type_Enum` | Type d'activité : Message, Poll, Proposal, ProposalEvent, Thread, Meeting, Task, Decision ou MeetingNote |
 | `data` | `JSON` | Contenu de l'activité (le format dépend du type) |
 | `createdAt` | `timestamptz` | Date de création de l'activité (par défaut : horodatage actuel) |
 | `archivedAt` | `timestamptz` | Date d'archivage de l'activité ; null si actif |
@@ -27,12 +27,13 @@ Le champ `type` accepte les valeurs d'énumération suivantes :
 
 - **Message** — Message texte ou contenu riche
 - **Poll** — Sondage pour recueillir des avis
+- **Proposal** — Proposition de gouvernance avec modifications préparées de l'organigramme
+- **ProposalEvent** — Événement de proposition (résolution, annulation, rappel de vote)
 - **Thread** — Référence à une autre discussion
 - **Meeting** — Référence à une réunion
 - **Task** — Référence à une tâche
 - **Decision** — Référence à une décision
 - **MeetingNote** — Note créée pendant une réunion
-- **ChangeStatus** — Changement de statut de discussion
 
 ## Relations
 

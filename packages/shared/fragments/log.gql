@@ -12,7 +12,5 @@ fragment Log on log {
   cancelMemberId
   cancelMemberName
   canceled
-  threadId
-  taskId
   decisionId
 }

@@ -19,6 +19,7 @@ import useCircleParticipants from '@/participants/hooks/useCircleParticipants'
 import useExtraParticipants from '@/participants/hooks/useExtraParticipants'
 import CircleSearchInput from '@/search/components/CircleSearchInput'
 import MemberSearchInput from '@/search/components/MemberSearchInput'
+import ThreadItem from '@/thread/components/ThreadItem'
 import {
   Alert,
   AlertDescription,
@@ -44,6 +45,7 @@ import {
   Task_Status_Enum,
   TaskFragment,
   useTaskSubscription,
+  useTaskThreadsQuery,
   useUpdateTaskMutation,
 } from '@gql'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -53,13 +55,12 @@ import debounce from 'lodash.debounce'
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { ChevronDownIcon, ChevronUpIcon, PrivacyIcon } from 'src/icons'
+import { PrivacyIcon } from 'src/icons'
 import settings from 'src/settings'
 import * as yup from 'yup'
 import useCreateTask from '../hooks/useCreateTask'
 import useUpdateTaskStatus from '../hooks/useUpdateTaskStatus'
 import TaskDeleteModal from '../modals/TaskDeleteModal'
-import { TaskLogs } from './TaskLogs'
 import TaskStatusInput from './TaskStatusInput'
 import TaskStatusTag from './TaskStatusTag'
 
@@ -105,7 +106,6 @@ export default function TaskContent({
   const updateTaskStatus = useUpdateTaskStatus()
   const createTask = useCreateTask()
   const [updateTask] = useUpdateTaskMutation()
-  const showLogs = useDisclosure()
   const { preventClose, allowClose } = usePreventClose()
 
   const { data, loading, error } = useTaskSubscription({
@@ -116,6 +116,13 @@ export default function TaskContent({
   })
   const task = data?.task_by_pk
   const path = usePathInOrg(`tasks/${id}`)
+
+  // Threads that reference this task (in a thread activity)
+  const { data: threadsData } = useTaskThreadsQuery({
+    skip: !id,
+    variables: { taskId: id! },
+  })
+  const threadActivities = threadsData?.thread_activity
 
   const {
     handleSubmit,
@@ -422,29 +429,21 @@ export default function TaskContent({
           </Alert>
         </Collapse>
 
-        {id && (
-          <Box>
-            <Button
-              variant="link"
-              leftIcon={
-                showLogs.isOpen ? (
-                  <ChevronUpIcon size="1em" />
-                ) : (
-                  <ChevronDownIcon size="1em" />
+        {threadActivities && threadActivities.length > 0 && (
+          <VStack align="stretch" spacing={1} w="100%">
+            {threadActivities.map(
+              (activity) =>
+                activity.thread && (
+                  <ThreadItem
+                    key={activity.id}
+                    thread={activity.thread}
+                    showIcon
+                    showCircle
+                    openButton
+                  />
                 )
-              }
-              onClick={showLogs.onToggle}
-            >
-              {showLogs.isOpen ? (
-                <Heading as="h2" size="md">
-                  {t('TaskContent.logs')}
-                </Heading>
-              ) : (
-                t('TaskContent.logs')
-              )}
-            </Button>
-            {showLogs.isOpen && <TaskLogs taskId={id} mt={2} />}
-          </Box>
+            )}
+          </VStack>
         )}
 
         {!id && isMember && (

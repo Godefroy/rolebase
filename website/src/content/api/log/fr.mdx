@@ -22,8 +22,7 @@ category: 'other'
 | `cancelMemberId` | `uuid` | Membre qui a annulé l'action (optionnel) |
 | `cancelMemberName` | `String` | Nom du membre qui a annulé (optionnel) |
 | `meetingId` | `uuid` | Réunion pendant laquelle ce journal a été créé (optionnel) |
-| `taskId` | `uuid` | Tâche associée à ce journal (optionnel) |
-| `threadId` | `uuid` | Discussion associée à ce journal (optionnel) |
+| `decisionId` | `uuid` | Décision dont ce journal résulte (optionnel) |
 
 ## Structure des modifications d'entités
 
@@ -48,8 +47,6 @@ type EntityChange = {
 - `member` — Le membre qui a effectué la modification
 - `cancelLog` — L'entrée de journal qui a été annulée (s'il s'agit d'une annulation)
 - `cancelMember` — Le membre qui a annulé l'action
-- `task` — La tâche associée (le cas échéant)
-- `thread` — La discussion associée (le cas échéant)
 
 ## Exemples de requêtes
 
@@ -68,12 +65,6 @@ query GetRecentLogs($orgId: uuid!) {
     display
     changes
     canceled
-    task {
-      title
-    }
-    thread {
-      title
-    }
   }
 }
 ```

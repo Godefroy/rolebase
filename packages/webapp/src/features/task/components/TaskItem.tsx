@@ -6,6 +6,7 @@ import useOrgMember from '@/member/hooks/useOrgMember'
 import { usePathInOrg } from '@/org/hooks/usePathInOrg'
 import {
   Avatar,
+  Button,
   Center,
   forwardRef,
   HStack,
@@ -18,6 +19,7 @@ import {
 import { Task_Status_Enum, TaskFragment } from '@gql'
 import { formatRelative } from 'date-fns'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link as ReachLink, useLocation } from 'react-router'
 import { PrivacyIcon, TaskIcon } from 'src/icons'
 import useUpdateTaskStatus from '../hooks/useUpdateTaskStatus'
@@ -28,6 +30,7 @@ import TaskStatusTag from './TaskStatusTag'
 interface Props extends LinkBoxProps {
   task: TaskFragment
   noModal?: boolean
+  openButton?: boolean
   showCircle?: boolean
   showMember?: boolean
   showIcon?: boolean
@@ -40,6 +43,7 @@ const TaskItem = forwardRef<Props, 'div'>(
     {
       task,
       noModal,
+      openButton,
       showCircle,
       showMember,
       showIcon,
@@ -50,6 +54,7 @@ const TaskItem = forwardRef<Props, 'div'>(
     },
     ref
   ) => {
+    const { t } = useTranslation()
     const isMember = useOrgMember()
     const updateTaskStatus = useUpdateTaskStatus()
     const dateLocale = useDateLocale()
@@ -74,7 +79,7 @@ const TaskItem = forwardRef<Props, 'div'>(
           boxShadow={isDragging ? 'lg' : 'none'}
           bg={isDragging ? 'gray.50' : undefined}
           _dark={{ bg: isDragging ? 'gray.700' : undefined }}
-          _hover={{ bg: 'bgItemHover' }}
+          _hover={openButton ? undefined : { bg: 'bgItemHover' }}
           {...linkBoxProps}
           tabIndex={
             // Remove tabIndex because it's redondant with link
@@ -89,19 +94,32 @@ const TaskItem = forwardRef<Props, 'div'>(
               </Center>
             )}
 
-            <LinkOverlay
-              as={ReachLink}
-              to={path}
-              flex={1}
-              w="0"
-              display="block"
-              whiteSpace="nowrap"
-              overflow="hidden"
-              textOverflow="ellipsis"
-              onClick={noModal ? undefined : handleOpen}
-            >
-              {task.title}
-            </LinkOverlay>
+            {openButton ? (
+              <Text
+                flex={1}
+                w="0"
+                display="block"
+                whiteSpace="nowrap"
+                overflow="hidden"
+                textOverflow="ellipsis"
+              >
+                {task.title}
+              </Text>
+            ) : (
+              <LinkOverlay
+                as={ReachLink}
+                to={path}
+                flex={1}
+                w="0"
+                display="block"
+                whiteSpace="nowrap"
+                overflow="hidden"
+                textOverflow="ellipsis"
+                onClick={noModal ? undefined : handleOpen}
+              >
+                {task.title}
+              </LinkOverlay>
+            )}
 
             {showDueDate && task.dueDate && (
               <Text
@@ -137,6 +155,12 @@ const TaskItem = forwardRef<Props, 'div'>(
             )}
 
             {children}
+
+            {openButton && (
+              <Button size="sm" variant="outline" onClick={onOpen}>
+                {t('TaskItem.open')}
+              </Button>
+            )}
           </HStack>
         </LinkBox>
 

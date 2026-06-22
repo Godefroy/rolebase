@@ -39,10 +39,6 @@ The `status` field accepts the following enum values:
 - `circle` — The circle this task is associated with
 - `member` — The member assigned to this task (if any)
 
-### Array Relationships
-
-- `logs` — Activity logs tracking changes to this task
-
 ## Query Examples
 
 ### List Tasks for an Organization
@@ -62,11 +58,6 @@ query GetTasks($orgId: uuid!) {
     }
     member {
       name
-    }
-    logs {
-      createdAt
-      display
-      changes
     }
   }
 }
@@ -144,6 +135,5 @@ Task access is controlled by several factors:
 
 <Callout type="info">
   Tasks can be organized into custom views using the
-  [task_view](/en/api/task_view) entity. Activity logs automatically track
-  changes to task status and assignments.
+  [task_view](/en/api/task_view) entity.
 </Callout>

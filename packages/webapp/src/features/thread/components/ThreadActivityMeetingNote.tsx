@@ -64,7 +64,15 @@ export default function ThreadActivityMeetingNote({ activity }: Props) {
       <CardBody pt={0}>
         {meeting ? (
           <>
-            <MeetingItem meeting={meeting} showDate showIcon mb={2} mx={-2} />
+            <MeetingItem
+              meeting={meeting}
+              showDate
+              showIcon
+              openButton
+              maxW="2xl"
+              mb={2}
+              mx={-2}
+            />
 
             {isEditable ? (
               <CollabEditor

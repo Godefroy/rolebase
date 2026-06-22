@@ -22,8 +22,7 @@ category: 'other'
 | `cancelMemberId` | `uuid` | Member who canceled the action (optional) |
 | `cancelMemberName` | `String` | Name of the member who canceled (optional) |
 | `meetingId` | `uuid` | Meeting during which this log was created (optional) |
-| `taskId` | `uuid` | Task associated with this log (optional) |
-| `threadId` | `uuid` | Thread associated with this log (optional) |
+| `decisionId` | `uuid` | Decision this log resulted from (optional) |
 
 ## Entity Changes Structure
 
@@ -48,8 +47,6 @@ type EntityChange = {
 - `member` — The member who made the change
 - `cancelLog` — The log entry that was canceled (if this is a cancellation)
 - `cancelMember` — The member who canceled the action
-- `task` — The associated task (if any)
-- `thread` — The associated thread (if any)
 
 ## Query Examples
 
@@ -68,12 +65,6 @@ query GetRecentLogs($orgId: uuid!) {
     display
     changes
     canceled
-    task {
-      title
-    }
-    thread {
-      title
-    }
   }
 }
 ```

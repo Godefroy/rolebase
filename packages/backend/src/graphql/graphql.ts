@@ -6502,12 +6502,6 @@ export type Log = {
   org: Org;
   orgId: Scalars['uuid'];
   /** An object relationship */
-  task?: Maybe<Task>;
-  taskId?: Maybe<Scalars['uuid']>;
-  /** An object relationship */
-  thread?: Maybe<Thread>;
-  threadId?: Maybe<Scalars['uuid']>;
-  /** An object relationship */
   user: Users;
   /** User and member who made the change */
   userId: Scalars['uuid'];
@@ -6617,10 +6611,6 @@ export type Log_Bool_Exp = {
   memberName?: InputMaybe<String_Comparison_Exp>;
   org?: InputMaybe<Org_Bool_Exp>;
   orgId?: InputMaybe<Uuid_Comparison_Exp>;
-  task?: InputMaybe<Task_Bool_Exp>;
-  taskId?: InputMaybe<Uuid_Comparison_Exp>;
-  thread?: InputMaybe<Thread_Bool_Exp>;
-  threadId?: InputMaybe<Uuid_Comparison_Exp>;
   user?: InputMaybe<Users_Bool_Exp>;
   userId?: InputMaybe<Uuid_Comparison_Exp>;
 };
@@ -6657,10 +6647,6 @@ export type Log_Insert_Input = {
   memberName?: InputMaybe<Scalars['String']>;
   org?: InputMaybe<Org_Obj_Rel_Insert_Input>;
   orgId?: InputMaybe<Scalars['uuid']>;
-  task?: InputMaybe<Task_Obj_Rel_Insert_Input>;
-  taskId?: InputMaybe<Scalars['uuid']>;
-  thread?: InputMaybe<Thread_Obj_Rel_Insert_Input>;
-  threadId?: InputMaybe<Scalars['uuid']>;
   user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
   /** User and member who made the change */
   userId?: InputMaybe<Scalars['uuid']>;
@@ -6683,8 +6669,6 @@ export type Log_Max_Fields = {
   /** Keep name for display, in case of deleted member */
   memberName?: Maybe<Scalars['String']>;
   orgId?: Maybe<Scalars['uuid']>;
-  taskId?: Maybe<Scalars['uuid']>;
-  threadId?: Maybe<Scalars['uuid']>;
   /** User and member who made the change */
   userId?: Maybe<Scalars['uuid']>;
 };
@@ -6705,8 +6689,6 @@ export type Log_Max_Order_By = {
   /** Keep name for display, in case of deleted member */
   memberName?: InputMaybe<Order_By>;
   orgId?: InputMaybe<Order_By>;
-  taskId?: InputMaybe<Order_By>;
-  threadId?: InputMaybe<Order_By>;
   /** User and member who made the change */
   userId?: InputMaybe<Order_By>;
 };
@@ -6728,8 +6710,6 @@ export type Log_Min_Fields = {
   /** Keep name for display, in case of deleted member */
   memberName?: Maybe<Scalars['String']>;
   orgId?: Maybe<Scalars['uuid']>;
-  taskId?: Maybe<Scalars['uuid']>;
-  threadId?: Maybe<Scalars['uuid']>;
   /** User and member who made the change */
   userId?: Maybe<Scalars['uuid']>;
 };
@@ -6750,8 +6730,6 @@ export type Log_Min_Order_By = {
   /** Keep name for display, in case of deleted member */
   memberName?: InputMaybe<Order_By>;
   orgId?: InputMaybe<Order_By>;
-  taskId?: InputMaybe<Order_By>;
-  threadId?: InputMaybe<Order_By>;
   /** User and member who made the change */
   userId?: InputMaybe<Order_By>;
 };
@@ -6799,10 +6777,6 @@ export type Log_Order_By = {
   memberName?: InputMaybe<Order_By>;
   org?: InputMaybe<Org_Order_By>;
   orgId?: InputMaybe<Order_By>;
-  task?: InputMaybe<Task_Order_By>;
-  taskId?: InputMaybe<Order_By>;
-  thread?: InputMaybe<Thread_Order_By>;
-  threadId?: InputMaybe<Order_By>;
   user?: InputMaybe<Users_Order_By>;
   userId?: InputMaybe<Order_By>;
 };
@@ -6843,10 +6817,6 @@ export enum Log_Select_Column {
   /** column name */
   OrgId = 'orgId',
   /** column name */
-  TaskId = 'taskId',
-  /** column name */
-  ThreadId = 'threadId',
-  /** column name */
   UserId = 'userId'
 }
 
@@ -6884,8 +6854,6 @@ export type Log_Set_Input = {
   /** Keep name for display, in case of deleted member */
   memberName?: InputMaybe<Scalars['String']>;
   orgId?: InputMaybe<Scalars['uuid']>;
-  taskId?: InputMaybe<Scalars['uuid']>;
-  threadId?: InputMaybe<Scalars['uuid']>;
   /** User and member who made the change */
   userId?: InputMaybe<Scalars['uuid']>;
 };
@@ -6920,8 +6888,6 @@ export type Log_Stream_Cursor_Value_Input = {
   /** Keep name for display, in case of deleted member */
   memberName?: InputMaybe<Scalars['String']>;
   orgId?: InputMaybe<Scalars['uuid']>;
-  taskId?: InputMaybe<Scalars['uuid']>;
-  threadId?: InputMaybe<Scalars['uuid']>;
   /** User and member who made the change */
   userId?: InputMaybe<Scalars['uuid']>;
 };
@@ -6956,10 +6922,6 @@ export enum Log_Update_Column {
   MemberName = 'memberName',
   /** column name */
   OrgId = 'orgId',
-  /** column name */
-  TaskId = 'taskId',
-  /** column name */
-  ThreadId = 'threadId',
   /** column name */
   UserId = 'userId'
 }
@@ -19351,10 +19313,6 @@ export type Task = {
   description_legacy?: Maybe<Scalars['String']>;
   dueDate?: Maybe<Scalars['timestamptz']>;
   id: Scalars['uuid'];
-  /** An array relationship */
-  logs: Array<Log>;
-  /** An aggregate relationship */
-  logs_aggregate: Log_Aggregate;
   /** An object relationship */
   member?: Maybe<Member>;
   memberId?: Maybe<Scalars['uuid']>;
@@ -19364,26 +19322,6 @@ export type Task = {
   private: Scalars['Boolean'];
   status: Task_Status_Enum;
   title: Scalars['String'];
-};
-
-
-/** columns and relationships of "task" */
-export type TaskLogsArgs = {
-  distinct_on?: InputMaybe<Array<Log_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Log_Order_By>>;
-  where?: InputMaybe<Log_Bool_Exp>;
-};
-
-
-/** columns and relationships of "task" */
-export type TaskLogs_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Log_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Log_Order_By>>;
-  where?: InputMaybe<Log_Bool_Exp>;
 };
 
 /** aggregated selection of "task" */
@@ -19462,8 +19400,6 @@ export type Task_Bool_Exp = {
   description_legacy?: InputMaybe<String_Comparison_Exp>;
   dueDate?: InputMaybe<Timestamptz_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
-  logs?: InputMaybe<Log_Bool_Exp>;
-  logs_aggregate?: InputMaybe<Log_Aggregate_Bool_Exp>;
   member?: InputMaybe<Member_Bool_Exp>;
   memberId?: InputMaybe<Uuid_Comparison_Exp>;
   org?: InputMaybe<Org_Bool_Exp>;
@@ -19489,7 +19425,6 @@ export type Task_Insert_Input = {
   description_legacy?: InputMaybe<Scalars['String']>;
   dueDate?: InputMaybe<Scalars['timestamptz']>;
   id?: InputMaybe<Scalars['uuid']>;
-  logs?: InputMaybe<Log_Arr_Rel_Insert_Input>;
   member?: InputMaybe<Member_Obj_Rel_Insert_Input>;
   memberId?: InputMaybe<Scalars['uuid']>;
   org?: InputMaybe<Org_Obj_Rel_Insert_Input>;
@@ -19590,7 +19525,6 @@ export type Task_Order_By = {
   description_legacy?: InputMaybe<Order_By>;
   dueDate?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
-  logs_aggregate?: InputMaybe<Log_Aggregate_Order_By>;
   member?: InputMaybe<Member_Order_By>;
   memberId?: InputMaybe<Order_By>;
   org?: InputMaybe<Org_Order_By>;
@@ -20100,10 +20034,6 @@ export type Thread = {
   initiatorMember: Member;
   initiatorMemberId: Scalars['uuid'];
   /** An array relationship */
-  logs: Array<Log>;
-  /** An aggregate relationship */
-  logs_aggregate: Log_Aggregate;
-  /** An array relationship */
   member_status: Array<Thread_Member_Status>;
   /** An aggregate relationship */
   member_status_aggregate: Thread_Member_Status_Aggregate;
@@ -20154,26 +20084,6 @@ export type ThreadExtra_Members_AggregateArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   order_by?: InputMaybe<Array<Thread_Extra_Member_Order_By>>;
   where?: InputMaybe<Thread_Extra_Member_Bool_Exp>;
-};
-
-
-/** columns and relationships of "thread" */
-export type ThreadLogsArgs = {
-  distinct_on?: InputMaybe<Array<Log_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Log_Order_By>>;
-  where?: InputMaybe<Log_Bool_Exp>;
-};
-
-
-/** columns and relationships of "thread" */
-export type ThreadLogs_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Log_Select_Column>>;
-  limit?: InputMaybe<Scalars['Int']>;
-  offset?: InputMaybe<Scalars['Int']>;
-  order_by?: InputMaybe<Array<Log_Order_By>>;
-  where?: InputMaybe<Log_Bool_Exp>;
 };
 
 
@@ -20827,7 +20737,6 @@ export enum Thread_Activity_Type_Constraint {
 }
 
 export enum Thread_Activity_Type_Enum {
-  ChangeStatus = 'ChangeStatus',
   Decision = 'Decision',
   Meeting = 'Meeting',
   MeetingNote = 'MeetingNote',
@@ -21062,8 +20971,6 @@ export type Thread_Bool_Exp = {
   id?: InputMaybe<Uuid_Comparison_Exp>;
   initiatorMember?: InputMaybe<Member_Bool_Exp>;
   initiatorMemberId?: InputMaybe<Uuid_Comparison_Exp>;
-  logs?: InputMaybe<Log_Bool_Exp>;
-  logs_aggregate?: InputMaybe<Log_Aggregate_Bool_Exp>;
   member_status?: InputMaybe<Thread_Member_Status_Bool_Exp>;
   member_status_aggregate?: InputMaybe<Thread_Member_Status_Aggregate_Bool_Exp>;
   org?: InputMaybe<Org_Bool_Exp>;
@@ -21288,7 +21195,6 @@ export type Thread_Insert_Input = {
   id?: InputMaybe<Scalars['uuid']>;
   initiatorMember?: InputMaybe<Member_Obj_Rel_Insert_Input>;
   initiatorMemberId?: InputMaybe<Scalars['uuid']>;
-  logs?: InputMaybe<Log_Arr_Rel_Insert_Input>;
   member_status?: InputMaybe<Thread_Member_Status_Arr_Rel_Insert_Input>;
   org?: InputMaybe<Org_Obj_Rel_Insert_Input>;
   orgId?: InputMaybe<Scalars['uuid']>;
@@ -21603,7 +21509,6 @@ export type Thread_Order_By = {
   id?: InputMaybe<Order_By>;
   initiatorMember?: InputMaybe<Member_Order_By>;
   initiatorMemberId?: InputMaybe<Order_By>;
-  logs_aggregate?: InputMaybe<Log_Aggregate_Order_By>;
   member_status_aggregate?: InputMaybe<Thread_Member_Status_Aggregate_Order_By>;
   org?: InputMaybe<Org_Order_By>;
   orgId?: InputMaybe<Order_By>;
@@ -24424,7 +24329,7 @@ export type CircleMemberFragment = { __typename?: 'circle_member', id: string, o
 
 export type DecisionFragment = { __typename?: 'decision', id: string, orgId: string, circleId: string, memberId: string, title: string, description: string, archivedAt?: string | null, createdAt: string, private: boolean };
 
-export type LogFragment = { __typename?: 'log', id: string, orgId: string, userId: string, memberId: string, memberName: string, meetingId?: string | null, createdAt: string, display: LogDisplay, changes: EntitiesChanges, cancelLogId?: string | null, cancelMemberId?: string | null, cancelMemberName?: string | null, canceled: boolean, threadId?: string | null, taskId?: string | null, decisionId?: string | null };
+export type LogFragment = { __typename?: 'log', id: string, orgId: string, userId: string, memberId: string, memberName: string, meetingId?: string | null, createdAt: string, display: LogDisplay, changes: EntitiesChanges, cancelLogId?: string | null, cancelMemberId?: string | null, cancelMemberName?: string | null, canceled: boolean, decisionId?: string | null };
 
 export type MeetingSummaryFragment = { __typename?: 'meeting', id: string, orgId: string, circleId: string, startDate: string, endDate: string, ended: boolean, title: string, currentStepId?: string | null, summary: string, private: boolean, meeting_attendees: Array<{ __typename?: 'meeting_attendee', id: string, meetingId: string, memberId: string, present?: boolean | null, startNotified: boolean }> };
 
@@ -24482,7 +24387,7 @@ export const ApiKeyFragmentDoc = {"kind":"Document","definitions":[{"kind":"Frag
 export const CircleFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Circle"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"roleId"}},{"kind":"Field","name":{"kind":"Name","value":"parentId"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}}]}}]} as unknown as DocumentNode<CircleFragment, unknown>;
 export const RoleSummaryFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"RoleSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"role"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"base"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"singleMember"}},{"kind":"Field","name":{"kind":"Name","value":"parentLink"}},{"kind":"Field","name":{"kind":"Name","value":"colorHue"}}]}}]} as unknown as DocumentNode<RoleSummaryFragment, unknown>;
 export const CircleSummaryFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CircleSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"Circle"}},{"kind":"Field","name":{"kind":"Name","value":"role"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"RoleSummary"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Circle"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"roleId"}},{"kind":"Field","name":{"kind":"Name","value":"parentId"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"RoleSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"role"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"base"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"singleMember"}},{"kind":"Field","name":{"kind":"Name","value":"parentLink"}},{"kind":"Field","name":{"kind":"Name","value":"colorHue"}}]}}]} as unknown as DocumentNode<CircleSummaryFragment, unknown>;
-export const LogFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Log"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"log"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"memberName"}},{"kind":"Field","name":{"kind":"Name","value":"meetingId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"display"}},{"kind":"Field","name":{"kind":"Name","value":"changes"}},{"kind":"Field","name":{"kind":"Name","value":"cancelLogId"}},{"kind":"Field","name":{"kind":"Name","value":"cancelMemberId"}},{"kind":"Field","name":{"kind":"Name","value":"cancelMemberName"}},{"kind":"Field","name":{"kind":"Name","value":"canceled"}},{"kind":"Field","name":{"kind":"Name","value":"threadId"}},{"kind":"Field","name":{"kind":"Name","value":"taskId"}},{"kind":"Field","name":{"kind":"Name","value":"decisionId"}}]}}]} as unknown as DocumentNode<LogFragment, unknown>;
+export const LogFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Log"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"log"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"userId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"memberName"}},{"kind":"Field","name":{"kind":"Name","value":"meetingId"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"display"}},{"kind":"Field","name":{"kind":"Name","value":"changes"}},{"kind":"Field","name":{"kind":"Name","value":"cancelLogId"}},{"kind":"Field","name":{"kind":"Name","value":"cancelMemberId"}},{"kind":"Field","name":{"kind":"Name","value":"cancelMemberName"}},{"kind":"Field","name":{"kind":"Name","value":"canceled"}},{"kind":"Field","name":{"kind":"Name","value":"decisionId"}}]}}]} as unknown as DocumentNode<LogFragment, unknown>;
 export const MeetingAttendeeFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MeetingAttendee"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting_attendee"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"meetingId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"present"}},{"kind":"Field","name":{"kind":"Name","value":"startNotified"}}]}}]} as unknown as DocumentNode<MeetingAttendeeFragment, unknown>;
 export const MeetingSummaryFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MeetingSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"ended"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"currentStepId"}},{"kind":"Field","name":{"kind":"Name","value":"summary"}},{"kind":"Field","name":{"kind":"Name","value":"private"}},{"kind":"Field","name":{"kind":"Name","value":"meeting_attendees"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MeetingAttendee"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MeetingAttendee"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting_attendee"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"meetingId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"present"}},{"kind":"Field","name":{"kind":"Name","value":"startNotified"}}]}}]} as unknown as DocumentNode<MeetingSummaryFragment, unknown>;
 export const MeetingFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"Meeting"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MeetingSummary"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}},{"kind":"Field","name":{"kind":"Name","value":"stepsConfig"}},{"kind":"Field","name":{"kind":"Name","value":"archivedAt"}},{"kind":"Field","name":{"kind":"Name","value":"videoConf"}},{"kind":"Field","name":{"kind":"Name","value":"recurringId"}},{"kind":"Field","name":{"kind":"Name","value":"recurringDate"}},{"kind":"Field","name":{"kind":"Name","value":"invitedReadonly"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MeetingAttendee"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting_attendee"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"meetingId"}},{"kind":"Field","name":{"kind":"Name","value":"memberId"}},{"kind":"Field","name":{"kind":"Name","value":"present"}},{"kind":"Field","name":{"kind":"Name","value":"startNotified"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"MeetingSummary"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"meeting"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"circleId"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"ended"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"currentStepId"}},{"kind":"Field","name":{"kind":"Name","value":"summary"}},{"kind":"Field","name":{"kind":"Name","value":"private"}},{"kind":"Field","name":{"kind":"Name","value":"meeting_attendees"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"MeetingAttendee"}}]}}]}}]} as unknown as DocumentNode<MeetingFragment, unknown>;

@@ -18,7 +18,12 @@ export default function ThreadActivityThread({ activity }: Props) {
         {t(`ThreadActivityThread.text`)}
       </Text>
       {activity.refThread ? (
-        <ThreadItem thread={activity.refThread} showIcon />
+        <ThreadItem
+          thread={activity.refThread}
+          showIcon
+          openButton
+          maxW="2xl"
+        />
       ) : (
         <Alert status="warning">
           <AlertIcon />

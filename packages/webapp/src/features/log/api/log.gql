@@ -14,11 +14,6 @@ query lastLogs($orgId: uuid!, $limit: Int, $offset: Int) {
   }
 }
 
-subscription taskLogs($taskId: uuid!) {
-  log(where: { taskId: { _eq: $taskId } }, order_by: { createdAt: asc }) {
-    ...Log
-  }
-}
 subscription meetingLogs($meetingId: uuid!) {
   log(where: { meetingId: { _eq: $meetingId } }, order_by: { createdAt: asc }) {
     ...Log

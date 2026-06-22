@@ -18,7 +18,14 @@ export default function ThreadActivityTask({ activity }: Props) {
         {t(`ThreadActivityTask.text`)}
       </Text>
       {activity.refTask ? (
-        <TaskItem task={activity.refTask} showMember showIcon showDueDate />
+        <TaskItem
+          task={activity.refTask}
+          showMember
+          showIcon
+          showDueDate
+          openButton
+          maxW="2xl"
+        />
       ) : (
         <Alert status="warning">
           <AlertIcon />

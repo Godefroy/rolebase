@@ -10,6 +10,21 @@ subscription task($id: uuid!) {
   }
 }
 
+query taskThreads($taskId: uuid!) {
+  thread_activity(
+    where: {
+      refTaskId: { _eq: $taskId }
+      archivedAt: { _is_null: true }
+    }
+    order_by: { createdAt: asc }
+  ) {
+    id
+    thread {
+      ...Thread
+    }
+  }
+}
+
 subscription tasks(
   $orgId: uuid!
   $filters: [task_bool_exp!]!

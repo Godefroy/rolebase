@@ -23,7 +23,6 @@ import {
   Thread_Activity_Type_Enum,
   useCreateThreadActivityMutation,
 } from '@gql'
-import { getOrgPath } from '@rolebase/shared/helpers/getOrgPath'
 import { cmdOrCtrlKey } from '@utils/env'
 import { UserLocalStorageKeys } from '@utils/localStorage'
 import React, {
@@ -46,7 +45,6 @@ import {
   TaskIcon,
   ThreadIcon,
 } from 'src/icons'
-import settings from 'src/settings'
 import ActivityPollModal from '../modals/ActivityPollModal'
 import ThreadEditModal from '../modals/ThreadEditModal'
 
@@ -179,15 +177,6 @@ export default function ThreadActivityCreate({ thread, ...boxProps }: Props) {
     [handleCreateActivity, entityType]
   )
 
-  const defaultEntityDescription = t(
-    'ThreadActivityCreate.defaultEntityDescription',
-    {
-      thread: `[${thread.title}](${settings.url}${
-        org ? getOrgPath(org) : ''
-      }/threads/${thread.id})`,
-    }
-  )
-
   if (thread.archivedAt) {
     return (
       <Box {...boxProps}>
@@ -216,6 +205,13 @@ export default function ThreadActivityCreate({ thread, ...boxProps }: Props) {
 
       <HStack spacing={2} mt={2} align="center">
         <Flex gap={2} overflowX="auto" flex="1" py={1}>
+          <Button
+            {...actionButtonProps}
+            leftIcon={<OrgChartIcon size={20} />}
+            onClick={proposalModal.onOpen}
+          >
+            {t(`ThreadActivityCreate.proposal`)}
+          </Button>
           {canAddDecision && (
             <Button
               {...actionButtonProps}
@@ -233,13 +229,6 @@ export default function ThreadActivityCreate({ thread, ...boxProps }: Props) {
             onClick={pollModal.onOpen}
           >
             {t(`ThreadActivityCreate.poll`)}
-          </Button>
-          <Button
-            {...actionButtonProps}
-            leftIcon={<OrgChartIcon size={20} />}
-            onClick={proposalModal.onOpen}
-          >
-            {t(`ThreadActivityCreate.proposal`)}
           </Button>
           <Button
             {...actionButtonProps}
@@ -321,7 +310,6 @@ export default function ThreadActivityCreate({ thread, ...boxProps }: Props) {
                 circleId: thread.circleId,
                 memberId: currentMember?.id,
                 title: thread.title,
-                description: defaultEntityDescription,
                 private: thread.private,
               }}
               isOpen
@@ -335,7 +323,6 @@ export default function ThreadActivityCreate({ thread, ...boxProps }: Props) {
               defaults={{
                 circleId: thread.circleId,
                 title: thread.title,
-                description: defaultEntityDescription,
                 private: thread.private,
               }}
               isOpen

@@ -3,11 +3,13 @@ import useDateLocale from '@/common/hooks/useDateLocale'
 import { useNormalClickHandler } from '@/common/hooks/useNormalClickHandler'
 import { usePathInOrg } from '@/org/hooks/usePathInOrg'
 import {
+  Button,
   forwardRef,
   HStack,
   LinkBox,
   LinkBoxProps,
   LinkOverlay,
+  Spacer,
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
@@ -23,6 +25,7 @@ import MeetingModal from '../modals/MeetingModal'
 interface Props extends LinkBoxProps {
   meeting: MeetingSummaryFragment
   noModal?: boolean
+  openButton?: boolean
   showCircle?: boolean
   showIcon?: boolean
   showDate?: boolean
@@ -34,6 +37,7 @@ const MeetingItem = forwardRef<Props, 'div'>(
     {
       meeting,
       noModal,
+      openButton,
       showCircle,
       showIcon,
       showDate,
@@ -59,7 +63,7 @@ const MeetingItem = forwardRef<Props, 'div'>(
         <LinkBox
           ref={ref}
           p={1}
-          _hover={{ bg: 'bgItemHover' }}
+          _hover={openButton ? undefined : { bg: 'bgItemHover' }}
           {...linkBoxProps}
           tabIndex={
             // Remove tabIndex because it's redondant with link
@@ -69,6 +73,29 @@ const MeetingItem = forwardRef<Props, 'div'>(
         >
           <HStack align="center">
             {showIcon && <MeetingIcon />}
+
+            {openButton ? (
+              <Text
+                minW="0"
+                whiteSpace="nowrap"
+                overflow="hidden"
+                textOverflow="ellipsis"
+              >
+                {t('MeetingItem.title', { title: meeting.title })}
+              </Text>
+            ) : (
+              <LinkOverlay
+                as={ReachLink}
+                to={path}
+                minW="0"
+                whiteSpace="nowrap"
+                overflow="hidden"
+                textOverflow="ellipsis"
+                onClick={noModal ? undefined : handleOpen}
+              >
+                {t('MeetingItem.title', { title: meeting.title })}
+              </LinkOverlay>
+            )}
 
             {showDate && (
               <Text pr={1} color="gray.500" _dark={{ color: 'gray.400' }}>
@@ -84,24 +111,19 @@ const MeetingItem = forwardRef<Props, 'div'>(
               </Text>
             )}
 
-            <LinkOverlay
-              as={ReachLink}
-              to={path}
-              flex={1}
-              w="0"
-              whiteSpace="nowrap"
-              overflow="hidden"
-              textOverflow="ellipsis"
-              onClick={noModal ? undefined : handleOpen}
-            >
-              {t('MeetingItem.title', { title: meeting.title })}
-            </LinkOverlay>
+            <Spacer />
 
             {meeting?.private && <PrivacyIcon size={18} />}
 
             {showCircle && <CircleByIdButton id={meeting.circleId} size="xs" />}
 
             {children}
+
+            {openButton && (
+              <Button size="sm" variant="outline" onClick={onOpen}>
+                {t('MeetingItem.open')}
+              </Button>
+            )}
           </HStack>
         </LinkBox>
 

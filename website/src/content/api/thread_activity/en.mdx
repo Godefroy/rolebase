@@ -12,7 +12,7 @@ category: 'threads'
 | `id` | `uuid` | Unique identifier for the activity (auto-generated) |
 | `threadId` | `uuid` | Reference to the parent thread |
 | `userId` | `uuid` | Reference to the user who created the activity |
-| `type` | `Thread_Activity_Type_Enum` | Type of activity: Message, Poll, Thread, Meeting, Task, Decision, MeetingNote, or ChangeStatus |
+| `type` | `Thread_Activity_Type_Enum` | Type of activity: Message, Poll, Proposal, ProposalEvent, Thread, Meeting, Task, Decision, or MeetingNote |
 | `data` | `JSON` | Activity content (format depends on type) |
 | `createdAt` | `timestamptz` | When the activity was created (defaults to current timestamp) |
 | `archivedAt` | `timestamptz` | When the activity was archived; null if active |
@@ -27,12 +27,13 @@ The `type` field accepts the following enum values:
 
 - **Message** — Text message or rich content
 - **Poll** — Poll for gathering opinions
+- **Proposal** — Governance proposal with prepared org chart changes
+- **ProposalEvent** — Proposal event (resolution, cancellation, vote reminder)
 - **Thread** — Reference to another thread
 - **Meeting** — Reference to a meeting
 - **Task** — Reference to a task
 - **Decision** — Reference to a decision
 - **MeetingNote** — Note created during a meeting
-- **ChangeStatus** — Thread status change
 
 ## Relationships
 

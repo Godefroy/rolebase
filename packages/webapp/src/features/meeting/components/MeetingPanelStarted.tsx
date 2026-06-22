@@ -3,7 +3,6 @@ import IconTextButton from '@/common/atoms/IconTextButton'
 import { useNormalClickHandler } from '@/common/hooks/useNormalClickHandler'
 import DecisionEditModal from '@/decision/modals/DecisionEditModal'
 import useCurrentMember from '@/member/hooks/useCurrentMember'
-import { useOrgContext } from '@/org/contexts/OrgContext'
 import TaskModal from '@/task/modals/TaskModal'
 import ThreadEditModal from '@/thread/modals/ThreadEditModal'
 import {
@@ -22,7 +21,6 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { Thread_Activity_Type_Enum } from '@gql'
-import { getOrgPath } from '@rolebase/shared/helpers/getOrgPath'
 import React, { MouseEvent, useCallback, useContext, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FiArrowDown, FiArrowRight } from 'react-icons/fi'
@@ -34,14 +32,12 @@ import {
   TaskIcon,
   ThreadIcon,
 } from 'src/icons'
-import settings from 'src/settings'
 import { MeetingContext } from '../contexts/MeetingContext'
 import MeetingEditModal from '../modals/MeetingEditModal'
 
 export default function MeetingPanelStarted() {
   const { t } = useTranslation()
   const currentMember = useCurrentMember()
-  const { org } = useOrgContext()
 
   const {
     meeting,
@@ -83,16 +79,6 @@ export default function MeetingPanelStarted() {
   if (!meeting || !canEdit || !isStarted) {
     return null
   }
-
-  // Default description when creating a decision or a task
-  const defaultEntityDescription = t(
-    'MeetingPanelStarted.defaultEntityDescription',
-    {
-      meeting: `[${meeting.title}](${settings.url}${
-        org ? getOrgPath(org) : ''
-      }/meetings/${meeting.id})`,
-    }
-  )
 
   return (
     <Container
@@ -210,7 +196,6 @@ export default function MeetingPanelStarted() {
                 defaults={{
                   circleId: meeting.circleId,
                   memberId: currentMember?.id,
-                  description: defaultEntityDescription,
                   private: meeting.private,
                 }}
                 isOpen
@@ -222,7 +207,6 @@ export default function MeetingPanelStarted() {
               <DecisionEditModal
                 defaults={{
                   circleId: meeting.circleId,
-                  description: defaultEntityDescription,
                   private: meeting.private,
                 }}
                 isOpen

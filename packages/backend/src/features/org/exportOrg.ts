@@ -178,7 +178,7 @@ function flattenThreadActivityData(
     case 'MeetingNote':
       return { ...rest, data: stringify(d.notes) }
     default:
-      // Thread, Meeting, Task, Decision, ChangeStatus: no large data
+      // Thread, Meeting, Task, Decision: no large data
       return { ...rest, data: stringify(d) }
   }
 }

@@ -139,8 +139,6 @@ export function useCancelLog(log: LogFragment) {
       display: log.display,
       changes,
       meetingId: log.meetingId,
-      taskId: log.taskId,
-      threadId: log.threadId,
       ...(!log.cancelLogId
         ? {
             cancelLogId: log.id,

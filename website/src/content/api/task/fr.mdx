@@ -39,10 +39,6 @@ Le champ `status` accepte les valeurs d'énumération suivantes :
 - `circle` — Le cercle auquel cette tâche est associée
 - `member` — Le membre assigné à cette tâche (le cas échéant)
 
-### Relations tableau
-
-- `logs` — Journaux d'activité suivant les modifications de cette tâche
-
 ## Exemples de requêtes
 
 ### Lister les tâches d'une organisation
@@ -62,11 +58,6 @@ query GetTasks($orgId: uuid!) {
     }
     member {
       name
-    }
-    logs {
-      createdAt
-      display
-      changes
     }
   }
 }
@@ -144,6 +135,5 @@ L'accès aux tâches est contrôlé par plusieurs facteurs :
 
 <Callout type="info">
   Les tâches peuvent être organisées en vues personnalisées à l'aide de l'entité
-  [task_view](/fr/api/task_view). Les journaux d'activité suivent
-  automatiquement les modifications de statut et d'assignation des tâches.
+  [task_view](/fr/api/task_view).
 </Callout>

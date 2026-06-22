@@ -18,7 +18,7 @@ const documents = {
     "fragment CircleLink on circle_link {\n  id\n  orgId\n  parentId\n  circleId\n  createdAt\n  archivedAt\n}": types.CircleLinkFragmentDoc,
     "fragment CircleMember on circle_member {\n  id\n  orgId\n  circleId\n  memberId\n  createdAt\n  archivedAt\n}": types.CircleMemberFragmentDoc,
     "fragment Decision on decision {\n  id\n  orgId\n  circleId\n  memberId\n  title\n  description\n  archivedAt\n  createdAt\n  private\n}": types.DecisionFragmentDoc,
-    "fragment Log on log {\n  id\n  orgId\n  userId\n  memberId\n  memberName\n  meetingId\n  createdAt\n  display\n  changes\n  cancelLogId\n  cancelMemberId\n  cancelMemberName\n  canceled\n  threadId\n  taskId\n  decisionId\n}": types.LogFragmentDoc,
+    "fragment Log on log {\n  id\n  orgId\n  userId\n  memberId\n  memberName\n  meetingId\n  createdAt\n  display\n  changes\n  cancelLogId\n  cancelMemberId\n  cancelMemberName\n  canceled\n  decisionId\n}": types.LogFragmentDoc,
     "fragment MeetingSummary on meeting {\n  id\n  orgId\n  circleId\n  startDate\n  endDate\n  ended\n  title\n  currentStepId\n  summary\n  private\n  meeting_attendees {\n    ...MeetingAttendee\n  }\n}\n\nfragment Meeting on meeting {\n  ...MeetingSummary\n  createdAt\n  stepsConfig\n  archivedAt\n  videoConf\n  recurringId\n  recurringDate\n  invitedReadonly\n}": types.MeetingSummaryFragmentDoc,
     "fragment MeetingAttendee on meeting_attendee {\n  id\n  meetingId\n  memberId\n  present\n  startNotified\n}": types.MeetingAttendeeFragmentDoc,
     "fragment MeetingRecurring on meeting_recurring {\n  id\n  orgId\n  circleId\n  circle {\n    role {\n      name\n      colorHue\n    }\n  }\n  scope\n  templateId\n  template {\n    title\n    stepsConfig\n  }\n  rrule\n  duration\n  videoConf\n  private\n  invitedReadonly\n  createdAt\n}": types.MeetingRecurringFragmentDoc,
@@ -74,7 +74,7 @@ export function gql(source: "fragment Decision on decision {\n  id\n  orgId\n  c
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "fragment Log on log {\n  id\n  orgId\n  userId\n  memberId\n  memberName\n  meetingId\n  createdAt\n  display\n  changes\n  cancelLogId\n  cancelMemberId\n  cancelMemberName\n  canceled\n  threadId\n  taskId\n  decisionId\n}"): (typeof documents)["fragment Log on log {\n  id\n  orgId\n  userId\n  memberId\n  memberName\n  meetingId\n  createdAt\n  display\n  changes\n  cancelLogId\n  cancelMemberId\n  cancelMemberName\n  canceled\n  threadId\n  taskId\n  decisionId\n}"];
+export function gql(source: "fragment Log on log {\n  id\n  orgId\n  userId\n  memberId\n  memberName\n  meetingId\n  createdAt\n  display\n  changes\n  cancelLogId\n  cancelMemberId\n  cancelMemberName\n  canceled\n  decisionId\n}"): (typeof documents)["fragment Log on log {\n  id\n  orgId\n  userId\n  memberId\n  memberName\n  meetingId\n  createdAt\n  display\n  changes\n  cancelLogId\n  cancelMemberId\n  cancelMemberName\n  canceled\n  decisionId\n}"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

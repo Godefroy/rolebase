@@ -19,7 +19,6 @@ import {
   useCreateThreadActivityReactionMutation,
   useDeleteThreadActivityReactionMutation,
 } from '@gql'
-import { ThreadActivityChangeStatusFragment } from '@rolebase/shared/model/thread_activity'
 import { format } from 'date-fns'
 import React, { ReactNode, useContext, useMemo } from 'react'
 import { Link as ReachLink } from 'react-router'
@@ -31,7 +30,7 @@ import ReactionMenuButton from './reactions/ReactionMenuButton'
 import ReactionsList from './reactions/ReactionsList'
 
 interface Props {
-  activity: ThreadActivityFragment | ThreadActivityChangeStatusFragment
+  activity: ThreadActivityFragment
   onEdit?(): void
   allowDelete?: boolean
   children: ReactNode

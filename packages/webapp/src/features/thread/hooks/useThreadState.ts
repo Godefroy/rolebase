@@ -7,13 +7,11 @@ import {
   ThreadActivityFragment,
   ThreadFragment,
   ThreadMemberStatusFragment,
-  Thread_Activity_Type_Enum,
-  useThreadActivitiesLogsSubscription,
+  useThreadActivitiesSubscription,
   useThreadSubscription,
   useUpsertThreadMemberStatusMutation,
 } from '@gql'
 import { ParticipantMember } from '@rolebase/shared/model/member'
-import { ThreadActivityChangeStatusFragment } from '@rolebase/shared/model/thread_activity'
 import { useCallback, useEffect, useMemo } from 'react'
 import { usePathInOrg } from '../../org/hooks/usePathInOrg'
 import useExtraParticipants from '../../participants/hooks/useExtraParticipants'
@@ -56,20 +54,22 @@ export default function useThreadState(threadId: string): ThreadState {
   const thread = threadResult.data?.thread_by_pk || undefined
   const memberStatus = thread?.member_status?.[0]
 
-  // Subscribe to activities and logs
-  const activitiesLogsResult = useThreadActivitiesLogsSubscription({
+  // Subscribe to activities
+  const activitiesResult = useThreadActivitiesSubscription({
     variables: { id: threadId },
   })
 
-  const activities =
-    activitiesLogsResult.data?.thread_by_pk?.activities
-      // Sort activities here because we need order before injectig logs
-      .sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1)) || undefined
-  const threadLogs = activitiesLogsResult.data?.thread_by_pk?.logs || undefined
+  const activities = useMemo(
+    () =>
+      activitiesResult.data?.thread_by_pk?.activities
+        .slice()
+        .sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1)) || undefined,
+    [activitiesResult.data]
+  )
 
   // Error and loading
-  const loading = threadResult.loading || activitiesLogsResult.loading
-  const error = threadResult.error || activitiesLogsResult.error
+  const loading = threadResult.loading || activitiesResult.loading
+  const error = threadResult.error || activitiesResult.error
 
   // Meeting page path
   const path = usePathInOrg(`threads/${thread?.id}`)
@@ -138,39 +138,10 @@ export default function useThreadState(threadId: string): ThreadState {
     })
   }, [!thread, activities])
 
-  const threadLogsActivity = useMemo(() => {
-    if (!thread || !threadLogs) {
-      return undefined
-    }
-
-    return threadLogs.map((log) => {
-      return {
-        id: log.id,
-        type: Thread_Activity_Type_Enum.ChangeStatus,
-        userId: log.userId,
-        createdAt: log.createdAt,
-        data: {
-          ...log,
-        },
-      } as ThreadActivityChangeStatusFragment
-    })
-  }, [thread, threadLogs])
-
-  // Merge activities and logs sorted by createdAt asc
-  const concatThreadLogsActivities = useMemo(() => {
-    if (!activities || !threadLogsActivity) {
-      return undefined
-    }
-
-    return activities
-      .concat(threadLogsActivity || [])
-      .sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1))
-  }, [activities, threadLogsActivity])
-
   return {
     thread,
     memberStatus,
-    activities: concatThreadLogsActivities,
+    activities,
     loading,
     error,
     path,

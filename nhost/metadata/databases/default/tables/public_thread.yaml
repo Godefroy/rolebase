@@ -28,13 +28,6 @@ array_relationships:
         table:
           name: thread_extra_member
           schema: public
-  - name: logs
-    using:
-      foreign_key_constraint_on:
-        column: threadId
-        table:
-          name: log
-          schema: public
   - name: member_status
     using:
       foreign_key_constraint_on:

@@ -18,7 +18,12 @@ export default function ThreadActivityDecision({ activity }: Props) {
         {t(`ThreadActivityDecision.text`)}
       </Text>
       {activity.refDecision ? (
-        <DecisionItem decision={activity.refDecision} showIcon />
+        <DecisionItem
+          decision={activity.refDecision}
+          showIcon
+          openButton
+          maxW="2xl"
+        />
       ) : (
         <Alert status="warning">
           <AlertIcon />
