@@ -31,15 +31,16 @@
     "endDate": "Date de clôture"
   },
   "APICard": {
-    "title": "API GraphQL",
     "description": "Accédez et modifiez tout ce que vous voulez dans Rolebase via notre API GraphQL. Créez des clés API pour authentifier vos requêtes.",
-    "keys": "Vos clés API",
+    "empty": "Vous n'avez pas encore de clé API.",
+    "colName": "Nom",
+    "colKey": "Clé",
     "keyNamePlaceholder": "Nom de la clé API...",
     "createKey": "Créer une clé API",
     "createSuccess": "Clé API créée avec succès",
     "viewDocs": "Voir la documentation de l'API"
   },
-  "APIKeyCard": {
+  "APIKeyRow": {
     "deleteConfirm": "Êtes-vous sûr(e) de vouloir supprimer la clé API {{name}} ?",
     "deleteSuccess": "Clé API supprimée",
     "renameSuccess": "Clé API renommée",
@@ -73,7 +74,9 @@
     }
   },
   "AppsPage": {
-    "heading": "Intégrations & API"
+    "heading": "Intégrations",
+    "apiInfo": "Vous cherchez l'API GraphQL et vos clés API ?",
+    "apiLink": "Accéder à la page API"
   },
   "BaseRoleCreateModal": {
     "heading": "Créer un rôle de base"
@@ -1008,7 +1011,8 @@
       "member": "Ma fiche membre",
       "credentials": "Mes identifiants",
       "notifications": "Notifications",
-      "apps": "Intégrations & API",
+      "apps": "Intégrations",
+      "api": "Clés API",
       "signout": "Déconnexion"
     }
   },
@@ -1017,7 +1021,8 @@
     "members": "Membres",
     "orgSettings": "Organisation",
     "subscription": "Abonnement",
-    "apps": "Intégrations & API",
+    "apps": "Intégrations",
+    "api": "Clés API",
     "export": "Export",
     "superAdmin": "Administration",
     "toastSaved": "Paramètres enregistrés !"

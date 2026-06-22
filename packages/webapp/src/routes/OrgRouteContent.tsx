@@ -1,3 +1,4 @@
+import ApiPage from '@/apps/pages/ApiPage'
 import AppsPage from '@/apps/pages/AppsPage'
 import CirclesPage from '@/circle/pages/CirclesPage'
 import Loading from '@/common/atoms/Loading'
@@ -67,6 +68,7 @@ export default function OrgRouteContent() {
           <Route path="settings" element={<SettingsLayout />}>
             <Route path="org" element={<OrgSettingsPage />} />
             <Route path="apps" element={<AppsPage />} />
+            <Route path="api-keys" element={<ApiPage />} />
             <Route path="export" element={<ExportPage />} />
             <Route path="credentials" element={<CredentialsSettingsPage />} />
             <Route path="notifications" element={<NotificationsSettingsPage />} />

@@ -9,6 +9,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Outlet } from 'react-router'
 import {
+  ApiIcon,
   AppsIcon,
   CircleIcon,
   ExportIcon,
@@ -100,6 +101,9 @@ export default function SettingsLayout() {
               </SidebarItemLink>
               <SidebarItemLink to={`${pathBase}/apps`} icon={AppsIcon}>
                 {t('Settings.apps')}
+              </SidebarItemLink>
+              <SidebarItemLink to={`${pathBase}/api-keys`} icon={ApiIcon}>
+                {t('Settings.api')}
               </SidebarItemLink>
             </VStack>
 

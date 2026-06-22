@@ -1,12 +1,13 @@
 import Loading from '@/common/atoms/Loading'
 import TextErrors from '@/common/atoms/TextErrors'
 import { Title } from '@/common/atoms/Title'
+import { usePathInOrg } from '@/org/hooks/usePathInOrg'
 import { useAuth } from '@/user/hooks/useAuth'
-import { Heading, VStack } from '@chakra-ui/react'
+import { Heading, Link, Text, VStack } from '@chakra-ui/react'
 import { App_Type_Enum, useUserAppsSubscription } from '@gql'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import APICard from '../components/APICard'
+import { Link as RouterLink } from 'react-router'
 import AppCard from '../components/AppCard'
 
 const apps = [
@@ -21,6 +22,7 @@ const apps = [
 export default function AppsPage() {
   const { t } = useTranslation()
   const { user } = useAuth()
+  const apiPath = usePathInOrg('settings/api-keys')
 
   // Get user apps
   const { data, error, loading } = useUserAppsSubscription({
@@ -46,7 +48,13 @@ export default function AppsPage() {
             userApp={userApps?.find((app) => app.type === type)}
           />
         ))}
-        <APICard />
+
+        <Text>
+          {t('AppsPage.apiInfo')}{' '}
+          <Link as={RouterLink} to={apiPath} color="blue.500">
+            {t('AppsPage.apiLink')}
+          </Link>
+        </Text>
       </VStack>
     </>
   )

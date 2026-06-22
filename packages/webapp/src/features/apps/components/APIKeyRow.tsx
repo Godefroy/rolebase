@@ -3,7 +3,9 @@ import {
   Flex,
   IconButton,
   Input,
+  Td,
   Tooltip,
+  Tr,
   useClipboard,
   useToast,
 } from '@chakra-ui/react'
@@ -16,11 +18,11 @@ import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CopyIcon, DeleteIcon } from 'src/icons'
 
-interface APIKeyCardProps {
+interface APIKeyRowProps {
   apiKey: ApiKeyFragment
 }
 
-export default function APIKeyCard({ apiKey }: APIKeyCardProps) {
+export default function APIKeyRow({ apiKey }: APIKeyRowProps) {
   const { t } = useTranslation()
   const toast = useToast()
 
@@ -33,7 +35,7 @@ export default function APIKeyCard({ apiKey }: APIKeyCardProps) {
   useEffect(() => {
     if (hasCopied) {
       toast({
-        title: t('APIKeyCard.copyToast'),
+        title: t('APIKeyRow.copyToast'),
         status: 'info',
         duration: 1500,
       })
@@ -56,7 +58,7 @@ export default function APIKeyCard({ apiKey }: APIKeyCardProps) {
       })
 
       toast({
-        title: t('APIKeyCard.renameSuccess'),
+        title: t('APIKeyRow.renameSuccess'),
         status: 'success',
       })
     } catch (error) {
@@ -70,14 +72,14 @@ export default function APIKeyCard({ apiKey }: APIKeyCardProps) {
   }
 
   const handleDelete = async () => {
-    if (!confirm(t('APIKeyCard.deleteConfirm', { name: apiKey.name }))) return
+    if (!confirm(t('APIKeyRow.deleteConfirm', { name: apiKey.name }))) return
     try {
       await archiveApiKey({
         variables: { id: apiKey.id, archivedAt: new Date().toISOString() },
       })
 
       toast({
-        title: t('APIKeyCard.deleteSuccess'),
+        title: t('APIKeyRow.deleteSuccess'),
         status: 'success',
       })
     } catch (error) {
@@ -97,35 +99,42 @@ export default function APIKeyCard({ apiKey }: APIKeyCardProps) {
   }
 
   return (
-    <Flex alignItems="center" gap={3}>
-      <Input
-        value={newName}
-        onChange={(e) => setNewName(e.target.value)}
-        onBlur={handleUpdateName}
-        onKeyDown={handleKeyDown}
-        size="sm"
-        maxW="200px"
-      />
-      <PasswordInput value={apiKey.value} isReadOnly size="sm" flex={1} />
-      <Tooltip label={t('common.copy')} placement="bottom" hasArrow>
-        <IconButton
-          aria-label={t('common.copy')}
-          icon={<CopyIcon size={20} />}
+    <Tr>
+      <Td w="200px">
+        <Input
+          value={newName}
+          onChange={(e) => setNewName(e.target.value)}
+          onBlur={handleUpdateName}
+          onKeyDown={handleKeyDown}
           size="sm"
-          variant="ghost"
-          onClick={onCopy}
         />
-      </Tooltip>
-      <Tooltip label={t('common.delete')} placement="bottom" hasArrow>
-        <IconButton
-          aria-label={t('common.delete')}
-          icon={<DeleteIcon size={20} />}
-          size="sm"
-          colorScheme="red"
-          variant="ghost"
-          onClick={handleDelete}
-        />
-      </Tooltip>
-    </Flex>
+      </Td>
+      <Td>
+        <PasswordInput value={apiKey.value} isReadOnly size="sm" />
+      </Td>
+      <Td w="1%" whiteSpace="nowrap" textAlign="right">
+        <Flex gap={1} justifyContent="flex-end">
+          <Tooltip label={t('common.copy')} placement="bottom" hasArrow>
+            <IconButton
+              aria-label={t('common.copy')}
+              icon={<CopyIcon size={20} />}
+              size="sm"
+              variant="ghost"
+              onClick={onCopy}
+            />
+          </Tooltip>
+          <Tooltip label={t('common.delete')} placement="bottom" hasArrow>
+            <IconButton
+              aria-label={t('common.delete')}
+              icon={<DeleteIcon size={20} />}
+              size="sm"
+              colorScheme="red"
+              variant="ghost"
+              onClick={handleDelete}
+            />
+          </Tooltip>
+        </Flex>
+      </Td>
+    </Tr>
   )
 }

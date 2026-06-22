@@ -31,15 +31,16 @@
     "endDate": "Closing date"
   },
   "APICard": {
-    "title": "GraphQL API",
     "description": "Access and edit everything you want in Rolebase through our GraphQL API. Create API keys to authenticate your requests.",
-    "keys": "Your API keys",
+    "empty": "You don't have any API keys yet.",
+    "colName": "Name",
+    "colKey": "Key",
     "keyNamePlaceholder": "API key name...",
     "createKey": "Create API key",
     "createSuccess": "API key created",
-    "viewDocs": "View API Documentation"
+    "viewDocs": "View API documentation"
   },
-  "APIKeyCard": {
+  "APIKeyRow": {
     "deleteConfirm": "Are you sure you want to delete the API key {{name}}?",
     "deleteSuccess": "API key deleted",
     "renameSuccess": "API key renamed",
@@ -73,7 +74,9 @@
     }
   },
   "AppsPage": {
-    "heading": "Integrations & API"
+    "heading": "Integrations",
+    "apiInfo": "Looking for the GraphQL API and your API keys?",
+    "apiLink": "Go to the API page"
   },
   "BaseRoleCreateModal": {
     "heading": "Create a basic role"
@@ -975,7 +978,8 @@
       "member": "My member info",
       "credentials": "My credentials",
       "notifications": "Notifications",
-      "apps": "Integrations & API",
+      "apps": "Integrations",
+      "api": "API keys",
       "signout": "Logout"
     }
   },
@@ -984,7 +988,8 @@
     "members": "Members",
     "orgSettings": "Organization",
     "subscription": "Subscription",
-    "apps": "Integrations & API",
+    "apps": "Integrations",
+    "api": "API keys",
     "export": "Export",
     "superAdmin": "Administration",
     "toastSaved": "Settings saved!"
