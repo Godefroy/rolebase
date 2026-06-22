@@ -40,7 +40,11 @@ export default function ProposalGraphEditorModal({
         borderRadius={0}
         borderWidth="8px"
         borderColor="yellow.400"
-        overflow="hidden"
+        // Clip horizontally, but let the content scroll vertically so that
+        // below lg (panel stacked under the graph) the modal extends instead
+        // of clipping the role panel and changes list.
+        overflowX="hidden"
+        overflowY="auto"
         bg="white"
         _dark={{ bg: 'gray.900', borderColor: 'yellow.500' }}
       >

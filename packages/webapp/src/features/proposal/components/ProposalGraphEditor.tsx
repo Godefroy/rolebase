@@ -12,7 +12,15 @@ import { GraphProvider } from '@/graph/contexts/GraphContext'
 import { CirclesGraphViews, GraphEvents } from '@/graph/types'
 import DraftOrgProvider from '@/org/contexts/DraftOrgProvider'
 import ReadonlyOrgProvider from '@/org/contexts/ReadonlyOrgProvider'
-import { Box, Button, Flex, Heading, Text, useColorMode } from '@chakra-ui/react'
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Text,
+  useBreakpointValue,
+  useColorMode,
+} from '@chakra-ui/react'
 import useCurrentMember from '@/member/hooks/useCurrentMember'
 import { ProposalLog } from '@rolebase/shared/model/proposal'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
@@ -41,6 +49,11 @@ export default function ProposalGraphEditor({
 }: Props) {
   const { t } = useTranslation()
   const { colorMode } = useColorMode()
+
+  // On desktop (lg+) the role panel and changes list sit in a fixed side panel
+  // to the right of the graph, each with its own scroll. Below lg they flow
+  // below the graph and the whole modal scrolls as one (like CirclesPage).
+  const isSidePanel = useBreakpointValue({ base: false, lg: true }) ?? false
 
   // The current member acts as a leader of the thread's circle while editing,
   // so they can prepare changes on it (Agile governance).
@@ -129,7 +142,12 @@ export default function ProposalGraphEditor({
   const content = (
     <CircleMemberContext.Provider value={circleMemberValue}>
       <GraphProvider>
-            <Flex h="100%" minH={0} flex="1" direction="column">
+            <Flex
+              direction="column"
+              h={isSidePanel ? '100%' : undefined}
+              minH={isSidePanel ? 0 : '100%'}
+              flex={isSidePanel ? '1' : undefined}
+            >
               <Flex
                 p={3}
                 align="center"
@@ -165,11 +183,24 @@ export default function ProposalGraphEditor({
                 </Button>
               </Flex>
 
-              <Flex flex="1" minH={0}>
-                {/* Graph */}
+              {/*
+                Graph + panel. The direction flips with the breakpoint (row on
+                desktop, column below lg) but the graph Box below stays the same
+                element either way, so its ResizeObserver (useElementSize) keeps
+                tracking the window resize instead of going stale on a remount.
+              */}
+              <Flex
+                direction={isSidePanel ? 'row' : 'column'}
+                flex={isSidePanel ? '1' : undefined}
+                minH={isSidePanel ? 0 : undefined}
+              >
+                {/* Graph: fills the space next to the panel on desktop, a
+                    fixed-height band above the panel when stacked. */}
                 <Box
                   ref={boxRef}
-                  flex="1"
+                  flex={isSidePanel ? '1' : undefined}
+                  h={isSidePanel ? undefined : '50dvh'}
+                  flexShrink={0}
                   position="relative"
                   overflow="hidden"
                 >
@@ -186,27 +217,26 @@ export default function ProposalGraphEditor({
                       selectedCircleId={selectedCircleId}
                     />
                   )}
-                  <GraphShortcutsButton
-                    position="absolute"
-                    top={2}
-                    right={2}
-                  />
+                  <GraphShortcutsButton position="absolute" top={2} right={2} />
                 </Box>
 
-                {/* Side panel: role (with header) + logs */}
+                {/* Side panel (desktop) / stacked below the graph (mobile):
+                    role then changes list. */}
                 <Flex
-                  w="420px"
-                  maxW="40%"
-                  borderLeftWidth="1px"
                   direction="column"
-                  minH={0}
+                  w={isSidePanel ? '420px' : 'full'}
+                  maxW={isSidePanel ? '40%' : undefined}
+                  borderLeftWidth={isSidePanel ? '1px' : undefined}
+                  borderTopWidth={isSidePanel ? undefined : '1px'}
+                  minH={isSidePanel ? 0 : undefined}
                 >
-                  <Box flex="1" minH={0}>
+                  <Box flex={isSidePanel ? '1' : undefined} minH={isSidePanel ? 0 : undefined}>
                     {selectedCircleId ? (
                       <CircleProvider circleId={selectedCircleId}>
                         <CircleContent
                           onlyRole
                           readOnly={readOnly}
+                          flowHeight={!isSidePanel}
                           onClose={() => setSelectedCircleId(undefined)}
                         />
                       </CircleProvider>
@@ -221,11 +251,13 @@ export default function ProposalGraphEditor({
                     )}
                   </Box>
 
+                  {/* Changes: scrolls within the panel on desktop, flows to its
+                      natural height when stacked. */}
                   <Box
                     borderTopWidth="1px"
                     p={4}
-                    maxH="35%"
-                    overflowY="auto"
+                    maxH={isSidePanel ? '35%' : undefined}
+                    overflowY={isSidePanel ? 'auto' : undefined}
                     flexShrink={0}
                   >
                     <Heading size="sm" mb={3}>
