@@ -1,5 +1,5 @@
 import { useOrgContext } from '@/org/contexts/OrgContext'
-import { OrgDataFragment, RoleFragment } from '@gql'
+import { Governance_Mode_Enum, OrgDataFragment, RoleFragment } from '@gql'
 import { applyEntitiesChanges } from '@rolebase/shared/helpers/log/applyEntitiesChanges'
 import { ActingLeader, OrgData } from '@rolebase/shared/model/OrgData'
 import { generateId } from '@rolebase/shared/helpers/generateId'
@@ -98,7 +98,17 @@ export default function useProposalDraft(
   const indexOrgData = useCallback(() => {
     const data = workingRef.current?.data
     orgDataRef.current = data
-      ? new OrgData({ ...data, actingLeader: actingLeaderRef.current })
+      ? new OrgData({
+          ...data,
+          // In a proposal the acting leader prepares changes with at least Agile
+          // rights, so Strict is relaxed to Agile. Free stays Free (its open
+          // edit rights must be preserved). Matches DraftOrgProvider's context.
+          governanceMode:
+            data.governanceMode === Governance_Mode_Enum.Free
+              ? Governance_Mode_Enum.Free
+              : Governance_Mode_Enum.Agile,
+          actingLeader: actingLeaderRef.current,
+        })
       : undefined
   }, [])
 

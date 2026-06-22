@@ -14,12 +14,18 @@ interface Props {
   children: ReactNode
 }
 
-// In-memory org data for the proposal editor. Governance is forced to Agile so
-// the current member can prepare changes (they are treated as a leader of the
-// thread's circle, baked into the draft's OrgData). Org identity (name, id,
-// subscription) is forwarded from the parent DbOrgProvider.
+// In-memory org data for the proposal editor. The current member prepares
+// changes as a leader of the thread's circle (baked into the draft's OrgData),
+// so Strict governance is relaxed to Agile while Free keeps its open edit
+// rights. Org identity (name, id, subscription) is forwarded from the parent
+// DbOrgProvider. Must stay in sync with the OrgData governanceMode set in
+// useProposalDraft.
 export default function DraftOrgProvider({ draft, children }: Props) {
   const parent = useOrgContext()
+  const governanceMode =
+    parent.governanceMode === Governance_Mode_Enum.Free
+      ? Governance_Mode_Enum.Free
+      : Governance_Mode_Enum.Agile
   const actions = useDraftOrgEditActions(draft)
 
   const dataRef = useRef<OrgData | undefined>(undefined)
@@ -33,7 +39,7 @@ export default function DraftOrgProvider({ draft, children }: Props) {
       orgId: parent.orgId,
       org: parent.org,
       subscription: parent.subscription,
-      governanceMode: Governance_Mode_Enum.Agile,
+      governanceMode,
       editable: true,
       isDraft: true,
       loading: !draft.ready,
@@ -48,6 +54,7 @@ export default function DraftOrgProvider({ draft, children }: Props) {
       draft.roleOverlays,
       draft.ready,
       draft.getData,
+      governanceMode,
       parent.orgId,
       parent.org,
       parent.subscription,
