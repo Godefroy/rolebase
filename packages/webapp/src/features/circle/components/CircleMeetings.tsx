@@ -61,7 +61,7 @@ export default function CircleMeetings({ circleId }: Props) {
       {loading && <Loading active size="md" />}
       <TextErrors errors={[error]} />
 
-      {meetings && <MeetingsList meetings={meetings} noModal />}
+      {meetings && <MeetingsList meetings={meetings} noModal highlightToday />}
 
       {isAdmin && meetings?.length === 0 && (
         <OnboardingVideo type={OnboardingVideoType.CreateMeeting} mt={10} />
