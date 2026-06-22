@@ -28,11 +28,20 @@ registerRestRoutes(async (app) => {
       const apiKeys = await adminRequest(GET_USER_ID, {
         value: apiKey,
       })
-      const userId = apiKeys.api_key[0]?.userId
+      const apiKeyRow = apiKeys.api_key[0]
+      const userId = apiKeyRow?.userId
       if (!userId) {
         res.status(403).send({ errors: [{ message: 'Invalid API key' }] })
         return
       }
+
+      // Record usage. Fire-and-forget so it never blocks or fails the request.
+      adminRequest(UPDATE_LAST_USED, {
+        id: apiKeyRow.id,
+        lastUsedAt: new Date().toISOString(),
+      }).catch((error) => {
+        console.error('Failed to update api_key lastUsedAt', error)
+      })
 
       try {
         const { query, variables, operationName } =
@@ -67,7 +76,19 @@ const GET_USER_ID = gql(`
     api_key(
       where: { value: { _eq: $value }, archivedAt: { _is_null: true } }
     ) {
+      id
       userId
+    }
+  }
+`)
+
+const UPDATE_LAST_USED = gql(`
+  mutation updateApiKeyLastUsed($id: uuid!, $lastUsedAt: timestamptz!) {
+    update_api_key_by_pk(
+      pk_columns: { id: $id }
+      _set: { lastUsedAt: $lastUsedAt }
+    ) {
+      id
     }
   }
 `)

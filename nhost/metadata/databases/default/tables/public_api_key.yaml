@@ -22,6 +22,7 @@ select_permissions:
         - archivedAt
         - createdAt
         - id
+        - lastUsedAt
         - name
         - userId
         - value

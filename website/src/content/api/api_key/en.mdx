@@ -14,6 +14,7 @@ category: 'other'
 | `name` | `String` | Descriptive name for the API key |
 | `value` | `String` | The actual API key value (auto-generated, shown once on creation) |
 | `createdAt` | `Timestamp` | When the API key was created (defaults to current timestamp) |
+| `lastUsedAt` | `Timestamp` | When the API key was last used to authenticate; null if never used |
 | `archivedAt` | `Timestamp` | When the API key was archived; null if active |
 
 ## Relationships
