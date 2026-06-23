@@ -25,7 +25,7 @@
 }
 
 .chakra-ui-light {
-  --fc-neutral-bg-color: var(--chakra-colors-gray-100);
+  --fc-neutral-bg-color: var(--chakra-colors-menulight);
   --fc-neutral-text-color: var(--chakra-colors-gray-500);
   --fc-border-color: var(--chakra-colors-gray-200);
   --fc-border-subtle-color: var(--chakra-colors-gray-100);
@@ -44,7 +44,7 @@
 }
 
 .chakra-ui-dark {
-  --fc-neutral-bg-color: var(--chakra-colors-gray-700);
+  --fc-neutral-bg-color: var(--chakra-colors-menudark);
   --fc-neutral-text-color: var(--chakra-colors-gray-500);
   --fc-border-color: var(--chakra-colors-gray-700);
   --fc-border-subtle-color: var(--chakra-colors-gray-800);
