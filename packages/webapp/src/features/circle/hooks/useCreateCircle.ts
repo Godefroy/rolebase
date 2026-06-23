@@ -3,6 +3,7 @@
 import useCreateLog from '@/log/hooks/useCreateLog'
 import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
+  Role_Insert_Input,
   RoleFragment,
   RoleSummaryFragment,
   useCreateCircleMutation,
@@ -23,7 +24,10 @@ export default function useCreateCircle() {
   return useCallback(
     async (
       parentId: string,
-      roleOrName: RoleSummaryFragment | string
+      roleOrName: RoleSummaryFragment | string,
+      // Extra role attributes applied when creating the role from a name
+      // (e.g. parentLink for a representation role).
+      roleValues?: Omit<Role_Insert_Input, 'orgId' | 'name'>
     ): Promise<string | undefined> => {
       if (!orgId) return
 
@@ -31,7 +35,7 @@ export default function useCreateCircle() {
       let role: RoleFragment | RoleSummaryFragment
       if (typeof roleOrName === 'string') {
         const { data } = await createRole({
-          variables: { values: { orgId, name: roleOrName } },
+          variables: { values: { ...roleValues, orgId, name: roleOrName } },
         })
         role = data?.insert_role_one!
       } else {

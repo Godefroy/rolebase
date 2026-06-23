@@ -25,6 +25,7 @@ import React, { useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { CreateIcon } from 'src/icons'
+import OnboardingWizardModal from '@/onboarding/wizard/OnboardingWizardModal'
 import OrgCreateModal from '../modals/OrgCreateModal'
 
 export default function OrgsPage() {
@@ -65,11 +66,14 @@ export default function OrgsPage() {
   // Create modal
   const createModal = useDisclosure()
 
+  // New non-invited users (no org) get the full onboarding wizard
+  const showOnboarding = !!orgs && orgs.length === 0
+
   // Redirect to an org at mount if possible
   useEffect(() => {
     if (!orgs) return
     if (orgs.length === 0) {
-      createModal.onOpen()
+      // Onboarding wizard is rendered below instead of auto-opening a modal
       return
     }
 
@@ -90,7 +94,9 @@ export default function OrgsPage() {
       navigate(`${getOrgPath(orgs[0])}/`)
       return
     }
-  }, [!!orgs])
+    // Re-run when the org list changes so that a just-created first org (e.g.
+    // from onboarding) redirects in instead of leaving the user on "/".
+  }, [orgs])
 
   return (
     <ScrollableLayout
@@ -142,6 +148,8 @@ export default function OrgsPage() {
         {createModal.isOpen && (
           <OrgCreateModal isOpen onClose={createModal.onClose} />
         )}
+
+        {showOnboarding && <OnboardingWizardModal />}
       </Container>
     </ScrollableLayout>
   )

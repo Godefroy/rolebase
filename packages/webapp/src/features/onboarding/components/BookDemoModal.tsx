@@ -4,6 +4,7 @@ import useUserMetadata from '@/user/hooks/useUserMetadata'
 import { Button, CloseButton, Heading, Text } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import useOnboardingActive from '../hooks/useOnboardingActive'
 
 const BOOK_DEMO_URL =
   'https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3HO94pvxEZhJHdFj9De9aQVxQysIRmZLG3ZohdET30avcVhkhCe3yrKRNLwjW8SCtr_qLaAwWe'
@@ -12,6 +13,7 @@ export default function BookDemoModal() {
   const { t, i18n } = useTranslation()
   const { metadata, setMetadata } = useUserMetadata()
   const isOwner = useOrgOwner()
+  const onboardingActive = useOnboardingActive()
   const [closed, setClosed] = useState(false)
 
   const handleClose = () => {
@@ -26,7 +28,9 @@ export default function BookDemoModal() {
     handleClose()
   }
 
-  const showModal = isOwner && !metadata?.bookDemoInfo && !closed
+  // Never show on top of another onboarding flow (wizard / org setup)
+  const showModal =
+    isOwner && !metadata?.bookDemoInfo && !closed && !onboardingActive
 
   return (
     <BottomFixedModal

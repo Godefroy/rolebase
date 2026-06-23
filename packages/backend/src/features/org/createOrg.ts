@@ -1,5 +1,4 @@
 import { nameSchema } from '@rolebase/shared/schemas'
-import { getSeedRoles } from '@rolebase/shared/seeds/roles'
 import { TRPCError } from '@trpc/server'
 import * as yup from 'yup'
 import { gql } from '../../gql'
@@ -50,9 +49,8 @@ export default authedProcedure
         roleId,
       })
 
-      // Create seed roles
-      const roles = getSeedRoles(orgId)
-      await adminRequest(CREATE_ROLES, { roles })
+      // Base roles and meeting templates are seeded client-side during
+      // onboarding (OrgSetupModal), based on the chosen organizational model.
 
       return orgId
     } catch (error) {
@@ -94,15 +92,6 @@ const CREATE_ROLE = gql(`
       name: $name
     }) {
       id
-    }
-  }`)
-
-const CREATE_ROLES = gql(`
-  mutation createRoles($roles: [role_insert_input!]!) {
-    insert_role(objects: $roles) {
-      returning {
-        id
-      }
     }
   }`)
 

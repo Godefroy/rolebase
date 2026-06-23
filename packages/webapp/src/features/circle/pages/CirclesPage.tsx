@@ -10,9 +10,8 @@ import { CirclesGraphViews } from '@/graph/types'
 import { SidebarContext } from '@/layout/contexts/SidebarContext'
 import MemberContent from '@/member/components/MemberContent'
 import { useOrgContext } from '@/org/contexts/OrgContext'
-import useUserMetadata from '@/user/hooks/useUserMetadata'
 import { useNavigateOrg } from '@/org/hooks/useNavigateOrg'
-import { Box, Text, useBreakpointValue, useColorMode } from '@chakra-ui/react'
+import { Box, useBreakpointValue, useColorMode } from '@chakra-ui/react'
 import React, {
   useCallback,
   useContext,
@@ -25,7 +24,6 @@ import { useTranslation } from 'react-i18next'
 import CircleContent from '../components/CircleContent'
 import CirclesGraphOptions from '../components/CirclesGraphOptions'
 import { CircleProvider } from '../contexts/CIrcleContext'
-import BottomFixedModal from '@/common/atoms/BottomFixedModal'
 
 type CirclesPageParams = {
   circleId: string
@@ -42,7 +40,6 @@ enum Panels {
 export default function CirclesPage() {
   const { t } = useTranslation()
   const sidebarContext = useContext(SidebarContext)
-  const { metadata } = useUserMetadata()
 
   // On desktop (lg+) the panel is a fixed side panel and the page does not
   // scroll. Below lg the graph and panel stack vertically and the whole page
@@ -192,27 +189,6 @@ export default function CirclesPage() {
           sidebarContext?.minimize.isOpen && !sidebarContext?.isMobile ? 12 : 2
         }
       />
-
-      {/* Onboarding */}
-      <BottomFixedModal
-        isOpen={
-          circles?.length === 1 &&
-          panel === Panels.None &&
-          metadata?.bookDemoInfo === true
-        }
-        width={450}
-        textAlign="center"
-        gap={3}
-        borderColor="yellow.800"
-        borderWidth="4px"
-        _dark={{
-          bg: 'menudark',
-          borderColor: 'yellow.800',
-        }}
-      >
-        <Text>{t('CirclesPage.empty')}</Text>
-        <Text fontWeight="bold">{t('CirclesPage.clickCircle')}</Text>
-      </BottomFixedModal>
     </GraphProvider>
   )
 }

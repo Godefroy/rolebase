@@ -8,8 +8,9 @@ import useRemoveCircleLink from '@/circle/hooks/useRemoveCircleLink'
 import useRemoveCircleMember from '@/circle/hooks/useRemoveCircleMember'
 import useRestoreCircle from '@/circle/hooks/useRestoreCircle'
 import useCreateMember from '@/member/hooks/useCreateMember'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import useUpdateRole from '@/role/hooks/useUpdateRole'
-import { useUpdateMemberMutation } from '@gql'
+import { useCreateRoleMutation, useUpdateMemberMutation } from '@gql'
 import { useCallback, useMemo } from 'react'
 import { trpc } from 'src/trpc'
 import { OrgEditActions } from '../contexts/OrgContext'
@@ -17,6 +18,7 @@ import { OrgEditActions } from '../contexts/OrgContext'
 // Database-backed implementation of OrgEditActions (org page).
 // Each method wraps an existing hook: behavior is unchanged.
 export default function useDbOrgEditActions(): OrgEditActions {
+  const { orgId } = useOrgContext()
   const moveCircle = useMoveCircle()
   const copyCircle = useCopyCircle()
   const archiveCircle = useArchiveCircle()
@@ -24,6 +26,18 @@ export default function useDbOrgEditActions(): OrgEditActions {
   const createCircle = useCreateCircle()
   const updateRole = useUpdateRole()
   const addCircleMember = useAddCircleMember()
+
+  const [createRoleMutation] = useCreateRoleMutation()
+  const createRole = useCallback<OrgEditActions['createRole']>(
+    async (values) => {
+      if (!orgId) return
+      const { data } = await createRoleMutation({
+        variables: { values: { ...values, orgId } },
+      })
+      return data?.insert_role_one ?? undefined
+    },
+    [orgId, createRoleMutation]
+  )
   const removeCircleMember = useRemoveCircleMember()
   const addCircleLink = useAddCircleLink()
   const removeCircleLink = useRemoveCircleLink()
@@ -56,6 +70,7 @@ export default function useDbOrgEditActions(): OrgEditActions {
       archiveCircle,
       restoreCircle,
       createCircle,
+      createRole,
       updateRole,
       updateMember,
       createMember,
@@ -72,6 +87,7 @@ export default function useDbOrgEditActions(): OrgEditActions {
       archiveCircle,
       restoreCircle,
       createCircle,
+      createRole,
       updateRole,
       updateMember,
       createMember,

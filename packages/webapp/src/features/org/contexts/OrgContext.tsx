@@ -4,6 +4,7 @@ import {
   OrgDataFragment,
   OrgFragment,
   OrgSubscriptionFragment,
+  Role_Insert_Input,
   RoleFragment,
   RoleSummaryFragment,
 } from '@gql'
@@ -28,8 +29,13 @@ export interface OrgEditActions {
   restoreCircle(circleId: string): Promise<void>
   createCircle(
     parentId: string,
-    roleOrName: RoleSummaryFragment | string
+    roleOrName: RoleSummaryFragment | string,
+    roleValues?: Omit<Role_Insert_Input, 'orgId' | 'name'>
   ): Promise<string | undefined>
+  // Create a standalone role (not attached to a circle). Backend only.
+  createRole(
+    values: Omit<Role_Insert_Input, 'orgId'>
+  ): Promise<RoleFragment | undefined>
   updateRole(role: RoleFragment, values: Partial<RoleFragment>): Promise<void>
   // Edit a member's own fields (name, description…). Readonly in draft mode:
   // a proposal changes the org chart, not member profiles.
@@ -88,6 +94,7 @@ export const noopOrgEditActions: OrgEditActions = {
   archiveCircle: noop,
   restoreCircle: noop,
   createCircle: noop,
+  createRole: noop,
   updateRole: noop,
   updateMember: noop,
   createMember: noop,

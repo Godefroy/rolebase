@@ -13285,6 +13285,7 @@ export type Org = {
   news: Array<News>;
   /** An aggregate relationship */
   news_aggregate: News_Aggregate;
+  onboardingOrgType?: Maybe<Scalars['String']['output']>;
   /** An object relationship */
   org_subscription?: Maybe<Org_Subscription>;
   /** An array relationship */
@@ -13667,6 +13668,7 @@ export type Org_Bool_Exp = {
   name?: InputMaybe<String_Comparison_Exp>;
   news?: InputMaybe<News_Bool_Exp>;
   news_aggregate?: InputMaybe<News_Aggregate_Bool_Exp>;
+  onboardingOrgType?: InputMaybe<String_Comparison_Exp>;
   org_subscription?: InputMaybe<Org_Subscription_Bool_Exp>;
   roles?: InputMaybe<Role_Bool_Exp>;
   roles_aggregate?: InputMaybe<Role_Aggregate_Bool_Exp>;
@@ -13921,6 +13923,7 @@ export type Org_Insert_Input = {
   members?: InputMaybe<Member_Arr_Rel_Insert_Input>;
   name?: InputMaybe<Scalars['String']['input']>;
   news?: InputMaybe<News_Arr_Rel_Insert_Input>;
+  onboardingOrgType?: InputMaybe<Scalars['String']['input']>;
   org_subscription?: InputMaybe<Org_Subscription_Obj_Rel_Insert_Input>;
   roles?: InputMaybe<Role_Arr_Rel_Insert_Input>;
   shareMembers?: InputMaybe<Scalars['Boolean']['input']>;
@@ -13942,6 +13945,7 @@ export type Org_Max_Fields = {
   iconFileId?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   name?: Maybe<Scalars['String']['output']>;
+  onboardingOrgType?: Maybe<Scalars['String']['output']>;
   slug?: Maybe<Scalars['String']['output']>;
 };
 
@@ -13956,6 +13960,7 @@ export type Org_Min_Fields = {
   iconFileId?: Maybe<Scalars['uuid']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   name?: Maybe<Scalars['String']['output']>;
+  onboardingOrgType?: Maybe<Scalars['String']['output']>;
   slug?: Maybe<Scalars['String']['output']>;
 };
 
@@ -14005,6 +14010,7 @@ export type Org_Order_By = {
   members_aggregate?: InputMaybe<Member_Aggregate_Order_By>;
   name?: InputMaybe<Order_By>;
   news_aggregate?: InputMaybe<News_Aggregate_Order_By>;
+  onboardingOrgType?: InputMaybe<Order_By>;
   org_subscription?: InputMaybe<Org_Subscription_Order_By>;
   roles_aggregate?: InputMaybe<Role_Aggregate_Order_By>;
   shareMembers?: InputMaybe<Order_By>;
@@ -14041,6 +14047,8 @@ export enum Org_Select_Column {
   /** column name */
   Name = 'name',
   /** column name */
+  OnboardingOrgType = 'onboardingOrgType',
+  /** column name */
   ShareMembers = 'shareMembers',
   /** column name */
   ShareOrg = 'shareOrg',
@@ -14059,6 +14067,7 @@ export type Org_Set_Input = {
   iconFileId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  onboardingOrgType?: InputMaybe<Scalars['String']['input']>;
   shareMembers?: InputMaybe<Scalars['Boolean']['input']>;
   shareOrg?: InputMaybe<Scalars['Boolean']['input']>;
   slug?: InputMaybe<Scalars['String']['input']>;
@@ -14083,6 +14092,7 @@ export type Org_Stream_Cursor_Value_Input = {
   iconFileId?: InputMaybe<Scalars['uuid']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  onboardingOrgType?: InputMaybe<Scalars['String']['input']>;
   shareMembers?: InputMaybe<Scalars['Boolean']['input']>;
   shareOrg?: InputMaybe<Scalars['Boolean']['input']>;
   slug?: InputMaybe<Scalars['String']['input']>;
@@ -14328,6 +14338,8 @@ export enum Org_Update_Column {
   Id = 'id',
   /** column name */
   Name = 'name',
+  /** column name */
+  OnboardingOrgType = 'onboardingOrgType',
   /** column name */
   ShareMembers = 'shareMembers',
   /** column name */

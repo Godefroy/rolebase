@@ -22,7 +22,7 @@ import { getTimeZone } from '@utils/dates'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 import { nhost } from 'src/nhost'
 
 import * as yup from 'yup'
@@ -47,6 +47,7 @@ export default function SignupForm({ defaultEmail, onStepChange }: Props) {
     i18n: { language },
   } = useTranslation()
   const navigate = useNavigate()
+  const location = useLocation()
   const toast = useToast()
 
   const [isLoading, setIsLoading] = useState(false)
@@ -77,7 +78,13 @@ export default function SignupForm({ defaultEmail, onStepChange }: Props) {
         await nhost.auth.sendVerificationEmail({ email: user.email })
       }
 
-      navigate('/')
+      // When signing up from an invitation link, stay on the invitation page so
+      // the user joins the org (and skips onboarding) instead of landing on "/".
+      if (location.pathname.includes('/invitation')) {
+        navigate(location.pathname + location.search)
+      } else {
+        navigate('/')
+      }
     } catch (error: any) {
       toast({
         title: error?.response?.data || error?.message || t('common.error'),

@@ -150,6 +150,7 @@ update_permissions:
         - icon
         - iconFileId
         - name
+        - onboardingOrgType
         - shareMembers
         - shareOrg
       filter:

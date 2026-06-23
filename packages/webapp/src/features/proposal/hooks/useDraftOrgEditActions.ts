@@ -281,6 +281,11 @@ export default function useDraftOrgEditActions(
         return newCircleId
       },
 
+      // Standalone role creation is not supported in proposal drafts.
+      async createRole() {
+        return undefined
+      },
+
       async updateRole(role, values) {
         let { prevData, newData } = getEntityChanges(role, values)
         if (Object.keys(prevData).length === 0 && Object.keys(newData).length === 0) {

@@ -204,15 +204,12 @@ export default function OtpForm({ defaultEmail, onStepChange }: Props) {
           color="gray.500"
           textAlign="center"
           sx={{ a: { textDecoration: 'underline' } }}
-        >
-          <div
-            dangerouslySetInnerHTML={{
-              __html: t('OtpForm.terms', {
-                termsAndPrivacy: t('common.termsAndPrivacy'),
-              }),
-            }}
-          />
-        </Text>
+          dangerouslySetInnerHTML={{
+            __html: t('OtpForm.terms', {
+              termsAndPrivacy: t('common.termsAndPrivacy'),
+            }),
+          }}
+        />
 
         {onStepChange && (
           <Text fontSize="sm" color="gray.500" _dark={{ color: 'gray.400' }}>

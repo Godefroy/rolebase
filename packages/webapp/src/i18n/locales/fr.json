@@ -1619,7 +1619,10 @@
       "Blocked": "Bloqué",
       "Closed": "Terminé",
       "NotClosed": "Non terminé"
-    }
+    },
+    "back": "Retour",
+    "next": "Suivant",
+    "continue": "Continuer"
   },
   "useCirclePicker": {
     "pickCircle": "Sélectionner dans l'organigramme"
@@ -1632,5 +1635,164 @@
   },
   "useUpdateTaskStatus": {
     "toast": "Tâche marquée comme \"{{status}}\""
+  },
+  "OrgTypeSelect": {
+    "Classic": "Classique",
+    "Classic_desc": "Organisation hiérarchique classique, avec des responsables et des réunions d'équipe régulières.",
+    "HolacracyV5": "Holacratie (v5)",
+    "HolacracyV5_desc": "Gouvernance par cercles (Constitution v5) : Leader, Représentant, et réunions de triage.",
+    "HolacracyV4": "Holacratie (v4)",
+    "HolacracyV4_desc": "Gouvernance par cercles (Constitution v4) : Premier Lien, Second Lien, et réunions de triage.",
+    "Sociocracy": "Sociocratie",
+    "Sociocracy_desc": "Gouvernance par consentement, avec un leader, un délégué et des réunions de politique."
+  },
+  "OrgSetupModal": {
+    "heading": "Configurez votre organisation",
+    "subheading": "Choisissez un modèle d'organisation. Nous créerons les rôles de base et les modèles de réunion adaptés. Vous pourrez tout modifier ensuite.",
+    "orgType": "Modèle d'organisation",
+    "roles": {
+      "heading": "Quels sont les rôles principaux ?",
+      "help": "Ajoutez les rôles principaux de {{orgName}} et indiquez qui en est responsable. Vous pourrez tout modifier ensuite.",
+      "customPlaceholder": "Ajouter un rôle..."
+    },
+    "responsible": "Responsable",
+    "selectResponsible": "Choisir un responsable",
+    "participants": "Autres participants",
+    "addParticipant": "Ajouter un participant",
+    "avatars": {
+      "heading": "Ajoutez des photos",
+      "help": "Ajoutez une photo pour chaque membre afin de rendre l'organigramme plus vivant.",
+      "skip": "Passer cette étape"
+    },
+    "ready": "Votre organigramme est prêt"
+  },
+  "Onboarding": {
+    "finish": "Terminer",
+    "username": {
+      "heading": "Bienvenue ! Quel est votre nom ?",
+      "name": "Prénom et nom"
+    },
+    "orgName": {
+      "heading": "Créez votre organisation"
+    },
+    "roles": {
+      "manager": {
+        "name": "Responsable",
+        "purpose": "Mener l'équipe vers ses objectifs.",
+        "domain": "Organisation du travail de l'équipe",
+        "accountabilities": "- Définir les objectifs et les priorités de l'équipe\n- Organiser le travail et répartir les responsabilités\n- Accompagner et faire grandir les membres de l'équipe"
+      },
+      "representative": {
+        "name": "Représentant",
+        "purpose": "Représenter l'équipe auprès de l'organisation.",
+        "domain": "",
+        "accountabilities": "- Faire remonter les besoins et retours de l'équipe\n- Restituer les décisions à l'équipe"
+      },
+      "circleLead": {
+        "name": "Leader",
+        "purpose": "Porter la raison d'être globale du cercle.",
+        "domain": "Affectation des rôles du cercle",
+        "accountabilities": "- Affecter les membres aux rôles du cercle\n- Définir les stratégies qui orientent les priorités\n- Arbitrer la valeur relative des actions en cas de conflit de priorités\n- Porter la raison d'être et les redevabilités non couvertes par d'autres rôles"
+      },
+      "circleRep": {
+        "name": "Représentant",
+        "purpose": "Faire remonter et résoudre, dans le cercle parent, les tensions qui le concernent.",
+        "domain": "",
+        "accountabilities": "- Comprendre les tensions exprimées par les membres du cercle\n- Discerner celles qui relèvent du cercle parent\n- Traiter ces tensions dans le cercle parent pour lever les contraintes sur le cercle"
+      },
+      "leadLink": {
+        "name": "Premier Lien",
+        "purpose": "Porter et exprimer la raison d'être globale du cercle.",
+        "domain": "Les domaines du cercle",
+        "accountabilities": "- Affecter les membres aux rôles et révoquer les affectations\n- Évaluer régulièrement l'adéquation des affectations et donner du feedback\n- Définir les priorités et les stratégies du cercle\n- Identifier et lever les obstacles à la raison d'être du cercle"
+      },
+      "repLink": {
+        "name": "Second Lien",
+        "purpose": "Traiter et transmettre les tensions des rôles du cercle vers le cercle supérieur.",
+        "domain": "",
+        "accountabilities": "- Comprendre les tensions des membres du cercle\n- Chercher d'abord à les résoudre au sein du cercle\n- Transmettre les tensions non résolues au cercle supérieur via la gouvernance"
+      },
+      "leader": {
+        "name": "Leader",
+        "purpose": "Coordonner les opérations du cercle pour atteindre son objectif.",
+        "domain": "Les opérations quotidiennes du cercle",
+        "accountabilities": "- Coordonner le travail du cercle (quoi, par qui, comment l'ensemble s'articule)\n- Prendre les décisions opérationnelles dans le cadre des politiques\n- Porter la perspective du cercle parent dans le cercle (lien descendant)"
+      },
+      "delegate": {
+        "name": "Délégué",
+        "purpose": "Représenter le cercle dans le cercle parent.",
+        "domain": "",
+        "accountabilities": "- Transmettre au cercle parent ce qui doit l'être (lien ascendant)\n- Participer aux décisions du cercle parent"
+      },
+      "secretary": {
+        "name": "Secrétaire",
+        "purpose": "Stabiliser les enregistrements et le rythme des réunions du cercle.",
+        "domain": "Les enregistrements du cercle (gouvernance et comptes-rendus)",
+        "accountabilities": "- Planifier les réunions du cercle\n- Capturer et publier les comptes-rendus et les décisions\n- Tenir à jour les enregistrements de gouvernance"
+      },
+      "facilitator": {
+        "name": "Facilitateur",
+        "purpose": "Veiller au bon déroulement des réunions et au respect du processus de décision.",
+        "domain": "",
+        "accountabilities": "- Faciliter les réunions de gouvernance et opérationnelles du cercle\n- Préparer l'ordre du jour et guider le processus de décision\n- Déclencher les élections des rôles élus du cercle"
+      }
+    },
+    "meetings": {
+      "teamWeekly": "Réunion d'équipe hebdomadaire",
+      "retrospective": "Rétrospective mensuelle",
+      "tactical": "Réunion de triage",
+      "governance": "Réunion de gouvernance",
+      "operational": "Réunion opérationnelle",
+      "policy": "Réunion de politique"
+    },
+    "role": {
+      "heading": "Quel est votre rôle ?"
+    },
+    "objective": {
+      "heading": "Qu'aimeriez-vous accomplir avec Rolebase ?"
+    },
+    "source": {
+      "heading": "Comment avez-vous connu Rolebase ?"
+    },
+    "otherPlaceholder": "Précisez...",
+    "options": {
+      "role": {
+        "executive": "Dirigeant·e",
+        "manager": "Manager",
+        "hr": "Ressources humaines",
+        "coach": "Coach / Consultant·e",
+        "operations": "Opérations",
+        "other": "Autre"
+      },
+      "objective": {
+        "clarify_roles": "Clarifier les rôles et responsabilités",
+        "structure_org": "Structurer l'organisation",
+        "governance": "Mettre en place une gouvernance",
+        "meetings": "Améliorer les réunions",
+        "collaboration": "Améliorer la collaboration",
+        "other": "Autre"
+      },
+      "source": {
+        "search": "Moteur de recherche",
+        "social": "Réseaux sociaux",
+        "word_of_mouth": "Bouche à oreille",
+        "blog": "Article de blog",
+        "ai": "Assistant IA",
+        "event": "Événement ou conférence",
+        "other": "Autre"
+      }
+    },
+    "roleExamples": {
+      "direction": "Direction",
+      "tech": "Technique",
+      "production": "Production",
+      "product": "Produit",
+      "business": "Business",
+      "marketing": "Marketing",
+      "sales": "Ventes",
+      "admin": "Administration",
+      "finance": "Finance",
+      "hr": "Ressources humaines"
+    }
   }
 }

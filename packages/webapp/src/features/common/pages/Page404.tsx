@@ -1,6 +1,8 @@
 import { Button, Container, Heading, VStack } from '@chakra-ui/react'
+import { useStoreState } from '@store/hooks'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { Navigate } from 'react-router'
 import { ChevronLeftIcon } from 'src/icons'
 import { Title } from '../atoms/Title'
 
@@ -10,6 +12,13 @@ interface Props {
 
 export default function Page404({ to }: Props) {
   const { t } = useTranslation()
+  const orgs = useStoreState((state) => state.orgs.entries)
+
+  // A user with no org reaching a dead/forbidden link (e.g. signed up from a
+  // link they can't access) should go through onboarding instead of a 404.
+  if (orgs && orgs.length === 0) {
+    return <Navigate to="/" replace />
+  }
 
   return (
     <Container maxW="sm" mt="100px">

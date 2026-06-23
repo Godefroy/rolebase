@@ -7,4 +7,8 @@ export interface UserMetadata {
   digestRrule?: string | false
   // Date of last digest
   digestLastDate?: string
+  // Onboarding profile answers (stats)
+  onboardingRole?: string
+  onboardingObjective?: string
+  onboardingSource?: string
 }

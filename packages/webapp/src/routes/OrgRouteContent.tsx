@@ -12,6 +12,7 @@ import MeetingPage from '@/meeting/pages/MeetingPage'
 import MeetingRecurringPage from '@/meeting/pages/MeetingRecurringPage'
 import { useSubscribeCurrentMeeting } from '@/member/hooks/useSubscribeCurrentMeeting'
 import MembersPage from '@/member/pages/MembersPage'
+import OrgSetupTrigger from '@/onboarding/components/OrgSetupTrigger'
 import { useOrgContext } from '@/org/contexts/OrgContext'
 import ExportPage from '@/org/pages/ExportPage'
 import OrgSettingsPage from '@/org/pages/OrgSettingsPage'
@@ -46,35 +47,38 @@ export default function OrgRouteContent() {
       {!org && !loading ? (
         <Page404 />
       ) : (
-        <Routes>
-          <Route index element={<Navigate to="news" replace />} />
-          <Route path="roles" element={<CirclesPage />} />
-          <Route path="news" element={<DashboardPage />} />
-          <Route path="members" element={<MembersPage />} />
-          <Route path="threads/:threadId" element={<ThreadPage />} />
-          <Route path="threads" element={<ThreadsPage />} />
-          <Route path="meetings/:meetingId" element={<MeetingPage />} />
-          <Route
-            path="meetings-recurring/:id"
-            element={<MeetingRecurringPage />}
-          />
-          <Route path="subscription" element={<SubscriptionPage />} />
-          <Route path="meetings" element={<MeetingsPage />} />
-          <Route path="tasks/:taskId" element={<TaskPage />} />
-          <Route path="tasks" element={<TasksPage />} />
-          <Route path="decisions/:decisionId" element={<DecisionPage />} />
-          <Route path="logs" element={<LogsPage />} />
-          <Route path="export-circle" element={<CircleExportPage />} />
-          <Route path="settings" element={<SettingsLayout />}>
-            <Route path="org" element={<OrgSettingsPage />} />
-            <Route path="apps" element={<AppsPage />} />
-            <Route path="api-keys" element={<ApiPage />} />
-            <Route path="export" element={<ExportPage />} />
-            <Route path="credentials" element={<CredentialsSettingsPage />} />
-            <Route path="notifications" element={<NotificationsSettingsPage />} />
-          </Route>
-          <Route path="*" element={<Page404 />} />
-        </Routes>
+        <>
+          <OrgSetupTrigger />
+          <Routes>
+            <Route index element={<Navigate to="news" replace />} />
+            <Route path="roles" element={<CirclesPage />} />
+            <Route path="news" element={<DashboardPage />} />
+            <Route path="members" element={<MembersPage />} />
+            <Route path="threads/:threadId" element={<ThreadPage />} />
+            <Route path="threads" element={<ThreadsPage />} />
+            <Route path="meetings/:meetingId" element={<MeetingPage />} />
+            <Route
+              path="meetings-recurring/:id"
+              element={<MeetingRecurringPage />}
+            />
+            <Route path="subscription" element={<SubscriptionPage />} />
+            <Route path="meetings" element={<MeetingsPage />} />
+            <Route path="tasks/:taskId" element={<TaskPage />} />
+            <Route path="tasks" element={<TasksPage />} />
+            <Route path="decisions/:decisionId" element={<DecisionPage />} />
+            <Route path="logs" element={<LogsPage />} />
+            <Route path="export-circle" element={<CircleExportPage />} />
+            <Route path="settings" element={<SettingsLayout />}>
+              <Route path="org" element={<OrgSettingsPage />} />
+              <Route path="apps" element={<AppsPage />} />
+              <Route path="api-keys" element={<ApiPage />} />
+              <Route path="export" element={<ExportPage />} />
+              <Route path="credentials" element={<CredentialsSettingsPage />} />
+              <Route path="notifications" element={<NotificationsSettingsPage />} />
+            </Route>
+            <Route path="*" element={<Page404 />} />
+          </Routes>
+        </>
       )}
     </Suspense>
   )

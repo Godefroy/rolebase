@@ -1586,7 +1586,10 @@
       "Blocked": "Blocked",
       "Closed": "Done",
       "NotClosed": "Not done"
-    }
+    },
+    "back": "Back",
+    "next": "Next",
+    "continue": "Continue"
   },
   "useCirclePicker": {
     "pickCircle": "Select in org chart"
@@ -1630,6 +1633,165 @@
     "unknown": {
       "heading": "File not supported, but we can help you",
       "text": "The format of your file is not supported by our import system at this time. \nA request has been sent to support to help you within 12 hours."
+    }
+  },
+  "OrgTypeSelect": {
+    "Classic": "Classic",
+    "Classic_desc": "Classic hierarchical organization, with managers and regular team meetings.",
+    "HolacracyV5": "Holacracy (v5)",
+    "HolacracyV5_desc": "Circle-based governance (Constitution v5): Leader, Representative, and tactical meetings.",
+    "HolacracyV4": "Holacracy (v4)",
+    "HolacracyV4_desc": "Circle-based governance (Constitution v4): Lead Link, Rep Link, and tactical meetings.",
+    "Sociocracy": "Sociocracy",
+    "Sociocracy_desc": "Consent-based governance, with a leader, a delegate and policy meetings."
+  },
+  "OrgSetupModal": {
+    "heading": "Set up your organization",
+    "subheading": "Choose an organizational model. We'll create the matching base roles and meeting templates. You can change everything afterwards.",
+    "orgType": "Organizational model",
+    "roles": {
+      "heading": "What are the main roles?",
+      "help": "Add the main roles of {{orgName}} and who is responsible for each. You can change everything later.",
+      "customPlaceholder": "Add a role..."
+    },
+    "responsible": "Responsible",
+    "selectResponsible": "Select a responsible",
+    "participants": "Other participants",
+    "addParticipant": "Add participant",
+    "avatars": {
+      "heading": "Add photos",
+      "help": "Add a photo for each member to bring the org chart to life.",
+      "skip": "Skip this step"
+    },
+    "ready": "Your org chart is ready"
+  },
+  "Onboarding": {
+    "finish": "Finish",
+    "username": {
+      "heading": "Welcome! What's your name?",
+      "name": "Full name"
+    },
+    "orgName": {
+      "heading": "Create your organization"
+    },
+    "roles": {
+      "manager": {
+        "name": "Manager",
+        "purpose": "Lead the team toward its objectives.",
+        "domain": "Organization of the team's work",
+        "accountabilities": "- Setting the team's objectives and priorities\n- Organizing work and assigning responsibilities\n- Supporting and developing team members"
+      },
+      "representative": {
+        "name": "Representative",
+        "purpose": "Represent the team to the broader organization.",
+        "domain": "",
+        "accountabilities": "- Relaying the team's needs and feedback upward\n- Bringing decisions back to the team"
+      },
+      "circleLead": {
+        "name": "Leader",
+        "purpose": "Hold the overall purpose of the circle.",
+        "domain": "Role assignments within the circle",
+        "accountabilities": "- Assigning members to the circle's roles\n- Defining strategies to guide prioritization\n- Judging the relative value of efforts to resolve priority conflicts\n- Holding the purpose and accountabilities not covered by other roles"
+      },
+      "circleRep": {
+        "name": "Representative",
+        "purpose": "Channel out and resolve, in the broader circle, the tensions that concern this circle.",
+        "domain": "",
+        "accountabilities": "- Understanding tensions conveyed by the circle's members\n- Discerning which ones belong in the broader circle\n- Processing those tensions in the broader circle to remove constraints on the circle"
+      },
+      "leadLink": {
+        "name": "Lead Link",
+        "purpose": "Hold and express the overall purpose of the circle.",
+        "domain": "The circle's domains",
+        "accountabilities": "- Assigning members to roles and removing assignments\n- Regularly evaluating role fit and giving feedback\n- Defining the circle's priorities and strategies\n- Identifying and removing blockages to the circle's purpose"
+      },
+      "repLink": {
+        "name": "Rep Link",
+        "purpose": "Process and convey tensions from the circle's roles to its super-circle.",
+        "domain": "",
+        "accountabilities": "- Understanding tensions from the circle's members\n- Seeking to resolve them within the circle first\n- Conveying unresolved tensions to the super-circle through governance"
+      },
+      "leader": {
+        "name": "Leader",
+        "purpose": "Coordinate the circle's operations to achieve its aim.",
+        "domain": "The circle's day-to-day operations",
+        "accountabilities": "- Coordinating the circle's work (what, by whom, how it fits together)\n- Making operational decisions within policy\n- Carrying the parent circle's perspective into the circle (top-down link)"
+      },
+      "delegate": {
+        "name": "Delegate",
+        "purpose": "Represent the circle in the parent circle.",
+        "domain": "",
+        "accountabilities": "- Conveying to the parent circle what needs to be communicated (bottom-up link)\n- Taking part in the parent circle's decisions"
+      },
+      "secretary": {
+        "name": "Secretary",
+        "purpose": "Stabilize the circle's records and meeting cadence.",
+        "domain": "The circle's records (governance and meeting notes)",
+        "accountabilities": "- Scheduling the circle's meetings\n- Capturing and publishing meeting notes and decisions\n- Keeping governance records up to date"
+      },
+      "facilitator": {
+        "name": "Facilitator",
+        "purpose": "Ensure meetings run well and the decision-making process is followed.",
+        "domain": "",
+        "accountabilities": "- Facilitating the circle's governance and operational meetings\n- Preparing the agenda and guiding the decision-making process\n- Triggering elections for the circle's elected roles"
+      }
+    },
+    "meetings": {
+      "teamWeekly": "Weekly team meeting",
+      "retrospective": "Monthly retrospective",
+      "tactical": "Tactical meeting",
+      "governance": "Governance meeting",
+      "operational": "Operational meeting",
+      "policy": "Policy meeting"
+    },
+    "role": {
+      "heading": "What's your role?"
+    },
+    "objective": {
+      "heading": "What would you like to achieve with Rolebase?"
+    },
+    "source": {
+      "heading": "How did you hear about Rolebase?"
+    },
+    "otherPlaceholder": "Please specify...",
+    "options": {
+      "role": {
+        "executive": "Executive",
+        "manager": "Manager",
+        "hr": "Human resources",
+        "coach": "Coach / Consultant",
+        "operations": "Operations",
+        "other": "Other"
+      },
+      "objective": {
+        "clarify_roles": "Clarify roles and responsibilities",
+        "structure_org": "Structure the organization",
+        "governance": "Set up governance",
+        "meetings": "Improve meetings",
+        "collaboration": "Improve collaboration",
+        "other": "Other"
+      },
+      "source": {
+        "search": "Search engine",
+        "social": "Social media",
+        "word_of_mouth": "Word of mouth",
+        "blog": "Blog post",
+        "ai": "AI assistant",
+        "event": "Event or conference",
+        "other": "Other"
+      }
+    },
+    "roleExamples": {
+      "direction": "Management",
+      "tech": "Engineering",
+      "production": "Production",
+      "product": "Product",
+      "business": "Business",
+      "marketing": "Marketing",
+      "sales": "Sales",
+      "admin": "Administration",
+      "finance": "Finance",
+      "hr": "Human resources"
     }
   }
 }

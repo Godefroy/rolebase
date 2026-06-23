@@ -28,7 +28,6 @@ import { ChevronRightIcon } from 'src/icons'
 import settings from 'src/settings'
 import { trpc } from 'src/trpc'
 import * as yup from 'yup'
-import useOrg from '../hooks/useOrg'
 import OnboardingVideo, {
   OnboardingVideoType,
 } from '@/onboarding/components/OnboardingVideo'
@@ -50,8 +49,6 @@ export default function OrgCreateModal(modalProps: UseModalProps) {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error | undefined>()
-  const [orgId, setOrgId] = useState<string | undefined>()
-  const org = useOrg(orgId)
   const [isSmallScreen] = useMediaQuery('(max-width: 900px)')
 
   const {
@@ -78,7 +75,13 @@ export default function OrgCreateModal(modalProps: UseModalProps) {
     try {
       // Create org
       const orgId = await trpc.org.createOrg.mutate({ name, slug })
-      setOrgId(orgId)
+
+      // Close the modal (it may live in a persistent layout, e.g. OrgSwitch,
+      // so navigating doesn't necessarily unmount it) and go straight into the
+      // new org by slug. The org-setup step then opens inside the fresh org.
+      setLoading(false)
+      modalProps.onClose()
+      navigate(`${getOrgPath({ id: orgId, slug })}/roles`)
     } catch (e: any) {
       setLoading(false)
       const message =
@@ -88,14 +91,6 @@ export default function OrgCreateModal(modalProps: UseModalProps) {
       setError(new Error(message))
     }
   })
-
-  // Redirect after creation to new organization
-  useEffect(() => {
-    if (org) {
-      modalProps.onClose()
-      navigate(`${getOrgPath(org)}/roles`)
-    }
-  }, [org])
 
   return (
     <BrandModal size="6xl" bodyProps={{ mx: 10 }} {...modalProps}>
