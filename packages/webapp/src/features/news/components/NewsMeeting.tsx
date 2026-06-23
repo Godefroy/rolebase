@@ -17,11 +17,11 @@ export default function NewsMeeting({ meeting }: Props) {
       i18nKey="DashboardNewsMeeting.action"
       date={meeting.endDate}
       icon={MeetingAvatarIcon}
+      circleId={meeting.circleId}
     >
       <MeetingItem
         meeting={meeting}
-        noModal
-        showCircle
+        openButton
         showIcon
         fontWeight="medium"
         my={3}

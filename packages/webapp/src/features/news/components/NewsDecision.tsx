@@ -16,10 +16,11 @@ export default function NewsDecision({ decision }: Props) {
       i18nKey="DashboardNewsDecision.action"
       date={decision.createdAt}
       memberId={decision.memberId}
+      circleId={decision.circleId}
     >
       <DecisionItem
         decision={decision}
-        showCircle
+        openButton
         showIcon
         fontWeight="medium"
         my={3}

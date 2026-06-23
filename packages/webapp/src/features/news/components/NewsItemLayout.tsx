@@ -1,3 +1,4 @@
+import CircleByIdButton from '@/circle/components/CircleByIdButton'
 import useDateLocale from '@/common/hooks/useDateLocale'
 import MemberAvatar from '@/member/components/MemberAvatar'
 import MemberLink from '@/member/components/MemberLink'
@@ -21,6 +22,7 @@ interface Props extends LinkBoxProps {
   i18nKey: string
   date: string
   memberId?: string
+  circleId?: string
   icon?: IconType
   children: ReactNode
 }
@@ -29,6 +31,7 @@ export default function NewsItemLayout({
   i18nKey,
   date: dateStr,
   memberId,
+  circleId,
   icon,
   children,
 }: Props) {
@@ -40,7 +43,7 @@ export default function NewsItemLayout({
 
   return (
     <Card boxShadow="none">
-      <CardHeader display="flex" alignItems="center" pb={0}>
+      <CardHeader display="flex" pb={0}>
         {icon ? (
           <Icon as={icon} w="2em" h="2em" />
         ) : (
@@ -64,7 +67,7 @@ export default function NewsItemLayout({
               }}
             />
           </Text>
-          <Text fontSize="sm" fontWeight="normal" color="gray.400">
+          <Text fontSize="xs" fontWeight="normal" color="gray.400">
             {capitalizeFirstLetter(
               format(date, 'PPPP', {
                 locale: dateLocale,
@@ -76,6 +79,8 @@ export default function NewsItemLayout({
             })}
           </Text>
         </Box>
+
+        {circleId && <CircleByIdButton id={circleId} size="xs" />}
       </CardHeader>
 
       <CardBody p={4}>{children}</CardBody>

@@ -18,11 +18,12 @@ export default function NewsThread({ thread }: Props) {
       i18nKey="DashboardNewsThread.action"
       date={thread.createdAt}
       memberId={thread.initiatorMemberId}
+      circleId={thread.circleId}
     >
       <ThreadItem
         thread={thread}
+        openButton
         showIcon
-        showCircle
         fontWeight="medium"
         my={3}
       />
