@@ -8,11 +8,11 @@ const { class: className, fullWidth = false } = Astro.props
 ---
 
 {fullWidth ? (
-  <section class:list={["mt-24 w-screen relative left-1/2 -translate-x-1/2", className]}>
+  <section class:list={["mt-24 lg:mt-40 w-screen relative left-1/2 -translate-x-1/2", className]}>
     <slot />
   </section>
 ) : (
-  <section class:list={["mt-24", className]}>
+  <section class:list={["mt-24 lg:mt-40", className]}>
     <slot />
   </section>
 )}
