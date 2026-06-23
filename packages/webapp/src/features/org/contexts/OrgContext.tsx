@@ -24,6 +24,8 @@ export interface OrgEditActions {
     targetCircleId: string | null
   ): Promise<string | undefined>
   archiveCircle(circleId: string): Promise<void>
+  // Restore an archived circle and its subtree. Backend only (org page).
+  restoreCircle(circleId: string): Promise<void>
   createCircle(
     parentId: string,
     roleOrName: RoleSummaryFragment | string
@@ -84,6 +86,7 @@ export const noopOrgEditActions: OrgEditActions = {
   moveCircle: noop,
   copyCircle: noop,
   archiveCircle: noop,
+  restoreCircle: noop,
   createCircle: noop,
   updateRole: noop,
   updateMember: noop,

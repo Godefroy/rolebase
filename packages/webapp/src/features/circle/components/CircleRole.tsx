@@ -16,7 +16,6 @@ import React, { useContext, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { MagicIcon } from 'src/icons'
 import { CircleContext } from '../contexts/CIrcleContext'
-import useRestoreCircle from '../hooks/useRestoreCircle'
 import CircleButton from './CircleButton'
 import CircleByIdButton from './CircleByIdButton'
 import CircleRoleMembers from './CircleRoleMembers'
@@ -57,7 +56,7 @@ export default function CircleRole({ skipFetchRole }: Props) {
 
   // In proposal draft mode, overlay the draft's pending role edits on top of
   // the DB role (still fetched via subscription, as on the org page).
-  const { roleOverlays, isDraft, orgData } = useOrgContext()
+  const { roleOverlays, isDraft, orgData, actions } = useOrgContext()
   const members = orgData?.members
   const overlay = roleOverlays?.[circle.roleId]
 
@@ -65,12 +64,11 @@ export default function CircleRole({ skipFetchRole }: Props) {
   // (canEditCircle on a non-root circle), and database only: an in-memory draft
   // can't unarchive in the live org.
   const canRestore = canEditCircle && !!circle.parentId && !isDraft
-  const restoreCircle = useRestoreCircle()
   const [restoring, setRestoring] = useState(false)
   const handleRestore = async () => {
     setRestoring(true)
     try {
-      await restoreCircle(circle.id)
+      await actions.restoreCircle(circle.id)
     } finally {
       setRestoring(false)
     }

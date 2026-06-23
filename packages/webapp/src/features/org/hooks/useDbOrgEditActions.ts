@@ -6,6 +6,7 @@ import useCopyCircle from '@/circle/hooks/useCopyCircle'
 import useMoveCircle from '@/circle/hooks/useMoveCircle'
 import useRemoveCircleLink from '@/circle/hooks/useRemoveCircleLink'
 import useRemoveCircleMember from '@/circle/hooks/useRemoveCircleMember'
+import useRestoreCircle from '@/circle/hooks/useRestoreCircle'
 import useCreateMember from '@/member/hooks/useCreateMember'
 import useUpdateRole from '@/role/hooks/useUpdateRole'
 import { useUpdateMemberMutation } from '@gql'
@@ -19,6 +20,7 @@ export default function useDbOrgEditActions(): OrgEditActions {
   const moveCircle = useMoveCircle()
   const copyCircle = useCopyCircle()
   const archiveCircle = useArchiveCircle()
+  const restoreCircle = useRestoreCircle()
   const createCircle = useCreateCircle()
   const updateRole = useUpdateRole()
   const addCircleMember = useAddCircleMember()
@@ -52,6 +54,7 @@ export default function useDbOrgEditActions(): OrgEditActions {
       moveCircle,
       copyCircle,
       archiveCircle,
+      restoreCircle,
       createCircle,
       updateRole,
       updateMember,
@@ -67,6 +70,7 @@ export default function useDbOrgEditActions(): OrgEditActions {
       moveCircle,
       copyCircle,
       archiveCircle,
+      restoreCircle,
       createCircle,
       updateRole,
       updateMember,

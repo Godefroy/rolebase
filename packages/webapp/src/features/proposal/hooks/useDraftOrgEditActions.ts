@@ -343,6 +343,10 @@ export default function useDraftOrgEditActions(
         )
       },
 
+      // Restoring an archived circle is backend only, not applicable to an
+      // in-memory draft.
+      async restoreCircle() {},
+
       // Members are readonly in a proposal draft: a proposal changes the org
       // chart, not member profiles.
       async updateMember() {},
