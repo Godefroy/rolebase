@@ -135,6 +135,11 @@ export function EditableField({
             role="group"
             borderRadius="md"
             position="relative"
+            // Isolate so the hover `_before` (zIndex: -1) paints within this box
+            // rather than behind ancestor backgrounds. Without it, an ancestor
+            // with a background (e.g. the inline panel on the website demo) paints
+            // over the negative-z-index pseudo and the hover effect disappears.
+            isolation="isolate"
             cursor={canOpenEdit ? 'pointer' : undefined}
             _hover={
               canOpenEdit

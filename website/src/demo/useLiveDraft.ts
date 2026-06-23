@@ -28,8 +28,12 @@ function arrayMethods<Entity extends { id: string }>(arr: Entity[]) {
       arr.push(data)
     },
     update: async (id: string, data: Partial<Entity>) => {
-      const entity = arr.find((e) => e.id === id)
-      if (entity) Object.assign(entity, data)
+      const index = arr.findIndex((e) => e.id === id)
+      // Replace the entity with a fresh object (rather than mutating in place):
+      // the webapp reads entities through identity-keyed `useMemo`s (e.g.
+      // CircleRole's `role`), so a stable reference would keep showing the
+      // pre-edit value. A new reference re-triggers those memos.
+      if (index !== -1) arr[index] = { ...arr[index], ...data }
     },
   }
 }
@@ -103,9 +107,12 @@ export default function useLiveDraft(initial: DemoFragments): LiveDraft {
   const updateMember = useCallback(
     async (member: MemberFragment, values: Partial<MemberFragment>) => {
       const data = workingRef.current?.data
-      const target = data?.members.find((m) => m.id === member.id)
-      if (!target) return
-      Object.assign(target, values)
+      if (!data) return
+      const index = data.members.findIndex((m) => m.id === member.id)
+      if (index === -1) return
+      // New object reference so identity-keyed memos in the member panel pick
+      // up the change (see the note in arrayMethods.update).
+      data.members[index] = { ...data.members[index], ...values }
       refresh()
     },
     [refresh]

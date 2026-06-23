@@ -114,6 +114,15 @@
 .editor .ProseMirror ol {
   padding-left: 1.5em;
 }
+/* Set markers explicitly so they survive a host CSS reset (e.g. Tailwind's
+   preflight on the website, which resets `ul, ol { list-style: none }`).
+   The taskList rule below re-sets `list-style: none` for checklists. */
+.editor .ProseMirror ul {
+  list-style-type: disc;
+}
+.editor .ProseMirror ol {
+  list-style-type: decimal;
+}
 
 /* Task lists */
 .editor .ProseMirror ul[data-type='taskList'] {
