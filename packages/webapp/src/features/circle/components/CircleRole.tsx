@@ -34,12 +34,14 @@ interface Props {
 const editableFields = [
   { field: 'domain' },
   { field: 'accountabilities' },
-  { field: 'checklist', initValue: '[] ' },
-  { field: 'indicators', initValue: '- ' },
+  // Open empty fields on an empty list/todo so the user can start typing items
+  // right away (the cursor lands inside the first item, no extra line).
+  { field: 'checklist', initList: 'task' },
+  { field: 'indicators', initList: 'bullet' },
   { field: 'notes' },
 ] satisfies Array<{
   field: keyof RoleFragment
-  initValue?: string
+  initList?: 'bullet' | 'task'
 }>
 
 export const fieldsGap = 10
@@ -184,14 +186,14 @@ export default function CircleRole({ skipFetchRole }: Props) {
           />
         ))}
 
-      {sortedFields.map(({ field, initValue }) => (
+      {sortedFields.map(({ field, initList }) => (
         <RoleEditableField
           key={field}
           label={t(`CircleRole.${field}`)}
           placeholder={t(`CircleRole.${field}Placeholder`)}
           role={role}
           field={field}
-          initValue={initValue}
+          initList={initList}
         />
       ))}
 

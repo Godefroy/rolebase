@@ -11,7 +11,7 @@ interface Props extends Omit<BoxProps, 'role'> {
   placeholder?: string
   role: RoleFragment
   field: keyof RoleFragment
-  initValue?: string
+  initList?: 'bullet' | 'task'
 }
 
 export function RoleEditableField({
@@ -19,7 +19,7 @@ export function RoleEditableField({
   placeholder,
   role,
   field,
-  initValue,
+  initList,
   ...boxProps
 }: Props) {
   const { t } = useTranslation()
@@ -45,10 +45,10 @@ export function RoleEditableField({
       placeholder={placeholder}
       editable={canEditRole}
       value={value}
-      initValue={initValue}
+      initList={initList}
       info={
         role.base ? (
-          <Alert status="warning">
+          <Alert status="warning" mt={2}>
             <AlertIcon />
             <AlertDescription>
               {t('RoleEditableField.baseRoleInfo', { role: role.name })}

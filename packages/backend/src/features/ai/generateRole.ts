@@ -61,7 +61,7 @@ const schema = {
 // Prefix to add to each line when a generated property is an array
 const defaultPrefix = '* '
 const prefixes: Partial<RoleAiFragment> = {
-  checklist: '[ ] ',
+  checklist: '- [ ] ',
 }
 
 export default authedProcedure

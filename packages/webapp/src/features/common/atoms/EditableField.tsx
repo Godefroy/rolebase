@@ -1,7 +1,7 @@
 import { EditorHandle } from '@/editor'
 import SimpleEditor from '@/editor/components/SimpleEditor'
 import { Box, BoxProps, Button, Collapse, Heading } from '@chakra-ui/react'
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { EditIcon } from 'src/icons'
 import { fieldsGap } from '../../circle/components/CircleRole'
@@ -13,7 +13,9 @@ interface Props extends Omit<BoxProps, 'value'> {
   editable: boolean
   hideTitle?: boolean
   value: string
-  initValue?: string
+  // When editing an empty field, seed an empty list/todo so the user can start
+  // typing items right away.
+  initList?: 'bullet' | 'task'
   info?: React.ReactNode
   onSave(value: string): void
 }
@@ -24,7 +26,7 @@ export function EditableField({
   editable,
   hideTitle,
   value,
-  initValue,
+  initList,
   info,
   onSave,
   ...boxProps
@@ -50,6 +52,47 @@ export function EditableField({
     editorRef.current?.setValue(value)
     setIsEditing(false)
   }, [isEditing, value])
+
+  // Focus the editor when entering edit mode. The editor's own autofocus only
+  // runs when it is created, which happens on click for empty fields but not
+  // for non-empty ones (they stay mounted read-only and merely toggle editable),
+  // so we focus it here for every case. For empty fields with an initial list
+  // type, seed an empty list/todo and place the cursor in its first item.
+  useEffect(() => {
+    if (!isEditing) return
+    let raf = 0
+    let timer = 0
+    let frames = 0
+    const focusEditor = () => {
+      const handle = editorRef.current
+      const editor = handle?.editor
+      if (!editor) {
+        if (frames++ < 30) raf = requestAnimationFrame(focusEditor)
+        return
+      }
+      if (initList && !value && handle?.isEmpty()) {
+        // Seed an empty list/todo by wrapping the empty paragraph (a command,
+        // not markdown content). StarterKit's TrailingNode then adds a paragraph
+        // after the list, and the editor's autofocus selects 'end', which would
+        // land the cursor on that extra line. Re-place it inside the first item
+        // ('start') in a setTimeout that runs after autofocus's.
+        const chain = editor.chain()
+        if (initList === 'task') chain.toggleTaskList()
+        else chain.toggleBulletList()
+        chain.run()
+        timer = window.setTimeout(() => {
+          editorRef.current?.editor?.commands.focus('start')
+        }, 0)
+      } else if (!editor.isFocused) {
+        editor.commands.focus('end')
+      }
+    }
+    focusEditor()
+    return () => {
+      cancelAnimationFrame(raf)
+      clearTimeout(timer)
+    }
+  }, [isEditing])
 
   // Open edit mode on click, except when clicking a link or a file
   const handleEditClick = useCallback((event: React.MouseEvent) => {
@@ -115,7 +158,7 @@ export function EditableField({
           >
             <SimpleEditor
               ref={editorRef}
-              value={value || initValue || ''}
+              value={value}
               placeholder={placeholder}
               readOnly={!isEditing}
               autoFocus={isEditing}
