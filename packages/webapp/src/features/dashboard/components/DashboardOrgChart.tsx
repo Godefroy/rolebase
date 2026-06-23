@@ -39,11 +39,22 @@ export default function DashboardOrgChart(boxProps: BoxProps) {
   // The dashboard chart has panzoom disabled. A zoom gesture (ctrl/⌘ + wheel,
   // or a trackpad pinch, which fires wheel events with ctrlKey) opens the full,
   // interactive org chart where the user can actually zoom.
-  const handleWheel = (event: React.WheelEvent) => {
-    if (event.ctrlKey || event.metaKey) {
-      navigateOrg('roles')
+  // Registered as a native non-passive listener so we can preventDefault and
+  // block the browser's native page zoom (React's onWheel is passive).
+  useEffect(() => {
+    const box = boxRef.current
+    if (!box) return
+
+    const handleWheel = (event: WheelEvent) => {
+      if (event.ctrlKey || event.metaKey) {
+        event.preventDefault()
+        navigateOrg('roles')
+      }
     }
-  }
+
+    box.addEventListener('wheel', handleWheel, { passive: false })
+    return () => box.removeEventListener('wheel', handleWheel)
+  }, [navigateOrg])
 
   // Redirect to org chart when there is only one circle
   useEffect(() => {
@@ -65,7 +76,7 @@ export default function DashboardOrgChart(boxProps: BoxProps) {
   }
 
   return (
-    <Box ref={boxRef} h={size} onWheel={handleWheel} {...boxProps}>
+    <Box ref={boxRef} h={size} {...boxProps}>
       {org && orgData && size && (
         <CirclesGraph
           key={colorMode}
