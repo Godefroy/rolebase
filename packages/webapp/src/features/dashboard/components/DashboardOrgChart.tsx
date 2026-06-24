@@ -17,6 +17,7 @@ import { getOrgPath } from '@rolebase/shared/helpers/getOrgPath'
 import React, { useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
+import { useOpenOrgChartOnZoom } from '../hooks/useOpenOrgChartOnZoom'
 
 export default function DashboardOrgChart(boxProps: BoxProps) {
   const { t } = useTranslation()
@@ -36,25 +37,8 @@ export default function DashboardOrgChart(boxProps: BoxProps) {
   // Color mode
   const { colorMode } = useColorMode()
 
-  // The dashboard chart has panzoom disabled. A zoom gesture (ctrl/⌘ + wheel,
-  // or a trackpad pinch, which fires wheel events with ctrlKey) opens the full,
-  // interactive org chart where the user can actually zoom.
-  // Registered as a native non-passive listener so we can preventDefault and
-  // block the browser's native page zoom (React's onWheel is passive).
-  useEffect(() => {
-    const box = boxRef.current
-    if (!box) return
-
-    const handleWheel = (event: WheelEvent) => {
-      if (event.ctrlKey || event.metaKey) {
-        event.preventDefault()
-        navigateOrg('roles')
-      }
-    }
-
-    box.addEventListener('wheel', handleWheel, { passive: false })
-    return () => box.removeEventListener('wheel', handleWheel)
-  }, [navigateOrg])
+  // A zoom gesture (wheel/pinch) opens the full, interactive org chart.
+  useOpenOrgChartOnZoom(boxRef)
 
   // Redirect to org chart when there is only one circle
   useEffect(() => {
