@@ -2,6 +2,7 @@ import { ChangeNotification } from '@microsoft/microsoft-graph-types-beta'
 import { loadAppById } from '..'
 import { RestError, route } from '../../../rest/route'
 import { captureError } from '../../../utils/sentry'
+import { handleAppSyncError } from '../AppDisconnectedError'
 import Office365App from './Office365App'
 
 export default route(async (context) => {
@@ -22,6 +23,7 @@ export default route(async (context) => {
   }
 
   for (const notification of notifications) {
+    let app: Office365App | undefined
     try {
       const {
         subscriptionId,
@@ -39,10 +41,11 @@ export default route(async (context) => {
       }
 
       // Load user app
-      const app = await loadAppById(userAppId)
-      if (!(app instanceof Office365App)) {
+      const loadedApp = await loadAppById(userAppId)
+      if (!(loadedApp instanceof Office365App)) {
         return
       }
+      app = loadedApp
 
       // Lifecycle notification
       if (lifecycleEvent === 'missed') {
@@ -75,7 +78,11 @@ export default route(async (context) => {
       }
     } catch (error) {
       console.error(`[Error] ${error}`)
-      captureError(error as any)
+      if (app) {
+        await handleAppSyncError(error, app)
+      } else {
+        captureError(error as any)
+      }
     }
   }
 

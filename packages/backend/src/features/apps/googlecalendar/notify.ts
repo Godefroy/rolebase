@@ -1,5 +1,6 @@
 import { loadAppById } from '..'
 import { RestError, route } from '../../../rest/route'
+import { isUnrecoverableAuthError } from '../AppDisconnectedError'
 import GoogleCalendarApp from './GoogleCalendarApp'
 
 export default route(async (context) => {
@@ -36,7 +37,17 @@ export default route(async (context) => {
     }
 
     // Handle notification
-    await app.onSubscriptionNotification(subscriptionId, expiryDate)
+    try {
+      await app.onSubscriptionNotification(subscriptionId, expiryDate)
+    } catch (error) {
+      // Disconnect the app (and notify the user) when its OAuth access has been
+      // revoked or expired, instead of letting every notification fail forever.
+      if (isUnrecoverableAuthError(error)) {
+        await app.disconnect().catch(() => undefined)
+      } else {
+        throw error
+      }
+    }
   } catch (error) {
     // console.error(error)
     // captureError(error)

@@ -6,6 +6,7 @@ import { adminRequest } from '../../../utils/adminRequest'
 import { HasuraEvent } from '../../../utils/nhost'
 import { captureError } from '../../../utils/sentry'
 import { appFactory } from '../../apps'
+import { handleAppSyncError } from '../../apps/AppDisconnectedError'
 import { IndexEntity } from './IndexEntity'
 
 export class IndexMeetingAttendee extends IndexEntity<MeetingAttendeeFragment> {
@@ -111,8 +112,8 @@ export class IndexMeetingAttendee extends IndexEntity<MeetingAttendeeFragment> {
     const userApps = member.user?.apps || []
 
     for (const userApp of userApps) {
+      const app = appFactory(userApp)
       try {
-        const app = appFactory(userApp)
         if (data.new && !meeting.archivedAt) {
           // Create/Update event
           await app.upsertMeetingEvent(
@@ -124,7 +125,7 @@ export class IndexMeetingAttendee extends IndexEntity<MeetingAttendeeFragment> {
         }
       } catch (error) {
         console.log(error)
-        captureError(error as any)
+        await handleAppSyncError(error, app)
       }
     }
   }

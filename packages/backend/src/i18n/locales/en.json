@@ -5,5 +5,14 @@
       "description": "Notes: {{url}}",
       "description_videoConf": "Notes: {{url}}\nVideoconf: {{videoConf}}"
     }
+  },
+  "app": {
+    "disconnected": {
+      "subject": "Your {{appName}} connection has been disconnected",
+      "title": "{{appName}} disconnected",
+      "body1": "Your {{appName}} calendar connection has stopped working because access was revoked or expired.",
+      "body2": "Your meetings are no longer synced. Reconnect the app to resume syncing.",
+      "cta": "Reconnect {{appName}}"
+    }
   }
 }

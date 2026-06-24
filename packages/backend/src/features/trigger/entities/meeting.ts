@@ -7,6 +7,7 @@ import { adminRequest } from '../../../utils/adminRequest'
 import { HasuraEvent } from '../../../utils/nhost'
 import { captureError } from '../../../utils/sentry'
 import { appFactory } from '../../apps'
+import { handleAppSyncError } from '../../apps/AppDisconnectedError'
 import { IndexEntity } from './IndexEntity'
 
 const Fragment = gql(`
@@ -215,9 +216,8 @@ export class IndexMeeting extends IndexEntity<MeetingFragment> {
         // Skip if last modif comes from this app
         if (lastUpdateSource === userApp.id) continue
 
+        const app = appFactory(userApp)
         try {
-          const app = appFactory(userApp)
-
           if (data.old) {
             if (meeting.archivedAt) {
               // Delete event if meeting is archived
@@ -246,7 +246,7 @@ export class IndexMeeting extends IndexEntity<MeetingFragment> {
           }
         } catch (error) {
           console.log(error)
-          captureError(error as any)
+          await handleAppSyncError(error, app)
         }
       }
     }

@@ -754,7 +754,10 @@ export default class Office365App
       }
     )
     if (!response.ok) {
-      throw new Error('Error while refreshing access token')
+      // Include the response body so unrecoverable failures (e.g. invalid_grant
+      // when the refresh token is revoked/expired) can be detected upstream.
+      const body = await response.text().catch(() => '')
+      throw new Error(`Error while refreshing access token: ${body}`)
     }
     const responseJson = await response.json()
 

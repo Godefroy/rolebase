@@ -5,5 +5,14 @@
       "description": "Notes : {{url}}",
       "description_videoConf": "Notes : {{url}}\nVisio : {{videoConf}}"
     }
+  },
+  "app": {
+    "disconnected": {
+      "subject": "Votre connexion {{appName}} a été déconnectée",
+      "title": "{{appName}} déconnecté",
+      "body1": "Votre connexion au calendrier {{appName}} a cessé de fonctionner car l'accès a été révoqué ou a expiré.",
+      "body2": "Vos réunions ne sont plus synchronisées. Reconnectez l'application pour reprendre la synchronisation.",
+      "cta": "Reconnecter {{appName}}"
+    }
   }
 }
