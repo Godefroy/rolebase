@@ -4,6 +4,7 @@ import { getOrgPath } from '@rolebase/shared/helpers/getOrgPath'
 import { truthy } from '@rolebase/shared/helpers/truthy'
 import {
   AppCalendarConfig,
+  OAuthSecretConfig,
   OrgCalendarConfig,
 } from '@rolebase/shared/model/user_app'
 import { formatInTimeZone } from 'date-fns-tz'
@@ -37,8 +38,11 @@ export function formatDate(date: Date, timezone: string): string {
   return formatInTimeZone(date, timezone, "yyyy-MM-dd'T'HH:mm:ss")
 }
 
+// Refresh proactively a bit before the actual expiry.
+const TOKEN_EXPIRY_MARGIN_MS = 60_000
+
 export default abstract class AbstractCalendarApp<
-  SecretConfig,
+  SecretConfig extends OAuthSecretConfig,
 > extends AbstractApp<SecretConfig, AppCalendarConfig> {
   // Abstract methods to implement
   protected abstract connectOrgCalendar(
@@ -47,6 +51,34 @@ export default abstract class AbstractCalendarApp<
   protected abstract disconnectOrgCalendar(
     orgCalendar: OrgCalendarConfig
   ): Promise<void>
+
+  // Provider-specific token refresh, run serialized under the connection lock by
+  // ensureValidAccessToken() (so it never runs concurrently for the same app).
+  protected abstract refreshToken(): Promise<void>
+
+  // Ensure a valid access token. Refreshes under the per-connection lock, so
+  // concurrent syncs of the same app never refresh in parallel: the first
+  // refreshes, the others reload the freshly persisted token and skip.
+  // Pass force = true when the provider rejected the current token (HTTP 401)
+  // even though it looks unexpired: it then refreshes unless a concurrent sync
+  // already swapped the token for a different one.
+  protected async ensureValidAccessToken(force = false): Promise<void> {
+    if (!force && this.secretConfig.expiryDate > Date.now() + TOKEN_EXPIRY_MARGIN_MS) {
+      return
+    }
+    const previousAccessToken = this.secretConfig.accessToken
+    await this.withRefreshLock(async () => {
+      // A concurrent sync may have refreshed while we waited for the lock.
+      await this.reloadSecretConfig()
+      const expired =
+        this.secretConfig.expiryDate <= Date.now() + TOKEN_EXPIRY_MARGIN_MS
+      const stillStale =
+        force && this.secretConfig.accessToken === previousAccessToken
+      if (expired || stillStale) {
+        await this.refreshToken()
+      }
+    })
+  }
 
   // Select calendars for availability and meetings
   public async selectCalendars(

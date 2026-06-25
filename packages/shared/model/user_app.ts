@@ -28,12 +28,16 @@ export interface OrgCalendarConfig {
   calendarId: string
 }
 
-// Office 365 secret config
-export interface Office365SecretConfig {
+// Common OAuth token fields shared by calendar app secret configs
+export interface OAuthSecretConfig {
   accessToken: string
   refreshToken: string
   expiryDate: number // Unix timestamp
   scope: string
+}
+
+// Office 365 secret config
+export interface Office365SecretConfig extends OAuthSecretConfig {
   subscriptions: Office365Subscription[]
 }
 

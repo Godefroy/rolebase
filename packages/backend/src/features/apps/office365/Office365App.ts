@@ -729,16 +729,16 @@ export default class Office365App
     return this.config.orgsCalendars.find((c) => c.calendarId === calendarId)
   }
 
-  // Get access token, refresh it if needed
+  // Get access token, refresh it if needed (serialized via the shared lock)
   private async getAccessToken(): Promise<string> {
-    const isExpired = this.secretConfig.expiryDate < +new Date()
-    if (isExpired) await this.refreshAccessToken()
-
+    await this.ensureValidAccessToken()
     return this.secretConfig.accessToken
   }
 
-  // Refresh access token
-  private async refreshAccessToken() {
+  // Refresh access token. Called under the connection lock by
+  // ensureValidAccessToken (which has already reloaded secretConfig).
+  protected async refreshToken(): Promise<void> {
+    const usedRefreshToken = this.secretConfig.refreshToken
     const response = await fetch(
       'https://login.microsoftonline.com/common/oauth2/v2.0/token',
       {
@@ -747,7 +747,7 @@ export default class Office365App
         body: new URLSearchParams({
           client_id: settings.apps.office365.clientId,
           client_secret: settings.apps.office365.clientSecret,
-          refresh_token: this.secretConfig.refreshToken,
+          refresh_token: usedRefreshToken,
           grant_type: 'refresh_token',
           scope: this.secretConfig.scope,
         }),
@@ -757,6 +757,19 @@ export default class Office365App
       // Include the response body so unrecoverable failures (e.g. invalid_grant
       // when the refresh token is revoked/expired) can be detected upstream.
       const body = await response.text().catch(() => '')
+
+      // Microsoft rotates refresh tokens (single-use). The connection lock
+      // prevents this within a process, but a concurrent process (other pod)
+      // can still consume the token: invalid_grant then means the account is
+      // healthy. Reload the token the other process just persisted; if it
+      // changed, the failure was a race, so recover instead of disconnecting.
+      if (/invalid_grant/i.test(body)) {
+        await this.reloadSecretConfig()
+        if (this.secretConfig.refreshToken !== usedRefreshToken) {
+          if (this.secretConfig.expiryDate >= +new Date()) return
+          return this.refreshToken()
+        }
+      }
       throw new Error(`Error while refreshing access token: ${body}`)
     }
     const responseJson = await response.json()
@@ -810,8 +823,9 @@ export default class Office365App
         await new Promise((resolve) => setTimeout(resolve, timeout))
         tries++
       } else if (response.status === 401) {
-        // Unauthorized, refresh token
-        await this.refreshAccessToken()
+        // Unauthorized: force a refresh (under the lock) even though the token
+        // may look unexpired, then retry.
+        await this.ensureValidAccessToken(true)
         tries++
       } else {
         throw new Error(

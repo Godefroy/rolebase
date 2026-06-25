@@ -4,6 +4,7 @@ import { App_Type_Enum, UserAppFullFragment, gql } from '../../gql'
 import { router } from '../../trpc'
 import { authedProcedure } from '../../trpc/authedProcedure'
 import { adminRequest } from '../../utils/adminRequest'
+import { GET_USER_APP } from './AbstractApp'
 import googlecalendar from './googlecalendar'
 import GoogleCalendarApp from './googlecalendar/GoogleCalendarApp'
 import office365 from './office365'
@@ -101,14 +102,6 @@ export function appFactory(userApp: UserAppFullFragment) {
       throw new Error('Invalid app type')
   }
 }
-
-const GET_USER_APP = gql(`
-  query getUserApp($id: uuid!) {
-    user_app_by_pk(id: $id) {
-      ...UserAppFull
-    }
-  }
-`)
 
 export const CREATE_USER_APP = gql(`
   mutation createUserApp($values: user_app_insert_input!) {

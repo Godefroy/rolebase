@@ -38,6 +38,9 @@ export default class GoogleCalendarApp
   private auth: Auth.OAuth2Client
   private calendar: calendar_v3.Calendar
   private calendarBatch: calendar_v3.Calendar
+  // Persist promise of the latest token rotation, so refreshToken() can wait for
+  // it to hit the database before releasing the connection lock.
+  private tokenPersist?: Promise<void>
 
   constructor(public userApp: UserAppFullFragment) {
     super(userApp)
@@ -70,7 +73,7 @@ export default class GoogleCalendarApp
         partialConfig.scope = tokens.scope
       }
       if (Object.keys(partialConfig).length) {
-        this.updateSecretConfig(partialConfig)
+        this.tokenPersist = this.updateSecretConfig(partialConfig)
       }
     })
 
@@ -84,6 +87,29 @@ export default class GoogleCalendarApp
       auth: this.auth,
       fetchImplementation: batchFetchImplementation(),
     })
+  }
+
+  // Keep the googleapis client in sync with the persisted credentials whenever
+  // they are reloaded (e.g. after a concurrent sync refreshed the token), so it
+  // doesn't fall back to its own out-of-band refresh.
+  protected async reloadSecretConfig(): Promise<GoogleCalendarSecretConfig> {
+    const config = await super.reloadSecretConfig()
+    this.auth.setCredentials({
+      access_token: config.accessToken,
+      refresh_token: config.refreshToken,
+      expiry_date: config.expiryDate,
+      scope: config.scope,
+    })
+    return config
+  }
+
+  // Refresh the access token. Called under the connection lock by
+  // ensureValidAccessToken, which has already reloaded secretConfig into the
+  // client. googleapis performs the refresh, the 'tokens' handler persists it,
+  // and we wait for that write before releasing the lock.
+  protected async refreshToken(): Promise<void> {
+    await this.auth.getAccessToken()
+    await this.tokenPersist
   }
 
   public async uninstall() {
@@ -102,6 +128,7 @@ export default class GoogleCalendarApp
 
   // List all user's calendars
   public async listCalendars(): Promise<Calendar[]> {
+    await this.ensureValidAccessToken()
     const { data: calendars } = await this.calendar.calendarList.list()
     if (!calendars.items) {
       throw new Error('No calendars found')
@@ -119,6 +146,7 @@ export default class GoogleCalendarApp
 
   // Update/create a meeting (for Hasura trigger event)
   public async upsertMeetingEvent(meetingEvent: MeetingEvent) {
+    await this.ensureValidAccessToken()
     const orgCalendar = this.config.orgsCalendars.find(
       (c) => c.orgId === meetingEvent.orgId
     )
@@ -162,6 +190,7 @@ export default class GoogleCalendarApp
 
   // Delete a meeting (for Hasura trigger event)
   public async deleteMeetingEvent(meetingId: string, orgId: string) {
+    await this.ensureValidAccessToken()
     const orgCalendar = this.config.orgsCalendars.find((c) => c.orgId === orgId)
     if (!orgCalendar) return
 
@@ -191,6 +220,7 @@ export default class GoogleCalendarApp
     orgId: string,
     date: Date
   ) {
+    await this.ensureValidAccessToken()
     const orgCalendar = this.config.orgsCalendars.find((c) => c.orgId === orgId)
     if (!orgCalendar) return
 
@@ -220,6 +250,7 @@ export default class GoogleCalendarApp
     subscriptionId: string,
     expiryDate: string
   ) {
+    await this.ensureValidAccessToken()
     const { orgCalendar, subscriptionConfig } =
       this.getSubscriptionConfigById(subscriptionId)
     if (!orgCalendar || !subscriptionConfig) return

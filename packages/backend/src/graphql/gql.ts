@@ -18,7 +18,8 @@ const documents = {
     "\n  query getRoleAI($name: String!, $lang: String!) {\n    role_ai(where: { name: { _eq: $name }, lang: { _eq: $lang } }, limit: 1) {\n      ...RoleAI\n    }\n  }": types.GetRoleAiDocument,
     "\n  mutation insertRoleAI($role: role_ai_insert_input!) {\n    insert_role_ai_one(object: $role) {\n      ...RoleAI\n    }\n  }": types.InsertRoleAiDocument,
     "\n  mutation updateUserApp($id: uuid!, $values: user_app_set_input!) {\n    update_user_app_by_pk(pk_columns: { id: $id }, _set: $values) {\n      id\n    }\n  }\n": types.UpdateUserAppDocument,
-    "\n  mutation archiveUserApp($id: uuid!, $archivedAt: timestamptz!) {\n    update_user_app_by_pk(pk_columns: { id: $id }, _set: { archivedAt: $archivedAt }) {\n      id\n    }\n  }\n": types.ArchiveUserAppDocument,
+    "\n  mutation archiveUserApp($id: uuid!, $archivedAt: timestamptz!) {\n    update_user_app(\n      where: { id: { _eq: $id }, archivedAt: { _is_null: true } }\n      _set: { archivedAt: $archivedAt }\n    ) {\n      affected_rows\n    }\n  }\n": types.ArchiveUserAppDocument,
+    "\n  query getUserApp($id: uuid!) {\n    user_app_by_pk(id: $id) {\n      ...UserAppFull\n    }\n  }\n": types.GetUserAppDocument,
     "\n  query getUserForAppNotification($userId: uuid!) {\n    users(where: { id: { _eq: $userId } }) {\n      id\n      email\n      displayName\n      locale\n    }\n  }\n": types.GetUserForAppNotificationDocument,
     "\n  query getOrgMeetingsForCalendarApp(\n    $orgId: uuid!\n    $userId: uuid!\n    $afterDate: timestamptz!\n  ) {\n    org_by_pk(id: $orgId) {\n      id\n      name\n      slug\n      members(where: { userId: { _eq: $userId }, archivedAt: { _is_null: true } }) {\n        id\n        name\n      }\n      meetings(\n        where: {\n          startDate: { _gt: $afterDate }\n          archivedAt: { _is_null: true }\n          meeting_attendees: { member: { userId: { _eq: $userId } } }\n        }\n        order_by: { startDate: asc }\n      ) {\n        ...Meeting\n        circle {\n          role {\n            name\n          }\n        }\n      }\n      meetings_recurring(where: { archivedAt: { _is_null: true } }) {\n        ...MeetingRecurring\n        meetings {\n          recurringDate\n        }\n      }\n    }\n  }\n\n": types.GetOrgMeetingsForCalendarAppDocument,
     "\n  query getMeetingForCalendarApp($meetingId: uuid!, $userId: uuid!) {\n    meeting_by_pk(id: $meetingId) {\n      ...Meeting\n      circle {\n        role {\n          name\n        }\n      }\n      org {\n        id\n        name\n        slug\n        members(where: {\n          userId: { _eq: $userId }\n          archivedAt: { _is_null: true }\n        }) {\n          id\n          name\n        }\n      }\n    }\n  }\n": types.GetMeetingForCalendarAppDocument,
@@ -26,7 +27,6 @@ const documents = {
     "\n  mutation createMeetingForCalendarApp($meeting: meeting_insert_input!) {\n    insert_meeting_one(object: $meeting) {\n      id\n    }\n  }\n": types.CreateMeetingForCalendarAppDocument,
     "\n  mutation updateMeetingForCalendarApp($meetingId: uuid!, $values: meeting_set_input!) {\n    update_meeting_by_pk(pk_columns: { id: $meetingId }, _set: $values) {\n      id\n    }\n  }\n": types.UpdateMeetingForCalendarAppDocument,
     "\n  mutation deleteMeetingForCalendarApp($meetingId: uuid!) {\n    delete_meeting_by_pk(id: $meetingId) {\n      id\n    }\n  }\n": types.DeleteMeetingForCalendarAppDocument,
-    "\n  query getUserApp($id: uuid!) {\n    user_app_by_pk(id: $id) {\n      ...UserAppFull\n    }\n  }\n": types.GetUserAppDocument,
     "\n  mutation createUserApp($values: user_app_insert_input!) {\n    insert_user_app_one(object: $values) {\n      id\n    }\n  }\n": types.CreateUserAppDocument,
     "\n  query getCircleOrgForArchive($id: uuid!) {\n    circle_by_pk(id: $id) {\n      id\n      orgId\n      parentId\n    }\n  }\n": types.GetCircleOrgForArchiveDocument,
     "\n  query getCircleOrgForRestore($id: uuid!) {\n    circle_by_pk(id: $id) {\n      id\n      orgId\n      parentId\n      archivedAt\n    }\n  }\n": types.GetCircleOrgForRestoreDocument,
@@ -197,7 +197,11 @@ export function gql(source: "\n  mutation updateUserApp($id: uuid!, $values: use
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  mutation archiveUserApp($id: uuid!, $archivedAt: timestamptz!) {\n    update_user_app_by_pk(pk_columns: { id: $id }, _set: { archivedAt: $archivedAt }) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation archiveUserApp($id: uuid!, $archivedAt: timestamptz!) {\n    update_user_app_by_pk(pk_columns: { id: $id }, _set: { archivedAt: $archivedAt }) {\n      id\n    }\n  }\n"];
+export function gql(source: "\n  mutation archiveUserApp($id: uuid!, $archivedAt: timestamptz!) {\n    update_user_app(\n      where: { id: { _eq: $id }, archivedAt: { _is_null: true } }\n      _set: { archivedAt: $archivedAt }\n    ) {\n      affected_rows\n    }\n  }\n"): (typeof documents)["\n  mutation archiveUserApp($id: uuid!, $archivedAt: timestamptz!) {\n    update_user_app(\n      where: { id: { _eq: $id }, archivedAt: { _is_null: true } }\n      _set: { archivedAt: $archivedAt }\n    ) {\n      affected_rows\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query getUserApp($id: uuid!) {\n    user_app_by_pk(id: $id) {\n      ...UserAppFull\n    }\n  }\n"): (typeof documents)["\n  query getUserApp($id: uuid!) {\n    user_app_by_pk(id: $id) {\n      ...UserAppFull\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -226,10 +230,6 @@ export function gql(source: "\n  mutation updateMeetingForCalendarApp($meetingId
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation deleteMeetingForCalendarApp($meetingId: uuid!) {\n    delete_meeting_by_pk(id: $meetingId) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation deleteMeetingForCalendarApp($meetingId: uuid!) {\n    delete_meeting_by_pk(id: $meetingId) {\n      id\n    }\n  }\n"];
-/**
- * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function gql(source: "\n  query getUserApp($id: uuid!) {\n    user_app_by_pk(id: $id) {\n      ...UserAppFull\n    }\n  }\n"): (typeof documents)["\n  query getUserApp($id: uuid!) {\n    user_app_by_pk(id: $id) {\n      ...UserAppFull\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
