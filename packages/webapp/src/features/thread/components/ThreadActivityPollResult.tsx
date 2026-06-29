@@ -1,4 +1,3 @@
-import { useOrgContext } from '@/org/contexts/OrgContext'
 import { Box, Stack, StackItem, Tooltip, useColorMode } from '@chakra-ui/react'
 import { ThreadPollAnswerFragment } from '@gql'
 import { ThreadActivityPollFragment } from '@rolebase/shared/model/thread_activity'
@@ -13,7 +12,6 @@ interface Props {
 function ThreadActivityPollResult({ activity, answers }: Props) {
   const { t } = useTranslation()
   const { colorMode } = useColorMode()
-  const members = useOrgContext().orgData?.members
 
   const results = useMemo(
     () =>
@@ -31,15 +29,13 @@ function ThreadActivityPollResult({ activity, answers }: Props) {
           // Voters that gave at least 1 point to this choice
           voters: answers.reduce<string[]>((names, answer) => {
             if (answer.choicesPoints[index] > 0) {
-              names.push(
-                members?.find((m) => m.userId === answer.userId)?.name || '?'
-              )
+              names.push(answer.member?.name || '?')
             }
             return names
           }, []),
         }))
         .sort((a, b) => b.points - a.points),
-    [activity, members, answers]
+    [activity, answers]
   )
 
   const maxPoints = useMemo(

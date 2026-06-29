@@ -159,6 +159,7 @@ export default function ProposalModal({
     if (activity) {
       await updateActivity({ variables: { id: activity.id, values: { data } } })
     } else {
+      if (!currentMember) return
       // Use the given thread, or create one named after the proposal.
       let targetThreadId = threadId
       const createdThread = !targetThreadId
@@ -186,6 +187,7 @@ export default function ProposalModal({
         variables: {
           values: {
             threadId: targetThreadId,
+            memberId: currentMember.id,
             type: Thread_Activity_Type_Enum.Proposal,
             data,
           },

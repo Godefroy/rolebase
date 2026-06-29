@@ -33,6 +33,7 @@ const GET_VOTES = gql(`
     thread_proposal_vote(where: { activityId: { _eq: $activityId } }) {
       userId
       vote
+      memberId
     }
   }
 `)
@@ -46,7 +47,14 @@ export interface LoadedProposal {
   data: ThreadActivityDataProposal
   voterUserIds: string[]
   leaderUserIds: string[]
-  votes: { userId: string; vote: string }[]
+  // Author's active member (null if the author has since been archived),
+  // resolved here from the already-loaded org data to avoid an extra query.
+  author: { id: string; name: string } | null
+  votes: {
+    userId: string
+    vote: string
+    memberId?: string | null
+  }[]
 }
 
 // Load everything needed to decide and apply a proposal resolution.
@@ -83,6 +91,8 @@ export async function loadProposal(
     leaders.map((p) => p.member.userId).filter(truthy)
   )
 
+  const author = orgData.members.find((m) => m.userId === activity.userId)
+
   return {
     activityId: activity.id,
     authorUserId: activity.userId,
@@ -92,6 +102,7 @@ export async function loadProposal(
     data,
     voterUserIds: [...voterUserIds],
     leaderUserIds: [...leaderUserIds],
+    author: author ? { id: author.id, name: author.name } : null,
     votes,
   }
 }

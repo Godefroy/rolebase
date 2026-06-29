@@ -1,5 +1,5 @@
 import Tab from '@/common/atoms/Tab'
-import MemberByIdButton from '@/member/components/MemberByIdButton'
+import MemberButton from '@/member/components/MemberButton'
 import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   Badge,
@@ -18,8 +18,10 @@ import {
   UseModalProps,
   VStack,
 } from '@chakra-ui/react'
+import { useMembersByIdsQuery } from '@gql'
+import { truthy } from '@rolebase/shared/helpers/truthy'
 import { ProposalVoteResult } from '@rolebase/shared/model/proposal'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
 interface Props extends UseModalProps {
@@ -46,7 +48,27 @@ export default function ProposalVotersModal({
   ...modalProps
 }: Props) {
   const { t } = useTranslation()
-  const members = useOrgContext().orgData?.members
+
+  // Load voter members by id, including archived ones (the org provider excludes
+  // archived members). Fall back to the org provider by userId for old snapshots
+  // that don't carry a memberId.
+  const memberIds = useMemo(
+    () => [...new Set(votes.map((v) => v.memberId).filter(truthy))],
+    [votes]
+  )
+  const { data } = useMembersByIdsQuery({
+    variables: { ids: memberIds },
+    skip: memberIds.length === 0,
+  })
+  const membersById = useMemo(
+    () => new Map((data?.member ?? []).map((m) => [m.id, m])),
+    [data]
+  )
+  const activeMembers = useOrgContext().orgData?.members
+
+  const getVoterMember = (vote: ProposalVoteResult) =>
+    (vote.memberId ? membersById.get(vote.memberId) : undefined) ??
+    activeMembers?.find((m) => m.userId === vote.userId)
 
   const voteLabel = (vote: string) =>
     vote === 'approve'
@@ -95,13 +117,11 @@ export default function ProposalVotersModal({
                   ) : (
                     <VStack align="stretch" spacing={1}>
                       {list.map((vote) => {
-                        const member = members?.find(
-                          (m) => m.userId === vote.userId
-                        )
+                        const member = getVoterMember(vote)
                         return (
                           <Flex key={vote.userId} align="center" gap={2}>
                             {member ? (
-                              <MemberByIdButton id={member.id} variant="ghost" />
+                              <MemberButton member={member} variant="ghost" />
                             ) : (
                               <Text>?</Text>
                             )}

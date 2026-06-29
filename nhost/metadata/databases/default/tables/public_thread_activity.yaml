@@ -38,6 +38,9 @@ object_relationships:
         remote_table:
           name: thread
           schema: public
+  - name: member
+    using:
+      foreign_key_constraint_on: memberId
   - name: thread
     using:
       foreign_key_constraint_on: threadId
@@ -56,36 +59,41 @@ insert_permissions:
   - role: user
     permission:
       check:
-        thread:
-          _or:
-            - circle:
-                participants:
-                  member:
-                    userId:
-                      _eq: X-Hasura-User-Id
-            - extra_members:
-                member:
-                  userId:
-                    _eq: X-Hasura-User-Id
-            - _and:
-                - private:
-                    _eq: false
-                - org:
-                    members:
-                      _and:
-                        - userId:
-                            _eq: X-Hasura-User-Id
-                        - _or:
-                            - role:
-                                _eq: Member
-                            - role:
-                                _eq: Admin
-                            - role:
-                                _eq: Owner
+        _and:
+          - thread:
+              _or:
+                - circle:
+                    participants:
+                      member:
+                        userId:
+                          _eq: X-Hasura-User-Id
+                - extra_members:
+                    member:
+                      userId:
+                        _eq: X-Hasura-User-Id
+                - _and:
+                    - private:
+                        _eq: false
+                    - org:
+                        members:
+                          _and:
+                            - userId:
+                                _eq: X-Hasura-User-Id
+                            - _or:
+                                - role:
+                                    _eq: Member
+                                - role:
+                                    _eq: Admin
+                                - role:
+                                    _eq: Owner
+          - member:
+              userId:
+                _eq: X-Hasura-User-Id
       set:
         userId: x-hasura-User-Id
       columns:
         - data
+        - memberId
         - refDecisionId
         - refMeetingId
         - refTaskId
@@ -100,6 +108,7 @@ select_permissions:
         - createdAt
         - data
         - id
+        - memberId
         - refDecisionId
         - refMeetingId
         - refTaskId

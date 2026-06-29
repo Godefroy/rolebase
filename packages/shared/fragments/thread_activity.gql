@@ -5,6 +5,9 @@ fragment ThreadActivity on thread_activity {
   createdAt
   type
   data
+  member {
+    ...ThreadActivityMember
+  }
   reactions {
     ...ThreadActivityReaction
   }

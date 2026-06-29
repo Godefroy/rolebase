@@ -4,6 +4,9 @@ fragment ThreadPollAnswer on thread_poll_answer {
   userId
   choicesPoints
   createdAt
+  member {
+    ...ThreadActivityMember
+  }
 }
 
 subscription threadPollAnswers($activityId: uuid!) {

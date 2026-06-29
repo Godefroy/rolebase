@@ -1534,6 +1534,7 @@
     "filters": "Filters",
     "archives": "Archives",
     "archived": "Archived",
+    "memberDisabled": "Disabled member",
     "error": "Error",
     "name": "Name",
     "copy": "Copy",

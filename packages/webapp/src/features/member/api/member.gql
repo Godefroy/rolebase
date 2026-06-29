@@ -4,6 +4,14 @@ query getMember($id: uuid!) {
   }
 }
 
+# Load members by id, including archived ones (unlike the org provider, which
+# excludes archived members). Used to display past voters/authors.
+query membersByIds($ids: [uuid!]!) {
+  member(where: { id: { _in: $ids } }) {
+    ...ThreadActivityMember
+  }
+}
+
 subscription members($orgId: uuid!, $active: Boolean!) {
   member(
     where: { orgId: { _eq: $orgId }, archivedAt: { _is_null: $active } }

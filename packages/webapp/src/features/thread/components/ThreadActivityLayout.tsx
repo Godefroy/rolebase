@@ -4,13 +4,13 @@ import MemberLink from '@/member/components/MemberLink'
 import useCurrentMember from '@/member/hooks/useCurrentMember'
 import useOrgAdmin from '@/member/hooks/useOrgAdmin'
 import useOrgMember from '@/member/hooks/useOrgMember'
-import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   Avatar,
   Box,
   Flex,
   HStack,
   Link,
+  Tag,
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
@@ -20,7 +20,8 @@ import {
   useDeleteThreadActivityReactionMutation,
 } from '@gql'
 import { format } from 'date-fns'
-import React, { ReactNode, useContext, useMemo } from 'react'
+import React, { ReactNode, useContext } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Link as ReachLink } from 'react-router'
 import { ThreadContext } from '../contexts/ThreadContext'
 import ActivityDeleteModal from '../modals/ActivityDeleteModal'
@@ -43,14 +44,8 @@ export default function ThreadActivityLayout({
   allowDelete,
   children,
 }: Props) {
+  const { t } = useTranslation()
   const { path, handleMarkUnread } = useContext(ThreadContext)!
-
-  // Retrieve author member
-  const members = useOrgContext().orgData?.members
-  const member = useMemo(
-    () => members?.find((m) => m.userId === activity.userId),
-    [activity.userId, members]
-  )
 
   // Can delete?
   const currentMember = useCurrentMember()
@@ -80,6 +75,7 @@ export default function ThreadActivityLayout({
       variables: {
         values: {
           activityId: activity.id,
+          memberId: currentMember.id,
           shortcode,
         },
       },
@@ -105,8 +101,8 @@ export default function ThreadActivityLayout({
     >
       <ThreadActivityAnchor activityId={activity.id} />
 
-      {member ? (
-        <MemberAvatar member={member} noTooltip size="md" mr={3} />
+      {activity.member ? (
+        <MemberAvatar member={activity.member} noTooltip size="md" mr={3} />
       ) : (
         <Avatar name="?" size="md" mr={3} />
       )}
@@ -142,7 +138,12 @@ export default function ThreadActivityLayout({
         </HStack>
 
         <Text>
-          {member && <MemberLink id={member.id} name={member.name} />}
+          {activity.member && <MemberLink id={activity.member.id} name={activity.member.name} />}
+          {activity.member?.archivedAt && (
+            <Tag size="sm" colorScheme="gray" ml={2}>
+              {t('common.memberDisabled')}
+            </Tag>
+          )}
           <Link
             as={ReachLink}
             to={`${path}#activity-${activity.id}`}

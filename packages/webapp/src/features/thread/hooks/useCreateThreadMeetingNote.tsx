@@ -1,3 +1,4 @@
+import useCurrentMember from '@/member/hooks/useCurrentMember'
 import {
   Thread_Activity_Type_Enum,
   useCreateThreadActivityMutation,
@@ -5,6 +6,7 @@ import {
 import { useCallback } from 'react'
 
 export default function useCreateThreadMeetingNote() {
+  const currentMember = useCurrentMember()
   const [createThreadActivity] = useCreateThreadActivityMutation()
 
   // Update notes
@@ -15,6 +17,7 @@ export default function useCreateThreadMeetingNote() {
         variables: {
           values: {
             threadId,
+            memberId: currentMember?.id,
             type: Thread_Activity_Type_Enum.MeetingNote,
             refMeetingId: meetingId,
             data: {
@@ -24,6 +27,6 @@ export default function useCreateThreadMeetingNote() {
         },
       })
     },
-    []
+    [currentMember?.id]
   )
 }

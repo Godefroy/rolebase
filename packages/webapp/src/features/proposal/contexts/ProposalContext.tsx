@@ -1,4 +1,5 @@
 import { ThreadContext } from '@/thread/contexts/ThreadContext'
+import useCurrentMember from '@/member/hooks/useCurrentMember'
 import { useAuth } from '@/user/hooks/useAuth'
 import { UseDisclosureReturn, useDisclosure } from '@chakra-ui/react'
 import {
@@ -56,6 +57,7 @@ interface Props {
 
 export function ProposalProvider({ activity, children }: Props) {
   const { user } = useAuth()
+  const currentMember = useCurrentMember()
   const { activities } = useContext(ThreadContext)!
   const editModal = useDisclosure()
 
@@ -93,9 +95,15 @@ export function ProposalProvider({ activity, children }: Props) {
       updateVote({
         variables: { id: state.userVote.id, values: { vote: value } },
       })
-    } else {
+    } else if (currentMember) {
       createVote({
-        variables: { values: { activityId: activity.id, vote: value } },
+        variables: {
+          values: {
+            activityId: activity.id,
+            memberId: currentMember.id,
+            vote: value,
+          },
+        },
       })
     }
   }

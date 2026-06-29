@@ -5,28 +5,36 @@ object_relationships:
   - name: activity
     using:
       foreign_key_constraint_on: activityId
+  - name: member
+    using:
+      foreign_key_constraint_on: memberId
 insert_permissions:
   - role: user
     permission:
       check:
-        activity:
-          thread:
-            org:
-              members:
-                _and:
-                  - userId:
-                      _eq: X-Hasura-User-Id
-                  - _or:
-                      - role:
-                          _eq: Member
-                      - role:
-                          _eq: Admin
-                      - role:
-                          _eq: Owner
+        _and:
+          - activity:
+              thread:
+                org:
+                  members:
+                    _and:
+                      - userId:
+                          _eq: X-Hasura-User-Id
+                      - _or:
+                          - role:
+                              _eq: Member
+                          - role:
+                              _eq: Admin
+                          - role:
+                              _eq: Owner
+          - member:
+              userId:
+                _eq: X-Hasura-User-Id
       set:
         userId: x-hasura-User-Id
       columns:
         - activityId
+        - memberId
         - vote
 select_permissions:
   - role: user
@@ -35,6 +43,7 @@ select_permissions:
         - activityId
         - createdAt
         - id
+        - memberId
         - userId
         - vote
       filter:

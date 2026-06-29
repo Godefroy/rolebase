@@ -12,22 +12,6 @@ import { loadOrgData } from '../org/loadOrgData'
 import { performArchiveCircle } from '../circle/utils/performArchiveCircle'
 import { LoadedProposal } from './loadProposal'
 
-const GET_AUTHOR_MEMBER = gql(`
-  query getProposalAuthorMember($orgId: uuid!, $userId: uuid!) {
-    member(
-      where: {
-        orgId: { _eq: $orgId }
-        userId: { _eq: $userId }
-        archivedAt: { _is_null: true }
-      }
-      limit: 1
-    ) {
-      id
-      name
-    }
-  }
-`)
-
 const INSERT_DECISION = gql(`
   mutation insertProposalDecision($values: decision_insert_input!) {
     insert_decision_one(object: $values) {
@@ -198,7 +182,7 @@ const dbMethods: EntitiesApplyMethods = {
 // create the decision when approved, then record the result on the thread.
 // Runs server-side because a voter may lack the rights to apply the changes.
 export async function applyResolution(loaded: LoadedProposal): Promise<void> {
-  const { data, votes } = loaded
+  const { data, votes, author } = loaded
   if (data.status !== 'inProgress') return
 
   const { approved } = resolveProposal(
@@ -210,12 +194,6 @@ export async function applyResolution(loaded: LoadedProposal): Promise<void> {
   let decisionId: string | null = null
 
   if (approved) {
-    const { member } = await adminRequest(GET_AUTHOR_MEMBER, {
-      orgId: loaded.orgId,
-      userId: loaded.authorUserId,
-    })
-    const author = member[0]
-
     // Create the decision first so the applied logs can reference it
     const decision = await adminRequest(INSERT_DECISION, {
       values: {
@@ -289,6 +267,7 @@ export async function applyResolution(loaded: LoadedProposal): Promise<void> {
     values: {
       threadId: loaded.threadId,
       userId: loaded.authorUserId,
+      memberId: author?.id,
       type: Thread_Activity_Type_Enum.ProposalEvent,
       data: {
         proposalActivityId: loaded.activityId,
@@ -298,6 +277,7 @@ export async function applyResolution(loaded: LoadedProposal): Promise<void> {
         votes: votes.map((v) => ({
           userId: v.userId,
           vote: v.vote as ProposalVoteValue,
+          memberId: v.memberId ?? undefined,
         })),
         showVoters: data.showVoters,
         decisionId,

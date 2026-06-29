@@ -106,6 +106,7 @@ export default forwardRef(function ThreadActivities(
       type: Thread_Activity_Type_Enum.MeetingNote,
       refMeeting: meetingState.meeting,
       reactions: [],
+      member: null,
       data: {
         notes: '',
       },

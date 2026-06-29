@@ -1,5 +1,4 @@
 import useCurrentMember from '@/member/hooks/useCurrentMember'
-import { useOrgContext } from '@/org/contexts/OrgContext'
 import { HStack } from '@chakra-ui/react'
 import { ThreadActivityReactionFragment } from '@gql'
 import React, { useMemo } from 'react'
@@ -32,13 +31,13 @@ export default function ReactionsList({
 }: Props) {
   const { t } = useTranslation()
   const currentMember = useCurrentMember()
-  const members = useOrgContext().orgData?.members
 
   // Aggregate reactions by emoji
   const reactionsAgg = useMemo(
     () =>
       reactions.reduce((acc, r) => {
-        const member = members?.find((m) => m.userId === r.userId)
+        // Author member, embedded in the reaction so archived members still show.
+        const member = r.member
         if (!member) return acc
 
         const existing = acc.find((e) => e.shortcode === r.shortcode)
@@ -64,7 +63,7 @@ export default function ReactionsList({
         }
         return acc
       }, [] as ReactionsAggregate[]),
-    [reactions, currentMember, members]
+    [reactions, currentMember]
   )
 
   return (

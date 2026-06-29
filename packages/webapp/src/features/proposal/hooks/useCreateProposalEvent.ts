@@ -1,3 +1,4 @@
+import useCurrentMember from '@/member/hooks/useCurrentMember'
 import {
   Thread_Activity_Type_Enum,
   useCreateThreadActivityMutation,
@@ -16,6 +17,7 @@ type EventExtra = Omit<
 // Append a generic proposal event (resolution, edit, cancellation, reminder)
 // to the thread.
 export default function useCreateProposalEvent() {
+  const currentMember = useCurrentMember()
   const [createActivity] = useCreateThreadActivityMutation()
 
   return useCallback(
@@ -29,11 +31,12 @@ export default function useCreateProposalEvent() {
         variables: {
           values: {
             threadId,
+            memberId: currentMember?.id,
             type: Thread_Activity_Type_Enum.ProposalEvent,
             data: { proposalActivityId, event, ...extra },
           },
         },
       }),
-    []
+    [currentMember?.id]
   )
 }

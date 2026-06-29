@@ -91,8 +91,7 @@ const documents = {
     "\n        query getOrgIdForRecompute($circleId: uuid!) {\n          circle_by_pk(id: $circleId) {\n            orgId\n          }\n        }\n      ": types.GetOrgIdForRecomputeDocument,
     "\n        mutation replaceParticipantsForRecompute(\n          $participants: [circle_participant_cache_insert_input!]!\n          $deleteWhere: circle_participant_cache_bool_exp!\n        ) {\n          delete_circle_participant_cache(where: $deleteWhere) {\n            returning {\n              id\n            }\n          }\n          insert_circle_participant_cache(objects: $participants) {\n            returning {\n              id\n            }\n          }\n        }\n    ": types.ReplaceParticipantsForRecomputeDocument,
     "\n  query getProposalForResolution($id: uuid!) {\n    thread_activity_by_pk(id: $id) {\n      id\n      userId\n      threadId\n      type\n      data\n      thread {\n        id\n        orgId\n        circleId\n        extra_members {\n          memberId\n          member {\n            id\n            userId\n          }\n        }\n      }\n    }\n  }\n": types.GetProposalForResolutionDocument,
-    "\n  query getProposalVotesForResolution($activityId: uuid!) {\n    thread_proposal_vote(where: { activityId: { _eq: $activityId } }) {\n      userId\n      vote\n    }\n  }\n": types.GetProposalVotesForResolutionDocument,
-    "\n  query getProposalAuthorMember($orgId: uuid!, $userId: uuid!) {\n    member(\n      where: {\n        orgId: { _eq: $orgId }\n        userId: { _eq: $userId }\n        archivedAt: { _is_null: true }\n      }\n      limit: 1\n    ) {\n      id\n      name\n    }\n  }\n": types.GetProposalAuthorMemberDocument,
+    "\n  query getProposalVotesForResolution($activityId: uuid!) {\n    thread_proposal_vote(where: { activityId: { _eq: $activityId } }) {\n      userId\n      vote\n      memberId\n    }\n  }\n": types.GetProposalVotesForResolutionDocument,
     "\n  mutation insertProposalDecision($values: decision_insert_input!) {\n    insert_decision_one(object: $values) {\n      id\n    }\n  }\n": types.InsertProposalDecisionDocument,
     "\n  mutation insertProposalLog($values: log_insert_input!) {\n    insert_log_one(object: $values) {\n      id\n    }\n  }\n": types.InsertProposalLogDocument,
     "\n  mutation updateProposalActivity($id: uuid!, $data: jsonb!) {\n    update_thread_activity_by_pk(\n      pk_columns: { id: $id }\n      _set: { data: $data }\n    ) {\n      id\n    }\n  }\n": types.UpdateProposalActivityDocument,
@@ -146,7 +145,7 @@ const documents = {
     "fragment MeetingAttendee on meeting_attendee {\n  id\n  meetingId\n  memberId\n  present\n  startNotified\n}": types.MeetingAttendeeFragmentDoc,
     "fragment MeetingRecurring on meeting_recurring {\n  id\n  orgId\n  circleId\n  circle {\n    role {\n      name\n      colorHue\n    }\n  }\n  scope\n  templateId\n  template {\n    title\n    stepsConfig\n  }\n  rrule\n  duration\n  videoConf\n  private\n  invitedReadonly\n  createdAt\n}": types.MeetingRecurringFragmentDoc,
     "fragment MeetingStep on meeting_step {\n  id\n  meetingId\n  stepConfigId\n  notes\n  type\n  data\n}": types.MeetingStepFragmentDoc,
-    "fragment Member on member {\n  id\n  orgId\n  archivedAt\n  name\n  description\n  pictureFileId\n  picture\n  userId\n  inviteEmail\n  inviteDate\n  role\n}\n\nfragment MemberSummary on member {\n  id\n  userId\n  name\n  picture\n}": types.MemberFragmentDoc,
+    "fragment Member on member {\n  id\n  orgId\n  archivedAt\n  name\n  description\n  pictureFileId\n  picture\n  userId\n  inviteEmail\n  inviteDate\n  role\n}\n\nfragment MemberSummary on member {\n  id\n  userId\n  name\n  picture\n}\n\nfragment ThreadActivityMember on member {\n  id\n  userId\n  name\n  picture\n  archivedAt\n}": types.MemberFragmentDoc,
     "fragment News on news {\n  id\n  createdAt\n  decision {\n    ...Decision\n  }\n  meeting {\n    ...MeetingSummary\n  }\n  thread {\n    ...ThreadWithFirstActivity\n  }\n}": types.NewsFragmentDoc,
     "fragment Org on org {\n  id\n  name\n  archivedAt\n  createdAt\n  slug\n  shareOrg\n  shareMembers\n  governanceMode\n  defaultGraphView\n  icon\n  homeNote\n}\n\nfragment OrgData on org {\n  ...Org\n  org_subscription {\n    ...OrgSubscription\n  }\n  circles(where: {archivedAt: {_is_null: true}}) {\n    ...Circle\n  }\n  circleMembers(where: {archivedAt: {_is_null: true}}) {\n    ...CircleMember\n  }\n  circleLinks(where: {archivedAt: {_is_null: true}}) {\n    ...CircleLink\n  }\n  roles(where: {archivedAt: {_is_null: true}}) {\n    ...RoleSummary\n  }\n  members(where: {archivedAt: {_is_null: true}}) {\n    ...Member\n  }\n}": types.OrgFragmentDoc,
     "fragment OrgSubscription on org_subscription {\n  id\n  stripeSubscriptionId\n  stripeCustomerId\n  status\n  type\n}": types.OrgSubscriptionFragmentDoc,
@@ -154,8 +153,8 @@ const documents = {
     "fragment RoleAI on role_ai {\n  id\n  name\n  purpose\n  domain\n  accountabilities\n  checklist\n  indicators\n  notes\n}": types.RoleAiFragmentDoc,
     "fragment Task on task {\n  id\n  orgId\n  circleId\n  memberId\n  title\n  description\n  archivedAt\n  createdAt\n  dueDate\n  status\n  private\n}": types.TaskFragmentDoc,
     "fragment Thread on thread {\n  id\n  orgId\n  circleId\n  initiatorMemberId\n  title\n  createdAt\n  archivedAt\n  pinned\n  status\n  private\n  extra_members {\n    ...ThreadExtraMember\n  }\n}\n\nfragment ThreadMemberStatus on thread_member_status {\n  lastReadActivityId\n  lastReadDate\n}\n\nfragment ThreadWithFirstActivity on thread {\n  ...Thread\n  activities(\n    where: {type: {_eq: Message}, archivedAt: {_is_null: true}}\n    order_by: {createdAt: asc}\n    limit: 1\n  ) {\n    ...ThreadActivity\n  }\n}": types.ThreadFragmentDoc,
-    "fragment ThreadActivity on thread_activity {\n  id\n  threadId\n  userId\n  createdAt\n  type\n  data\n  reactions {\n    ...ThreadActivityReaction\n  }\n  refThread {\n    ...Thread\n  }\n  refMeeting {\n    ...MeetingSummary\n  }\n  refTask {\n    ...Task\n  }\n  refDecision {\n    ...Decision\n  }\n}": types.ThreadActivityFragmentDoc,
-    "fragment ThreadActivityReaction on thread_activity_reaction {\n  id\n  userId\n  shortcode\n}": types.ThreadActivityReactionFragmentDoc,
+    "fragment ThreadActivity on thread_activity {\n  id\n  threadId\n  userId\n  createdAt\n  type\n  data\n  member {\n    ...ThreadActivityMember\n  }\n  reactions {\n    ...ThreadActivityReaction\n  }\n  refThread {\n    ...Thread\n  }\n  refMeeting {\n    ...MeetingSummary\n  }\n  refTask {\n    ...Task\n  }\n  refDecision {\n    ...Decision\n  }\n}": types.ThreadActivityFragmentDoc,
+    "fragment ThreadActivityReaction on thread_activity_reaction {\n  id\n  userId\n  shortcode\n  member {\n    ...ThreadActivityMember\n  }\n}": types.ThreadActivityReactionFragmentDoc,
     "fragment ThreadExtraMember on thread_extra_member {\n  id\n  threadId\n  memberId\n}": types.ThreadExtraMemberFragmentDoc,
     "fragment UserApp on user_app {\n  id\n  userId\n  type\n  config\n}\n\nfragment UserAppFull on user_app {\n  id\n  userId\n  type\n  secretConfig\n  config\n  tmpData\n  createdAt\n  user {\n    metadata\n  }\n}": types.UserAppFragmentDoc,
 };
@@ -489,11 +488,7 @@ export function gql(source: "\n  query getProposalForResolution($id: uuid!) {\n 
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query getProposalVotesForResolution($activityId: uuid!) {\n    thread_proposal_vote(where: { activityId: { _eq: $activityId } }) {\n      userId\n      vote\n    }\n  }\n"): (typeof documents)["\n  query getProposalVotesForResolution($activityId: uuid!) {\n    thread_proposal_vote(where: { activityId: { _eq: $activityId } }) {\n      userId\n      vote\n    }\n  }\n"];
-/**
- * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function gql(source: "\n  query getProposalAuthorMember($orgId: uuid!, $userId: uuid!) {\n    member(\n      where: {\n        orgId: { _eq: $orgId }\n        userId: { _eq: $userId }\n        archivedAt: { _is_null: true }\n      }\n      limit: 1\n    ) {\n      id\n      name\n    }\n  }\n"): (typeof documents)["\n  query getProposalAuthorMember($orgId: uuid!, $userId: uuid!) {\n    member(\n      where: {\n        orgId: { _eq: $orgId }\n        userId: { _eq: $userId }\n        archivedAt: { _is_null: true }\n      }\n      limit: 1\n    ) {\n      id\n      name\n    }\n  }\n"];
+export function gql(source: "\n  query getProposalVotesForResolution($activityId: uuid!) {\n    thread_proposal_vote(where: { activityId: { _eq: $activityId } }) {\n      userId\n      vote\n      memberId\n    }\n  }\n"): (typeof documents)["\n  query getProposalVotesForResolution($activityId: uuid!) {\n    thread_proposal_vote(where: { activityId: { _eq: $activityId } }) {\n      userId\n      vote\n      memberId\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -709,7 +704,7 @@ export function gql(source: "fragment MeetingStep on meeting_step {\n  id\n  mee
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "fragment Member on member {\n  id\n  orgId\n  archivedAt\n  name\n  description\n  pictureFileId\n  picture\n  userId\n  inviteEmail\n  inviteDate\n  role\n}\n\nfragment MemberSummary on member {\n  id\n  userId\n  name\n  picture\n}"): (typeof documents)["fragment Member on member {\n  id\n  orgId\n  archivedAt\n  name\n  description\n  pictureFileId\n  picture\n  userId\n  inviteEmail\n  inviteDate\n  role\n}\n\nfragment MemberSummary on member {\n  id\n  userId\n  name\n  picture\n}"];
+export function gql(source: "fragment Member on member {\n  id\n  orgId\n  archivedAt\n  name\n  description\n  pictureFileId\n  picture\n  userId\n  inviteEmail\n  inviteDate\n  role\n}\n\nfragment MemberSummary on member {\n  id\n  userId\n  name\n  picture\n}\n\nfragment ThreadActivityMember on member {\n  id\n  userId\n  name\n  picture\n  archivedAt\n}"): (typeof documents)["fragment Member on member {\n  id\n  orgId\n  archivedAt\n  name\n  description\n  pictureFileId\n  picture\n  userId\n  inviteEmail\n  inviteDate\n  role\n}\n\nfragment MemberSummary on member {\n  id\n  userId\n  name\n  picture\n}\n\nfragment ThreadActivityMember on member {\n  id\n  userId\n  name\n  picture\n  archivedAt\n}"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -741,11 +736,11 @@ export function gql(source: "fragment Thread on thread {\n  id\n  orgId\n  circl
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "fragment ThreadActivity on thread_activity {\n  id\n  threadId\n  userId\n  createdAt\n  type\n  data\n  reactions {\n    ...ThreadActivityReaction\n  }\n  refThread {\n    ...Thread\n  }\n  refMeeting {\n    ...MeetingSummary\n  }\n  refTask {\n    ...Task\n  }\n  refDecision {\n    ...Decision\n  }\n}"): (typeof documents)["fragment ThreadActivity on thread_activity {\n  id\n  threadId\n  userId\n  createdAt\n  type\n  data\n  reactions {\n    ...ThreadActivityReaction\n  }\n  refThread {\n    ...Thread\n  }\n  refMeeting {\n    ...MeetingSummary\n  }\n  refTask {\n    ...Task\n  }\n  refDecision {\n    ...Decision\n  }\n}"];
+export function gql(source: "fragment ThreadActivity on thread_activity {\n  id\n  threadId\n  userId\n  createdAt\n  type\n  data\n  member {\n    ...ThreadActivityMember\n  }\n  reactions {\n    ...ThreadActivityReaction\n  }\n  refThread {\n    ...Thread\n  }\n  refMeeting {\n    ...MeetingSummary\n  }\n  refTask {\n    ...Task\n  }\n  refDecision {\n    ...Decision\n  }\n}"): (typeof documents)["fragment ThreadActivity on thread_activity {\n  id\n  threadId\n  userId\n  createdAt\n  type\n  data\n  member {\n    ...ThreadActivityMember\n  }\n  reactions {\n    ...ThreadActivityReaction\n  }\n  refThread {\n    ...Thread\n  }\n  refMeeting {\n    ...MeetingSummary\n  }\n  refTask {\n    ...Task\n  }\n  refDecision {\n    ...Decision\n  }\n}"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "fragment ThreadActivityReaction on thread_activity_reaction {\n  id\n  userId\n  shortcode\n}"): (typeof documents)["fragment ThreadActivityReaction on thread_activity_reaction {\n  id\n  userId\n  shortcode\n}"];
+export function gql(source: "fragment ThreadActivityReaction on thread_activity_reaction {\n  id\n  userId\n  shortcode\n  member {\n    ...ThreadActivityMember\n  }\n}"): (typeof documents)["fragment ThreadActivityReaction on thread_activity_reaction {\n  id\n  userId\n  shortcode\n  member {\n    ...ThreadActivityMember\n  }\n}"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

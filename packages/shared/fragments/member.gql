@@ -18,3 +18,11 @@ fragment MemberSummary on member {
   name
   picture
 }
+
+fragment ThreadActivityMember on member {
+  id
+  userId
+  name
+  picture
+  archivedAt
+}

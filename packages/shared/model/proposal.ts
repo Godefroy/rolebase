@@ -48,6 +48,11 @@ export interface ThreadActivityDataProposal {
 export interface ProposalVoteResult {
   userId: string
   vote: ProposalVoteValue
+  // Voter member id, recorded at resolution time. Stable across archiving
+  // (unlike userId, which is nulled), so the voters modal can load the member
+  // name/picture by id even after the member is archived. Optional for
+  // snapshots written before this field existed (and not recoverable).
+  memberId?: string
 }
 
 // Generic event appended to the thread about a proposal (resolution,

@@ -12,6 +12,7 @@ category: 'threads'
 | `id` | `uuid` | Unique identifier for the poll answer (auto-generated) |
 | `activityId` | `uuid` | Reference to the thread activity (poll) |
 | `userId` | `uuid` | Reference to the user who submitted the answer |
+| `memberId` | `uuid` | Reference to the member who submitted the answer |
 | `choicesPoints` | `Int[]` | Array of integer points assigned to each poll choice |
 | `createdAt` | `Timestamp` | When the answer was submitted (defaults to current timestamp) |
 

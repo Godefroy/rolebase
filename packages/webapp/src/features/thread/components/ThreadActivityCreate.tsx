@@ -97,20 +97,21 @@ export default function ThreadActivityCreate({ thread, ...boxProps }: Props) {
   // Create a new activity
   const handleCreateActivity = useCallback(
     async (activity: Thread_Activity_Insert_Input) => {
-      if (!org) return
+      if (!org || !currentMember) return
 
       // Create activity
       await createThreadActivity({
         variables: {
           values: {
             threadId: thread.id,
+            memberId: currentMember.id,
             data: {},
             ...activity,
           },
         },
       })
     },
-    [org?.id, thread]
+    [org?.id, thread, currentMember?.id]
   )
 
   // Send message

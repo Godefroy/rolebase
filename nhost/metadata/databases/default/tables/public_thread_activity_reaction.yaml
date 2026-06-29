@@ -5,23 +5,31 @@ object_relationships:
   - name: activity
     using:
       foreign_key_constraint_on: activityId
+  - name: member
+    using:
+      foreign_key_constraint_on: memberId
 insert_permissions:
   - role: user
     permission:
       check:
-        activity:
-          thread:
-            org:
-              members:
-                _and:
-                  - userId:
-                      _eq: X-Hasura-User-Id
-                  - role:
-                      _neq: Readonly
+        _and:
+          - activity:
+              thread:
+                org:
+                  members:
+                    _and:
+                      - userId:
+                          _eq: X-Hasura-User-Id
+                      - role:
+                          _neq: Readonly
+          - member:
+              userId:
+                _eq: X-Hasura-User-Id
       set:
         userId: x-hasura-User-Id
       columns:
         - activityId
+        - memberId
         - shortcode
     comment: ""
 select_permissions:
@@ -31,6 +39,7 @@ select_permissions:
         - activityId
         - createdAt
         - id
+        - memberId
         - shortcode
         - userId
       filter: {}

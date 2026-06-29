@@ -1,5 +1,6 @@
 import NumberInputController from '@/common/atoms/NumberInputController'
 import EditorController from '@/editor/components/EditorController'
+import useCurrentMember from '@/member/hooks/useCurrentMember'
 import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   Accordion,
@@ -104,6 +105,7 @@ export default function ActivityPollModal({
 }: Props) {
   const { t } = useTranslation()
   const { orgId } = useOrgContext()
+  const currentMember = useCurrentMember()
   const [updateActivity] = useUpdateThreadActivityMutation()
   const [createActivity] = useCreateThreadActivityMutation()
   const [deletePollAnswers] = useDeleteThreadPollAnswersMutation()
@@ -198,11 +200,12 @@ export default function ActivityPollModal({
         await updateActivity({
           variables: { id: activity.id, values: { data: activityData } },
         })
-      } else if (threadId) {
+      } else if (threadId && currentMember) {
         await createActivity({
           variables: {
             values: {
               threadId,
+              memberId: currentMember.id,
               type: Thread_Activity_Type_Enum.Poll,
               data: activityData,
             },

@@ -2,6 +2,7 @@ import Loading from '@/common/atoms/Loading'
 import Markdown from '@/common/atoms/Markdown'
 import TextErrors from '@/common/atoms/TextErrors'
 import { useAuth } from '@/user/hooks/useAuth'
+import useCurrentMember from '@/member/hooks/useCurrentMember'
 import useOrgMember from '@/member/hooks/useOrgMember'
 import {
   Card,
@@ -32,6 +33,7 @@ interface Props {
 export default function ThreadActivityPoll({ activity }: Props) {
   const { t } = useTranslation()
   const { user } = useAuth()
+  const currentMember = useCurrentMember()
   const isMember = useOrgMember()
 
   // Edit modal
@@ -64,7 +66,7 @@ export default function ThreadActivityPoll({ activity }: Props) {
 
   // Vote
   const handleVote = (choicesPoints: number[]) => {
-    if (!answers || !user) return
+    if (!answers || !user || !currentMember) return
     const existingAnswer = answers.find((a) => a.userId === user.id)
     if (existingAnswer) {
       updatePollAnswer({
@@ -80,6 +82,7 @@ export default function ThreadActivityPoll({ activity }: Props) {
         variables: {
           values: {
             activityId: activity.id,
+            memberId: currentMember.id,
             choicesPoints,
           },
         },
