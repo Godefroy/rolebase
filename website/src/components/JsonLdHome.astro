@@ -1,30 +1,49 @@
 ---
 /**
- * Homepage-only `SoftwareApplication` schema. The FR/EN copy is passed in as
- * props from the MDX (which owns the localized text), so this component only
- * shapes the structured data. The `FAQPage` block is emitted separately by
- * `<FaqList>` from the rendered MDX.
+ * Homepage-only `SoftwareApplication` schema. The FR/EN copy and the pricing
+ * plans are passed in as props from the MDX (which owns the localized text),
+ * so this component only shapes the structured data. The `FAQPage` block is
+ * emitted separately by `<FaqList>` from the rendered MDX.
  */
 import config from '../../website.config'
 import { getLangFromUrl } from '../utils/i18n'
 import JsonLd from './JsonLd.astro'
 
+interface Offer {
+  /** Plan name, e.g. "Small", "Startup", "Enterprise". */
+  name: string
+  /** Numeric price as a string; omit for custom / quote-based plans. */
+  price?: string
+  /** ISO 4217 currency; falls back to the component-level `priceCurrency`. */
+  priceCurrency?: string
+  /** Short plan summary. */
+  description?: string
+}
+
 interface Props {
   /** Product description (SoftwareApplication.description). */
   description: string
-  /** Human-readable offer summary (Offer.description). */
-  offerDescription?: string
-  /** Offer price, defaults to a free tier. */
-  price?: string
-  /** ISO 4217 currency for the offer. */
+  /** Pricing plans, emitted as schema.org Offers. */
+  offers?: Offer[]
+  /** Default ISO 4217 currency for offers that don't set their own. */
   priceCurrency?: string
 }
 
-const { description, offerDescription, price = '0', priceCurrency = 'EUR' } = Astro.props
+const { description, offers = [], priceCurrency = 'EUR' } = Astro.props
 
 const lang = getLangFromUrl(Astro.url)
 const siteUrl = (Astro.site?.href ?? `${config.site}/`).replace(/\/$/, '')
 const homeUrl = `${siteUrl}/${lang}`
+
+const offerNodes = offers.map(offer => ({
+  '@type': 'Offer',
+  'name': offer.name,
+  // Custom / quote-based plans carry no numeric price.
+  ...(offer.price !== undefined
+    ? { 'price': offer.price, 'priceCurrency': offer.priceCurrency ?? priceCurrency }
+    : {}),
+  ...(offer.description ? { 'description': offer.description } : {}),
+}))
 
 const softwareApp = {
   '@context': 'https://schema.org',
@@ -34,12 +53,7 @@ const softwareApp = {
   'applicationCategory': 'BusinessApplication',
   'operatingSystem': 'Web',
   'url': homeUrl,
-  'offers': {
-    '@type': 'Offer',
-    'price': price,
-    'priceCurrency': priceCurrency,
-    'description': offerDescription,
-  },
+  ...(offerNodes.length ? { 'offers': offerNodes } : {}),
 }
 ---
 
