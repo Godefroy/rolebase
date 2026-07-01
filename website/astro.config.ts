@@ -5,8 +5,10 @@ import netlify from '@astrojs/netlify'
 import react from '@astrojs/react'
 import sitemap from '@astrojs/sitemap'
 import svgr from 'vite-plugin-svgr'
+import rehypeExternalLinks from 'rehype-external-links'
 import { redirects } from './src/redirects'
 import rehypeMdClass from './src/utils/rehype-md-class'
+import { getExternalLinkRel } from './src/utils/external-links'
 import enrichMd from './src/integrations/enrich-md'
 import config from './website.config'
 
@@ -37,7 +39,10 @@ export default defineConfig({
   build: { format: 'file' },
   redirects,
   markdown: {
-    rehypePlugins: [rehypeMdClass],
+    rehypePlugins: [
+      rehypeMdClass,
+      [rehypeExternalLinks, { target: '_blank', rel: getExternalLinkRel }],
+    ],
   },
   integrations: [
     mdx(),

@@ -29,6 +29,7 @@
     "lodash.uniqby": "^4.7.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "rehype-external-links": "^3.0.0",
     "tailwindcss": "^4.2.2",
     "turndown": "^7.2.2"
   },
