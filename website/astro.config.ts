@@ -1,5 +1,7 @@
+import type { RehypePlugins } from 'astro'
 import { defineConfig } from 'astro/config'
 import { fileURLToPath } from 'node:url'
+import { unified } from '@astrojs/markdown-remark'
 import mdx from '@astrojs/mdx'
 import netlify from '@astrojs/netlify'
 import react from '@astrojs/react'
@@ -25,6 +27,19 @@ const webappSrc = fileURLToPath(new URL('../packages/webapp/src', import.meta.ur
 
 const { site, langs, defaultLang } = config
 
+// The same rehype list feeds two APIs with subtly different types:
+// `markdown.processor = unified({...})` for plain `.md` and the `mdx()`
+// integration for `.mdx` (mdx@5 reads neither the deprecated top-level fields
+// nor `processor`, only its own options). Astro's RehypePlugins allows bare
+// `string` specifiers that mdx's `PluggableList` rejects, so drop that member
+// to get one type assignable to both.
+type Plugins<T extends unknown[]> = Exclude<T[number], string | [string, unknown]>[]
+
+const rehypePlugins: Plugins<RehypePlugins> = [
+  rehypeMdClass,
+  [rehypeExternalLinks, { target: '_blank', rel: getExternalLinkRel }],
+]
+
 export default defineConfig({
   site,
   adapter: netlify({
@@ -39,13 +54,15 @@ export default defineConfig({
   build: { format: 'file' },
   redirects,
   markdown: {
-    rehypePlugins: [
-      rehypeMdClass,
-      [rehypeExternalLinks, { target: '_blank', rel: getExternalLinkRel }],
-    ],
+    // Astro 6 replaced the deprecated top-level `rehypePlugins` field with
+    // `markdown.processor = unified({...})`, which drives plain `.md` files.
+    // See the `rehypePlugins` const above.
+    processor: unified({ rehypePlugins }),
   },
   integrations: [
-    mdx(),
+    // mdx@5 does not read `markdown.processor`, only its own options, so mirror
+    // the same list here for `.mdx` files.
+    mdx({ rehypePlugins }),
     react(),
     sitemap({
       // Exclude root URL (redirects to /en/) to avoid duplicate hreflang entries
