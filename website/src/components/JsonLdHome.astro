@@ -1,0 +1,46 @@
+---
+/**
+ * Homepage-only `SoftwareApplication` schema. The FR/EN copy is passed in as
+ * props from the MDX (which owns the localized text), so this component only
+ * shapes the structured data. The `FAQPage` block is emitted separately by
+ * `<FaqList>` from the rendered MDX.
+ */
+import config from '../../website.config'
+import { getLangFromUrl } from '../utils/i18n'
+import JsonLd from './JsonLd.astro'
+
+interface Props {
+  /** Product description (SoftwareApplication.description). */
+  description: string
+  /** Human-readable offer summary (Offer.description). */
+  offerDescription?: string
+  /** Offer price, defaults to a free tier. */
+  price?: string
+  /** ISO 4217 currency for the offer. */
+  priceCurrency?: string
+}
+
+const { description, offerDescription, price = '0', priceCurrency = 'EUR' } = Astro.props
+
+const lang = getLangFromUrl(Astro.url)
+const siteUrl = (Astro.site?.href ?? `${config.site}/`).replace(/\/$/, '')
+const homeUrl = `${siteUrl}/${lang}`
+
+const softwareApp = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  'name': config.siteName,
+  'description': description,
+  'applicationCategory': 'BusinessApplication',
+  'operatingSystem': 'Web',
+  'url': homeUrl,
+  'offers': {
+    '@type': 'Offer',
+    'price': price,
+    'priceCurrency': priceCurrency,
+    'description': offerDescription,
+  },
+}
+---
+
+<JsonLd data={softwareApp} />

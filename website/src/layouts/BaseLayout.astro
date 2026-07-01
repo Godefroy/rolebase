@@ -3,6 +3,7 @@ import TopNav from '../components/TopNav.astro'
 import TopNavDev from '../components/TopNavDev.astro'
 import Footer from '../components/Footer.astro'
 import SocialPreview from '../components/SocialPreview.astro'
+import JsonLd from '../components/JsonLd.astro'
 import config from '../../website.config'
 import { getLangFromUrl } from '../utils/i18n'
 import { getCanonicalPath } from '../utils/getCanonicalPath'
@@ -22,6 +23,23 @@ const canonicalPath = getCanonicalPath(currentPath)
 const mdAlternatePath = `${canonicalPath}.md`
 const hasLangPrefix = canonicalPath.startsWith(`/${lang}`)
 const altPath = (l: string) => hasLangPrefix ? canonicalPath.replace(`/${lang}`, `/${l}`) : canonicalPath
+
+// Site-wide structured data, emitted on every page.
+const siteUrl = (Astro.site?.href ?? `${config.site}/`).replace(/\/$/, '')
+const siteOrganization = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  'name': config.siteName,
+  'url': `${siteUrl}/`,
+  'logo': `${siteUrl}/favicon.svg`,
+}
+const siteWebsite = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  'name': config.siteName,
+  'url': `${siteUrl}/`,
+  'inLanguage': [...config.langs],
+}
 ---
 
 <!doctype html>
@@ -44,6 +62,8 @@ const altPath = (l: string) => hasLangPrefix ? canonicalPath.replace(`/${lang}`,
       href={new URL(mdAlternatePath, Astro.site).href}
     />
     <SocialPreview image={image} />
+    <JsonLd data={siteOrganization} />
+    <JsonLd data={siteWebsite} />
     {import.meta.env.PROD && (
       <script
         is:inline
