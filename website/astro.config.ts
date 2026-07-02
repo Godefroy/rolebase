@@ -57,12 +57,15 @@ export default defineConfig({
     // Astro 6 replaced the deprecated top-level `rehypePlugins` field with
     // `markdown.processor = unified({...})`, which drives plain `.md` files.
     // See the `rehypePlugins` const above.
-    processor: unified({ rehypePlugins }),
+    processor: unified({ rehypePlugins, gfm: true }),
   },
   integrations: [
     // mdx@5 does not read `markdown.processor`, only its own options, so mirror
-    // the same list here for `.mdx` files.
-    mdx({ rehypePlugins }),
+    // the same list here for `.mdx` files. `gfm` must be set explicitly: with a
+    // custom `markdown.processor`, Astro no longer surfaces the `gfm: true`
+    // default on `config.markdown`, so the mdx integration would otherwise
+    // resolve it to `undefined` and drop remark-gfm (breaking tables).
+    mdx({ rehypePlugins, gfm: true }),
     react(),
     sitemap({
       // Exclude root URL (redirects to /en/) to avoid duplicate hreflang entries
