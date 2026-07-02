@@ -84,6 +84,7 @@ Default to infographics for cost/feature comparisons, breakdowns, and process st
 - Lean into Rolebase themes: roles, org chart, governance, self-management, collaboration, peer feedback. Avoid corporate-pyramid imagery; for people, prefer diverse, casual, modern professionals over stock-suited executives
 - **Illustration mode**: no text (the script forbids it explicitly)
 - **Infographic mode**: write EXACTLY the labels and numbers to render — Nano Banana Pro reproduces text as-is, French diacritics included. Specify the typeface (sans-serif), text color, and position
+- **Accents (IMPORTANT)**: always write French text in the prompt WITH its correct accents (é, è, ê, à, ç…). The model renders what you write — if the prompt says "etapes"/"Developpement", the image comes out unaccented and looks wrong. Use the temp-file method (it handles accents fine), never strip diacritics to dodge shell quoting. State explicitly "rendered exactly with correct French accents" and, for titles, "modern clean bold sans-serif" — the model otherwise defaults to an ugly serif for headings.
 
 ## Blog thumbnail conventions (1200x630)
 
@@ -100,16 +101,17 @@ Thumbnails appear in the blog grid at ~300px wide and as Open Graph previews. Th
 
 After generation, show the thumbnail to the user. If it lands flat, washed-out, too dark, or too corporate, regenerate with more warmth and a clearer focal accent.
 
-## Infographics in MDX articles (data-coupling comment)
+## Regeneration comment in MDX articles (image-coupling)
 
-When inserting a data-driven infographic into an MDX article, add a one-line MDX comment immediately above the image so a future editor knows when to regenerate:
+Every generated image placed in an MDX article (infographic **or** illustration) gets an MDX comment immediately above it, so a future editor can regenerate it without guessing. The comment MUST embed the **exact prompt and command used** — without the verbatim prompt, a re-run produces a completely different image. For data-driven infographics, also record the regeneration trigger and the last data sync date.
 
 ```mdx
-{/* INFOGRAPHIC: regenerate if the numbers in <section X> change. Last data sync: YYYY-MM-DD. */}
+{/* IMAGE regen — npx tsx scripts/generate-image.ts "<exact prompt used, verbatim>" ./image-name.jpg 1600x900 [--infographic]
+    Infographic only: regenerate if <data trigger>. Last data sync: YYYY-MM-DD. */}
 ![alt text](./image-name.jpg)
 ```
 
-The goal is to make the data-image coupling visible, not to document the prompt verbatim.
+Keep the prompt in the comment identical to what was passed to the script (accents and apostrophes included). This makes both the regeneration command and the data-image coupling self-documenting.
 
 ## Shell quoting (IMPORTANT)
 
