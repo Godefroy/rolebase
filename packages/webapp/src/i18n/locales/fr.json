@@ -1652,8 +1652,8 @@
     "subheading": "Choisissez un modèle d'organisation. Nous créerons les rôles de base et les modèles de réunion adaptés. Vous pourrez tout modifier ensuite.",
     "orgType": "Modèle d'organisation",
     "roles": {
-      "heading": "Quels sont les rôles principaux ?",
-      "help": "Ajoutez les rôles principaux de {{orgName}} et indiquez qui en est responsable. Vous pourrez tout modifier ensuite.",
+      "heading": "Quels sont les principaux rôles et équipes ?",
+      "help": "Dans Rolebase, un rôle est une unité d'organisation qui peut être occupée par une personne ou par une équipe. Ajoutez les principaux rôles et équipes de {{orgName}} et indiquez qui en est responsable. Vous pourrez tout modifier ensuite.",
       "customPlaceholder": "Ajouter un rôle..."
     },
     "responsible": "Responsable",

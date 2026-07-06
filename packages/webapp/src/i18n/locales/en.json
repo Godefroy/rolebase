@@ -1651,8 +1651,8 @@
     "subheading": "Choose an organizational model. We'll create the matching base roles and meeting templates. You can change everything afterwards.",
     "orgType": "Organizational model",
     "roles": {
-      "heading": "What are the main roles?",
-      "help": "Add the main roles of {{orgName}} and who is responsible for each. You can change everything later.",
+      "heading": "What are the main roles and teams?",
+      "help": "In Rolebase, a role is an organizational unit that can be held by a single person or by a team. Add the main roles and teams of {{orgName}} and who is responsible for each. You can change everything later.",
       "customPlaceholder": "Add a role..."
     },
     "responsible": "Responsible",
