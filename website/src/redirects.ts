@@ -10,6 +10,10 @@ export const redirects: Redirects = {
   '/tarifs': '/fr/pricing',
   '/pricing': '/en/pricing',
 
+  // Removed glossary entry "Topic/Sujet" → Discussions documentation
+  '/en/glossary/sujet': '/en/docs/threads',
+  '/fr/glossary/sujet': '/fr/docs/threads',
+
   // Platform feature pages (old site → new /features)
   '/plateforme/flowchart': '/en/features',
   '/plateforme/organigramme': '/fr/features',

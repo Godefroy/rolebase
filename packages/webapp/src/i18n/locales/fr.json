@@ -1327,7 +1327,7 @@
     "decisionMode_simpleMajority": "Majorité simple",
     "decisionMode_absoluteMajority": "Majorité absolue",
     "voters": "Qui peut voter",
-    "voters_thread": "Participants du sujet",
+    "voters_thread": "Participants de la discussion",
     "voters_circle": "Participants du rôle",
     "allowAbstain": "Autoriser l'abstention",
     "showVoters": "Afficher qui a voté quoi à la résolution",
@@ -1383,7 +1383,7 @@
   },
   "ThreadActivityProposal": {
     "intro": "propose de prendre cette décision :",
-    "cannotVote_thread": "Seuls les participants de ce sujet peuvent voter sur cette proposition.",
+    "cannotVote_thread": "Seuls les participants de cette discussion peuvent voter sur cette proposition.",
     "cannotVote_circle": "Seuls les participants de ce rôle peuvent voter sur cette proposition.",
     "voteProgress": "{{count}}/{{total}} ont voté",
     "viewOrgChart": "Voir l'organigramme modifié",
@@ -1495,7 +1495,7 @@
     "notAllowed": "Vous n'avez pas accès à cette discussion."
   },
   "ThreadContent": {
-    "private": "Discussion privée : Seuls les participants de {{role}} et les invités supplémentaires peuvent voir la décision.",
+    "private": "Discussion privée : Seuls les participants de {{role}} et les invités supplémentaires peuvent voir la discussion.",
     "pin": "Épingler pour tout le monde",
     "unpin": "Désépingler",
     "pinned": "Épinglée"

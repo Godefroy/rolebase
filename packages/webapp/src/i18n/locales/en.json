@@ -95,7 +95,7 @@
     "notFound": "Role not found",
     "tabRole": "Role",
     "tabNews": "News",
-    "tabThreads": "Topics",
+    "tabThreads": "Discussions",
     "tabMeetings": "Meetings",
     "tabTasks": "Tasks",
     "tabDecisions": "Decisions"
@@ -113,15 +113,15 @@
   },
   "CircleDeleteModal": {
     "heading": "Archive role",
-    "info": "Are you sure you want to archive the role <b>{{name}}</b>? Its sub-roles, members, invited roles, meetings, topics, tasks and decisions are archived along with it.",
+    "info": "Are you sure you want to archive the role <b>{{name}}</b>? Its sub-roles, members, invited roles, meetings, discussions, tasks and decisions are archived along with it.",
     "restoreNote": "Nothing is lost: you can restore the role and everything archived with it at any time from the history.",
     "toast": "Role \"{{name}}\" archived",
     "confirmButton": "Archive {{name}}",
     "recurringMeetings": "{{count}} recurring meetings",
     "recurringMeetings_one": "1 recurring meeting",
     "entities": "This role and its sub-roles contain items that will be archived with it:",
-    "threads": "{{count}} topics",
-    "threads_one": "1 topic",
+    "threads": "{{count}} discussions",
+    "threads_one": "1 discussion",
     "meetings": "{{count}} meetings",
     "meetings_one": "1 meeting",
     "tasks": "{{count}} tasks",
@@ -174,7 +174,7 @@
     "action4": "Drop it in the desired role."
   },
   "CircleNews": {
-    "empty": "The latest activities will appear here: new topics, completed meetings, decisions made, etc."
+    "empty": "The latest activities will appear here: new discussions, completed meetings, decisions made, etc."
   },
   "CirclePrivacy": {
     "tooltip": "Security",
@@ -248,8 +248,8 @@
     "create": "Create a task"
   },
   "CircleThreads": {
-    "create": "Create a topic",
-    "empty": "No topic yet"
+    "create": "Create a discussion",
+    "empty": "No discussion yet"
   },
   "CirclesKeyboardShortcutsModal": {
     "heading": "Keyboard shortcuts",
@@ -303,9 +303,9 @@
     "add": "New meeting"
   },
   "DashboardMyThreads": {
-    "title": "My Threads",
-    "add": "New thread",
-    "empty": "No topic."
+    "title": "My Discussions",
+    "add": "New discussion",
+    "empty": "No discussion."
   },
   "DashboardMyTasks": {
     "title": "My Tasks",
@@ -313,7 +313,7 @@
   },
   "DashboardNews": {
     "heading": "News",
-    "empty": "The latest activities of {{org}} will appear here: new topics, completed meetings, decisions made, etc.",
+    "empty": "The latest activities of {{org}} will appear here: new discussions, completed meetings, decisions made, etc.",
     "circle": "Role"
   },
   "DashboardNewsDecision": {
@@ -323,7 +323,7 @@
     "action": "A meeting took place"
   },
   "DashboardNewsThread": {
-    "action": "<author /> has launched a topic"
+    "action": "<author /> has launched a discussion"
   },
   "DashboardOrgChart": {
     "empty": "Your org chart is empty for the moment.",
@@ -405,7 +405,7 @@
     "TaskCreate": "<author /> has created the task <task />",
     "TaskUpdate": "<author /> has modified the task <task />",
     "TaskStatusUpdate": "<author /> marked the task <task /> as <status />",
-    "ThreadStatusUpdate": "<author /> changed the topic <task /> from <prevStatus /> to <status />",
+    "ThreadStatusUpdate": "<author /> changed the discussion <task /> from <prevStatus /> to <status />",
     "TaskArchive": "<author /> has archived the task <task />",
     "DecisionCreate": "<author /> has created the decision <decision />",
     "DecisionUpdate": "<author /> has modified the decision <decision />",
@@ -565,14 +565,14 @@
     "logs": "Tasks modified during the meeting"
   },
   "MeetingStepContentThreadItem": {
-    "notAllowed": "Private topic",
-    "privateWarning": "This topic is not private while the meeting is private. Everyone will be able to see the notes. You can make the topic private by going to its settings.",
-    "notAllowedParticipantsWarning": "{{count}} participants do not have access to this private topic: {{participants}}",
-    "notAllowedParticipantsWarning_one": "{{count}} participant do not have access to this private topic: {{participants}}"
+    "notAllowed": "Private discussion",
+    "privateWarning": "This discussion is not private while the meeting is private. Everyone will be able to see the notes. You can make the discussion private by going to its settings.",
+    "notAllowedParticipantsWarning": "{{count}} participants do not have access to this private discussion: {{participants}}",
+    "notAllowedParticipantsWarning_one": "{{count}} participant do not have access to this private discussion: {{participants}}"
   },
   "MeetingStepContentThreads": {
-    "add": "Attach a topic",
-    "create": "New topic",
+    "add": "Attach a discussion",
+    "create": "New discussion",
     "randomize": "Randomize"
   },
   "MeetingStepSortableItem": {
@@ -658,11 +658,11 @@
       "title": "Change permission",
       "Readonly": {
         "title": "Read only",
-        "description": "The member can only view the org chart without being able to modify it. Can view public meetings, topics, and tasks but cannot participate."
+        "description": "The member can only view the org chart without being able to modify it. Can view public meetings, discussions, and tasks but cannot participate."
       },
       "Member": {
         "title": "Member",
-        "description": "The member can modify roles where they are leader, or edit everything if governance is not protected (see organization settings). Can participate in meetings, topics, and tasks."
+        "description": "The member can modify roles where they are leader, or edit everything if governance is not protected (see organization settings). Can participate in meetings, discussions, and tasks."
       },
       "Admin": {
         "title": "Admin",
@@ -772,7 +772,7 @@
   "NotificationsSettingsModal": {
     "heading": "Notifications",
     "digest": "Email summary of activities",
-    "disabledInfo": "By enabling the summary, you can adjust the frequency of emails. We recommend enabling it to track important topics in your organization.",
+    "disabledInfo": "By enabling the summary, you can adjust the frequency of emails. We recommend enabling it to track important discussions in your organization.",
     "toastSuccess": "Notifications settings saved!"
   },
   "OAuthRedirectPage": {
@@ -1009,7 +1009,7 @@
     "menu": "Menu",
     "news": "News",
     "roles": "Org chart",
-    "threads": "Topics",
+    "threads": "Discussions",
     "meetings": "Meetings",
     "tasks": "Tasks",
     "search": "Search",
@@ -1267,11 +1267,11 @@
     "tooltip": "Light/dark theme"
   },
   "ThreadActivities": {
-    "emptyTitle": "Topic created",
+    "emptyTitle": "Discussion created",
     "emptyDescription": "You can send a first message 👇"
   },
   "ThreadActivityCreate": {
-    "archived": "This topic has been deleted. You can restore it with the menu at the top right.",
+    "archived": "This discussion has been deleted. You can restore it with the menu at the top right.",
     "placeholder": "Message...",
     "poll": "Poll",
     "proposal": "Proposal"
@@ -1291,7 +1291,7 @@
     "decisionMode_simpleMajority": "Simple majority",
     "decisionMode_absoluteMajority": "Absolute majority",
     "voters": "Who can vote",
-    "voters_thread": "Topic participants",
+    "voters_thread": "Discussion participants",
     "voters_circle": "Role participants",
     "allowAbstain": "Allow abstaining",
     "showVoters": "Reveal who voted what at resolution",
@@ -1347,7 +1347,7 @@
   },
   "ThreadActivityProposal": {
     "intro": "proposes to make this decision:",
-    "cannotVote_thread": "Only the participants of this topic can vote on this proposal.",
+    "cannotVote_thread": "Only the participants of this discussion can vote on this proposal.",
     "cannotVote_circle": "Only the participants of this role can vote on this proposal.",
     "voteProgress": "{{count}}/{{total}} voted",
     "viewOrgChart": "View modified org chart",
@@ -1458,34 +1458,34 @@
     "notAllowed": "You do not have access to this task."
   },
   "ThreadActivityThread": {
-    "text": "has created a topic:",
-    "notAllowed": "You do not have access to this topic."
+    "text": "has created a discussion:",
+    "notAllowed": "You do not have access to this discussion."
   },
   "ThreadContent": {
-    "private": "Private topic: Only participants of {{role}} and additional guests can see the topic.",
+    "private": "Private discussion: Only participants of {{role}} and additional guests can see the discussion.",
     "pin": "Pin for everyone",
     "unpin": "Unpin",
     "pinned": "Pinned"
   },
   "ThreadEditModal": {
-    "headingEdit": "Topic settings",
-    "headingCreate": "New topic",
+    "headingEdit": "Discussion settings",
+    "headingCreate": "New discussion",
     "title": "Title",
     "titlePlaceholder": "What are we discussing?...",
     "status": "Status",
-    "private": "Private topic",
-    "privateHelp": "Only participants of {{role}} and additional guests can see the topic.",
-    "privateNotAllowed": "You must be a participant of {{role}} or be invited to the topic to make it private."
+    "private": "Private discussion",
+    "privateHelp": "Only participants of {{role}} and additional guests can see the discussion.",
+    "privateNotAllowed": "You must be a participant of {{role}} or be invited to the discussion to make it private."
   },
   "ThreadItem": {
-    "open": "Open topic"
+    "open": "Open discussion"
   },
   "ThreadsList": {
-    "empty": "No topic."
+    "empty": "No discussion."
   },
   "ThreadsPage": {
-    "heading": "Topics",
-    "create": "New topic"
+    "heading": "Discussions",
+    "create": "New discussion"
   },
   "VacantRolesModal": {
     "heading": "Vacant roles",
@@ -1510,7 +1510,7 @@
     "open": "Open",
     "skip": "Skip",
     "confirm": "Confirm",
-    "createThread": "Topic",
+    "createThread": "Discussion",
     "createMeeting": "Meeting",
     "createTask": "Task",
     "createDecision": "Decision",
@@ -1556,7 +1556,7 @@
       "All": "Everything",
       "Member": "Members",
       "Circle": "Roles",
-      "Thread": "Topics",
+      "Thread": "Discussions",
       "Meeting": "Meetings",
       "Task": "Tasks",
       "Decision": "Decisions"
@@ -1564,8 +1564,8 @@
     "meetingSteps": {
       "Tour": "Free note",
       "Tour_desc": "For a free discussion or a round table. You will be able to take notes.",
-      "Threads": "Topics",
-      "Threads_desc": "To discuss Topics concerning the Role. Ideal for an agenda. You will be able to take notes for each chosen Topic.",
+      "Threads": "Discussions",
+      "Threads_desc": "To review the discussions concerning the Role. Ideal for an agenda. You will be able to take notes for each chosen discussion.",
       "Checklist": "Checklist",
       "Checklist_desc": "To review the Role's recurring actions. The Role's Checklist is automatically included in the note when the Meeting is created.",
       "Indicators": "Indicators",
