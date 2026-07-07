@@ -2,6 +2,9 @@ table:
   name: thread_activity
   schema: public
 object_relationships:
+  - name: member
+    using:
+      foreign_key_constraint_on: memberId
   - name: refDecision
     using:
       manual_configuration:
@@ -38,9 +41,6 @@ object_relationships:
         remote_table:
           name: thread
           schema: public
-  - name: member
-    using:
-      foreign_key_constraint_on: memberId
   - name: thread
     using:
       foreign_key_constraint_on: threadId
