@@ -68,7 +68,11 @@ export default defineConfig({
     },
   },
   server: {
-    port: 5175,
+    // Defaults to localhost:5175. Set VITE_HOST (e.g. 0.0.0.0 inside Docker,
+    // where the port is published to the host) to bind other interfaces, and
+    // VITE_PORT to override the port.
+    port: Number(process.env.VITE_PORT) || 5175,
+    host: process.env.VITE_HOST || undefined,
   },
   resolve: {
     alias: [
