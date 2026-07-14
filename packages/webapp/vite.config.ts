@@ -44,7 +44,17 @@ export default defineConfig({
     // react-easy-crop is only imported from lazy-loaded modals, so Vite's
     // initial scan misses it and re-optimizes at runtime ("Outdated Optimize
     // Dep"). Pre-bundle it upfront to avoid the reload/corrupted-module issue.
-    include: ['react-easy-crop'],
+    //
+    // lowlight (via the lazy-loaded editor's code-block extension) is the same
+    // case, but worse: it pulls highlight.js/lib/all.js (~190 language imports),
+    // so a runtime re-optimize disposes esbuild's scan mid-flight and throws
+    // "Invalid command: on-resolve". Pre-bundling it upfront in the cold scan
+    // (which completes fine) avoids the race and leaves it cached.
+    include: [
+      'react-easy-crop',
+      'lowlight',
+      '@tiptap/extension-code-block-lowlight',
+    ],
   },
   build: {
     sourcemap: true,
