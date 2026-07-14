@@ -10,7 +10,11 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 const plugins: PluginOption[] = [
   svgr({ exportAsDefault: true }),
   react(),
-  tsconfigPaths(),
+  // Scope the tsconfig scan to the webapp's own tsconfig. Without `root`,
+  // vite-tsconfig-paths crawls the whole workspace and chokes on
+  // website/tsconfig.json (its `extends: "astro/tsconfigs/strict"` resolves
+  // via astro's exports map, which the bundled tsconfck fails to follow).
+  tsconfigPaths({ root: __dirname }),
   // visualizer({
   //   template: 'treemap',
   // }),
