@@ -2,14 +2,14 @@
 /**
  * Takes a clean 1920x1080 screenshot of a webpage.
  *
- * Usage: node screenshot.js <url> [output.png]
+ * Usage: node screenshot.js <url> [output.png] [--full]
  *
  * - Removes cookie banners and chat widgets (see cleanup.js)
  * - Defaults to viewport screenshot; pass --full for full page
  */
-const { chromium } = require('playwright');
-const path = require('path');
-const cleanup = require('./cleanup');
+import { chromium } from 'playwright';
+import path from 'path';
+import cleanup from './cleanup.js';
 
 async function main() {
   const args = process.argv.slice(2);
@@ -22,7 +22,6 @@ async function main() {
     process.exit(1);
   }
 
-  // Default filename from URL hostname
   const defaultName = new URL(url).hostname.replace(/\./g, '-') + '.png';
   const output = positional[1] || defaultName;
 
@@ -33,6 +32,12 @@ async function main() {
   const page = await context.newPage();
 
   await page.goto(url, { waitUntil: 'networkidle', timeout: 30000 });
+
+  // First cleanup pass
+  await page.evaluate(cleanup);
+  await page.waitForTimeout(1000);
+
+  // Second cleanup pass (catch late-loading modals)
   await page.evaluate(cleanup);
   await page.waitForTimeout(500);
 

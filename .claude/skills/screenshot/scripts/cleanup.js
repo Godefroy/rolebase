@@ -3,7 +3,7 @@
  * and small fixed-position corner elements.
  * Intended to be passed to page.evaluate().
  */
-module.exports = function cleanup() {
+export default function cleanup() {
   // Remove cookie banners
   const cookieSelectors = [
     '[class*="cookie"]', '[id*="cookie"]',
@@ -14,9 +14,31 @@ module.exports = function cleanup() {
     '[aria-label*="cookie"]', '[aria-label*="consent"]',
     '#CybotCookiebotDialog', '[id*="Cookiebot"]',
     '#cc--main',
+    '[class*="modal"]', '[class*="Modal"]',
+    '[class*="overlay"]', '[class*="Overlay"]',
+    '[role="dialog"][aria-modal="true"]',
+    '.axeptio_overlay', '#axeptio_overlay',
+    '[id*="tarteaucitron"]', '.tarteaucitronAlertBig',
   ];
   cookieSelectors.forEach((sel) => {
     document.querySelectorAll(sel).forEach((el) => el.remove());
+  });
+
+  // Click "Accept" or "Refuse" buttons if visible
+  const buttonSelectors = [
+    'button[class*="accept"]', 'button[id*="accept"]',
+    'button[class*="reject"]', 'button[id*="reject"]',
+    'button[class*="refuse"]', 'button[id*="refuse"]',
+    'button[class*="close"]', 'button[id*="close"]',
+    'button[aria-label*="Accept"]', 'button[aria-label*="Refuse"]',
+    'button[aria-label*="Close"]',
+    'a[class*="accept"]', 'a[class*="refuse"]',
+  ];
+  buttonSelectors.forEach((sel) => {
+    const btn = document.querySelector(sel);
+    if (btn && btn.offsetParent !== null) { // visible
+      btn.click();
+    }
   });
 
   // Remove chat widgets
@@ -47,4 +69,4 @@ module.exports = function cleanup() {
       }
     }
   });
-};
+}
