@@ -166,16 +166,12 @@ export const registerThreadTools: ToolRegistrar = (server, client) => {
 
   server.tool(
     'add_thread_activity',
-    'Add a message activity to a thread. The activity type is automatically set to Message.',
+    'Add a message activity to a thread. The activity type is automatically set to Message. Note: userId is always set to the authenticated user (API key owner).',
     {
       threadId: z.string().uuid().describe('The thread ID'),
-      data: z
-        .record(z.unknown())
-        .describe(
-          'Activity content as JSON object (editor content with markdown)'
-        ),
+      message: z.string().describe('Message content in markdown format'),
     },
-    async ({ threadId, data: activityData }) => {
+    async ({ threadId, message }) => {
       try {
         const data = await client.query(
           `
@@ -189,7 +185,7 @@ export const registerThreadTools: ToolRegistrar = (server, client) => {
             object: {
               threadId,
               type: 'Message',
-              data: activityData,
+              data: { message },
             },
           }
         )
