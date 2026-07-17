@@ -12,6 +12,7 @@ import { registerThreadTools } from './tools/thread.js'
 import { registerMeetingTools } from './tools/meeting.js'
 import { registerDecisionTools } from './tools/decision.js'
 import { registerTaskTools } from './tools/task.js'
+import { registerNewsTools } from './tools/news.js'
 
 async function main() {
   const client = new RolebaseClient()
@@ -30,6 +31,7 @@ async function main() {
   registerMeetingTools(server, client)
   registerDecisionTools(server, client)
   registerTaskTools(server, client)
+  registerNewsTools(server, client)
 
   const transport = new StdioServerTransport()
   await server.connect(transport)
