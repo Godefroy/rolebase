@@ -67,7 +67,7 @@ npm run dev
 npm run build && npm start
 ```
 
-## Tools disponibles (27)
+## Tools disponibles (29)
 
 ### GraphQL
 
@@ -149,6 +149,17 @@ npm run build && npm start
 
 Statuts de tâche : `Open`, `InProgress`, `InReview`, `Blocked`, `Done`.
 
+### Actualités
+
+| Tool | Type | Description |
+|------|------|-------------|
+| `get_news` | read | Feed unifié (threads, décisions, meetings terminés) |
+| `get_recent_activities` | read | Activités récentes (messages, propositions, votes) |
+
+`get_news` retourne un feed chronologique fusionnant threads, décisions et meetings terminés depuis une VIEW SQL. Supports la pagination (`limit`/`offset`) et le filtrage par `circleId`.
+
+`get_recent_activities` retourne les messages, propositions et votes à travers tous les threads d'un org ou cercle. Utile pour voir les dernières modifications sans ouvrir chaque thread.
+
 ## Structure du code
 
 ```
@@ -169,7 +180,9 @@ packages/mcp/
         ├── thread.ts         # Threads + activités
         ├── meeting.ts        # Meetings
         ├── decision.ts       # Décisions
-        └── task.ts           # Tâches
+        ├── task.ts           # Tâches
+        ├── news.ts           # Feed unifié (VIEW SQL news)
+        └── activity.ts       # Activités récentes cross-threads
 ```
 
 ## Notes techniques
