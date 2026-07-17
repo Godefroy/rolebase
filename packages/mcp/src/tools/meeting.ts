@@ -117,6 +117,17 @@ export const registerMeetingTools: ToolRegistrar = (server, client) => {
       title: z.string().describe('Meeting title'),
       startDate: z.string().describe('Meeting start date (ISO 8601)'),
       endDate: z.string().describe('Meeting end date (ISO 8601)'),
+      stepsConfig: z
+        .array(
+          z.object({
+            id: z.string(),
+            type: z.enum(['Tour', 'Threads', 'Checklist', 'Indicators', 'Tasks']),
+            title: z.string(),
+          })
+        )
+        .optional()
+        .default([{ id: 'step-1', type: 'Tour', title: 'Tour de table' }])
+        .describe('Meeting steps configuration'),
       videoConf: z
         .string()
         .optional()
@@ -133,6 +144,7 @@ export const registerMeetingTools: ToolRegistrar = (server, client) => {
       title,
       startDate,
       endDate,
+      stepsConfig,
       videoConf,
       private: isPrivate,
     }) => {
@@ -152,6 +164,7 @@ export const registerMeetingTools: ToolRegistrar = (server, client) => {
               title,
               startDate,
               endDate,
+              stepsConfig,
               videoConf: videoConf || null,
               private: isPrivate,
             },

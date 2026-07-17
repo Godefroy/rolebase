@@ -67,6 +67,11 @@ export const registerTaskTools: ToolRegistrar = (server, client) => {
         .describe('The member ID of the assigned person'),
       title: z.string().describe('Task title'),
       description: z.string().optional().describe('Task description'),
+      status: z
+        .enum(['Open', 'InProgress', 'InReview', 'Blocked', 'Done'])
+        .optional()
+        .default('Open')
+        .describe('Task status'),
       dueDate: z
         .string()
         .optional()
@@ -83,6 +88,7 @@ export const registerTaskTools: ToolRegistrar = (server, client) => {
       memberId,
       title,
       description,
+      status,
       dueDate,
       private: isPrivate,
     }) => {
@@ -102,6 +108,7 @@ export const registerTaskTools: ToolRegistrar = (server, client) => {
               memberId,
               title,
               description: description || null,
+              status,
               dueDate: dueDate || null,
               private: isPrivate,
             },
