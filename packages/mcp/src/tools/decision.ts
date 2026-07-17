@@ -85,6 +85,15 @@ export const registerDecisionTools: ToolRegistrar = (server, client) => {
       private: isPrivate,
     }) => {
       try {
+        const object: Record<string, unknown> = {
+          orgId,
+          circleId,
+          memberId,
+          title,
+          private: isPrivate,
+        }
+        if (description) object.description = description
+
         const data = await client.query(
           `
           mutation CreateDecision($object: decision_insert_input!) {
@@ -93,16 +102,7 @@ export const registerDecisionTools: ToolRegistrar = (server, client) => {
             }
           }
         `,
-          {
-            object: {
-              orgId,
-              circleId,
-              memberId,
-              title,
-              description: description || null,
-              private: isPrivate,
-            },
-          }
+          { object }
         )
         return {
           content: [

@@ -149,6 +149,17 @@ export const registerMeetingTools: ToolRegistrar = (server, client) => {
       private: isPrivate,
     }) => {
       try {
+        const object: Record<string, unknown> = {
+          orgId,
+          circleId,
+          title,
+          startDate,
+          endDate,
+          stepsConfig,
+          private: isPrivate,
+        }
+        if (videoConf) object.videoConf = videoConf
+
         const data = await client.query(
           `
           mutation CreateMeeting($object: meeting_insert_input!) {
@@ -157,18 +168,7 @@ export const registerMeetingTools: ToolRegistrar = (server, client) => {
             }
           }
         `,
-          {
-            object: {
-              orgId,
-              circleId,
-              title,
-              startDate,
-              endDate,
-              stepsConfig,
-              videoConf: videoConf || null,
-              private: isPrivate,
-            },
-          }
+          { object }
         )
         return {
           content: [

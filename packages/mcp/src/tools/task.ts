@@ -93,6 +93,17 @@ export const registerTaskTools: ToolRegistrar = (server, client) => {
       private: isPrivate,
     }) => {
       try {
+        const object: Record<string, unknown> = {
+          orgId,
+          circleId,
+          memberId,
+          title,
+          status,
+          private: isPrivate,
+        }
+        if (description) object.description = description
+        if (dueDate) object.dueDate = dueDate
+
         const data = await client.query(
           `
           mutation CreateTask($object: task_insert_input!) {
@@ -101,18 +112,7 @@ export const registerTaskTools: ToolRegistrar = (server, client) => {
             }
           }
         `,
-          {
-            object: {
-              orgId,
-              circleId,
-              memberId,
-              title,
-              description: description || null,
-              status,
-              dueDate: dueDate || null,
-              private: isPrivate,
-            },
-          }
+          { object }
         )
         return {
           content: [
