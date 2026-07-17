@@ -28,7 +28,8 @@ import MemberNameEditable from './MemberNameEditable'
 import MemberOrgRoleSelect from './MemberOrgRoleSelect'
 import MemberPictureEdit from './MemberPictureEdit'
 import MemberRoles from './MemberRoles'
-import ActionsMenu from '@/common/atoms/ActionsMenu'
+import ActionsMenu from '@/common/atoms/actionsMenu/ActionsMenu'
+import ArchiveMenuItem from '@/common/atoms/actionsMenu/ArchiveMenuItem'
 import MemberDeleteModal from '../modals/MemberDeleteModal'
 
 interface Props {
@@ -107,7 +108,9 @@ export default function MemberContent({
         <Box position="absolute" top={2} right={2}>
           {headerIcons}
           {isAdmin && editable && !isDraft && !isSelf && (
-            <ActionsMenu onArchive={deleteModal.onOpen} />
+            <ActionsMenu>
+              <ArchiveMenuItem onClick={deleteModal.onOpen} />
+            </ActionsMenu>
           )}
           <ModalCloseStaticButton onClose={onClose} />
         </Box>

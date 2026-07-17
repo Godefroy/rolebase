@@ -1,5 +1,9 @@
 import CircleButton from '@/circle/components/CircleButton'
-import ActionsMenu from '@/common/atoms/ActionsMenu'
+import ActionsMenu from '@/common/atoms/actionsMenu/ActionsMenu'
+import CopyLinkMenuItem from '@/common/atoms/actionsMenu/CopyLinkMenuItem'
+import DeleteMenuItem from '@/common/atoms/actionsMenu/DeleteMenuItem'
+import EditMenuItem from '@/common/atoms/actionsMenu/EditMenuItem'
+import UnarchiveMenuItem from '@/common/atoms/actionsMenu/UnarchiveMenuItem'
 import TitleLink from '@/common/atoms/TitleLink'
 import Loading from '@/common/atoms/Loading'
 import ScrollableLayout from '@/common/atoms/ScrollableLayout'
@@ -195,13 +199,16 @@ export default function ThreadContent({
 
             <Flex mr={headerIcons ? -2 : 0}>
               {canEdit && (
-                <ActionsMenu
-                  copyLinkUrl={`${settings.url}${path}`}
-                  onEdit={editModal.onOpen}
-                  onDelete={!thread?.archivedAt ? handleArchive : undefined}
-                  onUnarchive={thread?.archivedAt ? handleUnarchive : undefined}
-                  ml={2}
-                />
+                <ActionsMenu ml={2}>
+                  <EditMenuItem onClick={editModal.onOpen} />
+                  <CopyLinkMenuItem url={`${settings.url}${path}`} />
+                  {!thread?.archivedAt && (
+                    <DeleteMenuItem onClick={handleArchive} />
+                  )}
+                  {thread?.archivedAt && (
+                    <UnarchiveMenuItem onClick={handleUnarchive} />
+                  )}
+                </ActionsMenu>
               )}
               {headerIcons}
             </Flex>

@@ -194,6 +194,7 @@ update_permissions:
     permission:
       columns:
         - parentId
+        - roleId
       filter:
         _or:
           - org:
@@ -251,6 +252,26 @@ update_permissions:
                     _ceq:
                       - $
                       - orgId
+          - role:
+              orgId:
+                _ceq:
+                  - $
+                  - orgId
+          - _or:
+              - role:
+                  base:
+                    _eq: true
+              - _not:
+                  _exists:
+                    _table:
+                      name: circle
+                      schema: public
+                    _where:
+                      _and:
+                        - id:
+                            _cne: id
+                        - roleId:
+                            _ceq: roleId
           - _or:
               - org:
                   members:

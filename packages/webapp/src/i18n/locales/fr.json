@@ -129,6 +129,25 @@
     "decisions": "{{count}} décisions",
     "decisions_one": "1 décision"
   },
+  "MakeBaseRoleModal": {
+    "heading": "Transformer en rôle de base",
+    "info": "Le rôle <b>{{name}}</b> deviendra un rôle de base : une définition partagée que vous pourrez réutiliser partout dans l'organigramme.",
+    "consequence1": "Il apparaîtra dans la liste des rôles de base et pourra être ajouté à d'autres rôles.",
+    "consequence2": "Le modifier mettra à jour tous les endroits où il est utilisé.",
+    "consequence3": "Seuls les propriétaires de l'organisation peuvent modifier un rôle de base.",
+    "confirmButton": "Transformer en rôle de base",
+    "toast": "« {{name}} » est désormais un rôle de base"
+  },
+  "SeparateBaseRoleModal": {
+    "heading": "Séparer du rôle de base",
+    "info": "<b>{{name}}</b> est un rôle de base partagé dans l'organigramme. La séparation donne à ce rôle sa propre copie indépendante.",
+    "consequence1": "Ce rôle conserve son contenu actuel mais cesse de le partager avec le rôle de base.",
+    "consequence2": "Les futures modifications du rôle de base n'affecteront plus ce rôle.",
+    "consequence3": "Les autres rôles qui utilisent le rôle de base ne sont pas affectés.",
+    "irreversible": "La séparation est définitive : vous ne pourrez pas rattacher ce rôle au rôle de base ensuite.",
+    "confirmButton": "Séparer",
+    "toast": "« {{name}} » séparé du rôle de base"
+  },
   "CircleExportPage": {
     "heading": "Exporter une capture",
     "download": "Télécharger au format PNG",
@@ -1551,6 +1570,8 @@
     "move": "Déplacer",
     "duplicate": "Dupliquer",
     "export": "Exporter (PNG)",
+    "makeBaseRole": "Transformer en rôle de base",
+    "separateBaseRole": "Séparer du rôle de base",
     "archive": "Archiver",
     "unarchive": "Restaurer",
     "cancel": "Annuler",

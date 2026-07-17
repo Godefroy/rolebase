@@ -64,6 +64,7 @@ import {
   Record,
   RecordCircle,
   RepeateMusic,
+  Scissor,
   Send,
   Setting2,
   Share,
@@ -159,6 +160,7 @@ export const RestoreIcon = ArchiveBox
 export const RoleIcon = Record
 export const RotateLeftIcon = ArrowRotateLeft
 export const RotateRightIcon = ArrowRotateRight
+export const SeparateIcon = Scissor
 export const SearchIcon = (props: IconProps) => (
   <IoSearchOutline size={props.size || 24} />
 )

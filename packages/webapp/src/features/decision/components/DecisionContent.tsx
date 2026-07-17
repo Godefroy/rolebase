@@ -1,5 +1,7 @@
 import CircleByIdButton from '@/circle/components/CircleByIdButton'
-import ActionsMenu from '@/common/atoms/ActionsMenu'
+import ActionsMenu from '@/common/atoms/actionsMenu/ActionsMenu'
+import DeleteMenuItem from '@/common/atoms/actionsMenu/DeleteMenuItem'
+import EditMenuItem from '@/common/atoms/actionsMenu/EditMenuItem'
 import Loading from '@/common/atoms/Loading'
 import Markdown from '@/common/atoms/Markdown'
 import { Title } from '@/common/atoms/Title'
@@ -115,11 +117,10 @@ export default function DecisionContent({
 
         {isMember && (
           <Flex mr={headerIcons ? -3 : 0}>
-            <ActionsMenu
-              ml={3}
-              onEdit={canEdit ? editModal.onOpen : undefined}
-              onDelete={canEdit ? deleteModal.onOpen : undefined}
-            />
+            <ActionsMenu ml={3}>
+              {canEdit && <EditMenuItem onClick={editModal.onOpen} />}
+              {canEdit && <DeleteMenuItem onClick={deleteModal.onOpen} />}
+            </ActionsMenu>
             {headerIcons}
           </Flex>
         )}

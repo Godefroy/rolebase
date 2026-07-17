@@ -1,4 +1,7 @@
-import ActionsMenu from '@/common/atoms/ActionsMenu'
+import ActionsMenu from '@/common/atoms/actionsMenu/ActionsMenu'
+import DeleteMenuItem from '@/common/atoms/actionsMenu/DeleteMenuItem'
+import EditMenuItem from '@/common/atoms/actionsMenu/EditMenuItem'
+import MarkUnreadMenuItem from '@/common/atoms/actionsMenu/MarkUnreadMenuItem'
 import MemberAvatar from '@/member/components/MemberAvatar'
 import MemberLink from '@/member/components/MemberLink'
 import useCurrentMember from '@/member/hooks/useCurrentMember'
@@ -129,12 +132,13 @@ export default function ThreadActivityLayout({
             </EmojiPicker>
           )}
 
-          <ActionsMenu
-            variant="ghost"
-            onEdit={onEdit}
-            onDelete={canDelete ? onDeleteOpen : undefined}
-            onMarkUnread={() => handleMarkUnread(activity.id)}
-          />
+          <ActionsMenu variant="ghost">
+            <EditMenuItem onClick={onEdit} />
+            <MarkUnreadMenuItem
+              onClick={() => handleMarkUnread(activity.id)}
+            />
+            {canDelete && <DeleteMenuItem onClick={onDeleteOpen} />}
+          </ActionsMenu>
         </HStack>
 
         <Text>

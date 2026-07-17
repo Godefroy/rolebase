@@ -129,6 +129,25 @@
     "decisions": "{{count}} decisions",
     "decisions_one": "1 decision"
   },
+  "MakeBaseRoleModal": {
+    "heading": "Turn into a base role",
+    "info": "The role <b>{{name}}</b> will become a base role: a shared definition you can reuse anywhere in the org chart.",
+    "consequence1": "It will appear in the base roles list and can be added to other roles.",
+    "consequence2": "Editing it will update every place where it is used.",
+    "consequence3": "Only organization owners can edit a base role.",
+    "confirmButton": "Turn into a base role",
+    "toast": "\"{{name}}\" is now a base role"
+  },
+  "SeparateBaseRoleModal": {
+    "heading": "Separate from the base role",
+    "info": "<b>{{name}}</b> is a base role shared across the org chart. Separating gives this role its own independent copy.",
+    "consequence1": "This role keeps its current content but stops sharing it with the base role.",
+    "consequence2": "Future edits to the base role will no longer affect this role.",
+    "consequence3": "Other roles using the base role are not affected.",
+    "irreversible": "Separating is permanent: you cannot re-attach this role to the base role afterwards.",
+    "confirmButton": "Separate",
+    "toast": "\"{{name}}\" separated from the base role"
+  },
   "CircleExportPage": {
     "heading": "Export a capture",
     "download": "Download as PNG",
@@ -1520,6 +1539,8 @@
     "apply": "Apply",
     "duplicate": "Duplicate",
     "export": "Export (PNG)",
+    "makeBaseRole": "Turn into a base role",
+    "separateBaseRole": "Separate from the base role",
     "archive": "Archive",
     "unarchive": "Restore",
     "cancel": "Cancel",

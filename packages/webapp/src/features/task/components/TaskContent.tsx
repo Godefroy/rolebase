@@ -1,6 +1,8 @@
 import CircleByIdButton from '@/circle/components/CircleByIdButton'
 import CircleMemberLink from '@/circle/components/CircleMemberLink'
-import ActionsMenu from '@/common/atoms/ActionsMenu'
+import ActionsMenu from '@/common/atoms/actionsMenu/ActionsMenu'
+import CopyLinkMenuItem from '@/common/atoms/actionsMenu/CopyLinkMenuItem'
+import DeleteMenuItem from '@/common/atoms/actionsMenu/DeleteMenuItem'
 import Loading from '@/common/atoms/Loading'
 import Switch from '@/common/atoms/Switch'
 import SwitchController from '@/common/atoms/SwitchController'
@@ -288,11 +290,10 @@ export default function TaskContent({
 
         <Flex mr={headerIcons ? -3 : 0}>
           {id && isMember && (
-            <ActionsMenu
-              ml={3}
-              copyLinkUrl={`${settings.url}${path}`}
-              onDelete={deleteModal.onOpen}
-            />
+            <ActionsMenu ml={3}>
+              <CopyLinkMenuItem url={`${settings.url}${path}`} />
+              <DeleteMenuItem onClick={deleteModal.onOpen} />
+            </ActionsMenu>
           )}
 
           {headerIcons}

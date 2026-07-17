@@ -1,10 +1,17 @@
-import ActionsMenu from '@/common/atoms/ActionsMenu'
+import ActionsMenu from '@/common/atoms/actionsMenu/ActionsMenu'
+import ArchiveMenuItem from '@/common/atoms/actionsMenu/ArchiveMenuItem'
+import DuplicateMenuItem from '@/common/atoms/actionsMenu/DuplicateMenuItem'
+import EditMenuItem from '@/common/atoms/actionsMenu/EditMenuItem'
+import ExportMenuItem from '@/common/atoms/actionsMenu/ExportMenuItem'
+import MoveMenuItem from '@/common/atoms/actionsMenu/MoveMenuItem'
 import TitleLink from '@/common/atoms/TitleLink'
 import ModalCloseStaticButton from '@/common/atoms/ModalCloseStaticButton'
 import Tab from '@/common/atoms/Tab'
 import { Title } from '@/common/atoms/Title'
 import useUpdatableQueryParams from '@/common/hooks/useUpdatableQueryParams'
 import useOrgMember from '@/member/hooks/useOrgMember'
+import useOrgOwner from '@/member/hooks/useOrgOwner'
+import { useOrgContext } from '@/org/contexts/OrgContext'
 import { useNavigateOrg } from '@/org/hooks/useNavigateOrg'
 import ParticipantsNumber from '@/participants/components/ParticipantsNumber'
 import {
@@ -15,6 +22,7 @@ import {
   Flex,
   Heading,
   HStack,
+  MenuItem,
   Spacer,
   TabList,
   TabPanel,
@@ -30,6 +38,8 @@ import {
   DecisionsIcon,
   MeetingsIcon,
   NewsIcon,
+  RoleIcon,
+  SeparateIcon,
   TasksIcon,
   ThreadsIcon,
 } from 'src/icons'
@@ -38,6 +48,8 @@ import { CircleContext } from '../contexts/CIrcleContext'
 import CircleCopyModal from '../modals/CircleCopyModal'
 import CircleDeleteModal from '../modals/CircleDeleteModal'
 import CircleMoveModal from '../modals/CircleMoveModal'
+import MakeBaseRoleModal from '../modals/MakeBaseRoleModal'
+import SeparateBaseRoleModal from '../modals/SeparateBaseRoleModal'
 import CircleBreadcrumb from './CircleBreadcrumb'
 import CircleByIdButton from './CircleByIdButton'
 import CircleDecisions from './CircleDecisions'
@@ -88,6 +100,8 @@ export default function CircleContent({
 }: Props) {
   const { t } = useTranslation()
   const isMember = useOrgMember() && !readOnly
+  const isOrgOwner = useOrgOwner()
+  const { isDraft } = useOrgContext()
   const circleContext = useContext(CircleContext)
   const navigateOrg = useNavigateOrg()
 
@@ -105,6 +119,8 @@ export default function CircleContent({
   const deleteModal = useDisclosure()
   const duplicateModal = useDisclosure()
   const moveModal = useDisclosure()
+  const makeBaseRoleModal = useDisclosure()
+  const separateBaseRoleModal = useDisclosure()
 
   if (!circleContext) {
     return (
@@ -120,6 +136,20 @@ export default function CircleContent({
 
   const { circle, role, participants, canEditCircle, canEditRole } =
     circleContext
+
+  // Base role actions. Turning a role into a base role is org-owner only (a
+  // base role edit propagates everywhere). Detaching from a base role follows
+  // the circle's structural edit permission. Neither applies to the root circle
+  // or in an in-memory proposal draft.
+  const canMakeBaseRole =
+    isOrgOwner && canEditCircle && !isDraft && !role.base && !!circle.parentId
+  const canSeparateBaseRole =
+    canEditCircle && !isDraft && role.base && !!circle.parentId
+
+  console.log({
+    canMakeBaseRole,
+    canEditCircle
+  })
 
   return (
     <>
@@ -149,27 +179,41 @@ export default function CircleContent({
             )}
 
             {isMember && (
-              <ActionsMenu
-                onEdit={canEditRole ? editRoleModal.onOpen : undefined}
-                onArchive={
-                  canEditCircle && circle.parentId
-                    ? deleteModal.onOpen
-                    : undefined
-                }
-                onMove={
-                  canEditCircle && circle.parentId ? moveModal.onOpen : undefined
-                }
-                onDuplicate={
-                  canEditCircle && circle.parentId
-                    ? duplicateModal.onOpen
-                    : undefined
-                }
-                onExport={
-                  onlyRole
-                    ? undefined
-                    : () => navigateOrg(`export-circle?circleId=${circle.id}`)
-                }
-              />
+              <ActionsMenu>
+                {canEditRole && <EditMenuItem onClick={editRoleModal.onOpen} />}
+                {canEditCircle && circle.parentId && (
+                  <MoveMenuItem onClick={moveModal.onOpen} />
+                )}
+                {canEditCircle && circle.parentId && (
+                  <DuplicateMenuItem onClick={duplicateModal.onOpen} />
+                )}
+                {!onlyRole && (
+                  <ExportMenuItem
+                    onClick={() =>
+                      navigateOrg(`export-circle?circleId=${circle.id}`)
+                    }
+                  />
+                )}
+                {canMakeBaseRole && (
+                  <MenuItem
+                    icon={<RoleIcon size={20} />}
+                    onClick={makeBaseRoleModal.onOpen}
+                  >
+                    {t('common.makeBaseRole')}
+                  </MenuItem>
+                )}
+                {canSeparateBaseRole && (
+                  <MenuItem
+                    icon={<SeparateIcon size={20} />}
+                    onClick={separateBaseRoleModal.onOpen}
+                  >
+                    {t('common.separateBaseRole')}
+                  </MenuItem>
+                )}
+                {canEditCircle && circle.parentId && (
+                  <ArchiveMenuItem onClick={deleteModal.onOpen} />
+                )}
+              </ActionsMenu>
             )}
 
             {headerIcons}
@@ -276,6 +320,23 @@ export default function CircleContent({
 
       {duplicateModal.isOpen && (
         <CircleCopyModal isOpen onClose={duplicateModal.onClose} />
+      )}
+
+      {makeBaseRoleModal.isOpen && (
+        <MakeBaseRoleModal
+          role={role}
+          isOpen
+          onClose={makeBaseRoleModal.onClose}
+        />
+      )}
+
+      {separateBaseRoleModal.isOpen && (
+        <SeparateBaseRoleModal
+          circleId={circle.id}
+          role={role}
+          isOpen
+          onClose={separateBaseRoleModal.onClose}
+        />
       )}
     </>
   )
