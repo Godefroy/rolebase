@@ -11,6 +11,14 @@
     "tailwindcss": {
       "command": "npx",
       "args": ["-y", "tailwindcss-mcp-server"]
+    },
+    "rolebase": {
+      "command": "npx",
+      "args": ["tsx", "packages/mcp/src/index.ts"],
+      "env": {
+        "ROLEBASE_API_URL": "",
+        "ROLEBASE_API_KEY": ""
+      }
     }
   }
 }

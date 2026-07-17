@@ -28,3 +28,6 @@ stats.html
 # MCP cache
 .mcp-web-inspector
 .playwright-mcp
+
+# opencode
+opencode.jsonc
