@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import type { RolebaseClient } from '../client.js'
-import { roleFields } from '../schema.js'
+import { roleFields, circleFields } from '../schema.js'
 import type { ToolRegistrar } from './types.js'
 
 export const registerRoleTools: ToolRegistrar = (server, client) => {
@@ -91,10 +91,17 @@ export const registerRoleTools: ToolRegistrar = (server, client) => {
 
   server.tool(
     'create_role',
-    'Create a new role in an organization. Governance rules apply: Owners can always create; in Free mode, Admins and Members can also create non-base roles.',
+    'Create a new role in an organization. A circle is automatically created in the org chart. Governance rules apply: Owners can always create; in Free mode, Admins and Members can also create non-base roles.',
     {
       orgId: z.string().uuid().describe('The organization ID'),
       name: z.string().describe('Role name'),
+      parentId: z
+        .string()
+        .uuid()
+        .optional()
+        .describe(
+          'Parent circle ID in the org chart. If omitted, the role is created as a root circle.'
+        ),
       purpose: z.string().optional().describe('Role purpose'),
       domain: z.string().optional().describe('Role domain'),
       accountabilities: z
@@ -110,21 +117,53 @@ export const registerRoleTools: ToolRegistrar = (server, client) => {
         .optional()
         .describe('Whether this role has a single member'),
     },
-    async ({ orgId, ...fields }) => {
+    async ({ orgId, parentId, ...fields }) => {
       try {
-        const data = await client.query(
+        // Step 1: Create the role
+        const roleResult = await client.query<{
+          insert_role_one: { id: string }
+        }>(
           `
           mutation CreateRole($object: role_insert_input!) {
             insert_role_one(object: $object) {
-              ${roleFields}
+              id
             }
           }
         `,
           { object: { orgId, ...fields } }
         )
+
+        const roleId = roleResult.insert_role_one.id
+
+        // Step 2: Create the circle for this role
+        const circleResult = await client.query(
+          `
+          mutation CreateCircle($object: circle_insert_input!) {
+            insert_circle_one(object: $object) {
+              ${circleFields}
+              role { name }
+            }
+          }
+        `,
+          {
+            object: {
+              orgId,
+              roleId,
+              parentId: parentId || null,
+            },
+          }
+        )
+
         return {
           content: [
-            { type: 'text' as const, text: JSON.stringify(data, null, 2) },
+            {
+              type: 'text' as const,
+              text: JSON.stringify(
+                { role: roleResult.insert_role_one, circle: (circleResult as any).insert_circle_one },
+                null,
+                2
+              ),
+            },
           ],
         }
       } catch (error) {

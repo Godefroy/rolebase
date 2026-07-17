@@ -206,4 +206,94 @@ export const registerCircleTools: ToolRegistrar = (server, client) => {
       }
     }
   )
+
+  server.tool(
+    'add_circle_member',
+    'Assign a member to a circle. The member must already exist in the organization.',
+    {
+      circleId: z.string().uuid().describe('The circle ID'),
+      memberId: z.string().uuid().describe('The member ID to assign'),
+      orgId: z.string().uuid().describe('The organization ID'),
+    },
+    async ({ circleId, memberId, orgId }) => {
+      try {
+        const data = await client.query(
+          `
+          mutation AddCircleMember($object: circle_member_insert_input!) {
+            insert_circle_member_one(object: $object) {
+              id
+              circleId
+              memberId
+              member { name }
+              circle { role { name } }
+            }
+          }
+        `,
+          { object: { circleId, memberId, orgId } }
+        )
+        return {
+          content: [
+            { type: 'text' as const, text: JSON.stringify(data, null, 2) },
+          ],
+        }
+      } catch (error) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error: ${error instanceof Error ? error.message : String(error)}`,
+            },
+          ],
+          isError: true,
+        }
+      }
+    }
+  )
+
+  server.tool(
+    'remove_circle_member',
+    'Remove a member from a circle (unassign).',
+    {
+      circleId: z.string().uuid().describe('The circle ID'),
+      memberId: z.string().uuid().describe('The member ID to remove'),
+    },
+    async ({ circleId, memberId }) => {
+      try {
+        const data = await client.query(
+          `
+          mutation RemoveCircleMember($circleId: uuid!, $memberId: uuid!) {
+            update_circle_member(
+              where: { circleId: { _eq: $circleId }, memberId: { _eq: $memberId } }
+              _set: { archived: true }
+            ) {
+              returning {
+                id
+                circleId
+                memberId
+                archived
+              }
+              affected_rows
+            }
+          }
+        `,
+          { circleId, memberId }
+        )
+        return {
+          content: [
+            { type: 'text' as const, text: JSON.stringify(data, null, 2) },
+          ],
+        }
+      } catch (error) {
+        return {
+          content: [
+            {
+              type: 'text' as const,
+              text: `Error: ${error instanceof Error ? error.message : String(error)}`,
+            },
+          ],
+          isError: true,
+        }
+      }
+    }
+  )
 }
