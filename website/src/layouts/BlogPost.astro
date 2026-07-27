@@ -8,6 +8,9 @@ import KeyTakeaways from '../components/KeyTakeaways.astro'
 import InlineCta from '../components/InlineCta.astro'
 import { mdxComponents } from '../components'
 import Breadcrumb from '../components/Breadcrumb.astro'
+import JsonLd from '../components/JsonLd.astro'
+import config from '../../website.config'
+import { getCanonicalPath } from '../utils/getCanonicalPath'
 import { type Lang, getTranslations, langPath, getSlugFromId } from '../utils/i18n'
 
 interface Props {
@@ -28,9 +31,30 @@ if (similarSlugs.length > 0) {
     .map((slug) => allPosts.find((p) => getSlugFromId(p.id) === slug))
     .filter((p): p is CollectionEntry<'blog'> => !!p)
 }
+
+// `BlogPosting` schema for the article itself. The `BreadcrumbList` is emitted
+// separately by `<Breadcrumb>`, and `Organization` / `WebSite` by `BaseLayout`.
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  'headline': post.data.title,
+  'description': post.data.summary,
+  'inLanguage': lang,
+  'mainEntityOfPage': new URL(getCanonicalPath(Astro.url.pathname), Astro.site).href,
+  ...(post.data.image && { image: new URL(post.data.image.src, Astro.site).href }),
+  ...(post.data.date && { datePublished: post.data.date.toISOString() }),
+  ...(post.data.update && { dateModified: post.data.update.toISOString() }),
+  ...(post.data.author && { author: { '@type': 'Person', 'name': post.data.author } }),
+  'publisher': {
+    '@type': 'Organization',
+    'name': config.siteName,
+    'url': `${config.site}/`,
+  },
+}
 ---
 
-<BlogLayout title={post.data.title} image={post.data.image}>
+<BlogLayout title={post.data.title} description={post.data.summary} image={post.data.image}>
+  <JsonLd data={articleSchema} />
   <article class="min-w-0 flex-1">
     <header class="mb-10 pb-6 border-b border-gray-100">
       <Breadcrumb category={t.blog.label} categoryUrl={langPath(lang, '/blog')} title={post.data.title} hideTitle class="mb-3" />
@@ -61,7 +85,7 @@ if (similarSlugs.length > 0) {
 
   </article>
   <aside class="md:w-80 md:shrink-0 lg:w-88">
-    <BlogSidebar headings={headings} image={post.data.image} />
+    <BlogSidebar headings={headings} image={post.data.image} imageAlt={post.data.title} />
   </aside>
   {!post.data.hideInlineCta && <InlineCta />}
   {similarPosts.length > 0 && (

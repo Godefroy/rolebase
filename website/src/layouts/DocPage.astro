@@ -25,7 +25,7 @@ const categoryMap = {
 const cat = categoryMap[section]
 ---
 
-<DocsLayout title={title} section={section} wide={wide} headings={headings}>
+<DocsLayout title={title} description={description} section={section} wide={wide} headings={headings}>
   <article>
     <header class="mb-8">
       <Breadcrumb category={cat.label} categoryUrl={langPath(lang, cat.path)} title={title} hideTitle class="mb-3" />

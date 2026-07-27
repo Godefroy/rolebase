@@ -11,18 +11,37 @@ import '../styles/global.css'
 
 interface Props {
   title: string
+  /**
+   * Meta description of the page, also reused for the social preview. Comes
+   * from the content: `summary` on a blog post, `description` on a doc, a
+   * guide or a `pages` entry.
+   */
+  description?: string
+  /** `article` on blog posts, `website` everywhere else. */
+  ogType?: 'website' | 'article'
   staticHeader?: boolean
   image?: ImageMetadata
 }
 
-const { title, staticHeader = false, image } = Astro.props
+const { title, description, ogType = 'website', staticHeader = false, image } = Astro.props
+// Index pages carry very short titles ("Blog", "Introduction"), so the brand
+// is appended to give them a full document title. It is left out when the title
+// already names the brand, and when the suffix would push the title past the
+// ~60 characters a SERP displays.
+const brandedTitle = `${title} | ${config.siteName}`
+const pageTitle
+  = title.includes(config.siteName) || brandedTitle.length > 60 ? title : brandedTitle
 const currentPath = Astro.url.pathname
 const lang = getLangFromUrl(Astro.url)
 const isDevSection = currentPath.includes('/developers') || currentPath.includes('/api')
 const canonicalPath = getCanonicalPath(currentPath)
-const mdAlternatePath = `${canonicalPath}.md`
 const hasLangPrefix = canonicalPath.startsWith(`/${lang}`)
 const altPath = (l: string) => hasLangPrefix ? canonicalPath.replace(`/${lang}`, `/${l}`) : canonicalPath
+
+/** Absolute URL of a site-relative path, for the tags that require one. */
+const absoluteUrl = (path: string) => new URL(path, Astro.site).href
+const canonicalUrl = absoluteUrl(canonicalPath)
+const mdAlternateUrl = absoluteUrl(`${canonicalPath}.md`)
 
 // Site-wide structured data, emitted on every page.
 const siteUrl = (Astro.site?.href ?? `${config.site}/`).replace(/\/$/, '')
@@ -47,21 +66,29 @@ const siteWebsite = {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title}</title>
+    <title>{pageTitle}</title>
+    {description && <meta name="description" content={description} />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="canonical" href={new URL(canonicalPath, Astro.site).href} />
+    <link rel="canonical" href={canonicalUrl} />
     {hasLangPrefix && config.langs.map((l) => (
-      <link rel="alternate" hreflang={l} href={new URL(altPath(l), Astro.site).href} />
+      <link rel="alternate" hreflang={l} href={absoluteUrl(altPath(l))} />
     ))}
     {hasLangPrefix && (
-      <link rel="alternate" hreflang="x-default" href={new URL(altPath(config.defaultLang), Astro.site).href} />
+      <link rel="alternate" hreflang="x-default" href={absoluteUrl(altPath(config.defaultLang))} />
     )}
     <link
       rel="alternate"
       type="text/markdown"
-      href={new URL(mdAlternatePath, Astro.site).href}
+      href={mdAlternateUrl}
     />
-    <SocialPreview image={image} />
+    <SocialPreview
+      title={pageTitle}
+      description={description}
+      image={image}
+      type={ogType}
+      url={canonicalUrl}
+      lang={lang}
+    />
     <JsonLd data={siteOrganization} />
     <JsonLd data={siteWebsite} />
     {import.meta.env.PROD && (

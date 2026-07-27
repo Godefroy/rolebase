@@ -6,17 +6,18 @@ import { getTocItems, type Heading } from '../utils/toc'
 
 interface Props {
   title: string
+  description?: string
   section: 'docs' | 'guides' | 'developers' | 'api'
   wide?: boolean
   headings?: Heading[]
 }
 
-const { title, section, wide = false, headings = [] } = Astro.props
+const { title, description, section, wide = false, headings = [] } = Astro.props
 // No table of contents on wide pages (e.g. the GraphQL playground).
 const hasToc = !wide && getTocItems(headings).length > 0
 ---
 
-<BaseLayout title={title}>
+<BaseLayout title={title} description={description}>
   <div class:list={['flex min-h-[calc(100vh-56px)]', hasToc && 'xl:pr-72']}>
     <Sidebar section={section} />
     <main class:list={['flex-1 min-w-0 py-8 px-6 md:px-12', wide ? 'max-w-none' : 'max-w-5xl']}>

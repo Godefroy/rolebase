@@ -26,7 +26,7 @@ function formatDate(date: Date) {
   {post.data.image ? (
     <Image
       src={post.data.image}
-      alt=""
+      alt={post.data.title}
       class="aspect-video w-full object-cover transition-transform group-hover:scale-105"
     />
   ) : (

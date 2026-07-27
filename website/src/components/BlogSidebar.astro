@@ -7,9 +7,11 @@ import { getLangFromUrl, getTranslations } from '../utils/i18n'
 interface Props {
   headings: { depth: number; slug: string; text: string }[]
   image?: ImageMetadata
+  /** Alt text of the article thumbnail, normally the post title. */
+  imageAlt?: string
 }
 
-const { headings, image } = Astro.props
+const { headings, image, imageAlt = '' } = Astro.props
 const stripLeadingNumber = (text: string) =>
   text.replace(/^\d+\s*[\)\/\-\.·•]\s*/, '')
 const h2s = headings
@@ -22,7 +24,7 @@ const t = await getTranslations(lang)
 {image && (
   <Image
     src={image}
-    alt=""
+    alt={imageAlt}
     class="hidden rounded-2xl aspect-video object-cover w-full md:block mb-8"
   />
 )}

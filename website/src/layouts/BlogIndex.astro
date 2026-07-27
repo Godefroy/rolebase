@@ -16,7 +16,7 @@ const posts = (
 ).sort((a, b) => (b.data.date?.getTime() ?? 0) - (a.data.date?.getTime() ?? 0))
 ---
 
-<WebsiteLayout title={t.blog.title}>
+<WebsiteLayout title={t.blog.title} description={t.blog.subtitle}>
   <div class="mb-10">
     <h1 class="text-4xl font-bold mb-3">{t.blog.title}</h1>
     <p class="text-lg text-text-secondary">{t.blog.subtitle}</p>

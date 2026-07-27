@@ -11,7 +11,7 @@ const entry = entries[0]
 const { Content } = await render(entry)
 ---
 
-<BaseLayout title={entry.data.title}>
+<BaseLayout title={entry.data.title} description={entry.data.description}>
   <div class="relative overflow-hidden flex-1 flex flex-col justify-center">
     <CirclesBackground />
     <Content components={mdxComponents} />

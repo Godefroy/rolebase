@@ -112,6 +112,8 @@ const pages = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/pages' }),
   schema: z.object({
     title: z.string(),
+    // Meta description, rendered by `BaseLayout` and the social preview.
+    description: z.string().optional(),
   }),
 })
 

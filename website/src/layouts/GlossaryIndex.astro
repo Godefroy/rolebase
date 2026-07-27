@@ -15,7 +15,7 @@ const items = (await getCollection('glossary', (item) => item.id.endsWith(`/${la
   .sort((a, b) => a.data.name.localeCompare(b.data.name, lang))
 ---
 
-<WebsiteLayout title={t.glossary.label}>
+<WebsiteLayout title={t.glossary.label} description={t.glossary.subtitle}>
   <div class="mb-10">
     <h1 class="text-4xl font-bold mb-3">{t.glossary.label}</h1>
     <p class="text-lg text-text-secondary">{t.glossary.subtitle}</p>
