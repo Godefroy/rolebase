@@ -1,254 +1,198 @@
 ---
-title: 'The Best Open-Source Solutions for Creating an Org Chart'
-summary: 'Explore the best open-source solutions for creating org charts tailored to your organizational needs, from customization to collaboration.'
+title: '6 Open Source Org Chart Tools, Compared'
+h1: 'Six open source tools for your org chart, compared'
+summary: 'Six open source tools for your org chart, with their license, best use and limits. Some tools on the usual lists are open source in name only.'
 date: 2025-05-25
+update: 2026-07-28
 image: './thumbnail.jpg'
 similarPosts:
-  - 'open-source-org-charts'
   - 'create-org-chart'
   - 'dynamic-org-chart'
+  - 'horizontal-tools'
+takeaways:
+  - "Licenses checked in July 2026: draw.io under Apache 2.0, LibreOffice Draw under MPL 2.0, PlantUML under GPL, d3-org-chart under MIT, Dia under GPL v2 or later, Rolebase under MIT."
+  - "Dia sits on nearly every list, while its last published archive, dia-0.97.3, dates from September 5, 2014 on download.gnome.org."
+  - "BALKAN's OrgChart JS is often filed under open source. Its EULA says “The Software is licensed, not sold” and its perpetual licenses run from $399 to $4,999."
+  - "A diagram editor gives you a picture that someone redraws at every change. A governance app gives you data that the teams maintain themselves."
 ---
 
-**Looking for a free and effective tool to design org charts?** Here is an overview of the 5 best open-source solutions that address different professional needs. These tools make it easy to visualize organizational structures while offering customization, collaboration, and integration options.
+Most lists of open source org chart tools copy the same names around without ever opening a license file. You end up with a JavaScript library that sells for $399 a seat and a desktop program whose last stable release came out in September 2014.
 
-### Tool Summary:
+I went back through that list and checked three things for every tool, in July 2026: the exact license, the date of the last release, the real price. Here is what survives, with the case where each one is the right call and the case where it will waste your afternoon.
 
-- **[Rolebase](/)**: Ideal for organizations adopting horizontal management, with [dynamic org charts](/en/features) and calendar integrations (Google Calendar, Outlook).
+## The comparison
 
-- **[OrgChart.js](https://balkan.app/OrgChartJS)**: A JavaScript library for [interactive org charts](/en/blog/create-org-chart) that are highly customizable.
+| Tool | License | Type | Good for | Where it hurts |
+| --- | --- | --- | --- | --- |
+| draw.io (diagrams.net) | Apache 2.0 | Diagram editor, browser and desktop | Getting a clean org chart out in an hour, with no account to create | The drawing knows nothing about the people, every change is redone by hand |
+| LibreOffice Draw | MPL 2.0 | Vector drawing module of LibreOffice | Dropping an org chart into a handbook or a printed document | One person at a time, layout entirely manual |
+| PlantUML | GPL, with LGPL, MIT, Apache and EPL variants | Diagrams generated from text | Versioning the org chart in a Git repo and reviewing it in a pull request | Technical teams only, layout is hard to steer |
+| d3-org-chart | MIT | JavaScript library built on D3 | Showing an org chart inside your own app or intranet | You need a developer, and the last npm release dates from September 2023 |
+| Dia | GPL v2 or later | Desktop diagram editor | Reopening old `.dia` files | Last stable release in September 2014 |
+| Rolebase | MIT | Governance app: roles, meetings, decisions | An org chart every team keeps current itself | No free drawing, the structure follows a role model |
 
-- **[Dia](http://dia-installer.de/)**: Simple software for creating various diagrams, with extensive customization and export options.
+## What open source actually gets you here
 
-- **[Diagrams.net](https://app.diagrams.net/) ([Draw.io](https://www.drawio.com/))**: An intuitive online platform with real-time collaboration and multiple integrations ([Google Drive](https://www.google.com/drive/), [Microsoft 365](https://www.microsoft.com/en-us/microsoft-365)).
+The reflex is to talk about price. That is the weakest argument, because the proprietary tools in the same segment also have free plans. Three other differences carry far more weight.
 
-- **[PlantUML](https://plantuml.com/)**: Create org charts from text descriptions, perfect for developers and technical teams.
+You decide where the data lives. draw.io states on its home page that your files stay yours and that the editor has no access to them. They go to your Drive, your OneDrive or your hard disk, and the desktop app works offline. Rolebase installs on your own infrastructure, and the [developer documentation](/en/developers) walks through it.
 
-### Quick Feature Comparison
+The formats stay readable. A `.drawio` file is XML, a PlantUML diagram is text, a Rolebase export is an XLSX or JSON file. The day you switch tools, your data walks out with you.
 
-| Tool             | Customization       | Collaboration                                    | Integration                                                                                           | Export Formats      |
-| ---------------- | ------------------- | ------------------------------------------------ | ----------------------------------------------------------------------------------------------------- | ------------------- |
-| **Rolebase**     | Dynamic roles       | Asynchronous communication                       | Google Calendar, Outlook, iCal                                                                        | PDF, synced agendas |
-| **OrgChart.js**  | Flexible themes     | Drag-and-drop                                    | JavaScript frameworks                                                                                 | PDF, PNG, SVG       |
-| **Dia**          | Custom shapes       | Simple sharing                                   | Python extensions                                                                                     | PNG, SVG, EPS       |
-| **Diagrams.net** | Various layouts     | Live collaboration                               | Google Drive, [OneDrive](https://www.microsoft.com/en-us/microsoft-365/onedrive/online-cloud-storage) | PNG, SVG, PDF       |
-| **PlantUML**     | Text-based commands | [Git](https://git-scm.com/) for version tracking | IDEs like IntelliJ, [GitLab](https://about.gitlab.com/)                                               | PNG, SVG, LaTeX     |
+The code is auditable. That matters most when the org chart holds personal data and your DPO asks where it travels.
 
-### Why Choose an Open-Source Solution?
+Of course, a license says nothing about the price or the pace of maintenance. Those are two separate questions, and Dia shows further down that they weigh as much as the license itself.
 
-- **Free of charge**: No licensing fees.
+## draw.io, also known as diagrams.net
 
-- **Flexibility**: Modifiable code to fit your needs.
+![draw.io home page](./ebfcaf0d09ccd63c6951332cdb341344.jpeg)
 
-- **Active communities**: Regular support and updates.
+The code ships under the Apache 2.0 license in the `jgraph/drawio` repository. The project is alive: version 31.1.2 came out on July 26, 2026, and releases land several times a week. The hosted app on `app.diagrams.net` opens with no account and no credit card, and a desktop app exists for Windows, macOS and Linux.
 
-**Which tool best suits your needs?** Explore their features to optimize your org charts and improve your organization's visibility.
+For an org chart, the tool ticks a lot of boxes. It imports Visio `.vsdx`, Gliffy and Lucidchart files, which settles the migration away from a proprietary tool. It builds a diagram from a CSV file, so you can start from an HRIS export. It offers automatic layouts, horizontal, vertical, radial or fishbone. It exports to PNG, SVG, PDF, HTML and XML. When the file sits on Google Drive or OneDrive, several people edit at the same time, each with a colored cursor.
 
-## [DIAGRAMS.NET](https://app.diagrams.net/): A GUIDE TO GETTING STARTED
-
-![DIAGRAMS.NET](./30d262c995a4e3fb1715e60527aefe1b.jpeg)
+The limit comes from the nature of what it produces. A draw.io org chart is a drawing, and the file has no idea that a rectangle stands for a person holding three responsibilities across two teams. A reorg gets retranslated box by box, and whoever owns the file becomes the bottleneck.
 
 <Youtube videoId="ntXJuN78aEo" />
 
-## 1. [Rolebase](/)
+## LibreOffice Draw
 
-![Rolebase](./76619b97d1207abedf067ef8b39ed409.jpeg)
+LibreOffice ships under the MPL 2.0 license, and its Draw module handles vector diagrams with connectors, layers and PDF, SVG or PNG export. It runs offline, on machines where LibreOffice is often installed already, and it drops straight into a Writer document or an Impress deck.
 
-Rolebase is an open-source platform designed to support organizations in adopting horizontal management models. It offers a modern and seamless way to design org charts, with a focus on [collaborative governance](/en/blog/sociocracy-intro) and more agile [team management](/en/features).
+It is the right pick when the org chart ends up printed, in a welcome booklet, a brochure or a grant application. You control the typography down to the point, and the result fits a brand guideline.
 
-Thanks to its dynamic org charts, Rolebase allows you to track role and responsibility changes within an organization in real time. A true asset for structures where flexibility and clarity are essential.
+Draw works solo, and that is where it gets painful. Multi-user editing is absent, the layout stays manual, and every arrival or departure sends you back into the source file. Past fifty boxes or so, aligning connectors becomes a job of its own.
 
-### Tools for Optimal Collaboration
+## PlantUML
 
-One of the most appreciated aspects of Rolebase is its collaboration-focused tools. The platform facilitates the organization of [productive meetings](/en/features), task tracking, and asynchronous communication, thereby strengthening team cohesion and efficiency.
+![PlantUML documentation](./a9a1fb0be7c7c975936ed5fd9cf70150.jpeg)
 
-> "Rolebase has become an essential tool for Evea, allowing teams to easily find out who does what and providing a real-time mapping of roles within the company. Rolebase simplifies onboarding, organizes efficient meetings and maintains focus, leading to rapid adoption and immediate productivity benefits." - Damien Delmotte, Communication & Brand Manager @ Evea and Frederic Faurennes, Founder & CEO.
+PlantUML generates diagrams from text descriptions. The project ships under GPL, with LGPL, Apache, EPL and MIT variants for the contexts where the GPL blocks. The WBS diagram type suits a team structure well, and Graphviz does the rendering.
 
-### Seamless Integrations
+The org chart becomes a text file. It lives in the Git repo next to the code, every change goes through review like the rest, and the history shows exactly when a given team was created. IntelliJ IDEA, Eclipse and VS Code render a live preview. GitLab and Confluence render PlantUML blocks inside the pages themselves.
 
-Rolebase integrates with the tools already in place within your organization. For example, it sends email notifications for assigned tasks, ensuring effective follow-up. Additionally, the platform allows synchronization with external calendars (Google Calendar, Outlook), ensuring smooth coordination between the various tools in use. These integration features also come with export and sharing options, reinforcing transparency in decision-making.
+One precaution the project FAQ gives on its own: on the public server, the diagram is encoded in the URL and the traffic goes over HTTP. For a company structure carrying people's names, run a PlantUML server on your own network.
 
-### Simplified Export and Sharing
+The weak point is human. Outside the technical team, nobody is going to edit a `.puml` file. The layout is also something you take rather than choose, since Graphviz decides the placement.
 
-With Rolebase, teams can export and synchronize agendas, ensuring clear tracking of decisions made and upcoming actions. This feature also allows archiving and sharing information, offering valuable traceability in organizations where transparency plays a key role. This proves particularly useful in horizontal work environments, where every member needs a clear view of processes and objectives.
+## d3-org-chart
 
-## 2. [OrgChart.js](https://balkan.app/OrgChartJS)
+David Bumbeishvili's library ships under the MIT license, builds on D3 version 7, and covers the org chart need precisely, with collapsible nodes, zoom, a minimap and React, Vue and Angular wrappers. It has around 1,200 stars on GitHub.
 
-![OrgChart.js](./f270373e6bad45d656a4be95477a7b90.jpeg)
+This is the building block to pick when you want an org chart inside your own product or on your intranet, with your data and your design.
 
-OrgChart.js is an open-source JavaScript library designed to create interactive org charts with great flexibility. It provides developers and teams with a powerful technical tool for visualizing organizational structures in a clear and customizable way.
+Two reservations. It is a library, so everything else falls on you, starting with the input interface and the storage. And the pace has slowed down: the last release published on npm is 3.1.1, from September 2023. It works, it moves little.
 
-### Advanced Customization
+## Dia, the cautionary case
 
-One of OrgChart.js's key strengths is its high level of customization. You can modify node appearance, adjust templates, and choose from eight different orientations, including horizontal, vertical, or mixed layouts. A major update, introduced in version 8.15 in March 2025, integrated an artificial intelligence feature that automates org chart design.
+![The Dia website still offering version 0.97.2](./ad24d0f67e37ce7b893315ba6b3999ff.jpeg)
 
-These customization options align perfectly with the needs of modern organizations, especially those adopting collaborative approaches or horizontal structures.
+Dia is a diagram editor from the GNOME project, under the GPL v2 or later license, with more than a thousand shapes and some thirty diagram types. It comes back in nearly every list of open source org chart tools.
 
-### Collaborative Features
+Look at the dates. On `download.gnome.org`, the last published archive is `dia-0.97.3.tar.xz`, dated September 5, 2014. The historical site `dia-installer.de` still offers 0.97.2 for download and no longer answers over HTTPS. The repository on GNOME's GitLab still receives commits, with no new stable release for twelve years.
 
-OrgChart.js also stands out for its collaborative tools, which are essential in environments where teams work across departments. Through an intuitive interface, users can add, delete, or edit nodes directly. The drag-and-drop function further simplifies real-time restructuring, making updates quick and accessible to everyone.
+Dia earns its keep for reopening an old `.dia` file, or if your Linux distribution already ships it. To start an org chart in 2026, take draw.io.
 
-The library also allows grouping multiple nodes into a single box or adding assistant nodes with different relationship types. These features are particularly useful for representing multidisciplinary teams or complex matrix structures.
+## OrgChart JS is proprietary
 
-### Simplified Export and Sharing
+BALKAN's OrgChart JS appears in most "open source" org chart roundups, including the previous version of this article. The library is excellent, and it belongs to its vendor.
 
-Finally, OrgChart.js shines with its varied export options. You can save your org charts in different formats, including PDF, PNG, SVG, CSV, JSON, and XML. A team-based PDF export function generates separate documents for each group, with customization options such as adding the company logo and formats suited to professional needs. These tools facilitate the distribution and archiving of org charts, meeting the expectations of organizations of all sizes.
+In July 2026, its pricing page lists perpetual licenses at $399 for a single site, $1,899 for Premium and $4,999 for Enterprise. The EULA is explicit: "The Software is licensed, not sold", ownership stays with BALKAN App, redistribution is forbidden on Professional, and readable source code only arrives from Premium upward. The free 30-day trial excludes any commercial or production use.
 
-## 3. [Dia](http://dia-installer.de/)
+That model is perfectly legitimate. The problem comes from the lists that file the library as free software, and from the team that discovers the invoice after building its intranet on top of it. Open the license file before you write the first line of code.
 
-![Dia](./ad24d0f67e37ce7b893315ba6b3999ff.jpeg)
+## Rolebase
 
-Dia is a free and open-source software designed for creating diagrams and effective org charts. Developed in C and enhanced with Python extensions, it offers more than 1,000 ready-to-use objects and supports over 30 different diagram types. Its ease of use makes it a reliable solution for teams seeking a stable and high-performing tool.
+<OrgChartView demo="demo" height="440px" showAllNodes={false} />
 
-### Customization Options
+Disclosure: Rolebase is our product, so weigh this section accordingly.
 
-Dia offers a wealth of options for adapting the interface and diagrams to users' specific needs. Settings are organized into four main categories: **User Interface**, **Default Diagram Settings**, **Default Display Settings**, and **Grid Lines**.
+Rolebase ships under the MIT license and takes the problem from the other end. Instead of drawing boxes, you describe roles with a purpose, a decision domain, accountabilities and indicators. Roles nest to form teams, one person holds several of them, and the org chart is drawn from that data. The model is detailed in the [org chart documentation](/en/docs/org-chart).
 
-- **User Interface**: Users can customize object selection according to their preferences, such as enabling intersection-based selection during reverse dragging, or managing the recent documents list.
+The rest of the platform exists to keep that structure alive. Meetings have a shared agenda, reusable templates and minutes. Governance decisions stay recorded with their date and their author. Tasks and threads attach to the role concerned rather than to a mailbox. Editing is simultaneous, search covers members, roles, decisions and meetings, and structural changes are reserved for the people in charge.
 
-- **Diagram Settings**: Dia allows you to choose the orientation (portrait), paper type (A4, Letter), default background color, as well as dimensions and zoom level for new windows. Connection points can also be displayed automatically to simplify links between elements.
+Rolebase syncs meetings with Google Calendar, Outlook and any iCal calendar, [imports a structure from Holaspirit](/en/docs/import), and [exports](/en/docs/export) the org chart as a PNG plus the data as XLSX or JSON.
 
-- **Grid**: The dynamic grid automatically adjusts its dimensions based on zoom level, and users can define custom spacing (in centimeters) between horizontal and vertical lines.
+The Scop EVEA cooperative kept its org chart in a PowerPoint before moving to Rolebase, with 140 people spread across Nantes, Lyon and Troyes, more than eight competency clusters and cross-functional missions.
 
-These options allow you to configure the software to meet the precise needs of each organization.
+> Rolebase has become an essential tool for EVEA. Teams can easily find who does what. We have a real-time map of all roles within the company at any moment.
 
-### Integration Capabilities
+Damien Delmotte, Communication & Brand Manager, in the [full case study](/en/client-cases/scop-evea).
 
-Dia integrates easily into development environments through its Python scripting support. This gives developers the ability to create custom extensions and automate specific tasks. The software also supports ATLAS Transformation Language (ATL) for generating diagrams from models, making it particularly useful in advanced development environments. Additionally, Dia offers a sheet and object editor capable of importing and updating shapes dynamically.
+The free plan covers 5 active members with every feature, with no credit card, and people without a user account show up in the org chart without being counted. Above that, the Startup plan costs €5 per user per month, checked in July 2026, and nonprofits get substantial discounts depending on their status. The details sit on the [pricing page](/en/pricing).
 
-### Easy Export and Sharing
+### The limits of Rolebase
 
-Dia supports a wide range of export formats, including EPS, SVG, DXF, CGM, WMF, PNG, JPEG, and VDX. These formats address various needs, whether for the web, presentations, or professional printing. For example:
+Better to be blunt about these, it will save you a trial run for nothing.
 
-- **SVG**: Preserves vector quality while remaining editable.
+Free drawing is out of reach. A generic diagram, a BPMN flow, an org chart with exotic shapes: none of that exists. The structure follows the role model, and if all you want is boxes with a name and a job title, draw.io does the job in less time.
 
-- **PNG and JPEG**: Ideal for digital documents.
+The org chart export produces a PNG image, and the data leaves as XLSX or JSON. A PDF goes through the browser print dialog.
 
-- **EPS**: Perfect for high-quality printing.
+Automatic import works from Holaspirit. Coming from a spreadsheet or another tool, entry stays manual or goes through the API.
 
-These export options allow Dia to adapt to different workflows, whether for collaborative projects or professional presentations.
+The scope stops at governance. Payroll, time off, annual reviews, skills and career tracking, peer feedback and elections all live elsewhere. Rolebase describes who does what and how decisions get made.
 
-## 4. diagrams.net ([Draw.io](https://www.drawio.com/))
+Self-hosting means running Nhost, Hasura and PostgreSQL. It is documented, and it still takes longer than a one-click install.
 
-![Draw.io](./ebfcaf0d09ccd63c6951332cdb341344.jpeg)
+## Drawing an org chart or keeping it alive
 
-After discovering Rolebase, OrgChart.js, and Dia, let's move on to an online tool that stands out for its simplicity and effectiveness: **Diagrams.net** (also known as Draw.io). This open-source platform allows you to design professional org charts directly from a browser, and is suitable for both small teams and large organizations.
+The six tools fall into two families, and the choice plays out almost entirely there.
 
-### Customization Options
+draw.io, LibreOffice Draw, PlantUML, d3-org-chart and Dia produce a representation. Someone builds it, someone updates it, and the quality of the result depends on that person being available. If what you need is the method for building that representation, it is laid out step by step in [how to create an org chart](/en/blog/create-org-chart).
 
-Diagrams.net offers a wide range of possibilities for customizing your org charts. You can adjust shapes, connectors, and styles according to your preferences. The tool provides several automatic layouts such as horizontal, vertical, radial, fishbone, or single-column. These options simplify element organization, whether you need to manage spacing between parent and child nodes or manipulate branches (moving, collapsing, or expanding). For complex structures, container shapes automatically adjust based on the chosen layouts.
+Rolebase produces data that each team edits within its own scope, and the drawing follows. That is the principle behind a [dynamic org chart](/en/blog/dynamic-org-chart), and it also explains the trade-off: you accept an imposed role model in exchange for a structure that updates itself without going through a file keeper.
 
-Advanced users will appreciate the ability to create custom libraries with their own icons and graphics. Moreover, it is possible to generate diagrams directly from text data or CSV files, making it a versatile and practical tool for varied needs.
+There is a simple signal to settle it. If your current org chart gets revised during a dedicated quarterly review, the tool is the reason you need that ritual. An org chart that gets corrected the day a responsibility changes needs no ritual at all.
 
-### Collaboration Features
+## How to choose
 
-Real-time collaboration is one of Diagrams.net's key strengths, especially when files are stored on Google Drive or Microsoft OneDrive. Each collaborator is identified by a distinct color, which makes it easy to track contributions. To avoid distractions, it is also possible to hide other users' cursors during intensive work sessions.
+Five questions are enough, in this order.
 
-### Compatibility with Other Tools
+Who updates it? For a single person, a diagram editor is fine. For every team, you need per-role permissions and simultaneous editing.
 
-Diagrams.net integrates easily with collaborative tools like Google Drive, OneDrive, Google Docs, Sheets, Slides, Atlassian [Confluence](https://www.atlassian.com/software/confluence) Cloud, and [Nextcloud](https://nextcloud.com/). This compatibility allows you to embed org charts directly into your existing workflows. Furthermore, the platform ensures data security by storing no user information on its own servers.
+How often? Two revisions a year fit comfortably in LibreOffice Draw. Monthly changes call for a data model.
 
-### Simplified Export and Sharing
+How many people? Below twenty boxes, any tool works. Past a hundred, aligning connectors by hand becomes a profession of its own, and EVEA lived through that with its 140 employees.
 
-The tool supports a variety of export formats, including .drawio, .xml, .png, .svg, .jpeg, .webp, .html, and .pdf. You can also share your diagrams via URL links containing the data. These links allow access in viewing or editing mode. By default, data is embedded in the exported file, allowing other users to open and modify it. For privacy reasons, this embedding can be disabled.
+What skills are on the team? PlantUML and d3-org-chart assume a developer is available, for the setup and then for the whole life of the tool.
 
-In August 2024, a new feature was added: the ability to find and generate smart templates directly from the template library. By entering a text query in the "Generate" box, you can quickly create diagrams based on text descriptions, speeding up the design process.
+Where does the data have to live? On your disk with LibreOffice or the draw.io desktop app, on your network with a PlantUML server, on an instance you host yourself with Rolebase.
 
-## 5. [PlantUML](https://plantuml.com/)
+Rolebase stays free up to 5 active members, which leaves time to check whether the role model matches how you actually work before committing the whole organization to it.
 
-![PlantUML](./a9a1fb0be7c7c975936ed5fd9cf70150.jpeg)
+## Frequently asked questions
 
-**PlantUML** stands out with its original approach: creating diagrams from simple text descriptions. Unlike traditional graphical tools, it uses a clear and intuitive description language, similar to programming languages. This text-based method ensures precision and reproducibility that are ideal for technical teams. As part of the open-source tool ecosystem, PlantUML offers a complementary alternative to typical graphical interfaces.
+<FaqList>
 
-### Customization Options
+<FaqItem question="What is the best free and open source org chart software?">
 
-With PlantUML, customization is at the heart of the experience. Through commands integrated directly into the text code, you can adjust elements such as background colors, font styles and sizes, or apply various visual themes to your diagrams. The tool supports several diagram types, including **WBS diagrams** (Work Breakdown Structure), which are perfect for modeling complex organizational structures. These diagrams can be adapted with different notations, directions, colors, and styles. Additionally, PlantUML allows you to add hyperlinks, tooltips, rich text, emoticons, Unicode, and even icons.
+To get a clean org chart out fast, draw.io under the Apache 2.0 license is the safest pick in 2026. It opens in the browser with no account, imports Visio and Lucidchart files, exports to PNG, SVG and PDF, and the project ships several releases a week.
 
-### Collaboration Features
+For an org chart the teams maintain themselves, the question changes nature and a diagram editor hits its ceiling. Rolebase, under the MIT license, describes roles and generates the org chart from that data.
 
-PlantUML's text-based approach fosters smooth collaboration within teams. By integrating diagram files into version control systems like Git, every modification is tracked in real time. [GitHub](https://github.com/), for example, automatically renders PlantUML diagrams found in Markdown files, simplifying content sharing and review.
+</FaqItem>
 
-A concrete example: in October 2024, Mibex Software used PlantUML to create a sequence diagram hosted on Bitbucket Cloud and embedded in a Confluence page. This diagram illustrated the workings of their "Include Bitbucket for Confluence" application and helped improve understanding and collaboration within their team.
+<FaqItem question="Can an open source tool hold an org chart of several hundred people?">
 
-### Integration Capabilities
+A diagram editor hits its ceiling well before that. Past a hundred boxes, manual layout occupies someone full time and every reorg starts from scratch.
 
-PlantUML is designed to integrate seamlessly into various development environments. It is compatible with popular tools like **[IntelliJ IDEA](https://www.jetbrains.com/idea/)**, **[Eclipse](https://eclipseide.org/)**, and **[VS Code](https://code.visualstudio.com/)**, allowing developers to work directly on their diagrams from their preferred IDE. Version control platforms such as **Git**, **GitLab**, and **GitHub** also support PlantUML. For example, on GitLab, diagrams can be viewed directly in Markdown files within repositories or wikis. A simple configuration of a PlantUML server on a self-managed GitLab instance allows automatic conversion of plantuml blocks into HTML images.
+The tools that hold at that scale generate the drawing from data: d3-org-chart if you build your own interface, PlantUML if your team is technical, Rolebase if you want each team to handle its own part. The Scop EVEA cooperative maps 140 people across three sites that way.
 
-Beyond that, PlantUML integrates with documentation tools like **Confluence**, **Markdown**, **Doxygen**, and **Sphinx**. Diagrams hosted on Git platforms can be added to Confluence pages, providing dynamic documentation that stays up to date as projects evolve.
+</FaqItem>
 
-### Easy Export and Sharing
+<FaqItem question="Can you host your org chart on your own servers?">
 
-PlantUML supports numerous export formats, including **PNG**, **SVG**, **LaTeX**, **EPS**, and **ASCII art**. This variety allows diagrams to be integrated into different types of documents, whether presentations or academic work. The tool uses several rendering engines, such as **Graphviz**, **Smetana**, **VizJs**, and **ELK**. For teams working in cloud environments, PlantUML is compatible with **[Docker](https://www.docker.com/)** and can be integrated into CI/CD pipelines.
+Yes, with very different levels of effort. LibreOffice Draw and the draw.io desktop app keep the files on your machine, with no server to administer. PlantUML deploys on your own network, which its own guide recommends as soon as the diagrams carry sensitive information. Rolebase installs on your infrastructure with Nhost, Hasura and PostgreSQL, and the procedure is described in the [developer documentation](/en/developers).
 
-Thanks to this text-based approach, PlantUML simplifies diagram sharing and reproduction, a valuable advantage for geographically distributed teams and projects requiring regularly updated documentation.
+</FaqItem>
 
-## Comparative Table of Tools
+<FaqItem question="Does open source mean free to use?">
 
-Here is a table highlighting the main characteristics of each solution, to help you make an informed choice.
+The two notions overlap often without being the same. The license says what you are allowed to do with the code, the price says what you pay for a service.
 
-| Tool                       | Customization Options                                                                                                                                                              | Collaboration Features                                                                                                                                      | Integration Capabilities                                                                               | Export Ease                           |
-| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------- |
-| **Rolebase**               | Dynamic org charts, [custom role management](/en/blog/role-based-management), adapted to horizontal structures | Real-time collaboration, asynchronous communication, [integrated meeting management](/en/features) | Synchronization with external calendars, API for custom integrations                                   | Exportable and synchronizable agendas |
-| **OrgChart.js**            | Various visual themes, customizable colors, flexible layout                                                                                                                        | Integration with version control systems, web sharing                                                                                                       | Compatible with modern JavaScript frameworks, web application integration                              | SVG, PNG, PDF formats                 |
-| **Dia**                    | Customizable shapes and connectors, custom object creation                                                                                                                         | File sharing via shared file systems                                                                                                                        | Plugins to extend functionality, Python scripts                                                        | PNG, SVG, EPS, PostScript formats     |
-| **diagrams.net (Draw.io)** | **Over 100 integrations**, various themes and styles, extensive icon libraries                                                                                                     | **Real-time shared cursors**, collaborative comments                                                                                                        | **Google Workspace, SharePoint, OneDrive, Microsoft Teams, Jira, Confluence, GitHub, GitLab, Dropbox** | **PNG, JPG, SVG, HTML, PDF**          |
-| **PlantUML**               | Visual themes, customizable colors, font styles, WBS diagrams                                                                                                                      | Integration with Git for version tracking, text-based collaboration                                                                                         | **IntelliJ IDEA, Eclipse, VS Code, Git, GitLab, GitHub, Confluence**                                   | **PNG, SVG, LaTeX, EPS, ASCII art**   |
+A tool can be open source and still cost money in hosting or support, like Rolebase whose code is MIT and whose service is paid above 5 active members. A tool can also present itself as free while staying proprietary, like OrgChart JS and its perpetual licenses starting at $399. Open the license file before you choose.
 
-### Key Points for Your Decision
+</FaqItem>
 
-This table allows you to quickly identify the tool that matches your needs. Here are a few things to keep in mind:
-
-- **Customization**: All tools offer varied options, from dynamic org charts to visual themes and customizable colors. Rolebase, for example, adapts particularly well to non-traditional organizational structures.
-
-- **Collaboration**: Real-time synchronization is a constant among these tools, fostering effective collaboration. Diagrams.net stands out with its shared cursors and collaborative commenting features.
-
-- **Integration**: If you are looking for extensive compatibility, diagrams.net leads with its **over 100 integrations**. On the other hand, PlantUML excels in development environments with its integration into tools like IntelliJ IDEA or Git.
-
-- **Export**: All tools support standard formats (PNG, SVG, PDF), but PlantUML offers additional options such as LaTeX and ASCII art, ideal for specific needs.
-
-Ultimately, each solution addresses specific needs. Your choice will depend on your organization's priorities in terms of customization, collaboration, integration, and export formats.
-
-## Conclusion
-
-In a context where flexibility and decentralization are increasingly important, open-source tools for creating org charts bring real added value. They help structure and make roles visible within organizations while offering customization options tailored to specific business needs, all backed by active and engaged communities.
-
-Each solution presented in this article has its own strengths. **Rolebase** stands out with its dynamic org charts, ideal for horizontal management. **OrgChart.js** shines with its ease of integration into web projects. **Dia** remains a solid choice for creating classic technical diagrams. **Diagrams.net** (or draw.io) is valued for its intuitive interface and collaborative features, such as real-time shared cursors. Finally, **PlantUML** excels in development environments thanks to its text-based approach, which appeals to technical teams.
-
-To choose the right tool for you, start by evaluating your specific needs. Examine your internal processes, identify your challenges (lack of visibility, integration difficulties, restructuring needs), and determine the intended uses as well as the number of licenses required.
-
-Remember to consider essential criteria such as the ability to scale with your organization, integration with your existing tools, security, compliance, and user experience.
-
-These solutions offer total control and valuable adaptability to support the evolution of your org charts over time. With the backing of developer communities, they represent a wise and sustainable choice for structuring and visualizing your teams effectively.
-
-## FAQs
-
-### What are the advantages of open-source tools for creating org charts compared to proprietary software?
-
-## The Advantages of Open-Source Tools for Creating Org Charts
-
-Open-source tools for designing org charts offer several compelling advantages over proprietary software.
-
-**First**, they allow for significant cost savings. With no licensing fees to pay, businesses can reduce their expenses while still accessing advanced features.
-
-**Second**, they offer great freedom through their flexibility. With access to the source code, users can adapt these tools to their specific needs, an option rarely available with proprietary software.
-
-Finally, open-source software benefits from the support of active developer communities. These communities play a key role by providing regular updates and integrating modern features, often in direct response to user requests. For businesses looking to evolve collaboratively and optimize their organization, these tools represent a particularly well-suited solution.
-
-### How do you choose the best open-source tool for creating an org chart suited to your needs?
-
-## How to Choose the Right Open-Source Tool for Your Org Charts
-
-To select the open-source tool that perfectly meets your org chart needs, start by evaluating your priorities. Do you need an intuitive interface? Collaborative features for teamwork? Or advanced customization options to adapt diagrams to your specific requirements? These questions will guide your choice.
-
-Also make sure the tool integrates well with the software you already use. This can prevent unnecessary complications and improve workflow efficiency. Additionally, compatibility with collaboration tools can be a major advantage if you work in a team.
-
-Another key point: examine the documentation and community surrounding the tool. An active community and well-detailed guides can make all the difference in quickly resolving issues or learning to get the most out of the application.
-
-Finally, try several solutions. Each tool has its strengths and weaknesses, and the key is to find the one that best adapts to your way of working and your expectations.
-
-### How do the open-source tools presented in the article foster collaboration and integrate easily into an existing professional environment?
-
-## Open-Source Solutions for Creating Org Charts
-
-Open-source tools dedicated to creating org charts are transforming how teams collaborate. With features like real-time co-creation, integrated comments, and simultaneous editing, they provide a platform where everyone can actively participate. The result: increased transparency and better employee engagement in designing organizational structures.
-
-These solutions also integrate smoothly into professional environments. Through options like data import and automatic org chart updates, they ensure that structures always remain up to date. This is a major asset for companies operating in constantly changing environments, where roles and teams shift regularly.
+</FaqList>

@@ -104,13 +104,13 @@ export const redirects: Redirects = {
   '/blog/3-solutions-pour-ameliorer-la-communication-dequipe':
     '/fr/blog/team-communication',
   '/blog/5-etapes-pour-optimiser-vos-reunions-dequipe':
-    '/fr/blog/optimize-meetings',
+    '/fr/blog/productive-meetings',
   '/blog/7-outils-essentiels-pour-la-gestion-dequipes-horizontales':
     '/fr/blog/horizontal-tools',
   '/blog/checklist-mise-en-place-dune-structure-horizontale':
     '/fr/blog/horizontal-checklist',
   '/blog/comment-attribuer-des-roles-en-reunion':
-    '/fr/blog/assign-roles-meetings',
+    '/fr/blog/governance-meeting',
   '/blog/comment-decider-en-collectif-avec-la-decision-par-consentement':
     '/fr/blog/consent-decision',
   '/blog/comment-definir-les-roles-dans-une-organisation-horizontale':
@@ -120,11 +120,11 @@ export const redirects: Redirects = {
   '/blog/comment-faire-des-comptes-rendus-de-reunions-gagner-du-temps-nourrir-la-documentation-interne':
     '/fr/blog/meeting-minutes',
   '/blog/comment-integrer-lamelioration-continue-au-management-horizontal':
-    '/fr/blog/continuous-improvement',
+    '/fr/blog/horizontal-transition',
   '/blog/comment-integrer-le-feedback-dans-la-gestion-horizontale':
-    '/fr/blog/feedback-horizontal',
+    '/fr/blog/peer-feedback',
   '/blog/comment-la-gestion-horizontale-renforce-la-confiance':
-    '/fr/blog/horizontal-trust',
+    '/fr/blog/horizontal-transition',
   '/blog/creer-un-organigramme-pour-votre-entreprise':
     '/fr/blog/create-org-chart',
   '/blog/differences-entre-structure-plate-et-hierarchique':
@@ -132,11 +132,11 @@ export const redirects: Redirects = {
   '/blog/faq-management-horizontal-et-productivite-dequipe':
     '/fr/blog/horizontal-faq',
   '/blog/guide-complet-sur-lanalyse-de-sentiment-dequipe':
-    '/fr/blog/sentiment-analysis',
+    '/fr/blog/team-communication',
   '/blog/guide-complet-transition-vers-un-management-horizontal':
     '/fr/blog/horizontal-transition',
   '/blog/guide-ultime-des-organigrammes-open-source':
-    '/fr/blog/open-source-org-charts',
+    '/fr/blog/open-source-org-chart-tools',
   '/blog/holacratie-vs-sociocratie-quelles-differences':
     '/fr/blog/holacracy-vs-sociocracy',
   '/blog/introduction-a-la-sociocratie-une-approche-dynamique-de-la-gouvernance':
@@ -145,7 +145,7 @@ export const redirects: Redirects = {
     '/fr/blog/holacracy-intro',
   '/blog/introduction-au-role-based-management-votre-solution-contre-les-silos':
     '/fr/blog/role-based-management',
-  '/blog/introduction-aux-methodes-agiles': '/fr/blog/agile-methods',
+  '/blog/introduction-aux-methodes-agiles': '/fr/blog/management-movement',
   '/blog/la-reunion-de-gouvernance-pour-faire-evoluer-son-organisation':
     '/fr/blog/governance-meeting',
   '/blog/la-reunion-tactique-ou-reunion-de-triage': '/fr/blog/tactical-meeting',
@@ -165,7 +165,7 @@ export const redirects: Redirects = {
   '/blog/reunion-a-distance-efficaces-nos-secrets-pour-lentreprise-hybride-ou-full-remote':
     '/fr/blog/remote-meetings',
   '/blog/reunionite-le-pourquoi-selon-un-chercheur-et-nos-5-conseils-pour-la-combattre':
-    '/fr/blog/meeting-overload-tips',
+    '/fr/blog/meeting-overload',
 
   // Blog redirects: 2026 posts (EN old slugs)
   '/blog/the-dynamic-organisational-chart-or-the-org-chart-of-the-future':
@@ -182,4 +182,24 @@ export const redirects: Redirects = {
     '/en/blog/productive-meetings',
   '/blog/how-to-actually-make-project-handovers-between-teams-efficient':
     '/en/blog/project-handovers',
+
+  // Blog posts merged into the page that now covers the topic
+  '/fr/blog/agile-methods': '/fr/blog/management-movement',
+  '/en/blog/agile-methods': '/en/blog/management-movement',
+  '/fr/blog/assign-roles-meetings': '/fr/blog/governance-meeting',
+  '/en/blog/assign-roles-meetings': '/en/blog/governance-meeting',
+  '/fr/blog/continuous-improvement': '/fr/blog/horizontal-transition',
+  '/en/blog/continuous-improvement': '/en/blog/horizontal-transition',
+  '/fr/blog/feedback-horizontal': '/fr/blog/peer-feedback',
+  '/en/blog/feedback-horizontal': '/en/blog/peer-feedback',
+  '/fr/blog/horizontal-trust': '/fr/blog/horizontal-transition',
+  '/en/blog/horizontal-trust': '/en/blog/horizontal-transition',
+  '/fr/blog/meeting-overload-tips': '/fr/blog/meeting-overload',
+  '/en/blog/meeting-overload-tips': '/en/blog/meeting-overload',
+  '/fr/blog/open-source-org-charts': '/fr/blog/open-source-org-chart-tools',
+  '/en/blog/open-source-org-charts': '/en/blog/open-source-org-chart-tools',
+  '/fr/blog/optimize-meetings': '/fr/blog/productive-meetings',
+  '/en/blog/optimize-meetings': '/en/blog/productive-meetings',
+  '/fr/blog/sentiment-analysis': '/fr/blog/team-communication',
+  '/en/blog/sentiment-analysis': '/en/blog/team-communication',
 }

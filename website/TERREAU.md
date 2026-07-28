@@ -68,7 +68,11 @@ préfixe de la locale du contenu qui le contient.
 3. **Accès gratuit réel** : toutes les fonctionnalités jusqu'à 5 membres actifs, sans carte
    bancaire, puis un plan payant qui suit la croissance.
 4. **Couverture de bout en bout de la gouvernance** : rôles et organigramme, réunions, décisions,
-   feedback entre pairs, dans un seul outil plutôt qu'un assemblage.
+   tâches et discussions rattachées aux rôles, dans un seul outil plutôt qu'un assemblage.
+   Ne jamais citer le feedback entre pairs ni l'élection sans candidat comme des fonctionnalités :
+   ce sont des pratiques que le produit ne gère pas. Aucune fonctionnalité de feedback, d'élection,
+   de suivi de compétences, de gestion de carrière ni d'analyse de climat n'existe dans
+   `packages/webapp`, vérifié le 2026-07-28.
 5. **Cas clients publics** : citer les études de cas de la collection `client-cases/` avec un lien
    vers leur page.
 
@@ -208,8 +212,8 @@ Thumbnails et visuels d'article :
 - Éviter l'imagerie de pyramide corporate et les cadres en costume : préférer des professionnels
   modernes, divers et décontractés.
 
-Thèmes de la marque : rôles, organigramme, gouvernance, auto-organisation, collaboration, feedback
-entre pairs.
+Thèmes de la marque : rôles, organigramme, gouvernance, auto-organisation, collaboration,
+clarté des responsabilités.
 ```
 
 **Preset avatar (à copier verbatim à la place du bloc par défaut)** : pour les avatars de membres
@@ -275,6 +279,13 @@ la fenêtre de cooldown.
 
 ## 12. Confidentialité de la stratégie SEO
 
-La stratégie SEO est confidentielle. Ne jamais mentionner SERP, mots-clés, volumes de recherche,
-difficulté (KD), CPC ni positions dans les messages adressés à l'utilisateur : ces données servent
-en interne uniquement, pour raisonner et agir, pas pour être exposées telles quelles.
+La stratégie SEO ne doit jamais transparaître dans le contenu publié sur le site. Un texte
+destiné aux lecteurs ne mentionne ni mot-clé cible, ni volume de recherche, ni difficulté (KD),
+ni CPC, ni position, ni SERP, et ne justifie jamais son existence par une raison de
+référencement (« ce terme est très recherché, voilà pourquoi nous en parlons »). Le contenu se
+justifie par son utilité pour le lecteur, jamais par sa mécanique d'acquisition. Cela vaut pour
+les pages, les articles, les FAQ, les méta-descriptions et tout ce qui est servi publiquement.
+
+À l'inverse, Terreau (API, base, rapports, backlog) et les messages adressés à l'utilisateur
+portent l'intégralité de ces données : c'est leur raison d'être, et c'est ce qui rend les
+décisions vérifiables. Ne rien y masquer.
