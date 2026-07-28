@@ -34,6 +34,9 @@ const clientCases = defineCollection({
     z.object({
       title: z.string(),
       summary: z.string(),
+      // Company name, used as the alt text of the logo. Falls back to `title`,
+      // which reads as a full headline rather than as an image description.
+      client: z.string().optional(),
       sector: z.string().optional(),
       teamSize: z.string().optional(),
       logo: image().optional(),
@@ -97,6 +100,10 @@ const glossary = defineCollection({
   schema: z.object({
     name: z.string(),
     summary: z.string(),
+    // SEO `<title>` override. Entries default to `<name> - Definition`, which
+    // promises exactly what the competing dictionaries promise. Set this on the
+    // terms where a distinct promise earns the click.
+    title: z.string().optional(),
     description: z.string().optional(),
     date: z.coerce.date().optional(),
     update: z.coerce.date().optional(),

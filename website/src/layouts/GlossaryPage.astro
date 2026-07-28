@@ -4,6 +4,7 @@ import { render } from 'astro:content'
 import BlogLayout from './BlogLayout.astro'
 import BlogSidebar from '../components/BlogSidebar.astro'
 import Breadcrumb from '../components/Breadcrumb.astro'
+import JsonLdGlossary from '../components/JsonLdGlossary.astro'
 import { mdxComponents } from '../components'
 import { type Lang, getTranslations, langPath } from '../utils/i18n'
 
@@ -18,7 +19,8 @@ const { Content, headings } = await render(item)
 const dateLang = lang === 'fr' ? 'fr-FR' : 'en-US'
 ---
 
-<BlogLayout title={`${item.data.name} - ${t.glossary.definition}`} description={item.data.summary}>
+<BlogLayout title={item.data.title ?? `${item.data.name} - ${t.glossary.definition}`} description={item.data.summary}>
+  <JsonLdGlossary name={item.data.name} description={item.data.summary} lang={lang} />
   <article class="min-w-0 flex-1">
     <header class="mb-10 pb-6 border-b border-gray-100">
       <Breadcrumb category={t.glossary.label} categoryUrl={langPath(lang, '/glossary')} title={item.data.name} hideTitle class="mb-3" />

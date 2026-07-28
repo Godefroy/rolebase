@@ -29,7 +29,7 @@ const items = (await getCollection('client-cases', (item) => item.id.endsWith(`/
       >
         <div class="flex items-center justify-center aspect-video bg-gray-50 p-8">
           {item.data.logo ? (
-            <Image src={item.data.logo} alt="" class="max-h-16 w-auto" />
+            <Image src={item.data.logo} alt={item.data.client ?? item.data.title} class="max-h-16 w-auto" />
           ) : (
             <span class="text-2xl font-medium text-gray-300">{item.data.title}</span>
           )}

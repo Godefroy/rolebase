@@ -39,7 +39,7 @@ const { Content, headings } = await render(item)
     </div>
   </article>
   <aside class="md:w-80 md:shrink-0 lg:w-88">
-    {item.data.logo && <Image src={item.data.logo} alt="" class="h-16 mb-6" />}
+    {item.data.logo && <Image src={item.data.logo} alt={item.data.client ?? item.data.title} class="h-16 mb-6" />}
     <BlogSidebar headings={headings} />
   </aside>
 </BlogLayout>

@@ -1,0 +1,41 @@
+---
+/**
+ * `DefinedTerm` schema for a glossary entry, tied to the locale's glossary
+ * index as its `DefinedTermSet`. Glossary pages carry the site's largest share
+ * of search impressions and previously emitted no entity-level structured data,
+ * only the `BreadcrumbList` from `<Breadcrumb>`.
+ */
+import config from '../../website.config'
+import JsonLd from './JsonLd.astro'
+import { type Lang, getTranslations, langPath } from '../utils/i18n'
+
+interface Props {
+  /** The term itself, e.g. "Checklist". */
+  name: string
+  /** One-sentence definition, reused as the meta description. */
+  description: string
+  lang: Lang
+}
+
+const { name, description, lang } = Astro.props
+const t = await getTranslations(lang)
+
+const siteUrl = (Astro.site?.href ?? `${config.site}/`).replace(/\/$/, '')
+const absoluteUrl = (path: string) => `${siteUrl}${path}`
+
+const definedTerm = {
+  '@context': 'https://schema.org',
+  '@type': 'DefinedTerm',
+  'name': name,
+  'description': description,
+  'url': absoluteUrl(Astro.url.pathname.replace(/\.html$/, '')),
+  'inDefinedTermSet': {
+    '@type': 'DefinedTermSet',
+    'name': `${config.siteName} ${t.glossary.label}`,
+    'url': absoluteUrl(langPath(lang, '/glossary')),
+  },
+  'inLanguage': lang,
+}
+---
+
+<JsonLd data={definedTerm} />
