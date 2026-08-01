@@ -2,8 +2,7 @@
 
 Ce fichier centralise **tout ce qui est spécifique à ce site** pour les skills `terreau-*` :
 identité, positionnement, ICP, angles différenciants, concurrents à exclure, pages canoniques,
-ciblage des mots-clés, organisation du contenu, conventions visuelles, pages evergreen et
-confidentialité de la stratégie.
+ciblage des mots-clés, organisation du contenu, conventions visuelles et pages evergreen.
 
 Les skills `terreau-*` sont génériques et partagées entre tous les sites : elles ne contiennent
 aucune valeur de ce fichier, elles le lisent.
@@ -274,18 +273,3 @@ la fenêtre de cooldown.
   `similarPosts` identiques ; tous les slugs de `similarPosts` pointent vers des dossiers existants ;
   les liens internes portent le bon préfixe de locale.
 - **Commit** : jamais sans validation humaine.
-
----
-
-## 12. Confidentialité de la stratégie SEO
-
-La stratégie SEO ne doit jamais transparaître dans le contenu publié sur le site. Un texte
-destiné aux lecteurs ne mentionne ni mot-clé cible, ni volume de recherche, ni difficulté (KD),
-ni CPC, ni position, ni SERP, et ne justifie jamais son existence par une raison de
-référencement (« ce terme est très recherché, voilà pourquoi nous en parlons »). Le contenu se
-justifie par son utilité pour le lecteur, jamais par sa mécanique d'acquisition. Cela vaut pour
-les pages, les articles, les FAQ, les méta-descriptions et tout ce qui est servi publiquement.
-
-À l'inverse, Terreau (API, base, rapports, backlog) et les messages adressés à l'utilisateur
-portent l'intégralité de ces données : c'est leur raison d'être, et c'est ce qui rend les
-décisions vérifiables. Ne rien y masquer.

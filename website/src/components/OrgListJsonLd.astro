@@ -1,0 +1,46 @@
+---
+/**
+ * `ItemList` schema for a ranked listicle: one `Organization` per ranked
+ * player, in the order the `items` array gives them. Goes at the very end of
+ * the article, after the conclusion, so the prose stays first in the source.
+ */
+import JsonLd from './JsonLd.astro'
+
+interface Item {
+  /** Name of the ranked player, as it appears in the article. */
+  name: string
+  /** Canonical URL of the ranked player. */
+  url: string
+}
+
+interface Props {
+  /** List name, usually the article title. */
+  name: string
+  /** Optional one-line description of what the list ranks. */
+  description?: string
+  /** Ranked players, in ranking order. */
+  items: Item[]
+}
+
+const { name, description, items } = Astro.props
+---
+
+<JsonLd
+  data={{
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    'name': name,
+    ...(description ? { description } : {}),
+    'numberOfItems': items.length,
+    'itemListOrder': 'https://schema.org/ItemListOrderAscending',
+    'itemListElement': items.map((item, index) => ({
+      '@type': 'ListItem',
+      'position': index + 1,
+      'item': {
+        '@type': 'Organization',
+        'name': item.name,
+        'url': item.url,
+      },
+    })),
+  }}
+/>
