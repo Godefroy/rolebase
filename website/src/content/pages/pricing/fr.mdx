@@ -3,11 +3,13 @@ title: 'Tarifs de Rolebase'
 description: 'Démarrez gratuitement en petite équipe, puis passez à un tarif fixe par utilisateur en grandissant. Toutes les fonctionnalités sont incluses, sans palier caché.'
 ---
 
+<JsonLdSoftwareApplication />
+
 <h1 class="text-4xl md:text-5xl font-bold text-center mt-0">
   Des tarifs simples pour des équipes bien organisées
 </h1>
 
-{/* Quand un plan change ici, répercutez-le dans les `offers` du SoftwareApplication passés à <JsonLdHome> sur la home (index/fr.mdx). */}
+{/* Quand un plan change ici, répercutez-le dans `product.plans` de content/translations/fr.yaml, qui alimente le JSON-LD SoftwareApplication. */}
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
   <PricingCard title="Small">
     <Fragment slot="price"><span class="text-3xl font-bold">Gratuit</span> à vie</Fragment>

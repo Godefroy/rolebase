@@ -3,11 +3,13 @@ title: 'Rolebase Pricing'
 description: 'Start free with a small team, then move to a flat per-user plan as you grow. Every feature is included on every plan, no hidden tier.'
 ---
 
+<JsonLdSoftwareApplication />
+
 <h1 class="text-4xl md:text-5xl font-bold text-center mt-0">
   Simple pricing for well-organized teams
 </h1>
 
-{/* When a plan changes here, mirror it in the SoftwareApplication `offers` passed to <JsonLdHome> on the homepage (index/en.mdx). */}
+{/* When a plan changes here, mirror it in `product.plans` of content/translations/en.yaml, which feeds the SoftwareApplication JSON-LD. */}
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
   <PricingCard title="Small">
     <Fragment slot="price"><span class="text-3xl font-bold">Free</span> forever</Fragment>

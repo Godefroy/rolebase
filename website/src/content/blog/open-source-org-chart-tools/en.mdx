@@ -1,9 +1,9 @@
 ---
-title: '6 Open Source Org Chart Tools, Compared'
+title: 'Open Source Org Chart Software: 6 Tools Compared'
 h1: 'Six open source tools for your org chart, compared'
 summary: 'Six open source tools for your org chart, with their license, best use and limits. Some tools on the usual lists are open source in name only.'
 date: 2025-05-25
-update: 2026-07-28
+update: 2026-08-05
 image: './thumbnail.jpg'
 similarPosts:
   - 'create-org-chart'
@@ -30,6 +30,8 @@ I went back through that list and checked three things for every tool, in July 2
 | d3-org-chart | MIT | JavaScript library built on D3 | Showing an org chart inside your own app or intranet | You need a developer, and the last npm release dates from September 2023 |
 | Dia | GPL v2 or later | Desktop diagram editor | Reopening old `.dia` files | Last stable release in September 2014 |
 | Rolebase | MIT | Governance app: roles, meetings, decisions | An org chart every team keeps current itself | No free drawing, the structure follows a role model |
+
+Proprietary tools stay out of this list on purpose. If your shortlist mixes both, the [best org chart software](/en/blog/best-org-chart-software) comparison covers eleven tools, open source or not.
 
 ## What open source actually gets you here
 
@@ -82,6 +84,8 @@ David Bumbeishvili's library ships under the MIT license, builds on D3 version 7
 This is the building block to pick when you want an org chart inside your own product or on your intranet, with your data and your design.
 
 Two reservations. It is a library, so everything else falls on you, starting with the input interface and the storage. And the pace has slowed down: the last release published on npm is 3.1.1, from September 2023. It works, it moves little.
+
+Shopping for a JavaScript org chart library rather than an application narrows the field fast. d3-org-chart is the MIT option, and it ships React, Vue and Angular wrappers, so the framework you already use rarely settles the choice. The alternatives are commercial diagram suites where the org chart is one layout among many, sold per developer: GoJS and Syncfusion's diagram component sit in that group, and so does BALKAN's OrgChart JS, whatever the roundups say about it.
 
 ## Dia, the cautionary case
 
@@ -184,6 +188,14 @@ The tools that hold at that scale generate the drawing from data: d3-org-chart i
 <FaqItem question="Can you host your org chart on your own servers?">
 
 Yes, with very different levels of effort. LibreOffice Draw and the draw.io desktop app keep the files on your machine, with no server to administer. PlantUML deploys on your own network, which its own guide recommends as soon as the diagrams carry sensitive information. Rolebase installs on your infrastructure with Nhost, Hasura and PostgreSQL, and the procedure is described in the [developer documentation](/en/developers).
+
+</FaqItem>
+
+<FaqItem question="Does Microsoft have an org chart tool?">
+
+Microsoft has three, at three different levels. Visio is the diagramming app, sold separately from Microsoft 365, with org chart templates and a wizard that builds the chart from an Excel file. SmartArt, inside Word, PowerPoint and Excel, draws a small hierarchy in a few clicks and stops there. Teams shows an Organization tab generated from the manager field in Microsoft Entra ID, which reflects the HR hierarchy rather than an org chart you edit.
+
+None of the three is open source, and all three model reporting lines. If your structure holds roles that cross teams, that model is the actual limit, well before the license is.
 
 </FaqItem>
 

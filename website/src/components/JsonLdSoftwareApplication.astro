@@ -1,0 +1,89 @@
+---
+/**
+ * `SoftwareApplication` JSON-LD for the pages presenting the product and its
+ * plans (homepage and pricing). Both pages describe the same product, so the
+ * copy and the plans live once in `content/translations/<lang>.yaml` under
+ * `product`, and this component only shapes the structured data. The `FAQPage`
+ * block is emitted separately by `<FaqList>` from the rendered MDX.
+ *
+ * Every page emits the same `@id`, so search engines read one entity rather
+ * than several.
+ */
+import config from '../../website.config'
+import { getLangFromUrl, getTranslations } from '../utils/i18n'
+import JsonLd from './JsonLd.astro'
+
+interface Plan {
+  /** Plan name, e.g. "Small", "Startup", "Enterprise". */
+  name: string
+  /** Numeric price as a string; absent for custom / quote-based plans. */
+  price?: string
+  /** Short plan summary. */
+  description?: string
+  /** Billing unit for a recurring per-seat price, e.g. "user". */
+  unitText?: string
+  /** Billing period in months for a recurring price. */
+  billingDurationMonths?: number
+}
+
+const priceCurrency = 'EUR'
+
+const lang = getLangFromUrl(Astro.url)
+const t = await getTranslations(lang)
+const { description, plans = [] } = (t.product ?? {}) as {
+  description?: string
+  plans?: Plan[]
+}
+
+const siteUrl = (Astro.site?.href ?? `${config.site}/`).replace(/\/$/, '')
+const homeUrl = `${siteUrl}/${lang}`
+// Both locales serve the plans on the same path.
+const offersUrl = `${homeUrl}/pricing`
+
+const offerNodes = plans.map(plan => {
+  const recurring = plan.unitText || plan.billingDurationMonths
+  return {
+    '@type': 'Offer',
+    'name': plan.name,
+    'url': offersUrl,
+    // Custom / quote-based plans carry no numeric price.
+    ...(plan.price !== undefined ? { 'price': plan.price, priceCurrency } : {}),
+    ...(plan.description ? { 'description': plan.description } : {}),
+    ...(plan.price !== undefined && recurring
+      ? {
+          'priceSpecification': {
+            '@type': 'UnitPriceSpecification',
+            'price': plan.price,
+            priceCurrency,
+            ...(plan.unitText
+              ? {
+                  'referenceQuantity': {
+                    '@type': 'QuantitativeValue',
+                    'value': 1,
+                    'unitText': plan.unitText,
+                  },
+                }
+              : {}),
+            ...(plan.billingDurationMonths
+              ? { 'billingIncrement': 1, 'billingDuration': plan.billingDurationMonths }
+              : {}),
+          },
+        }
+      : {}),
+  }
+})
+
+const softwareApp = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  '@id': `${homeUrl}#software`,
+  'name': config.siteName,
+  'description': description,
+  'applicationCategory': 'BusinessApplication',
+  'operatingSystem': 'Web',
+  'url': homeUrl,
+  ...(offerNodes.length ? { 'offers': offerNodes } : {}),
+}
+---
+
+<JsonLd data={softwareApp} />

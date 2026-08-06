@@ -65,6 +65,23 @@ footer:
     glassfrog: Alternative to GlassFrog
     peerdom: Alternative to Peerdom
 
+# Product and plans, emitted as the `SoftwareApplication` JSON-LD of the
+# homepage and the pricing page. Mirror any plan change in the visible
+# `PricingCard`s of `content/pages/pricing/`.
+product:
+  description: Rolebase is the open source platform to map your roles, run better meetings, and let every team self-organize.
+  plans:
+    - name: Small
+      price: '0'
+      description: Ideal for testing and collaborating in a small team. All features, up to 5 active members, unlimited inactive members in the org chart.
+    - name: Startup
+      price: '5'
+      unitText: user
+      billingDurationMonths: 1
+      description: Get your entire team on board. All features, unlimited active members, 1h/month of coaching, priority support.
+    - name: Enterprise
+      description: Request a demo and a quote tailored to your needs. Unlimited guests, custom consulting and integrations, priority support.
+
 # Example organization rendered in the interactive org-chart islands.
 demo:
   ui:
