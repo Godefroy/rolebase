@@ -116,6 +116,24 @@ pre.md {
 pre.md code {
   @apply bg-transparent p-0;
 }
+/* Expressive Code blocks carry no margin of their own: the space above them
+   comes from the paragraph before. Mirror it below. */
+.expressive-code {
+  @apply mb-5;
+}
+/* Mermaid replaces the block's text with an SVG once it has rendered. The
+   diagram block also carries `.md`, so the code panel styling is undone. */
+pre.mermaid.md {
+  @apply my-8 flex justify-center bg-transparent p-0 text-inherit;
+  /* Hidden until Mermaid runs, so the raw diagram source never flashes. */
+  visibility: hidden;
+}
+pre.mermaid.md[data-processed='true'] {
+  visibility: visible;
+}
+pre.mermaid.md svg {
+  @apply mx-auto h-auto max-w-full;
+}
 a.md {
   @apply text-primary underline underline-offset-2;
 }

@@ -1,13 +1,14 @@
-import type { RehypePlugins } from 'astro'
 import { defineConfig } from 'astro/config'
 import { fileURLToPath } from 'node:url'
 import { unified } from '@astrojs/markdown-remark'
-import mdx from '@astrojs/mdx'
+import mdx, { type MdxOptions } from '@astrojs/mdx'
 import netlify from '@astrojs/netlify'
 import react from '@astrojs/react'
 import sitemap from '@astrojs/sitemap'
+import expressiveCode from 'astro-expressive-code'
 import svgr from 'vite-plugin-svgr'
 import rehypeExternalLinks from 'rehype-external-links'
+import rehypeMermaid from 'rehype-mermaid'
 import { redirects } from './src/redirects'
 import rehypeMdClass from './src/utils/rehype-md-class'
 import { getExternalLinkRel } from './src/utils/external-links'
@@ -27,18 +28,18 @@ const webappSrc = fileURLToPath(new URL('../packages/webapp/src', import.meta.ur
 
 const { site, langs, defaultLang } = config
 
-// The same rehype list feeds two APIs with subtly different types:
-// `markdown.processor = unified({...})` for plain `.md` and the `mdx()`
-// integration for `.mdx` (mdx@5 reads neither the deprecated top-level fields
-// nor `processor`, only its own options). Astro's RehypePlugins allows bare
-// `string` specifiers that mdx's `PluggableList` rejects, so drop that member
-// to get one type assignable to both.
-type Plugins<T extends unknown[]> = Exclude<T[number], string | [string, unknown]>[]
-
-const rehypePlugins: Plugins<RehypePlugins> = [
-  rehypeMdClass,
-  [rehypeExternalLinks, { target: '_blank', rel: getExternalLinkRel }],
-]
+// Drives `.md` files. `pre-mermaid` leaves a `<pre class="mermaid">` rendered
+// client-side by `src/scripts/mermaid.ts`, so no Playwright is needed at build
+// time. It runs before `rehypeMdClass` so the diagram `<pre>` also gets `.md`,
+// and before Expressive Code, which then finds no `<code>` left to highlight.
+const processor = unified({
+  rehypePlugins: [
+    [rehypeMermaid, { strategy: 'pre-mermaid' }],
+    rehypeMdClass,
+    [rehypeExternalLinks, { target: '_blank', rel: getExternalLinkRel }],
+  ],
+  gfm: true,
+})
 
 export default defineConfig({
   site,
@@ -53,19 +54,21 @@ export default defineConfig({
   trailingSlash: 'never',
   build: { format: 'file' },
   redirects,
-  markdown: {
-    // Astro 6 replaced the deprecated top-level `rehypePlugins` field with
-    // `markdown.processor = unified({...})`, which drives plain `.md` files.
-    // See the `rehypePlugins` const above.
-    processor: unified({ rehypePlugins, gfm: true }),
-  },
+  markdown: { processor },
   integrations: [
-    // mdx@5 does not read `markdown.processor`, only its own options, so mirror
-    // the same list here for `.mdx` files. `gfm` must be set explicitly: with a
-    // custom `markdown.processor`, Astro no longer surfaces the `gfm: true`
-    // default on `config.markdown`, so the mdx integration would otherwise
-    // resolve it to `undefined` and drop remark-gfm (breaking tables).
-    mdx({ rehypePlugins, gfm: true }),
+    // Renders every code block, from the options in ec.config.mjs.
+    expressiveCode(),
+    // mdx@5 reads only its own options, so the pipeline is repeated here for
+    // `.mdx` files. Reading it back off the processor is what matters: `unified()`
+    // copies the arrays it receives and integrations append to those copies
+    // during `astro:config:setup`, which is how Expressive Code lands on MDX
+    // pages. `gfm` is explicit for the same reason, a custom processor hides the
+    // default Astro would otherwise pass on (dropping remark-gfm breaks tables).
+    mdx({
+      remarkPlugins: processor.options.remarkPlugins as MdxOptions['remarkPlugins'],
+      rehypePlugins: processor.options.rehypePlugins as MdxOptions['rehypePlugins'],
+      gfm: true,
+    }),
     react(),
     sitemap({
       // Exclude root URL (redirects to /en/) to avoid duplicate hreflang entries
