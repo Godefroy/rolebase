@@ -11,21 +11,20 @@ Rolebase expose une **API GraphQL** alimentée par Hasura. Vous pouvez utiliser 
 ## Accès à l'API
 
 - Le point d'accès de l'API est disponible à l'URL GraphQL de votre projet Nhost.
-- L'authentification est gérée via les jetons d'authentification Nhost.
+- L'authentification est gérée via les clés API.
 - Consultez la [Référence API](/fr/api) pour les requêtes, mutations et schémas d'entités disponibles.
 
 ## Authentification
 
-Pour authentifier les requêtes API, vous avez besoin d'une **clé API** ou d'un **jeton d'authentification utilisateur** :
+Les requêtes API s'authentifient avec une **clé API**, créée depuis la page [Paramètres > Clés API](/settings/api-keys) dans l'application. Une clé porte les permissions de l'utilisateur qui l'a créée, dans toutes les organisations dont il est membre.
 
-- Les **clés API** peuvent être créées depuis la page **Paramètres > Clés API** dans l'application. Elles fournissent un accès programmatique limité à une organisation spécifique.
-- Les **jetons d'authentification utilisateur** sont obtenus via le flux d'authentification Nhost et portent les permissions de l'utilisateur authentifié.
-
-Incluez le jeton dans l'en-tête `Authorization` :
+Envoyez-la dans l'en-tête `x-api-key` :
 
 ```
-Authorization: Bearer <votre-jeton>
+x-api-key: <votre-cle-api>
 ```
+
+La même clé authentifie l'[API GraphQL](/fr/api) et l'[API tRPC](/fr/developers/trpc-api).
 
 ## Exemples d'utilisation
 

@@ -21,7 +21,7 @@ export function route<F extends RouteFn>(routeFn: F) {
     // Error handling
     const errorTransaction = startErrorHandling(req.url)
 
-    const context = createContext({
+    const context = await createContext({
       req,
       res,
     })

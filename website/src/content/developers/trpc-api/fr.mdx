@@ -27,13 +27,22 @@ Elle suit le protocole HTTP standard de tRPC (requêtes en `GET`, mutations en `
 
 ## Authentification
 
-Les procédures tRPC requièrent un **token d’authentification utilisateur** (le token d’accès Nhost d’un utilisateur connecté). Envoyez-le en bearer token :
+Les procédures tRPC s’authentifient avec une **clé API**, la même que celle de l’[API GraphQL](/fr/api). Créez-la depuis [Paramètres > Clés API](/settings/api-keys) dans l’application et envoyez-la dans l’en-tête `x-api-key` :
 
 ```
-Authorization: Bearer <votre-token-d-acces>
+x-api-key: <votre-cle-api>
 ```
 
-Les procédures s’exécutent avec les permissions de cet utilisateur. Les clés API (l’en-tête `x-api-key`) authentifient uniquement l’API GraphQL et restent donc distinctes de tRPC. Quelques procédures sont publiques (lire une invitation ou une organisation partagée), et les procédures internes utilisent plutôt un secret de webhook.
+Les procédures s’exécutent avec les permissions de l’utilisateur propriétaire de la clé. Quelques procédures sont publiques (lire une invitation ou une organisation partagée), et les procédures internes utilisent plutôt un secret de webhook.
+
+<Callout type="info" title="Tokens d’accès">
+  L’application web s’authentifie avec le token d’accès Nhost de l’utilisateur
+  connecté (`Authorization: Bearer <token>`), que le backend accepte également.
+  Ces tokens sont éphémères et liés à une session de navigateur : les
+  intégrations externes doivent donc utiliser une clé API. Les procédures
+  réservées aux administrateurs restent accessibles uniquement avec un token
+  d’accès portant le rôle `admin`.
+</Callout>
 
 ## Client typé
 
@@ -48,7 +57,7 @@ const trpc = createTRPCClient<AppRouter>({
     httpBatchLink({
       url: 'https://api.rolebase.io',
       headers: () => ({
-        Authorization: `Bearer ${accessToken}`,
+        'x-api-key': apiKey,
       }),
     }),
   ],
@@ -68,11 +77,11 @@ Vous pouvez aussi appeler les procédures en HTTP simple, sans client tRPC.
 ```bash
 # Requête : GET /<procedure>?input=<json-encode-url>
 curl 'https://api.rolebase.io/org.getPublicData?input=%7B%22orgId%22%3A%22VOTRE_ORG_ID%22%7D' \
-  -H 'Authorization: Bearer VOTRE_TOKEN_ACCES'
+  -H 'x-api-key: VOTRE_CLE_API'
 
 # Mutation : POST /<procedure> avec l’input en corps JSON
 curl -X POST 'https://api.rolebase.io/circle.archiveCircle' \
-  -H 'Authorization: Bearer VOTRE_TOKEN_ACCES' \
+  -H 'x-api-key: VOTRE_CLE_API' \
   -H 'Content-Type: application/json' \
   -d '{"circleId": "VOTRE_CIRCLE_ID"}'
 ```

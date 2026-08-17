@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "start": "tsx src/index.ts",
-    "dev": "npm run codegen & nodemon -w 'src/**' -w '../shared/**' -w '../emails/**' -w '../editor-legacy/**' -w '../editor/**' --ext 'ts,json' --ignore 'src/**/*.spec.ts' --exec 'tsx src/index.ts'",
+    "dev": "npm run codegen & NODE_ENV=development nodemon -w 'src/**' -w '../shared/**' -w '../emails/**' -w '../editor-legacy/**' -w '../editor/**' --ext 'ts,json' --ignore 'src/**/*.spec.ts' --exec 'tsx src/index.ts'",
     "codegen": "graphql-codegen --config src/codegen.ts",
     "build": "tsc",
     "test": "vitest",

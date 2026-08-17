@@ -1,7 +1,6 @@
 import * as yup from 'yup'
-import { gql } from '../../gql'
 import { registerRestRoutes } from '../../rest/registerRestRoutes'
-import { adminRequest } from '../../utils/adminRequest'
+import { authenticateApiKey } from '../../utils/authenticateApiKey'
 import { nhost } from '../../utils/nhost'
 
 // Public GraphQL API
@@ -25,23 +24,11 @@ registerRestRoutes(async (app) => {
         return
       }
 
-      const apiKeys = await adminRequest(GET_USER_ID, {
-        value: apiKey,
-      })
-      const apiKeyRow = apiKeys.api_key[0]
-      const userId = apiKeyRow?.userId
+      const userId = await authenticateApiKey(apiKey)
       if (!userId) {
         res.status(403).send({ errors: [{ message: 'Invalid API key' }] })
         return
       }
-
-      // Record usage. Fire-and-forget so it never blocks or fails the request.
-      adminRequest(UPDATE_LAST_USED, {
-        id: apiKeyRow.id,
-        lastUsedAt: new Date().toISOString(),
-      }).catch((error) => {
-        console.error('Failed to update api_key lastUsedAt', error)
-      })
 
       try {
         const { query, variables, operationName } =
@@ -70,25 +57,3 @@ registerRestRoutes(async (app) => {
     })
   })
 })
-
-const GET_USER_ID = gql(`
-  query getApiKeyUserId($value: String!) {
-    api_key(
-      where: { value: { _eq: $value }, archivedAt: { _is_null: true } }
-    ) {
-      id
-      userId
-    }
-  }
-`)
-
-const UPDATE_LAST_USED = gql(`
-  mutation updateApiKeyLastUsed($id: uuid!, $lastUsedAt: timestamptz!) {
-    update_api_key_by_pk(
-      pk_columns: { id: $id }
-      _set: { lastUsedAt: $lastUsedAt }
-    ) {
-      id
-    }
-  }
-`)

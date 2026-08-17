@@ -15,6 +15,6 @@ export function startErrorHandling(name: string) {
   return Sentry.startInactiveSpan({ name, op: 'http.server' })
 }
 
-export function captureError(error: Error) {
-  Sentry.captureException(error)
+export function captureError(error: Error, extra?: Record<string, unknown>) {
+  Sentry.captureException(error, extra ? { extra } : undefined)
 }

@@ -11,6 +11,10 @@ export default {
   url: process.env.WEBAPP_URL || 'http://localhost:3000',
   backendUrl: process.env.BACKEND_URL || 'http://localhost:8888',
 
+  // Opt-in, so a deployment that forgets to set NODE_ENV stays on the safe side
+  // (no stack traces in API responses). The dev script sets it.
+  isDev: process.env.NODE_ENV === 'development',
+
   defaultTimezone: 'Europe/Paris',
 
   forbiddenSlugs: [
