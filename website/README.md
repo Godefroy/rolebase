@@ -15,7 +15,7 @@ Starts the Astro dev server on port 4324.
 
 | Command             | Description                                                  |
 | ------------------- | ------------------------------------------------------------ |
-| `npm run dev`       | Start Astro dev server                                       |
+| `npm run dev`       | Start Astro dev server on http://localhost:6101              |
 | `npm run build`     | Build the Astro site                                         |
 | `npm run preview`   | Preview the built Astro site                                 |
 | `npm run astrocms`  | Start AstroCMS on http://localhost:4001/astrocms             |
