@@ -5,6 +5,7 @@ import CrispSetUser from '@/common/atoms/CrispSetUser'
 import Loading from '@/common/atoms/Loading'
 import TextError from '@/common/atoms/TextError'
 import Page404 from '@/common/pages/Page404'
+import ImpersonationBanner from '@/superAdmin/components/ImpersonationBanner'
 import SuperAdminRoutes from './SuperAdminRoutes'
 import LoggedLayout from '@/layout/components/LoggedLayout'
 import SettingsLayout from '@/layout/components/SettingsLayout'
@@ -103,6 +104,7 @@ export default function PrivateRoute() {
       </Routes>
 
       <CrispSetUser />
+      <ImpersonationBanner />
       <VerifyEmailModal />
       <Onboarding />
     </LoggedLayout>

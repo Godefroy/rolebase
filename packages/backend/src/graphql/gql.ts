@@ -108,6 +108,8 @@ const documents = {
     "\n  query getResolutionCircleLink($id: uuid!) {\n    circle_link_by_pk(id: $id) { id }\n  }\n": types.GetResolutionCircleLinkDocument,
     "\n  mutation insertResolutionCircleLink($object: circle_link_insert_input!) {\n    insert_circle_link_one(object: $object) { id }\n  }\n": types.InsertResolutionCircleLinkDocument,
     "\n  mutation updateResolutionCircleLink($id: uuid!, $values: circle_link_set_input!) {\n    update_circle_link_by_pk(pk_columns: { id: $id }, _set: $values) { id }\n  }\n": types.UpdateResolutionCircleLinkDocument,
+    "\n  query getUserForImpersonation($id: uuid!) {\n    user(id: $id) {\n      id\n      email\n      disabled\n    }\n  }\n": types.GetUserForImpersonationDocument,
+    "\n  mutation createImpersonationPat(\n    $userId: uuid!\n    $refreshTokenHash: String!\n    $expiresAt: timestamptz!\n    $metadata: jsonb!\n  ) {\n    insertAuthRefreshToken(\n      object: {\n        userId: $userId\n        type: pat\n        refreshTokenHash: $refreshTokenHash\n        expiresAt: $expiresAt\n        metadata: $metadata\n      }\n    ) {\n      id\n    }\n  }\n": types.CreateImpersonationPatDocument,
     "\n  fragment CircleSearch on circle {\n    id\n    orgId\n    role {\n      name\n    }\n  }\n": types.CircleSearchFragmentDoc,
     "\n        query GetCircleForSearch($id: uuid!) {\n          circle_by_pk(id: $id) {\n            ...CircleSearch\n          }\n        }\n      ": types.GetCircleForSearchDocument,
     "\n        query GetCirclesForSearch {\n          circle(where: { archivedAt: { _is_null: true } }) {\n            ...CircleSearch\n          }\n        }\n      ": types.GetCirclesForSearchDocument,
@@ -553,6 +555,14 @@ export function gql(source: "\n  mutation insertResolutionCircleLink($object: ci
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation updateResolutionCircleLink($id: uuid!, $values: circle_link_set_input!) {\n    update_circle_link_by_pk(pk_columns: { id: $id }, _set: $values) { id }\n  }\n"): (typeof documents)["\n  mutation updateResolutionCircleLink($id: uuid!, $values: circle_link_set_input!) {\n    update_circle_link_by_pk(pk_columns: { id: $id }, _set: $values) { id }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query getUserForImpersonation($id: uuid!) {\n    user(id: $id) {\n      id\n      email\n      disabled\n    }\n  }\n"): (typeof documents)["\n  query getUserForImpersonation($id: uuid!) {\n    user(id: $id) {\n      id\n      email\n      disabled\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation createImpersonationPat(\n    $userId: uuid!\n    $refreshTokenHash: String!\n    $expiresAt: timestamptz!\n    $metadata: jsonb!\n  ) {\n    insertAuthRefreshToken(\n      object: {\n        userId: $userId\n        type: pat\n        refreshTokenHash: $refreshTokenHash\n        expiresAt: $expiresAt\n        metadata: $metadata\n      }\n    ) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation createImpersonationPat(\n    $userId: uuid!\n    $refreshTokenHash: String!\n    $expiresAt: timestamptz!\n    $metadata: jsonb!\n  ) {\n    insertAuthRefreshToken(\n      object: {\n        userId: $userId\n        type: pat\n        refreshTokenHash: $refreshTokenHash\n        expiresAt: $expiresAt\n        metadata: $metadata\n      }\n    ) {\n      id\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

@@ -11,6 +11,7 @@ import orgSubscription from './orgSubscription'
 import participants from './participants'
 import proposal from './proposal'
 import search from './search'
+import superAdmin from './superAdmin'
 import trigger from './trigger'
 
 export const trpcRouter = router({
@@ -25,6 +26,7 @@ export const trpcRouter = router({
   participants,
   proposal,
   search,
+  superAdmin,
   trigger,
 
   // Health check for Nhost

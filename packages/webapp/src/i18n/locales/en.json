@@ -1231,7 +1231,12 @@
         "lastSeen": "Last seen",
         "orgs": "Orgs",
         "status": "Status"
-      }
+      },
+      "impersonate": "Log in as"
+    },
+    "impersonation": {
+      "banner": "Logged in as {{name}}",
+      "stop": "Back to my account"
     },
     "maintenance": {
       "heading": "Maintenance",

@@ -18,6 +18,7 @@ import {
 import debounce from 'lodash.debounce'
 import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import ImpersonateButton from '../components/ImpersonateButton'
 
 const PAGE_SIZE = 50
 
@@ -85,6 +86,7 @@ export default function AdminUsersPage() {
                 <Th>{t('SuperAdmin.users.columns.lastSeen')}</Th>
                 <Th isNumeric>{t('SuperAdmin.users.columns.orgs')}</Th>
                 <Th>{t('SuperAdmin.users.columns.status')}</Th>
+                <Th />
               </Tr>
             </Thead>
             <Tbody>
@@ -122,6 +124,14 @@ export default function AdminUsersPage() {
                         ? t('SuperAdmin.users.disabled')
                         : t('SuperAdmin.users.active')}
                     </Tag>
+                  </Td>
+                  <Td isNumeric>
+                    {!user.disabled && (
+                      <ImpersonateButton
+                        userId={user.id}
+                        userName={user.displayName || user.email || user.id}
+                      />
+                    )}
                   </Td>
                 </Tr>
               ))}

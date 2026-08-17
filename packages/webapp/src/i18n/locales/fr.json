@@ -1267,7 +1267,12 @@
         "lastSeen": "Dernière connexion",
         "orgs": "Orgs",
         "status": "Statut"
-      }
+      },
+      "impersonate": "Se connecter en tant que"
+    },
+    "impersonation": {
+      "banner": "Connecté en tant que {{name}}",
+      "stop": "Revenir à mon compte"
     },
     "maintenance": {
       "heading": "Maintenance",
