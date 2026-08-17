@@ -1,0 +1,140 @@
+---
+title: 'circle'
+description: "Circle, how it nests its members, roles and child circles, with every field and relationship the entity exposes in the GraphQL schema."
+category: 'circles-roles'
+---
+
+## Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `id` | `uuid` | Unique identifier for the circle |
+| `orgId` | `uuid` | Reference to the organization |
+| `roleId` | `uuid` | Reference to the role associated with this circle |
+| `parentId` | `uuid` | Reference to the parent circle (optional, null for top-level circles) |
+| `archivedAt` | `Timestamp` | When the circle was archived; null if active |
+| `createdAt` | `Timestamp` | When the circle was created |
+
+## Relationships
+
+**Object Relationships:**
+
+- `org` — The organization this circle belongs to
+- `parent` — The parent circle (if any)
+- `role` — The role that defines this circle's purpose and accountabilities
+
+**Array Relationships:**
+
+- `children` — Child circles within this circle
+- `members` — Circle memberships
+- `leaders` — Circle leadership assignments
+- `participants` — All participants (including inherited from child circles)
+- `meetings` — Meetings associated with this circle
+- `meetings_recurring` — Recurring meetings for this circle
+- `tasks` — Tasks assigned to this circle
+- `decisions` — Decisions made within this circle
+- `threads` — Discussion threads in this circle
+- `hostCircleLinks` — Links where this circle hosts other circles
+- `invitedCircleLinks` — Links where this circle is invited to other circles
+
+## Query Examples
+
+### List Circles in an Organization
+
+```graphql
+query GetCircles($orgId: uuid!) {
+  circle(where: { orgId: { _eq: $orgId } }) {
+    id
+    role {
+      name
+      purpose
+    }
+    members {
+      member {
+        name
+      }
+    }
+    children {
+      id
+      role {
+        name
+      }
+    }
+    parent {
+      id
+      role {
+        name
+      }
+    }
+  }
+}
+```
+
+### Get a Specific Circle
+
+```graphql
+query GetCircle($id: uuid!) {
+  circle_by_pk(id: $id) {
+    id
+    role {
+      name
+    }
+  }
+}
+```
+
+## Mutation Examples
+
+### Create a Circle
+
+```graphql
+mutation CreateCircle {
+  insert_circle_one(
+    object: {
+      orgId: "your-org-id"
+      roleId: "role-id"
+      parentId: "parent-circle-id"
+    }
+  ) {
+    id
+    role {
+      name
+    }
+  }
+}
+```
+
+### Move a Circle
+
+A circle's only directly updatable field is its `parentId` (moving it under another circle).
+
+```graphql
+mutation MoveCircle {
+  update_circle_by_pk(
+    pk_columns: { id: "circle-id" }
+    _set: { parentId: "new-parent-circle-id" }
+  ) {
+    id
+    parentId
+  }
+}
+```
+
+<Callout type="info" title="Archiving">
+  `archivedAt` is not writable on a circle directly. Archiving a circle is a
+  nested operation handled by the application: it archives the role, members,
+  invited roles, meetings, recurring meetings, discussions, tasks and decisions of
+  the whole subtree together, and is reversible from the history.
+</Callout>
+
+## Permissions
+
+Circle access follows the organization's [`governanceMode`](/en/docs/governance-modes). In `Free` mode any member can modify the org chart. In `Agile` mode a circle's leaders modify it directly. In `Strict` mode structural changes go through proposals, while organization owners can always edit.
+
+<Callout type="info" title="Notes">
+  Circles form a hierarchical tree through the `parentId` relationship. Each
+  circle must have an associated role that defines its purpose and
+  accountabilities. Circle participants include direct members plus leaders of
+  child and linked circles. Meetings, tasks, and decisions are organized within
+  circles.
+</Callout>

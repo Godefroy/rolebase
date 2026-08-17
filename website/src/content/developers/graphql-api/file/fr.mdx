@@ -1,0 +1,74 @@
+---
+title: 'file'
+description: "Fichier, représente un fichier stocké dans Rolebase. Les fichiers peuvent être associés à des organisations et des membres pour des usages tels que les photos de profil, le stockage de documents et les pièces jointes."
+category: 'other'
+---
+
+## Champs
+
+| Champ | Type | Description |
+| --- | --- | --- |
+| `id` | `uuid` | Identifiant unique du fichier (généré automatiquement) |
+| `bucketId` | `String` | Référence au bucket de stockage |
+| `name` | `String` | Nom original du fichier (optionnel) |
+| `mimeType` | `String` | Type MIME du fichier (optionnel) |
+| `size` | `Integer` | Taille du fichier en octets (optionnel) |
+| `etag` | `String` | Balise d'entité pour la mise en cache et les requêtes conditionnelles (optionnel) |
+| `isUploaded` | `Boolean` | Indique si le fichier a été entièrement téléversé (optionnel) |
+| `metadata` | `JSON` | Métadonnées supplémentaires sur le fichier (optionnel) |
+| `createdAt` | `Timestamp` | Date de création du fichier (par défaut : horodatage actuel) |
+| `updatedAt` | `Timestamp` | Date de dernière mise à jour du fichier (par défaut : horodatage actuel) |
+| `uploadedByUserId` | `uuid` | Référence à l'utilisateur qui a téléversé le fichier (optionnel) |
+
+## Relations
+
+### Relations objet
+
+- `bucket` — Le bucket de stockage contenant le fichier
+
+### Relations tableau
+
+- `members` — Membres utilisant ce fichier (ex. : comme photo de profil)
+- `orgs` — Organisations associées à ce fichier
+
+## Buckets de stockage
+
+Les fichiers sont stockés dans des buckets qui définissent les paramètres de stockage :
+
+- `cacheControl` — Paramètres de contrôle du cache
+- `downloadExpiration` — Durée d'expiration du lien de téléchargement
+- `maxUploadFileSize` — Taille maximale autorisée pour les fichiers
+- `minUploadFileSize` — Taille minimale autorisée pour les fichiers
+- `presignedUrlsEnabled` — Indique si les URL pré-signées sont activées pour un accès temporaire sécurisé
+
+## Exemples de requêtes
+
+### Obtenir un fichier spécifique
+
+```graphql
+query GetFile($id: uuid!) {
+  file(id: $id) {
+    id
+    name
+    mimeType
+    size
+    createdAt
+    metadata
+  }
+}
+```
+
+## Permissions
+
+L'accès aux fichiers est ouvert à tous les utilisateurs authentifiés et aux requêtes publiques :
+
+- **Consultation** — Tous les utilisateurs authentifiés et les requêtes publiques peuvent consulter les métadonnées des fichiers (limité à 1 résultat)
+- **Création** — Tous les utilisateurs authentifiés peuvent téléverser des fichiers
+
+<Callout type="info">
+  Les fichiers sont stockés de manière sécurisée dans des buckets de stockage
+  configurables. Les URL pré-signées permettent un accès temporaire sécurisé, et
+  la validation du type MIME assure un traitement correct des fichiers. Les
+  ETags supportent la mise en cache et les requêtes conditionnelles pour une
+  livraison efficace des fichiers.
+</Callout>

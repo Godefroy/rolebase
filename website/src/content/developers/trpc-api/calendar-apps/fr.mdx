@@ -1,0 +1,47 @@
+---
+title: 'Applications de calendrier'
+description: 'Procédures tRPC du routeur apps : connecter Google Calendar ou Office 365, lister et choisir les calendriers, déconnecter une application.'
+order: 6
+---
+
+Procédures du routeur `apps`, qui pilotent les connexions de calendrier d’un utilisateur. Une connexion est stockée dans une ligne [`user_app`](/fr/developers/graphql-api/user_app), et chaque procédure agit sur l’identifiant de l’application : elle est refusée si l’application appartient à un autre utilisateur. Google Calendar et Office 365 sont les deux types pris en charge.
+
+## Requête `apps.listCalendars`
+
+Liste les calendriers accessibles via une application connectée.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `id` | `uuid` | Identifiant du `user_app`. Requis. |
+
+Elle renvoie un tableau de `{ id, name, isDefault, canEdit }`, où `canEdit` indique si Rolebase peut écrire des réunions dans ce calendrier.
+
+## Mutation `apps.selectCalendars`
+
+Choisit les calendriers dont l’application lit les disponibilités, et celui qui reçoit les réunions de chaque organisation.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `id` | `uuid` | Identifiant du `user_app`. Requis. |
+| `availabilityCalendars` | `[String]` | Identifiants des calendriers lus pour calculer les disponibilités. Requis. |
+| `orgsCalendars` | `[Object]` | Couples `{ orgId, calendarId }`, un par organisation dont les réunions sont poussées vers un calendrier. Requis. |
+
+Les deux listes remplacent la sélection précédente : envoyez donc la sélection complète à chaque appel. La procédure ne renvoie rien.
+
+```typescript
+await trpc.apps.selectCalendars.mutate({
+  id: userAppId,
+  availabilityCalendars: ['primary'],
+  orgsCalendars: [{ orgId, calendarId: 'primary' }],
+})
+```
+
+## Mutation `apps.uninstall`
+
+Déconnecte une application de calendrier, ce qui arrête la synchronisation et supprime les identifiants stockés. La procédure prend `{ id }` et ne renvoie rien.
+
+## Connecter une application
+
+L’installation passe par le parcours OAuth du fournisseur, que l’application termine en transmettant le code d’autorisation à `apps.googlecalendar.authRedirect` ou `apps.office365.authRedirect`. Les deux prennent `{ code }` et créent la ligne `user_app` à partir des tokens obtenus. L’URL de redirection est fixée côté backend : le parcours est donc conçu pour démarrer depuis l’interface Rolebase plutôt que depuis une intégration.
+
+Chaque fournisseur a aussi un webhook que le service de calendrier appelle quand un événement change, `POST /apps/googlecalendar/notify` et `POST /apps/office365/notify`. Ils s’authentifient avec les données de canal du fournisseur, pas avec une clé API.

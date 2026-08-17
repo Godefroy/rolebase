@@ -1,0 +1,140 @@
+---
+title: 'log'
+description: "Log, represents an activity log entry tracking changes to entities, user actions, and providing an audit trail. Logs support undo/redo functionality through structured change tracking."
+category: 'other'
+---
+
+## Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `id` | `uuid` | Unique identifier for the log entry (auto-generated) |
+| `orgId` | `uuid` | Reference to the organization |
+| `userId` | `uuid` | User who made the change |
+| `memberId` | `uuid` | Member who made the change |
+| `memberName` | `String` | Name of the member (preserved for deleted members) |
+| `createdAt` | `Timestamp` | When the log entry was created (defaults to current timestamp) |
+| `display` | `JSON` | Type of log and data to display in the UI |
+| `changes` | `JSON` | Structured log of entity changes for undo/redo |
+| `canceled` | `Boolean` | Whether this log entry has been canceled (defaults to false) |
+| `cancelLogId` | `uuid` | Reference to the log entry that was canceled (optional) |
+| `cancelMemberId` | `uuid` | Member who canceled the action (optional) |
+| `cancelMemberName` | `String` | Name of the member who canceled (optional) |
+| `meetingId` | `uuid` | Meeting during which this log was created (optional) |
+| `decisionId` | `uuid` | Decision this log resulted from (optional) |
+
+## Entity Changes Structure
+
+The `changes` field tracks modifications to entities with the following structure:
+
+```typescript
+type EntityChange = {
+  type: 'Create' | 'Update' | 'Delete'
+  id: string
+  data?: Entity // For Create/Delete
+  prevData?: Entity // For Update (previous state)
+  newData?: Entity // For Update (new state)
+}
+```
+
+## Relationships
+
+### Object Relationships
+
+- `org` — The organization this log belongs to
+- `user` — The user who made the change
+- `member` — The member who made the change
+- `cancelLog` — The log entry that was canceled (if this is a cancellation)
+- `cancelMember` — The member who canceled the action
+
+## Query Examples
+
+### List Recent Logs
+
+```graphql
+query GetRecentLogs($orgId: uuid!) {
+  log(
+    where: { orgId: { _eq: $orgId } }
+    order_by: { createdAt: desc }
+    limit: 10
+  ) {
+    id
+    createdAt
+    memberName
+    display
+    changes
+    canceled
+  }
+}
+```
+
+## Mutation Examples
+
+### Create a Log Entry
+
+```graphql
+mutation CreateLog {
+  insert_log_one(
+    object: {
+      orgId: "your-org-id"
+      memberId: "member-id"
+      memberName: "John Doe"
+      display: { type: "task_created", title: "New Task" }
+      changes: {
+        type: "Create"
+        id: "task-id"
+        data: { title: "New Task", status: "TODO" }
+      }
+    }
+  ) {
+    id
+    createdAt
+    display
+  }
+}
+```
+
+### Cancel a Log Entry (Undo)
+
+```graphql
+mutation CancelLog {
+  insert_log_one(
+    object: {
+      orgId: "your-org-id"
+      memberId: "member-id"
+      memberName: "Jane Doe"
+      cancelLogId: "original-log-id"
+      cancelMemberId: "original-member-id"
+      cancelMemberName: "John Doe"
+      display: { type: "task_creation_canceled" }
+      changes: {
+        type: "Delete"
+        id: "task-id"
+        data: { title: "New Task", status: "TODO" }
+      }
+    }
+  ) {
+    id
+    cancelLog {
+      id
+      display
+    }
+  }
+}
+```
+
+## Permissions
+
+Log access is controlled based on the following rules:
+
+- Organization members can view logs from their organization
+- Log creation requires organization membership with an appropriate role
+- The `userId` is automatically set to the authenticated user
+- Log entries cannot be deleted after creation. Only the `canceled` field can be updated
+- Cancellation is handled by creating new log entries (not modifying originals)
+
+<Callout type="info">
+  The `display` field contains user-friendly information about the action, while
+  the `changes` field stores technical details for undo/redo. Member names are
+  preserved to maintain readability even if members are later deleted.
+</Callout>

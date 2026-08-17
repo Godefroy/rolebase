@@ -1,0 +1,117 @@
+---
+title: 'meeting_template'
+description: "Meeting Template, a reusable meeting configuration that defines the structure and flow of meetings, helping organizations standardize their meeting formats."
+category: 'meetings'
+---
+
+## Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `id` | `uuid` | Unique identifier for the template |
+| `orgId` | `uuid` | Reference to the organization |
+| `title` | `String` | Title of the template |
+| `stepsConfig` | `[meeting_step_config]` | Array of step configurations defining the meeting structure |
+| `createdAt` | `Timestamp` | When the template was created |
+| `archivedAt` | `Timestamp` | When the template was archived; null if active |
+
+## Relationships
+
+**Object Relationships:**
+
+- `org` — The organization this template belongs to
+
+## Step Configuration
+
+The `stepsConfig` array defines the meeting structure. Each entry includes:
+
+- **id** — Unique step identifier
+- **type** — Step type (Tour, Threads, Checklist, Indicators, Tasks)
+- **title** — Display title for the step
+
+## Query Examples
+
+### List Meeting Templates
+
+```graphql
+query meetingTemplates($orgId: uuid!) {
+  meeting_template(
+    where: { orgId: { _eq: $orgId } }
+    order_by: { title: asc }
+  ) {
+    id
+    orgId
+    title
+    stepsConfig
+  }
+}
+```
+
+## Mutation Examples
+
+### Create a Meeting Template
+
+```graphql
+mutation createMeetingTemplate {
+  insert_meeting_template_one(
+    object: {
+      orgId: "org-id"
+      title: "Weekly Team Sync"
+      stepsConfig: [
+        { id: "step-1", type: Tour, title: "Notes" }
+        { id: "step-2", type: Threads, title: "Discussions" }
+        { id: "step-3", type: Checklist, title: "Checklist" }
+        { id: "step-4", type: Indicators, title: "Indicators" }
+        { id: "step-5", type: Tasks, title: "Tasks" }
+      ]
+    }
+  ) {
+    id
+    title
+    stepsConfig
+  }
+}
+```
+
+### Update a Meeting Template
+
+```graphql
+mutation updateMeetingTemplate($id: uuid!) {
+  update_meeting_template_by_pk(
+    pk_columns: { id: $id }
+    _set: {
+      title: "Updated Team Sync"
+      stepsConfig: [{ id: "step-1", type: Tour, title: "Notes" }]
+    }
+  ) {
+    id
+    title
+    stepsConfig
+  }
+}
+```
+
+### Archive a Meeting Template
+
+Templates are archived (soft-deleted) by setting `archivedAt`, not physically deleted.
+
+```graphql
+mutation archiveMeetingTemplate($id: uuid!) {
+  update_meeting_template_by_pk(
+    pk_columns: { id: $id }
+    _set: { archivedAt: "2024-01-01T00:00:00Z" }
+  ) {
+    id
+  }
+}
+```
+
+## Permissions
+
+Organization members can view, create, update, and delete templates within their organization. Templates are organization-wide resources accessible to all members.
+
+<Callout type="info" title="Notes">
+  Templates can be used for both one-time and recurring meetings. The order of
+  steps in `stepsConfig` determines the meeting flow. Changes to a template do
+  not affect existing meetings already created from it.
+</Callout>

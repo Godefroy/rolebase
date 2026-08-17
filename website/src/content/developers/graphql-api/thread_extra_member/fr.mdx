@@ -1,0 +1,94 @@
+---
+title: 'thread_extra_member'
+description: "Membre supplémentaire de discussion, représente un membre supplémentaire invité à participer à une discussion au-delà des participants par défaut du cercle. Permet la collaboration inter-cercles en élargissant l'accès aux discussions."
+category: 'threads'
+---
+
+## Champs
+
+| Champ | Type | Description |
+| --- | --- | --- |
+| `id` | `uuid` | Identifiant unique de l'entrée de membre supplémentaire (généré automatiquement) |
+| `threadId` | `uuid` | Référence à la discussion |
+| `memberId` | `uuid` | Référence au membre ajouté |
+
+## Relations
+
+### Relations objet
+
+- `thread` — La discussion à laquelle ce membre supplémentaire appartient
+- `member` — Le membre supplémentaire ajouté à la discussion
+
+## Exemples de requêtes
+
+### Lister les membres supplémentaires d'une discussion
+
+```graphql
+query GetThreadExtraMembers($threadId: uuid!) {
+  thread_extra_member(where: { threadId: { _eq: $threadId } }) {
+    id
+    member {
+      id
+      name
+    }
+    threadId
+  }
+}
+```
+
+## Exemples de mutations
+
+### Ajouter un membre supplémentaire à une discussion
+
+```graphql
+mutation AddThreadExtraMember {
+  insert_thread_extra_member_one(
+    object: { threadId: "thread-id", memberId: "member-id" }
+  ) {
+    id
+    threadId
+    memberId
+  }
+}
+```
+
+### Retirer un membre supplémentaire
+
+```graphql
+mutation RemoveExtraMember {
+  delete_thread_extra_member_by_pk(id: "extra-member-id") {
+    id
+    memberId
+  }
+}
+```
+
+## Permissions
+
+### Lecture (Select)
+
+Les utilisateurs peuvent voir les membres supplémentaires d'une discussion lorsqu'ils remplissent l'une de ces conditions :
+
+- Ils sont participants du cercle de la discussion
+- Ils sont eux-mêmes un membre supplémentaire de la discussion
+- Pour les discussions non privées, ils sont membres de l'organisation
+
+### Création (Insert)
+
+Les utilisateurs peuvent ajouter des membres supplémentaires aux discussions lorsqu'ils remplissent l'une de ces conditions :
+
+- Ils sont participants du cercle de la discussion
+- Ils sont eux-mêmes un membre supplémentaire de la discussion
+- Pour les discussions non privées, ils sont membres de l'organisation avec le rôle Member, Admin ou Owner
+
+### Suppression (Delete)
+
+Les utilisateurs peuvent retirer des membres supplémentaires des discussions dans les mêmes conditions que la création.
+
+<Callout type="info">
+  Chaque membre ne peut être ajouté qu'une seule fois par discussion (garanti
+  par une contrainte d'unicité sur `threadId` et `memberId`). Les membres
+  supplémentaires peuvent être retirés sans affecter le contenu de la
+  discussion, et les paramètres de confidentialité s'appliquent à tous les
+  participants, y compris les membres supplémentaires.
+</Callout>

@@ -1,5 +1,5 @@
 import { defineCollection } from 'astro:content'
-import { glob } from 'astro/loaders'
+import { file, glob } from 'astro/loaders'
 import { z } from 'astro/zod'
 
 const blog = defineCollection({
@@ -67,28 +67,19 @@ const developers = defineCollection({
     title: z.string(),
     description: z.string().optional(),
     order: z.number().optional(),
+    // Sidebar group of a GraphQL API reference page (`graphql-api/<entity>`),
+    // matching an id of `api-categories.yaml`.
+    category: z.string().optional(),
+    wide: z.boolean().optional(),
   }),
 })
 
 const apiCategories = defineCollection({
-  loader: glob({
-    pattern: '**/*.{md,mdx}',
-    base: './src/content/api-categories',
-  }),
+  loader: file('./src/content/api-categories.yaml'),
   schema: z.object({
-    title: z.string(),
+    // Group heading per language, keyed by lang code.
+    title: z.record(z.string(), z.string()),
     order: z.number().optional(),
-  }),
-})
-
-const api = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/api' }),
-  schema: z.object({
-    title: z.string(),
-    description: z.string().optional(),
-    entity: z.string().optional(),
-    category: z.string().optional(),
-    wide: z.boolean().optional(),
   }),
 })
 
@@ -131,7 +122,6 @@ export const collections = {
   guides,
   developers,
   'api-categories': apiCategories,
-  api,
   glossary,
   translations,
   pages,

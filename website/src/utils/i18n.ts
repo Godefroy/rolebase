@@ -23,9 +23,17 @@ export function getSlugFromId(id: string): string {
   return id.split('/')[0]
 }
 
+/**
+ * Extract the slug of a nested content collection entry, keeping the folder
+ * path: "a/b/en" → "a/b", and "a/index/en" → "a" (empty for a root index).
+ */
+export function getNestedSlugFromId(id: string): string {
+  return id.replace(/\/[^/]+$/, '').replace(/^index$|\/index$/, '')
+}
+
 /** Get the lang suffix from a content collection entry ID like "my-slug/en" */
 export function getLangFromId(id: string): Lang {
-  return id.split('/')[1] as Lang
+  return id.split('/').at(-1) as Lang
 }
 
 export function langPath(lang: Lang, path: string): string {

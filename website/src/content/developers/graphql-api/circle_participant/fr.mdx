@@ -1,0 +1,43 @@
+---
+title: 'circle_participant'
+description: "Participant de cercle, une vue calculée représentant tous les participants d'un cercle, incluant les membres directs et les participants hérités des cercles enfants et liés."
+category: 'circles-roles'
+---
+
+<Callout type="warning" title="Non accessible via l'API publique">
+  Cette entité n'est pas directement accessible via l'API publique. C'est une
+  vue calculée utilisée en interne pour les vérifications de permissions et la
+  résolution des participants.
+</Callout>
+
+## Champs
+
+| Champ | Type | Description |
+| --- | --- | --- |
+| `circleId` | `uuid` | Référence au cercle |
+| `memberId` | `uuid` | Référence au membre |
+
+## Relations
+
+**Relations objet :**
+
+- `circle` — Le cercle auquel ce participant appartient
+- `member` — Le membre qui est participant
+
+## Sources des participants
+
+Les participants d'un cercle proviennent de trois sources :
+
+1. **Membres directs du cercle** — depuis `circle_member` (appartenances actives uniquement)
+2. **Leaders des cercles enfants** — depuis `circle_leader` via les relations parent-enfant
+3. **Leaders des cercles liés** — depuis `circle_leader` via les liens de cercle
+
+## Détails d'implémentation
+
+La vue est une UNION de trois requêtes et est mise en cache dans `circle_participant_cache` pour des raisons de performance. Le cache est automatiquement maintenu par des déclencheurs de base de données lorsque des changements de structure de cercle se produisent.
+
+<Callout type="info" title="Notes">
+  Le statut de participant affecte l'accès aux réunions, tâches et décisions au
+  sein du cercle. Le cache est utilisé pour des vérifications de permissions
+  efficaces dans tout le système.
+</Callout>

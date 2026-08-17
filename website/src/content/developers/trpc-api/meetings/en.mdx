@@ -1,0 +1,31 @@
+---
+title: 'Meetings'
+description: 'tRPC procedure of the meeting router, and the iCal feed that exposes an org calendar to external calendar clients.'
+order: 4
+---
+
+Meetings themselves are read and written with GraphQL on [`meeting`](/en/developers/graphql-api/meeting), [`meeting_step`](/en/developers/graphql-api/meeting_step), [`meeting_attendee`](/en/developers/graphql-api/meeting_attendee) and [`meeting_recurring`](/en/developers/graphql-api/meeting_recurring). The `meeting` router only issues the token that unlocks the endpoints an external client cannot authenticate with an API key.
+
+## Query `meeting.getMeetingsToken`
+
+Returns the token of an organization, for any member including Readonly.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `orgId` | `uuid` | Target organization. Required. |
+
+The token depends on the organization only, so it stays valid as long as the org exists and anyone holding it can read the iCal feed below. Treat it as a shared secret.
+
+```typescript
+const token = await trpc.meeting.getMeetingsToken.query({ orgId })
+```
+
+## iCal feed
+
+The backend also serves the meetings of a member as an iCal calendar, on a plain REST route rather than a tRPC procedure, since calendar clients only know how to poll a URL.
+
+```
+GET https://api.rolebase.io/meeting/ical?orgId=<uuid>&memberId=<uuid>&token=<token>&lang=<en|fr>
+```
+
+All four query parameters are required, and `token` is the one returned by `getMeetingsToken`. The feed answers 401 on an invalid token and 404 once the organization is gone, so a client polling a deleted org stops rather than retrying forever.

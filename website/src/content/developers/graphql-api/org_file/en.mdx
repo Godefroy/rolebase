@@ -1,0 +1,70 @@
+---
+title: 'org_file'
+description: "Organization File, represents an association between an organization and a file, enabling organization-level file management and access control."
+category: 'org-members'
+---
+
+## Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `id` | `uuid` | Unique identifier for the file association |
+| `orgId` | `uuid` | Reference to the organization |
+| `fileId` | `uuid` | Reference to the file |
+| `createdAt` | `Timestamp` | When the file association was created |
+
+## Relationships
+
+**Object Relationships:**
+
+- `org` — The organization this file association belongs to
+- `file` — The associated file
+
+## Query Examples
+
+### List Organization Files
+
+```graphql
+query GetOrgFiles($orgId: uuid!) {
+  org_file(where: { orgId: { _eq: $orgId } }) {
+    id
+    file {
+      name
+      mimeType
+      size
+      createdAt
+    }
+    org {
+      name
+    }
+  }
+}
+```
+
+## Mutation Examples
+
+### Create an Organization File Association
+
+```graphql
+mutation CreateOrgFile {
+  insert_org_file_one(object: { orgId: "your-org-id", fileId: "file-id" }) {
+    id
+    file {
+      name
+      mimeType
+    }
+  }
+}
+```
+
+## Permissions
+
+Organization file access is controlled based on organization membership:
+
+- **Member / Admin / Owner:** Can view files associated with their organization, create new file associations, and delete file associations they have access to
+
+<Callout type="info" title="Notes">
+  Files can be associated with multiple organizations. Deleting an association
+  does not delete the actual file. File metadata and content are managed through
+  the `file` entity.
+</Callout>

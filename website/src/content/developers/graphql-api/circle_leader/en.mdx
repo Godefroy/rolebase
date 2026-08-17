@@ -1,0 +1,44 @@
+---
+title: 'circle_leader'
+description: "Circle Leader, represents a leadership assignment within a circle. Circle leaders have special permissions for governance decisions and member management."
+category: 'circles-roles'
+---
+
+<Callout type="warning" title="Not accessible through the public API">
+  This entity is not directly accessible via the public API. It is managed
+  internally by Rolebase.
+</Callout>
+
+## Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `circleId` | `uuid` | Reference to the circle |
+| `memberId` | `uuid` | Reference to the member assigned as leader |
+| `orgId` | `uuid` | Reference to the organization |
+
+## Relationships
+
+**Object Relationships:**
+
+- `circle` — The circle this leadership assignment belongs to
+- `member` — The member assigned as the circle leader
+
+## Permissions
+
+- **Organization owners and admins:** Can assign circle leaders
+- **Parent circle leaders:** Can assign leaders for child circles
+
+Circle leaders have special permissions within their circles:
+
+- Managing circle members
+- Creating and modifying circle roles
+- Managing circle governance
+- Creating and managing circle links
+- Leading meetings and making decisions
+
+<Callout type="info" title="Notes">
+  A circle can have multiple leaders. Circle leaders inherit leadership
+  permissions in child circles. Leadership assignments determine governance
+  permissions throughout the circle hierarchy.
+</Callout>

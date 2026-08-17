@@ -1,0 +1,104 @@
+---
+title: 'org'
+description: "Organisation, l'entité de niveau supérieur qui contient toutes les autres entités telles que les cercles, rôles, membres, réunions et tâches."
+category: 'org-members'
+---
+
+## Champs
+
+| Champ | Type | Description |
+| --- | --- | --- |
+| `id` | `uuid` | Identifiant unique de l'organisation |
+| `name` | `String` | Nom de l'organisation |
+| `slug` | `String` | Identifiant unique adapté aux URL (optionnel) |
+| `archivedAt` | `Timestamp` | Date d'archivage de l'organisation ; null si actif |
+| `createdAt` | `Timestamp` | Date de création de l'organisation |
+| `defaultGraphView` | `String` | Paramètre de vue graphique par défaut (optionnel) |
+| `governanceMode` | `governance_mode` | Qui peut modifier l'organigramme : `Free` (tous les membres), `Agile` (leaders de rôle), `Strict` (uniquement par proposition). Par défaut : `Free` |
+| `shareMembers` | `Boolean` | Indique si les informations des membres sont partagées publiquement (par défaut : false) |
+| `shareOrg` | `Boolean` | Indique si les informations de l'organisation sont partagées publiquement (par défaut : false) |
+
+## Relations
+
+**Un-à-un :**
+
+- `org_subscription` — Informations d'abonnement de l'organisation
+
+**Un-à-plusieurs :**
+
+- `circles` — Cercles organisationnels
+- `decisions` — Décisions de l'organisation
+- `files` — Fichiers de l'organisation
+- `logs` — Journaux d'activité
+- `meeting_templates` — Modèles de réunion
+- `meetings` — Réunions
+- `meetings_recurring` — Réunions récurrentes
+- `members` — Membres de l'organisation
+- `news` — Actualités
+- `roles` — Rôles de l'organisation
+- `task_views` — Vues de tâches
+- `tasks` — Tâches
+- `threads` — Fils de discussion
+
+## Exemples de requêtes
+
+### Obtenir une organisation spécifique
+
+```graphql
+query GetOrganization($id: uuid!) {
+  org_by_pk(id: $id) {
+    id
+    name
+    slug
+    archivedAt
+    createdAt
+    members {
+      id
+      name
+      role
+    }
+    circles {
+      id
+      name
+    }
+  }
+}
+```
+
+## Exemples de mutations
+
+### Mettre à jour une organisation
+
+```graphql
+mutation UpdateOrganization {
+  update_org_by_pk(
+    pk_columns: { id: "your-org-id" }
+    _set: {
+      name: "New Organization Name"
+      shareMembers: true
+      governanceMode: Strict
+    }
+  ) {
+    id
+    name
+    shareMembers
+    governanceMode
+  }
+}
+```
+
+## Permissions
+
+- **Propriétaire :** Accès complet à tous les paramètres et données de l'organisation
+- **Administrateur :** Peut gérer la plupart des paramètres et données de l'organisation
+- **Membre :** Peut consulter les données de l'organisation selon les paramètres de partage
+
+<Callout type="info" title="Notes">
+  Le champ `slug` doit être unique parmi toutes les organisations. Le champ
+  `governanceMode` définit qui peut modifier l'organigramme : `Free` laisse
+  tous les membres l'éditer, `Agile` restreint l'édition aux leaders de rôle,
+  et `Strict` le rend en lecture seule pour que les changements passent par des
+  propositions. Seul le propriétaire peut modifier `governanceMode`. Les
+  indicateurs `shareMembers` et `shareOrg` contrôlent la visibilité des données
+  de l'organisation pour les utilisateurs externes.
+</Callout>

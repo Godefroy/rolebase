@@ -1,0 +1,96 @@
+---
+title: 'meeting_step'
+description: "Étape de réunion, représente une étape spécifique ou un point de l'ordre du jour au sein d'une réunion, utilisée pour structurer les réunions et suivre la progression à travers des activités comme les notes, discussions, listes de vérification et tâches."
+category: 'meetings'
+---
+
+## Champs
+
+| Champ | Type | Description |
+| --- | --- | --- |
+| `id` | `uuid` | Identifiant unique de l'étape |
+| `meetingId` | `uuid` | Référence à la réunion |
+| `stepConfigId` | `String` | Référence à la configuration de l'étape dans le stepsConfig de la réunion |
+| `type` | `Meeting_Step_Type_Enum` | Type d'étape de réunion |
+| `data` | `meeting_step_data` | Données et contenu spécifiques à l'étape |
+| `notes` | `String` | Notes et documentation de l'étape |
+
+## Relations
+
+**Relations objet :**
+
+- `meeting` — La réunion à laquelle cette étape appartient
+
+## Types d'étapes
+
+- **Tour** — Notes (nom historique pour l'étape de notes/tour de table)
+- **Threads** — Étape des discussions
+- **Checklist** — Revue de la liste de vérification du cercle
+- **Indicators** — Revue des indicateurs du cercle
+- **Tasks** — Étape de gestion des tâches
+
+## Exemples de requêtes
+
+### Obtenir les étapes d'une réunion
+
+```graphql
+query GetMeetingSteps($meetingId: uuid!) {
+  meeting_step(where: { meetingId: { _eq: $meetingId } }) {
+    id
+    type
+    stepConfigId
+    data
+    notes
+  }
+}
+```
+
+## Exemples de mutations
+
+### Créer une étape de réunion
+
+```graphql
+mutation CreateMeetingStep {
+  insert_meeting_step_one(
+    object: {
+      meetingId: "meeting-id"
+      stepConfigId: "step-1"
+      type: Tour
+      data: {}
+      notes: "Opening check-in round"
+    }
+  ) {
+    id
+    type
+    data
+  }
+}
+```
+
+### Mettre à jour les données et notes d'une étape
+
+```graphql
+mutation UpdateMeetingStep($id: uuid!, $data: json!, $notes: String!) {
+  update_meeting_step_by_pk(
+    pk_columns: { id: $id }
+    _set: { data: $data, notes: $notes }
+  ) {
+    id
+    data
+    notes
+  }
+}
+```
+
+## Permissions
+
+- **Participants du cercle :** Peuvent consulter et mettre à jour les étapes des réunions de leur cercle
+- **Participants de la réunion :** Peuvent consulter les étapes et les mettre à jour s'ils ne sont pas en mode lecture seule
+- **Membres de l'organisation :** Peuvent consulter les étapes des réunions non privées
+
+<Callout type="info" title="Notes">
+  Les étapes sont créées à partir du `stepsConfig` du modèle de réunion. La
+  structure du champ `data` varie selon le type d'étape. La progression à
+  travers les étapes est suivie via le champ `currentStepId` de la réunion. Les
+  notes peuvent être mises à jour pendant et après la réunion.
+</Callout>

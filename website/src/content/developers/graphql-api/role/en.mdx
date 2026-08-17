@@ -1,0 +1,123 @@
+---
+title: 'role'
+description: "Role, defines the purpose, domain, accountabilities, and other aspects of a position or function within an organization. Each circle is associated with a role."
+category: 'circles-roles'
+---
+
+## Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `id` | `uuid` | Unique identifier for the role |
+| `orgId` | `uuid` | Reference to the organization |
+| `name` | `String` | Name of the role |
+| `purpose` | `String` | The role's purpose or mission |
+| `domain` | `String` | Areas of authority and control |
+| `accountabilities` | `String` | List of accountabilities |
+| `checklist` | `String` | Checklist of recurring responsibilities |
+| `indicators` | `String` | Performance indicators to track |
+| `notes` | `String` | Additional notes |
+| `archivedAt` | `Timestamp` | When the role was archived; null if active |
+| `createdAt` | `Timestamp` | When the role was created |
+| `base` | `Boolean` | Whether this is a base role (default: false) |
+| `singleMember` | `Boolean` | Whether the role can only have one member (default: false) |
+| `parentLink` | `Boolean` | Whether the role can be linked to parent circles (default: false) |
+| `colorHue` | `Smallint` | Color hue for visual representation (optional) |
+
+## Relationships
+
+**Object Relationships:**
+
+- `org` — The organization this role belongs to
+
+**Array Relationships:**
+
+- `circles` — Circles that use this role
+
+## Query Examples
+
+### List Roles in an Organization
+
+```graphql
+query GetRoles($orgId: uuid!) {
+  role(where: { orgId: { _eq: $orgId } }) {
+    id
+    name
+  }
+}
+```
+
+### Get a Specific Role with Full Details
+
+```graphql
+query GetRole($id: uuid!) {
+  role_by_pk(id: $id) {
+    id
+    name
+    purpose
+    domain
+    accountabilities
+    checklist
+    indicators
+    notes
+  }
+}
+```
+
+## Mutation Examples
+
+### Create a Role
+
+```graphql
+mutation CreateRole {
+  insert_role_one(
+    object: {
+      orgId: "your-org-id"
+      name: "Software Engineer"
+      purpose: "Develop and maintain software applications"
+      domain: "Application codebase and development tools"
+      accountabilities: "Write clean code, Review PRs, Debug issues"
+      checklist: "Daily code review, Weekly status updates"
+      indicators: "Code quality metrics, Bug resolution time"
+      notes: "Focus on maintainable and scalable code"
+      singleMember: false
+    }
+  ) {
+    id
+    name
+    purpose
+  }
+}
+```
+
+### Update a Role
+
+```graphql
+mutation UpdateRole {
+  update_role_by_pk(
+    pk_columns: { id: "role-id" }
+    _set: {
+      name: "Senior Software Engineer"
+      accountabilities: "Lead development, Mentor team members, Architect solutions"
+    }
+  ) {
+    id
+    name
+    accountabilities
+  }
+}
+```
+
+## Permissions
+
+- **View** — All organization members can view roles
+- **Create** — Owners can create any role. Admins and Members can create non-base roles
+- **Update** — Owners can update any role. For non-base roles, access depends on the organization's [`governanceMode`](/en/docs/governance-modes): in `Free` mode Admins and Members can update them; in `Agile` mode the circle's leaders can; in `Strict` mode structural changes go through proposals
+- **Delete** — Only available through the Hasura admin API
+
+<Callout type="info" title="Notes">
+  Base roles (`base: true`) are fundamental to the organization and can only be
+  modified by owners. The `singleMember` flag restricts assignment to one
+  person. The combination of purpose, domain, and accountabilities defines the
+  complete scope of the role.
+</Callout>

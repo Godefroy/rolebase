@@ -1,0 +1,72 @@
+---
+title: 'Membres'
+description: 'Procédures tRPC du routeur member : inviter un membre, accepter une invitation, changer un rôle d’accès, archiver et restaurer.'
+order: 2
+---
+
+Procédures du routeur `member`. Créer une ligne membre et modifier son nom, sa photo ou ses données de travail passe par GraphQL sur l’entité [`member`](/fr/developers/graphql-api/member) ; ces procédures gèrent le parcours d’invitation, le rôle d’accès et le nombre de sièges de l’abonnement, qui demandent tous une logique côté serveur.
+
+Un rôle d’accès vaut `Readonly`, `Member`, `Admin` ou `Owner` ; voir [Permissions](/fr/developers/permissions) pour ce que chacun accorde.
+
+## Mutation `member.inviteMember`
+
+Envoie un email d’invitation à un membre existant, pour un Admin ou un Owner. Un nouvel appel sur un membre déjà invité renvoie l’email avec un token frais.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `memberId` | `uuid` | Membre à inviter, pas encore rattaché à un utilisateur. Requis. |
+| `email` | `String` | Adresse à laquelle l’invitation est envoyée. Requis. |
+| `role` | `String` | Rôle d’accès accordé à l’acceptation. Requis. |
+
+La ligne membre conserve l’email et la date d’invitation, dont le token d’invitation est dérivé. Un membre déjà rattaché à un utilisateur répond `CONFLICT`, et l’appel est refusé quand l’abonnement n’a plus de siège disponible pour un membre de plus. La procédure ne renvoie rien.
+
+```typescript
+await trpc.member.inviteMember.mutate({
+  memberId: 'VOTRE_MEMBER_ID',
+  email: 'quelquun@example.com',
+  role: 'Member',
+})
+```
+
+## Requête `member.getMemberInvitationInfo`
+
+Lit ce qu’un lien d’invitation doit afficher avant que le destinataire se connecte : cette procédure ne demande donc aucune authentification.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `memberId` | `uuid` | Membre invité. Requis. |
+| `token` | `String` | Token porté par le lien d’invitation. Requis. |
+
+Elle renvoie `{ orgName, email }`. Un membre sans invitation en attente répond `NOT_FOUND`, et un token qui ne correspond pas répond `UNAUTHORIZED`.
+
+## Mutation `member.acceptMemberInvitation`
+
+Rattache le membre invité à l’utilisateur connecté et applique le rôle d’accès prévu.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `memberId` | `uuid` | Membre invité. Requis. |
+| `token` | `String` | Token porté par le lien d’invitation. Requis. |
+
+L’invitation est consommée, et le nombre de sièges de l’abonnement Stripe est mis à jour quand l’organisation a un abonnement actif. Un utilisateur déjà membre de l’organisation répond `CONFLICT`, et un abonnement sans siège libre bloque l’appel. La procédure ne renvoie rien.
+
+## Mutation `member.updateMemberRole`
+
+Change ou retire le rôle d’accès d’un membre. Un Admin agit sur n’importe quel membre, changer le rôle d’un Owner demande le rôle Owner, et le dernier Owner actif ne peut pas être rétrogradé.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `memberId` | `uuid` | Membre visé. Requis. |
+| `role` | `String` | Nouveau rôle d’accès, ou valeur vide pour révoquer l’accès en gardant le membre dans l’organigramme. Requis. |
+
+Un membre jamais invité répond `NOT_FOUND`. La procédure ne renvoie rien.
+
+## Mutation `member.archiveMember`
+
+Archive un membre, le détache de son compte utilisateur et efface son rôle d’accès et son invitation. Un Admin archive n’importe quel membre, archiver un Owner demande le rôle Owner, et le dernier Owner actif est protégé. Un membre ne peut pas s’archiver lui-même, ce qui répond `FORBIDDEN`.
+
+La procédure prend `{ memberId }`, met à jour le nombre de sièges de l’abonnement quand le membre était rattaché à un utilisateur, et ne renvoie rien.
+
+## Mutation `member.restoreMember`
+
+Restaure un membre archivé, pour un Admin ou un Owner. La procédure prend `{ memberId }` et ne renvoie rien. Le membre revient sans rôle d’accès : invitez-le de nouveau pour lui redonner l’accès.

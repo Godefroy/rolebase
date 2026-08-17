@@ -1,0 +1,59 @@
+---
+title: 'Roles'
+description: 'tRPC procedures of the circle and proposal routers: archive a role with its whole subtree, restore it, resolve a proposal.'
+order: 3
+---
+
+A role placed in the org chart is a [`circle`](/en/developers/graphql-api/circle) row, so archiving one has to carry its whole subtree in a single operation. The `circle` and `proposal` routers expose the actions that need that server-side logic. Everything else about roles is plain GraphQL on [`circle`](/en/developers/graphql-api/circle), [`role`](/en/developers/graphql-api/role) and [`circle_member`](/en/developers/graphql-api/circle_member).
+
+## Mutation `circle.archiveCircle`
+
+Archives a role together with all its nested descendants, for an authenticated user with permission to edit the role.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `circleId` | `uuid` | The role to archive. Required. |
+| `meetingId` | `uuid` | In-progress meeting of the acting member, so the archive log is linked to it. Optional. |
+
+The circle, its descendants, their non-base roles, memberships, links (as host or invited), meetings, recurring meeting configs, threads, tasks and decisions all receive the same `archivedAt` value. Only currently active rows are stamped, so entities archived earlier keep their own timestamp. The root circle cannot be archived.
+
+It returns the timestamp used and the ids it applied to, which is what `restoreCircle` later matches on.
+
+```typescript
+const { archivedAt, circlesIds, rolesIds } = await trpc.circle.archiveCircle.mutate({
+  circleId: 'YOUR_CIRCLE_ID',
+})
+```
+
+## Mutation `circle.restoreCircle`
+
+Restores an archived role and the descendants archived with it, for an authenticated user with permission to edit the role.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `circleId` | `uuid` | The archived role to restore. Required. |
+| `meetingId` | `uuid` | In-progress meeting of the acting member, so the cancellation log is linked to it. Optional. |
+
+Within the subtree, only rows carrying the same `archivedAt` as the circle are reactivated, so entities archived in a different operation stay archived. The archive log of the circle is cancelled at the same time. The target role has to be archived, and the root circle cannot be restored.
+
+```typescript
+const { archivedAt, circlesIds } = await trpc.circle.restoreCircle.mutate({
+  circleId: 'YOUR_CIRCLE_ID',
+})
+```
+
+## Mutation `proposal.resolve`
+
+Resolves an in-progress proposal and applies its outcome. Allowed for the proposal author, a leader of the circle, or an org Admin.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `activityId` | `uuid` | The [`thread_activity`](/en/developers/graphql-api/thread_activity) of type `Proposal`. Required. |
+
+The resolution runs server-side with admin rights, since a voter may lack the permissions the outcome requires. A proposal already resolved is left untouched, so the call is safe to repeat. It returns nothing.
+
+```typescript
+await trpc.proposal.resolve.mutate({ activityId: 'YOUR_ACTIVITY_ID' })
+```
+
+Votes are cast with GraphQL on `thread_proposal_vote`, and the automatic resolution once the outcome is certain runs as an [internal procedure](/en/developers/trpc-api/internal).

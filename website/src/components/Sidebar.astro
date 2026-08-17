@@ -1,10 +1,17 @@
 ---
 import { getCollection } from 'astro:content'
-import { getTranslations, getLangFromUrl, getLangFromId, getSlugFromId } from '../utils/i18n'
+import {
+  getTranslations,
+  getLangFromUrl,
+  getLangFromId,
+  getSlugFromId,
+  getNestedSlugFromId,
+  langPath,
+} from '../utils/i18n'
 import NavLink from './NavLink.astro'
 
 interface Props {
-  section: 'docs' | 'guides' | 'developers' | 'api'
+  section: 'docs' | 'guides' | 'developers'
 }
 
 const { section } = Astro.props
@@ -12,14 +19,28 @@ const { section } = Astro.props
 const lang = getLangFromUrl(Astro.url)
 const t = await getTranslations(lang)
 
-interface SidebarSection {
-  title: string
-  basePath: string
-  links: { slug: string; label: string }[]
-  code?: boolean
+interface SidebarLink {
+  path: string
+  label: string
 }
 
-function sortEntries(entries: { id: string; data: { title: string; order?: number } }[]) {
+/** A group of links nested under an item, with an optional heading. */
+interface SidebarGroup {
+  title?: string
+  links: SidebarLink[]
+}
+
+interface SidebarItem extends SidebarLink {
+  groups?: SidebarGroup[]
+  expanded?: boolean
+}
+
+interface SidebarSection {
+  title: string
+  items: SidebarItem[]
+}
+
+function sortEntries<T extends { data: { title: string; order?: number } }>(entries: T[]): T[] {
   return entries.sort((a, b) => {
     const aOrder = a.data.order ?? Infinity
     const bOrder = b.data.order ?? Infinity
@@ -28,10 +49,10 @@ function sortEntries(entries: { id: string; data: { title: string; order?: numbe
   })
 }
 
-function entriesToLinks(entries: { id: string; data: { title: string } }[]) {
+function entriesToItems(entries: { id: string; data: { title: string } }[], basePath: string) {
   return entries.map((e) => {
     const slug = getSlugFromId(e.id)
-    return { slug: slug === 'index' ? '' : slug, label: e.data.title }
+    return { path: slug === 'index' ? basePath : `${basePath}/${slug}`, label: e.data.title }
   })
 }
 
@@ -45,96 +66,128 @@ if (section === 'docs' || section === 'guides') {
   const guides = sortEntries(allGuides.filter((e) => getLangFromId(e.id) === lang))
 
   sections.push(
-    { title: t.documentation, basePath: '/docs', links: entriesToLinks(docs) },
-    { title: t.guides, basePath: '/guides', links: entriesToLinks(guides) }
+    { title: t.documentation, items: entriesToItems(docs, '/docs') },
+    { title: t.guides, items: entriesToItems(guides, '/guides') }
   )
 } else if (section === 'developers') {
   const allDevs = await getCollection('developers')
-  const devs = sortEntries(allDevs.filter((e) => getLangFromId(e.id) === lang))
+  const devs = allDevs
+    .filter((e) => getLangFromId(e.id) === lang)
+    .map((e) => ({ ...e, slug: getNestedSlugFromId(e.id) }))
+
+  // Reference sections (the GraphQL API, the tRPC API) hold their pages in a
+  // nested folder, listed under the section's own page.
+  const isNested = (slug: string) => slug.includes('/')
+
+  // Headings used to group the GraphQL entity pages. Pages without a category
+  // are listed first, without a heading.
+  const allCategories = await getCollection('api-categories')
+  const categories = allCategories.sort(
+    (a, b) => (a.data.order ?? Infinity) - (b.data.order ?? Infinity)
+  )
+
+  function childGroups(parentSlug: string): SidebarGroup[] {
+    const children = devs.filter((e) => e.slug.startsWith(`${parentSlug}/`))
+    if (children.length === 0) return []
+
+    const toLinks = (entries: typeof children) =>
+      entries.map((e) => ({
+        path: `/developers/${e.slug}`,
+        label: e.data.title,
+      }))
+
+    return [
+      { links: toLinks(sortEntries(children.filter((e) => !e.data.category))) },
+      ...categories.map((cat) => ({
+        title: cat.data.title[lang],
+        links: toLinks(
+          children
+            .filter((e) => e.data.category === cat.id)
+            .sort((a, b) => a.data.title.localeCompare(b.data.title))
+        ),
+      })),
+    ].filter((group) => group.links.length > 0)
+  }
 
   sections.push({
     title: t.developers,
-    basePath: '/developers',
-    links: entriesToLinks(devs),
+    items: sortEntries(devs.filter((e) => !isNested(e.slug))).map((e) => {
+      const slug = getNestedSlugFromId(e.id)
+      const path = slug ? `/developers/${slug}` : '/developers'
+      const groups = slug ? childGroups(slug) : []
+      return {
+        path,
+        label: e.data.title,
+        groups: groups.length > 0 ? groups : undefined,
+        // Nested sections are collapsed, unless the current page is the
+        // section's own page or one of its children.
+        expanded: Astro.url.pathname.startsWith(langPath(lang, path)),
+      }
+    }),
   })
-} else if (section === 'api') {
-  // Introduction link
-  sections.push({
-    title: t.api.reference,
-    basePath: '/api',
-    links: [
-      { slug: '', label: t.api.introduction },
-      { slug: 'playground', label: t.api.playground },
-    ],
-  })
-
-  // Load API entities from content collection
-  const allApiEntries = await getCollection('api')
-  const apiEntries = allApiEntries.filter(
-    (e) => getLangFromId(e.id) === lang && e.data.entity && e.data.category
-  )
-
-  // Load categories from content collection, sorted by order
-  const allCategories = await getCollection('api-categories')
-  const categories = allCategories
-    .filter((e) => getLangFromId(e.id) === lang)
-    .sort((a, b) => (a.data.order ?? Infinity) - (b.data.order ?? Infinity))
-
-  for (const cat of categories) {
-    const key = getSlugFromId(cat.id)
-    const entries = apiEntries
-      .filter((e) => e.data.category === key)
-      .sort((a, b) => (a.data.entity ?? '').localeCompare(b.data.entity ?? ''))
-
-    if (entries.length > 0) {
-      sections.push({
-        title: cat.data.title,
-        basePath: '/api',
-        links: entries.map((e) => ({
-          slug: getSlugFromId(e.id),
-          label: e.data.entity!,
-        })),
-        code: true,
-      })
-    }
-  }
 }
 ---
 
 <aside class="hidden md:block w-65 min-w-65 border-r border-border p-6 pr-4 bg-bg-secondary h-[calc(100vh-56px)] overflow-y-auto sticky top-14" data-sidebar>
   <nav>
-    {sections.map((s, i) => (
-      <div class={i === 0 && section === 'api' ? '' : 'mb-6'}>
-        {i === 0 && section === 'api' ? (
-          /* API intro link without a heading */
-          <div class="mb-3">
-            <h3 class="text-xs uppercase tracking-wide text-text-secondary mb-2 border-none p-0">{s.title}</h3>
-            {s.links.map(link => (
-              <NavLink exact path={link.slug ? `${s.basePath}/${link.slug}` : s.basePath}>{link.label}</NavLink>
-            ))}
-          </div>
-        ) : s.code ? (
-          /* API entity sub-sections */
-          <>
-            <h4 class="text-xs text-text-secondary mt-3 mb-1 font-medium">{s.title}</h4>
-            <div class="flex flex-col">
-              {s.links.map(link => (
-                <NavLink exact path={`${s.basePath}/${link.slug}`} code>{link.label}</NavLink>
-              ))}
+    {sections.map((s) => (
+      <div class="mb-6">
+        <h3 class="text-xs uppercase tracking-wide text-text-secondary mb-2 border-none p-0">{s.title}</h3>
+        <div class="flex flex-col">
+          {s.items.map(item => item.groups ? (
+            <div data-subnav-item>
+              <div class="flex items-center gap-0.5">
+                <div class="flex-1 min-w-0"><NavLink exact path={item.path}>{item.label}</NavLink></div>
+                <button
+                  type="button"
+                  class="p-1 rounded-md text-text-secondary hover:bg-bg-main hover:text-text-main"
+                  aria-expanded={item.expanded ? 'true' : 'false'}
+                  aria-label={item.label}
+                  data-subnav-toggle
+                >
+                  <svg class="w-3.5 h-3.5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                </button>
+              </div>
+              <div class:list={['ml-3 pl-2 border-l border-border mb-2', !item.expanded && 'hidden']} data-subnav>
+                {item.groups.map(group => (
+                  <div>
+                    {group.title && <h4 class="text-xs text-text-secondary mt-3 mb-1 font-medium">{group.title}</h4>}
+                    <div class="flex flex-col">
+                      {group.links.map(link => (
+                        <NavLink exact path={link.path}>{link.label}</NavLink>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-          </>
-        ) : (
-          /* Standard sections (docs, guides, developers) */
-          <>
-            <h3 class="text-xs uppercase tracking-wide text-text-secondary mb-2 border-none p-0">{s.title}</h3>
-            <div class="flex flex-col">
-              {s.links.map(link => (
-                <NavLink exact path={link.slug ? `${s.basePath}/${link.slug}` : s.basePath}>{link.label}</NavLink>
-              ))}
-            </div>
-          </>
-        )}
+          ) : (
+            <NavLink exact path={item.path}>{item.label}</NavLink>
+          ))}
+        </div>
       </div>
     ))}
   </nav>
 </aside>
+
+<style>
+  [data-subnav-toggle][aria-expanded='true'] svg {
+    transform: rotate(90deg);
+  }
+</style>
+
+<script>
+  // Bound on the whole document so the sidebar copy cloned into the mobile
+  // menu (see TopNavShell) toggles too.
+  document.querySelectorAll('[data-subnav-toggle]').forEach((toggle) => {
+    toggle.addEventListener('click', () => {
+      const subnav = toggle.closest('[data-subnav-item]')?.querySelector('[data-subnav]')
+      if (!subnav) return
+      const expanded = toggle.getAttribute('aria-expanded') === 'true'
+      toggle.setAttribute('aria-expanded', String(!expanded))
+      subnav.classList.toggle('hidden', expanded)
+    })
+  })
+</script>

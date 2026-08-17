@@ -1,0 +1,93 @@
+---
+title: 'api_key'
+description: "API Key, represents an API key for programmatic access to the Rolebase API. API keys authenticate and authorize integration with external applications and services."
+category: 'other'
+---
+
+## Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `id` | `uuid` | Unique identifier for the API key (auto-generated) |
+| `userId` | `uuid` | Reference to the user who owns this key |
+| `name` | `String` | Descriptive name for the API key |
+| `value` | `String` | The actual API key value (auto-generated, shown once on creation) |
+| `createdAt` | `Timestamp` | When the API key was created (defaults to current timestamp) |
+| `lastUsedAt` | `Timestamp` | When the API key was last used to authenticate; null if never used |
+| `archivedAt` | `Timestamp` | When the API key was archived; null if active |
+
+## Relationships
+
+### Object Relationships
+
+- `user` — The user this API key belongs to
+
+## Query Examples
+
+### List API Keys
+
+```graphql
+query apiKeys($userId: uuid!) {
+  api_key(where: { userId: { _eq: $userId } }) {
+    id
+    name
+    value
+    createdAt
+  }
+}
+```
+
+## Mutation Examples
+
+### Create an API Key
+
+```graphql
+mutation createApiKey($userId: uuid!, $name: String!) {
+  insert_api_key_one(object: { userId: $userId, name: $name }) {
+    id
+    name
+    value
+    createdAt
+  }
+}
+```
+
+### Rename an API Key
+
+```graphql
+mutation renameApiKey($id: uuid!, $name: String!) {
+  update_api_key_by_pk(pk_columns: { id: $id }, _set: { name: $name }) {
+    id
+    name
+    value
+    createdAt
+  }
+}
+```
+
+### Archive an API Key
+
+API keys are archived (soft-deleted) by setting `archivedAt`, not physically deleted.
+
+```graphql
+mutation archiveApiKey($id: uuid!) {
+  update_api_key_by_pk(
+    pk_columns: { id: $id }
+    _set: { archivedAt: "2024-01-01T00:00:00Z" }
+  ) {
+    id
+  }
+}
+```
+
+## Permissions
+
+API key management is restricted to the owning user:
+
+- Users can create, view, rename, and archive their own API keys only
+
+<Callout type="info">
+  The key `value` is only shown once upon creation — store it securely. Best
+  practices include regularly rotating keys, monitoring usage, deleting unused
+  keys, and never sharing them publicly.
+</Callout>

@@ -1,0 +1,112 @@
+---
+title: 'task_view'
+description: "Task View, represents a custom view of tasks in Rolebase. Task views allow users to organize and filter tasks flexibly, supporting different task management methodologies like Kanban or Scrum."
+category: 'tasks'
+---
+
+## Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `id` | `uuid` | Unique identifier for the task view (auto-generated) |
+| `orgId` | `uuid` | Reference to the organization |
+| `key` | `String` | Unique key for the view within the organization (e.g., 'backlog', 'sprint') |
+| `tasksIds` | `uuid[]` | Array of task IDs included in this view |
+
+## Relationships
+
+### Object Relationships
+
+- `org` — The organization this task view belongs to
+
+## Query Examples
+
+### List Task Views
+
+```graphql
+query GetTaskViews($orgId: uuid!) {
+  task_view(where: { orgId: { _eq: $orgId } }) {
+    id
+    key
+    tasksIds
+    org {
+      name
+    }
+  }
+}
+```
+
+### Get Tasks with a Specific View
+
+```graphql
+query GetTasksWithView(
+  $orgId: uuid!
+  $filters: [task_bool_exp!]!
+  $taskViewKey: String!
+) {
+  org_by_pk(id: $orgId) {
+    tasks(where: { _and: $filters }) {
+      id
+      title
+      status
+      dueDate
+    }
+    task_views(where: { key: { _eq: $taskViewKey } }) {
+      id
+      key
+      tasksIds
+    }
+  }
+}
+```
+
+## Mutation Examples
+
+### Create a Task View
+
+```graphql
+mutation CreateTaskView {
+  insert_task_view_one(
+    object: {
+      orgId: "your-org-id"
+      key: "my-custom-view"
+      tasksIds: ["task-id-1", "task-id-2"]
+    }
+  ) {
+    id
+    key
+    tasksIds
+  }
+}
+```
+
+### Update a Task View
+
+```graphql
+mutation UpdateTaskView {
+  update_task_view(
+    where: { orgId: { _eq: "your-org-id" }, key: { _eq: "my-custom-view" } }
+    _set: { tasksIds: ["task-id-1", "task-id-2", "task-id-3"] }
+  ) {
+    returning {
+      id
+      key
+      tasksIds
+    }
+  }
+}
+```
+
+## Permissions
+
+Task view access is controlled based on organization membership:
+
+- All authenticated users can view task views
+- Organization members with **Member**, **Admin**, or **Owner** roles can create task views
+- Only the `tasksIds` field can be updated
+
+<Callout type="info">
+  The combination of `orgId` and `key` must be unique. Task IDs in the view must
+  correspond to existing tasks in the organization. Views can be shared among
+  organization members.
+</Callout>

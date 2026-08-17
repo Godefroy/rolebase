@@ -1,0 +1,108 @@
+---
+title: 'Organisations'
+description: 'Procédures tRPC du routeur org : créer une organisation, changer son slug et son mode de gouvernance, exporter, importer, partager et archiver.'
+order: 1
+---
+
+Procédures du routeur `org`, qui couvrent les actions au niveau de l’organisation allant au-delà de l’édition de lignes : créer une organisation avec son cercle racine, faire entrer et sortir les données, et archiver. Lire et modifier l’organisation elle-même passe par GraphQL sur l’entité [`org`](/fr/developers/graphql-api/org).
+
+## Mutation `org.createOrg`
+
+Crée une organisation pour l’utilisateur connecté, qui en devient le [`member`](/fr/developers/graphql-api/member) Owner, avec un [`role`](/fr/developers/graphql-api/role) racine et le [`circle`](/fr/developers/graphql-api/circle) qui le place au sommet de l’organigramme. Les rôles de base et les modèles de réunion sont créés ensuite, pendant l’onboarding dans l’application.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `name` | `String` | Nom de l’organisation. Requis. |
+| `slug` | `String` | Slug d’URL, unique parmi toutes les organisations. Requis. |
+
+La procédure renvoie l’identifiant de la nouvelle organisation. Un slug déjà pris ou réservé répond `CONFLICT`.
+
+```typescript
+const orgId = await trpc.org.createOrg.mutate({ name: 'Acme', slug: 'acme' })
+```
+
+## Mutation `org.updateOrgSlug`
+
+Change le slug d’URL d’une organisation, pour un Admin ou un Owner.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `orgId` | `uuid` | Organisation visée. Requis. |
+| `slug` | `String` | Nouveau slug. Requis. |
+
+Comme pour `createOrg`, un slug déjà pris ou réservé répond `CONFLICT`. La procédure ne renvoie rien.
+
+## Mutation `org.setGovernanceMode`
+
+Définit qui peut modifier l’organigramme. Réservée à l’Owner, d’où une procédure plutôt qu’une mise à jour GraphQL : Hasura ne sait pas restreindre une seule colonne aux Owners tout en laissant les Admins modifier les autres réglages.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `orgId` | `uuid` | Organisation visée. Requis. |
+| `governanceMode` | `governance_mode` | `Free`, `Agile` ou `Strict`. Requis. |
+
+Voir [Permissions](/fr/developers/permissions) pour ce que chaque mode autorise.
+
+```typescript
+await trpc.org.setGovernanceMode.mutate({ orgId, governanceMode: 'Strict' })
+```
+
+## Mutation `org.exportOrg`
+
+Exporte les données de l’organisation dans un fichier JSON ou Excel, pour l’Owner.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `orgId` | `uuid` | Organisation visée. Requis. |
+| `format` | `String` | `json` ou `xlsx`. Requis. |
+| `entities` | `[String]` | Entités optionnelles à inclure, parmi `decisions`, `tasks`, `threads` et `meetings`. Requis, et peut être vide. |
+
+Les rôles, cercles et membres sont toujours inclus ; la liste `entities` ajoute les entités optionnelles avec leurs lignes liées (activités des fils, étapes et participants de réunion, etc.). La procédure renvoie `{ filename, contentType, data }`, où `data` contient le document JSON pour `json` et un classeur en base64 pour `xlsx`.
+
+```typescript
+const { filename, data } = await trpc.org.exportOrg.mutate({
+  orgId,
+  format: 'xlsx',
+  entities: ['tasks', 'meetings'],
+})
+```
+
+## Mutation `org.exportOrgChart`
+
+Génère l’organigramme sous forme d’image PNG, pour tout membre y compris Readonly.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `orgId` | `uuid` | Organisation visée. Requis. |
+| `circleId` | `uuid` | Ne générer que ce rôle et ses descendants. Optionnel, l’organigramme complet par défaut. |
+| `view` | `String` | Vue à générer : `AllCircles`, `SimpleCircles`, `FlatCircle` ou `Members`. Requis. |
+| `width` | `Int` | Côté de l’image en pixels, entre 100 et 3000. Requis. |
+| `colorMode` | `String` | `light` ou `dark`. Optionnel, `light` par défaut. |
+| `showAllNodes` | `Boolean` | Dessiner les membres et les cercles profonds quel que soit le niveau de zoom. Optionnel. |
+
+La procédure renvoie `{ data, contentType, filename }` avec l’image en base64.
+
+## Mutation `org.importOrg`
+
+Crée une organisation à partir d’un fichier déposé.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `provider` | `String` | Format source. `Holaspirit` est celui pris en charge aujourd’hui. Requis. |
+| `fileId` | `uuid` | Identifiant du fichier déposé au préalable dans le stockage. Requis. |
+
+La procédure renvoie l’identifiant de l’organisation créée. Un fichier inaccessible ou un provider inconnu répond `BAD_REQUEST`.
+
+## Requête `org.getPublicData`
+
+Lit l’organigramme d’une organisation qui le partage publiquement. Cette procédure ne demande aucune authentification.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `orgId` | `uuid` | Organisation visée. Requis. |
+
+Elle renvoie `{ circles, roles, members }`, avec `members` vide sauf si l’organisation partage aussi les informations des membres. Une organisation qui ne partage pas son organigramme répond `FORBIDDEN`.
+
+## Mutation `org.archiveOrg`
+
+Archive une organisation, pour l’Owner. L’abonnement Stripe, s’il existe, est supprimé au préalable. La procédure prend `{ orgId }` et renvoie ce même identifiant.

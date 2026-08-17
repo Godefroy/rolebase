@@ -1,0 +1,47 @@
+---
+title: 'Calendar apps'
+description: 'tRPC procedures of the apps router: connect Google Calendar or Office 365, list and select calendars, disconnect an app.'
+order: 6
+---
+
+Procedures of the `apps` router, which drive the calendar connections of a user. A connection is stored as a [`user_app`](/en/developers/graphql-api/user_app) row, and every procedure here acts on the app id, so it is refused when the app belongs to another user. Google Calendar and Office 365 are the two supported types.
+
+## Query `apps.listCalendars`
+
+Lists the calendars reachable through a connected app.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `id` | `uuid` | Id of the `user_app`. Required. |
+
+It returns an array of `{ id, name, isDefault, canEdit }`, where `canEdit` tells whether Rolebase can write meetings to that calendar.
+
+## Mutation `apps.selectCalendars`
+
+Chooses which calendars the app reads availability from, and which one receives the meetings of each organization.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `id` | `uuid` | Id of the `user_app`. Required. |
+| `availabilityCalendars` | `[String]` | Calendar ids read to compute the user availability. Required. |
+| `orgsCalendars` | `[Object]` | Pairs of `{ orgId, calendarId }`, one per organization whose meetings are pushed to a calendar. Required. |
+
+Both lists replace the previous selection, so send the whole selection each time. It returns nothing.
+
+```typescript
+await trpc.apps.selectCalendars.mutate({
+  id: userAppId,
+  availabilityCalendars: ['primary'],
+  orgsCalendars: [{ orgId, calendarId: 'primary' }],
+})
+```
+
+## Mutation `apps.uninstall`
+
+Disconnects a calendar app, which stops the sync and removes the stored credentials. It takes `{ id }` and returns nothing.
+
+## Connecting an app
+
+Installing an app goes through the provider OAuth flow, which the app finishes by handing the authorization code to `apps.googlecalendar.authRedirect` or `apps.office365.authRedirect`. Both take `{ code }` and create the `user_app` row from the returned tokens. The redirect URL is fixed on the backend side, so the flow is meant to be started from the Rolebase interface rather than from an integration.
+
+Each provider also has a webhook the calendar service calls when an event changes, `POST /apps/googlecalendar/notify` and `POST /apps/office365/notify`. They authenticate with the provider channel data, not with an API key.

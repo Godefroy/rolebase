@@ -1,0 +1,98 @@
+---
+title: 'API GraphQL'
+description: "Accédez et gérez vos organisations Rolebase de manière programmatique via l'API GraphQL."
+order: 2.5
+---
+
+## Clés API
+
+Générez des clés API depuis [Paramètres > Clés API](/settings/api-keys) dans l'application. Ces clés authentifient toutes les requêtes envoyées à l'API, ainsi que celles vers l'[API tRPC](/fr/developers/trpc-api).
+
+## Point d'accès GraphQL
+
+**Production :** `https://api.rolebase.io/graphql`
+
+**Développement local :** `http://localhost:8888/graphql`
+
+L'API est propulsée par [Hasura](https://hasura.io/docs/2.0/index/), vous pouvez donc vous référer à la documentation Hasura pour les capacités de requête avancées.
+
+Testez des requêtes en direct dans le [Playground GraphQL](/fr/developers/graphql-api/playground). Pour les procédures backend qui vont au-delà du CRUD, consultez l'[API tRPC](/fr/developers/trpc-api).
+
+## Démarrage rapide
+
+### Avec curl
+
+```bash
+curl -X POST https://api.rolebase.io/graphql \
+  -H "x-api-key: YOUR_API_KEY_HERE" \
+  -H "Content-Type: application/json" \
+  -d '{"query": "{ org { id, name } }"}'
+```
+
+### Avec Apollo Client
+
+```typescript
+import {
+  ApolloClient,
+  InMemoryCache,
+  createHttpLink,
+  gql,
+} from '@apollo/client'
+
+// Créer le client avec les en-têtes d'authentification
+const client = new ApolloClient({
+  link: createHttpLink({
+    uri: 'https://api.rolebase.io/graphql',
+    headers: {
+      'x-api-key': 'YOUR_API_KEY_HERE',
+    },
+  }),
+  cache: new InMemoryCache(),
+})
+
+// Exemple de requête
+const { data } = await client.query({
+  query: gql`
+    query GetOrganization {
+      org {
+        id
+        name
+      }
+    }
+  `,
+})
+```
+
+<Callout type="tip" title="Authentification">
+  Incluez l'en-tête `x-api-key` dans chaque requête. Votre clé API détermine à
+  quelles données d'organisation vous pouvez accéder et quelles opérations sont
+  autorisées.
+</Callout>
+
+## Entités
+
+Chaque entité prend en charge les opérations GraphQL standard (requête, mutation) en fonction des permissions de votre clé API.
+
+### Organisation et membres
+
+- [`org`](/fr/developers/graphql-api/org) — Organisations
+- [`member`](/fr/developers/graphql-api/member) — Membres de l'organisation
+- [`org_file`](/fr/developers/graphql-api/org_file) — Fichiers de l'organisation
+- [`org_subscription`](/fr/developers/graphql-api/org_subscription) — Abonnements de l'organisation
+
+### Cercles et rôles
+
+- [`circle`](/fr/developers/graphql-api/circle) — Cercles organisationnels
+- [`circle_leader`](/fr/developers/graphql-api/circle_leader) — Attributions de leadership des cercles
+- [`circle_link`](/fr/developers/graphql-api/circle_link) — Liens entre cercles
+- [`circle_member`](/fr/developers/graphql-api/circle_member) — Appartenances aux cercles
+- [`circle_participant`](/fr/developers/graphql-api/circle_participant) — Participants des cercles (vue)
+- [`role`](/fr/developers/graphql-api/role) — Rôles au sein des cercles
+
+### Réunions
+
+- [`meeting`](/fr/developers/graphql-api/meeting) — Réunions
+- [`meeting_attendee`](/fr/developers/graphql-api/meeting_attendee) — Participants aux réunions
+- [`meeting_recurring`](/fr/developers/graphql-api/meeting_recurring) — Configurations de réunions récurrentes
+- [`meeting_step`](/fr/developers/graphql-api/meeting_step) — Étapes et points de l'ordre du jour
+- [`meeting_template`](/fr/developers/graphql-api/meeting_template) — Modèles de réunion

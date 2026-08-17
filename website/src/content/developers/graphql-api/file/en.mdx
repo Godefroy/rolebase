@@ -1,0 +1,73 @@
+---
+title: 'file'
+description: "File, represents a stored file in Rolebase. Files can be associated with organizations and members for purposes such as profile pictures, document storage, and attachments."
+category: 'other'
+---
+
+## Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `id` | `uuid` | Unique identifier for the file (auto-generated) |
+| `bucketId` | `String` | Reference to the storage bucket |
+| `name` | `String` | Original name of the file (optional) |
+| `mimeType` | `String` | MIME type of the file (optional) |
+| `size` | `Integer` | Size of the file in bytes (optional) |
+| `etag` | `String` | Entity tag for caching and conditional requests (optional) |
+| `isUploaded` | `Boolean` | Whether the file has been fully uploaded (optional) |
+| `metadata` | `JSON` | Additional metadata about the file (optional) |
+| `createdAt` | `Timestamp` | When the file was created (defaults to current timestamp) |
+| `updatedAt` | `Timestamp` | When the file was last updated (defaults to current timestamp) |
+| `uploadedByUserId` | `uuid` | Reference to the user who uploaded the file (optional) |
+
+## Relationships
+
+### Object Relationships
+
+- `bucket` — The storage bucket containing the file
+
+### Array Relationships
+
+- `members` — Members using this file (e.g., as a profile picture)
+- `orgs` — Organizations associated with this file
+
+## Storage Buckets
+
+Files are stored in buckets that define storage parameters:
+
+- `cacheControl` — Cache control settings
+- `downloadExpiration` — Download link expiration time
+- `maxUploadFileSize` — Maximum allowed file size
+- `minUploadFileSize` — Minimum allowed file size
+- `presignedUrlsEnabled` — Whether presigned URLs are enabled for secure temporary access
+
+## Query Examples
+
+### Get a Specific File
+
+```graphql
+query GetFile($id: uuid!) {
+  file(id: $id) {
+    id
+    name
+    mimeType
+    size
+    createdAt
+    metadata
+  }
+}
+```
+
+## Permissions
+
+File access is open to all authenticated users and public requests:
+
+- **View** — All authenticated users and public requests can view file metadata (limited to 1 result)
+- **Create** — All authenticated users can upload files
+
+<Callout type="info">
+  Files are stored securely in configurable storage buckets. Presigned URLs
+  enable secure temporary access, and MIME type validation ensures proper file
+  handling. ETags support caching and conditional requests for efficient file
+  delivery.
+</Callout>

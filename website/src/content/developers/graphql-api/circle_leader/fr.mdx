@@ -1,0 +1,45 @@
+---
+title: 'circle_leader'
+description: "Leader de cercle, représente une attribution de leadership au sein d'un cercle. Les leaders de cercle disposent de permissions spéciales pour les décisions de gouvernance et la gestion des membres."
+category: 'circles-roles'
+---
+
+<Callout type="warning" title="Non accessible via l'API publique">
+  Cette entité n'est pas directement accessible via l'API publique. Elle est
+  gérée en interne par Rolebase.
+</Callout>
+
+## Champs
+
+| Champ | Type | Description |
+| --- | --- | --- |
+| `circleId` | `uuid` | Référence au cercle |
+| `memberId` | `uuid` | Référence au membre désigné comme leader |
+| `orgId` | `uuid` | Référence à l'organisation |
+
+## Relations
+
+**Relations objet :**
+
+- `circle` — Le cercle auquel cette attribution de leadership appartient
+- `member` — Le membre désigné comme leader du cercle
+
+## Permissions
+
+- **Propriétaires et administrateurs de l'organisation :** Peuvent attribuer des leaders de cercle
+- **Leaders du cercle parent :** Peuvent attribuer des leaders pour les cercles enfants
+
+Les leaders de cercle disposent de permissions spéciales au sein de leurs cercles :
+
+- Gestion des membres du cercle
+- Création et modification des rôles du cercle
+- Gestion de la gouvernance du cercle
+- Création et gestion des liens de cercle
+- Animation des réunions et prise de décisions
+
+<Callout type="info" title="Notes">
+  Un cercle peut avoir plusieurs leaders. Les leaders de cercle héritent des
+  permissions de leadership dans les cercles enfants. Les attributions de
+  leadership déterminent les permissions de gouvernance dans toute la hiérarchie
+  des cercles.
+</Callout>

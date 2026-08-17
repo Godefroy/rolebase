@@ -1,0 +1,37 @@
+# Sidebar groups of the GraphQL API reference pages, referenced by the
+# `category` frontmatter field of `content/developers/graphql-api/*`.
+- id: org-members
+  order: 0
+  title:
+    en: Organization & Members
+    fr: Organisation & Membres
+
+- id: circles-roles
+  order: 1
+  title:
+    en: Circles & Roles
+    fr: Cercles & Rôles
+
+- id: meetings
+  order: 2
+  title:
+    en: Meetings
+    fr: Réunions
+
+- id: tasks
+  order: 3
+  title:
+    en: Tasks
+    fr: Tâches
+
+- id: threads
+  order: 4
+  title:
+    en: Threads
+    fr: Fils de discussion
+
+- id: other
+  order: 5
+  title:
+    en: Other
+    fr: Autres

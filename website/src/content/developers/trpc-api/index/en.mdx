@@ -1,0 +1,121 @@
+---
+title: 'tRPC API'
+description: 'Call the Rolebase backend procedures (tRPC) that complement the GraphQL API.'
+order: 3
+---
+
+## Overview
+
+Most data in Rolebase is read and written through the [GraphQL API](/en/developers/graphql-api), which is the recommended surface for integrations. Alongside it, the backend exposes a **tRPC API**: the typed RPC layer that the web app uses for operations that go beyond plain CRUD, such as creating an organization with its seed roles, archiving a circle and its descendants, exporting data, or inviting a member.
+
+This section documents the procedures that are useful from outside the app, one page per router. [Internal procedures](/en/developers/trpc-api/internal) (webhooks, scheduled jobs, search indexing) are listed for reference and are not meant to be called directly.
+
+<Callout type="info" title="GraphQL first">
+  For reading and writing entities, prefer the GraphQL API. Reach for tRPC only
+  for the actions below, which encapsulate business logic the GraphQL layer does
+  not expose.
+</Callout>
+
+## Endpoint
+
+The tRPC API is served at the backend root:
+
+- **Production:** `https://api.rolebase.io`
+- **Local development:** `http://localhost:8888`
+
+It speaks the standard tRPC HTTP protocol (queries over `GET`, mutations over `POST`), so it works with any [tRPC client](https://trpc.io/docs/client/introduction) or with plain HTTP.
+
+## Authentication
+
+tRPC procedures are authenticated with an **API key**, the same key the [GraphQL API](/en/developers/graphql-api) uses. Create one from [Settings > API keys](/settings/api-keys) in the app and send it in the `x-api-key` header:
+
+```
+x-api-key: <your-api-key>
+```
+
+The procedures run with the permissions of the user the key belongs to. A few procedures are public (such as reading an invitation or a shared org), and the internal procedures use a webhook secret instead.
+
+<Callout type="info" title="Access tokens">
+  The web app authenticates with the Nhost access token of the signed-in user
+  (`Authorization: Bearer <token>`), which the backend also accepts. Those
+  tokens are short-lived and tied to a browser session, so external integrations
+  should use an API key. Admin-only procedures stay reserved for access tokens
+  carrying the `admin` role.
+</Callout>
+
+## Type-safe client
+
+The cleanest way to call the API is a typed tRPC client that imports the router type from the backend package:
+
+```typescript
+import { createTRPCClient, httpBatchLink } from '@trpc/client'
+import type { AppRouter } from '@rolebase/backend'
+
+const trpc = createTRPCClient<AppRouter>({
+  links: [
+    httpBatchLink({
+      url: 'https://api.rolebase.io',
+      headers: () => ({
+        'x-api-key': apiKey,
+      }),
+    }),
+  ],
+})
+
+// Query
+const data = await trpc.org.getPublicData.query({ orgId })
+
+// Mutation
+const { id } = await trpc.org.createOrg.mutate({ name: 'Acme', slug: 'acme' })
+```
+
+## Raw HTTP
+
+You can also call procedures over plain HTTP without a tRPC client.
+
+```bash
+# Query: GET /<procedure>?input=<url-encoded-json>
+curl 'https://api.rolebase.io/org.getPublicData?input=%7B%22orgId%22%3A%22YOUR_ORG_ID%22%7D' \
+  -H 'x-api-key: YOUR_API_KEY'
+
+# Mutation: POST /<procedure> with the input as the JSON body
+curl -X POST 'https://api.rolebase.io/circle.archiveCircle' \
+  -H 'x-api-key: YOUR_API_KEY' \
+  -H 'Content-Type: application/json' \
+  -d '{"circleId": "YOUR_CIRCLE_ID"}'
+```
+
+The response is wrapped as `{ "result": { "data": <value> } }`.
+
+## Errors
+
+A failed call answers with `{ "error": { "message": ..., "data": { "code": ..., "httpStatus": ... } } }`, and a typed client throws a `TRPCClientError` carrying the same code. The codes are the same across every procedure, so the reference pages only mention what is specific to a procedure.
+
+| Code | Status | Meaning |
+| --- | --- | --- |
+| `UNAUTHORIZED` | 401 | Missing or invalid API key, or a procedure that needs a signed-in user. |
+| `FORBIDDEN` | 403 | The key holder lacks the required role or permission on that entity. |
+| `NOT_FOUND` | 404 | The id does not exist, or is not visible to the key holder. |
+| `BAD_REQUEST` | 400 | Input rejected by the procedure schema, or a state that forbids the action. |
+| `INTERNAL_SERVER_ERROR` | 500 | Unexpected failure, including a rejected call to an external service. |
+
+## Procedures
+
+Procedures are grouped in routers, and a call combines the router name and the procedure name: `org.createOrg`, `circle.archiveCircle`.
+
+| Router                                                              | Procedures                                                       |
+| ------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| [Organizations](/en/developers/trpc-api/organizations) (`org`)       | Create, export, import, share and archive an organization        |
+| [Members](/en/developers/trpc-api/members) (`member`)                | Invitations, access roles, archive and restore                   |
+| [Roles](/en/developers/trpc-api/roles) (`circle`, `proposal`)         | Archive a role with its descendants, resolve a proposal          |
+| [Meetings](/en/developers/trpc-api/meetings) (`meeting`)              | Video meeting access token                                      |
+| [AI and search](/en/developers/trpc-api/ai-search) (`ai`, `search`)   | Role drafts, meeting summaries, scoped search key                |
+| [Calendar apps](/en/developers/trpc-api/calendar-apps) (`apps`)       | List and select calendars, disconnect an app                     |
+| [Subscriptions](/en/developers/trpc-api/subscriptions) (`orgSubscription`) | Stripe billing, invoices and payment methods               |
+| [Internal](/en/developers/trpc-api/internal) (`cron`, `trigger`, ...) | Scheduled jobs and webhooks, listed for reference                |
+
+## Next steps
+
+- Browse the [GraphQL API](/en/developers/graphql-api) for entities, queries, and mutations.
+- Try queries live in the [GraphQL Playground](/en/developers/graphql-api/playground).
+- [Set up the development environment](/en/developers/install-self-host) to explore the backend source.

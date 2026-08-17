@@ -1,0 +1,193 @@
+---
+title: 'thread'
+description: "Thread, represents a discussion or conversation thread in Rolebase. Threads are associated with circles, support activities (messages), reactions, extra members, and can reference tasks, meetings, and decisions."
+category: 'threads'
+---
+
+## Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `id` | `uuid` | Unique identifier for the thread (auto-generated) |
+| `orgId` | `uuid` | Reference to the organization |
+| `circleId` | `uuid` | Reference to the circle |
+| `initiatorMemberId` | `uuid` | Reference to the member who started the thread |
+| `title` | `String` | Title of the thread |
+| `createdAt` | `Timestamp` | When the thread was created (defaults to current timestamp) |
+| `archivedAt` | `Timestamp` | When the thread was archived; null if active |
+| `pinned` | `Boolean` | Whether the thread is pinned for everyone, surfacing it first in thread lists (defaults to false) |
+| `private` | `Boolean` | Whether the thread is private (defaults to false) |
+| `status` | `Thread_Status_Enum` | Current status of the thread (e.g., Active, Preparation, Closed) |
+
+## Relationships
+
+### Object Relationships
+
+- `org` — The organization this thread belongs to
+- `circle` — The circle this thread is associated with
+- `initiatorMember` — The member who started the thread
+
+### Array Relationships
+
+- `activities` — Messages and updates in the thread (see [thread_activity](/en/developers/graphql-api/thread_activity))
+- `extra_members` — Additional members added to the thread (see [thread_extra_member](/en/developers/graphql-api/thread_extra_member))
+- `member_status` — Tracking member read status per thread
+
+## Member Status
+
+The `thread_member_status` tracks reading status for each member:
+
+- `lastReadActivityId` — ID of the last activity read
+- `lastReadDate` — When the member last read the thread
+- `memberId` — Member whose status is being tracked
+
+## Query Examples
+
+### List Threads for an Organization
+
+```graphql
+query GetThreads($orgId: uuid!) {
+  thread(where: { orgId: { _eq: $orgId } }) {
+    id
+    title
+    status
+    createdAt
+    circle {
+      role {
+        name
+      }
+    }
+  }
+}
+```
+
+### Get a Specific Thread with Activities
+
+```graphql
+query GetThread($id: uuid!) {
+  thread_by_pk(id: $id) {
+    id
+    title
+    status
+    createdAt
+    circle {
+      role {
+        name
+      }
+    }
+    initiatorMember {
+      name
+    }
+    activities {
+      id
+      type
+      data
+      createdAt
+      user {
+        displayName
+      }
+      reactions {
+        id
+        shortcode
+      }
+    }
+    member_status {
+      lastReadDate
+      member {
+        name
+      }
+    }
+  }
+}
+```
+
+## Mutation Examples
+
+### Create a Thread
+
+```graphql
+mutation CreateThread {
+  insert_thread_one(
+    object: {
+      orgId: "your-org-id"
+      circleId: "circle-id"
+      title: "Discussion about new feature"
+      initiatorMemberId: "member-id"
+      status: Active
+      private: false
+      extra_members: {
+        data: [{ memberId: "member-id-1" }, { memberId: "member-id-2" }]
+      }
+    }
+  ) {
+    id
+    title
+    status
+  }
+}
+```
+
+### Add an Activity to a Thread
+
+```graphql
+mutation AddThreadActivity {
+  insert_thread_activity_one(
+    object: {
+      threadId: "thread-id"
+      type: Message
+      data: { message: "This is a message" }
+      userId: "user-id"
+    }
+  ) {
+    id
+    type
+    data
+  }
+}
+```
+
+### Update Thread Status
+
+```graphql
+mutation UpdateThreadStatus {
+  update_thread_by_pk(
+    pk_columns: { id: "thread-id" }
+    _set: { status: Closed }
+  ) {
+    id
+    status
+  }
+}
+```
+
+### Pin a Thread
+
+```graphql
+mutation PinThread {
+  update_thread_by_pk(
+    pk_columns: { id: "thread-id" }
+    _set: { pinned: true }
+  ) {
+    id
+    pinned
+  }
+}
+```
+
+## Permissions
+
+Thread access is controlled by several factors:
+
+- **Circle membership** — Circle participants can access their circle's threads
+- **Privacy settings** — Private threads are only visible to circle participants and extra members
+- **Organization role** — Organization members can access non-private threads
+- **Extra members** — Additional participants added via [thread_extra_member](/en/developers/graphql-api/thread_extra_member)
+- Thread activities can be created by participants and extra members
+- Member status can be updated by the respective member
+
+<Callout type="info">
+  Threads support rich content through JSON activity data, reactions for
+  engagement, and cross-entity references to tasks, meetings, and decisions.
+  Members can be added beyond the circle via extra members for broader
+  collaboration.
+</Callout>

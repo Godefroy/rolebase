@@ -1,0 +1,72 @@
+---
+title: 'Members'
+description: 'tRPC procedures of the member router: invite a member, accept an invitation, change an access role, archive and restore.'
+order: 2
+---
+
+Procedures of the `member` router. Creating a member row and editing its name, picture or work data is plain GraphQL on the [`member`](/en/developers/graphql-api/member) entity; these procedures handle the invitation flow, the access role and the seat count of the subscription, which all need server-side logic.
+
+An access role is `Readonly`, `Member`, `Admin` or `Owner`, and see [Permissions](/en/developers/permissions) for what each one grants.
+
+## Mutation `member.inviteMember`
+
+Sends an invitation email to an existing member, for an Admin or Owner. Calling it again on an already invited member resends the email with a fresh token.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `memberId` | `uuid` | Member to invite, not yet linked to a user. Required. |
+| `email` | `String` | Address the invitation is sent to. Required. |
+| `role` | `String` | Access role granted on acceptance. Required. |
+
+The member row keeps the invitation email and date, from which the invitation token is derived. A member already linked to a user answers `CONFLICT`, and the call is refused when the subscription has no seat left for one more member. It returns nothing.
+
+```typescript
+await trpc.member.inviteMember.mutate({
+  memberId: 'YOUR_MEMBER_ID',
+  email: 'someone@example.com',
+  role: 'Member',
+})
+```
+
+## Query `member.getMemberInvitationInfo`
+
+Reads what an invitation link needs to show before the recipient signs in, so this procedure takes no authentication.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `memberId` | `uuid` | Invited member. Required. |
+| `token` | `String` | Token carried by the invitation link. Required. |
+
+It returns `{ orgName, email }`. A member with no pending invitation answers `NOT_FOUND`, and a token that does not match answers `UNAUTHORIZED`.
+
+## Mutation `member.acceptMemberInvitation`
+
+Links the invited member to the signed-in user and applies the invited access role.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `memberId` | `uuid` | Invited member. Required. |
+| `token` | `String` | Token carried by the invitation link. Required. |
+
+The invitation is consumed, and the Stripe subscription seat count is updated when the organization has an active subscription. A user who already belongs to the organization answers `CONFLICT`, and a subscription without a free seat blocks the call. It returns nothing.
+
+## Mutation `member.updateMemberRole`
+
+Changes or removes the access role of a member. An Admin can act on any member, while changing the role of an Owner requires Owner, and the last active Owner cannot be demoted.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `memberId` | `uuid` | Target member. Required. |
+| `role` | `String` | New access role, or an empty value to revoke the access while keeping the member in the org chart. Required. |
+
+A member who was never invited answers `NOT_FOUND`. It returns nothing.
+
+## Mutation `member.archiveMember`
+
+Archives a member, unlinking it from its user account and clearing its access role and invitation. An Admin can archive any member, archiving an Owner requires Owner, and the last active Owner is protected. Members cannot archive themselves, which answers `FORBIDDEN`.
+
+It takes `{ memberId }`, updates the subscription seat count when the member was linked to a user, and returns nothing.
+
+## Mutation `member.restoreMember`
+
+Restores an archived member, for an Admin or Owner. It takes `{ memberId }` and returns nothing. The member comes back without an access role, so invite it again to give it access.

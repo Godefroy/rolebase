@@ -1,6 +1,10 @@
 import type { APIRoute } from 'astro'
 import { getCollection } from 'astro:content'
-import { getLangFromId, getSlugFromId } from '../utils/i18n'
+import {
+  getLangFromId,
+  getNestedSlugFromId,
+  getSlugFromId,
+} from '../utils/i18n'
 
 const siteUrl = import.meta.env.SITE?.replace(/\/$/, '') || ''
 
@@ -9,12 +13,11 @@ function notDraft(entry: { data: { draft?: boolean } }) {
 }
 
 export const GET: APIRoute = async () => {
-  const [docs, guides, developers, api, blog, clientCases, glossary] =
+  const [docs, guides, developers, blog, clientCases, glossary] =
     await Promise.all([
       getCollection('docs'),
       getCollection('guides'),
       getCollection('developers'),
-      getCollection('api'),
       getCollection('blog'),
       getCollection('client-cases'),
       getCollection('glossary', notDraft),
@@ -55,27 +58,48 @@ export const GET: APIRoute = async () => {
       id: string
       data: { title: string; description?: string; summary?: string }
     }[],
-    prefix: string
+    prefix: string,
+    slugOf: (id: string) => string = getSlugFromId
   ) {
     lines.push('', `## ${title}`, '')
     for (const entry of entries) {
-      const slug = getSlugFromId(entry.id)
+      const slug = slugOf(entry.id)
       const desc =
         entry.data.description || (entry.data as { summary?: string }).summary
       const suffix = desc ? `: ${desc}` : ''
-      lines.push(
-        `- [${entry.data.title}](${siteUrl}/en/${prefix}/${slug})${suffix}`
-      )
+      const path = slug ? `${prefix}/${slug}` : prefix
+      lines.push(`- [${entry.data.title}](${siteUrl}/en/${path})${suffix}`)
     }
   }
 
+  // The API references are nested under `developers/graphql-api/` and
+  // `developers/trpc-api/`, and get a section of their own.
+  const nestedUnder = (prefix: string) => (entry: { id: string }) =>
+    getNestedSlugFromId(entry.id).startsWith(`${prefix}/`)
+  const isNested = (entry: { id: string }) =>
+    getNestedSlugFromId(entry.id).includes('/')
+
   addSection('Documentation', en(docs).sort(byOrder), 'docs')
   addSection('Guides', en(guides).sort(byOrder), 'guides')
-  addSection('Developers', en(developers).sort(byOrder), 'developers')
   addSection(
-    'API Reference',
-    en(api).sort((a, b) => a.data.title.localeCompare(b.data.title)),
-    'api'
+    'Developers',
+    en(developers).filter((e) => !isNested(e)).sort(byOrder),
+    'developers',
+    getNestedSlugFromId
+  )
+  addSection(
+    'GraphQL API Reference',
+    en(developers)
+      .filter(nestedUnder('graphql-api'))
+      .sort((a, b) => a.data.title.localeCompare(b.data.title)),
+    'developers',
+    getNestedSlugFromId
+  )
+  addSection(
+    'tRPC API Reference',
+    en(developers).filter(nestedUnder('trpc-api')).sort(byOrder),
+    'developers',
+    getNestedSlugFromId
   )
   addSection(
     'Blog',

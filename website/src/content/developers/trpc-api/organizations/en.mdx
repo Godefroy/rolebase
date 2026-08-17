@@ -1,0 +1,108 @@
+---
+title: 'Organizations'
+description: 'tRPC procedures of the org router: create an organization, change its slug and governance mode, export, import, share and archive it.'
+order: 1
+---
+
+Procedures of the `org` router, which cover the organization-level actions that go beyond editing rows: creating an org with its root circle, moving data in and out, and archiving. Reading and updating the organization itself is plain GraphQL on the [`org`](/en/developers/graphql-api/org) entity.
+
+## Mutation `org.createOrg`
+
+Creates an organization for the signed-in user, who becomes its Owner [`member`](/en/developers/graphql-api/member), along with a root [`role`](/en/developers/graphql-api/role) and the [`circle`](/en/developers/graphql-api/circle) that places it at the top of the org chart. Base roles and meeting templates are seeded later, during in-app onboarding.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `name` | `String` | Organization name. Required. |
+| `slug` | `String` | URL slug, unique across all organizations. Required. |
+
+It returns the id of the new organization. A slug already taken or on the reserved list answers `CONFLICT`.
+
+```typescript
+const orgId = await trpc.org.createOrg.mutate({ name: 'Acme', slug: 'acme' })
+```
+
+## Mutation `org.updateOrgSlug`
+
+Changes the URL slug of an organization, for an Admin or Owner.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `orgId` | `uuid` | Target organization. Required. |
+| `slug` | `String` | New slug. Required. |
+
+Like `createOrg`, a slug already taken or reserved answers `CONFLICT`. It returns nothing.
+
+## Mutation `org.setGovernanceMode`
+
+Sets who is allowed to change the org chart. Reserved to the Owner, which is why it is a procedure rather than a GraphQL update: Hasura cannot restrict a single column to Owners while Admins edit the other org settings.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `orgId` | `uuid` | Target organization. Required. |
+| `governanceMode` | `governance_mode` | `Free`, `Agile` or `Strict`. Required. |
+
+See [Permissions](/en/developers/permissions) for what each mode allows.
+
+```typescript
+await trpc.org.setGovernanceMode.mutate({ orgId, governanceMode: 'Strict' })
+```
+
+## Mutation `org.exportOrg`
+
+Exports the organization data as a JSON or Excel file, for the Owner.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `orgId` | `uuid` | Target organization. Required. |
+| `format` | `String` | `json` or `xlsx`. Required. |
+| `entities` | `[String]` | Optional entities to include, among `decisions`, `tasks`, `threads` and `meetings`. Required, and may be empty. |
+
+Roles, circles and members are always included; the `entities` list adds the optional ones, with their related rows (thread activities, meeting steps and attendees, and so on). It returns `{ filename, contentType, data }`, where `data` is the JSON document for `json` and a base64 workbook for `xlsx`.
+
+```typescript
+const { filename, data } = await trpc.org.exportOrg.mutate({
+  orgId,
+  format: 'xlsx',
+  entities: ['tasks', 'meetings'],
+})
+```
+
+## Mutation `org.exportOrgChart`
+
+Renders the org chart as a PNG image, for any member including Readonly.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `orgId` | `uuid` | Target organization. Required. |
+| `circleId` | `uuid` | Render this role and its descendants only. Optional, defaults to the whole org chart. |
+| `view` | `String` | View to render: `AllCircles`, `SimpleCircles`, `FlatCircle` or `Members`. Required. |
+| `width` | `Int` | Image side in pixels, between 100 and 3000. Required. |
+| `colorMode` | `String` | `light` or `dark`. Optional, defaults to `light`. |
+| `showAllNodes` | `Boolean` | Draw members and deep circles whatever the zoom scale. Optional. |
+
+It returns `{ data, contentType, filename }` with the image as base64.
+
+## Mutation `org.importOrg`
+
+Creates an organization from an uploaded file.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `provider` | `String` | Source format. `Holaspirit` is the one currently supported. Required. |
+| `fileId` | `uuid` | Id of the file uploaded to storage beforehand. Required. |
+
+It returns the id of the created organization. An unreachable file or an unknown provider answers `BAD_REQUEST`.
+
+## Query `org.getPublicData`
+
+Reads the org chart of an organization that shares it publicly. This procedure takes no authentication.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `orgId` | `uuid` | Target organization. Required. |
+
+It returns `{ circles, roles, members }`, with `members` empty unless the organization also shares member information. An organization that does not share its org chart answers `FORBIDDEN`.
+
+## Mutation `org.archiveOrg`
+
+Archives an organization, for the Owner. The Stripe subscription, if any, is deleted first. It takes `{ orgId }` and returns that same id.

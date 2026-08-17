@@ -1,0 +1,31 @@
+---
+title: 'Réunions'
+description: 'Procédure tRPC du routeur meeting, et flux iCal qui expose le calendrier d’une organisation aux clients de calendrier externes.'
+order: 4
+---
+
+Les réunions se lisent et s’écrivent en GraphQL sur [`meeting`](/fr/developers/graphql-api/meeting), [`meeting_step`](/fr/developers/graphql-api/meeting_step), [`meeting_attendee`](/fr/developers/graphql-api/meeting_attendee) et [`meeting_recurring`](/fr/developers/graphql-api/meeting_recurring). Le routeur `meeting` ne délivre que le token qui débloque les points d’accès qu’un client externe ne peut pas authentifier avec une clé API.
+
+## Requête `meeting.getMeetingsToken`
+
+Renvoie le token d’une organisation, pour tout membre y compris Readonly.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `orgId` | `uuid` | Organisation visée. Requis. |
+
+Le token ne dépend que de l’organisation : il reste valide aussi longtemps qu’elle existe, et quiconque le détient peut lire le flux iCal ci-dessous. Traitez-le comme un secret partagé.
+
+```typescript
+const token = await trpc.meeting.getMeetingsToken.query({ orgId })
+```
+
+## Flux iCal
+
+Le backend expose aussi les réunions d’un membre sous forme de calendrier iCal, sur une route REST plutôt qu’une procédure tRPC, car les clients de calendrier savent seulement interroger une URL.
+
+```
+GET https://api.rolebase.io/meeting/ical?orgId=<uuid>&memberId=<uuid>&token=<token>&lang=<en|fr>
+```
+
+Les quatre paramètres sont requis, et `token` est celui renvoyé par `getMeetingsToken`. Le flux répond 401 sur un token invalide et 404 quand l’organisation n’existe plus, pour qu’un client qui interroge une organisation supprimée s’arrête au lieu de réessayer indéfiniment.

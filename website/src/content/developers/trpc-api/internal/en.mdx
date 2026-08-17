@@ -1,0 +1,44 @@
+---
+title: 'Internal procedures'
+description: 'tRPC procedures reserved for scheduled jobs, Hasura event triggers and platform administration, listed for reference.'
+order: 8
+---
+
+These procedures exist for the platform itself, not for integrations. An API key cannot call them: they authenticate either with the webhook secret shared with the scheduler and Hasura, or with an access token carrying the `admin` role. They are listed here so a self-hosted instance knows what runs and why.
+
+## Scheduled jobs (`cron`)
+
+Called on a schedule with the webhook secret. Each one takes no input.
+
+| Procedure | What it does |
+| --- | --- |
+| `cron.createNextRecurringMeetings` | Creates the upcoming occurrences of the recurring meeting configurations. |
+| `cron.endOldMeetings` | Closes meetings left in progress past their end. |
+| `cron.resendInvitations` | Sends a reminder for invitations still pending. |
+| `cron.resolveProposals` | Resolves the proposals whose deadline has passed. |
+| `cron.sendDigestEmails` | Sends the activity digest emails. |
+
+## Event triggers
+
+Called by Hasura on a database change, with the webhook secret.
+
+| Procedure | What it does |
+| --- | --- |
+| `trigger` | Reflects an inserted, updated or deleted row into the search index and the connected calendars. |
+| `proposal.onVote` | Resolves a proposal as soon as the votes make the outcome certain. |
+
+Calendar providers also push their own changes on the REST routes `POST /apps/googlecalendar/notify` and `POST /apps/office365/notify`, described on the [Calendar apps](/en/developers/trpc-api/calendar-apps) page.
+
+## Administration
+
+Reserved to an access token carrying the `admin` role.
+
+| Procedure | What it does |
+| --- | --- |
+| `participants.recomputeCache` | Rebuilds the cache behind [`circle_participant`](/en/developers/graphql-api/circle_participant). |
+| `search.reindexAll` | Clears and rebuilds the whole search index. |
+| `superAdmin.impersonate` | Issues a short-lived personal access token to open a session as another user, from `{ userId }`. A disabled user is refused. |
+
+## Health check
+
+`healthz` is a public query that answers `ok`, used by the hosting platform to check the backend is up.

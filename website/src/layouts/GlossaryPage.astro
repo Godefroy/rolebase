@@ -23,7 +23,7 @@ const dateLang = lang === 'fr' ? 'fr-FR' : 'en-US'
   <JsonLdGlossary name={item.data.name} description={item.data.summary} lang={lang} />
   <article class="min-w-0 flex-1">
     <header class="mb-10 pb-6 border-b border-gray-100">
-      <Breadcrumb category={t.glossary.label} categoryUrl={langPath(lang, '/glossary')} title={item.data.name} hideTitle class="mb-3" />
+      <Breadcrumb trail={[{ label: t.glossary.label, href: langPath(lang, '/glossary') }]} title={item.data.name} hideTitle class="mb-3" />
       <h1 class="mb-4 font-medium text-3xl md:text-4xl lg:text-5xl">
         {item.data.name}
       </h1>

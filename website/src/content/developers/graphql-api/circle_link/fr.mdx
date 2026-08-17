@@ -1,0 +1,104 @@
+---
+title: 'circle_link'
+description: "Lien de cercle, représente un lien entre deux cercles, permettant la collaboration transversale et la représentation d'un cercle au sein d'un autre au-delà de la hiérarchie parent-enfant."
+category: 'circles-roles'
+---
+
+## Champs
+
+| Champ | Type | Description |
+| --- | --- | --- |
+| `id` | `uuid` | Identifiant unique du lien de cercle |
+| `parentId` | `uuid` | Référence au cercle hôte |
+| `circleId` | `uuid` | Référence au cercle invité |
+| `createdAt` | `Timestamp` | Date de création du lien de cercle |
+| `archivedAt` | `Timestamp` | Date d'archivage du lien de cercle ; null si actif |
+
+## Relations
+
+**Relations objet :**
+
+- `hostCircle` — Le cercle qui héberge le cercle lié (référencé par `parentId`)
+- `invitedCircle` — Le cercle invité à participer (référencé par `circleId`)
+
+## Exemples de requêtes
+
+### Obtenir les liens d'un cercle spécifique
+
+```graphql
+query GetCircleLinks($parentId: uuid!) {
+  circle_link(where: { parentId: { _eq: $parentId } }) {
+    id
+    hostCircle {
+      id
+      role {
+        name
+      }
+    }
+    invitedCircle {
+      id
+      role {
+        name
+      }
+    }
+    createdAt
+  }
+}
+```
+
+## Exemples de mutations
+
+### Créer un lien de cercle
+
+```graphql
+mutation CreateCircleLink {
+  insert_circle_link_one(
+    object: { parentId: "host-circle-id", circleId: "invited-circle-id" }
+  ) {
+    id
+    hostCircle {
+      role {
+        name
+      }
+    }
+    invitedCircle {
+      role {
+        name
+      }
+    }
+  }
+}
+```
+
+### Supprimer un lien de cercle
+
+Les liens sont archivés (suppression douce) en renseignant `archivedAt`, sans suppression physique.
+
+```graphql
+mutation ArchiveCircleLink {
+  update_circle_link(
+    where: {
+      parentId: { _eq: "host-circle-id" }
+      circleId: { _eq: "invited-circle-id" }
+      archivedAt: { _is_null: true }
+    }
+    _set: { archivedAt: "2024-01-01T00:00:00Z" }
+  ) {
+    affected_rows
+  }
+}
+```
+
+## Permissions
+
+- **Propriétaires de l'organisation :** Accès complet
+- **Administrateurs/Membres de l'organisation :** Peuvent créer des liens si la gouvernance n'est pas protégée
+- **Leaders du cercle hôte :** Peuvent créer et gérer les liens
+- **Public :** Limité à la consultation des liens dans les organisations avec des informations de membres partagées
+
+<Callout type="info" title="Notes">
+  La combinaison de `parentId` et `circleId` doit être unique. Les liens de
+  cercle affectent l'héritage des participants et les structures de permissions.
+  Les leaders des cercles liés obtiennent certaines permissions dans le cercle
+  hôte.
+</Callout>

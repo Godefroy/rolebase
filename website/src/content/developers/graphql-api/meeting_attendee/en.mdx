@@ -1,0 +1,103 @@
+---
+title: 'meeting_attendee'
+description: "Meeting Attendee, tracks a member's participation in a meeting, including presence status and notification state."
+category: 'meetings'
+---
+
+## Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `id` | `uuid` | Unique identifier for the attendee record |
+| `meetingId` | `uuid` | Reference to the meeting |
+| `memberId` | `uuid` | Reference to the member |
+| `present` | `Boolean` | Whether the member is present in the meeting (optional) |
+| `startNotified` | `Boolean` | Whether a start notification was sent (default: false) |
+
+## Relationships
+
+**Object Relationships:**
+
+- `meeting` — The meeting this attendance record belongs to
+- `member` — The member attending the meeting
+
+## Constraints
+
+- Unique constraint on the (`meetingId`, `memberId`) combination
+- Foreign keys cascade on delete for both `meetingId` and `memberId`
+
+## Query Examples
+
+### List Attendees for a Meeting
+
+```graphql
+query GetMeetingAttendees($meetingId: uuid!) {
+  meeting_attendee(where: { meetingId: { _eq: $meetingId } }) {
+    id
+    memberId
+    present
+    startNotified
+    member {
+      name
+      picture
+    }
+  }
+}
+```
+
+## Mutation Examples
+
+### Add an Attendee to a Meeting
+
+```graphql
+mutation CreateMeetingAttendee {
+  insert_meeting_attendee_one(
+    object: {
+      meetingId: "meeting-id"
+      memberId: "member-id"
+      present: false
+      startNotified: false
+    }
+  ) {
+    id
+    present
+    startNotified
+  }
+}
+```
+
+### Update Attendance Status
+
+```graphql
+mutation UpdateMeetingAttendee($id: uuid!) {
+  update_meeting_attendee_by_pk(
+    pk_columns: { id: $id }
+    _set: { present: true }
+  ) {
+    id
+    present
+  }
+}
+```
+
+### Remove an Attendee
+
+```graphql
+mutation DeleteMeetingAttendee($id: uuid!) {
+  delete_meeting_attendee_by_pk(id: $id) {
+    id
+  }
+}
+```
+
+## Permissions
+
+- **Circle participants:** Can add/remove attendees and update attendance status in their circle's meetings
+- **Meeting attendees:** Can view other attendees and update their own status (unless read-only)
+- **Organization members:** Can view attendees in non-private meetings
+
+<Callout type="info" title="Notes">
+  Each member can only appear once per meeting (enforced by unique constraint).
+  The `present` field is optional and can be updated during the meeting.
+  Deleting a meeting or member automatically removes related attendance records.
+</Callout>

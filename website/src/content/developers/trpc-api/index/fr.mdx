@@ -1,0 +1,122 @@
+---
+title: 'API tRPC'
+description: 'Appelez les procédures backend de Rolebase (tRPC) qui complètent l’API GraphQL.'
+order: 3
+---
+
+## Vue d’ensemble
+
+La plupart des données de Rolebase se lisent et s’écrivent via l’[API GraphQL](/fr/developers/graphql-api), qui reste la surface recommandée pour les intégrations. À côté, le backend expose une **API tRPC** : la couche RPC typée utilisée par l’application pour les opérations qui vont au-delà du simple CRUD, comme créer une organisation avec ses rôles de départ, archiver un rôle et ses descendants, exporter des données ou inviter un membre.
+
+Cette section documente les procédures utiles depuis l’extérieur de l’application, à raison d’une page par routeur. Les [procédures internes](/fr/developers/trpc-api/internal) (webhooks, tâches planifiées, indexation de recherche) sont listées pour référence et ne sont pas destinées à être appelées directement.
+
+<Callout type="info" title="GraphQL d’abord">
+  Pour lire et écrire des entités, préférez l’API GraphQL. Utilisez tRPC
+  uniquement pour les actions ci-dessous, qui encapsulent une logique métier que
+  la couche GraphQL n’expose pas.
+</Callout>
+
+## Endpoint
+
+L’API tRPC est servie à la racine du backend :
+
+- **Production :** `https://api.rolebase.io`
+- **Développement local :** `http://localhost:8888`
+
+Elle suit le protocole HTTP standard de tRPC (requêtes en `GET`, mutations en `POST`), et fonctionne donc avec n’importe quel [client tRPC](https://trpc.io/docs/client/introduction) ou en HTTP simple.
+
+## Authentification
+
+Les procédures tRPC s’authentifient avec une **clé API**, la même que celle de l’[API GraphQL](/fr/developers/graphql-api). Créez-la depuis [Paramètres > Clés API](/settings/api-keys) dans l’application et envoyez-la dans l’en-tête `x-api-key` :
+
+```
+x-api-key: <votre-cle-api>
+```
+
+Les procédures s’exécutent avec les permissions de l’utilisateur propriétaire de la clé. Quelques procédures sont publiques (lire une invitation ou une organisation partagée), et les procédures internes utilisent plutôt un secret de webhook.
+
+<Callout type="info" title="Tokens d’accès">
+  L’application web s’authentifie avec le token d’accès Nhost de l’utilisateur
+  connecté (`Authorization: Bearer <token>`), que le backend accepte également.
+  Ces tokens sont éphémères et liés à une session de navigateur : les
+  intégrations externes doivent donc utiliser une clé API. Les procédures
+  réservées aux administrateurs restent accessibles uniquement avec un token
+  d’accès portant le rôle `admin`.
+</Callout>
+
+## Client typé
+
+La façon la plus propre d’appeler l’API est un client tRPC typé qui importe le type du routeur depuis le package backend :
+
+```typescript
+import { createTRPCClient, httpBatchLink } from '@trpc/client'
+import type { AppRouter } from '@rolebase/backend'
+
+const trpc = createTRPCClient<AppRouter>({
+  links: [
+    httpBatchLink({
+      url: 'https://api.rolebase.io',
+      headers: () => ({
+        'x-api-key': apiKey,
+      }),
+    }),
+  ],
+})
+
+// Requête
+const data = await trpc.org.getPublicData.query({ orgId })
+
+// Mutation
+const { id } = await trpc.org.createOrg.mutate({ name: 'Acme', slug: 'acme' })
+```
+
+## HTTP brut
+
+Vous pouvez aussi appeler les procédures en HTTP simple, sans client tRPC.
+
+```bash
+# Requête : GET /<procedure>?input=<json-encode-url>
+curl 'https://api.rolebase.io/org.getPublicData?input=%7B%22orgId%22%3A%22VOTRE_ORG_ID%22%7D' \
+  -H 'x-api-key: VOTRE_CLE_API'
+
+# Mutation : POST /<procedure> avec l’input en corps JSON
+curl -X POST 'https://api.rolebase.io/circle.archiveCircle' \
+  -H 'x-api-key: VOTRE_CLE_API' \
+  -H 'Content-Type: application/json' \
+  -d '{"circleId": "VOTRE_CIRCLE_ID"}'
+```
+
+La réponse est encapsulée sous la forme `{ "result": { "data": <valeur> } }`.
+
+## Erreurs
+
+Un appel en échec répond `{ "error": { "message": ..., "data": { "code": ..., "httpStatus": ... } } }`, et un client typé lève une `TRPCClientError` portant le même code. Ces codes sont identiques pour toutes les procédures : les pages de référence ne signalent donc que ce qui est propre à une procédure.
+
+| Code | Statut | Signification |
+| --- | --- | --- |
+| `UNAUTHORIZED` | 401 | Clé API absente ou invalide, ou procédure réservée à un utilisateur connecté. |
+| `FORBIDDEN` | 403 | Le porteur de la clé n’a pas le rôle ou la permission requise sur cette entité. |
+| `NOT_FOUND` | 404 | L’identifiant n’existe pas, ou n’est pas visible par le porteur de la clé. |
+| `BAD_REQUEST` | 400 | Input refusé par le schéma de la procédure, ou état qui interdit l’action. |
+| `INTERNAL_SERVER_ERROR` | 500 | Échec inattendu, y compris un appel refusé par un service externe. |
+
+## Procédures
+
+Les procédures sont regroupées en routeurs, et un appel combine le nom du routeur et celui de la procédure : `org.createOrg`, `circle.archiveCircle`.
+
+| Routeur                                                                     | Procédures                                                        |
+| --------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| [Organisations](/fr/developers/trpc-api/organizations) (`org`)               | Créer, exporter, importer, partager et archiver une organisation   |
+| [Membres](/fr/developers/trpc-api/members) (`member`)                       | Invitations, rôles d’accès, archivage et restauration             |
+| [Rôles](/fr/developers/trpc-api/roles) (`circle`, `proposal`)                | Archiver un rôle avec ses descendants, résoudre une proposition    |
+| [Réunions](/fr/developers/trpc-api/meetings) (`meeting`)                    | Token d’accès aux réunions vidéo                                  |
+| [IA et recherche](/fr/developers/trpc-api/ai-search) (`ai`, `search`)        | Brouillons de rôle, résumés de réunion, clé de recherche restreinte |
+| [Applications de calendrier](/fr/developers/trpc-api/calendar-apps) (`apps`) | Lister et choisir les calendriers, déconnecter une application     |
+| [Abonnements](/fr/developers/trpc-api/subscriptions) (`orgSubscription`)     | Facturation Stripe, factures et moyens de paiement                |
+| [Internes](/fr/developers/trpc-api/internal) (`cron`, `trigger`, ...)        | Tâches planifiées et webhooks, listés pour référence               |
+
+## Étapes suivantes
+
+- Parcourez la [référence de l’API GraphQL](/fr/developers/graphql-api) pour les entités, requêtes et mutations.
+- Testez des requêtes en direct dans le [Playground GraphQL](/fr/developers/graphql-api/playground).
+- [Configurez l’environnement de développement](/fr/developers/install-self-host) pour explorer le code du backend.

@@ -1,0 +1,48 @@
+---
+title: 'Abonnements'
+description: 'Procédures tRPC du routeur orgSubscription : aperçus de prix, souscription, résiliation, factures, moyen de paiement et informations de facturation.'
+order: 7
+---
+
+Procédures du routeur `orgSubscription`, qui encapsulent la facturation Stripe d’une organisation. Toutes prennent `orgId` et requièrent le rôle **Owner**. La partie stockée d’un abonnement se lit en GraphQL sur [`org_subscription`](/fr/developers/graphql-api/org_subscription) ; tout ce qui suit interroge Stripe en direct, et ces procédures sont donc le seul moyen de voir les montants, les factures et les moyens de paiement.
+
+Les plans sont `Startup` et `Business`, et une organisation sans abonnement est limitée à 5 membres actifs. Les montants sont renvoyés en centimes.
+
+<Callout type="info" title="Piloté par l’application">
+  Ces procédures sont conçues pour les écrans de facturation de l’application,
+  qui les enchaînent avec Stripe Elements pour confirmer un paiement. Une
+  intégration peut lire un abonnement et ses factures, mais souscrire depuis
+  l’extérieur implique aussi de gérer le client secret Stripe renvoyé.
+</Callout>
+
+## Lire un abonnement
+
+| Procédure | Type | Description |
+| --- | --- | --- |
+| `getSubscription` | Requête | Abonnement courant : plan, statut, échéance, carte, informations de facturation et prochaine facture. Renvoie `null` si l’organisation n’en a pas. |
+| `getSubscriptionUpcomingInvoice` | Requête | Date et total du prochain paiement, ou `null`. |
+| `getSubscriptionInvoices` | Requête | Factures passées avec leur statut, leur total, le lien PDF et la page de paiement hébergée par Stripe. |
+| `getPricePreview` | Requête | Prix d’un plan avant de souscrire, à partir d’une adresse de facturation et d’un code promo optionnel. Renvoie le sous-total par siège, le nombre de sièges, la promotion appliquée et la taxe. |
+| `retrieveCouponToSubscription` | Mutation | Valide un code promo et renvoie son nom, sa durée et ses restrictions. |
+
+`getPricePreview` prend `{ orgId, planType, address, promotionCode? }` et `retrieveCouponToSubscription` prend `{ orgId, promotionCode }`. Les trois autres prennent uniquement `{ orgId }`.
+
+```typescript
+const subscription = await trpc.orgSubscription.getSubscription.query({ orgId })
+const invoices = await trpc.orgSubscription.getSubscriptionInvoices.query({ orgId })
+```
+
+## Modifier un abonnement
+
+| Procédure | Type | Description |
+| --- | --- | --- |
+| `subscribeOrg` | Mutation | Souscrit l’organisation à un plan. Prend `{ orgId, planType, address, promotionCode? }` et renvoie `{ subscriptionId, clientSecret, isFreeOrTrial, price }`, le client secret étant ce dont Stripe a besoin pour confirmer le paiement. |
+| `unsubscribeOrg` | Mutation | Résilie à la fin de la période payée et renvoie `{ cancelAt }`. |
+| `resumeSubscription` | Mutation | Annule une résiliation en attente, pour que l’abonnement continue. |
+| `updateSubscriptionPaymentMethodIntent` | Mutation | Ouvre un setup intent Stripe pour remplacer la carte, et renvoie `{ clientSecret }`. |
+| `updateSubscriptionBillingDetails` | Mutation | Met à jour le nom, l’email et l’adresse de facturation. Prend `{ orgId, billingDetails }`. |
+| `updateSubscriptionBillingEmail` | Mutation | Met à jour uniquement l’email de facturation. Prend `{ orgId, email }`. |
+
+Le nombre de sièges suit les membres : inviter, accepter une invitation ou archiver un membre met à jour la quantité Stripe, aucune procédure ici ne la change.
+
+Stripe appelle aussi le backend de lui-même, sur la route REST `POST /orgSubscription/stripeWebhook`, par laquelle le résultat d’un paiement met à jour le statut de l’abonnement stocké.

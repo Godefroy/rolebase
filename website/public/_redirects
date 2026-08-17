@@ -4,3 +4,9 @@
 
 # Glossary
 /glossaire-rbm/:slug  /fr/glossary/:slug  301
+
+# API reference moved under the Developers section
+/en/api            /en/developers/graphql-api          301
+/fr/api            /fr/developers/graphql-api          301
+/en/api/*          /en/developers/graphql-api/:splat   301
+/fr/api/*          /fr/developers/graphql-api/:splat   301

@@ -1,0 +1,129 @@
+---
+title: 'meeting_recurring'
+description: "Réunion récurrente, définit la planification, le modèle et les paramètres d'une série de réunions récurrentes au sein d'un cercle."
+category: 'meetings'
+---
+
+## Champs
+
+| Champ | Type | Description |
+| --- | --- | --- |
+| `id` | `uuid` | Identifiant unique de la configuration récurrente |
+| `orgId` | `uuid` | Référence à l'organisation |
+| `circleId` | `uuid` | Référence au cercle |
+| `templateId` | `uuid` | Référence au modèle de réunion |
+| `rrule` | `String` | Règle de récurrence au format iCal (RFC 5545) |
+| `duration` | `Smallint` | Durée de la réunion en minutes |
+| `scope` | `participants_scope` | Configuration pour la sélection des participants |
+| `private` | `Boolean` | Indique si les réunions de la série sont privées (par défaut : false) |
+| `invitedReadonly` | `Boolean` | Indique si les membres invités sont en lecture seule (par défaut : false) |
+| `videoConf` | `JSON` | Paramètres de visioconférence par défaut (optionnel) |
+| `createdAt` | `Timestamp` | Date de création de la configuration récurrente |
+| `archivedAt` | `Timestamp` | Date d'archivage de la configuration récurrente ; null si actif |
+
+## Relations
+
+**Relations objet :**
+
+- `org` — L'organisation à laquelle cette réunion récurrente appartient
+- `circle` — Le cercle auquel cette réunion récurrente est associée
+- `template` — Le modèle de réunion utilisé pour chaque instance
+
+**Relations tableau :**
+
+- `meetings` — Instances individuelles de réunion dans la série récurrente
+
+## Règle de récurrence
+
+Le champ `rrule` suit le format iCalendar (RFC 5545). Exemples :
+
+- `FREQ=WEEKLY;BYDAY=MO` — Chaque lundi
+- `FREQ=WEEKLY;INTERVAL=2;BYDAY=TU,TH` — Toutes les deux semaines le mardi et le jeudi
+- `FREQ=MONTHLY;BYMONTHDAY=1` — Le premier jour de chaque mois
+
+## Exemples de requêtes
+
+### Lister les réunions récurrentes
+
+```graphql
+query MeetingRecurrings($orgId: uuid!) {
+  meeting_recurring(where: { orgId: { _eq: $orgId } }) {
+    id
+    orgId
+    circleId
+    circle {
+      role {
+        name
+        colorHue
+      }
+    }
+    scope
+    templateId
+    template {
+      title
+      stepsConfig
+    }
+    rrule
+    duration
+    videoConf
+    createdAt
+    meetings {
+      id
+      recurringDate
+    }
+  }
+}
+```
+
+## Exemples de mutations
+
+### Créer une réunion récurrente
+
+```graphql
+mutation CreateMeetingRecurring {
+  insert_meeting_recurring_one(
+    object: {
+      orgId: "org-id"
+      circleId: "circle-id"
+      templateId: "template-id"
+      rrule: "FREQ=WEEKLY;INTERVAL=1;BYDAY=MO"
+      duration: 60
+      scope: { type: "circle_members" }
+      private: false
+      invitedReadonly: false
+    }
+  ) {
+    id
+    rrule
+    duration
+  }
+}
+```
+
+### Mettre à jour une réunion récurrente
+
+```graphql
+mutation UpdateMeetingRecurring($id: uuid!) {
+  update_meeting_recurring_by_pk(
+    pk_columns: { id: $id }
+    _set: { rrule: "FREQ=WEEKLY;INTERVAL=2;BYDAY=TU,TH", duration: 90 }
+  ) {
+    id
+    rrule
+    duration
+  }
+}
+```
+
+## Permissions
+
+- **Participants du cercle :** Peuvent créer et gérer les réunions récurrentes dans leurs cercles
+- **Membres de l'organisation :** Peuvent consulter les réunions récurrentes non privées
+
+<Callout type="info" title="Notes">
+  Chaque réunion récurrente doit référencer un modèle qui définit sa structure.
+  Les instances de réunion sont créées automatiquement selon la règle de
+  récurrence. Les modifications de la configuration n'affectent pas les
+  instances de réunion passées. Le champ `rrule` doit respecter la spécification
+  iCalendar.
+</Callout>

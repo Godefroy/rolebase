@@ -12,6 +12,11 @@ import '../styles/global.css'
 interface Props {
   title: string
   /**
+   * Titles of the pages this one sits under, nearest first. They are inserted
+   * in the document title: "circle_member | GraphQL API | Rolebase".
+   */
+  titleTrail?: string[]
+  /**
    * Meta description of the page, also reused for the social preview. Comes
    * from the content: `summary` on a blog post, `description` on a doc, a
    * guide or a `pages` entry.
@@ -23,17 +28,28 @@ interface Props {
   image?: ImageMetadata
 }
 
-const { title, description, ogType = 'website', staticHeader = false, image } = Astro.props
-// Index pages carry very short titles ("Blog", "Introduction"), so the brand
-// is appended to give them a full document title. It is left out when the title
-// already names the brand, and when the suffix would push the title past the
-// ~60 characters a SERP displays.
-const brandedTitle = `${title} | ${config.siteName}`
-const pageTitle
-  = title.includes(config.siteName) || brandedTitle.length > 60 ? title : brandedTitle
+const {
+  title,
+  titleTrail = [],
+  description,
+  ogType = 'website',
+  staticHeader = false,
+  image,
+} = Astro.props
+// Index pages carry very short titles ("Blog", "Introduction"), so the ancestor
+// pages and the brand are appended to give them a full document title. A suffix
+// is kept only while it fits in the ~60 characters a SERP displays, and the
+// brand is left out when the title already names it.
+const suffixes = title.includes(config.siteName)
+  ? titleTrail
+  : [...titleTrail, config.siteName]
+const pageTitle = suffixes.reduce((current, suffix) => {
+  const candidate = `${current} | ${suffix}`
+  return candidate.length > 60 ? current : candidate
+}, title)
 const currentPath = Astro.url.pathname
 const lang = getLangFromUrl(Astro.url)
-const isDevSection = currentPath.includes('/developers') || currentPath.includes('/api')
+const isDevSection = currentPath.includes('/developers')
 const canonicalPath = getCanonicalPath(currentPath)
 const hasLangPrefix = canonicalPath.startsWith(`/${lang}`)
 const altPath = (l: string) => hasLangPrefix ? canonicalPath.replace(`/${lang}`, `/${l}`) : canonicalPath

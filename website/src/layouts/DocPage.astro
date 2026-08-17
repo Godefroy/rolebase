@@ -6,13 +6,26 @@ import type { Heading } from '../utils/toc'
 
 interface Props {
   title: string
-  section?: 'docs' | 'guides' | 'developers' | 'api'
+  section?: 'docs' | 'guides' | 'developers'
   description?: string
   wide?: boolean
   headings?: Heading[]
+  /**
+   * Intermediate pages between the section root and this one, from the
+   * outermost to the direct parent (e.g. the GraphQL API page above an entity
+   * page). They appear in the breadcrumb and in the document title.
+   */
+  ancestors?: { label: string; path: string }[]
 }
 
-const { title, section = 'docs', description, wide = false, headings = [] } = Astro.props
+const {
+  title,
+  section = 'docs',
+  description,
+  wide = false,
+  headings = [],
+  ancestors = [],
+} = Astro.props
 const lang = getLangFromUrl(Astro.url)
 const t = await getTranslations(lang)
 
@@ -20,15 +33,28 @@ const categoryMap = {
   docs: { label: t.documentation, path: '/docs' },
   guides: { label: t.guides, path: '/docs' },
   developers: { label: t.developers, path: '/developers' },
-  api: { label: t.api.reference, path: '/api' },
 } as const
 const cat = categoryMap[section]
+
+const trail = [cat, ...ancestors].map(({ label, path }) => ({
+  label,
+  href: langPath(lang, path),
+}))
+// Document title reads from the page outwards: "circle_member | GraphQL API".
+const titleTrail = ancestors.map((a) => a.label).reverse()
 ---
 
-<DocsLayout title={title} description={description} section={section} wide={wide} headings={headings}>
+<DocsLayout
+  title={title}
+  titleTrail={titleTrail}
+  description={description}
+  section={section}
+  wide={wide}
+  headings={headings}
+>
   <article>
     <header class="mb-8">
-      <Breadcrumb category={cat.label} categoryUrl={langPath(lang, cat.path)} title={title} hideTitle class="mb-3" />
+      <Breadcrumb trail={trail} title={title} hideTitle class="mb-3" />
       <h1 class="mt-0 text-4xl font-bold">{title}</h1>
       {description && <p class="text-lg text-text-secondary">{description}</p>}
     </header>

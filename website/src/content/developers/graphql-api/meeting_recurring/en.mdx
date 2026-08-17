@@ -1,0 +1,128 @@
+---
+title: 'meeting_recurring'
+description: "Meeting Recurring, defines the schedule, template, and settings for a recurring series of meetings within a circle."
+category: 'meetings'
+---
+
+## Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `id` | `uuid` | Unique identifier for the recurring configuration |
+| `orgId` | `uuid` | Reference to the organization |
+| `circleId` | `uuid` | Reference to the circle |
+| `templateId` | `uuid` | Reference to the meeting template |
+| `rrule` | `String` | iCal (RFC 5545) format recurrence rule |
+| `duration` | `Smallint` | Meeting duration in minutes |
+| `scope` | `participants_scope` | Configuration for participant selection |
+| `private` | `Boolean` | Whether meetings in the series are private (default: false) |
+| `invitedReadonly` | `Boolean` | Whether invited members are read-only (default: false) |
+| `videoConf` | `JSON` | Default video conferencing settings (optional) |
+| `createdAt` | `Timestamp` | When the recurring configuration was created |
+| `archivedAt` | `Timestamp` | When the recurring configuration was archived; null if active |
+
+## Relationships
+
+**Object Relationships:**
+
+- `org` — The organization this recurring meeting belongs to
+- `circle` — The circle this recurring meeting is associated with
+- `template` — The meeting template used for each instance
+
+**Array Relationships:**
+
+- `meetings` — Individual meeting instances in the recurring series
+
+## Recurrence Rule
+
+The `rrule` field follows the iCalendar (RFC 5545) format. Examples:
+
+- `FREQ=WEEKLY;BYDAY=MO` — Every Monday
+- `FREQ=WEEKLY;INTERVAL=2;BYDAY=TU,TH` — Every two weeks on Tuesday and Thursday
+- `FREQ=MONTHLY;BYMONTHDAY=1` — First day of each month
+
+## Query Examples
+
+### List Recurring Meetings
+
+```graphql
+query MeetingRecurrings($orgId: uuid!) {
+  meeting_recurring(where: { orgId: { _eq: $orgId } }) {
+    id
+    orgId
+    circleId
+    circle {
+      role {
+        name
+        colorHue
+      }
+    }
+    scope
+    templateId
+    template {
+      title
+      stepsConfig
+    }
+    rrule
+    duration
+    videoConf
+    createdAt
+    meetings {
+      id
+      recurringDate
+    }
+  }
+}
+```
+
+## Mutation Examples
+
+### Create a Recurring Meeting
+
+```graphql
+mutation CreateMeetingRecurring {
+  insert_meeting_recurring_one(
+    object: {
+      orgId: "org-id"
+      circleId: "circle-id"
+      templateId: "template-id"
+      rrule: "FREQ=WEEKLY;INTERVAL=1;BYDAY=MO"
+      duration: 60
+      scope: { type: "circle_members" }
+      private: false
+      invitedReadonly: false
+    }
+  ) {
+    id
+    rrule
+    duration
+  }
+}
+```
+
+### Update a Recurring Meeting
+
+```graphql
+mutation UpdateMeetingRecurring($id: uuid!) {
+  update_meeting_recurring_by_pk(
+    pk_columns: { id: $id }
+    _set: { rrule: "FREQ=WEEKLY;INTERVAL=2;BYDAY=TU,TH", duration: 90 }
+  ) {
+    id
+    rrule
+    duration
+  }
+}
+```
+
+## Permissions
+
+- **Circle participants:** Can create and manage recurring meetings in their circles
+- **Organization members:** Can view non-private recurring meetings
+
+<Callout type="info" title="Notes">
+  Each recurring meeting must reference a template that defines its structure.
+  Meeting instances are created automatically based on the recurrence rule.
+  Changes to the configuration do not affect past meeting instances. The `rrule`
+  field must follow the iCalendar specification.
+</Callout>

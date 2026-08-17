@@ -1,0 +1,44 @@
+---
+title: 'Procédures internes'
+description: 'Procédures tRPC réservées aux tâches planifiées, aux déclencheurs Hasura et à l’administration de la plateforme, listées pour référence.'
+order: 8
+---
+
+Ces procédures existent pour la plateforme elle-même, pas pour les intégrations. Une clé API ne peut pas les appeler : elles s’authentifient soit avec le secret de webhook partagé avec le planificateur et Hasura, soit avec un token d’accès portant le rôle `admin`. Elles sont listées ici pour qu’une instance auto-hébergée sache ce qui tourne et pourquoi.
+
+## Tâches planifiées (`cron`)
+
+Appelées sur une planification avec le secret de webhook. Aucune ne prend d’input.
+
+| Procédure | Ce qu’elle fait |
+| --- | --- |
+| `cron.createNextRecurringMeetings` | Crée les prochaines occurrences des configurations de réunions récurrentes. |
+| `cron.endOldMeetings` | Clôture les réunions restées en cours après leur fin. |
+| `cron.resendInvitations` | Envoie un rappel pour les invitations encore en attente. |
+| `cron.resolveProposals` | Résout les propositions dont l’échéance est passée. |
+| `cron.sendDigestEmails` | Envoie les emails de digest d’activité. |
+
+## Déclencheurs d’événements
+
+Appelés par Hasura sur un changement en base, avec le secret de webhook.
+
+| Procédure | Ce qu’elle fait |
+| --- | --- |
+| `trigger` | Répercute une ligne insérée, modifiée ou supprimée dans l’index de recherche et les calendriers connectés. |
+| `proposal.onVote` | Résout une proposition dès que les votes rendent l’issue certaine. |
+
+Les fournisseurs de calendrier poussent aussi leurs propres changements sur les routes REST `POST /apps/googlecalendar/notify` et `POST /apps/office365/notify`, décrites sur la page [Applications de calendrier](/fr/developers/trpc-api/calendar-apps).
+
+## Administration
+
+Réservées à un token d’accès portant le rôle `admin`.
+
+| Procédure | Ce qu’elle fait |
+| --- | --- |
+| `participants.recomputeCache` | Reconstruit le cache derrière [`circle_participant`](/fr/developers/graphql-api/circle_participant). |
+| `search.reindexAll` | Vide et reconstruit tout l’index de recherche. |
+| `superAdmin.impersonate` | Délivre un token d’accès personnel éphémère pour ouvrir une session en tant qu’un autre utilisateur, à partir de `{ userId }`. Un utilisateur désactivé est refusé. |
+
+## Health check
+
+`healthz` est une requête publique qui répond `ok`, utilisée par la plateforme d’hébergement pour vérifier que le backend tourne.

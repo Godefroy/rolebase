@@ -1,28 +1,37 @@
 ---
 import { getLangFromUrl, langPath } from '../utils/i18n'
+import Icon from './Icon.astro'
 
 interface Props {
-  path: string
+  path?: string
   href?: string
   exact?: boolean
-  code?: boolean
+  /** Opens in a new tab and appends an external link icon. */
+  external?: boolean
 }
 
-const { path, href, exact = false, code = false } = Astro.props
+const { path, href, exact = false, external = false } = Astro.props
 
 const currentPath = Astro.url.pathname
 const lang = getLangFromUrl(Astro.url)
-const resolvedHref = href ?? langPath(lang, path)
-const active = exact ? currentPath === resolvedHref : currentPath.includes(path)
+const resolvedHref = href ?? langPath(lang, path!)
+const active
+  = external || !path
+    ? false
+    : exact
+      ? currentPath === resolvedHref
+      : currentPath.includes(path)
 ---
 
 <a
   href={resolvedHref}
+  target={external ? '_blank' : undefined}
+  rel={external ? 'noopener noreferrer' : undefined}
   class:list={[
-    'block px-3 py-1.5 rounded-md text-sm no-underline hover:no-underline',
-    code ? 'font-mono' : 'font-medium',
+    'px-3 py-1.5 rounded-md text-sm font-medium no-underline hover:no-underline',
+    external ? 'inline-flex items-center gap-1.5' : 'block',
     active
       ? 'bg-primary/10 text-black'
       : 'text-text-secondary hover:bg-bg-secondary hover:text-text-main',
   ]}
-><slot /></a>
+><slot />{external && <Icon icon="external-link" class="w-3.5 h-3.5" />}</a>

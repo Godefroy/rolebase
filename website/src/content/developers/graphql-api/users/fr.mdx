@@ -1,0 +1,117 @@
+---
+title: 'users'
+description: "Utilisateurs, représente les comptes utilisateur dans Rolebase, gérés par Hasura Auth. Contient les informations de profil, les détails d'authentification et les relations avec les organisations et les rôles."
+category: 'other'
+---
+
+## Champs
+
+| Champ | Type | Description |
+| --- | --- | --- |
+| `id` | `uuid` | Identifiant unique de l'utilisateur (généré automatiquement) |
+| `displayName` | `String` | Nom d'affichage de l'utilisateur |
+| `email` | `String` | Adresse e-mail de l'utilisateur (unique, optionnel) |
+| `emailVerified` | `Boolean` | Indique si l'adresse e-mail a été vérifiée (par défaut : false) |
+| `phoneNumber` | `String` | Numéro de téléphone de l'utilisateur (unique, optionnel) |
+| `phoneNumberVerified` | `Boolean` | Indique si le numéro de téléphone a été vérifié (par défaut : false) |
+| `avatarUrl` | `String` | URL de l'image d'avatar de l'utilisateur |
+| `locale` | `String` | Langue préférée de l'utilisateur |
+| `metadata` | `JSON` | Métadonnées supplémentaires de l'utilisateur (ex. : fuseau horaire, préférences) |
+| `newEmail` | `String` | Nouvelle adresse e-mail en attente de vérification (optionnel) |
+| `isAnonymous` | `Boolean` | Indique si c'est un utilisateur anonyme (par défaut : false) |
+| `disabled` | `Boolean` | Indique si le compte utilisateur est désactivé (par défaut : false) |
+| `lastSeen` | `Timestamp` | Dernière activité de l'utilisateur (optionnel) |
+| `createdAt` | `Timestamp` | Date de création du compte (par défaut : horodatage actuel) |
+| `updatedAt` | `Timestamp` | Date de dernière mise à jour du compte (par défaut : horodatage actuel) |
+
+### Champs d'authentification
+
+| Champ | Type | Description |
+| --- | --- | --- |
+| `passwordHash` | `String` | Mot de passe haché pour l'authentification par mot de passe (jamais exposé via l'API) |
+| `activeMfaType` | `String` | Méthode d'authentification multi-facteurs active (optionnel) |
+| `totpSecret` | `String` | Secret pour le mot de passe à usage unique basé sur le temps (optionnel) |
+| `otpHash` | `String` | Hachage du mot de passe à usage unique (jamais exposé via l'API) |
+| `otpHashExpiresAt` | `Timestamp` | Date d'expiration du hachage OTP |
+| `otpMethodLastUsed` | `String` | Dernière méthode OTP utilisée (optionnel) |
+| `ticket` | `String` | Ticket d'authentification (optionnel) |
+| `ticketExpiresAt` | `Timestamp` | Date d'expiration du ticket d'authentification |
+| `currentChallenge` | `String` | Défi d'authentification en cours (optionnel) |
+
+## Relations
+
+### Relations tableau
+
+- `apps` — Applications connectées de l'utilisateur (voir [user_app](/fr/developers/graphql-api/user_app))
+- `members` — Appartenances aux organisations
+- `roles` — Rôles assignés à l'utilisateur
+- `refreshTokens` — Jetons de rafraîchissement d'authentification
+- `securityKeys` — Clés de sécurité WebAuthn
+- `userProviders` — Fournisseurs d'authentification connectés (OAuth, etc.)
+
+## Exemples de requêtes
+
+### Obtenir le profil utilisateur
+
+```graphql
+query GetUserProfile($userId: uuid!) {
+  user(id: $userId) {
+    id
+    displayName
+    email
+    emailVerified
+    avatarUrl
+    locale
+    metadata
+    newEmail
+    lastSeen
+    members {
+      id
+      org {
+        name
+      }
+    }
+  }
+}
+```
+
+## Exemples de mutations
+
+### Mettre à jour le profil utilisateur
+
+```graphql
+mutation UpdateUserProfile {
+  updateUser(
+    pk_columns: { id: "user-id" }
+    _set: {
+      displayName: "New Name"
+      locale: "en"
+      metadata: { timezone: "Europe/Paris" }
+    }
+  ) {
+    id
+    displayName
+    locale
+    metadata
+    updatedAt
+  }
+}
+```
+
+## Permissions
+
+L'accès aux données utilisateur est strictement contrôlé :
+
+- Les utilisateurs ne peuvent consulter et modifier que leurs propres données de profil
+- Les champs sensibles (`passwordHash`, `otpHash`, etc.) ne sont jamais exposés via l'API
+- La gestion des rôles est assurée par des points d'accès dédiés
+- Les modifications d'adresse e-mail et de numéro de téléphone nécessitent une vérification
+- La désactivation de compte ne peut être effectuée que par les administrateurs
+
+<Callout type="info">
+  L'entité utilisateur est gérée par Hasura Auth et ne doit pas être modifiée
+  directement. L'authentification multi-facteurs (MFA) peut être activée avec
+  différentes méthodes, et les clés de sécurité WebAuthn supportent
+  l'authentification sans mot de passe. Les fournisseurs OAuth connectés sont
+  gérés via la relation `userProviders`.
+</Callout>

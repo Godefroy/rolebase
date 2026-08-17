@@ -61,7 +61,7 @@ const articleSchema = {
   <JsonLd data={articleSchema} />
   <article class="min-w-0 flex-1">
     <header class="mb-10 pb-6 border-b border-gray-100">
-      <Breadcrumb category={t.blog.label} categoryUrl={langPath(lang, '/blog')} title={post.data.title} hideTitle class="mb-3" />
+      <Breadcrumb trail={[{ label: t.blog.label, href: langPath(lang, '/blog') }]} title={post.data.title} hideTitle class="mb-3" />
       <h1 class="mb-4 font-medium text-3xl md:text-4xl lg:text-5xl">
         {post.data.h1 ?? post.data.title}
       </h1>

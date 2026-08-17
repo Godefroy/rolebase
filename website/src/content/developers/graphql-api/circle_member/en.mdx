@@ -1,0 +1,99 @@
+---
+title: 'circle_member'
+description: "Circle Member, represents a membership relationship between a member and a circle, tracking association status and history."
+category: 'circles-roles'
+---
+
+## Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `id` | `uuid` | Unique identifier for the circle membership |
+| `circleId` | `uuid` | Reference to the circle |
+| `memberId` | `uuid` | Reference to the member |
+| `createdAt` | `Timestamp` | When the membership was created |
+| `archivedAt` | `Timestamp` | When the membership was archived; null if active |
+
+## Relationships
+
+**Object Relationships:**
+
+- `circle` — The circle this membership belongs to
+- `member` — The member associated with this circle membership
+
+## Query Examples
+
+### Get Members of a Specific Circle
+
+```graphql
+query GetCircleMembers($circleId: uuid!) {
+  circle_member(
+    where: { circleId: { _eq: $circleId }, archivedAt: { _is_null: true } }
+  ) {
+    id
+    circle {
+      id
+      role {
+        name
+      }
+    }
+    member {
+      id
+      name
+      description
+    }
+    createdAt
+  }
+}
+```
+
+## Mutation Examples
+
+### Add a Member to a Circle
+
+```graphql
+mutation AddCircleMember {
+  insert_circle_member_one(
+    object: { circleId: "circle-id", memberId: "member-id" }
+  ) {
+    id
+    circle {
+      id
+      role {
+        name
+      }
+    }
+    member {
+      name
+    }
+  }
+}
+```
+
+### Archive a Circle Membership
+
+```graphql
+mutation UpdateCircleMember {
+  update_circle_member_by_pk(
+    pk_columns: { id: "circle-member-id" }
+    _set: { archivedAt: "2024-01-01T00:00:00Z" }
+  ) {
+    id
+    archivedAt
+  }
+}
+```
+
+## Permissions
+
+- **Organization owners and admins:** Can add and remove members from any circle
+- **Circle leaders:** Can manage members in their circles
+- **Members:** Can view circle memberships in circles they belong to
+- A member cannot be added to a circle if they already have an active membership
+
+<Callout type="info" title="Notes">
+  The `archivedAt` timestamp preserves membership history while marking inactive
+  memberships. Circle membership determines access to circle resources like
+  meetings, tasks, and decisions. Members can belong to multiple circles
+  simultaneously.
+</Callout>

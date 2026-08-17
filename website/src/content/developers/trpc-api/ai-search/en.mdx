@@ -1,0 +1,43 @@
+---
+title: 'AI and search'
+description: 'tRPC procedures of the ai and search routers: generate a role draft, summarize a meeting, get a scoped search key.'
+order: 5
+---
+
+Two small routers back features the app cannot compute client-side: `ai` calls the language model, and `search` hands out a key scoped to one organization.
+
+## Query `ai.generateRole`
+
+Generates a role draft from its name, for an authenticated user.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `name` | `String` | Role name the draft is written from. Required. |
+| `lang` | `String` | Language the draft is written in, as a language code. Required. |
+
+It returns a `role_ai` record with `name`, `purpose`, `domain`, `accountabilities`, `checklist`, `indicators` and `notes`, ready to copy into a [`role`](/en/developers/graphql-api/role). Drafts are cached per name and language, so the same pair answers from storage instead of calling the model again.
+
+```typescript
+const draft = await trpc.ai.generateRole.query({ name: 'Product Owner', lang: 'en' })
+```
+
+## Query `ai.generateMeetingSummary`
+
+Summarizes a meeting from its steps, notes and threads, for a Member of the organization.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `meetingId` | `uuid` | Meeting to summarize. Required. |
+| `lang` | `String` | Language the summary is written in, as a language code. Required. |
+
+It returns the summary as markdown. An unknown meeting answers `NOT_FOUND`.
+
+## Query `search.getAlgoliaConfig`
+
+Returns the search credentials of an organization, for any member including Readonly.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `orgId` | `uuid` | Target organization. Required. |
+
+It returns `{ appId, apiKey, indexName }`, where `apiKey` is a secured Algolia key filtered on that organization, so it cannot read another one. Reindexing the whole index is an [internal procedure](/en/developers/trpc-api/internal).

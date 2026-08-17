@@ -1,0 +1,193 @@
+---
+title: 'thread'
+description: "Discussion, représente une discussion ou un fil de conversation dans Rolebase. Les discussions sont associées à des cercles, supportent des activités (messages), des réactions, des membres supplémentaires, et peuvent référencer des tâches, réunions et décisions."
+category: 'threads'
+---
+
+## Champs
+
+| Champ | Type | Description |
+| --- | --- | --- |
+| `id` | `uuid` | Identifiant unique de la discussion (généré automatiquement) |
+| `orgId` | `uuid` | Référence à l'organisation |
+| `circleId` | `uuid` | Référence au cercle |
+| `initiatorMemberId` | `uuid` | Référence au membre qui a initié la discussion |
+| `title` | `String` | Titre de la discussion |
+| `createdAt` | `Timestamp` | Date de création de la discussion (par défaut : horodatage actuel) |
+| `archivedAt` | `Timestamp` | Date d'archivage de la discussion ; null si actif |
+| `pinned` | `Boolean` | Indique si la discussion est épinglée pour tout le monde, ce qui la place en premier dans les listes (par défaut : false) |
+| `private` | `Boolean` | Indique si la discussion est privée (par défaut : false) |
+| `status` | `Thread_Status_Enum` | Statut actuel de la discussion (ex. : Active, Preparation, Closed) |
+
+## Relations
+
+### Relations objet
+
+- `org` — L'organisation à laquelle cette discussion appartient
+- `circle` — Le cercle auquel cette discussion est associée
+- `initiatorMember` — Le membre qui a initié la discussion
+
+### Relations tableau
+
+- `activities` — Messages et mises à jour dans la discussion (voir [thread_activity](/fr/developers/graphql-api/thread_activity))
+- `extra_members` — Membres supplémentaires ajoutés à la discussion (voir [thread_extra_member](/fr/developers/graphql-api/thread_extra_member))
+- `member_status` — Suivi du statut de lecture par membre
+
+## Statut des membres
+
+Le `thread_member_status` suit le statut de lecture de chaque membre :
+
+- `lastReadActivityId` — Identifiant de la dernière activité lue
+- `lastReadDate` — Date de la dernière lecture de la discussion par le membre
+- `memberId` — Membre dont le statut est suivi
+
+## Exemples de requêtes
+
+### Lister les discussions d'une organisation
+
+```graphql
+query GetThreads($orgId: uuid!) {
+  thread(where: { orgId: { _eq: $orgId } }) {
+    id
+    title
+    status
+    createdAt
+    circle {
+      role {
+        name
+      }
+    }
+  }
+}
+```
+
+### Obtenir une discussion spécifique avec ses activités
+
+```graphql
+query GetThread($id: uuid!) {
+  thread_by_pk(id: $id) {
+    id
+    title
+    status
+    createdAt
+    circle {
+      role {
+        name
+      }
+    }
+    initiatorMember {
+      name
+    }
+    activities {
+      id
+      type
+      data
+      createdAt
+      user {
+        displayName
+      }
+      reactions {
+        id
+        shortcode
+      }
+    }
+    member_status {
+      lastReadDate
+      member {
+        name
+      }
+    }
+  }
+}
+```
+
+## Exemples de mutations
+
+### Créer une discussion
+
+```graphql
+mutation CreateThread {
+  insert_thread_one(
+    object: {
+      orgId: "your-org-id"
+      circleId: "circle-id"
+      title: "Discussion about new feature"
+      initiatorMemberId: "member-id"
+      status: Active
+      private: false
+      extra_members: {
+        data: [{ memberId: "member-id-1" }, { memberId: "member-id-2" }]
+      }
+    }
+  ) {
+    id
+    title
+    status
+  }
+}
+```
+
+### Ajouter une activité à une discussion
+
+```graphql
+mutation AddThreadActivity {
+  insert_thread_activity_one(
+    object: {
+      threadId: "thread-id"
+      type: Message
+      data: { message: "This is a message" }
+      userId: "user-id"
+    }
+  ) {
+    id
+    type
+    data
+  }
+}
+```
+
+### Mettre à jour le statut d'une discussion
+
+```graphql
+mutation UpdateThreadStatus {
+  update_thread_by_pk(
+    pk_columns: { id: "thread-id" }
+    _set: { status: Closed }
+  ) {
+    id
+    status
+  }
+}
+```
+
+### Épingler une discussion
+
+```graphql
+mutation PinThread {
+  update_thread_by_pk(
+    pk_columns: { id: "thread-id" }
+    _set: { pinned: true }
+  ) {
+    id
+    pinned
+  }
+}
+```
+
+## Permissions
+
+L'accès aux discussions est contrôlé par plusieurs facteurs :
+
+- **Appartenance au cercle** — Les participants du cercle peuvent accéder aux discussions de leur cercle
+- **Paramètres de confidentialité** — Les discussions privées ne sont visibles que par les participants du cercle et les membres supplémentaires
+- **Rôle dans l'organisation** — Les membres de l'organisation peuvent accéder aux discussions non privées
+- **Membres supplémentaires** — Participants additionnels ajoutés via [thread_extra_member](/fr/developers/graphql-api/thread_extra_member)
+- Les activités de discussion peuvent être créées par les participants et les membres supplémentaires
+- Le statut des membres peut être mis à jour par le membre concerné
+
+<Callout type="info">
+  Les discussions supportent du contenu riche via des données d'activité en
+  JSON, des réactions pour l'engagement, et des références croisées vers des
+  tâches, réunions et décisions. Des membres peuvent être ajoutés au-delà du
+  cercle via les membres supplémentaires pour une collaboration élargie.
+</Callout>

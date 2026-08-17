@@ -21,7 +21,7 @@ const { Content, headings } = await render(item)
 <BlogLayout title={item.data.title} description={item.data.summary}>
   <article class="min-w-0 flex-1">
     <header class="mb-10 pb-6 border-b border-gray-100">
-      <Breadcrumb category={t.clientCases.label} categoryUrl={langPath(lang, '/client-cases')} title={item.data.title} hideTitle class="mb-3" />
+      <Breadcrumb trail={[{ label: t.clientCases.label, href: langPath(lang, '/client-cases') }]} title={item.data.title} hideTitle class="mb-3" />
       <h1 class="mb-4 font-medium text-3xl md:text-4xl lg:text-5xl">
         {item.data.title}
       </h1>

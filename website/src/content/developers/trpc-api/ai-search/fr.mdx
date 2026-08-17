@@ -1,0 +1,43 @@
+---
+title: 'IA et recherche'
+description: 'Procédures tRPC des routeurs ai et search : générer un brouillon de rôle, résumer une réunion, obtenir une clé de recherche restreinte.'
+order: 5
+---
+
+Deux petits routeurs portent des fonctionnalités que l’application ne peut pas calculer côté client : `ai` appelle le modèle de langage, et `search` délivre une clé restreinte à une organisation.
+
+## Requête `ai.generateRole`
+
+Génère un brouillon de rôle à partir de son nom, pour un utilisateur authentifié.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `name` | `String` | Nom du rôle à partir duquel le brouillon est rédigé. Requis. |
+| `lang` | `String` | Langue de rédaction, sous forme de code de langue. Requis. |
+
+La procédure renvoie un enregistrement `role_ai` avec `name`, `purpose`, `domain`, `accountabilities`, `checklist`, `indicators` et `notes`, prêt à être recopié dans un [`role`](/fr/developers/graphql-api/role). Les brouillons sont mis en cache par nom et par langue : le même couple répond depuis le stockage au lieu de rappeler le modèle.
+
+```typescript
+const draft = await trpc.ai.generateRole.query({ name: 'Product Owner', lang: 'fr' })
+```
+
+## Requête `ai.generateMeetingSummary`
+
+Résume une réunion à partir de ses étapes, notes et fils de discussion, pour un Member de l’organisation.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `meetingId` | `uuid` | Réunion à résumer. Requis. |
+| `lang` | `String` | Langue de rédaction, sous forme de code de langue. Requis. |
+
+Elle renvoie le résumé en markdown. Une réunion inconnue répond `NOT_FOUND`.
+
+## Requête `search.getAlgoliaConfig`
+
+Renvoie les identifiants de recherche d’une organisation, pour tout membre y compris Readonly.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `orgId` | `uuid` | Organisation visée. Requis. |
+
+Elle renvoie `{ appId, apiKey, indexName }`, où `apiKey` est une clé Algolia sécurisée filtrée sur cette organisation : elle ne peut donc pas en lire une autre. La reconstruction complète de l’index est une [procédure interne](/fr/developers/trpc-api/internal).

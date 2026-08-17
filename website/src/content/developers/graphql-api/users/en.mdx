@@ -1,0 +1,116 @@
+---
+title: 'users'
+description: "Users, represents user accounts in Rolebase, managed by Hasura Auth. Contains profile information, authentication details, and relationships to organizations and roles."
+category: 'other'
+---
+
+## Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `id` | `uuid` | Unique identifier for the user (auto-generated) |
+| `displayName` | `String` | User's display name |
+| `email` | `String` | User's email address (unique, optional) |
+| `emailVerified` | `Boolean` | Whether the email has been verified (defaults to false) |
+| `phoneNumber` | `String` | User's phone number (unique, optional) |
+| `phoneNumberVerified` | `Boolean` | Whether the phone number has been verified (defaults to false) |
+| `avatarUrl` | `String` | URL to the user's avatar image |
+| `locale` | `String` | User's preferred locale |
+| `metadata` | `JSON` | Additional user metadata (e.g., timezone, preferences) |
+| `newEmail` | `String` | New email address pending verification (optional) |
+| `isAnonymous` | `Boolean` | Whether this is an anonymous user (defaults to false) |
+| `disabled` | `Boolean` | Whether the user account is disabled (defaults to false) |
+| `lastSeen` | `Timestamp` | When the user was last active (optional) |
+| `createdAt` | `Timestamp` | When the account was created (defaults to current timestamp) |
+| `updatedAt` | `Timestamp` | When the account was last updated (defaults to current timestamp) |
+
+### Authentication Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `passwordHash` | `String` | Hashed password for password authentication (never exposed via API) |
+| `activeMfaType` | `String` | Active multi-factor authentication method (optional) |
+| `totpSecret` | `String` | Secret for time-based one-time password (optional) |
+| `otpHash` | `String` | One-time password hash (never exposed via API) |
+| `otpHashExpiresAt` | `Timestamp` | When the OTP hash expires |
+| `otpMethodLastUsed` | `String` | Last used OTP method (optional) |
+| `ticket` | `String` | Authentication ticket (optional) |
+| `ticketExpiresAt` | `Timestamp` | When the authentication ticket expires |
+| `currentChallenge` | `String` | Current authentication challenge (optional) |
+
+## Relationships
+
+### Array Relationships
+
+- `apps` — User's connected applications (see [user_app](/en/developers/graphql-api/user_app))
+- `members` — Organization memberships
+- `roles` — User's assigned roles
+- `refreshTokens` — Authentication refresh tokens
+- `securityKeys` — WebAuthn security keys
+- `userProviders` — Connected authentication providers (OAuth, etc.)
+
+## Query Examples
+
+### Get User Profile
+
+```graphql
+query GetUserProfile($userId: uuid!) {
+  user(id: $userId) {
+    id
+    displayName
+    email
+    emailVerified
+    avatarUrl
+    locale
+    metadata
+    newEmail
+    lastSeen
+    members {
+      id
+      org {
+        name
+      }
+    }
+  }
+}
+```
+
+## Mutation Examples
+
+### Update User Profile
+
+```graphql
+mutation UpdateUserProfile {
+  updateUser(
+    pk_columns: { id: "user-id" }
+    _set: {
+      displayName: "New Name"
+      locale: "en"
+      metadata: { timezone: "Europe/Paris" }
+    }
+  ) {
+    id
+    displayName
+    locale
+    metadata
+    updatedAt
+  }
+}
+```
+
+## Permissions
+
+Access to user data is strictly controlled:
+
+- Users can only view and modify their own profile data
+- Sensitive fields (`passwordHash`, `otpHash`, etc.) are never exposed via the API
+- Role management is handled through dedicated endpoints
+- Email and phone number changes require verification
+- Account disabling can only be done by administrators
+
+<Callout type="info">
+  The user entity is managed by Hasura Auth and should not be modified directly.
+  Multi-factor authentication (MFA) can be enabled using various methods, and
+  WebAuthn security keys support passwordless authentication. Connected OAuth
+  providers are managed through the `userProviders` relationship.
+</Callout>

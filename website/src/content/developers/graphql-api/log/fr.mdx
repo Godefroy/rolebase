@@ -1,0 +1,141 @@
+---
+title: 'log'
+description: "Journal, représente une entrée de journal d'activité suivant les modifications d'entités, les actions utilisateur et fournissant une piste d'audit. Les journaux supportent la fonctionnalité d'annulation/rétablissement via un suivi structuré des modifications."
+category: 'other'
+---
+
+## Champs
+
+| Champ | Type | Description |
+| --- | --- | --- |
+| `id` | `uuid` | Identifiant unique de l'entrée de journal (généré automatiquement) |
+| `orgId` | `uuid` | Référence à l'organisation |
+| `userId` | `uuid` | Utilisateur qui a effectué la modification |
+| `memberId` | `uuid` | Membre qui a effectué la modification |
+| `memberName` | `String` | Nom du membre (conservé pour les membres supprimés) |
+| `createdAt` | `Timestamp` | Date de création de l'entrée de journal (par défaut : horodatage actuel) |
+| `display` | `JSON` | Type de journal et données à afficher dans l'interface |
+| `changes` | `JSON` | Journal structuré des modifications d'entités pour l'annulation/rétablissement |
+| `canceled` | `Boolean` | Indique si cette entrée de journal a été annulée (par défaut : false) |
+| `cancelLogId` | `uuid` | Référence à l'entrée de journal qui a été annulée (optionnel) |
+| `cancelMemberId` | `uuid` | Membre qui a annulé l'action (optionnel) |
+| `cancelMemberName` | `String` | Nom du membre qui a annulé (optionnel) |
+| `meetingId` | `uuid` | Réunion pendant laquelle ce journal a été créé (optionnel) |
+| `decisionId` | `uuid` | Décision dont ce journal résulte (optionnel) |
+
+## Structure des modifications d'entités
+
+Le champ `changes` suit les modifications des entités avec la structure suivante :
+
+```typescript
+type EntityChange = {
+  type: 'Create' | 'Update' | 'Delete'
+  id: string
+  data?: Entity // Pour Create/Delete
+  prevData?: Entity // Pour Update (état précédent)
+  newData?: Entity // Pour Update (nouvel état)
+}
+```
+
+## Relations
+
+### Relations objet
+
+- `org` — L'organisation à laquelle ce journal appartient
+- `user` — L'utilisateur qui a effectué la modification
+- `member` — Le membre qui a effectué la modification
+- `cancelLog` — L'entrée de journal qui a été annulée (s'il s'agit d'une annulation)
+- `cancelMember` — Le membre qui a annulé l'action
+
+## Exemples de requêtes
+
+### Lister les journaux récents
+
+```graphql
+query GetRecentLogs($orgId: uuid!) {
+  log(
+    where: { orgId: { _eq: $orgId } }
+    order_by: { createdAt: desc }
+    limit: 10
+  ) {
+    id
+    createdAt
+    memberName
+    display
+    changes
+    canceled
+  }
+}
+```
+
+## Exemples de mutations
+
+### Créer une entrée de journal
+
+```graphql
+mutation CreateLog {
+  insert_log_one(
+    object: {
+      orgId: "your-org-id"
+      memberId: "member-id"
+      memberName: "John Doe"
+      display: { type: "task_created", title: "New Task" }
+      changes: {
+        type: "Create"
+        id: "task-id"
+        data: { title: "New Task", status: "TODO" }
+      }
+    }
+  ) {
+    id
+    createdAt
+    display
+  }
+}
+```
+
+### Annuler une entrée de journal (Annulation)
+
+```graphql
+mutation CancelLog {
+  insert_log_one(
+    object: {
+      orgId: "your-org-id"
+      memberId: "member-id"
+      memberName: "Jane Doe"
+      cancelLogId: "original-log-id"
+      cancelMemberId: "original-member-id"
+      cancelMemberName: "John Doe"
+      display: { type: "task_creation_canceled" }
+      changes: {
+        type: "Delete"
+        id: "task-id"
+        data: { title: "New Task", status: "TODO" }
+      }
+    }
+  ) {
+    id
+    cancelLog {
+      id
+      display
+    }
+  }
+}
+```
+
+## Permissions
+
+L'accès aux journaux est contrôlé selon les règles suivantes :
+
+- Les membres de l'organisation peuvent consulter les journaux de leur organisation
+- La création de journaux nécessite l'appartenance à l'organisation avec un rôle approprié
+- Le `userId` est automatiquement défini sur l'utilisateur authentifié
+- Les entrées de journal ne peuvent pas être supprimées après leur création. Seul le champ `canceled` peut être mis à jour
+- L'annulation est gérée par la création de nouvelles entrées de journal (pas par la modification des originales)
+
+<Callout type="info">
+  Le champ `display` contient des informations conviviales sur l'action, tandis
+  que le champ `changes` stocke les détails techniques pour
+  l'annulation/rétablissement. Les noms des membres sont conservés pour
+  maintenir la lisibilité même si les membres sont supprimés ultérieurement.
+</Callout>

@@ -49,11 +49,6 @@ sidebar:
   tagline: Rolebase is the open-source platform for self-managed organizations.
   discover: Discover Rolebase
 
-api:
-  reference: API Reference
-  introduction: Introduction
-  playground: GraphQL Playground
-
 footer:
   product: Product
   comparisons: Comparisons

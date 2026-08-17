@@ -49,11 +49,6 @@ sidebar:
   tagline: Rolebase est la plateforme open-source pour les organisations auto-gouvernées.
   discover: Découvrir Rolebase
 
-api:
-  reference: Référence API
-  introduction: Introduction
-  playground: Playground GraphQL
-
 footer:
   product: Produit
   comparisons: Comparatifs

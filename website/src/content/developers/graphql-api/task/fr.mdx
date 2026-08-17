@@ -1,0 +1,138 @@
+---
+title: 'task'
+description: "Tâche, représente une tâche ou un élément à faire dans Rolebase. Les tâches sont associées à des cercles, peuvent être assignées à des membres et permettent le suivi de la progression avec des statuts et des dates d'échéance."
+category: 'tasks'
+---
+
+## Champs
+
+| Champ | Type | Description |
+| --- | --- | --- |
+| `id` | `uuid` | Identifiant unique de la tâche (généré automatiquement) |
+| `orgId` | `uuid` | Référence à l'organisation à laquelle cette tâche appartient |
+| `circleId` | `uuid` | Référence au cercle auquel cette tâche est associée |
+| `memberId` | `uuid` | Référence au membre assigné (optionnel) |
+| `title` | `String` | Titre de la tâche |
+| `description` | `String` | Description détaillée de la tâche |
+| `status` | `Task_Status_Enum` | Statut actuel : Open, InProgress, InReview, Blocked ou Done |
+| `dueDate` | `Timestamp` | Date d'échéance de la tâche (optionnel) |
+| `createdAt` | `Timestamp` | Date de création de la tâche (par défaut : horodatage actuel) |
+| `archivedAt` | `Timestamp` | Date d'archivage de la tâche ; null si actif |
+| `private` | `Boolean` | Indique si la tâche est privée (par défaut : false) |
+
+## Statut de la tâche
+
+Le champ `status` accepte les valeurs d'énumération suivantes :
+
+- **Open** — La tâche est ouverte et active
+- **InProgress** — La tâche est en cours de réalisation
+- **InReview** — La tâche est en cours de révision
+- **Blocked** — La tâche est bloquée par une autre tâche ou un problème
+- **Done** — La tâche est terminée
+
+## Relations
+
+### Relations objet
+
+- `org` — L'organisation à laquelle cette tâche appartient
+- `circle` — Le cercle auquel cette tâche est associée
+- `member` — Le membre assigné à cette tâche (le cas échéant)
+
+## Exemples de requêtes
+
+### Lister les tâches d'une organisation
+
+```graphql
+query GetTasks($orgId: uuid!) {
+  task(where: { orgId: { _eq: $orgId } }) {
+    id
+    title
+    description
+    status
+    dueDate
+    circle {
+      role {
+        name
+      }
+    }
+    member {
+      name
+    }
+  }
+}
+```
+
+### Obtenir une tâche spécifique
+
+```graphql
+query GetTask($id: uuid!) {
+  task_by_pk(id: $id) {
+    id
+    title
+    description
+    status
+    dueDate
+    circle {
+      role {
+        name
+      }
+    }
+    member {
+      name
+    }
+  }
+}
+```
+
+## Exemples de mutations
+
+### Créer une tâche
+
+```graphql
+mutation CreateTask {
+  insert_task_one(
+    object: {
+      orgId: "your-org-id"
+      circleId: "circle-id"
+      title: "Implement new feature"
+      description: "Add user authentication to the app"
+      status: Open
+      dueDate: "2024-01-15T00:00:00Z"
+      memberId: "assigned-member-id"
+    }
+  ) {
+    id
+    title
+    status
+  }
+}
+```
+
+### Mettre à jour une tâche
+
+```graphql
+mutation UpdateTask {
+  update_task_by_pk(
+    pk_columns: { id: "task-id" }
+    _set: { status: InProgress, description: "Updated task description" }
+  ) {
+    id
+    status
+    description
+  }
+}
+```
+
+## Permissions
+
+L'accès aux tâches est contrôlé par plusieurs facteurs :
+
+- **Appartenance au cercle** — Les participants du cercle peuvent accéder aux tâches de leur cercle
+- **Paramètres de confidentialité** — Les tâches privées ne sont visibles que par les membres assignés et les participants du cercle
+- **Rôle dans l'organisation** — Les membres de l'organisation peuvent accéder aux tâches non privées
+- **Assignation** — Les membres assignés ont toujours accès à leurs tâches
+
+<Callout type="info">
+  Les tâches peuvent être organisées en vues personnalisées à l'aide de l'entité
+  [task_view](/fr/developers/graphql-api/task_view).
+</Callout>

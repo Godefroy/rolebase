@@ -2,6 +2,7 @@
 import { getCollection, render } from 'astro:content'
 import DocPage from '../../../layouts/DocPage.astro'
 import { mdxComponents } from '../../../components'
+import { getLangFromId, getNestedSlugFromId } from '../../../utils/i18n'
 import config from '../../../../website.config'
 
 export async function getStaticPaths() {
@@ -9,9 +10,9 @@ export async function getStaticPaths() {
   for (const lang of config.langs) {
     const entries = await getCollection('developers', (e) => e.id.endsWith(`/${lang}`))
     for (const entry of entries) {
-      const slug = entry.id.replace(`/${lang}`, '')
+      const slug = getNestedSlugFromId(entry.id)
       paths.push({
-        params: { lang, slug: slug === 'index' ? undefined : slug },
+        params: { lang, slug: slug || undefined },
         props: { entry },
       })
     }
@@ -21,8 +22,29 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props
 const { Content, headings } = await render(entry)
+const lang = getLangFromId(entry.id)
+
+// Pages of a reference section (`graphql-api/org`) sit under the section page,
+// which the breadcrumb and the document title name.
+const slug = getNestedSlugFromId(entry.id)
+const parents = slug.split('/').slice(0, -1)
+const allEntries = await getCollection('developers')
+const ancestors = parents.map((_, i) => {
+  const parentSlug = parents.slice(0, i + 1).join('/')
+  const parent = allEntries.find(
+    (e) => getNestedSlugFromId(e.id) === parentSlug && getLangFromId(e.id) === lang
+  )
+  return { label: parent?.data.title ?? parentSlug, path: `/developers/${parentSlug}` }
+})
 ---
 
-<DocPage title={entry.data.title} section="developers" description={entry.data.description} headings={headings}>
+<DocPage
+  title={entry.data.title}
+  section="developers"
+  ancestors={ancestors}
+  description={entry.data.description}
+  wide={entry.data.wide}
+  headings={headings}
+>
   <Content components={mdxComponents} />
 </DocPage>

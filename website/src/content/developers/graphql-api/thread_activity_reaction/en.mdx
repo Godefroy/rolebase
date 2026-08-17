@@ -1,0 +1,82 @@
+---
+title: 'thread_activity_reaction'
+description: "Thread Activity Reaction, represents an emoji reaction to a thread activity. Reactions allow members to express quick responses to messages without creating new activities."
+category: 'threads'
+---
+
+## Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `id` | `uuid` | Unique identifier for the reaction (auto-generated) |
+| `activityId` | `uuid` | Reference to the thread activity being reacted to |
+| `userId` | `uuid` | Reference to the user who added the reaction |
+| `memberId` | `uuid` | Reference to the member who added the reaction |
+| `shortcode` | `String` | Unicode emoji character or shortcode |
+| `createdAt` | `Timestamp` | When the reaction was created (defaults to current timestamp) |
+
+## Relationships
+
+### Object Relationships
+
+- `activity` — The thread activity this reaction belongs to
+
+## Query Examples
+
+### List Reactions for an Activity
+
+```graphql
+query GetActivityReactions($activityId: uuid!) {
+  thread_activity_reaction(
+    where: { activityId: { _eq: $activityId } }
+    order_by: { createdAt: asc }
+  ) {
+    id
+    shortcode
+    userId
+    createdAt
+  }
+}
+```
+
+## Mutation Examples
+
+### Add a Reaction
+
+```graphql
+mutation CreateActivityReaction {
+  insert_thread_activity_reaction_one(
+    object: { activityId: "activity-id", shortcode: "👍" }
+  ) {
+    id
+    shortcode
+    createdAt
+  }
+}
+```
+
+### Remove a Reaction
+
+```graphql
+mutation DeleteActivityReaction {
+  delete_thread_activity_reaction_by_pk(id: "reaction-id") {
+    id
+    shortcode
+  }
+}
+```
+
+## Permissions
+
+Reaction access is controlled based on organization membership:
+
+- **View** — All authenticated users can view reactions
+- **Create** — Organization members (with Member, Admin, or Owner role) can add reactions. The `userId` is automatically set to the authenticated user
+- **Delete** — Users can only remove their own reactions
+
+<Callout type="info">
+  Each member can add multiple different emoji reactions to an activity, but
+  duplicate emoji reactions from the same member are prevented. Reactions are
+  typically displayed as emoji counts per activity and can be used for quick
+  polls or sentiment tracking.
+</Callout>

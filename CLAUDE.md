@@ -132,7 +132,7 @@ When modifying the product, update the documentation accordingly **in all langua
 5. **Changed statuses or enums**: Update both the guide page and the API page.
 6. **New integration or app**: Update `content/docs/apps-integrations/`.
 7. **Changed subscription plans**: Update `content/docs/subscriptions/` and `content/api/org_subscription/`.
-8. **New, changed, or removed tRPC route**: Keep the tRPC API reference (`content/developers/trpc-api/`) in sync. Update the procedure tables when a backend tRPC procedure is added, renamed, removed, or changes its input, placing it in the user-facing or internal section as appropriate.
+8. **New, changed, or removed tRPC route**: Keep the tRPC API reference (`content/developers/trpc-api/`, one page per router plus `internal/`) in sync when a backend tRPC procedure is added, renamed, removed, or changes its input. Also update the router table on `trpc-api/index/`.
 
 #### Before every commit
 

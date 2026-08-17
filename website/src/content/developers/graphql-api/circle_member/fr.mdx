@@ -1,0 +1,99 @@
+---
+title: 'circle_member'
+description: "Membre de cercle, représente une relation d'appartenance entre un membre et un cercle, avec suivi du statut d'association et de l'historique."
+category: 'circles-roles'
+---
+
+## Champs
+
+| Champ | Type | Description |
+| --- | --- | --- |
+| `id` | `uuid` | Identifiant unique de l'appartenance au cercle |
+| `circleId` | `uuid` | Référence au cercle |
+| `memberId` | `uuid` | Référence au membre |
+| `createdAt` | `Timestamp` | Date de création de l'appartenance |
+| `archivedAt` | `Timestamp` | Date d'archivage de l'appartenance ; null si actif |
+
+## Relations
+
+**Relations objet :**
+
+- `circle` — Le cercle auquel cette appartenance se rapporte
+- `member` — Le membre associé à cette appartenance au cercle
+
+## Exemples de requêtes
+
+### Obtenir les membres d'un cercle spécifique
+
+```graphql
+query GetCircleMembers($circleId: uuid!) {
+  circle_member(
+    where: { circleId: { _eq: $circleId }, archivedAt: { _is_null: true } }
+  ) {
+    id
+    circle {
+      id
+      role {
+        name
+      }
+    }
+    member {
+      id
+      name
+      description
+    }
+    createdAt
+  }
+}
+```
+
+## Exemples de mutations
+
+### Ajouter un membre à un cercle
+
+```graphql
+mutation AddCircleMember {
+  insert_circle_member_one(
+    object: { circleId: "circle-id", memberId: "member-id" }
+  ) {
+    id
+    circle {
+      id
+      role {
+        name
+      }
+    }
+    member {
+      name
+    }
+  }
+}
+```
+
+### Archiver une appartenance à un cercle
+
+```graphql
+mutation UpdateCircleMember {
+  update_circle_member_by_pk(
+    pk_columns: { id: "circle-member-id" }
+    _set: { archivedAt: "2024-01-01T00:00:00Z" }
+  ) {
+    id
+    archivedAt
+  }
+}
+```
+
+## Permissions
+
+- **Propriétaires et administrateurs de l'organisation :** Peuvent ajouter et retirer des membres de n'importe quel cercle
+- **Leaders de cercle :** Peuvent gérer les membres de leurs cercles
+- **Membres :** Peuvent consulter les appartenances aux cercles auxquels ils appartiennent
+- Un membre ne peut pas être ajouté à un cercle s'il a déjà une appartenance active
+
+<Callout type="info" title="Notes">
+  L'horodatage `archivedAt` préserve l'historique des appartenances tout en
+  marquant les appartenances inactives. L'appartenance à un cercle détermine
+  l'accès aux ressources du cercle comme les réunions, tâches et décisions. Les
+  membres peuvent appartenir à plusieurs cercles simultanément.
+</Callout>

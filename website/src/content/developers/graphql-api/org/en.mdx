@@ -1,0 +1,103 @@
+---
+title: 'org'
+description: "Organization, the top-level entity that contains all other entities such as circles, roles, members, meetings, and tasks."
+category: 'org-members'
+---
+
+## Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `id` | `uuid` | Unique identifier for the organization |
+| `name` | `String` | Name of the organization |
+| `slug` | `String` | URL-friendly unique identifier (optional) |
+| `archivedAt` | `Timestamp` | When the organization was archived; null if active |
+| `createdAt` | `Timestamp` | When the organization was created |
+| `defaultGraphView` | `String` | Default graph view setting (optional) |
+| `governanceMode` | `governance_mode` | Who can change the org chart: `Free` (all members), `Agile` (role leaders), `Strict` (proposals only). Default: `Free` |
+| `shareMembers` | `Boolean` | Whether member information is publicly shared (default: false) |
+| `shareOrg` | `Boolean` | Whether organization information is publicly shared (default: false) |
+
+## Relationships
+
+**One-to-One:**
+
+- `org_subscription` — The organization's subscription information
+
+**One-to-Many:**
+
+- `circles` — Organizational circles
+- `decisions` — Organization decisions
+- `files` — Organization files
+- `logs` — Activity logs
+- `meeting_templates` — Meeting templates
+- `meetings` — Meetings
+- `meetings_recurring` — Recurring meetings
+- `members` — Organization members
+- `news` — News items
+- `roles` — Organization roles
+- `task_views` — Task views
+- `tasks` — Tasks
+- `threads` — Discussion threads
+
+## Query Examples
+
+### Get a Specific Organization
+
+```graphql
+query GetOrganization($id: uuid!) {
+  org_by_pk(id: $id) {
+    id
+    name
+    slug
+    archivedAt
+    createdAt
+    members {
+      id
+      name
+      role
+    }
+    circles {
+      id
+      name
+    }
+  }
+}
+```
+
+## Mutation Examples
+
+### Update an Organization
+
+```graphql
+mutation UpdateOrganization {
+  update_org_by_pk(
+    pk_columns: { id: "your-org-id" }
+    _set: {
+      name: "New Organization Name"
+      shareMembers: true
+      governanceMode: Strict
+    }
+  ) {
+    id
+    name
+    shareMembers
+    governanceMode
+  }
+}
+```
+
+## Permissions
+
+- **Owner:** Full access to all organization settings and data
+- **Admin:** Can manage most organization settings and data
+- **Member:** Can view organization data based on sharing settings
+
+<Callout type="info" title="Notes">
+  The `slug` field must be unique across all organizations. The
+  `governanceMode` field sets who can change the org chart: `Free` lets every
+  member edit it, `Agile` restricts edits to role leaders, and `Strict` makes
+  it read-only so changes go through proposals. Only the Owner can change
+  `governanceMode`. The `shareMembers` and `shareOrg` flags control visibility
+  of organization data to external users.
+</Callout>

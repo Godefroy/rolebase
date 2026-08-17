@@ -10,6 +10,15 @@ export const redirects: Redirects = {
   '/tarifs': '/fr/pricing',
   '/pricing': '/en/pricing',
 
+  // The API reference moved under the Developers section: the `/:lang/api/*`
+  // splat lives in `public/_redirects`, which Netlify reads before this list.
+
+  // Renamed developer pages
+  '/en/developers/getting-started': '/en/developers/install-self-host',
+  '/fr/developers/getting-started': '/fr/developers/install-self-host',
+  '/en/developers/custom-integrations': '/en/developers/use-the-api',
+  '/fr/developers/custom-integrations': '/fr/developers/use-the-api',
+
   // Removed glossary entry "Topic/Sujet" → Discussions documentation
   '/en/glossary/sujet': '/en/docs/threads',
   '/fr/glossary/sujet': '/fr/docs/threads',

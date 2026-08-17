@@ -1,27 +1,26 @@
 ---
 interface Props {
-  category: string
-  categoryUrl: string
+  /** Ancestors of the page, from the section root down to its direct parent. */
+  trail: { label: string; href: string }[]
   title: string
   hideTitle?: boolean
   class?: string
 }
 
-const {
-  category,
-  categoryUrl,
-  title,
-  hideTitle = false,
-  class: className,
-} = Astro.props
+const { trail, title, hideTitle = false, class: className } = Astro.props
 
 const linkClass = 'text-text-secondary hover:text-text-main hover:underline transition-colors'
+const origin = Astro.site?.origin ?? ''
+const items = [{ label: 'Rolebase', href: '/' }, ...trail]
 ---
 
 <nav class:list={['text-sm text-text-secondary', className]}>
-  <a href="/" class={linkClass}>Rolebase</a>
-  <span class="mx-1">⟩</span>
-  <a href={categoryUrl} class={linkClass}>{category}</a>
+  {items.map((item, i) => (
+    <>
+      {i > 0 && <span class="mx-1">⟩</span>}
+      <a href={item.href} class={linkClass}>{item.label}</a>
+    </>
+  ))}
   {!hideTitle && (
     <>
       <span class="mx-1">⟩</span>
@@ -34,23 +33,17 @@ const linkClass = 'text-text-secondary hover:text-text-main hover:underline tran
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
   itemListElement: [
+    ...items.map((item, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: item.label,
+      item: `${origin}${item.href}`,
+    })),
     {
       "@type": "ListItem",
-      position: 1,
-      name: "Rolebase",
-      item: `${Astro.site?.origin ?? ''}/`,
-    },
-    {
-      "@type": "ListItem",
-      position: 2,
-      name: category,
-      item: `${Astro.site?.origin ?? ''}${categoryUrl}`,
-    },
-    {
-      "@type": "ListItem",
-      position: 3,
+      position: items.length + 1,
       name: title,
-      item: `${Astro.site?.origin ?? ''}${Astro.url.pathname.replace(/\.html$/, '')}`,
+      item: `${origin}${Astro.url.pathname.replace(/\.html$/, '')}`,
     },
   ],
 })} />

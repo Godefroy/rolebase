@@ -1,0 +1,148 @@
+---
+title: 'decision'
+description: "Decision, represents a formal decision made within a circle. Decisions track important choices, policies, and agreements, and can be referenced in threads and other entities for documentation."
+category: 'other'
+---
+
+## Fields
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `id` | `uuid` | Unique identifier for the decision (auto-generated) |
+| `orgId` | `uuid` | Reference to the organization |
+| `circleId` | `uuid` | Reference to the circle where the decision was made |
+| `memberId` | `uuid` | Reference to the member who made the decision |
+| `title` | `String` | Title of the decision |
+| `description` | `String` | Detailed description of the decision (supports rich text) |
+| `createdAt` | `Timestamp` | When the decision was created (defaults to current timestamp) |
+| `archivedAt` | `Timestamp` | When the decision was archived; null if active |
+| `private` | `Boolean` | Whether the decision is private (defaults to false) |
+
+## Relationships
+
+### Object Relationships
+
+- `org` — The organization this decision belongs to
+- `circle` — The circle where the decision was made
+- `member` — The member who made the decision
+
+### Referenced By
+
+- `thread_activity` — Decisions can be referenced in thread activities
+- Search index — Decisions are indexed for organization-wide search
+
+## Query Examples
+
+### List Decisions
+
+```graphql
+query GetDecisions($orgId: uuid!) {
+  decision(where: { archivedAt: { _is_null: true }, orgId: { _eq: $orgId } }) {
+    id
+    title
+    description
+    createdAt
+    circle {
+      role {
+        name
+      }
+    }
+    member {
+      name
+    }
+  }
+}
+```
+
+### Get a Specific Decision
+
+```graphql
+query GetDecision($decisionId: uuid!) {
+  decision_by_pk(id: $decisionId) {
+    id
+    title
+    description
+    createdAt
+    circle {
+      role {
+        name
+      }
+    }
+    member {
+      name
+    }
+    private
+    archivedAt
+  }
+}
+```
+
+## Mutation Examples
+
+### Create a Decision
+
+```graphql
+mutation CreateDecision {
+  insert_decision_one(
+    object: {
+      orgId: "your-org-id"
+      circleId: "circle-id"
+      memberId: "member-id"
+      title: "New Working Hours Policy"
+      description: "The organization will adopt flexible working hours..."
+      private: false
+    }
+  ) {
+    id
+    title
+    createdAt
+  }
+}
+```
+
+### Update a Decision
+
+```graphql
+mutation UpdateDecision {
+  update_decision_by_pk(
+    pk_columns: { id: "decision-id" }
+    _set: {
+      description: "Updated policy details..."
+      title: "Updated Working Hours Policy"
+    }
+  ) {
+    id
+    title
+    description
+  }
+}
+```
+
+### Archive a Decision
+
+```graphql
+mutation ArchiveDecision {
+  update_decision_by_pk(
+    pk_columns: { id: "decision-id" }
+    _set: { archivedAt: "2024-01-01T00:00:00Z" }
+  ) {
+    id
+  }
+}
+```
+
+## Permissions
+
+Decision access is controlled by several factors:
+
+- **Circle membership** — Circle participants can access and create decisions in their circles
+- **Privacy settings** — Private decisions are only visible to circle participants
+- **Organization role** — Organization members can access non-private decisions
+- **Modification rights** — Circle participants can modify decisions. Organization members can modify non-private decisions
+- **Archived decisions** remain accessible but are hidden from default views
+
+<Callout type="info">
+  Decisions provide a formal record of important organizational choices. They
+  can be referenced in threads for context and discussion, and are searchable
+  across the organization.
+</Callout>

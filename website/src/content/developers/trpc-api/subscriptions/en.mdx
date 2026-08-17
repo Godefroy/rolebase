@@ -1,0 +1,48 @@
+---
+title: 'Subscriptions'
+description: 'tRPC procedures of the orgSubscription router: price previews, subscribe, cancel, invoices, payment method and billing details.'
+order: 7
+---
+
+Procedures of the `orgSubscription` router, which wrap the Stripe billing of an organization. Every one of them takes `orgId` and requires the **Owner** role. The stored side of a subscription is readable with GraphQL on [`org_subscription`](/en/developers/graphql-api/org_subscription); everything below reaches Stripe live, so these procedures are the only way to see amounts, invoices and payment methods.
+
+Plans are `Startup` and `Business`, and an organization without a subscription is limited to 5 active members. Amounts are returned in cents.
+
+<Callout type="info" title="Driven by the app">
+  These procedures are built for the in-app billing screens, which chain them
+  with Stripe Elements to confirm a payment. An integration can read a
+  subscription and its invoices, but subscribing from outside the app also means
+  handling the Stripe client secret it returns.
+</Callout>
+
+## Reading a subscription
+
+| Procedure | Type | Description |
+| --- | --- | --- |
+| `getSubscription` | Query | Current subscription: plan type, status, expiry, card, billing details and upcoming invoice. Returns `null` when the org has none. |
+| `getSubscriptionUpcomingInvoice` | Query | Next payment date and total, or `null`. |
+| `getSubscriptionInvoices` | Query | Past invoices with their status, total, PDF link and Stripe hosted payment page. |
+| `getPricePreview` | Query | Price for a plan before subscribing, given a billing address and an optional promotion code. Returns the per-seat subtotal, the seat count, the applied promotion and the tax. |
+| `retrieveCouponToSubscription` | Mutation | Validates a promotion code and returns its name, duration and restrictions. |
+
+`getPricePreview` takes `{ orgId, planType, address, promotionCode? }`, and `retrieveCouponToSubscription` takes `{ orgId, promotionCode }`. The three others take `{ orgId }` only.
+
+```typescript
+const subscription = await trpc.orgSubscription.getSubscription.query({ orgId })
+const invoices = await trpc.orgSubscription.getSubscriptionInvoices.query({ orgId })
+```
+
+## Changing a subscription
+
+| Procedure | Type | Description |
+| --- | --- | --- |
+| `subscribeOrg` | Mutation | Subscribes the org to a plan. Takes `{ orgId, planType, address, promotionCode? }` and returns `{ subscriptionId, clientSecret, isFreeOrTrial, price }`, the client secret being what Stripe needs to confirm the payment. |
+| `unsubscribeOrg` | Mutation | Cancels at the end of the paid period and returns `{ cancelAt }`. |
+| `resumeSubscription` | Mutation | Cancels a pending cancellation, so the subscription keeps running. |
+| `updateSubscriptionPaymentMethodIntent` | Mutation | Opens a Stripe setup intent to replace the card, and returns `{ clientSecret }`. |
+| `updateSubscriptionBillingDetails` | Mutation | Updates the billing name, email and address. Takes `{ orgId, billingDetails }`. |
+| `updateSubscriptionBillingEmail` | Mutation | Updates the billing email alone. Takes `{ orgId, email }`. |
+
+Seat counts follow the members: inviting, accepting an invitation or archiving a member updates the Stripe quantity, so no procedure here changes it.
+
+Stripe also calls the backend on its own, on the `POST /orgSubscription/stripeWebhook` REST route, which is how a payment result updates the stored subscription status.
