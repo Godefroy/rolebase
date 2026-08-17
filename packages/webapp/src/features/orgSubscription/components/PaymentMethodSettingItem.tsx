@@ -29,6 +29,10 @@ export default function PaymentMethodSettingItem({
             <HStack>
               <CreditCardIcon name={card.brand} size={30} />
               <Text>···· {card.last4}</Text>
+              <Text color="gray.500">
+                {t('SubscriptionPlans.expiresAt')}{' '}
+                {card.expMonth.toString().padStart(2, '0')}/{card.expYear}
+              </Text>
             </HStack>
           ) : null
         }

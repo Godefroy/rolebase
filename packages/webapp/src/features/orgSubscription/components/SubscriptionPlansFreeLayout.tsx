@@ -1,4 +1,10 @@
-import { Button, Flex, FlexProps, useDisclosure } from '@chakra-ui/react'
+import {
+  Button,
+  Flex,
+  SimpleGrid,
+  SimpleGridProps,
+  useDisclosure,
+} from '@chakra-ui/react'
 import { Subscription_Plan_Type_Enum } from '@gql'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -10,7 +16,9 @@ import { SubscriptionPlanCardData } from '../plansTypes'
 import SubscriptionFreePlanCardFooter from './SubscriptionFreePlanCardFooter'
 import SubscriptionPlanCard from './SubscriptionPlanCard'
 
-export default function SubscriptionTabFreeLayout(flexProps: FlexProps) {
+export default function SubscriptionPlansFreeLayout(
+  gridProps: SimpleGridProps
+) {
   const { t, i18n } = useTranslation()
   const plansData = useSubscriptionPlanData()
   const { openInvoice } = useSubscriptionContext()
@@ -75,26 +83,17 @@ export default function SubscriptionTabFreeLayout(flexProps: FlexProps) {
 
   return (
     <>
-      <Flex
-        w="100%"
-        justifyContent="space-between"
-        alignItems="center"
-        p="5"
-        gap="5"
-        flexWrap={['wrap', 'wrap', 'wrap', 'wrap', 'nowrap']}
-        flexDir="row"
-        {...flexProps}
-      >
+      <SimpleGrid w="100%" minChildWidth="280px" spacing="5" {...gridProps}>
         {plans.map((plan) => (
           <SubscriptionPlanCard
             w="100%"
-            h={plan.type === null ? '375px' : '350px'}
+            minH="350px"
             key={plan.type ?? 'free'}
             isCurrent={plan.type === null}
             {...plan}
           />
         ))}
-      </Flex>
+      </SimpleGrid>
       {selectedPlanType && (
         <SubscriptionPaymentModal
           isOpen={isOpen}

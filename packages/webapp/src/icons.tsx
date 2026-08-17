@@ -61,6 +61,7 @@ import {
   Play,
   Profile,
   Profile2User,
+  Receipt,
   Record,
   RecordCircle,
   RepeateMusic,
@@ -91,6 +92,7 @@ import { IoSearchOutline } from 'react-icons/io5'
 export const AddIcon = Add
 export const ArchiveIcon = ArchiveBox
 export const ApiIcon = Code
+export const BillingIcon = Receipt
 export const AppsIcon = ArrangeHorizontalSquare
 export const ArrowRightIcon = ArrowRight
 export const ArrowUpIcon = ArrowUp

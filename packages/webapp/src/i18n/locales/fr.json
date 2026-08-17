@@ -1046,6 +1046,7 @@
     "members": "Membres",
     "orgSettings": "Organisation",
     "subscription": "Abonnement",
+    "billing": "Facturation",
     "apps": "Intégrations",
     "api": "Clés API",
     "export": "Export",
@@ -1058,16 +1059,17 @@
     "orgs": "Organisations",
     "menu": "Menu",
     "settings": "Paramètres",
-    "admin": "Administration",
     "news": "Actualités",
     "roles": "Organigramme",
     "threads": "Discussions",
     "meetings": "Réunions",
     "tasks": "Tâches",
     "search": "Rechercher",
-    "members": "Membres",
-    "subscription": "Abonnement",
     "help": "Aide"
+  },
+  "HelpMenu": {
+    "documentation": "Documentation",
+    "contact": "Nous contacter"
   },
   "SignupForm": {
     "heading": "Créez votre compte Rolebase",
@@ -1083,10 +1085,11 @@
   "SubscriptionPage": {
     "heading": "Abonnement"
   },
+  "BillingPage": {
+    "heading": "Facturation",
+    "billingInfo": "Informations de facturation"
+  },
   "SubscriptionTabs": {
-    "subscriptionTabTitle": "Mon abonnement",
-    "accountTabTitle": "Compte",
-    "invoicesTabTitle": "Factures",
     "subscription": "Abonnement",
     "mustBeOwner": "Vous devez être propriétaire de l'organisation pour gérer l'abonnement",
     "cancelSubscriptionModal": {
@@ -1141,7 +1144,7 @@
     },
     "accountTab": {
       "billingEmail": "Email de facturation",
-      "billingDetails": "Informations de facturation",
+      "billingDetails": "Adresse de facturation",
       "invalidBillingDetails": "Informations de facturation invalides",
       "currentSubscription": "Abonnement actuel",
       "paymentMethod": "Moyen de paiement",

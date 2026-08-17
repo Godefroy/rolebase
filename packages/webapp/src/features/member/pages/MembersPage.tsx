@@ -1,5 +1,4 @@
 import Loading from '@/common/atoms/Loading'
-import ScrollableLayout from '@/common/atoms/ScrollableLayout'
 import { Title } from '@/common/atoms/Title'
 import { useOrgContext } from '@/org/contexts/OrgContext'
 import { useMembersSubscription } from '@gql'
@@ -27,6 +26,7 @@ import {
   Tag,
   Text,
   useDisclosure,
+  VStack,
 } from '@chakra-ui/react'
 import { truthy } from '@rolebase/shared/helpers/truthy'
 import { SearchTypes } from '@rolebase/shared/model/search'
@@ -46,7 +46,7 @@ export default function MembersPage() {
   const isOwner = useOrgOwner()
   const orgId = useOrgContext().orgId
   const members = useOrgContext().orgData?.members
-  const subscriptionPath = usePathInOrg('subscription')
+  const subscriptionPath = usePathInOrg('settings/subscription')
 
   // Archived members (loaded on demand)
   const [showArchived, setShowArchived] = useState(false)
@@ -102,58 +102,61 @@ export default function MembersPage() {
     <>
       <Title>{t('MembersPage.heading')}</Title>
 
-      <ScrollableLayout
-        header={
-          <Flex ml={5} w="100%" alignItems="center" flexWrap="wrap">
-            <Heading as="h1" size="lg">
-              {t('MembersPage.heading')}
-            </Heading>
-            <Spacer />
+      <VStack spacing={6} align="stretch" maxW="2xl">
+        <Flex w="100%" alignItems="center" flexWrap="wrap">
+          <Heading as="h1" size="lg">
+            {t('MembersPage.heading')}
+          </Heading>
+          <Spacer />
 
-            <InputGroup size="sm" w="auto" my={2}>
-              <InputLeftElement pointerEvents="none">
-                <SearchIcon color="gray.500" />
-              </InputLeftElement>
-              <Input
-                type="text"
-                placeholder={t('MembersPage.searchPlaceholder')}
-                borderRadius="md"
-                transition="width 0.2s"
-                w={isSearchFocused ? '200px' : '130px'}
-                value={searchText}
-                onChange={(e) => setSearchText(e.target.value)}
-                onFocus={() => setIsSearchFocused(true)}
-                onBlur={() => setIsSearchFocused(false)}
-              />
-              {searchText && (
-                <InputRightElement _groupFocus={{ display: 'block' }}>
-                  <CloseButton
-                    colorScheme="gray"
-                    size="sm"
-                    onClick={() => setSearchText('')}
-                  />
-                </InputRightElement>
-              )}
-            </InputGroup>
-
-            {isAdmin && (
-              <Button
-                size="md"
-                colorScheme="blue"
-                leftIcon={<EmailIcon size={20} />}
-                ml={3}
-                onClick={onInviteOpen}
-              >
-                {t('MembersPage.invite')}
-              </Button>
+          <InputGroup size="sm" w="auto" my={2}>
+            <InputLeftElement pointerEvents="none">
+              <SearchIcon color="gray.500" />
+            </InputLeftElement>
+            <Input
+              type="text"
+              placeholder={t('MembersPage.searchPlaceholder')}
+              borderRadius="md"
+              transition="width 0.2s"
+              w={isSearchFocused ? '200px' : '130px'}
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              onFocus={() => setIsSearchFocused(true)}
+              onBlur={() => setIsSearchFocused(false)}
+            />
+            {searchText && (
+              <InputRightElement _groupFocus={{ display: 'block' }}>
+                <CloseButton
+                  colorScheme="gray"
+                  size="sm"
+                  onClick={() => setSearchText('')}
+                />
+              </InputRightElement>
             )}
-          </Flex>
-        }
-      >
-        <Box maxW="2xl" my={10} px={{ base: 5, sm: 10 }}>
+          </InputGroup>
+
+          {isAdmin && (
+            <Button
+              size="md"
+              colorScheme="blue"
+              leftIcon={<EmailIcon size={20} />}
+              ml={3}
+              onClick={onInviteOpen}
+            >
+              {t('MembersPage.invite')}
+            </Button>
+          )}
+        </Flex>
+
+        <Box>
           {/* Member List */}
           {filteredMembers?.map((member) => (
-            <LinkBox key={member.id} px={2} py={1} _hover={{ bg: 'bgItemHover' }}>
+            <LinkBox
+              key={member.id}
+              px={2}
+              py={1}
+              _hover={{ bg: 'bgItemHover' }}
+            >
               <HStack>
                 <MemberLinkOverlay member={member} />
                 <MemberOrgRoleSelect member={member} size="sm" />
@@ -257,7 +260,7 @@ export default function MembersPage() {
         </Box>
 
         <Loading active={loading} size="md" />
-      </ScrollableLayout>
+      </VStack>
 
       {isInviteOpen && <MembersInviteModal isOpen onClose={onInviteClose} />}
     </>

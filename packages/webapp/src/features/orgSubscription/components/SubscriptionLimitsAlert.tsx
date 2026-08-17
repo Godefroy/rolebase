@@ -19,7 +19,7 @@ export default function SubscriptionLimitsAlert({
   ...styleProps
 }: Props) {
   const { t } = useTranslation()
-  const subscriptionPath = usePathInOrg('subscription')
+  const subscriptionPath = usePathInOrg('settings/subscription')
 
   return (
     <Alert

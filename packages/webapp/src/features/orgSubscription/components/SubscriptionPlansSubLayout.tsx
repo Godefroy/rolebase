@@ -2,7 +2,8 @@ import {
   Button,
   Divider,
   Flex,
-  FlexProps,
+  SimpleGrid,
+  SimpleGridProps,
   useDisclosure,
 } from '@chakra-ui/react'
 import { Subscription_Plan_Type_Enum } from '@gql'
@@ -17,7 +18,7 @@ import { SubscriptionPlan, SubscriptionPlanCardData } from '../plansTypes'
 import CurrentSubscriptionDetails from './CurrentSubscriptionDetails'
 import SubscriptionPlanCard from './SubscriptionPlanCard'
 
-export default function SubscriptionTabSubLayout(flexProps: FlexProps) {
+export default function SubscriptionPlansSubLayout(gridProps: SimpleGridProps) {
   const { t, i18n } = useTranslation()
   const plansData = useSubscriptionPlanData()
   const { subscription, openInvoice, refetchSubscription } =
@@ -138,26 +139,17 @@ export default function SubscriptionTabSubLayout(flexProps: FlexProps) {
           />
         )}
         <Divider />
-        <Flex
-          w="100%"
-          justifyContent="center"
-          alignItems="center"
-          gap="5"
-          flexWrap={['wrap', 'wrap', 'wrap', 'wrap', 'nowrap']}
-          flexDir="row"
-          {...flexProps}
-        >
+        <SimpleGrid w="100%" minChildWidth="280px" spacing="5" {...gridProps}>
           {plans.map((plan) => (
             <SubscriptionPlanCard
               w="100%"
-              h={'350px'}
-              maxW="400px"
+              minH="350px"
               key={plan.type ?? 'free'}
               isCurrent={false}
               {...plan}
             />
           ))}
-        </Flex>
+        </SimpleGrid>
       </Flex>
       {selectedPlanType && (
         <SubscriptionPaymentModal

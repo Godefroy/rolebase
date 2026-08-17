@@ -1013,6 +1013,7 @@
     "members": "Members",
     "orgSettings": "Organization",
     "subscription": "Subscription",
+    "billing": "Billing",
     "apps": "Integrations",
     "api": "API keys",
     "export": "Export",
@@ -1024,7 +1025,6 @@
     "lock": "Lock sidebar open",
     "orgs": "Organizations",
     "settings": "Settings",
-    "admin": "Administration",
     "menu": "Menu",
     "news": "News",
     "roles": "Org chart",
@@ -1032,9 +1032,11 @@
     "meetings": "Meetings",
     "tasks": "Tasks",
     "search": "Search",
-    "members": "Members",
-    "subscription": "Subscription",
     "help": "Help"
+  },
+  "HelpMenu": {
+    "documentation": "Documentation",
+    "contact": "Contact us"
   },
   "SignupForm": {
     "heading": "Create your Rolebase account",
@@ -1050,10 +1052,11 @@
   "SubscriptionPage": {
     "heading": "Subscription"
   },
+  "BillingPage": {
+    "heading": "Billing",
+    "billingInfo": "Billing information"
+  },
   "SubscriptionTabs": {
-    "subscriptionTabTitle": "My subscription",
-    "accountTabTitle": "Account",
-    "invoicesTabTitle": "Invoices",
     "subscription": "Subscription",
     "mustBeOwner": "You must be an owner of this org to manage the subscription",
     "cancelSubscriptionModal": {
@@ -1108,7 +1111,7 @@
     },
     "accountTab": {
       "billingEmail": "Billing email",
-      "billingDetails": "Billing details",
+      "billingDetails": "Billing address",
       "invalidBillingDetails": "Invalid billing details",
       "currentSubscription": "Current subscription",
       "paymentMethod": "Payment method",

@@ -5,7 +5,6 @@ import {
 import MeetingEditModal from '@/meeting/modals/MeetingEditModal'
 import useCurrentMember from '@/member/hooks/useCurrentMember'
 import useOrgAdmin from '@/member/hooks/useOrgAdmin'
-import useOrgOwner from '@/member/hooks/useOrgOwner'
 import OrgSwitch from '@/org/components/OrgSwitch'
 import { useNavigateOrg } from '@/org/hooks/useNavigateOrg'
 import { useOrgContext } from '@/org/contexts/OrgContext'
@@ -14,7 +13,6 @@ import SearchGlobalModal from '@/search/components/SearchGlobalModal'
 import TaskModal from '@/task/modals/TaskModal'
 import ThreadEditModal from '@/thread/modals/ThreadEditModal'
 import { useAuth } from '@/user/hooks/useAuth'
-import useSuperAdmin from '@/user/hooks/useSuperAdmin'
 import {
   Avatar,
   Flex,
@@ -26,31 +24,27 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { useStoreState } from '@store/hooks'
-import { cmdOrCtrlKey } from '@utils/env'
-import { Crisp } from 'crisp-sdk-web'
 import React, { useContext, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   BackIcon,
   HelpIcon,
   MeetingsIcon,
-  MembersIcon,
   MenuIcon,
   NewsIcon,
   OrgChartIcon,
-  SearchIcon,
   SettingsIcon,
   SidebarLeftIcon,
-  SubscriptionIcon,
-  SuperAdminIcon,
   TasksIcon,
   ThreadsIcon,
 } from 'src/icons'
 import { SidebarContext } from '../contexts/SidebarContext'
+import HelpMenuList from './HelpMenuList'
 import SidebarItem from './SidebarItem'
 import SidebarItemLink from './SidebarItemLink'
 import SidebarLayout from './SidebarLayout'
 import SidebarMeetings from './SidebarMeetings'
+import SidebarSearchField from './SidebarSearchField'
 import SidebarTasks from './SidebarTasks'
 import SidebarThreads from './SidebarThreads'
 import SidebarTopIcon from './SidebarTopIcon'
@@ -75,8 +69,6 @@ export default function Sidebar() {
   const navigate = useNavigateOrg()
   const isMember = useOrgMember()
   const isAdmin = useOrgAdmin()
-  const isOwner = useOrgOwner()
-  const isSuperAdmin = useSuperAdmin()
 
   // User display name and avatar
   const displayName = currentMember?.name || user?.displayName || ''
@@ -93,18 +85,6 @@ export default function Sidebar() {
 
   // Links
   const rootPath = usePathInOrg('')
-
-  // Open/close Crisp
-  const handleHelp = () => {
-    if (Crisp.chat.isVisible()) {
-      // Hide Crisp
-      Crisp.chat.hide()
-    } else {
-      // Open Crisp
-      Crisp.chat.show()
-      Crisp.chat.open()
-    }
-  }
 
   // Modals
   const searchModal = useDisclosure()
@@ -227,6 +207,11 @@ export default function Sidebar() {
 
           {orgId && (
             <>
+              <SidebarSearchField
+                showShortcut={!isMobile}
+                onClick={searchModal.onOpen}
+              />
+
               <SidebarItemLink to={`${rootPath}news`} icon={NewsIcon}>
                 {t('Sidebar.news')}
               </SidebarItemLink>
@@ -265,43 +250,10 @@ export default function Sidebar() {
               </SidebarItemLink>
 
               <SidebarTasks />
-
-              <Spacer />
-
-              <Tooltip
-                label={isMobile ? '' : `${cmdOrCtrlKey} + P`}
-                placement="right"
-                hasArrow
-              >
-                <SidebarItem icon={SearchIcon} onClick={searchModal.onOpen}>
-                  {t('Sidebar.search')}
-                </SidebarItem>
-              </Tooltip>
             </>
           )}
 
-          {orgId && (
-            <>
-              <SidebarItemLink to={`${rootPath}members`} icon={MembersIcon}>
-                {t('Sidebar.members')}
-              </SidebarItemLink>
-
-              {isOwner && (
-                <SidebarItemLink
-                  to={`${rootPath}subscription`}
-                  icon={SubscriptionIcon}
-                >
-                  {t('Sidebar.subscription')}
-                </SidebarItemLink>
-              )}
-            </>
-          )}
-
-          {isSuperAdmin && (
-            <SidebarItemLink to="/admin" icon={SuperAdminIcon}>
-              {t('Sidebar.admin')}
-            </SidebarItemLink>
-          )}
+          <Spacer />
 
           <SidebarItemLink
             to={
@@ -314,9 +266,12 @@ export default function Sidebar() {
             {t('Sidebar.settings')}
           </SidebarItemLink>
 
-          <SidebarItem icon={HelpIcon} onClick={handleHelp}>
-            {t('Sidebar.help')}
-          </SidebarItem>
+          <Menu placement="right-end">
+            <MenuButton as={SidebarItem} icon={HelpIcon}>
+              {t('Sidebar.help')}
+            </MenuButton>
+            <HelpMenuList />
+          </Menu>
 
           <Menu>
             <MenuButton

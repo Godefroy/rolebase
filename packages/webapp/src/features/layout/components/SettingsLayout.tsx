@@ -1,21 +1,11 @@
 import ScrollableLayout from '@/common/atoms/ScrollableLayout'
 import { Title } from '@/common/atoms/Title'
-import useOrgAdmin from '@/member/hooks/useOrgAdmin'
-import useOrgOwner from '@/member/hooks/useOrgOwner'
-import { useOrgContext } from '@/org/contexts/OrgContext'
-import { usePathInOrg } from '@/org/hooks/usePathInOrg'
 import { Box, Flex, Heading, useMediaQuery, VStack } from '@chakra-ui/react'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Outlet } from 'react-router'
-import {
-  ApiIcon,
-  AppsIcon,
-  CircleIcon,
-  ExportIcon,
-  NotificationIcon,
-  UserInfoIcon,
-} from 'src/icons'
+import useSettingsLinks from '../hooks/useSettingsLinks'
+import SettingsMenu from './SettingsMenu'
 import SidebarGroupTitle from './SidebarGroupTitle'
 import SidebarItemLink from './SidebarItemLink'
 
@@ -23,10 +13,7 @@ const sidebarWidth = '250px'
 
 export default function SettingsLayout() {
   const { t } = useTranslation()
-  const pathBase = usePathInOrg('settings') || '/settings'
-  const { orgId } = useOrgContext()
-  const isAdmin = useOrgAdmin()
-  const isOwner = useOrgOwner()
+  const groups = useSettingsLinks()
   const [isSmallScreen] = useMediaQuery('(max-width: 1024px)')
 
   return (
@@ -47,67 +34,49 @@ export default function SettingsLayout() {
           flexDirection={isSmallScreen ? 'column' : 'row'}
           alignItems="stretch"
         >
-          {/* Left Menu */}
-          <VStack
-            w={isSmallScreen ? 'full' : sidebarWidth}
-            bg="white"
-            borderRight={isSmallScreen ? 'none' : '1px'}
-            borderBottom={isSmallScreen ? '1px' : 'none'}
-            borderColor="gray.200"
-            py={4}
-            px={3}
-            align="stretch"
-            spacing={3}
-            _dark={{
-              bg: 'gray.800',
-              borderColor: 'gray.700',
-            }}
-          >
-            {/* Organization Section */}
-            {(isAdmin || isOwner) && orgId && (
-              <VStack align="stretch" spacing={1}>
-                <SidebarGroupTitle>
-                  {t('SettingsMenu.org.heading')}
-                </SidebarGroupTitle>
-                {isAdmin && (
-                  <SidebarItemLink to={`${pathBase}/org`} icon={CircleIcon}>
-                    {t('Settings.orgSettings')}
-                  </SidebarItemLink>
-                )}
-                {isOwner && (
-                  <SidebarItemLink to={`${pathBase}/export`} icon={ExportIcon}>
-                    {t('Settings.export')}
-                  </SidebarItemLink>
-                )}
-              </VStack>
-            )}
+          {/* Navigation: dropdown on small screens, sidebar otherwise */}
+          {isSmallScreen ? (
+            <Box
+              px={5}
+              py={3}
+              borderBottom="1px"
+              borderColor="gray.200"
+              _dark={{ borderColor: 'gray.700' }}
+            >
+              <SettingsMenu />
+            </Box>
+          ) : (
+            <VStack
+              w={sidebarWidth}
+              bg="white"
+              borderRight="1px"
+              borderColor="gray.200"
+              py={4}
+              px={3}
+              align="stretch"
+              spacing={3}
+              _dark={{
+                bg: 'gray.800',
+                borderColor: 'gray.700',
+              }}
+            >
+              {groups.map((group) => (
+                <VStack key={group.title} align="stretch" spacing={1}>
+                  <SidebarGroupTitle>{group.title}</SidebarGroupTitle>
 
-            {/* User Section */}
-            <VStack align="stretch" spacing={1}>
-              <SidebarGroupTitle>
-                {t('SettingsMenu.user.heading')}
-              </SidebarGroupTitle>
-              <SidebarItemLink
-                to={`${pathBase}/credentials`}
-                icon={UserInfoIcon}
-              >
-                {t('SettingsMenu.user.credentials')}
-              </SidebarItemLink>
-              <SidebarItemLink
-                to={`${pathBase}/notifications`}
-                icon={NotificationIcon}
-              >
-                {t('SettingsMenu.user.notifications')}
-              </SidebarItemLink>
-              <SidebarItemLink to={`${pathBase}/apps`} icon={AppsIcon}>
-                {t('Settings.apps')}
-              </SidebarItemLink>
-              <SidebarItemLink to={`${pathBase}/api-keys`} icon={ApiIcon}>
-                {t('Settings.api')}
-              </SidebarItemLink>
+                  {group.links.map((link) => (
+                    <SidebarItemLink
+                      key={link.to}
+                      to={link.to}
+                      icon={link.icon}
+                    >
+                      {link.label}
+                    </SidebarItemLink>
+                  ))}
+                </VStack>
+              ))}
             </VStack>
-
-          </VStack>
+          )}
 
           {/* Main Content */}
           <Box flex={1} h="100%" p={{ base: 5, sm: 10 }}>

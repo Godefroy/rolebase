@@ -100,7 +100,7 @@ export default function SubscriptionPaymentStepper({
         confirmParams: {
           return_url: `${
             new URL('', import.meta.url).origin
-          }/orgs/${orgId}/subscription`,
+          }/orgs/${orgId}/settings/subscription`,
         },
       })
 
