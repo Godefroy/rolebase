@@ -104,7 +104,7 @@ You'll need to [install the cli](https://stripe.com/docs/stripe-cli#install) fir
 Once done, run the following command:
 
 ```bash
-stripe listen --forward-to https://local.functions.nhost.run/routes/subscriptions/stripeWebhook
+stripe listen --forward-to http://localhost:8888/orgSubscription/stripeWebhook
 ```
 
 It'll should output your [Stripe webhook endpoint secret](https://dashboard.stripe.com/test/webhooks).
