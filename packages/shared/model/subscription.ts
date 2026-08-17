@@ -36,8 +36,11 @@ export type UpcomingInvoice = {
 }
 
 export type Invoice = {
+  id: string
   createdAt: string
   pdfUrl?: string | null | undefined
+  // Stripe hosted page where the invoice can be paid
+  hostedUrl?: string | null | undefined
   totalInCents: number
   status: InvoiceStatus
 }
@@ -82,6 +85,13 @@ export type PricePreview = {
     percentage: number
     amount: number
   } | null
+}
+
+// Invoice awaiting payment, blocking any subscription change
+export function findOpenInvoice(
+  invoices: Invoice[] | undefined
+): Invoice | undefined {
+  return invoices?.find((invoice) => invoice.status === InvoiceStatus.OPEN)
 }
 
 export function isSubscriptionActive(

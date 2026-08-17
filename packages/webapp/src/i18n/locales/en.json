@@ -1062,6 +1062,12 @@
       "desc2": "Your organization will only be able to have 5 invited members.",
       "desc3": "You will lose personalized support and priority support with our team."
     },
+    "openInvoice": {
+      "title": "An invoice is awaiting payment",
+      "desc": "Pay your {{amount}} € invoice to activate your subscription. While it stays open, you cannot change your subscription.",
+      "blocked": "Pay the pending invoice before changing your subscription.",
+      "pay": "Pay the invoice"
+    },
     "invoiceTab": {
       "heading": "Invoice history",
       "desc": "Find all your past invoices here and download them.",
@@ -1070,6 +1076,7 @@
       "invoiceDate": "Invoice date",
       "invoice": "Invoice",
       "download": "Download",
+      "pay": "Pay",
       "status": "Statut",
       "paymentStatus": {
         "paid": "Paid",

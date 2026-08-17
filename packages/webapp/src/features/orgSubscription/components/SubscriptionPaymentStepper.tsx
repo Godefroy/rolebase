@@ -115,9 +115,9 @@ export default function SubscriptionPaymentStepper({
     }
   }
 
-  const subscribe = async () => {
+  const subscribe = async (): Promise<boolean> => {
     const address = billingDetails.address
-    if (!address) return
+    if (!address) return false
 
     setLoading(true)
     try {
@@ -133,24 +133,30 @@ export default function SubscriptionPaymentStepper({
       }
 
       setClientSecret(res.clientSecret)
-      setLoading(false)
-    } catch (e) {
+      return true
+    } catch (e: any) {
+      const hasOpenInvoice = e?.data?.code === 'CONFLICT'
       toast({
-        title: t('common.errorRetry'),
-        description: t('common.errorContact'),
+        title: hasOpenInvoice
+          ? t('SubscriptionTabs.openInvoice.title')
+          : t('common.errorRetry'),
+        description: hasOpenInvoice
+          ? t('SubscriptionTabs.openInvoice.blocked')
+          : t('common.errorContact'),
         duration: 10000,
         isClosable: true,
         status: 'error',
       })
+      return false
     } finally {
       setLoading(false)
     }
   }
 
   const handleNext = async () => {
-    if (activeStep === 1) {
-      await subscribe()
-    }
+    // Stay on the summary when the subscription could not be created,
+    // the payment step has no client secret to work with
+    if (activeStep === 1 && !(await subscribe())) return
     goToNext()
   }
 

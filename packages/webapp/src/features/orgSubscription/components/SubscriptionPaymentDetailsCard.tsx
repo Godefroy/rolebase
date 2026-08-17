@@ -56,8 +56,9 @@ export default function SubscriptionPaymentDetailsCard({
             paddingX="2"
             maxH="50px"
             maxW="65px"
+            flexShrink={0}
           >
-            <CreditCardIcon name={card.brand} />
+            <CreditCardIcon name={card.brand} size={40} />
           </Card>
           <Box w="100%">
             <Text fontWeight={700} fontSize={18}>

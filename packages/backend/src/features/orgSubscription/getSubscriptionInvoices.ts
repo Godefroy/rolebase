@@ -43,8 +43,10 @@ const formatStripeInvoices = (
 
   for (const stripeInvoice of stripeInvoices) {
     invoices.push({
+      id: stripeInvoice.id,
       createdAt: dateFromSeconds(stripeInvoice.created),
       pdfUrl: stripeInvoice.invoice_pdf,
+      hostedUrl: stripeInvoice.hosted_invoice_url,
       totalInCents: stripeInvoice.total,
       status: stripeInvoice.status as InvoiceStatus,
     })

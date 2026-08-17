@@ -27,7 +27,7 @@ export default function PaymentMethodSettingItem({
         value={
           card ? (
             <HStack>
-              <CreditCardIcon name={card.brand} style={{ width: 30 }} />
+              <CreditCardIcon name={card.brand} size={30} />
               <Text>···· {card.last4}</Text>
             </HStack>
           ) : null

@@ -1,25 +1,18 @@
 import { Flex, FlexProps, Text } from '@chakra-ui/react'
-import { Subscription } from '@rolebase/shared/model/subscription'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSubscriptionContext } from '../contexts/SubscriptionContext'
 import AccountSettingsList from './AccountSettingsList'
 
-type AccountTabProps = {
-  subscription: Subscription | null
-  onAccountUpdated: () => void
-} & FlexProps
-
-export default function AccountTab({
-  subscription,
-  onAccountUpdated,
-  ...flexProps
-}: AccountTabProps) {
+export default function AccountTab(flexProps: FlexProps) {
   const { t } = useTranslation()
+  const { subscription, refetchSubscription } = useSubscriptionContext()
+
   return (
     <Flex w="100%" p="5" flexDir="row" justifyContent="center" {...flexProps}>
       {subscription && (
         <AccountSettingsList
-          onUpdate={onAccountUpdated}
+          onUpdate={refetchSubscription}
           subscription={subscription}
         />
       )}

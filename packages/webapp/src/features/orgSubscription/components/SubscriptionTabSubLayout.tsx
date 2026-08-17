@@ -6,10 +6,10 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { Subscription_Plan_Type_Enum } from '@gql'
-import { Subscription } from '@rolebase/shared/model/subscription'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ChevronRightIcon, EmailIcon } from 'src/icons'
+import { useSubscriptionContext } from '../contexts/SubscriptionContext'
 import { useSubscriptionPlanData } from '../hooks/useSubscriptionPlanData'
 import CancelSubscriptionModal from '../modals/CancelSubscriptionModal'
 import SubscriptionPaymentModal from '../modals/SubscriptionPaymentModal'
@@ -17,18 +17,11 @@ import { SubscriptionPlan, SubscriptionPlanCardData } from '../plansTypes'
 import CurrentSubscriptionDetails from './CurrentSubscriptionDetails'
 import SubscriptionPlanCard from './SubscriptionPlanCard'
 
-type SubscriptionTabSubLayoutProps = {
-  subscription: Subscription
-  onSubscriptionUpdated: () => void
-} & FlexProps
-
-export default function SubscriptionTabSubLayout({
-  subscription,
-  onSubscriptionUpdated,
-  ...flexProps
-}: SubscriptionTabSubLayoutProps) {
+export default function SubscriptionTabSubLayout(flexProps: FlexProps) {
   const { t, i18n } = useTranslation()
   const plansData = useSubscriptionPlanData()
+  const { subscription, openInvoice, refetchSubscription } =
+    useSubscriptionContext()
   const [currentPlanData, setCurrentPlanData] = useState<SubscriptionPlan>()
   const {
     isOpen: isPaymentOpen,
@@ -79,7 +72,7 @@ export default function SubscriptionTabSubLayout({
               )
             }
             onClick={onUnsubscribeOpen}
-            isDisabled={!!subscription.expiresAt}
+            isDisabled={!!subscription.expiresAt || !!openInvoice}
           >
             {subscription.expiresAt
               ? t('SubscriptionPlans.activateOnSubscriptionEnd')
@@ -98,6 +91,7 @@ export default function SubscriptionTabSubLayout({
               rightIcon={<ChevronRightIcon size="1em" />}
               variant="outline"
               onClick={subscribe(Subscription_Plan_Type_Enum.Startup)}
+              isDisabled={!!openInvoice}
               colorScheme="gray"
             >
               {subscription.type
@@ -129,7 +123,9 @@ export default function SubscriptionTabSubLayout({
     }
 
     return plansArray
-  }, [plansData, subscription])
+  }, [plansData, subscription, openInvoice])
+
+  if (!subscription) return null
 
   return (
     <>
@@ -138,7 +134,7 @@ export default function SubscriptionTabSubLayout({
           <CurrentSubscriptionDetails
             subscription={subscription}
             currentPlan={currentPlanData}
-            onSubscriptionUpdated={onSubscriptionUpdated}
+            onSubscriptionUpdated={refetchSubscription}
           />
         )}
         <Divider />
@@ -173,7 +169,7 @@ export default function SubscriptionTabSubLayout({
       <CancelSubscriptionModal
         isOpen={isUnsubscribeOpen}
         onClose={onUnsubscribeClose}
-        onSubscriptionCanceled={onSubscriptionUpdated}
+        onSubscriptionCanceled={refetchSubscription}
       />
     </>
   )

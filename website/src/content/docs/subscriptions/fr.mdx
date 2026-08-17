@@ -89,6 +89,13 @@ Rolebase utilise **Stripe** pour le traitement des paiements. Depuis la section 
 - Mettre à jour votre moyen de paiement.
 - Télécharger les **factures** des paiements passés.
 - Consulter l'historique de facturation.
+- Régler une facture en attente depuis le bouton **Régler**, qui ouvre la page de paiement sécurisée Stripe.
+
+<Callout type="warning" title="Facture en attente">
+  Tant qu'une facture reste en attente de paiement, le changement de plan est
+  suspendu. Un bandeau s'affiche sur l'onglet **Mon abonnement** avec le montant
+  dû et un lien direct vers son règlement.
+</Callout>
 
 <Callout type="info" title="Paiements sécurisés">
   L'ensemble du traitement des paiements est géré par Stripe. Rolebase ne stocke

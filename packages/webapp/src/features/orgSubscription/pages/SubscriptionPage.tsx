@@ -10,6 +10,7 @@ import React, { useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 import SubscriptionTabs from '../components/SubscriptionTabs'
+import SubscriptionProvider from '../contexts/SubscriptionProvider'
 import SubscriptionConfirmationModal from '../modals/SubscriptionConfirmationModal'
 
 export default function SubscriptionPage() {
@@ -38,7 +39,11 @@ export default function SubscriptionPage() {
       <Title>{t('SubscriptionPage.heading')}</Title>
 
       <Box>
-        {isOwner && !isLoading && <SubscriptionTabs w="100%" />}
+        {isOwner && !isLoading && (
+          <SubscriptionProvider>
+            <SubscriptionTabs w="100%" />
+          </SubscriptionProvider>
+        )}
 
         {!isOwner && !isLoading && (
           <Text px="10" as="b" color="red.500">

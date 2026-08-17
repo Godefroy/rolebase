@@ -16,6 +16,7 @@ import {
   createStripeCustomer,
   createStripeSubscription,
   deleteStripeSubscription,
+  getStripeCustomerOpenInvoice,
 } from './utils/stripe'
 
 export default authedProcedure
@@ -54,6 +55,15 @@ export default authedProcedure
     let customerId = orgSubscription?.stripeCustomerId
     let subscriptionId = orgSubscription?.stripeSubscriptionId
     let currentPlanType = orgSubscription?.type
+
+    // An unpaid invoice must be settled before any subscription change,
+    // otherwise each attempt leaves behind an incomplete subscription
+    if (customerId && (await getStripeCustomerOpenInvoice(customerId))) {
+      throw new TRPCError({
+        code: 'CONFLICT',
+        message: 'An invoice is awaiting payment',
+      })
+    }
 
     if (isSubscriptionActive(status)) {
       // A subscription is already active, at the moment throwing an error as there is only one plan available

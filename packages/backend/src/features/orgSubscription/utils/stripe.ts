@@ -114,6 +114,18 @@ export const getStripeCustomerInvoices = async (
   return invoices
 }
 
+export const getStripeCustomerOpenInvoice = async (
+  stripeCustomerId: string
+): Promise<Stripe.Invoice | null> => {
+  const invoices = await stripe.invoices.list({
+    customer: stripeCustomerId,
+    status: 'open',
+    limit: 1,
+  })
+
+  return invoices.data[0] ?? null
+}
+
 export const createStripeSubscription = async (
   orgId: string,
   stripeCustomerId: string,

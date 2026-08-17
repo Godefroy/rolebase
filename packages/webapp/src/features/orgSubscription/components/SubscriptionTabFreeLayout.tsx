@@ -3,6 +3,7 @@ import { Subscription_Plan_Type_Enum } from '@gql'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ChevronRightIcon, EmailIcon } from 'src/icons'
+import { useSubscriptionContext } from '../contexts/SubscriptionContext'
 import { useSubscriptionPlanData } from '../hooks/useSubscriptionPlanData'
 import SubscriptionPaymentModal from '../modals/SubscriptionPaymentModal'
 import { SubscriptionPlanCardData } from '../plansTypes'
@@ -12,6 +13,7 @@ import SubscriptionPlanCard from './SubscriptionPlanCard'
 export default function SubscriptionTabFreeLayout(flexProps: FlexProps) {
   const { t, i18n } = useTranslation()
   const plansData = useSubscriptionPlanData()
+  const { openInvoice } = useSubscriptionContext()
   const [selectedPlanType, setSelectedPlanType] =
     useState<Subscription_Plan_Type_Enum | null>(null)
   const { isOpen, onOpen, onClose } = useDisclosure()
@@ -37,6 +39,7 @@ export default function SubscriptionTabFreeLayout(flexProps: FlexProps) {
           <Button
             rightIcon={<ChevronRightIcon size="1em" />}
             onClick={subscribe(Subscription_Plan_Type_Enum.Startup)}
+            isDisabled={!!openInvoice}
             colorScheme="green"
           >
             {t('SubscriptionPlans.upgradePlan')}
@@ -62,7 +65,7 @@ export default function SubscriptionTabFreeLayout(flexProps: FlexProps) {
     })
 
     return plansArray
-  }, [plansData])
+  }, [plansData, openInvoice])
 
   useEffect(() => {
     if (!isOpen) {

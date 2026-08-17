@@ -1,26 +1,19 @@
 import { Flex, FlexProps } from '@chakra-ui/react'
-import { Subscription } from '@rolebase/shared/model/subscription'
 import React from 'react'
+import { useSubscriptionContext } from '../contexts/SubscriptionContext'
+import OpenInvoiceAlert from './OpenInvoiceAlert'
 import SubscriptionTabFreeLayout from './SubscriptionTabFreeLayout'
 import SubscriptionTabSubLayout from './SubscriptionTabSubLayout'
 
-type SubscriptionTabProps = {
-  subscription: Subscription | null
-  onSubscriptionUpdated: () => void
-} & FlexProps
+export default function SubscriptionTab(flexProps: FlexProps) {
+  const { subscription, openInvoice } = useSubscriptionContext()
 
-export default function SubscriptionTab({
-  subscription,
-  onSubscriptionUpdated,
-  ...flexProps
-}: SubscriptionTabProps) {
   return (
-    <Flex p="5" flexDir="row" {...flexProps}>
+    <Flex p="5" flexDir="column" gap="5" {...flexProps}>
+      {openInvoice && <OpenInvoiceAlert invoice={openInvoice} />}
+
       {subscription ? (
-        <SubscriptionTabSubLayout
-          onSubscriptionUpdated={onSubscriptionUpdated}
-          subscription={subscription}
-        />
+        <SubscriptionTabSubLayout />
       ) : (
         <SubscriptionTabFreeLayout />
       )}

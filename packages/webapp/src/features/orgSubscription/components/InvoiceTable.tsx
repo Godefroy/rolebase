@@ -11,7 +11,7 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react'
-import { Invoice } from '@rolebase/shared/model/subscription'
+import { Invoice, InvoiceStatus } from '@rolebase/shared/model/subscription'
 import {
   Row,
   SortingState,
@@ -28,6 +28,7 @@ import {
   ChevronDownIcon,
   ChevronUpIcon,
   DownloadIcon,
+  ExportIcon,
   FileIcon,
 } from 'src/icons'
 
@@ -107,22 +108,39 @@ export default function InvoiceTable({
         ),
         footer: (props) => props.column.id,
       }),
-      columnHelper.accessor((row) => row.pdfUrl, {
+      columnHelper.accessor((row) => row, {
         id: 'actions',
         header: '',
         cell: (info) => {
-          const link = info.getValue()
+          const invoice = info.getValue()
+          const isPayable =
+            invoice.status === InvoiceStatus.OPEN && !!invoice.hostedUrl
+
           return (
-            <Button
-              variant="outline"
-              as={link ? 'a' : undefined}
-              isDisabled={!link}
-              href={link ?? undefined}
-              target="_blank"
-              leftIcon={<DownloadIcon />}
-            >
-              {t('SubscriptionTabs.invoiceTab.download')}
-            </Button>
+            <HStack justifyContent="end">
+              {isPayable && (
+                <Button
+                  as="a"
+                  colorScheme="orange"
+                  href={invoice.hostedUrl!}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  leftIcon={<ExportIcon />}
+                >
+                  {t('SubscriptionTabs.invoiceTab.pay')}
+                </Button>
+              )}
+              <Button
+                variant="outline"
+                as={invoice.pdfUrl ? 'a' : undefined}
+                isDisabled={!invoice.pdfUrl}
+                href={invoice.pdfUrl ?? undefined}
+                target="_blank"
+                leftIcon={<DownloadIcon />}
+              >
+                {t('SubscriptionTabs.invoiceTab.download')}
+              </Button>
+            </HStack>
           )
         },
         enableSorting: false,

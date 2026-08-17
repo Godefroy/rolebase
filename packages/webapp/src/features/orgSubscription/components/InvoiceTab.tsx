@@ -1,16 +1,11 @@
 import { Flex, FlexProps } from '@chakra-ui/react'
-import { Invoice } from '@rolebase/shared/model/subscription'
 import React from 'react'
+import { useSubscriptionContext } from '../contexts/SubscriptionContext'
 import InvoiceTabLayout from './InvoiceTabLayout'
 
-type InvoiceTabProps = {
-  invoices: Invoice[]
-} & FlexProps
+export default function InvoiceTab(flexProps: FlexProps) {
+  const { invoices } = useSubscriptionContext()
 
-export default function InvoiceTab({
-  invoices,
-  ...flexProps
-}: InvoiceTabProps) {
   return (
     <Flex p="5" flexDir="row" {...flexProps}>
       <InvoiceTabLayout invoices={invoices} />

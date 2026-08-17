@@ -36,5 +36,6 @@ export default function CreditCardIcon({
     }
   }, [name])
 
-  return <Icon size="md" {...iconProps} />
+  // react-icons sets size as the svg width/height, so it needs a CSS length
+  return <Icon size="1em" {...iconProps} />
 }

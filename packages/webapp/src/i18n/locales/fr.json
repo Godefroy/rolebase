@@ -1095,6 +1095,12 @@
       "desc2": "Votre organisation ne pourra plus avoir que 5 membres invités.",
       "desc3": "Vous perdrez l'accompagnement et le support prioritaire avec notre équipe."
     },
+    "openInvoice": {
+      "title": "Une facture est en attente de paiement",
+      "desc": "Réglez votre facture de {{amount}} € pour activer votre abonnement. Tant qu'elle est ouverte, vous ne pouvez pas changer d'abonnement.",
+      "blocked": "Réglez la facture en attente avant de changer d'abonnement.",
+      "pay": "Régler la facture"
+    },
     "invoiceTab": {
       "heading": "Historique des factures",
       "desc": "Retrouvez toutes vos précédentes factures juste ici et téléchargez-les.",
@@ -1103,6 +1109,7 @@
       "invoiceDate": "Date de la facture",
       "invoice": "Facture",
       "download": "Télécharger",
+      "pay": "Régler",
       "status": "Statut",
       "paymentStatus": {
         "paid": "Payée",
