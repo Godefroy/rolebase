@@ -1,14 +1,13 @@
 import { RRuleUTC } from '@rolebase/shared/helpers/RRuleUTC'
 import getMeetingVideoConfUrl from '@rolebase/shared/helpers/getMeetingVideoConfUrl'
 import { getOrgPath } from '@rolebase/shared/helpers/getOrgPath'
-import { TRPCError } from '@trpc/server'
 import { utcToZonedTime } from 'date-fns-tz'
 import { ICalCalendar } from 'ical-generator'
 import * as yup from 'yup'
 import { gql } from '../../gql'
 import { guardQueryParams } from '../../guards/guardQueryParams'
 import i18n from '../../i18n'
-import { route } from '../../rest/route'
+import { RestError, route } from '../../rest/route'
 import settings from '../../settings'
 import { adminRequest } from '../../utils/adminRequest'
 import { loadOrgData } from '../org/loadOrgData'
@@ -26,15 +25,17 @@ export default route(async (context) => {
 
   // Validate token
   if (token !== generateMeetingToken(orgId)) {
-    throw new TRPCError({ code: 'UNAUTHORIZED', message: 'Invalid token' })
+    throw new RestError(401, 'Invalid token')
   }
 
   // Get org and circles
   const orgResult = await adminRequest(GET_MEETINGS, { orgId, memberId })
   const org = orgResult.org_by_pk
 
+  // Calendar clients keep polling the subscription URL of a deleted org, so
+  // answer 404 rather than reporting each poll as a server error.
   if (!org) {
-    throw new TRPCError({ code: 'NOT_FOUND', message: 'Org not found' })
+    throw new RestError(404, 'Org not found')
   }
 
   // Load indexed org data for scope resolution
