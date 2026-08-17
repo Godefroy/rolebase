@@ -6,7 +6,14 @@ import { useMatch } from 'react-router'
 export function useOrgRouteParams(): { orgId?: string; slug?: string } {
   const orgMatch = useMatch('/orgs/:orgId/*')
   const slugMatch = useMatch('/:slug/*')
-  const orgId = orgMatch?.params.orgId
+  // Anything else under /orgs (like the orgs list) is not an org id, and
+  // sending it to Hasura would fail with a uuid syntax error
+  const orgId = uuidRegex.test(orgMatch?.params.orgId ?? '')
+    ? orgMatch?.params.orgId
+    : undefined
   const slug = orgId ? undefined : slugMatch?.params.slug ?? undefined
   return { orgId, slug }
 }
+
+const uuidRegex =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i

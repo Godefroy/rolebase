@@ -42,8 +42,9 @@ export async function startImpersonation(userId: string, userName: string) {
   }
 
   // Reload instead of navigating: Apollo cache, store and subscriptions still
-  // hold the super admin's data
-  window.location.href = '/'
+  // hold the super admin's data. "/orgs" rather than "/", which Netlify
+  // redirects to the website.
+  window.location.href = '/orgs'
 }
 
 export function stopImpersonation() {

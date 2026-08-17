@@ -67,6 +67,9 @@ export default function PrivateRoute() {
 
       <Routes>
         <Route index element={<OrgsPage />} />
+        {/* Reachable with a full page load, unlike "/" which Netlify
+            redirects to the website */}
+        <Route path="orgs" element={<OrgsPage />} />
         <Route
           path="orgs/:orgId/invitation"
           element={<MemberInvitationPage />}
