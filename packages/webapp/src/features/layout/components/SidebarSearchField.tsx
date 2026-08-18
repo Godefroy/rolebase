@@ -21,6 +21,7 @@ export default function SidebarSearchField({ showShortcut, onClick }: Props) {
       onClick={onClick}
       w="100%"
       h="38px"
+      flexShrink={0}
       px={4}
       mb={2}
       align="center"
