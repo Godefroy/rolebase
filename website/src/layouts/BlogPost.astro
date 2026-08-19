@@ -57,7 +57,7 @@ const articleSchema = {
 }
 ---
 
-<BlogLayout title={post.data.title} description={post.data.summary} image={post.data.image}>
+<BlogLayout title={post.data.title} description={post.data.summary} titleBrand={false} image={post.data.image}>
   <JsonLd data={articleSchema} />
   <article class="min-w-0 flex-1">
     <header class="mb-10 pb-6 border-b border-gray-100">

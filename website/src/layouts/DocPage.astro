@@ -6,6 +6,8 @@ import type { Heading } from '../utils/toc'
 
 interface Props {
   title: string
+  /** Appends ` | <brand>` to the document title. */
+  titleBrand?: boolean
   section?: 'docs' | 'guides' | 'developers'
   description?: string
   wide?: boolean
@@ -20,6 +22,7 @@ interface Props {
 
 const {
   title,
+  titleBrand = true,
   section = 'docs',
   description,
   wide = false,
@@ -47,6 +50,7 @@ const titleTrail = ancestors.map((a) => a.label).reverse()
 <DocsLayout
   title={title}
   titleTrail={titleTrail}
+  titleBrand={titleBrand}
   description={description}
   section={section}
   wide={wide}

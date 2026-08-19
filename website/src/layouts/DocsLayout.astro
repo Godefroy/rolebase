@@ -8,6 +8,8 @@ interface Props {
   title: string
   /** Ancestor page titles inserted in the document title, nearest first. */
   titleTrail?: string[]
+  /** Appends ` | <brand>` to the document title. */
+  titleBrand?: boolean
   description?: string
   section: 'docs' | 'guides' | 'developers'
   wide?: boolean
@@ -17,6 +19,7 @@ interface Props {
 const {
   title,
   titleTrail = [],
+  titleBrand = true,
   description,
   section,
   wide = false,
@@ -26,7 +29,7 @@ const {
 const hasToc = !wide && getTocItems(headings).length > 0
 ---
 
-<BaseLayout title={title} titleTrail={titleTrail} description={description}>
+<BaseLayout title={title} titleTrail={titleTrail} titleBrand={titleBrand} description={description}>
   <div class:list={['flex min-h-[calc(100vh-56px)]', hasToc && 'xl:pr-72']}>
     <Sidebar section={section} />
     <main class:list={['flex-1 min-w-0 py-8 px-6 md:px-12', wide ? 'max-w-none' : 'max-w-5xl']}>

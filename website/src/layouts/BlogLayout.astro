@@ -4,13 +4,15 @@ import BaseLayout from './BaseLayout.astro'
 interface Props {
   title: string
   description?: string
+  /** Appends ` | <brand>` to the document title. */
+  titleBrand?: boolean
   image?: ImageMetadata
 }
 
-const { title, description, image } = Astro.props
+const { title, description, titleBrand = true, image } = Astro.props
 ---
 
-<BaseLayout title={title} description={description} ogType="article" staticHeader image={image}>
+<BaseLayout title={title} description={description} ogType="article" titleBrand={titleBrand} staticHeader image={image}>
   <main class="max-w-6xl mx-auto px-6 py-16">
     <div class="flex flex-col gap-8 md:flex-row lg:gap-12">
       <slot />

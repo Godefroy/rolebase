@@ -24,6 +24,8 @@ interface Props {
   description?: string
   /** `article` on blog posts, `website` everywhere else. */
   ogType?: 'website' | 'article'
+  /** Appends ` | <brand>` to the document title. */
+  titleBrand?: boolean
   staticHeader?: boolean
   image?: ImageMetadata
 }
@@ -33,20 +35,15 @@ const {
   titleTrail = [],
   description,
   ogType = 'website',
+  titleBrand = true,
   staticHeader = false,
   image,
 } = Astro.props
 // Index pages carry very short titles ("Blog", "Introduction"), so the ancestor
-// pages and the brand are appended to give them a full document title. A suffix
-// is kept only while it fits in the ~60 characters a SERP displays, and the
-// brand is left out when the title already names it.
-const suffixes = title.includes(config.siteName)
-  ? titleTrail
-  : [...titleTrail, config.siteName]
-const pageTitle = suffixes.reduce((current, suffix) => {
-  const candidate = `${current} | ${suffix}`
-  return candidate.length > 60 ? current : candidate
-}, title)
+// pages and the brand are appended to give them a full document title. Titles
+// that already name the brand opt out.
+const suffixes = titleBrand ? [...titleTrail, config.siteName] : titleTrail
+const pageTitle = [title, ...suffixes].join(' | ')
 const currentPath = Astro.url.pathname
 const lang = getLangFromUrl(Astro.url)
 const isDevSection = currentPath.includes('/developers')

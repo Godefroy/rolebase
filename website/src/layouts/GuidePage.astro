@@ -6,12 +6,14 @@ import type { Heading } from '../utils/toc'
 
 interface Props {
   title: string
+  /** Appends ` | <brand>` to the document title. */
+  titleBrand?: boolean
   section?: 'docs' | 'guides'
   description?: string
   headings?: Heading[]
 }
 
-const { title, section = 'docs', description, headings = [] } = Astro.props
+const { title, titleBrand = true, section = 'docs', description, headings = [] } = Astro.props
 const lang = getLangFromUrl(Astro.url)
 const t = await getTranslations(lang)
 
@@ -22,7 +24,7 @@ const categoryMap = {
 const cat = categoryMap[section]
 ---
 
-<DocsLayout title={title} description={description} section={section} headings={headings}>
+<DocsLayout title={title} titleBrand={titleBrand} description={description} section={section} headings={headings}>
   <article>
     <header class="mb-8">
       <Breadcrumb trail={[{ label: cat.label, href: langPath(lang, cat.path) }]} title={title} hideTitle class="mb-3" />
