@@ -14,6 +14,7 @@ interface Props {
   membersIds: string[]
   excludeMembersIds?: string[]
   max?: number
+  allowCreate?: boolean
   buttonProps?: ThemingProps<'Button'>
   onAdd?(memberId: string): void
   onRemove?(memberId: string): void
@@ -24,6 +25,7 @@ export default function MembersMultiSelect({
   membersIds,
   excludeMembersIds,
   max,
+  allowCreate,
   buttonProps,
   onAdd,
   onRemove,
@@ -76,6 +78,7 @@ export default function MembersMultiSelect({
       {onAdd && (!max || selectedMembers.length < max) ? (
         <MemberSearchButton
           excludeIds={excludeMembersIdsMemo}
+          allowCreate={allowCreate}
           size="sm"
           variant="outline"
           leftIcon={<CreateIcon size={20} />}

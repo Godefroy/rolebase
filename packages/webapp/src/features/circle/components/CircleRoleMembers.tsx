@@ -67,6 +67,7 @@ export default function CircleRoleMembers() {
           circleId={circle.id}
           membersIds={membersIds}
           max={role?.singleMember ? 1 : undefined}
+          allowCreate
           buttonProps={
             highlightButton
               ? { variant: 'solid', colorScheme: 'blue' }

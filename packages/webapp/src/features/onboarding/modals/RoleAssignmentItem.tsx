@@ -71,6 +71,7 @@ export default function RoleAssignmentItem({
             membersIds={role.responsibleId ? [role.responsibleId] : []}
             excludeMembersIds={role.participantIds}
             max={1}
+            allowCreate
             onAdd={setResponsible}
             onRemove={() => onChange({ responsibleId: undefined })}
             // The responsible is required, so prompt it with a primary button
@@ -83,6 +84,7 @@ export default function RoleAssignmentItem({
           <MembersMultiSelect
             membersIds={role.participantIds}
             excludeMembersIds={role.responsibleId ? [role.responsibleId] : []}
+            allowCreate
             onAdd={addParticipant}
             onRemove={removeParticipant}
           />

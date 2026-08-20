@@ -8,11 +8,13 @@ import SearchButton, { SearchButtonProps } from './SearchButton'
 interface Props extends Omit<SearchButtonProps, 'items'> {
   members?: MemberFragment[] // If not provided, use store
   excludeIds?: string[]
+  allowCreate?: boolean
 }
 
 export default function MemberSearchButton({
   members,
   excludeIds,
+  allowCreate,
   ...props
 }: Props) {
   const items = useMemberSearchItems(members, excludeIds)
@@ -25,7 +27,7 @@ export default function MemberSearchButton({
       {...props}
       items={items}
       // Members are readonly in a proposal draft, so no creation there.
-      onCreate={isAdmin && !isDraft ? createMember : undefined}
+      onCreate={allowCreate && isAdmin && !isDraft ? createMember : undefined}
     />
   )
 }
