@@ -9,6 +9,7 @@ import { ThreadActivityFragment, ThreadFragment, gql } from '../../gql'
 import settings from '../../settings'
 import { webhookProcedure } from '../../trpc/webhookProcedure'
 import { adminRequest } from '../../utils/adminRequest'
+import { updateUserMetadata } from '../user/utils/updateUserMetadata'
 
 export default webhookProcedure.mutation(async () => {
   const { users } = await adminRequest(GET_USERS)
@@ -55,9 +56,9 @@ export default webhookProcedure.mutation(async () => {
       )
 
       // Save next digest date as last date
-      await adminRequest(UPDATE_USER_METADATA, {
-        userId: user.id,
-        metadata: { ...metadata, digestLastDate: nowDate.toISOString() },
+      await updateUserMetadata(user.id, {
+        ...metadata,
+        digestLastDate: nowDate.toISOString(),
       })
     } catch (e) {
       console.error(`Error sending digest to user ${user.id}:`, e)
@@ -78,13 +79,6 @@ const GET_USERS = gql(`
   }
 `)
 
-const UPDATE_USER_METADATA = gql(`
-  mutation updateUserMetadata($userId: uuid!, $metadata: jsonb!) {
-    updateUser(pk_columns: { id: $userId }, _set: { metadata: $metadata }) {
-      id
-    }
-  }
-`)
 
 // Send a digest to a user
 async function sendDigest(

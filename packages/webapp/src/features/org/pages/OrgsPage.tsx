@@ -21,10 +21,12 @@ import { OrgData } from '@rolebase/shared/model/OrgData'
 import { truthy } from '@rolebase/shared/helpers/truthy'
 import { useStoreState } from '@store/hooks'
 import { UserLocalStorageKeys } from '@utils/localStorage'
-import React, { useEffect, useMemo, useRef } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { CreateIcon } from 'src/icons'
+import usePendingInvitations from '@/member/hooks/usePendingInvitations'
+import PendingInvitationsModal from '@/member/modals/PendingInvitationsModal'
 import OnboardingWizardModal from '@/onboarding/wizard/OnboardingWizardModal'
 import OrgCreateModal from '../modals/OrgCreateModal'
 
@@ -66,8 +68,22 @@ export default function OrgsPage() {
   // Create modal
   const createModal = useDisclosure()
 
-  // New non-invited users (no org) get the full onboarding wizard
-  const showOnboarding = !!orgs && orgs.length === 0
+  // Users with no org either have invitations waiting for their email address
+  // (they are offered to join), or are new users going through the onboarding
+  // wizard. The wizard also shows when they choose to create an org instead.
+  const hasNoOrg = !!orgs && orgs.length === 0
+  const { invitations, loading: loadingInvitations } =
+    usePendingInvitations(hasNoOrg)
+  const [skipInvitations, setSkipInvitations] = useState(false)
+  const showInvitations =
+    hasNoOrg &&
+    !skipInvitations &&
+    !loadingInvitations &&
+    invitations.length > 0
+  const showOnboarding =
+    hasNoOrg &&
+    !loadingInvitations &&
+    (skipInvitations || invitations.length === 0)
 
   // Redirect to an org at mount if possible
   useEffect(() => {
@@ -147,6 +163,13 @@ export default function OrgsPage() {
 
         {createModal.isOpen && (
           <OrgCreateModal isOpen onClose={createModal.onClose} />
+        )}
+
+        {showInvitations && (
+          <PendingInvitationsModal
+            invitations={invitations}
+            onCreateOrg={() => setSkipInvitations(true)}
+          />
         )}
 
         {showOnboarding && <OnboardingWizardModal />}

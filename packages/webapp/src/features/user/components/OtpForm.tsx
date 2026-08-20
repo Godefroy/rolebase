@@ -74,6 +74,9 @@ export default function OtpForm({ defaultEmail, onStepChange }: Props) {
           metadata: {
             timezone: getTimeZone(),
           },
+          // Come back to the requested page (invitation) if the email link is
+          // used instead of the code
+          redirectTo: window.location.href,
         },
       })
 

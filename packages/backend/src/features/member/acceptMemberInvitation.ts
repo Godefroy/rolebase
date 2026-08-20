@@ -2,6 +2,7 @@ import {
   checkSubscriptionSeats,
   isSubscriptionActive,
 } from '@rolebase/shared/model/subscription'
+import { UserMetadata } from '@rolebase/shared/model/user'
 import { TRPCError } from '@trpc/server'
 import * as yup from 'yup'
 import { gql } from '../../gql'
@@ -9,6 +10,7 @@ import { authedProcedure } from '../../trpc/authedProcedure'
 import { adminRequest } from '../../utils/adminRequest'
 import { getOrgSubscriptionAndActiveMembers } from '../orgSubscription/utils/getOrgSubscriptionAndActiveMembers'
 import { updateStripeSubscription } from '../orgSubscription/utils/stripe'
+import { updateUserMetadata } from '../user/utils/updateUserMetadata'
 import { generateInviteToken } from './utils/generateInviteToken'
 import { getMemberById } from './utils/getMemberById'
 import { updateMember } from './utils/updateMember'
@@ -93,6 +95,18 @@ export default authedProcedure
       userId: opts.ctx.userId,
       inviteEmail: userEmail,
     })
+
+    // Joining an org through an invitation is how users with no org of their
+    // own arrive: record it as their onboarding source, since they never go
+    // through the onboarding wizard that asks for it.
+    const metadata = (checkUserResult.user?.metadata ?? {}) as UserMetadata
+    const isFirstOrg = checkUserResult.member.length === 0
+    if (isFirstOrg && !metadata.onboardingSource) {
+      await updateUserMetadata(opts.ctx.userId!, {
+        ...metadata,
+        onboardingSource: 'invitation',
+      })
+    }
   })
 
 const CHECK_ORG_USER = gql(`
@@ -104,6 +118,10 @@ const CHECK_ORG_USER = gql(`
     }
     user(id: $userId) {
       email
+      metadata
+    }
+    member(where: { userId: { _eq: $userId } }, limit: 1) {
+      id
     }
   }
 `)

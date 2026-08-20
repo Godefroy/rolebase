@@ -758,6 +758,12 @@
     "cancel": "Annuler",
     "toastSuccess": "Invitation acceptée"
   },
+  "PendingInvitationsModal": {
+    "heading_one": "Vous avez été invité à rejoindre une organisation",
+    "heading_other": "Vous avez été invité à rejoindre des organisations",
+    "join": "Rejoindre",
+    "createOrg": "Créer ma propre organisation"
+  },
   "MemberPictureCropModal": {
     "heading": "Recadrez la photo",
     "rotate": "Tourner à 90°",

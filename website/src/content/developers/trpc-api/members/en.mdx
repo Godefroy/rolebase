@@ -39,6 +39,12 @@ Reads what an invitation link needs to show before the recipient signs in, so th
 
 It returns `{ orgName, email }`. A member with no pending invitation answers `NOT_FOUND`, and a token that does not match answers `UNAUTHORIZED`.
 
+## Query `member.getPendingInvitations`
+
+Lists the invitations waiting for the signed-in user, matched on their email address. It takes no input and is used to offer joining an organization to a user who has none.
+
+It returns an array of `{ memberId, token, orgId, orgName }`, ready to pass to `member.acceptMemberInvitation`. An unverified email address returns an empty array, since sign-up alone proves nothing about who owns the address.
+
 ## Mutation `member.acceptMemberInvitation`
 
 Links the invited member to the signed-in user and applies the invited access role.
@@ -48,7 +54,7 @@ Links the invited member to the signed-in user and applies the invited access ro
 | `memberId` | `uuid` | Invited member. Required. |
 | `token` | `String` | Token carried by the invitation link. Required. |
 
-The invitation is consumed, and the Stripe subscription seat count is updated when the organization has an active subscription. A user who already belongs to the organization answers `CONFLICT`, and a subscription without a free seat blocks the call. It returns nothing.
+The invitation is consumed, and the Stripe subscription seat count is updated when the organization has an active subscription. When this is the first organization of the user, `invitation` is recorded as their onboarding source. A user who already belongs to the organization answers `CONFLICT`, and a subscription without a free seat blocks the call. It returns nothing.
 
 ## Mutation `member.updateMemberRole`
 

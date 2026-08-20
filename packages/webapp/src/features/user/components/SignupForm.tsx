@@ -69,13 +69,18 @@ export default function SignupForm({ defaultEmail, onStepChange }: Props) {
           metadata: {
             timezone: getTimeZone(),
           },
+          // Come back to the requested page (invitation) after verification
+          redirectTo: window.location.href,
         },
       })
       if (!body.session?.user) return
       const { user } = body.session
 
       if (user.email && !user.emailVerified) {
-        await nhost.auth.sendVerificationEmail({ email: user.email })
+        await nhost.auth.sendVerificationEmail({
+          email: user.email,
+          options: { redirectTo: window.location.href },
+        })
       }
 
       // When signing up from an invitation link, stay on the invitation page so

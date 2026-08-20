@@ -39,6 +39,12 @@ Lit ce qu’un lien d’invitation doit afficher avant que le destinataire se co
 
 Elle renvoie `{ orgName, email }`. Un membre sans invitation en attente répond `NOT_FOUND`, et un token qui ne correspond pas répond `UNAUTHORIZED`.
 
+## Requête `member.getPendingInvitations`
+
+Liste les invitations en attente pour l’utilisateur connecté, rapprochées de son adresse email. Elle ne prend aucun input et sert à proposer de rejoindre une organisation à un utilisateur qui n’en a aucune.
+
+Elle renvoie un tableau de `{ memberId, token, orgId, orgName }`, prêt à passer à `member.acceptMemberInvitation`. Une adresse email non vérifiée renvoie un tableau vide, l’inscription seule ne prouvant rien sur le propriétaire de l’adresse.
+
 ## Mutation `member.acceptMemberInvitation`
 
 Rattache le membre invité à l’utilisateur connecté et applique le rôle d’accès prévu.
@@ -48,7 +54,7 @@ Rattache le membre invité à l’utilisateur connecté et applique le rôle d�
 | `memberId` | `uuid` | Membre invité. Requis. |
 | `token` | `String` | Token porté par le lien d’invitation. Requis. |
 
-L’invitation est consommée, et le nombre de sièges de l’abonnement Stripe est mis à jour quand l’organisation a un abonnement actif. Un utilisateur déjà membre de l’organisation répond `CONFLICT`, et un abonnement sans siège libre bloque l’appel. La procédure ne renvoie rien.
+L’invitation est consommée, et le nombre de sièges de l’abonnement Stripe est mis à jour quand l’organisation a un abonnement actif. Quand il s’agit de la première organisation de l’utilisateur, `invitation` est enregistré comme source d’onboarding. Un utilisateur déjà membre de l’organisation répond `CONFLICT`, et un abonnement sans siège libre bloque l’appel. La procédure ne renvoie rien.
 
 ## Mutation `member.updateMemberRole`
 
