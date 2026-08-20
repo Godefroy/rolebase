@@ -15,6 +15,7 @@ const Fragment = gql(`
     id
     orgId
     title
+    summary
     circle {
       role {
         name
@@ -33,7 +34,9 @@ const transform = (fragment: DocumentType<typeof Fragment>): SearchDoc => ({
   orgId: fragment.orgId,
   type: SearchTypes.Meeting,
   title: `${fragment.circle.role.name} - ${fragment.title}`,
-  description: fragment.steps.map((step) => step.notes).join('\n'),
+  description: [fragment.summary, ...fragment.steps.map((step) => step.notes)]
+    .filter(Boolean)
+    .join('\n'),
   boost: 0,
 })
 

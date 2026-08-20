@@ -114,7 +114,7 @@ const documents = {
     "\n  fragment DecisionSearch on decision {\n    id\n    orgId\n    title\n    createdAt\n  }\n": types.DecisionSearchFragmentDoc,
     "\n        query GetDecisionForSearch($id: uuid!) {\n          decision_by_pk(id: $id) {\n            ...DecisionSearch\n          }\n        }\n      ": types.GetDecisionForSearchDocument,
     "\n        query GetDecisionsForSearch {\n          decision(where: { archivedAt: { _is_null: true } }) {\n            ...DecisionSearch\n          }\n        }\n      ": types.GetDecisionsForSearchDocument,
-    "\n  fragment MeetingSearch on meeting {\n    id\n    orgId\n    title\n    circle {\n      role {\n        name\n      }\n    }\n    steps {\n      notes\n    }\n    createdAt\n    startDate\n  }\n": types.MeetingSearchFragmentDoc,
+    "\n  fragment MeetingSearch on meeting {\n    id\n    orgId\n    title\n    summary\n    circle {\n      role {\n        name\n      }\n    }\n    steps {\n      notes\n    }\n    createdAt\n    startDate\n  }\n": types.MeetingSearchFragmentDoc,
     "\n        query GetMeetingForSearch($id: uuid!) {\n          meeting_by_pk(id: $id) {\n            ...MeetingSearch\n          }\n        }\n      ": types.GetMeetingForSearchDocument,
     "\n        query GetMeetingsForSearch {\n          meeting(where: { archivedAt: { _is_null: true } }) {\n            ...MeetingSearch\n          }\n        }\n      ": types.GetMeetingsForSearchDocument,
     "\n        query GetMeetingDataForSearch($meetingId: uuid!) {\n          meeting_by_pk(id: $meetingId) {\n            org {\n              id\n              slug\n            }\n            circle {\n              role {\n                name\n              }\n            }\n            meeting_attendees {\n              id\n              present\n              startNotified\n              member {\n                id\n                name\n                archivedAt\n                user {\n                  email\n                  locale\n                  metadata\n                  apps(where: { archivedAt: { _is_null: true } }) {\n                    ...UserAppFull\n                  }\n                }\n              }\n            }\n          }\n        }\n      ": types.GetMeetingDataForSearchDocument,
@@ -582,7 +582,7 @@ export function gql(source: "\n        query GetDecisionsForSearch {\n          
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  fragment MeetingSearch on meeting {\n    id\n    orgId\n    title\n    circle {\n      role {\n        name\n      }\n    }\n    steps {\n      notes\n    }\n    createdAt\n    startDate\n  }\n"): (typeof documents)["\n  fragment MeetingSearch on meeting {\n    id\n    orgId\n    title\n    circle {\n      role {\n        name\n      }\n    }\n    steps {\n      notes\n    }\n    createdAt\n    startDate\n  }\n"];
+export function gql(source: "\n  fragment MeetingSearch on meeting {\n    id\n    orgId\n    title\n    summary\n    circle {\n      role {\n        name\n      }\n    }\n    steps {\n      notes\n    }\n    createdAt\n    startDate\n  }\n"): (typeof documents)["\n  fragment MeetingSearch on meeting {\n    id\n    orgId\n    title\n    summary\n    circle {\n      role {\n        name\n      }\n    }\n    steps {\n      notes\n    }\n    createdAt\n    startDate\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
