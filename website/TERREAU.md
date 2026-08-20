@@ -159,6 +159,9 @@ Astro + MDX + Tailwind, i18n par dossier, dans le dossier `website/` du monorepo
 - **Composants MDX** : tous les `.astro` de `src/components/` sont auto-découverts et disponibles
   dans les MDX sans import.
 - **i18n** : utilitaires dans `src/utils/i18n.ts`, config de langues dans `website.config.ts`.
+- **Fichiers téléchargeables** : `public/downloads/`, servis sur `/downloads/<fichier>`, liés
+  avec `<Button>`. Les `.docx` sont générés par `scripts/generate-doc-templates.py`, jamais
+  édités à la main : modifier le script, le relancer, committer les binaires.
 
 **Frontmatter d'un article de blog** :
 
