@@ -11,7 +11,6 @@ COPY ../../package.json ./
 COPY ../../packages/backend/package.json ./packages/backend/
 COPY ../../packages/shared/package.json ./packages/shared/
 COPY ../../packages/emails/package.json ./packages/emails/
-COPY ../../packages/editor-legacy/package.json ./packages/editor-legacy/
 COPY ../../packages/editor/package.json ./packages/editor/
 COPY ../../packages/graph/package.json ./packages/graph/
 

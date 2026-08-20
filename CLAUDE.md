@@ -174,14 +174,8 @@ Before creating any commit, review the staged product changes (`packages/`, `nho
 - Prefer positive formulations over negative ones. Instead of "X, pas Y" or "ne pas Z", reformulate positively (e.g. "rester indépendant" instead of "ne pas dépendre", "dès le premier sprint" instead of "pas à la fin").
 - Avoid label-colon patterns like "Objectif :", "Résultat :", "Avantage :". Integrate the information directly in the phrase.
 
-## Ongoing work
+## Editor
 
-### Editor migration (Lexical → Tiptap, markdown as canonical storage)
+Content is stored as markdown (`packages/editor`, Tiptap). Grammar contract, locked by the round-trip tests in `packages/editor`: mentions `[@Name](rolebase://member/uuid)`, files `[name](url "file:mime:size")`, collapsibles as `<details>` HTML (parsed and serialized, absent from the slash menu), YouTube as a bare URL, single-line table cells (GFM).
 
-Implemented and verified locally on 2026-06-12; operational steps remain:
-
-1. **Prod rollout order**: deploy migration (adds `*_legacy` columns; `hasura metadata reload` if applied out-of-band) → run `npm run migrate:editor` in `packages/backend` against prod → deploy app → re-run the script to catch rows written by stale clients (idempotent; `--from-legacy` re-converts from backups).
-2. **Cleanup (Phase 7)**: remove the `useEditorValue` lazy fallback in webapp, drop `@rolebase/editor-legacy` from webapp+backend deps, delete `packages/editor-legacy`, then drop the `*_legacy` columns.
-3. Collab uses yjs rooms suffixed `-v2` (same y-websocket docker); old Lexical rooms become orphaned (check disk usage if `YPERSISTENCE` is enabled).
-
-Grammar contract (locked by tests in `packages/editor-legacy` export snapshots + `packages/editor` round-trip): mentions `[@Name](rolebase://member/uuid)`, files `[name](url "file:mime:size")`, collapsibles as `<details>` HTML (parsed/serialized but removed from the slash menu), YouTube as a bare URL. Table cells are single-line (GFM): multi-paragraph legacy cells are joined with a space.
+Collab uses yjs rooms suffixed `-v2`.

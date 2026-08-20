@@ -11,7 +11,6 @@ import React, {
 } from 'react'
 import { useTranslation } from 'react-i18next'
 import useEditorLabels from '../hooks/useEditorLabels'
-import { useEditorValue } from '../hooks/useEditorValue'
 import useFileUpload from '../hooks/useFileUpload'
 import useMentionables from '../hooks/useMentionables'
 import EditorContainer from './EditorContainer'
@@ -52,9 +51,6 @@ const SimpleEditor = forwardRef<EditorHandle, Props>(
     const mentionables = useMentionables()
     const labels = useEditorLabels()
 
-    // Convert legacy Lexical JSON values to markdown on the fly
-    const editorValue = useEditorValue(value)
-
     useImperativeHandle(ref, () => localRef.current!, [])
 
     const computedReadOnly =
@@ -84,8 +80,6 @@ const SimpleEditor = forwardRef<EditorHandle, Props>(
       onSubmit?.(localRef.current.getValue(true))
     }, [onSubmit])
 
-    if (editorValue === undefined) return null
-
     return (
       <EditorContainer
         readOnly={computedReadOnly}
@@ -95,7 +89,7 @@ const SimpleEditor = forwardRef<EditorHandle, Props>(
       >
         <RichEditor
           ref={localRef}
-          value={editorValue}
+          value={value}
           placeholder={placeholder}
           emptyParagraphPlaceholder={t('common.emptyParagraphPlaceholder')}
           autoFocus={autoFocus}

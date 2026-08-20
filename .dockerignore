@@ -17,7 +17,6 @@ packages/*
 !packages/backend
 !packages/shared
 !packages/emails
-!packages/editor-legacy
 !packages/editor
 !packages/graph
 

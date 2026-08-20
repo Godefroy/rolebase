@@ -19,7 +19,6 @@ import React, {
 import { useTranslation } from 'react-i18next'
 import settings from 'src/settings'
 import useEditorLabels from '../hooks/useEditorLabels'
-import { useEditorValue } from '../hooks/useEditorValue'
 import useFileUpload from '../hooks/useFileUpload'
 import useMentionables from '../hooks/useMentionables'
 import { CollabOfflineOverlay } from './CollabOfflineOverlay'
@@ -64,9 +63,6 @@ const CollabEditor = forwardRef<EditorHandle, Props>(
     const { handleUpload } = useFileUpload()
     const mentionables = useMentionables()
     const labels = useEditorLabels()
-
-    // Convert legacy Lexical JSON values to markdown on the fly
-    const editorValue = useEditorValue(value)
 
     useImperativeHandle(ref, () => localRef.current!, [])
 
@@ -114,15 +110,13 @@ const CollabEditor = forwardRef<EditorHandle, Props>(
       return () => clearInterval(interval)
     }, [saveEvery, isFocus, handleChange])
 
-    if (editorValue === undefined) return null
-
     return (
       <EditorContainer readOnly={readOnly} isFocused={isFocus}>
         <RichEditor
           key={docId}
           ref={localRef}
           collaboration={collaboration}
-          value={editorValue}
+          value={value}
           placeholder={placeholder}
           emptyParagraphPlaceholder={t('common.emptyParagraphPlaceholder')}
           autoFocus={autoFocus}
@@ -140,9 +134,7 @@ const CollabEditor = forwardRef<EditorHandle, Props>(
 
         {!readOnly && (
           <Tooltip
-            label={
-              online ? 'Collaboration Online' : 'Collaboration Offline'
-            }
+            label={online ? 'Collaboration Online' : 'Collaboration Offline'}
             placement="top"
             hasArrow
           >

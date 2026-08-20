@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "start": "tsx src/index.ts",
-    "dev": "npm run codegen & NODE_ENV=development nodemon -w 'src/**' -w '../shared/**' -w '../emails/**' -w '../editor-legacy/**' -w '../editor/**' --ext 'ts,json' --ignore 'src/**/*.spec.ts' --exec 'tsx src/index.ts'",
+    "dev": "npm run codegen & NODE_ENV=development nodemon -w 'src/**' -w '../shared/**' -w '../emails/**' -w '../editor/**' --ext 'ts,json' --ignore 'src/**/*.spec.ts' --exec 'tsx src/index.ts'",
     "codegen": "graphql-codegen --config src/codegen.ts",
     "build": "tsc",
     "test": "vitest",
@@ -14,15 +14,13 @@
     "docker:deploy": "cd ../.. && docker buildx build -f packages/backend/Dockerfile --push --platform linux/amd64,linux/arm64 -t registry.eu-central-1.nhost.run/94212868-126b-47d0-bc96-4a9ac670c2ea:1.0.10 .",
     "nhost:config:validate": "cd ../.. && nhost run config-validate --config packages/backend/nhost-service.toml --service-id 94212868-126b-47d0-bc96-4a9ac670c2ea",
     "nhost:config:pull": "cd ../.. && nhost run config-pull --config packages/backend/nhost-service.toml --service-id 94212868-126b-47d0-bc96-4a9ac670c2ea",
-    "nhost:config:deploy": "cd ../.. && nhost run config-deploy --config packages/backend/nhost-service.toml --service-id 94212868-126b-47d0-bc96-4a9ac670c2ea",
-    "migrate:editor": "tsx scripts/migrateEditorContent.ts"
+    "nhost:config:deploy": "cd ../.. && nhost run config-deploy --config packages/backend/nhost-service.toml --service-id 94212868-126b-47d0-bc96-4a9ac670c2ea"
   },
   "dependencies": {
     "@jrmdayn/googleapis-batcher": "^0.5.0",
     "@microsoft/microsoft-graph-types-beta": "^0.40.0-preview",
     "@nhost/nhost-js": "^4.7.0",
     "@rolebase/editor": "*",
-    "@rolebase/editor-legacy": "*",
     "@rolebase/graph": "*",
     "@sentry/node": "^10.38.0",
     "@sentry/profiling-node": "^10.38.0",
