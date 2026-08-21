@@ -160,8 +160,11 @@ Astro + MDX + Tailwind, i18n par dossier, dans le dossier `website/` du monorepo
   dans les MDX sans import.
 - **i18n** : utilitaires dans `src/utils/i18n.ts`, config de langues dans `website.config.ts`.
 - **Fichiers téléchargeables** : `public/downloads/`, servis sur `/downloads/<fichier>`, liés
-  avec `<Button>`. Les `.docx` sont générés par `scripts/generate-doc-templates.py`, jamais
-  édités à la main : modifier le script, le relancer, committer les binaires.
+  avec `<Button>`. Les binaires sont générés par un script co-localisé dans le dossier de la
+  page qui les propose, à côté de ses `.mdx`, un script par jeu de documents. Sa docstring nomme
+  la page servie et les fichiers produits, et un commentaire MDX au-dessus de chaque `<Button>`
+  rappelle le script à relancer. Jamais d'édition à la main : modifier le script, le relancer,
+  committer les binaires.
 
 **Frontmatter d'un article de blog** :
 

@@ -1,12 +1,20 @@
 #!/usr/bin/env python3
-"""Generate the downloadable .docx templates offered on the meeting-minutes posts.
+"""Generate the Word templates offered on the meeting minutes post.
 
-The .docx files under `public/downloads/` are build artefacts committed to the
-repo. Edit the definitions below and re-run this script rather than editing the
-binaries.
+Lives beside the page it serves: `en.mdx` and `fr.mdx` in this folder,
+published on /en/blog/meeting-minutes and /fr/blog/meeting-minutes.
+
+Files produced, under `public/downloads/` and served on `/downloads/<file>`
+    meeting-minutes-template.docx        EN, linked from en.mdx
+    meeting-agenda-template.docx         EN, linked from en.mdx
+    compte-rendu-de-reunion-modele.docx  FR, linked from fr.mdx
+    ordre-du-jour-reunion-modele.docx    FR, linked from fr.mdx
+
+These binaries are build artefacts committed to the repo. Edit the definitions
+below and re-run this script rather than editing the files themselves.
 
     pip install python-docx
-    python3 scripts/generate-doc-templates.py
+    python3 src/content/blog/meeting-minutes/generate-meeting-templates.py
 """
 from pathlib import Path
 
@@ -14,7 +22,7 @@ from docx import Document
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import Pt, RGBColor
 
-OUT = Path(__file__).resolve().parent.parent / "public" / "downloads"
+OUT = Path(__file__).resolve().parents[4] / "public" / "downloads"
 
 PURPLE = RGBColor(0x98, 0x70, 0xF0)
 GREY = RGBColor(0x6B, 0x6B, 0x6B)
