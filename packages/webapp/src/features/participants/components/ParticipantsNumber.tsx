@@ -57,7 +57,7 @@ export default function ParticipantsNumber({
           >
             {someParticipants.map(({ member }, i) => (
               <Avatar
-                key={i}
+                key={member.id}
                 name={member.name}
                 src={
                   getResizedImageUrl(member.picture, AVATAR_SM_WIDTH) ||

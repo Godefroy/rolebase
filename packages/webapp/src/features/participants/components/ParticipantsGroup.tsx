@@ -24,10 +24,10 @@ export default function ParticipantsGroup({
       {...avatarGroupProps}
     >
       {participants.map(
-        (member, i) =>
+        (member) =>
           member && (
             <Avatar
-              key={i}
+              key={member.id}
               border="1px solid"
               name={member.name}
               src={

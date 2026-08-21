@@ -1,5 +1,5 @@
 import { extendTheme } from '@chakra-ui/react'
-import { mode } from '@chakra-ui/theme-tools'
+import { mode, randomColor } from '@chakra-ui/theme-tools'
 import { Task_Status_Enum, Thread_Status_Enum } from '@gql'
 import 'focus-visible/dist/focus-visible'
 import './fonts/Basier-Circle-medium-webfont/stylesheet.css'
@@ -124,6 +124,24 @@ const theme = extendTheme({
     },
   },
   components: {
+    Avatar: {
+      baseStyle: ({ name }: { name?: string }) => ({
+        container: {
+          // Chakra sets the name color only while the picture is not loaded,
+          // which leaves the avatar transparent when `data-loaded` is stale
+          // (recycled component). Set it in every state instead.
+          '--avatar-bg': name
+            ? randomColor({ string: name })
+            : 'colors.gray.400',
+          // Picture background, so that a transparent picture doesn't show
+          // what's behind the avatar. Set on the image itself, which exists
+          // only when the picture is actually displayed.
+          '.chakra-avatar__img': {
+            bg: 'gray.400',
+          },
+        },
+      }),
+    },
     Alert: {
       baseStyle: {
         container: {
