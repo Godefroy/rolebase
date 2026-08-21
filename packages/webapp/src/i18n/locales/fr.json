@@ -343,7 +343,8 @@
   "DashboardNews": {
     "heading": "Actualités",
     "empty": "Les dernières activités de {{org}} apparaitront ici : nouvelles discussions, réunions terminées, décisions prises, etc.",
-    "circle": "Rôle"
+    "circle": "Rôle",
+    "type": "Type"
   },
   "DashboardNewsDecision": {
     "action": "<author /> a enregistré une décision"

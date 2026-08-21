@@ -2,9 +2,11 @@ import Loading from '@/common/atoms/Loading'
 import TextErrors from '@/common/atoms/TextErrors'
 import DashboardHomeNote from '@/dashboard/components/DashboardHomeNote'
 import NewsList from '@/news/components/NewsList'
+import { NewsType, newsTypes } from '@/news/newsTypes'
 import { useOrgContext } from '@/org/contexts/OrgContext'
 import CircleSearchButton from '@/search/components/CircleSearchButton'
 import CircleSearchInput from '@/search/components/CircleSearchInput'
+import SearchTypeMenu from '@/search/components/SearchTypeMenu'
 import {
   Alert,
   AlertDescription,
@@ -27,9 +29,10 @@ export default function DashboardNews(boxProps: BoxProps) {
   const { t } = useTranslation()
   const { org } = useOrgContext()
   const [circleId, setCircleId] = useState<string | undefined>()
+  const [type, setType] = useState<NewsType | undefined>()
 
   // Subscribe to news
-  const { news, error, loading, bottomRef } = useNewsFeed(circleId)
+  const { news, error, loading, bottomRef } = useNewsFeed(circleId, type)
 
   return (
     <Stack spacing={0} {...boxProps}>
@@ -46,6 +49,14 @@ export default function DashboardNews(boxProps: BoxProps) {
           </Heading>
 
           <ButtonGroup size="sm" variant="outline" spacing={2}>
+            <SearchTypeMenu
+              types={newsTypes}
+              value={type}
+              placeholder={t('DashboardNews.type')}
+              fontWeight="normal"
+              onChange={setType}
+            />
+
             {circleId ? (
               <CircleSearchInput
                 value={circleId}

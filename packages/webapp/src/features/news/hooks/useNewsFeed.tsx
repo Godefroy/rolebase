@@ -1,18 +1,29 @@
 import { useOrgContext } from '@/org/contexts/OrgContext'
-import { useLastNewsQuery } from '@gql'
-import { useEffect, useRef } from 'react'
+import { News_Bool_Exp, useLastNewsQuery } from '@gql'
+import { useEffect, useMemo, useRef } from 'react'
+import { NewsType, newsTypeColumns } from '../newsTypes'
 
-export function useNewsFeed(circleId: string | undefined, limit = 8) {
+export function useNewsFeed(
+  circleId: string | undefined,
+  type?: NewsType,
+  limit = 8
+) {
   const { orgId } = useOrgContext()
   const bottomRef = useRef(null)
+
+  const where = useMemo((): News_Bool_Exp => {
+    const scope: News_Bool_Exp = circleId
+      ? { circleId: { _eq: circleId } }
+      : { orgId: { _eq: orgId } }
+    if (!type) return scope
+    return { ...scope, [newsTypeColumns[type]]: { _is_null: false } }
+  }, [circleId, orgId, type])
 
   // Subscribe to news
   const { data, error, loading, fetchMore } = useLastNewsQuery({
     skip: !orgId && !circleId,
     variables: {
-      where: circleId
-        ? { circleId: { _eq: circleId } }
-        : { orgId: { _eq: orgId } },
+      where,
       limit,
     },
     fetchPolicy: 'cache-and-network',

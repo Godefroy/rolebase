@@ -2,19 +2,14 @@ import Loading from '@/common/atoms/Loading'
 import { useIdleCallback } from '@/common/hooks/useIdleCallback'
 import { useOrgContext } from '@/org/contexts/OrgContext'
 import { useNavigateOrg } from '@/org/hooks/useNavigateOrg'
-import { ChevronDownIcon, SearchIcon } from '@chakra-ui/icons'
+import { SearchIcon } from '@chakra-ui/icons'
 import {
-  Button,
   HStack,
   Input,
   InputGroup,
   InputLeftElement,
   List,
   ListItem,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   Modal,
   ModalContent,
   ModalOverlay,
@@ -28,8 +23,8 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAlgoliaSearch } from '../hooks/useAlgoliaSearch'
 import { SearchItem } from '../searchTypes'
-import { searchIcons } from './SearchResultIcon'
 import SearchResultItem from './SearchResultItem'
+import SearchTypeMenu from './SearchTypeMenu'
 
 const maxDisplayedItems = 50
 
@@ -101,9 +96,6 @@ export default function SearchGlobalModal(modalProps: UseModalProps) {
     search(inputValue, type)
   }, [type])
 
-  // Icon of selected type
-  const TypeIcon = type && searchIcons[type]
-
   return (
     <Modal size="lg" closeOnEsc {...modalProps}>
       <ModalOverlay />
@@ -134,34 +126,13 @@ export default function SearchGlobalModal(modalProps: UseModalProps) {
 
         <HStack mt={2}>
           <Text>{t('SearchGlobalModal.in')}</Text>
-          <Menu>
-            <MenuButton
-              as={Button}
-              variant="outline"
-              size="sm"
-              leftIcon={TypeIcon ? <TypeIcon size={20} /> : undefined}
-              rightIcon={<ChevronDownIcon />}
-            >
-              {t(`common.searchTypes.${type || 'All'}`)}
-            </MenuButton>
-            <MenuList>
-              <MenuItem key="All" onClick={() => setType(undefined)}>
-                {t(`common.searchTypes.All`)}
-              </MenuItem>
-              {searchTypes.map((buttonType) => {
-                const Icon = searchIcons[buttonType]
-                return (
-                  <MenuItem
-                    key={buttonType}
-                    icon={<Icon size={20} />}
-                    onClick={() => setType(buttonType)}
-                  >
-                    {t(`common.searchTypes.${buttonType}`)}
-                  </MenuItem>
-                )
-              })}
-            </MenuList>
-          </Menu>
+          <SearchTypeMenu
+            types={searchTypes}
+            value={type}
+            variant="outline"
+            size="sm"
+            onChange={setType}
+          />
         </HStack>
 
         <List
