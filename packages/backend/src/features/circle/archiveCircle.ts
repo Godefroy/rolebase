@@ -12,6 +12,7 @@ const GET_CIRCLE_ORG = gql(`
       id
       orgId
       parentId
+      archivedAt
     }
   }
 `)
@@ -34,6 +35,12 @@ export default authedProcedure
     })
     if (!ref) {
       throw new TRPCError({ code: 'NOT_FOUND', message: 'Circle does not exist' })
+    }
+    if (ref.archivedAt) {
+      throw new TRPCError({
+        code: 'BAD_REQUEST',
+        message: 'Circle is already archived',
+      })
     }
     if (!ref.parentId) {
       throw new TRPCError({

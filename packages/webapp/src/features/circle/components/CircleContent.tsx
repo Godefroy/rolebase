@@ -136,14 +136,18 @@ export default function CircleContent({
   const { circle, role, participants, canEditCircle, canEditRole } =
     circleContext
 
+  // An archived role only offers Restore (from the alert in CircleRole) and
+  // Duplicate, which reads it into a new role without changing it.
+  const canRestructure = canEditCircle && !circle.archivedAt
+
   // Base role actions. Turning a role into a base role is org-owner only (a
   // base role edit propagates everywhere). Detaching from a base role follows
   // the circle's structural edit permission. Neither applies to the root circle
   // or in an in-memory proposal draft.
   const canMakeBaseRole =
-    isOrgOwner && canEditCircle && !isDraft && !role.base && !!circle.parentId
+    isOrgOwner && canRestructure && !isDraft && !role.base && !!circle.parentId
   const canSeparateBaseRole =
-    canEditCircle && !isDraft && role.base && !!circle.parentId
+    canRestructure && !isDraft && role.base && !!circle.parentId
 
   return (
     <>
@@ -175,13 +179,13 @@ export default function CircleContent({
             {isMember && (
               <ActionsMenu>
                 {canEditRole && <EditMenuItem onClick={editRoleModal.onOpen} />}
-                {canEditCircle && circle.parentId && (
+                {canRestructure && circle.parentId && (
                   <MoveMenuItem onClick={moveModal.onOpen} />
                 )}
                 {canEditCircle && circle.parentId && (
                   <DuplicateMenuItem onClick={duplicateModal.onOpen} />
                 )}
-                {!onlyRole && (
+                {!onlyRole && !circle.archivedAt && (
                   <ExportMenuItem
                     onClick={() =>
                       navigateOrg(`export-circle?circleId=${circle.id}`)
@@ -204,7 +208,7 @@ export default function CircleContent({
                     {t('common.separateBaseRole')}
                   </MenuItem>
                 )}
-                {canEditCircle && circle.parentId && (
+                {canRestructure && circle.parentId && (
                   <ArchiveMenuItem onClick={deleteModal.onOpen} />
                 )}
               </ActionsMenu>
