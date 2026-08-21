@@ -15,7 +15,7 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { RoleFragment, RoleSummaryFragment } from '@gql'
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
 interface Props
@@ -29,15 +29,31 @@ export default function MakeBaseRoleModal({ role, ...alertProps }: Props) {
   const toast = useToast()
   const cancelRef = useRef<HTMLButtonElement>(null)
 
+  // The mutation runs with the user's own rights, so surface a refusal instead
+  // of failing silently.
+  const [saving, setSaving] = useState(false)
   const handleConfirm = async () => {
-    await updateRole(role as RoleFragment, { base: true })
-    toast({
-      title: t('MakeBaseRoleModal.toast', { name: role.name }),
-      status: 'success',
-      duration: 2000,
-      isClosable: true,
-    })
-    alertProps.onClose()
+    setSaving(true)
+    try {
+      await updateRole(role as RoleFragment, { base: true })
+      toast({
+        title: t('MakeBaseRoleModal.toast', { name: role.name }),
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+      })
+      alertProps.onClose()
+    } catch (error: any) {
+      toast({
+        title: t('common.error'),
+        description: error?.message || undefined,
+        status: 'error',
+        duration: 4000,
+        isClosable: true,
+      })
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
@@ -70,7 +86,12 @@ export default function MakeBaseRoleModal({ role, ...alertProps }: Props) {
             <Button ref={cancelRef} onClick={alertProps.onClose}>
               {t('common.cancel')}
             </Button>
-            <Button colorScheme="blue" onClick={handleConfirm} ml={3}>
+            <Button
+              colorScheme="blue"
+              isLoading={saving}
+              onClick={handleConfirm}
+              ml={3}
+            >
               {t('MakeBaseRoleModal.confirmButton')}
             </Button>
           </AlertDialogFooter>

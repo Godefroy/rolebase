@@ -19,7 +19,7 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { RoleSummaryFragment, useGetRoleQuery } from '@gql'
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import useSeparateFromBaseRole from '../hooks/useSeparateFromBaseRole'
 
@@ -45,16 +45,32 @@ export default function SeparateBaseRoleModal({
   })
   const baseRole = data?.role_by_pk
 
+  // The mutations run with the user's own rights, so surface a refusal instead
+  // of failing silently.
+  const [separating, setSeparating] = useState(false)
   const handleConfirm = async () => {
     if (!baseRole) return
-    await separateFromBaseRole(circleId, baseRole)
-    toast({
-      title: t('SeparateBaseRoleModal.toast', { name: role.name }),
-      status: 'success',
-      duration: 2000,
-      isClosable: true,
-    })
-    alertProps.onClose()
+    setSeparating(true)
+    try {
+      await separateFromBaseRole(circleId, baseRole)
+      toast({
+        title: t('SeparateBaseRoleModal.toast', { name: role.name }),
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+      })
+      alertProps.onClose()
+    } catch (error: any) {
+      toast({
+        title: t('common.error'),
+        description: error?.message || undefined,
+        status: 'error',
+        duration: 4000,
+        isClosable: true,
+      })
+    } finally {
+      setSeparating(false)
+    }
   }
 
   return (
@@ -103,6 +119,7 @@ export default function SeparateBaseRoleModal({
             <Button
               colorScheme="orange"
               isDisabled={loading || !!error || !baseRole}
+              isLoading={separating}
               onClick={handleConfirm}
               ml={3}
             >

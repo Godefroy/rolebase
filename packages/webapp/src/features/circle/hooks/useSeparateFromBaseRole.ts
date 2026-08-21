@@ -2,6 +2,7 @@ import useCreateLog from '@/log/hooks/useCreateLog'
 import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   RoleFragment,
+  useArchiveRoleMutation,
   useCreateRoleMutation,
   useUpdateCircleMutation,
 } from '@gql'
@@ -14,6 +15,7 @@ import { useCallback } from 'react'
 // the other circles using it are left untouched.
 export default function useSeparateFromBaseRole() {
   const [createRole] = useCreateRoleMutation()
+  const [archiveRole] = useArchiveRoleMutation()
   const [updateCircle] = useUpdateCircleMutation()
   const createLog = useCreateLog()
   const { orgId, getOrgData } = useOrgContext()
@@ -46,13 +48,27 @@ export default function useSeparateFromBaseRole() {
         },
       })
       const newRole = roleData?.insert_role_one
-      if (roleErrors || !newRole) throw roleErrors?.[0]
+      if (roleErrors || !newRole) {
+        throw roleErrors?.[0] ?? new Error('Unauthorized')
+      }
 
-      // Repoint the circle to its own role.
-      const { data, errors } = await updateCircle({
-        variables: { id: circleId, values: { roleId: newRole.id } },
-      })
-      if (errors || !data?.update_circle_by_pk) throw errors?.[0]
+      // Repoint the circle to its own role. The two mutations can't run as one,
+      // so a refused repointing archives the copy just created rather than
+      // leaving an orphan role behind (a concurrent change can remove the right
+      // between the two calls).
+      try {
+        const { data, errors } = await updateCircle({
+          variables: { id: circleId, values: { roleId: newRole.id } },
+        })
+        if (errors || !data?.update_circle_by_pk) {
+          throw errors?.[0] ?? new Error('Unauthorized')
+        }
+      } catch (error) {
+        await archiveRole({
+          variables: { id: newRole.id, archivedAt: new Date().toISOString() },
+        }).catch(() => undefined)
+        throw error
+      }
 
       // Log the change (undoable: archive the new role + restore the roleId).
       createLog({

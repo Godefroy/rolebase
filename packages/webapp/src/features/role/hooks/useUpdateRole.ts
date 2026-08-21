@@ -13,7 +13,15 @@ export default function useUpdateRole() {
 
   return useCallback(
     async (role: RoleFragment, values: Partial<RoleFragment>) => {
-      await updateRole({ variables: { id: role.id, values } })
+      // A row the Hasura filter rejects comes back as null without an error, so
+      // check the result: logging an update that never happened would put a
+      // phantom entry in the activity feed.
+      const { data, errors } = await updateRole({
+        variables: { id: role.id, values },
+      })
+      if (errors || !data?.update_role_by_pk) {
+        throw errors?.[0] ?? new Error('Unauthorized')
+      }
 
       // Log change (diff prev/new)
       const { prevData, newData } = getEntityChanges(role, values)
