@@ -1,8 +1,8 @@
-import useOrgMember from '@/member/hooks/useOrgMember'
 import { Box, BoxProps, Text, useDisclosure } from '@chakra-ui/react'
 import { LogFragment } from '@gql'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import useCanCancelLog from '../hooks/useCanCancelLog'
 import LogCancelModal from '../modals/LogCancelModal'
 import LogItem from './LogItem'
 
@@ -15,7 +15,7 @@ interface Props extends BoxProps {
 
 export default function LogsList({ logs, onCancelled, ...boxProps }: Props) {
   const { t } = useTranslation()
-  const isMember = useOrgMember()
+  const canCancelLog = useCanCancelLog()
 
   // Log modal
   const [cancelLog, setCancelLog] = useState<LogFragment | undefined>()
@@ -40,7 +40,7 @@ export default function LogsList({ logs, onCancelled, ...boxProps }: Props) {
         <LogItem
           key={log.id}
           log={log}
-          onCancel={isMember ? () => handleOpenCancel(log) : undefined}
+          onCancel={canCancelLog(log) ? () => handleOpenCancel(log) : undefined}
         />
       ))}
 

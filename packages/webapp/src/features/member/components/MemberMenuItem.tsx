@@ -34,6 +34,21 @@ export default function MemberMenuItem({
     [circles, circlesIds, orgData]
   )
 
+  // Roles and description share a single subtitle line, so a member holding a
+  // right through both reads as one entry.
+  const subtitle = useMemo(
+    () =>
+      [
+        circlesNames.length !== 0
+          ? textEllipsis(circlesNames.join(', '), 40)
+          : undefined,
+        description,
+      ]
+        .filter(Boolean)
+        .join(', '),
+    [circlesNames, description]
+  )
+
   return (
     <MenuItem {...menuItemProps}>
       <Avatar
@@ -44,14 +59,9 @@ export default function MemberMenuItem({
       />
       <Stack spacing={0}>
         <Text fontSize="sm">{member.name}</Text>
-        {circlesNames.length !== 0 && (
+        {subtitle && (
           <Text fontSize="xs" color="gray.500">
-            {textEllipsis(circlesNames.join(', '), 40)}
-          </Text>
-        )}
-        {description && (
-          <Text fontSize="xs" color="gray.500">
-            {description}
+            {subtitle}
           </Text>
         )}
       </Stack>

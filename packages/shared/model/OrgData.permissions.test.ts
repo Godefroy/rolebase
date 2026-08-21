@@ -3,6 +3,7 @@ import { Governance_Mode_Enum } from '../gql'
 import { circleMembers, circles, orgData } from '../mocks/circles'
 import { members } from '../mocks/members'
 import { roles } from '../mocks/roles'
+import { LogDisplay, LogType } from './log'
 import { OrgData } from './OrgData'
 
 const { Free, Agile, Strict } = Governance_Mode_Enum
@@ -18,6 +19,9 @@ const { Free, Agile, Strict } = Governance_Mode_Enum
 // So for circle-agence-dev: alice is leader AND owner; pam is a direct member
 // but NOT a leader (the circle is led through its representative).
 
+const data = (mode: Governance_Mode_Enum) =>
+  new OrgData({ circles, circleMembers, circleLinks: [], roles, members, governanceMode: mode })
+
 const perms = (
   circleId: string,
   memberId: string | undefined,
@@ -25,11 +29,19 @@ const perms = (
   isOrgMember = true,
   isOrgOwner = false
 ) => {
-  const data = new OrgData({ circles, circleMembers, circleLinks: [], roles, members, governanceMode: mode })
-  const circle = data.getCircle(circleId)!
-  const role = data.getRole(circle.roleId)!
-  return data.getCirclePermissions(circle, role, memberId, isOrgMember, isOrgOwner)
+  const org = data(mode)
+  const circle = org.getCircle(circleId)!
+  const role = org.getRole(circle.roleId)!
+  return org.getCirclePermissions(circle, role, memberId, isOrgMember, isOrgOwner)
 }
+
+const canCancel = (
+  display: LogDisplay,
+  memberId: string | undefined,
+  mode: Governance_Mode_Enum,
+  isOrgMember = true,
+  isOrgOwner = false
+) => data(mode).canCancelLog(display, memberId, isOrgMember, isOrgOwner)
 
 describe('OrgData permission helpers', () => {
   it('hasRepresentatives reflects parent-link sub-circles', () => {
@@ -131,5 +143,87 @@ describe('OrgData.getCirclePermissions', () => {
     const p = perms('circle-agence-leader', 'member-pam', Free, true, true)
     expect(p.canEditSubCircles).toBe(false)
     expect(p.canEditSubCirclesParentLinks).toBe(false)
+  })
+})
+
+describe('OrgData.canCancelLog', () => {
+  const { Agile } = Governance_Mode_Enum
+
+  it('needs the member-assignment right to undo a member change', () => {
+    const display: LogDisplay = {
+      type: LogType.CircleMemberAdd,
+      id: 'circle-agence-dev',
+      name: 'Développeurs',
+      memberId: 'member-pam',
+      memberName: 'Pam',
+    }
+    // alice represents circle-agence-dev, pam is only a direct member
+    expect(canCancel(display, 'member-alice', Agile)).toBe(true)
+    expect(canCancel(display, 'member-pam', Agile)).toBe(false)
+  })
+
+  it('needs the structural right to undo a circle change', () => {
+    const display: LogDisplay = {
+      type: LogType.CircleMove,
+      id: 'circle-agence-dev',
+      name: 'Développeurs',
+      parentId: 'circle-agence',
+      parentName: 'Agence',
+    }
+    expect(canCancel(display, 'member-alice', Agile)).toBe(true)
+    expect(canCancel(display, 'member-pam', Agile)).toBe(false)
+  })
+
+  it('undoing a base role edit is reserved to org owners', () => {
+    const display: LogDisplay = {
+      type: LogType.RoleUpdate,
+      id: 'role-leader',
+      name: 'Leader',
+    }
+    expect(canCancel(display, 'member-alice', Agile)).toBe(false)
+    expect(canCancel(display, 'member-alice', Agile, true, true)).toBe(true)
+  })
+
+  it('undoing a role edit follows the circle using it', () => {
+    const display: LogDisplay = {
+      type: LogType.RoleUpdate,
+      id: 'role-dev',
+      name: 'Développeurs',
+    }
+    expect(canCancel(display, 'member-alice', Agile)).toBe(true)
+    expect(canCancel(display, 'member-pam', Agile)).toBe(false)
+  })
+
+  it('leaves an unresolved target (archived circle) to the backend', () => {
+    const display: LogDisplay = {
+      type: LogType.CircleArchive,
+      id: 'circle-unknown',
+      name: 'Archivé',
+    }
+    expect(canCancel(display, 'member-pam', Agile)).toBe(true)
+    expect(canCancel(display, 'member-pam', Agile, false)).toBe(false)
+  })
+})
+
+describe('OrgData.canEditSomeCircle', () => {
+  const { Free, Agile, Strict } = Governance_Mode_Enum
+
+  it('Agile: true for a lead, false for a plain member', () => {
+    expect(data(Agile).canEditSomeCircle('member-alice', true, false)).toBe(true)
+    expect(data(Agile).canEditSomeCircle('member-pam', true, false)).toBe(false)
+  })
+
+  it('Free and org owners can always edit something', () => {
+    expect(data(Free).canEditSomeCircle('member-pam', true, false)).toBe(true)
+    expect(data(Strict).canEditSomeCircle('member-pam', true, true)).toBe(true)
+  })
+
+  it('Strict: a lead keeps member assignment', () => {
+    expect(data(Strict).canEditSomeCircle('member-alice', true, false)).toBe(true)
+    expect(data(Strict).canEditSomeCircle('member-pam', true, false)).toBe(false)
+  })
+
+  it('denies non org-members', () => {
+    expect(data(Free).canEditSomeCircle('member-alice', false, false)).toBe(false)
   })
 })

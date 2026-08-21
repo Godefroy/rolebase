@@ -19,6 +19,7 @@ import { CircleContext } from '../contexts/CIrcleContext'
 import CircleButton from './CircleButton'
 import CircleByIdButton from './CircleByIdButton'
 import CircleRoleMembers from './CircleRoleMembers'
+import CircleRoleNoRights from './CircleRoleNoRights'
 import CircleRoleSubCircles from './CircleRoleSubCircles'
 import CircleRoleLinkParents from './CircleRoleLinkParents'
 import { RoleEditableField } from './RoleEditableField'
@@ -210,6 +211,8 @@ export default function CircleRole({ skipFetchRole }: Props) {
             {t('CircleRole.generate')}
           </Button>
         )}
+
+      <CircleRoleNoRights />
 
       {generatorModal.isOpen && (
         <RoleGeneratorModal

@@ -1,32 +1,35 @@
 import MemberMenuItem from '@/member/components/MemberMenuItem'
+import { ParticipantMemberWithOrgOwner } from '@/member/hooks/useParticipantMembersWithOrgOwners'
 import { MenuGroup } from '@chakra-ui/react'
-import { MemberFragment } from '@gql'
-import { ParticipantMember } from '@rolebase/shared/model/member'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import CircleMemberLink from './CircleMemberLink'
-import OrgOwnersItems from './OrgOwnersItems'
 
 interface Props {
   title: string
-  members: ParticipantMember[]
-  orgOwners?: MemberFragment[]
+  members: ParticipantMemberWithOrgOwner[]
 }
 
 // A titled group of members in the Security menu (e.g. who can modify the role,
-// or who can assign members), followed by the organization's owners.
-export default function CirclePrivacyGroup({ title, members, orgOwners }: Props) {
+// or who can assign members).
+export default function CirclePrivacyGroup({ title, members }: Props) {
+  const { t } = useTranslation()
+
   return (
     <MenuGroup title={title}>
-      {members.map(({ member, circlesIds }) => (
+      {members.map(({ member, circlesIds, isOrgOwner }) => (
         <CircleMemberLink
           key={member.id}
           memberId={member.id}
           circleId={circlesIds[0]}
         >
-          <MemberMenuItem member={member} circlesIds={circlesIds} />
+          <MemberMenuItem
+            member={member}
+            circlesIds={circlesIds}
+            description={isOrgOwner ? t('CirclePrivacy.roleOwner') : undefined}
+          />
         </CircleMemberLink>
       ))}
-      <OrgOwnersItems members={orgOwners} excludeParticipants={members} />
     </MenuGroup>
   )
 }

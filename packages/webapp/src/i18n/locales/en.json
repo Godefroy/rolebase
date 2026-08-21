@@ -199,10 +199,9 @@
     "tooltip": "Security",
     "role": "Who can modify the role {{role}}:",
     "role_members": "Who can modify the role {{role}} and its members:",
+    "roleAndSubRoles": "Who can modify the role {{role}} and its sub-roles:",
     "subRoles": "Who can modify sub-roles:",
     "subRoles_members": "Who can modify sub-roles and members:",
-    "ownersShowMore": "+{{count}} owners",
-    "ownersShowMore_one": "+{{count}} owner",
     "roleOwner": "Owner",
     "strictExplanation": "This role is protected by strict governance. Changes go through a proposal.",
     "createProposal": "Create a proposal",
@@ -241,6 +240,17 @@
   },
   "CircleRoleLinkParents": {
     "title": "Participates in"
+  },
+  "CircleRoleNoRights": {
+    "heading": "Reserved changes",
+    "baseText": "The {{role}} role is a base role: its configuration is shared by every role using it, so only the organization's owners can edit it.",
+    "baseSeparate": "To customize this role here, separate it from the base role from the actions menu.",
+    "actionsText": "To {{actions}}, ask the members who hold the right or submit a proposal to the role's participants.",
+    "actionRole": "edit the role",
+    "actionSubRoles": "manage sub-roles",
+    "actionMembers": "assign members",
+    "seeWhoCanEdit": "Click the padlock at the top right to see who can edit directly.",
+    "createProposal": "Create a proposal"
   },
   "CirclesPage": {
     "title": "{{org}}'s org chart",

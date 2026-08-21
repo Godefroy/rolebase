@@ -210,9 +210,13 @@ export default function useGraphEvents(): GraphEvents {
     [memberAddDenial, addCircleMember, runAction, warn]
   )
 
-  // Direct edits need an org member and an editable chart (preview/share
-  // disable them). Per-action rights are then checked above.
-  const canDrag = isMember && editable
+  // Direct edits need an org member, an editable chart (preview/share disable
+  // them) and at least one circle the member may edit: otherwise every drop
+  // would be refused. Per-action rights are then checked above.
+  const canDrag =
+    isMember &&
+    editable &&
+    !!orgData?.canEditSomeCircle(currentMember?.id, isMember, isOrgOwner)
 
   return useMemo(
     () => ({

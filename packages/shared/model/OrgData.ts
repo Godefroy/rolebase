@@ -4,9 +4,11 @@ import {
   CircleMemberFragment,
   Governance_Mode_Enum,
   MemberFragment,
+  Member_Role_Enum,
   RoleSummaryFragment,
   ThreadFragment,
 } from '../gql'
+import { LogDisplay, LogType } from '../model/log'
 import { Participant } from '../model/member'
 import { EntityWithScope, ParticipantsScope } from '../model/participants'
 
@@ -108,6 +110,7 @@ export class OrgData {
     readonly CircleFragment[]
   >()
   private activeMembersList?: readonly MemberFragment[]
+  private orgOwnersList?: readonly MemberFragment[]
 
   constructor(input: OrgDataInput) {
     const {
@@ -207,6 +210,13 @@ export class OrgData {
   // Members linked to a user account (those who have actually joined).
   getActiveMembers(): readonly MemberFragment[] {
     return (this.activeMembersList ??= this.members.filter((m) => !!m.userId))
+  }
+  // Owners of the organization, who may act on any circle in any governance
+  // mode. Every "who can do this" list ends with them.
+  getOrgOwners(): readonly MemberFragment[] {
+    return (this.orgOwnersList ??= this.members.filter(
+      (m) => m.role === Member_Role_Enum.Owner
+    ))
   }
 
   // ---- Relations ----
@@ -507,6 +517,102 @@ export class OrgData {
       canEditSubCircles,
       canEditSubCirclesParentLinks,
     }
+  }
+
+  // Permissions of a circle resolved by id, or undefined when the circle is
+  // not indexed (archived circles are resolved outside the active index).
+  private getCirclePermissionsById(
+    circleId: string,
+    memberId: string | undefined,
+    isOrgMember: boolean,
+    isOrgOwner: boolean
+  ): CirclePermissions | undefined {
+    const circle = this.getCircle(circleId)
+    const role = circle && this.getRole(circle.roleId)
+    if (!circle || !role) return undefined
+    return this.getCirclePermissions(
+      circle,
+      role,
+      memberId,
+      isOrgMember,
+      isOrgOwner
+    )
+  }
+
+  // Whether a member may undo a logged org-chart change. Undoing replays the
+  // inverse mutations with the member's own rights, so it needs the same
+  // permission as the original edit (the Hasura permissions reject it
+  // otherwise). Circle archives and creations are undone through the backend
+  // routes, which run this same check on data including archived circles: when
+  // the target is no longer indexed here, leave the decision to them.
+  canCancelLog(
+    display: LogDisplay,
+    memberId: string | undefined,
+    isOrgMember: boolean,
+    isOrgOwner: boolean
+  ): boolean {
+    if (!isOrgMember) return false
+    if (isOrgOwner) return true
+
+    const permsOf = (circleId: string) =>
+      this.getCirclePermissionsById(circleId, memberId, isOrgMember, isOrgOwner)
+
+    switch (display.type) {
+      case LogType.CircleMemberAdd:
+      case LogType.CircleMemberRemove:
+        return permsOf(display.id)?.canEditMembers ?? true
+
+      case LogType.CircleLinkAdd:
+      case LogType.CircleLinkRemove:
+        // display.id is the host circle, which owns the link.
+        return permsOf(display.id)?.canEditSubCircles ?? true
+
+      case LogType.RoleCreate:
+      case LogType.RoleUpdate:
+      case LogType.RoleArchive: {
+        // display.id is a role id. A base role is a shared definition, reserved
+        // to org owners; a regular role belongs to a single circle.
+        const role = this.getRole(display.id)
+        if (role?.base) return false
+        const circle = this.circles.find((c) => c.roleId === display.id)
+        return circle ? !!permsOf(circle.id)?.canEditRole : true
+      }
+
+      default:
+        // CircleCreate, CircleCopy, CircleMove, CircleArchive
+        return permsOf(display.id)?.canEditCircle ?? true
+    }
+  }
+
+  // Whether a member may edit at least one circle of the chart. Gates the
+  // chart-wide edit affordances (drag & drop), which would otherwise be offered
+  // to members whose every drop gets refused.
+  canEditSomeCircle(
+    memberId: string | undefined,
+    isOrgMember: boolean,
+    isOrgOwner: boolean
+  ): boolean {
+    if (!isOrgMember) return false
+    if (isOrgOwner || this.governanceMode === Governance_Mode_Enum.Free) {
+      return true
+    }
+    return this.circles.some((circle) => {
+      const role = this.getRole(circle.roleId)
+      if (!role) return false
+      const perms = this.getCirclePermissions(
+        circle,
+        role,
+        memberId,
+        isOrgMember,
+        isOrgOwner
+      )
+      return (
+        perms.canEditCircle ||
+        perms.canEditMembers ||
+        perms.canEditSubCircles ||
+        perms.canEditSubCirclesParentLinks
+      )
+    })
   }
 
   // Member ids included in a participants scope

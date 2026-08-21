@@ -16,5 +16,10 @@ export default function BaseRoleSearchButton({
   ...props
 }: Props) {
   const items = useBaseRoleSearchItems(roles, excludeIds, parentLink)
+
+  // Nothing left to pick and no creation offered: the button would only open an
+  // empty list (e.g. "add a representative" with no parent-link base role).
+  if (items.length === 0 && !props.onCreate) return null
+
   return <SearchButton {...props} items={items} />
 }

@@ -11,12 +11,18 @@ import {
   Tooltip,
   useDisclosure,
 } from '@chakra-ui/react'
-import { Governance_Mode_Enum, Member_Role_Enum } from '@gql'
-import React, { Suspense, lazy, useContext, useMemo } from 'react'
+import { Governance_Mode_Enum } from '@gql'
+import React, { Suspense, lazy, useContext } from 'react'
 import { useTranslation } from 'react-i18next'
+import useParticipantMembersWithOrgOwners from '@/member/hooks/useParticipantMembersWithOrgOwners'
 import { AddIcon, PrivacyIcon } from 'src/icons'
+import { ParticipantMember } from '@rolebase/shared/model/member'
 import { CircleContext } from '../contexts/CIrcleContext'
 import CirclePrivacyGroup from './CirclePrivacyGroup'
+
+// Under strict governance no circle member holds the structural rights: the
+// group then lists the org owners alone.
+const noMembers: ParticipantMember[] = []
 
 // Lazy-loaded to break the import cycle CircleContent → CirclePrivacy →
 // ProposalModal → ProposalGraphEditor → CircleContent.
@@ -24,18 +30,15 @@ const ProposalModal = lazy(() => import('@/proposal/modals/ProposalModal'))
 
 export default function CirclePrivacy() {
   const { t } = useTranslation()
-  const { governanceMode, orgData } = useOrgContext()
+  const { governanceMode } = useOrgContext()
   const proposalModal = useDisclosure()
 
   // Get circle context
   const circleContext = useContext(CircleContext)
 
-  // Get organization's owners
-  const members = orgData?.members
-  const orgOwners = useMemo(
-    () => members?.filter((m) => m.role === Member_Role_Enum.Owner),
-    [members]
-  )
+  // Owners of the organization hold every right on every role, so each group
+  // ends with them, flagged as such rather than listed apart.
+  const withOrgOwners = useParticipantMembersWithOrgOwners()
 
   if (!circleContext) return null
   const { circle, role, owners, leaders, hasParentLinkMembers } = circleContext
@@ -79,27 +82,44 @@ export default function CirclePrivacy() {
               </Text>
             )}
 
-            <MenuItem icon={<AddIcon size={20} />} onClick={proposalModal.onOpen}>
+            <MenuItem
+              icon={<AddIcon size={20} />}
+              onClick={proposalModal.onOpen}
+            >
               {t('CirclePrivacy.createProposal')}
             </MenuItem>
 
             <MenuDivider />
 
             {isStrict ? (
-              <CirclePrivacyGroup
-                title={t('CirclePrivacy.whoCanAssignMembers')}
-                members={memberAssigners}
-                orgOwners={orgOwners}
-              />
+              <>
+                <CirclePrivacyGroup
+                  title={t(
+                    showSubRoles
+                      ? 'CirclePrivacy.roleAndSubRoles'
+                      : 'CirclePrivacy.role',
+                    { role: role.name }
+                  )}
+                  members={withOrgOwners(noMembers)}
+                />
+
+                <MenuDivider />
+
+                <CirclePrivacyGroup
+                  title={t('CirclePrivacy.whoCanAssignMembers')}
+                  members={withOrgOwners(memberAssigners)}
+                />
+              </>
             ) : (
               <>
                 <CirclePrivacyGroup
                   title={t(
-                    `CirclePrivacy.role${hasParentLinkMembers ? '' : '_members'}`,
+                    `CirclePrivacy.role${
+                      hasParentLinkMembers ? '' : '_members'
+                    }`,
                     { role: role.name }
                   )}
-                  members={owners}
-                  orgOwners={orgOwners}
+                  members={withOrgOwners(owners)}
                 />
 
                 {showSubRoles && (
@@ -111,8 +131,7 @@ export default function CirclePrivacy() {
                           hasParentLinkMembers ? '_members' : ''
                         }`
                       )}
-                      members={leaders}
-                      orgOwners={orgOwners}
+                      members={withOrgOwners(leaders)}
                     />
                   </>
                 )}

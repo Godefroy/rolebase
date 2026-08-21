@@ -199,10 +199,9 @@
     "tooltip": "Sécurité",
     "role": "Qui peut modifier le rôle {{role}} :",
     "role_members": "Qui peut modifier le rôle {{role}} et ses membres :",
+    "roleAndSubRoles": "Qui peut modifier le rôle {{role}} et ses sous-rôles :",
     "subRoles": "Qui peut modifier les sous-rôles :",
     "subRoles_members": "Qui peut modifier les sous-rôles et les membres :",
-    "ownersShowMore": "+{{count}} propriétaires",
-    "ownersShowMore_one": "+ {{count}} propriétaire",
     "roleOwner": "Propriétaire",
     "strictExplanation": "Ce rôle est protégé par la gouvernance stricte. Les changements passent par une proposition.",
     "createProposal": "Créer une proposition",
@@ -241,6 +240,17 @@
   },
   "CircleRoleLinkParents": {
     "title": "Participe à"
+  },
+  "CircleRoleNoRights": {
+    "heading": "Modifications réservées",
+    "baseText": "Le rôle {{role}} est un rôle de base : sa configuration est partagée par tous les rôles qui l'utilisent, donc seuls les propriétaires de l'organisation peuvent la modifier.",
+    "baseSeparate": "Pour personnaliser ce rôle ici, séparez-le du rôle de base depuis le menu d'actions.",
+    "actionsText": "Pour {{actions}}, demandez aux membres habilités ou soumettez une proposition aux participants de ce rôle.",
+    "actionRole": "modifier le rôle",
+    "actionSubRoles": "gérer les sous-rôles",
+    "actionMembers": "assigner des membres",
+    "seeWhoCanEdit": "Cliquez sur le cadenas en haut à droite pour voir qui peut modifier directement.",
+    "createProposal": "Créer une proposition"
   },
   "CirclesPage": {
     "title": "Organigramme de {{org}}",

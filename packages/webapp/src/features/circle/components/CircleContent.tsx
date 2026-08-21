@@ -21,7 +21,6 @@ import {
   Box,
   Flex,
   Heading,
-  HStack,
   MenuItem,
   Spacer,
   TabList,
@@ -145,11 +144,6 @@ export default function CircleContent({
     isOrgOwner && canEditCircle && !isDraft && !role.base && !!circle.parentId
   const canSeparateBaseRole =
     canEditCircle && !isDraft && role.base && !!circle.parentId
-
-  console.log({
-    canMakeBaseRole,
-    canEditCircle
-  })
 
   return (
     <>

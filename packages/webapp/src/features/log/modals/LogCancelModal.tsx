@@ -47,17 +47,32 @@ export default function LogCancelModal({
   // Checkbox to force cancel if there are changes
   const [force, setForce] = useState(false)
 
-  // Cancel log
+  // Cancel log. The revert mutations run with the user's own rights, so surface
+  // a refusal instead of failing silently.
+  const [canceling, setCanceling] = useState(false)
   const handleCancelLog = async () => {
-    await cancel()
-    onCancelled?.()
-    modalProps.onClose()
+    setCanceling(true)
+    try {
+      await cancel()
+      onCancelled?.()
+      modalProps.onClose()
 
-    toast({
-      title: t('LogCancelModal.toastSuccess'),
-      status: 'success',
-      duration: 2000,
-    })
+      toast({
+        title: t('LogCancelModal.toastSuccess'),
+        status: 'success',
+        duration: 2000,
+      })
+    } catch (error: any) {
+      toast({
+        title: t('common.error'),
+        description: error?.message || undefined,
+        status: 'error',
+        duration: 4000,
+        isClosable: true,
+      })
+    } finally {
+      setCanceling(false)
+    }
   }
 
   return (
@@ -133,6 +148,7 @@ export default function LogCancelModal({
             colorScheme="red"
             type="submit"
             isDisabled={hasChanged && !force}
+            isLoading={canceling}
             onClick={handleCancelLog}
           >
             {t('LogCancelModal.cancel')}
