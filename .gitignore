@@ -31,3 +31,7 @@ stats.html
 
 # Shared Terreau skills (symlinks to the terreau repo)
 .claude/skills/terreau-*
+
+# Pi agent
+.pi/*
+!.pi/settings.json
