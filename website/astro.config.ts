@@ -10,6 +10,7 @@ import svgr from 'vite-plugin-svgr'
 import rehypeExternalLinks from 'rehype-external-links'
 import rehypeMermaid from 'rehype-mermaid'
 import { redirects } from './src/redirects'
+import { contentLastmod } from './src/utils/content-lastmod'
 import rehypeMdClass from './src/utils/rehype-md-class'
 import { getExternalLinkRel } from './src/utils/external-links'
 import enrichMd from './src/integrations/enrich-md'
@@ -24,7 +25,9 @@ const sharedDir = fileURLToPath(new URL('../packages/shared', import.meta.url))
 const graphEntry = fileURLToPath(
   new URL('../packages/graph/src/index.ts', import.meta.url)
 )
-const webappSrc = fileURLToPath(new URL('../packages/webapp/src', import.meta.url))
+const webappSrc = fileURLToPath(
+  new URL('../packages/webapp/src', import.meta.url)
+)
 
 const { site, langs, defaultLang } = config
 
@@ -69,12 +72,20 @@ export default defineConfig({
     // pages. `gfm` is explicit for the same reason, a custom processor hides the
     // default Astro would otherwise pass on (dropping remark-gfm breaks tables).
     mdx({
-      remarkPlugins: processor.options.remarkPlugins as MdxOptions['remarkPlugins'],
-      rehypePlugins: processor.options.rehypePlugins as MdxOptions['rehypePlugins'],
+      remarkPlugins: processor.options
+        .remarkPlugins as MdxOptions['remarkPlugins'],
+      rehypePlugins: processor.options
+        .rehypePlugins as MdxOptions['rehypePlugins'],
       gfm: true,
     }),
     react(),
     sitemap({
+      // Date of the last commit on each page's source, so a crawler (and an agent
+      // ranking what to read first) can tell what actually moved since last time.
+      serialize: (item) => {
+        item.lastmod = contentLastmod(new URL(item.url).pathname)
+        return item
+      },
       // Exclude root URL (redirects to /en/) to avoid duplicate hreflang entries
       filter: (page) => page !== `${site}/`,
       i18n: {
