@@ -1,0 +1,110 @@
+---
+// Inline Cal.com booker, loaded through the official embed script instead of a
+// raw iframe: it resizes itself to its content, drops the cal.com page chrome
+// and takes the site's colors. The booker language follows the visitor's
+// browser settings, which cal.com resolves on its side.
+import { getLangFromUrl, getTranslations } from '../utils/i18n'
+
+interface Props {
+  /** Cal.com link without the domain, e.g. `lonestone-godefroy/rolebase-demo`. */
+  calLink: string
+  layout?: 'month_view' | 'week_view' | 'column_view'
+  class?: string
+}
+
+const { calLink, layout = 'month_view', class: className } = Astro.props
+
+const lang = getLangFromUrl(Astro.url)
+const t = await getTranslations(lang)
+
+// One namespace per link, so several bookers can live on the same page.
+const namespace = calLink.replace(/[^a-zA-Z0-9]+/g, '-')
+const elementId = `cal-embed-${namespace}`
+
+// Brand tokens mirrored from `global.css`: the booker renders inside an iframe,
+// so the site's CSS variables never reach it.
+const cssVars = {
+  'cal-brand': 'hsl(262, 89%, 68%)',
+  'cal-brand-emphasis': 'hsl(262, 89%, 58%)',
+  'cal-brand-text': '#ffffff',
+  'cal-bg': 'hsl(31.3, 44.2%, 97.9%)',
+  'cal-bg-emphasis': 'hsl(31.3, 19%, 91%)',
+  'cal-bg-subtle': 'hsl(31.3, 44.2%, 97.9%)',
+  'cal-bg-muted': 'hsl(31.3, 19%, 91%)',
+  'cal-text': 'hsl(31.3, 15%, 48.4%)',
+  'cal-text-emphasis': 'hsl(31.3, 12.7%, 9%)',
+  'cal-text-subtle': 'hsl(31.3, 15%, 48.4%)',
+  'cal-text-muted': 'hsl(31.3, 16.6%, 59.6%)',
+  'cal-border': 'hsl(31.3, 15.4%, 86.1%)',
+  'cal-border-subtle': 'hsl(31.3, 15.4%, 86.1%)',
+  'cal-border-muted': 'hsl(31.3, 19%, 91%)',
+  'cal-border-emphasis': 'hsl(31.3, 15.7%, 73.9%)',
+  'cal-border-booker': 'transparent',
+}
+---
+
+<div id={elementId} class:list={['w-full min-h-150', className]}></div>
+
+<noscript>
+  <a
+    href={`https://cal.com/${calLink}`}
+    target="_blank"
+    rel="noopener"
+    class="underline">{t.bookDemo}</a
+  >
+</noscript>
+
+<script
+  is:inline
+  define:vars={{ elementId, calLink, layout, namespace, cssVars }}
+>
+  // Official cal.com loader snippet, kept verbatim so it stays in sync with the
+  // one cal.com generates. It queues the calls below until embed.js is ready.
+  ;((C, A, L) => {
+    const p = (a, ar) => {
+      a.q.push(ar)
+    }
+    const d = C.document
+    C.Cal =
+      C.Cal ||
+      function () {
+        const cal = C.Cal
+        const ar = arguments
+        if (!cal.loaded) {
+          cal.ns = {}
+          cal.q = cal.q || []
+          d.head.appendChild(d.createElement('script')).src = A
+          cal.loaded = true
+        }
+        if (ar[0] === L) {
+          const api = function () {
+            p(api, arguments)
+          }
+          const namespace = ar[1]
+          api.q = api.q || []
+          if (typeof namespace === 'string') {
+            cal.ns[namespace] = cal.ns[namespace] || api
+            p(cal.ns[namespace], ar)
+            p(cal, ['initNamespace', namespace])
+          } else p(cal, ar)
+          return
+        }
+        p(cal, ar)
+      }
+  })(window, 'https://app.cal.com/embed/embed.js', 'init')
+
+  Cal('init', namespace, { origin: 'https://cal.com' })
+
+  Cal.ns[namespace]('inline', {
+    elementOrSelector: `#${elementId}`,
+    calLink,
+    config: { layout },
+  })
+
+  Cal.ns[namespace]('ui', {
+    layout,
+    theme: 'light',
+    hideEventTypeDetails: false,
+    cssVarsPerTheme: { light: cssVars, dark: cssVars },
+  })
+</script>

@@ -6,11 +6,10 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import useOnboardingActive from '../hooks/useOnboardingActive'
 
-const BOOK_DEMO_URL =
-  'https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3HO94pvxEZhJHdFj9De9aQVxQysIRmZLG3ZohdET30avcVhkhCe3yrKRNLwjW8SCtr_qLaAwWe'
+const BOOK_DEMO_URL = 'https://cal.com/lonestone-godefroy/rolebase-demo'
 
 export default function BookDemoModal() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const { metadata, setMetadata } = useUserMetadata()
   const isOwner = useOrgOwner()
   const onboardingActive = useOnboardingActive()
@@ -22,9 +21,7 @@ export default function BookDemoModal() {
   }
 
   const handleBookDemo = () => {
-    const url = new URL(BOOK_DEMO_URL)
-    url.searchParams.set('hl', i18n.language)
-    window.open(url.toString(), '_blank')
+    window.open(BOOK_DEMO_URL, '_blank')
     handleClose()
   }
 
