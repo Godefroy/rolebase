@@ -33,6 +33,10 @@ const clientCases = defineCollection({
   schema: ({ image }) =>
     z.object({
       title: z.string(),
+      // Optional SEO `<title>` / headline split, same convention as `blog`:
+      // `title` stays the document title, `h1` overrides the visible headline
+      // on the case page and on its card in the index.
+      h1: z.string().optional(),
       summary: z.string(),
       // Company name, used as the alt text of the logo. Falls back to `title`,
       // which reads as a full headline rather than as an image description.
@@ -102,7 +106,6 @@ const glossary = defineCollection({
     // promises exactly what the competing dictionaries promise. Set this on the
     // terms where a distinct promise earns the click.
     title: z.string().optional(),
-    description: z.string().optional(),
     date: z.coerce.date().optional(),
     update: z.coerce.date().optional(),
     draft: z.boolean().optional(),

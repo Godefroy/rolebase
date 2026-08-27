@@ -41,7 +41,7 @@ const items = (await getCollection('client-cases', (item) => item.id.endsWith(`/
             </p>
           )}
           <h2 class="text-lg font-medium leading-snug group-hover:text-primary transition-colors">
-            {item.data.title}
+            {item.data.h1 ?? item.data.title}
           </h2>
           <p class="mt-2 text-sm text-text-secondary line-clamp-3">{item.data.summary}</p>
         </div>
