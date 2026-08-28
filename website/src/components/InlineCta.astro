@@ -2,21 +2,30 @@
 import Button from './Button.astro'
 import { getLangFromUrl, getTranslations } from '../utils/i18n'
 
+interface Props {
+  title?: string
+  text?: string
+  label?: string
+  href?: string
+}
+
 const lang = getLangFromUrl(Astro.url)
 const t = await getTranslations(lang)
+const {
+  title = t.cta.title,
+  text = t.cta.description,
+  label = t.cta.button,
+  href = `/${lang}/contact`,
+} = Astro.props
 ---
 
 <div id="inline-cta-tpl" hidden>
   <div class="relative my-10 overflow-hidden rounded-2xl bg-yellow-50 p-8 md:p-12">
     <div class="relative z-10">
-      <p class="mb-2 text-2xl font-medium">
-        {t.cta.title}
-      </p>
-      <p class="mb-6 leading-relaxed md:pr-30">
-        {t.cta.description}
-      </p>
+      <p class="mb-2 text-2xl font-medium">{title}</p>
+      <p class="mb-6 leading-relaxed md:pr-30">{text}</p>
       <div class="flex flex-wrap gap-3">
-        <Button href={`/${lang}/contact`} variant="orange" label={t.cta.button} />
+        <Button href={href} variant="orange" label={label} />
         <Button href="/signup" variant="outline" label={t.cta.buttonSelfServe} />
       </div>
     </div>

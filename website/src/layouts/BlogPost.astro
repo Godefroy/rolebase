@@ -91,7 +91,7 @@ const articleSchema = {
   <aside class="md:w-80 md:shrink-0 lg:w-88">
     <BlogSidebar headings={headings} image={post.data.image} imageAlt={post.data.title} />
   </aside>
-  {!post.data.hideInlineCta && <InlineCta />}
+  {!post.data.hideInlineCta && <InlineCta {...(post.data.cta ?? {})} />}
   {similarPosts.length > 0 && (
     <section slot="after" class="mt-16 pt-10 border-t border-gray-100">
       <h2 class="text-2xl font-medium mb-8">{t.blog.similarPosts}</h2>

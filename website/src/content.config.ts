@@ -22,6 +22,15 @@ const blog = defineCollection({
       draft: z.boolean().default(false),
       // Opt a single post out of the auto-inserted mid-article CTA.
       hideInlineCta: z.boolean().default(false),
+      // Override the copy and the destination of that CTA on a single post.
+      cta: z
+        .object({
+          title: z.string().optional(),
+          text: z.string().optional(),
+          label: z.string().optional(),
+          href: z.string().optional(),
+        })
+        .optional(),
     }),
 })
 
