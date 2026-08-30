@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "moduleResolution": "Node",
+    "module": "preserve",
     "target": "ES2022",
     "allowJs": true,
     "skipLibCheck": true,
@@ -11,8 +11,9 @@
     "isolatedModules": true,
     "strict": true,
     "strictNullChecks": true,
-    "downlevelIteration": true,
     "jsx": "react",
-    "baseUrl": "."
+    "paths": {
+      "*": ["./*"]
+    }
   }
 }

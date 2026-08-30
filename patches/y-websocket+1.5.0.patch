@@ -1,0 +1,21 @@
+diff --git a/node_modules/y-websocket/package.json b/node_modules/y-websocket/package.json
+index 6c6c9d4..68b6bc6 100644
+--- a/node_modules/y-websocket/package.json
++++ b/node_modules/y-websocket/package.json
+@@ -7,7 +7,7 @@
+   "types": "./dist/src/y-websocket.d.ts",
+   "sideEffects": false,
+   "funding": {
+-    "type": "GitHub Sponsors ❤",
++    "type": "GitHub Sponsors \u2764",
+     "url": "https://github.com/sponsors/dmonad"
+   },
+   "scripts": {
+@@ -31,6 +31,7 @@
+     "./bin/utils": "./bin/utils.js",
+     "./bin/callback": "./bin/callback.js",
+     ".": {
++      "types": "./dist/src/y-websocket.d.ts",
+       "module": "./src/y-websocket.js",
+       "import": "./src/y-websocket.js",
+       "require": "./dist/y-websocket.cjs"

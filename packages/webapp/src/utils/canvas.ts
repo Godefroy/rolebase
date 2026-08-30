@@ -1,4 +1,4 @@
-import { Area } from 'react-easy-crop/types'
+import { Area } from 'react-easy-crop'
 
 // https://codesandbox.io/s/y09komm059?file=/src/canvasUtils.js:0-803
 

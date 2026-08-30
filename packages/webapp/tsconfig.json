@@ -5,26 +5,25 @@
     "types": ["vite/client"],
     "allowJs": false,
     "skipLibCheck": true,
-    "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "noImplicitAny": true,
     "jsx": "react",
-    "baseUrl": ".",
     "paths": {
-      "@api/*": ["src/api/*"],
-      "@/*": ["src/features/*"],
-      "@gql": ["src/graphql.generated.ts"],
-      "@images/*": ["src/images/*"],
-      "@store/*": ["src/store/*"],
-      "@utils/*": ["src/utils/*"]
+      "@api/*": ["./src/api/*"],
+      "@/*": ["./src/features/*"],
+      "@gql": ["./src/graphql.generated.ts"],
+      "@images/*": ["./src/images/*"],
+      "@store/*": ["./src/store/*"],
+      "@utils/*": ["./src/utils/*"],
+      "*": ["./*"]
     }
   }
 }

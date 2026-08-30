@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "build": "echo 'No build step needed'",
-    "tsc": "tsc --noEmit",
+    "tsc": "tsgo --noEmit",
     "test": "vitest run"
   },
   "dependencies": {
@@ -38,6 +38,7 @@
     "@types/node": "^18.8.3",
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.0.10",
+    "@typescript/native-preview": "^7.0.0-dev.20260707.2",
     "typescript": "^5.2.2",
     "vitest": "^0.34.6"
   },

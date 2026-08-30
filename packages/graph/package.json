@@ -4,7 +4,7 @@
   "license": "MIT",
   "main": "src/index.ts",
   "scripts": {
-    "tsc": "tsc",
+    "tsc": "tsgo",
     "test": "vitest run"
   },
   "dependencies": {
@@ -27,6 +27,7 @@
     "@types/lodash.uniqby": "^4.7.6",
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
+    "@typescript/native-preview": "^7.0.0-dev.20260707.2",
     "typescript": "^5.2.2",
     "vitest": "^0.34.6"
   }

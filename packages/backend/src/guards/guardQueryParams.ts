@@ -2,7 +2,7 @@ import * as yup from 'yup'
 import { RestError } from '../rest/route'
 import { Context } from '../trpc/context'
 
-export function guardQueryParams<Schema extends yup.ObjectSchema<any>>(
+export function guardQueryParams<Schema extends yup.Schema>(
   context: Context,
   schema: Schema
 ) {
