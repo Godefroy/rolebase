@@ -18,6 +18,7 @@ import { Member_Role_Enum, type MemberFragment } from '@gql'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SendIcon } from 'src/icons'
+import { track } from 'src/analytics'
 import { trpc } from 'src/trpc'
 
 interface MemberInviteModalProps extends UseModalProps {
@@ -46,6 +47,7 @@ export default function MemberInviteModal({
         role: Member_Role_Enum.Member,
         email,
       })
+      track('member_invited', { count: 1 })
       toast({
         title: t('MemberInviteModal.toastInvited', { member: member.name }),
         status: 'success',

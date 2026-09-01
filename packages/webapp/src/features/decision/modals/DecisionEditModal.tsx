@@ -35,6 +35,7 @@ import { nameSchema } from '@rolebase/shared/schemas'
 import React from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { track } from 'src/analytics'
 import * as yup from 'yup'
 
 interface Props extends UseModalProps {
@@ -123,6 +124,8 @@ export default function DecisionEditModal({
       })
       const newDecision = data?.insert_decision_one
       if (!newDecision) return
+
+      track('decision_created', { private: values.private })
 
       onCreate?.(newDecision.id)
     }

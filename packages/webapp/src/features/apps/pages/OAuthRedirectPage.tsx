@@ -11,6 +11,7 @@ import { App_Type_Enum } from '@gql'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useSearchParams } from 'react-router'
+import { track } from 'src/analytics'
 import { BackIcon } from 'src/icons'
 import appsParams from '../appsParams'
 
@@ -38,7 +39,10 @@ export default function OAuthRedirectPage({ type }: Props) {
     // Register app
     appParams
       .redirectFunction({ code })
-      .then(() => setSuccess(true))
+      .then(() => {
+        track('app_connected', { type })
+        setSuccess(true)
+      })
       .catch((error) => setError(error))
   }, [])
 

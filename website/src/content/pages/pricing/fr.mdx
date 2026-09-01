@@ -12,7 +12,7 @@ description: 'Démarrez gratuitement en petite équipe, puis passez à un tarif 
 
 {/* Quand un plan change ici, répercutez-le dans `product.plans` de content/translations/fr.yaml, qui alimente le JSON-LD SoftwareApplication. */}
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
-  <PricingCard title="Small">
+  <PricingCard title="Small" plan="small">
     <Fragment slot="price"><span class="text-3xl font-bold">Gratuit</span> à vie</Fragment>
     <Fragment slot="description">Idéal pour tester et collaborer en petite équipe</Fragment>
     <CheckItem label="Toutes les fonctionnalités" />
@@ -21,7 +21,7 @@ description: 'Démarrez gratuitement en petite équipe, puis passez à un tarif 
     <Button slot="cta" href="/signup" class="block w-full text-center" label="Créer une organisation" />
   </PricingCard>
 
-  <PricingCard title="Startup" featured>
+  <PricingCard title="Startup" plan="startup" featured>
     <Fragment slot="price">
       <span class="text-3xl font-bold">5 €</span> / mois / utilisateur
     </Fragment>
@@ -41,7 +41,7 @@ description: 'Démarrez gratuitement en petite équipe, puis passez à un tarif 
     />
   </PricingCard>
 
-  <PricingCard title="Entreprise">
+  <PricingCard title="Entreprise" plan="enterprise">
     <Fragment slot="price"><span class="text-3xl font-bold">Sur mesure</span></Fragment>
     <Fragment slot="description">Demandez une démo et un devis personnalisé selon vos besoins</Fragment>
     <CheckItem label="Toutes les fonctionnalités" />

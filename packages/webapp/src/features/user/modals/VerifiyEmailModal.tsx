@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { track } from 'src/analytics'
 import { nhost } from 'src/nhost'
 
 export default function VerifyEmailModal() {
@@ -23,6 +24,7 @@ export default function VerifyEmailModal() {
     await nhost.auth.sendVerificationEmail({
       email: user?.email!,
     })
+    track('auth_verification_resent')
     setClosed(true)
   }
 

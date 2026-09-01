@@ -31,6 +31,7 @@ import {
 } from '@stripe/stripe-js'
 import React, { FormEvent, ReactNode, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { track } from 'src/analytics'
 import { trpc } from 'src/trpc'
 import { useStripeAppearance } from '../hooks/useStripeAppearance'
 import StripeBillingDetailsForm from './StripeBillingDetailsForm'
@@ -95,6 +96,11 @@ export default function SubscriptionPaymentStepper({
     try {
       await updateBillingDetails(billingDetails)
 
+      track('subscription_payment_submitted', {
+        plan: planType,
+        promoCode: !!promoCode,
+      })
+
       const { error } = await stripe.confirmPayment({
         elements: paymentElement,
         confirmParams: {
@@ -106,6 +112,11 @@ export default function SubscriptionPaymentStepper({
 
       if (error) throw error
     } catch (e: any) {
+      track('subscription_payment_failed', {
+        plan: planType,
+        stage: 'confirm',
+        reason: e?.message,
+      })
       toast({
         title: e.message,
         status: 'error',
@@ -136,6 +147,11 @@ export default function SubscriptionPaymentStepper({
       return true
     } catch (e: any) {
       const hasOpenInvoice = e?.data?.code === 'CONFLICT'
+      track('subscription_payment_failed', {
+        plan: planType,
+        stage: 'intent',
+        reason: hasOpenInvoice ? 'open_invoice' : e?.message,
+      })
       toast({
         title: hasOpenInvoice
           ? t('SubscriptionTabs.openInvoice.title')
@@ -154,6 +170,12 @@ export default function SubscriptionPaymentStepper({
   }
 
   const handleNext = async () => {
+    if (activeStep === 0) {
+      track('subscription_billing_submitted', {
+        plan: planType,
+        country: billingDetails.address?.country,
+      })
+    }
     // Stay on the summary when the subscription could not be created,
     // the payment step has no client secret to work with
     if (activeStep === 1 && !(await subscribe())) return

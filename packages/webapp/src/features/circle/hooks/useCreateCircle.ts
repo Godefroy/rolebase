@@ -12,6 +12,7 @@ import {
 import { EntitiesChanges, EntityChangeType, LogType } from '@rolebase/shared/model/log'
 import { omit } from '@utils/omit'
 import { useCallback } from 'react'
+import { track } from 'src/analytics'
 
 // Create a circle (and its role if a name is given) under a parent circle.
 // Returns the new circle id.
@@ -47,6 +48,8 @@ export default function useCreateCircle() {
         variables: { orgId, roleId: role.id, parentId },
       })
       const newCircle = data?.insert_circle_one!
+
+      track('circle_created', { newRole: typeof roleOrName === 'string' })
 
       // Build changes
       const changes: EntitiesChanges = {

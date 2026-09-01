@@ -18,6 +18,7 @@ import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { ChevronRightIcon, UploadIcon } from 'src/icons'
+import { track } from 'src/analytics'
 import { nhost } from 'src/nhost'
 import { trpc } from 'src/trpc'
 
@@ -120,9 +121,11 @@ export default function ImportPage() {
       // Import org with nhost function
       try {
         const orgId = await trpc.org.importOrg.mutate({ provider, fileId })
+        track('org_imported', { provider })
         setNewOrgId(orgId)
         setStep(ImportSteps.Success)
       } catch (error: any) {
+        track('org_import_failed', { provider, reason: error?.message })
         handleSendSupport(
           `Error importing org (${provider}): ${error.message}`,
           file.name,

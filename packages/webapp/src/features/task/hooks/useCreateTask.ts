@@ -7,6 +7,7 @@ import {
 } from '@gql'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { track } from 'src/analytics'
 
 export default function useCreateTask() {
   const { t } = useTranslation()
@@ -29,6 +30,8 @@ export default function useCreateTask() {
       const newTask = newTaskData?.insert_task_one
 
       if (!newTask) return
+
+      track('task_created', { assigned: !!newTask.memberId })
 
       // Toast
       toast({

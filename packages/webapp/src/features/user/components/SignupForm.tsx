@@ -23,6 +23,7 @@ import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router'
+import { track } from 'src/analytics'
 import { nhost } from 'src/nhost'
 
 import * as yup from 'yup'
@@ -51,6 +52,7 @@ export default function SignupForm({ defaultEmail, onStepChange }: Props) {
   const toast = useToast()
 
   const [isLoading, setIsLoading] = useState(false)
+  const isInvitation = location.pathname.includes('/invitation')
 
   const onSubmit = async ({
     name,
@@ -60,6 +62,7 @@ export default function SignupForm({ defaultEmail, onStepChange }: Props) {
     // Sign up
     try {
       setIsLoading(true)
+      track('auth_signup_submitted', { invitation: isInvitation })
       const { body } = await nhost.auth.signUpEmailPassword({
         email,
         password,
@@ -75,6 +78,7 @@ export default function SignupForm({ defaultEmail, onStepChange }: Props) {
       })
       if (!body.session?.user) return
       const { user } = body.session
+      track('auth_signup_succeeded', { invitation: isInvitation })
 
       if (user.email && !user.emailVerified) {
         await nhost.auth.sendVerificationEmail({
@@ -85,12 +89,15 @@ export default function SignupForm({ defaultEmail, onStepChange }: Props) {
 
       // When signing up from an invitation link, stay on the invitation page so
       // the user joins the org (and skips onboarding) instead of landing on "/".
-      if (location.pathname.includes('/invitation')) {
+      if (isInvitation) {
         navigate(location.pathname + location.search)
       } else {
         navigate('/')
       }
     } catch (error: any) {
+      track('auth_signup_failed', {
+        reason: error?.response?.data || error?.message,
+      })
       toast({
         title: error?.response?.data || error?.message || t('common.error'),
         status: 'error',

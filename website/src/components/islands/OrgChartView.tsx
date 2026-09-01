@@ -7,6 +7,7 @@ import {
   type DemoOrgKey,
   type DemoTexts,
 } from '../../demo/orgDemoData'
+import { currentLang, track } from '../../utils/analytics'
 
 interface Props {
   // Which example organization to render ('demo' | 'simple'), as a string
@@ -68,10 +69,29 @@ export default function OrgChartView({
     return () => observer.disconnect()
   }, [])
 
+  // Strongest product-interest signal the marketing site can emit: the visitor
+  // played with the org chart instead of scrolling past it. Sent once.
+  const usageTracked = useRef(false)
+  const trackUsage = () => {
+    if (usageTracked.current) return
+    usageTracked.current = true
+    track('site_orgchart_demo_used', {
+      demo,
+      page: location.pathname,
+      lang: currentLang(),
+    })
+  }
+
   const events: GraphEvents = useMemo(
     () => ({
-      onCircleClick: (circleId) => setSelectedCircleId(circleId),
-      onMemberClick: (circleId) => setSelectedCircleId(circleId),
+      onCircleClick: (circleId) => {
+        trackUsage()
+        setSelectedCircleId(circleId)
+      },
+      onMemberClick: (circleId) => {
+        trackUsage()
+        setSelectedCircleId(circleId)
+      },
       onClickOutside: () => setSelectedCircleId(undefined),
     }),
     []

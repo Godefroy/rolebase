@@ -2,9 +2,11 @@ import { type Session } from '@nhost/nhost-js/auth'
 import React, {
   createContext,
   useEffect,
+  useRef,
   useState,
   type ReactNode,
 } from 'react'
+import { identify, track } from 'src/analytics'
 import { nhost } from 'src/nhost'
 
 export interface AuthContextType {
@@ -41,6 +43,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       unsubscribe()
     }
   }, [])
+
+  // Who is in the session, in pseudonymous form: user id and the onboarding
+  // answers already collected in the user metadata, never the email or name.
+  useEffect(() => {
+    if (!user) return
+    identify({
+      userId: user.id,
+      locale: user.locale,
+      emailVerified: user.emailVerified,
+      onboardingRole: user.metadata?.onboardingRole as string | undefined,
+      onboardingObjective: user.metadata?.onboardingObjective as
+        | string
+        | undefined,
+      onboardingSource: user.metadata?.onboardingSource as string | undefined,
+    })
+  }, [user?.id, user?.emailVerified, user?.metadata])
+
+  // Verification happens through an email link, so the flag flips on a session
+  // refresh rather than on a user action in this tab.
+  const wasEmailVerified = useRef<boolean>()
+  useEffect(() => {
+    if (!user) return
+    const previous = wasEmailVerified.current
+    wasEmailVerified.current = user.emailVerified
+    if (previous === false && user.emailVerified) track('auth_email_verified')
+  }, [user?.id, user?.emailVerified])
 
   // Refresh token when receiving query param "refreshToken" (reset password)
   useEffect(() => {

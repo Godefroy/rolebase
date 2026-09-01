@@ -30,9 +30,9 @@ const riveUrl = 'https://rive.app/s/kBdu3ZNaY0_sU2RqJmUTUQ/embed'
     <h2 class="text-xl md:text-2xl font-bold">{title}</h2>
     <p class="mt-4 text-text-secondary"><slot /></p>
     <div class="flex flex-wrap gap-4 mt-6">
-      <Button href={primaryHref} variant="outline" label={primaryLabel} />
+      <Button href={primaryHref} variant="outline" label={primaryLabel} trackPlacement="banner" />
       {secondaryLabel && secondaryHref && (
-        <Button href={secondaryHref} variant="orange" label={secondaryLabel} />
+        <Button href={secondaryHref} variant="orange" label={secondaryLabel} trackPlacement="banner" />
       )}
     </div>
   </div>

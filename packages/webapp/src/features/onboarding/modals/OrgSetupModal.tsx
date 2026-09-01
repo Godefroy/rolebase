@@ -4,8 +4,9 @@ import { useOrgContext } from '@/org/contexts/OrgContext'
 import { Button, Flex, Link, Spacer, useToast } from '@chakra-ui/react'
 import { useUpdateOrgMutation } from '@gql'
 import { nanoid } from 'nanoid'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { track } from 'src/analytics'
 import { ChevronLeftIcon, ChevronRightIcon } from 'src/icons'
 import useSeedOrg from '../hooks/useSeedOrg'
 import { OrgType } from '../orgTypes'
@@ -36,6 +37,10 @@ export default function OrgSetupModal({ onClose }: Props) {
   const { orgId, orgData } = useOrgContext()
   const [updateOrg] = useUpdateOrgMutation()
   const seedOrg = useSeedOrg()
+
+  useEffect(() => {
+    track('org_setup_started')
+  }, [])
 
   const [step, setStep] = useState<SetupStep>(SetupStep.Model)
   const [orgType, setOrgType] = useState<OrgType>(OrgType.Classic)
@@ -68,6 +73,13 @@ export default function OrgSetupModal({ onClose }: Props) {
 
   // Finish: persist the model, seed the chart + meetings, then close. Members
   // already exist (created while assigning roles), so seeding happens only here.
+  // Closing before the org is seeded: the drop-off this funnel exists to find.
+  const finished = useRef(false)
+  const handleClose = () => {
+    if (!finished.current) track('org_setup_abandoned', { step })
+    onClose()
+  }
+
   const finish = async () => {
     if (!orgId || !rootCircle) return
     setLoading(true)
@@ -84,6 +96,13 @@ export default function OrgSetupModal({ onClose }: Props) {
           participantIds: r.participantIds,
         })),
       })
+      finished.current = true
+      track('org_setup_completed', {
+        orgType,
+        rolesCount: roles.length,
+        membersCount: members.length,
+        allHavePicture,
+      })
       toast({
         title: t('OrgSetupModal.ready'),
         status: 'success',
@@ -92,6 +111,7 @@ export default function OrgSetupModal({ onClose }: Props) {
       })
       onClose()
     } catch (error: any) {
+      track('org_setup_failed', { reason: error?.message })
       toast({
         title: error?.message || t('common.error'),
         status: 'error',
@@ -110,7 +130,7 @@ export default function OrgSetupModal({ onClose }: Props) {
       isOpen
       autoFocus={false}
       closeOnEsc={false}
-      onClose={onClose}
+      onClose={handleClose}
     >
       <OnboardingProgress
         total={stepOrder.length}
@@ -148,7 +168,10 @@ export default function OrgSetupModal({ onClose }: Props) {
           <Button
             colorScheme="blue"
             rightIcon={<ChevronRightIcon size="1em" />}
-            onClick={() => setStep(SetupStep.Roles)}
+            onClick={() => {
+              track('org_setup_model_done', { orgType })
+              setStep(SetupStep.Roles)
+            }}
           >
             {t('common.next')}
           </Button>
@@ -157,7 +180,14 @@ export default function OrgSetupModal({ onClose }: Props) {
           <Button
             colorScheme="blue"
             rightIcon={<ChevronRightIcon size="1em" />}
-            onClick={() => setStep(SetupStep.Avatars)}
+            onClick={() => {
+              track('org_setup_roles_done', {
+                orgType,
+                rolesCount: roles.length,
+                membersCount: members.length,
+              })
+              setStep(SetupStep.Avatars)
+            }}
             isDisabled={!canSeed}
           >
             {t('common.continue')}

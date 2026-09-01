@@ -40,6 +40,7 @@ import { nameSchema } from '@rolebase/shared/schemas'
 import React, { useState } from 'react'
 import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { track } from 'src/analytics'
 import * as yup from 'yup'
 import { ThreadStatusMenu } from '../components/ThreadStatusMenu'
 
@@ -168,6 +169,11 @@ export default function ThreadEditModal({
       })
       const createdThreadId = data?.insert_thread_one?.id
       if (!createdThreadId) return
+
+      track('thread_created', {
+        private: values.private,
+        extraMembers: extraMembersIds.length,
+      })
 
       if (onCreate) {
         onCreate(createdThreadId)

@@ -23,7 +23,7 @@ const { staticHeader = false } = Astro.props
     <NavLink path="/blog">{t.blog.label}</NavLink>
   </Fragment>
   <Fragment slot="right">
-    <Button href={lp('/contact')} variant="outline-primary" size="sm" label={t.bookDemo} />
-    <Button href="/login" variant="primary" size="sm" label={t.login} />
+    <Button href={lp('/contact')} variant="outline-primary" size="sm" label={t.bookDemo} trackPlacement="topnav" />
+    <Button href="/login" variant="primary" size="sm" label={t.login} trackPlacement="topnav" />
   </Fragment>
 </TopNavShell>

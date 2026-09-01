@@ -16,6 +16,7 @@ import {
 import { format } from 'date-fns'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { track } from 'src/analytics'
 import { trpc } from 'src/trpc'
 
 type CancelSubscriptionModalProps = {
@@ -38,6 +39,7 @@ export default function CancelSubscriptionModal({
       const { cancelAt } = await trpc.orgSubscription.unsubscribeOrg.mutate({
         orgId: orgId ?? '',
       })
+      track('subscription_cancelled')
       toast({
         title: t('SubscriptionPlans.unsubscribeDate', {
           date: format(new Date(cancelAt), 'dd/MM/uuuu'),

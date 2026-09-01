@@ -2,6 +2,7 @@ import useCurrentMember from '@/member/hooks/useCurrentMember'
 import { usePathInOrg } from '@/org/hooks/usePathInOrg'
 import { Meeting_Insert_Input, useCreateMeetingMutation } from '@gql'
 import { useCallback } from 'react'
+import { track } from 'src/analytics'
 import { useDuplicateMeetingSteps } from './useDuplicateMeetingSteps'
 
 export default function useCreateMeeting() {
@@ -22,6 +23,11 @@ export default function useCreateMeeting() {
       })
       const newMeeting = data?.insert_meeting_one
       if (!newMeeting) return console.error(errors)
+
+      track('meeting_created', {
+        recurring: !!meeting.recurringId,
+        duplicated: !!duplicateMeetingId,
+      })
 
       const path = `${meetingsPath}/${newMeeting.id}`
 

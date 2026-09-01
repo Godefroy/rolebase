@@ -18,7 +18,7 @@ const { title, subtitle, buttonText, buttonHref, smallText } = Astro.props
     <h1 class="text-4xl md:text-5xl font-bold leading-tight mt-0 mb-0">{title}</h1>
     <p class="mt-6 text-lg text-text-secondary">{subtitle}</p>
     <div class="mt-8">
-      <Button href={buttonHref} label={buttonText} />
+      <Button href={buttonHref} label={buttonText} trackPlacement="hero" />
       <p class="mt-2 text-sm text-text-secondary">{smallText}</p>
     </div>
     <div class="flex items-center gap-4 mt-6 [&_p]:mb-0! [&_p]:contents [&_img]:h-20 [&_img]:w-auto">

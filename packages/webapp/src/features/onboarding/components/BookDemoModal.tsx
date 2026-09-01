@@ -4,6 +4,7 @@ import useUserMetadata from '@/user/hooks/useUserMetadata'
 import { Button, CloseButton, Heading, Text } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { track } from 'src/analytics'
 import useOnboardingActive from '../hooks/useOnboardingActive'
 
 const BOOK_DEMO_URL = 'https://cal.com/lonestone-godefroy/rolebase-demo'
@@ -21,6 +22,7 @@ export default function BookDemoModal() {
   }
 
   const handleBookDemo = () => {
+    track('book_demo_clicked')
     window.open(BOOK_DEMO_URL, '_blank')
     handleClose()
   }

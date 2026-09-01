@@ -18,6 +18,7 @@ import { emailSchema } from '@rolebase/shared/schemas'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { track } from 'src/analytics'
 import { nhost } from 'src/nhost'
 import * as yup from 'yup'
 import { AuthStep } from '../pages/AuthPage'
@@ -112,6 +113,8 @@ export default function OtpForm({ defaultEmail, onStepChange }: Props) {
       if (status !== 200 || !user) {
         throw new Error('Invalid verification code')
       }
+
+      track('auth_otp_succeeded')
 
       // Session is automatically stored by Nhost SDK
       // User will be redirected by the auth state change

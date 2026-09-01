@@ -7,6 +7,7 @@ import { getOrgPath } from '@rolebase/shared/helpers/getOrgPath'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Navigate, useParams } from 'react-router'
+import { track } from 'src/analytics'
 import { trpc } from 'src/trpc'
 import { useMemberInvitationInfo } from '../hooks/useMemberInvitationInfo'
 
@@ -38,6 +39,7 @@ export default function MemberInvitationPage() {
     trpc.member.acceptMemberInvitation
       .mutate({ memberId, token })
       .then(() => {
+        track('member_invitation_accepted')
         toast({
           title: t('MemberInvitationPage.toastSuccess'),
           status: 'success',

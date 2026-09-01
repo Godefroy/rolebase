@@ -18,6 +18,7 @@ import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { Link as ReachLink } from 'react-router'
+import { track } from 'src/analytics'
 import { nhost } from 'src/nhost'
 import * as yup from 'yup'
 import { AuthStep } from '../pages/AuthPage'
@@ -50,6 +51,7 @@ export default function LoginForm({ defaultEmail, onStepChange }: Props) {
         email: values.email,
         password: values['current-password'],
       })
+      track('auth_login_succeeded')
     } catch (error: any) {
       toast({
         title: error?.response?.data || error?.message || t('common.error'),

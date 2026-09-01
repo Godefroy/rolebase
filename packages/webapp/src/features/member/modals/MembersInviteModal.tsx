@@ -22,6 +22,7 @@ import { useFieldArray, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { FiX } from 'react-icons/fi'
 import { AddIcon, EmailIcon } from 'src/icons'
+import { track } from 'src/analytics'
 import { trpc } from 'src/trpc'
 import MemberButton from '../components/MemberButton'
 import useCreateMember from '../hooks/useCreateMember'
@@ -119,6 +120,7 @@ export default function MembersInviteModal(modalProps: UseModalProps) {
         // Remove the invited member from the form
         remove(i)
       }
+      if (invitedCount > 0) track('member_invited', { count: invitedCount })
       toast({
         title: t('MembersInviteModal.toastSuccess', {
           count: invitedCount,

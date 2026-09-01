@@ -3,9 +3,10 @@ import ThemeSwitch from '@/common/atoms/ThemeSwitch'
 import useQueryParams from '@/common/hooks/useQueryParams'
 import { useMemberInvitationInfo } from '@/member/hooks/useMemberInvitationInfo'
 import { Alert, AlertIcon, Box, Flex } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
+import { track } from 'src/analytics'
 import LangSelect from '../components/LangSelect'
 import LoginForm from '../components/LoginForm'
 import OtpForm from '../components/OtpForm'
@@ -27,6 +28,12 @@ export default function AuthPage() {
   const [mode, setMode] = useState<AuthStep>(queryParams.mode || 'otp')
 
   const isInvitationPage = location.pathname.includes('/invitation')
+
+  // Funnel step between landing on /login and creating an account: the modal
+  // was actually rendered, in the mode the visitor is looking at.
+  useEffect(() => {
+    track('auth_viewed', { mode, invitation: isInvitationPage })
+  }, [mode, isInvitationPage])
 
   // Get invitation info if this is an invitation page
   const { data: invitationData } = useMemberInvitationInfo({

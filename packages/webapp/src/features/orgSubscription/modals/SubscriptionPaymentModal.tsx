@@ -9,8 +9,9 @@ import {
 } from '@chakra-ui/react'
 import { Subscription_Plan_Type_Enum } from '@gql'
 import { capitalizeFirstLetter } from '@utils/capitalizeFirstLetter'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
+import { track } from 'src/analytics'
 import SubscriptionPaymentStepper from '../components/SubscriptionPaymentStepper'
 
 type SubscriptionPaymentModalProps = {
@@ -22,6 +23,10 @@ export default function SubscriptionPaymentModal({
   ...modalProps
 }: SubscriptionPaymentModalProps) {
   const { t } = useTranslation()
+
+  useEffect(() => {
+    if (modalProps.isOpen) track('subscription_plan_selected', { plan: planType })
+  }, [modalProps.isOpen, planType])
 
   return (
     <Modal size="xl" closeOnOverlayClick={false} {...modalProps}>

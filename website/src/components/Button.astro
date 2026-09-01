@@ -6,6 +6,10 @@ interface Props {
   size?: 'sm' | 'md'
   class?: string
   targetBlank?: boolean
+  /** Umami event name. Defaults to `site_cta_click`; `false` opts out. */
+  track?: string | false
+  /** Where on the page the button sits: 'topnav', 'hero', 'inline'… */
+  trackPlacement?: string
 }
 
 const {
@@ -15,6 +19,8 @@ const {
   size = 'md',
   class: className,
   targetBlank = false,
+  track = 'site_cta_click',
+  trackPlacement,
 } = Astro.props
 
 const sizeClasses = {
@@ -43,6 +49,8 @@ const rippleColor = {
   href={href}
   target={targetBlank ? '_blank' : undefined}
   rel={targetBlank ? 'noopener noreferrer' : undefined}
+  data-track={track || undefined}
+  data-track-placement={trackPlacement}
   class:list={[
     'btn-hover relative overflow-hidden rounded-md font-medium !no-underline !hover:no-underline inline-block',
     sizeClasses[size],

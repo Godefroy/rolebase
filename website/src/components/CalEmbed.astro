@@ -107,4 +107,16 @@ const cssVars = {
     hideEventTypeDetails: false,
     cssVarsPerTheme: { light: cssVars, dark: cssVars },
   })
+
+  // Booking funnel. `linkReady` separates a visitor who reached the contact
+  // page from one who actually got a calendar to pick a slot in.
+  const lang = document.documentElement.lang
+  Cal.ns[namespace]('on', {
+    action: 'linkReady',
+    callback: () => window.umami?.track('site_book_demo_viewed', { lang }),
+  })
+  Cal.ns[namespace]('on', {
+    action: 'bookingSuccessful',
+    callback: () => window.umami?.track('site_book_demo_booked', { lang }),
+  })
 </script>

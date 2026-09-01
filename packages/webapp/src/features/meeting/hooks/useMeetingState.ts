@@ -14,6 +14,7 @@ import { MeetingStepConfig } from '@rolebase/shared/model/meeting'
 import { ParticipantMember } from '@rolebase/shared/model/member'
 import { isSameDay } from 'date-fns'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { track } from 'src/analytics'
 import { usePathInOrg } from '../../org/hooks/usePathInOrg'
 import useCircleParticipants from '../../participants/hooks/useCircleParticipants'
 import useExtraParticipants from '../../participants/hooks/useExtraParticipants'
@@ -225,6 +226,12 @@ export default function useMeetingState(meetingId: string): MeetingState {
           ended: true,
         },
       },
+    })
+    track('meeting_ended', {
+      participants: participants.length,
+      durationMin: Math.round(
+        (Date.now() - new Date(meeting.startDate).getTime()) / 60000
+      ),
     })
   }, [meeting, participants])
 

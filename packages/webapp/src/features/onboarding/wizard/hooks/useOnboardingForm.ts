@@ -7,6 +7,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
+import { track } from 'src/analytics'
 import { nhost } from 'src/nhost'
 import slugify from 'slugify'
 import { trpc } from 'src/trpc'
@@ -190,6 +191,7 @@ export default function useOnboardingForm() {
         name: data.orgName,
         slug: data.slug,
       })
+      track('onboarding_org_created', { orgId: newOrgId })
 
       // Go straight into the new org (by slug, without waiting for the store).
       // The org-setup step opens there automatically (fresh, unseeded org).

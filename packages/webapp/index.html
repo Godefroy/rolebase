@@ -20,13 +20,44 @@
     />
     <title>Rolebase</title>
 
-    <!-- Umami Analytics (production only) -->
+    <!-- Umami Analytics (production only).
+         Same website id as the marketing site: both are served from
+         rolebase.io, and Umami derives the visitor id from a hash including the
+         website id, so a second id would split a single visit in two and make
+         any site -> app funnel impossible. `tag` keeps the two sides separable
+         in reports. -->
     <script>
+      // Report screens, not records: org/meeting/task ids would each get their
+      // own row in the Pages report otherwise.
+      //
+      // The list is injected at build time from the router (see
+      // vite/umamiAppRoots.ts), so adding a route needs no edit here.
+      var UMAMI_APP_ROOTS = __UMAMI_APP_ROOTS__
+      window.rolebaseTrackUrl = function (type, payload) {
+        var segments = payload.url.split('?')[0].split('/')
+        // segments[0] is empty (leading slash), segments[1] is the first path
+        // segment: either an app root or an org slug.
+        var head = segments[1]
+        if (UMAMI_APP_ROOTS.indexOf(head) === -1) segments[1] = ':slug'
+        payload.url = segments
+          .join('/')
+          .replace(
+            /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi,
+            ':id'
+          )
+        return payload
+      }
+
       if (location.hostname === 'rolebase.io') {
         var s = document.createElement('script')
         s.defer = true
         s.src = 'https://umami.internal.lonestone.io/script.js'
-        s.dataset.websiteId = 'bd9370b9-340a-41e4-b25f-e865fb445c63'
+        s.dataset.websiteId = 'b551cd9c-5426-410a-83ed-94d46b6a7865'
+        s.dataset.tag = 'app'
+        // Invitation links carry ?memberId=&token=, and the reset-password
+        // return carries ?email=. None of it belongs in analytics.
+        s.dataset.excludeSearch = 'true'
+        s.dataset.beforeSend = 'rolebaseTrackUrl'
         document.head.appendChild(s)
       }
     </script>

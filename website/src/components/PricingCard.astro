@@ -1,16 +1,25 @@
 ---
 interface Props {
   title: string
+  /**
+   * Language-independent plan key sent to analytics. The title is localised,
+   * so it would split one plan into two values across locales.
+   */
+  plan?: string
   featured?: boolean
 }
 
-const { title, featured = false } = Astro.props
+const { title, plan, featured = false } = Astro.props
 ---
 
-<div class:list={[
-  "rounded-xl p-6 flex flex-col",
-  featured ? "bg-primary text-white ring-2 ring-primary" : "bg-white",
-]}>
+<div
+  data-track-event={plan ? 'site_pricing_plan_click' : undefined}
+  data-track-plan={plan}
+  class:list={[
+    "rounded-xl p-6 flex flex-col",
+    featured ? "bg-primary text-white ring-2 ring-primary" : "bg-white",
+  ]}
+>
   <h3 class="text-xl font-bold mb-2 mt-0">{title}</h3>
   <p class:list={["text-lg mb-6", featured ? "text-white/80" : "text-text-secondary"]}>
     <slot name="price" />

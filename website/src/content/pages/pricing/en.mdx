@@ -12,7 +12,7 @@ description: 'Start free with a small team, then move to a flat per-user plan as
 
 {/* When a plan changes here, mirror it in `product.plans` of content/translations/en.yaml, which feeds the SoftwareApplication JSON-LD. */}
 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
-  <PricingCard title="Small">
+  <PricingCard title="Small" plan="small">
     <Fragment slot="price"><span class="text-3xl font-bold">Free</span> forever</Fragment>
     <Fragment slot="description">Ideal for testing and collaborating in a small team</Fragment>
     <CheckItem label="All features included" />
@@ -21,7 +21,7 @@ description: 'Start free with a small team, then move to a flat per-user plan as
     <Button slot="cta" href="/signup" class="block w-full text-center" label="Create an organization" />
   </PricingCard>
 
-  <PricingCard title="Startup" featured>
+  <PricingCard title="Startup" plan="startup" featured>
     <Fragment slot="price">
       <span class="text-3xl font-bold">€5</span> / month / user
     </Fragment>
@@ -39,7 +39,7 @@ description: 'Start free with a small team, then move to a flat per-user plan as
     />
   </PricingCard>
 
-  <PricingCard title="Enterprise">
+  <PricingCard title="Enterprise" plan="enterprise">
     <Fragment slot="price"><span class="text-3xl font-bold">Custom pricing</span></Fragment>
     <Fragment slot="description">Request a demo and a quote tailored to your needs</Fragment>
     <CheckItem label="All features included" />

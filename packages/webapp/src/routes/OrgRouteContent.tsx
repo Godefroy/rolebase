@@ -15,6 +15,7 @@ import MembersPage from '@/member/pages/MembersPage'
 import OrgSetupTrigger from '@/onboarding/components/OrgSetupTrigger'
 import NavigateInOrg from '@/org/components/NavigateInOrg'
 import { useOrgContext } from '@/org/contexts/OrgContext'
+import useAnalyticsIdentity from '@/org/hooks/useAnalyticsIdentity'
 import ExportPage from '@/org/pages/ExportPage'
 import OrgSettingsPage from '@/org/pages/OrgSettingsPage'
 import TaskPage from '@/task/pages/TaskPage'
@@ -40,6 +41,9 @@ export default function OrgRouteContent() {
 
   // Update current meeting in store
   useSubscribeCurrentMeeting()
+
+  // Plan, org type and size, attached to the analytics session
+  useAnalyticsIdentity()
 
   return (
     <Suspense fallback={<Loading active center />}>
