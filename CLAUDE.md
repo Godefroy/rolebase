@@ -145,7 +145,7 @@ Before creating any commit, review the staged product changes (`packages/`, `nho
 
 ### Development
 
-- Assume Astro is already running.
+- The astro dev server normally already runs on the port set in `astro.config.ts` (`server.port`). Use that port only. If nothing responds there, start it; if it responds but is broken, kill it and restart it. Never start it on another port.
 - The `website/` package builds **standalone**, not as a root npm `workspaces` member (Netlify: `npm ci && turbo build && cd website && npm install && npm run build`). Adding it to the root workspaces hoists legacy/CJS deps (`@rolebase/emails`, `@rolebase/backend`, Storybook) over the website's MDX/Astro stack and breaks the build; the root `package-lock.json` also can't be regenerated. To reuse `@rolebase/graph` / `@rolebase/shared`, add Vite `resolve.alias` to their TS source in `website/astro.config.ts` and declare their runtime deps directly in `website/package.json`. Avoid the webapp's Chakra/Apollo chain; reimplement thin glue against `@rolebase/shared` (see `website/src/components/islands/` and `website/src/demo/`).
 - When you remove an import, check if the file is still needed in the project. Delete it if not. Check imports of the deleted file.
 - When you remove or rename a page, add a redirect.
