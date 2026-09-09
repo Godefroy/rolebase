@@ -151,7 +151,7 @@
   "CircleExportPage": {
     "heading": "Export a capture",
     "download": "Download as PNG",
-    "showAllNodes": "Show members and sub-roles"
+    "showMembers": "Show members"
   },
   "ExportPage": {
     "heading": "Export",
@@ -394,6 +394,10 @@
     "AllCircles_desc": "Display all nested Roles and the Members who occupy them. The size of each displayed circle depends on the number of Roles and Members it contains.",
     "SimpleCircles": "Holarchy",
     "SimpleCircles_desc": "Display at the same size the Roles of the selected Role, with the members who represent them.",
+    "HierarchyAll": "Hierarchical",
+    "HierarchyAll_desc": "Show all Roles as a top-down hierarchical org chart, with the Members who fill them.",
+    "HierarchySimple": "Folded hierarchical",
+    "HierarchySimple_desc": "Show the hierarchical org chart folded around the selected Role: its parents and its direct Roles, with the Members who fill them.",
     "FlatCircle": "Operational",
     "FlatCircle_desc": "Display all Roles at the same level, mixed, with the members who represent them.",
     "Members": "Members only",

@@ -1,6 +1,7 @@
 import { CircleMemberContext } from '@/circle/contexts/CircleMemberContext'
 import { getCircleMemberUrlSearch } from '@/circle/contexts/CircleMemberProvider'
 import { useNormalClickHandler } from '@/common/hooks/useNormalClickHandler'
+import useGraphViewParam from '@/graph/hooks/useGraphViewParam'
 import { useCallback, useContext, useMemo } from 'react'
 import { useOrgContext } from '@/org/contexts/OrgContext'
 import { usePathInOrg } from '../../org/hooks/usePathInOrg'
@@ -13,6 +14,7 @@ export default function useCircleMemberLink(
   const { orgId } = useOrgContext()
   const circleMemberContext = useContext(CircleMemberContext)
   const path = usePathInOrg('roles')
+  const view = useGraphViewParam()
 
   const goToCircle = useCallback(() => {
     circleMemberContext?.goTo(circleId, memberId, parentId)
@@ -22,9 +24,14 @@ export default function useCircleMemberLink(
 
   return useMemo(
     () => ({
-      to: `${path}${getCircleMemberUrlSearch(circleId, memberId, parentId)}`,
+      to: `${path}${getCircleMemberUrlSearch(
+        circleId,
+        memberId,
+        parentId,
+        view
+      )}`,
       onClick: handleClick,
     }),
-    [circleId, memberId, parentId, orgId, handleClick]
+    [circleId, memberId, parentId, orgId, view, handleClick]
   )
 }

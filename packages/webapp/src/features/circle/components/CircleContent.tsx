@@ -12,6 +12,7 @@ import useUpdatableQueryParams from '@/common/hooks/useUpdatableQueryParams'
 import useOrgMember from '@/member/hooks/useOrgMember'
 import useOrgOwner from '@/member/hooks/useOrgOwner'
 import { useOrgContext } from '@/org/contexts/OrgContext'
+import useGraphViewParam from '@/graph/hooks/useGraphViewParam'
 import { useNavigateOrg } from '@/org/hooks/useNavigateOrg'
 import ParticipantsNumber from '@/participants/components/ParticipantsNumber'
 import {
@@ -103,6 +104,7 @@ export default function CircleContent({
   const { isDraft } = useOrgContext()
   const circleContext = useContext(CircleContext)
   const navigateOrg = useNavigateOrg()
+  const view = useGraphViewParam()
 
   // Tabs
   const { params, changeParams } = useUpdatableQueryParams<Params>()
@@ -188,7 +190,11 @@ export default function CircleContent({
                 {!onlyRole && !circle.archivedAt && (
                   <ExportMenuItem
                     onClick={() =>
-                      navigateOrg(`export-circle?circleId=${circle.id}`)
+                      navigateOrg(
+                        `export-circle?circleId=${circle.id}${
+                          view ? `&view=${view}` : ''
+                        }`
+                      )
                     }
                   />
                 )}

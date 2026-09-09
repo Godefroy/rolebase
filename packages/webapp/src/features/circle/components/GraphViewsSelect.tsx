@@ -22,6 +22,8 @@ interface Props extends Omit<ButtonProps, 'value' | 'onChange'> {
 export const viewsList = [
   CirclesGraphViews.AllCircles,
   CirclesGraphViews.SimpleCircles,
+  CirclesGraphViews.HierarchyAll,
+  CirclesGraphViews.HierarchySimple,
   CirclesGraphViews.FlatCircle,
   CirclesGraphViews.Members,
 ]

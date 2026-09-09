@@ -1,7 +1,8 @@
 import { truthy } from '@rolebase/shared/helpers/truthy'
 import React, { useEffect, useMemo, useRef } from 'react'
 import { Graph } from '../../core/Graph'
-import { isPointInsideCircle } from '../../helpers/isPointInsideCircle'
+import { getDropTargetNode } from '../../helpers/getDropTargetNode'
+import { isPointInsideNode } from '../../helpers/isPointInsideNode'
 import { NodeData, NodeType } from '../../types'
 
 interface Position {
@@ -13,6 +14,9 @@ interface DragNode {
   node: NodeData
   element: HTMLDivElement
   title?: HTMLDivElement
+  // Edge to the parent card, in the hierarchical views. Entirely inside the
+  // dragged subtree, so it moves rigidly with it.
+  link?: SVGPathElement
 }
 
 export function useDragNode(graph: Graph | undefined, node: NodeData) {
@@ -21,6 +25,9 @@ export function useDragNode(graph: Graph | undefined, node: NodeData) {
   const dragNodes = useRef<DragNode[]>([])
   const dragTargets = useRef<DragNode[]>([])
   const dragTarget = useRef<DragNode | undefined>()
+  // Edge from the dragged node to the parent it is being pulled away from:
+  // hidden for the duration of the drag
+  const dragRootLink = useRef<SVGPathElement | undefined>()
 
   // Stable document listeners delegating to the latest handlers
   const latestHandlers = useRef<{
@@ -135,9 +142,17 @@ export function useDragNode(graph: Graph | undefined, node: NodeData) {
           node: d,
           element,
           title,
+          // The dragged node's own edge leads outside the subtree: it is
+          // hidden rather than moved (see dragRootLink below)
+          link: d === node ? undefined : getLinkElement(d),
         }
       })
       .filter(truthy)
+
+    // The edge to the parent being left behind is meaningless while the node
+    // is in flight: hide it until the drop resolves
+    dragRootLink.current = getLinkElement(node)
+    dragRootLink.current?.classList.add('dragging')
 
     // Register targets
     dragTargets.current = graph.nodes
@@ -178,7 +193,11 @@ export function useDragNode(graph: Graph | undefined, node: NodeData) {
     dragNodes.current.forEach((d) => {
       d.element.classList.remove('dragging')
       d.title?.classList.remove('dragging')
+      // Drop the drag transform: the next render redraws the edge from the
+      // layout, moved or not
+      d.link?.removeAttribute('transform')
     })
+    dragRootLink.current?.classList.remove('dragging')
     dragTarget.current?.element.classList.remove('drag-target')
 
     // Reset dragged circles
@@ -207,6 +226,7 @@ export function useDragNode(graph: Graph | undefined, node: NodeData) {
     dragNodes.current = []
     dragTargets.current = []
     dragTarget.current = undefined
+    dragRootLink.current = undefined
   }
 
   const handleMouseMove = (event: MouseEvent) => {
@@ -221,16 +241,20 @@ export function useDragNode(graph: Graph | undefined, node: NodeData) {
       if (d.title) {
         d.title.style.translate = `${d.node.x + dX}px ${d.node.y + dY}px`
       }
+      // Edges inside the dragged subtree keep their shape: one transform
+      // attribute moves the whole path, no geometry to recompute
+      d.link?.setAttribute('transform', `translate(${dX} ${dY})`)
     })
 
-    const target = getTargetNodeData(dragTargets.current, event, graph)
+    const target = getTargetNodeData(dragTargets.current, event, graph, node)
 
+    // Always follow the pointer, target or not: keeping the previous one when
+    // it leaves would drop the highlight for good on the way back in, and
+    // would drop the node on a circle the pointer has left.
     if (target !== dragTarget.current) {
       dragTarget.current?.element.classList.remove('drag-target')
-      if (target) {
-        dragTarget.current = target
-        target.element.classList.add('drag-target')
-      }
+      dragTarget.current = target ?? undefined
+      target?.element.classList.add('drag-target')
     }
   }
 
@@ -263,20 +287,27 @@ function getTitleElement(node: NodeData) {
   ) as HTMLDivElement
 }
 
+function getLinkElement(node: NodeData) {
+  return (document.getElementById(`link-${node.data.id}`) ?? undefined) as
+    | SVGPathElement
+    | undefined
+}
+
 function getTargetNodeData(
   targetNodes: DragNode[],
   event: MouseEvent,
-  graph: Graph
+  graph: Graph,
+  dragged: NodeData
 ): DragNode | null {
   const position = getDragEventPosition(event, graph)
 
   // Get circles under the mouse
   const currentTargets = targetNodes.filter(({ node }) =>
-    isPointInsideCircle(position.x, position.y, node.x, node.y, node.r)
+    isPointInsideNode(node, position.x, position.y)
   )
 
   // Get last descendants under the mouse
-  return (
+  const target =
     currentTargets.reduce<{ max: number; dragNode?: DragNode }>(
       (acc, dragNode) =>
         !dragNode || dragNode.node.depth > acc.max
@@ -284,7 +315,15 @@ function getTargetNodeData(
           : acc,
       { max: 0 }
     ).dragNode || null
-  )
+
+  if (!target) return null
+
+  // Dropping on a parent-link role lands in the circle it represents, so the
+  // highlight goes there too
+  const dropNode = getDropTargetNode(target.node, dragged)
+  if (!dropNode) return null
+  if (dropNode === target.node) return target
+  return targetNodes.find(({ node }) => node === dropNode) || null
 }
 
 function getDragEventPosition(event: MouseEvent, graph: Graph) {

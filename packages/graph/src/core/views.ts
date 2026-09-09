@@ -1,12 +1,9 @@
 import { CircleFragment } from '@rolebase/shared/gql'
-import {
-  CircleMemberJoined,
-  OrgData,
-} from '@rolebase/shared/model/OrgData'
+import { CircleMemberJoined, OrgData } from '@rolebase/shared/model/OrgData'
 import { Participant } from '@rolebase/shared/model/member'
 import { HierarchyNode } from 'd3-hierarchy'
 import uniqBy from 'lodash.uniqby'
-import { CirclesGraphViews, Data, GraphEvents } from '../types'
+import { CirclesGraphViews, Data, GraphEvents, GraphLayoutKind } from '../types'
 
 // A render spec for a circle: which circle, where it sits in the layout, and
 // what to render inside it. Replaces the nested CircleFull the views used to
@@ -22,10 +19,14 @@ export interface CircleData {
   memberEntries?: CircleMemberJoined[]
 }
 
-// A view determines which circles are displayed and how they are sorted
+// A view determines which circles are displayed, how they are placed and
+// how they are sorted
 export interface ViewStrategy {
   getCircles(org: OrgData, selectedCircleId?: string): CircleData[]
-  packSorting(a: HierarchyNode<Data>, b: HierarchyNode<Data>): number
+  // How the circles are placed (defaults to circle packing)
+  layout?: GraphLayoutKind
+  // Circle packing only: order of the packed siblings
+  packSorting?(a: HierarchyNode<Data>, b: HierarchyNode<Data>): number
   // Events disabled in this view
   omitEvents?: Array<keyof GraphEvents>
   // Recompute layout when the selected circle changes
@@ -33,7 +34,7 @@ export interface ViewStrategy {
 }
 
 // Stabilize sorting with ids
-const sortById = (a: HierarchyNode<Data>, b: HierarchyNode<Data>) =>
+export const sortById = (a: HierarchyNode<Data>, b: HierarchyNode<Data>) =>
   a.data.id.localeCompare(b.data.id)
 
 const fullCircle = (
@@ -151,9 +152,32 @@ const members: ViewStrategy = {
   },
 }
 
+// Same circles as AllCircles, laid out as a top-down tree of cards
+const hierarchyAll: ViewStrategy = {
+  layout: GraphLayoutKind.Tree,
+  getCircles: allCircles.getCircles,
+}
+
+// Same circles as SimpleCircles (the selected circle, its ancestors and their
+// direct children), laid out as a top-down tree of cards. Every card lists its
+// members: a card is read as a whole, so a role on screen always shows who
+// fills it, not just who represents it.
+const hierarchySimple: ViewStrategy = {
+  layout: GraphLayoutKind.Tree,
+  relayoutOnSelect: true,
+  getCircles: (org, selectedCircleId) =>
+    simpleCircles.getCircles(org, selectedCircleId).map((circle) => ({
+      ...circle,
+      showMembers: true,
+      participants: undefined,
+    })),
+}
+
 export const viewStrategies: Record<CirclesGraphViews, ViewStrategy> = {
   [CirclesGraphViews.AllCircles]: allCircles,
   [CirclesGraphViews.SimpleCircles]: simpleCircles,
   [CirclesGraphViews.FlatCircle]: flatCircle,
   [CirclesGraphViews.Members]: members,
+  [CirclesGraphViews.HierarchyAll]: hierarchyAll,
+  [CirclesGraphViews.HierarchySimple]: hierarchySimple,
 }

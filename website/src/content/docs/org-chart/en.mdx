@@ -6,7 +6,7 @@ order: 3
 
 ## Overview
 
-The interactive org chart is the primary way to visualize your organizational structure. It displays roles as nested containers, where a role that contains sub-roles represents a team or department. You can:
+The interactive org chart is the primary way to visualize your organizational structure. It displays roles as nested containers, where a role that contains sub-roles represents a team or department, or as a classic top-down tree if you prefer that reading. You can:
 
 - **Click** a role to zoom in and see its sub-roles.
 - **Drag** to pan around the org chart.
@@ -19,18 +19,32 @@ Try it on the example organization below: click a role to zoom into its sub-role
 
 ## Views
 
-The org chart offers four different views. You can set the default view in the [organization settings](/en/docs/organizations), and switch between views at any time using the view selector.
+The org chart offers six different views. You can set the default view in the [organization settings](/en/docs/organizations), and switch between views at any time using the view selector.
 
-| View             | Description                                                                                                                            |
-| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| **All Roles**    | Shows the full hierarchy of all roles and sub-roles. The size of each role depends on the number of sub-roles and members it contains. |
-| **Holarchy**     | Displays the sub-roles of the selected role at the same size, with the members who represent them.                                     |
-| **Operational**  | Displays all roles at the same level, mixed, with the members who represent them.                                                      |
-| **Members only** | Displays the organization from a member-centric perspective.                                                                           |
+| View                 | Description                                                                                                                            |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| **All Roles**        | Shows the full hierarchy of all roles and sub-roles. The size of each role depends on the number of sub-roles and members it contains. |
+| **Holarchy**         | Displays the sub-roles of the selected role at the same size, with the members who represent them.                                     |
+| **Hierarchical**     | Displays all roles as a top-down hierarchical org chart, each role in a card linked to its parent role, with the members who fill it.  |
+| **Folded hierarchical** | Displays the same org chart recentered on the selected role, with its parent roles, its direct roles and the members who fill them. |
+| **Operational**      | Displays all roles at the same level, mixed, with the members who represent them.                                                      |
+| **Members only**     | Displays the organization from a member-centric perspective.                                                                           |
+
+### Hierarchical views
+
+The **Hierarchical** and **Folded hierarchical** views present the same structure as the top-down hierarchical org chart most organizations are used to. Each role sits in a card linked to its parent role, and members appear inside the card of the role they fill.
+
+Every interaction stays the same as in the circle views: click a role to open it, drag and drop to move a role or a member, zoom and pan freely.
+
+<OrgChartView demo="demo" view="HierarchyAll" height="440px" />
+
+On a large organization the full org chart grows wide. The **Folded hierarchical** view keeps it comfortable to read by showing only the line of parent roles and the direct roles of the selected role.
 
 <Callout type="tip" title="Navigation">
   Regardless of the default view, users can always switch between views and
-  click into any role to explore its contents.
+  click into any role to explore its contents. The current view is part of the
+  page address, so a shared link opens the org chart on the view and the role
+  you had on screen.
 </Callout>
 
 ## Next Steps

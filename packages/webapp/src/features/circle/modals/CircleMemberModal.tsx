@@ -1,5 +1,6 @@
 import ModalMaximizeButton from '@/common/atoms/ModalMaximizeButton'
 import { useNormalClickHandler } from '@/common/hooks/useNormalClickHandler'
+import useGraphViewParam from '@/graph/hooks/useGraphViewParam'
 import { usePathInOrg } from '@/org/hooks/usePathInOrg'
 import {
   Modal,
@@ -11,6 +12,7 @@ import React from 'react'
 import MemberContent from '../../member/components/MemberContent'
 import CircleContent from '../components/CircleContent'
 import { CircleProvider } from '../contexts/CIrcleContext'
+import { getCircleMemberUrlSearch } from '../contexts/CircleMemberProvider'
 
 interface Props extends UseModalProps {
   circleId?: string
@@ -25,6 +27,7 @@ export default function CircleMemberModal({
 }: Props) {
   const handleClose = useNormalClickHandler(modalProps.onClose, true)
   const path = usePathInOrg('roles')
+  const view = useGraphViewParam()
 
   if (!circleId && !memberId) return null
 
@@ -38,9 +41,12 @@ export default function CircleMemberModal({
             id={memberId}
             headerIcons={
               <ModalMaximizeButton
-                to={`${path}?memberId=${memberId}${
-                  circleId ? `&circleId=${circleId}` : ''
-                }`}
+                to={`${path}${getCircleMemberUrlSearch(
+                  circleId,
+                  memberId,
+                  undefined,
+                  view
+                )}`}
                 onClick={handleClose}
               />
             }
@@ -51,7 +57,12 @@ export default function CircleMemberModal({
               <CircleContent
                 headerIcons={
                   <ModalMaximizeButton
-                    to={`${path}?circleId=${circleId}`}
+                    to={`${path}${getCircleMemberUrlSearch(
+                      circleId,
+                      undefined,
+                      undefined,
+                      view
+                    )}`}
                     onClick={handleClose}
                   />
                 }

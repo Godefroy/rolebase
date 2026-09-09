@@ -5,11 +5,14 @@ import debounce from 'lodash.debounce'
 import throttle from 'lodash.throttle'
 import settings from '../settings'
 import {
+  Bounds,
   Data,
+  GraphLayoutKind,
   GraphParams,
   NodeData,
   Position,
   RootElement,
+  TreeLink,
   VisibleNodes,
   ZoomFocusCircleScale,
 } from '../types'
@@ -47,10 +50,21 @@ export abstract class Graph<
   public inputData: InputData | undefined
   public root: NodeData | undefined
   public nodes: NodeData[] = []
+  // How the current nodes were placed (drives culling and rendering)
+  public layoutKind: GraphLayoutKind = GraphLayoutKind.Pack
+  // Bounding box of the whole layout
+  public layoutBounds: Bounds = { x0: 0, y0: 0, x1: 0, y1: 0 }
+  // Center and radius framing the whole layout
+  public layoutFocus: { x: number; y: number; r: number } = { x: 0, y: 0, r: 0 }
+  // Box framing the whole layout (used when it is not square, e.g. a tree)
+  public layoutFocusBox: Bounds = { x0: 0, y0: 0, x1: 0, y1: 0 }
+  // Edges between nodes (hierarchical views)
+  public layoutLinks: TreeLink[] = []
   // Subset of nodes currently mounted in the DOM (windowing)
   public visibleNodes: VisibleNodes = {
     nodes: [],
     titles: [],
+    links: [],
     titleVisibility: new Map(),
     cullScale: 1,
     levelHiddenIds: new Set(),
@@ -62,6 +76,11 @@ export abstract class Graph<
   // animation (except the focused circle) so they don't each promote a GPU
   // layer while transitioning to their new position
   public repositionedIds = new Set<string>()
+  // Ids of the edges whose path changed on the last data update, or that it
+  // added. An edge cannot morph from one shape to another, so it is drawn at
+  // its arrival geometry and kept hidden until the nodes have moved there.
+  // Edges the update left alone stay visible (see CirclesGraph.updateData).
+  public movingLinkIds = new Set<string>()
   public selectedCircleId?: string
   // Members are visible at any zoom scale (e.g. Members view)
   public showAllMembers = false
@@ -198,6 +217,8 @@ export abstract class Graph<
     this.lastCullTransform = this.zoomTransform
     this.visibleNodes = computeVisibleNodes({
       root: this.root,
+      layout: this.layoutKind,
+      links: this.layoutLinks,
       transform: this.zoomTransform,
       width: this.width,
       height: this.height,
@@ -245,6 +266,13 @@ export abstract class Graph<
 
   updateRootRadius(radius: number) {
     this.rootRadius = radius
+
+    // A wide tree can need a smaller scale than the default minimum to fit on
+    // screen: lower the bound to the fitting scale, never above it
+    const fitScale = radius > 0 ? this.graphMinSize / (radius * 2) : 1
+    const [minScale, maxScale] = settings.zoom.scaleExtent
+    this.zoomBehaviour.scaleExtent([Math.min(minScale, fitScale), maxScale])
+
     this.updatePanExtent()
   }
 
@@ -284,7 +312,7 @@ export abstract class Graph<
 
   // Zoom to coordinates
   zoomTo(x: number, y: number, radius = 0, instant = false) {
-    let scale = radius
+    const scale = radius
       ? Math.min(
           settings.zoom.scaleExtent[1],
           Math.min(
@@ -295,15 +323,35 @@ export abstract class Graph<
         )
       : this.zoomTransform.k
 
+    this.zoomToScale(x, y, scale, instant)
+  }
+
+  // Zoom to a given scale on a point of the visible (cropped) area.
+  // `verticalRatio` places that point in the area: centered by default.
+  zoomToScale(
+    x: number,
+    y: number,
+    scale: number,
+    instant = false,
+    verticalRatio = 0.5
+  ) {
+    let k = Math.min(settings.zoom.scaleExtent[1], scale)
+
     // Prevent from zooming to an intermediate state where opacity of members is too low
-    if (scale > 0.8 && scale < 1) {
-      scale = 0.8
+    if (k > 0.8 && k < 1) {
+      k = 0.8
     }
 
+    const cropHeight = this.height - this.focusCrop.top - this.focusCrop.bottom
+    const offsetY =
+      verticalRatio === 0.5
+        ? this.focusOffsetY
+        : cropHeight * verticalRatio + this.focusCrop.top
+
     const transform = new ZoomTransform(
-      scale,
-      -x * scale + this.focusOffsetX,
-      -y * scale + this.focusOffsetY
+      k,
+      -x * k + this.focusOffsetX,
+      -y * k + offsetY
     )
 
     // Apply synchronously when instant
@@ -317,6 +365,25 @@ export abstract class Graph<
       .duration(settings.zoom.duration)
       .ease(settings.zoom.transition)
       .call(this.zoomBehaviour.transform, transform)
+  }
+
+  // Zoom to fit a box in the visible (cropped) area. Unlike zoomTo, which
+  // fits a radius in the smallest dimension, this uses both dimensions: a tree
+  // is much wider than it is tall and would otherwise stay tiny.
+  zoomToBox(box: Bounds, instant = false) {
+    const width = box.x1 - box.x0
+    const height = box.y1 - box.y0
+    if (width <= 0 || height <= 0) return
+
+    const cropWidth = this.width - this.focusCrop.left - this.focusCrop.right
+    const cropHeight = this.height - this.focusCrop.top - this.focusCrop.bottom
+
+    this.zoomToScale(
+      (box.x0 + box.x1) / 2,
+      (box.y0 + box.y1) / 2,
+      Math.min(cropWidth / width, cropHeight / height),
+      instant
+    )
   }
 
   // Conserve center on window resize
@@ -369,9 +436,29 @@ export abstract class Graph<
     this.scheduleCull()
   }, 500)
 
+  // Frame a tree card: always the same scale, since every card has the same
+  // size, and placed high so the roles hanging under it stay in view
+  focusCard(node: NodeData, instant?: boolean) {
+    this.zoomToScale(
+      node.x,
+      node.y,
+      settings.tree.focusScale,
+      instant,
+      settings.tree.focusVerticalRatio
+    )
+  }
+
   // Zoom on a node
   focusNode(node: NodeData, adaptScale?: boolean, instant?: boolean) {
     if (!node.r) return
+    if (
+      adaptScale &&
+      this.layoutKind === GraphLayoutKind.Tree &&
+      !this.params.focusCircleScale
+    ) {
+      this.focusCard(node, instant)
+      return
+    }
     this.zoomTo(
       node.x,
       node.y,
@@ -384,14 +471,28 @@ export abstract class Graph<
   focusNodeId(nodeId?: string, adaptScale?: boolean, instant?: boolean) {
     if (!this.nodes || this.nodes.length === 0) return
 
-    const node = nodeId
-      ? // Find node by id
-        this.nodes.find((n) => n.data.id === nodeId)
-      : // Find biggest node
-        this.nodes.reduce(
-          (n, biggest) => (n.r > biggest.r ? n : biggest),
-          this.nodes[0]
+    // No node given: frame the whole layout. Falling back to the biggest node
+    // would centre a flat view on whichever circle happens to be the largest,
+    // and a tree has no biggest card at all.
+    if (!nodeId) {
+      this.lastFocusNodeId = undefined
+      this.lastFocusAdaptScale = adaptScale || false
+      this.lastFocusTime = Date.now()
+      if (this.layoutKind === GraphLayoutKind.Tree) {
+        this.zoomToBox(this.layoutFocusBox, instant)
+      } else {
+        const { x, y, r } = this.layoutFocus
+        this.zoomTo(
+          x,
+          y,
+          adaptScale ? this.focusCircleScale({ r } as NodeData) : 0,
+          instant
         )
+      }
+      return
+    }
+
+    const node = this.nodes.find((n) => n.data.id === nodeId)
 
     if (!node) return
     // Remember the request so a resize that interrupts the animation can

@@ -2,7 +2,7 @@ import ModalPanel, { modalPanelWidth } from '@/common/atoms/ModalPanel'
 import { Title } from '@/common/atoms/Title'
 import { useElementSize } from '@/common/hooks/useElementSize'
 import useOverflowHidden from '@/common/hooks/useOverflowHidden'
-import useQueryParams from '@/common/hooks/useQueryParams'
+import useUpdatableQueryParams from '@/common/hooks/useUpdatableQueryParams'
 import CirclesGraph from '@/graph/CirclesGraph'
 import { GraphProvider } from '@/graph/contexts/GraphContext'
 import useGraphEvents from '@/graph/hooks/useGraphEvents'
@@ -10,7 +10,6 @@ import { CirclesGraphViews } from '@/graph/types'
 import { SidebarContext } from '@/layout/contexts/SidebarContext'
 import MemberContent from '@/member/components/MemberContent'
 import { useOrgContext } from '@/org/contexts/OrgContext'
-import { useNavigateOrg } from '@/org/hooks/useNavigateOrg'
 import { Box, useBreakpointValue, useColorMode } from '@chakra-ui/react'
 import React, {
   useCallback,
@@ -23,12 +22,14 @@ import React, {
 import { useTranslation } from 'react-i18next'
 import CircleContent from '../components/CircleContent'
 import CirclesGraphOptions from '../components/CirclesGraphOptions'
+import { viewsList } from '../components/GraphViewsSelect'
 import { CircleProvider } from '../contexts/CIrcleContext'
 
 type CirclesPageParams = {
   circleId: string
   memberId: string
   parentId: string
+  view: string
 }
 
 enum Panels {
@@ -47,8 +48,8 @@ export default function CirclesPage() {
   const isSidePanel = useBreakpointValue({ base: false, lg: true }) ?? false
   useOverflowHidden(isSidePanel)
 
-  const queryParams = useQueryParams<CirclesPageParams>()
-  const navigateOrg = useNavigateOrg()
+  const { params: queryParams, changeParams } =
+    useUpdatableQueryParams<CirclesPageParams>()
   const { org, orgData } = useOrgContext()
   const [ready, setReady] = useState(false)
 
@@ -58,9 +59,6 @@ export default function CirclesPage() {
 
   // Panels
   const [panel, setPanel] = useState<Panels>(Panels.None)
-  const [view, setView] = useState<CirclesGraphViews>(
-    org?.defaultGraphView || CirclesGraphViews.AllCircles
-  )
   const [circleId, setCircleId] = useState<string | undefined>()
   const [memberId, setMemberId] = useState<string | null | undefined>()
   const [parentId, setParentId] = useState<string | undefined>()
@@ -69,7 +67,28 @@ export default function CirclesPage() {
   const circles = orgData?.circles
   const events = useGraphEvents()
 
-  const handleClosePanel = useCallback(() => navigateOrg('roles'), [])
+  // Graph view, kept in the URL like the selected circle so it is shareable
+  // and survives navigation. Falls back to the organization default.
+  const viewParam = queryParams.view as CirclesGraphViews | undefined
+  const view =
+    viewParam && viewsList.includes(viewParam)
+      ? viewParam
+      : org?.defaultGraphView || CirclesGraphViews.AllCircles
+
+  const handleViewChange = useCallback(
+    (newView: CirclesGraphViews) => changeParams({ view: newView }),
+    [changeParams]
+  )
+
+  const handleClosePanel = useCallback(
+    () =>
+      changeParams({
+        circleId: undefined,
+        memberId: undefined,
+        parentId: undefined,
+      }),
+    [changeParams]
+  )
 
   // Zoom offset to keep the focused circle visible next to the side panel
   const focusCropRight =
@@ -116,13 +135,6 @@ export default function CirclesPage() {
 
   // Color mode
   const { colorMode } = useColorMode()
-
-  // Use effect to update view when org changes
-  useEffect(() => {
-    if (org?.defaultGraphView) {
-      setView(org.defaultGraphView)
-    }
-  }, [org])
 
   return (
     <GraphProvider>
@@ -178,7 +190,7 @@ export default function CirclesPage() {
 
       <CirclesGraphOptions
         view={view}
-        onViewChange={setView}
+        onViewChange={handleViewChange}
         position="absolute"
         top={0}
         left={0}

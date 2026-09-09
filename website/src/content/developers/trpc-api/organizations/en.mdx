@@ -75,10 +75,11 @@ Renders the org chart as a PNG image, for any member including Readonly.
 | --- | --- | --- |
 | `orgId` | `uuid` | Target organization. Required. |
 | `circleId` | `uuid` | Render this role and its descendants only. Optional, defaults to the whole org chart. |
-| `view` | `String` | View to render: `AllCircles`, `SimpleCircles`, `FlatCircle` or `Members`. Required. |
-| `width` | `Int` | Image side in pixels, between 100 and 3000. Required. |
+| `view` | `String` | View to render: `AllCircles`, `SimpleCircles`, `HierarchyAll`, `HierarchySimple`, `FlatCircle` or `Members`. Required. |
+| `width` | `Int` | Image width in pixels, between 100 and 3000. Required. |
+| `height` | `Int` | Image height in pixels, between 100 and 3000. Optional, square by default. |
 | `colorMode` | `String` | `light` or `dark`. Optional, defaults to `light`. |
-| `showAllNodes` | `Boolean` | Draw members and deep circles whatever the zoom scale. Optional. |
+| `showMembers` | `Boolean` | List the members inside the roles. Optional, on by default. |
 
 It returns `{ data, contentType, filename }` with the image as base64.
 

@@ -3,4 +3,6 @@ export enum CirclesGraphViews {
   SimpleCircles = 'SimpleCircles',
   FlatCircle = 'FlatCircle',
   Members = 'Members',
+  HierarchyAll = 'HierarchyAll',
+  HierarchySimple = 'HierarchySimple',
 }

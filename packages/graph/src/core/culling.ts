@@ -1,8 +1,19 @@
 import settings from '../settings'
-import { NodeData, NodeType, TitleVisibility, VisibleNodes } from '../types'
+import {
+  GraphLayoutKind,
+  NodeData,
+  NodeType,
+  TitleVisibility,
+  TreeLink,
+  VisibleNodes,
+} from '../types'
 
 export interface CullingParams {
   root: NodeData
+  // How the nodes were placed (defaults to circle packing)
+  layout?: GraphLayoutKind
+  // Edges of the layout, culled on their own bounds (see below)
+  links?: TreeLink[]
   transform: { x: number; y: number; k: number }
   width: number
   height: number
@@ -20,11 +31,14 @@ export interface CullingParams {
 }
 
 // Windowing: compute the subset of nodes to mount in the DOM.
-// The circle packing hierarchy is its own spatial index: children are strictly
-// inside their parent, so a top-down traversal with early bail-out
-// gives the visible set in O(visible).
+// Every node carries the bounding box of its subtree, so a top-down traversal
+// with early bail-out gives the visible set in O(visible). In a pack layout
+// those bounds are the node's own circle (children are contained), which makes
+// the traversal identical to a plain containment test.
 export function computeVisibleNodes({
   root,
+  layout = GraphLayoutKind.Pack,
+  links = [],
   transform,
   width,
   height,
@@ -40,8 +54,14 @@ export function computeVisibleNodes({
   const levelHiddenIds = new Set<string>()
   const criticalScales: number[] = []
   const { x: tx, y: ty, k } = transform
-  const { minScreenRadius, viewportMargin, titleScaleMargin } = settings.culling
+  const {
+    minScreenRadius,
+    viewportMargin,
+    titleScaleMargin,
+    treeMemberMinScreenHeight,
+  } = settings.culling
   const { threshold, gap } = settings.titles
+  const isTree = layout === GraphLayoutKind.Tree
 
   // On high-DPR/touch screens, a composited layer costs DPR² as much GPU
   // memory, so we mount fewer nodes: drop smaller circles earlier and shrink
@@ -61,30 +81,58 @@ export function computeVisibleNodes({
   // `levelHidden`: the node is inside a circle that displays its centered
   // title (zoom scale too low for its size), so it's faded out and click-through
   const visit = (node: NodeData, levelHidden: boolean) => {
+    // Whether the node's own box is on screen. In a pack layout it is implied
+    // by the subtree test below (the subtree is the node's own circle); in a
+    // tree layout a card can be off screen while its descendants are not.
+    let ownVisible = true
+
     if (!renderAll) {
-      const screenX = node.x * k + tx
-      const screenY = node.y * k + ty
-      const screenR = node.r * k
-
       // Cull subtree when too small to be visible
-      // (children are always smaller than their parent)
-      if (screenR < minScreenRadius * dprFactor) return
+      // (a pack child is smaller than its parent, a tree card has the same
+      // width as its children)
+      if (node.r * k < minScreenRadius * dprFactor) return
 
-      // Cull subtree when outside of the expanded viewport
+      // Cull subtree when it is entirely outside of the expanded viewport
+      const { x0, y0, x1, y1 } = node.bounds
       if (
-        screenX + screenR < -margin ||
-        screenX - screenR > width + margin ||
-        screenY + screenR < -margin ||
-        screenY - screenR > height + margin
+        x1 * k + tx < -margin ||
+        x0 * k + tx > width + margin ||
+        y1 * k + ty < -margin ||
+        y0 * k + ty > height + margin
       ) {
         return
+      }
+
+      if (isTree) {
+        const screenX = node.x * k + tx
+        const screenY = node.y * k + ty
+        const halfW = (node.w / 2) * k
+        const halfH = (node.h / 2) * k
+        ownVisible = !(
+          screenX + halfW < -margin ||
+          screenX - halfW > width + margin ||
+          screenY + halfH < -margin ||
+          screenY - halfH > height + margin
+        )
       }
     }
 
     switch (node.data.type) {
       case NodeType.Circle: {
-        nodes.push(node)
-        if (levelHidden) levelHiddenIds.add(node.data.id)
+        if (ownVisible) nodes.push(node)
+        if (levelHidden && ownVisible) levelHiddenIds.add(node.data.id)
+
+        // A tree card carries its own name and never hides its children:
+        // no centered title, no level-hidden crossfade
+        if (isTree) {
+          if (node.children) {
+            for (const child of node.children) {
+              visit(child, false)
+            }
+          }
+          return
+        }
+
         if (renderAll || isTitleVisible(node, kMin, kMax, graphMinSize)) {
           titles.push(node)
           // Discrete center/top state at the actual scale (not the conservative
@@ -138,13 +186,23 @@ export function computeVisibleNodes({
       }
 
       case NodeType.Member:
+        // In a tree, member rows become unreadable slivers long before the
+        // cards stop being readable, so they get their own on-screen threshold
+        if (
+          isTree &&
+          !renderAll &&
+          !showAllNodes &&
+          node.h * k < treeMemberMinScreenHeight
+        ) {
+          return
+        }
         // Members follow the same visibility rule as circles: shown when their
         // circle is open (big enough on screen), hidden (level-hidden) when it
         // displays its centered title. The screen-radius cull above and the
         // parent's childrenMaybeVisible gate already bound how many are mounted.
-        nodes.push(node)
+        if (ownVisible) nodes.push(node)
         // Members of the Members view are never hidden
-        if (levelHidden && !showAllMembers) {
+        if (levelHidden && !showAllMembers && ownVisible) {
           levelHiddenIds.add(node.data.id)
         }
         return
@@ -166,12 +224,36 @@ export function computeVisibleNodes({
     }
   }
 
-  // Re-cull when all titles disappear (zoom scale 1)
-  criticalScales.push(titlesMaxScale)
+  // Edges are culled on their own bounding box, not on their endpoints: an
+  // edge crossing the viewport must stay visible even when both cards it links
+  // are off screen (a long edge spans several viewports when zoomed in).
+  const visibleLinks = renderAll
+    ? links
+    : links.filter((link) => {
+        if (link.r * k < minScreenRadius * dprFactor) return false
+        const { x0, y0, x1, y1 } = link.bounds
+        return !(
+          x1 * k + tx < -margin ||
+          x0 * k + tx > width + margin ||
+          y1 * k + ty < -margin ||
+          y0 * k + ty > height + margin
+        )
+      })
+
+  if (isTree) {
+    // Re-cull when member rows cross their on-screen threshold
+    criticalScales.push(
+      treeMemberMinScreenHeight / settings.tree.memberRowHeight
+    )
+  } else {
+    // Re-cull when all titles disappear (zoom scale 1)
+    criticalScales.push(titlesMaxScale)
+  }
 
   return {
     nodes,
     titles,
+    links: visibleLinks,
     titleVisibility,
     cullScale: k,
     levelHiddenIds,
@@ -194,9 +276,7 @@ function computeTitleVisibility(
   const isRootChild = !parent || parent.data.id === 'root'
   // Circle (and parent) on-screen size, relative to the visible area
   const onScreen = (k * size) / graphMinSize
-  const parentOnScreen = parent
-    ? (k * parent.r * 2) / graphMinSize
-    : Infinity
+  const parentOnScreen = parent ? (k * parent.r * 2) / graphMinSize : Infinity
 
   // Center title: zoom scale below 1, circle small enough on screen,
   // and parent circle big enough on screen

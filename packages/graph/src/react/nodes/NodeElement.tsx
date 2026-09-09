@@ -1,7 +1,8 @@
 import React from 'react'
 import { getColor } from '../../helpers/colors'
 import { giantViewportRatio } from '../../helpers/device'
-import { NodeData, NodeType } from '../../types'
+import settings from '../../settings'
+import { NodeData, NodeShape, NodeType } from '../../types'
 import { useGraphRenderContext } from '../GraphRenderContext'
 import { useDragNode } from '../hooks/useDragNode'
 import useMounted from '../hooks/useMounted'
@@ -35,7 +36,6 @@ export default function NodeElement({
   const parent =
     node.data.type === NodeType.Member ? node.parent?.parent : node.parent
 
-  const depth = node.depth
   const hue = node.data.colorHue
 
   // Drag & drop
@@ -58,7 +58,22 @@ export default function NodeElement({
     node.r * graph.zoomTransform.k * 2 >
       giantViewportRatio * Math.max(graph.width, graph.height)
 
-  const bgColor = getColor(colorMode, 94, 16, depth, hue)
+  // A rectangular node (a tree card, a member row) is rendered at its layout
+  // size rather than scaled from a square, so its text and borders keep their
+  // proportions whatever its height
+  const isRect = node.shape === NodeShape.Rect
+  const isMemberRow = isRect && node.data.type === NodeType.Member
+
+  // Packed circles darken with depth, which is what tells the nesting apart.
+  // A tree draws the hierarchy with its edges, so its cards keep the colour of
+  // a first-level circle however deep they are, and the member rows they list
+  // sit one step lighter on top of them.
+  const depth = isRect ? 1 : node.depth
+  const { light, dark } = settings.tree.memberLightness
+
+  const bgColor = isMemberRow
+    ? getColor(colorMode, light, dark, depth, hue)
+    : getColor(colorMode, 94, 16, depth, hue)
   const outlineColor = getColor(colorMode, 75, 35, depth, hue)
   const boxShadowColor = getColor(colorMode, 75, 35, depth, hue)
   const hoverOutlineColor = getColor(colorMode, 88, 22, depth, hue)
@@ -66,17 +81,17 @@ export default function NodeElement({
   return (
     <div
       id={`node-${node.data.id}`}
-      className={`node ${className || ''} ${
+      className={`node ${isRect ? 'rect ' : ''}${className || ''} ${
         divProps.onClick && !selected ? 'clickable' : ''
       } ${selected ? 'selected' : ''} ${levelHidden ? 'level-hidden' : ''} ${
         giant ? 'giant' : ''
       } ${inEnterGroup ? 'in-enter-group' : ''}`}
       style={
         {
-          width: `${nodeSize}px`,
-          height: `${nodeSize}px`,
-          marginLeft: `-${nodeSize / 2}px`,
-          marginTop: `-${nodeSize / 2}px`,
+          width: `${isRect ? node.w : nodeSize}px`,
+          height: `${isRect ? node.h : nodeSize}px`,
+          marginLeft: `-${(isRect ? node.w : nodeSize) / 2}px`,
+          marginTop: `-${(isRect ? node.h : nodeSize) / 2}px`,
           translate: animateEnter
             ? `${parent.x}px ${parent.y}px`
             : `${node.x}px ${node.y}px`,
@@ -84,7 +99,7 @@ export default function NodeElement({
           cursor: canDrag ? `var(--node-cursor, pointer)` : 'pointer',
           // Hidden during a select-relayout animation: no paint, no GPU layer
           display: hidden ? 'none' : undefined,
-          '--node-scale': `${(node.r * 2) / nodeSize}`,
+          '--node-scale': isRect ? '1' : `${(node.r * 2) / nodeSize}`,
           '--bg-color': bgColor,
           '--outline-color': outlineColor,
           '--hover-outline-color': hoverOutlineColor,

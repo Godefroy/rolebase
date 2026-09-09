@@ -1,4 +1,4 @@
-export { CirclesGraphViews, NodeType } from '@rolebase/graph'
+export { CirclesGraphViews, GraphLayoutKind, NodeType } from '@rolebase/graph'
 export type {
   Data,
   GraphEvents,

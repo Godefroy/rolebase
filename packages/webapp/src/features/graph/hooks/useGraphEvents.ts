@@ -5,6 +5,7 @@ import { useToast } from '@chakra-ui/react'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import useCurrentMember from '../../member/hooks/useCurrentMember'
+import useGraphViewParam from './useGraphViewParam'
 import useOrgMember from '../../member/hooks/useOrgMember'
 import useOrgOwner from '../../member/hooks/useOrgOwner'
 import { GraphEvents } from '../types'
@@ -16,6 +17,9 @@ export default function useGraphEvents(): GraphEvents {
   const isOrgOwner = useOrgOwner()
   const currentMember = useCurrentMember()
   const navigateOrg = useNavigateOrg()
+  // The graph view lives in the URL: carry it over on every navigation, so
+  // selecting a circle doesn't reset it to the organization default
+  const view = useGraphViewParam()
   const { orgData, editable, governanceMode } = useOrgContext()
   const { moveCircle, copyCircle, addCircleMember, removeCircleMember } =
     useOrgEditActions()
@@ -121,14 +125,20 @@ export default function useGraphEvents(): GraphEvents {
       const params = new URLSearchParams()
       params.set('circleId', circleId)
       if (parentId) params.set('parentId', parentId)
+      if (view) params.set('view', view)
       navigateOrg(`roles?${params.toString()}`)
     },
-    [navigateOrg]
+    [navigateOrg, view]
   )
   const onMemberClick = useCallback(
-    (circleId: string, memberId: string) =>
-      navigateOrg(`roles?circleId=${circleId}&memberId=${memberId}`),
-    [navigateOrg]
+    (circleId: string, memberId: string) => {
+      const params = new URLSearchParams()
+      params.set('circleId', circleId)
+      params.set('memberId', memberId)
+      if (view) params.set('view', view)
+      navigateOrg(`roles?${params.toString()}`)
+    },
+    [navigateOrg, view]
   )
 
   // Move a circle: requires editing the moved circle and adding it under the
@@ -194,7 +204,15 @@ export default function useGraphEvents(): GraphEvents {
         await removeCircleMember(parentCircleId, memberId)
       })
     },
-    [getPerms, memberAddDenial, addCircleMember, removeCircleMember, runAction, warn, t]
+    [
+      getPerms,
+      memberAddDenial,
+      addCircleMember,
+      removeCircleMember,
+      runAction,
+      warn,
+      t,
+    ]
   )
 
   // Copy a member to a circle.
@@ -222,7 +240,7 @@ export default function useGraphEvents(): GraphEvents {
     () => ({
       onCircleClick,
       onMemberClick,
-      onClickOutside: () => navigateOrg('roles'),
+      onClickOutside: () => navigateOrg(view ? `roles?view=${view}` : 'roles'),
       onCircleMove: canDrag ? onCircleMove : undefined,
       onCircleCopy: canDrag ? onCircleCopy : undefined,
       onMemberMove: canDrag ? onMemberMove : undefined,
@@ -233,6 +251,7 @@ export default function useGraphEvents(): GraphEvents {
       onCircleClick,
       onMemberClick,
       navigateOrg,
+      view,
       onCircleMove,
       onCircleCopy,
       onMemberMove,

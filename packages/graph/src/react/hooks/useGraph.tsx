@@ -22,6 +22,8 @@ export interface GraphProps<Data, TGraph extends Graph<Data>> {
   panzoomDisabled?: boolean
   // Show members and deep circles at any zoom scale (e.g. export)
   showAllNodes?: boolean
+  // Leave the members out of the layout (see GraphParams)
+  hideMembers?: boolean
   onReady?(): void
 }
 
@@ -37,6 +39,7 @@ export default function useGraph<Data, TGraph extends Graph<Data>>({
   selectedCircleId,
   panzoomDisabled,
   showAllNodes,
+  hideMembers,
   onReady,
 }: GraphProps<Data, TGraph>) {
   const graphContext = useContext(GraphContext)
@@ -55,6 +58,7 @@ export default function useGraph<Data, TGraph extends Graph<Data>>({
       focusCircleScale,
       zoomDisabled: panzoomDisabled,
       showAllNodes,
+      hideMembers,
       events: events || {},
     }
     const graph = init(params)

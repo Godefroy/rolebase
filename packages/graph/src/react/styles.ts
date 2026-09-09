@@ -1,6 +1,9 @@
 import settings from '../settings'
 
 const moveTransition = `${settings.move.duration}ms ease-out`
+// Edges cannot be animated from one shape to another, so they step aside while
+// nodes move and fade back in, over the same duration, once they have arrived
+const linkFade = `opacity ${moveTransition}`
 
 // Size of node before scaling
 // Should be high enough to be divided for border width (in Panzoom)
@@ -8,6 +11,16 @@ const moveTransition = `${settings.move.duration}ms ease-out`
 export const nodeSize = 200
 
 const { baseSize } = settings.titles
+const {
+  cardRadius,
+  cardBorder,
+  cardPadding,
+  cardTitlePadding,
+  titleFontSize,
+  titleLineHeight,
+  memberRowRadius,
+  memberRowPadding,
+} = settings.tree
 
 // Styles of the graph, scoped under the .rb-graph container class.
 // Rendered in a <style> tag by the graph components, so the package
@@ -73,12 +86,30 @@ export const graphStyles = `
   border-style: solid;
   border-color: var(--outline-color);
 }
-.rb-graph .node.selected {
+/* Hover, selection and drop-target outlines are drawn by an overlay rather
+   than by the node's own border or shadow:
+   - a border takes part in the box model (box-sizing: border-box), so making
+     one appear shrinks the content box, shifting the node content and
+     resizing the avatar images laid against the padding box;
+   - an inset shadow paints under the children, so the avatar image, which
+     covers the whole node, hides it.
+   The overlay is a pseudo-element, generated last, so it paints above every
+   child. It exists only on the one or two nodes concerned, and only they read
+   the per-frame --zoom-scale. */
+.rb-graph .node.selected::after,
+.rb-graph .node.clickable:hover::after,
+.rb-graph .node.drag-target::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border-style: solid;
+  border-color: var(--outline-color);
   border-width: calc(4px / var(--zoom-scale) / var(--node-scale));
+  pointer-events: none;
 }
-.rb-graph .node.clickable:hover {
+.rb-graph .node.clickable:hover::after {
   border-color: var(--hover-outline-color);
-  border-width: calc(4px / var(--zoom-scale) / var(--node-scale));
 }
 .rb-graph .node.drag-node {
   box-shadow: 0 10px 10px var(--box-shadow-color);
@@ -95,7 +126,7 @@ export const graphStyles = `
   /* Reset transition while dragging to avoid lagging behind the mouse */
   transition: box-shadow ${moveTransition} !important;
 }
-.rb-graph .node.drag-target {
+.rb-graph .node.drag-target::after {
   border-width: calc(8px / var(--zoom-scale) / var(--node-scale));
 }
 /* Nodes inside a circle that displays its centered title:
@@ -127,6 +158,141 @@ export const graphStyles = `
 .rb-graph-zooming .circle-title-center,
 .rb-graph-zooming .circle-title-top {
   transition: none !important;
+}
+
+/* Hierarchical views: cards linked by edges, listing their members.
+   A rectangular node is rendered at its layout size (--node-scale is 1), so
+   every inner size below is expressed in layout units and scales with the
+   panzoom transform, without any per-frame CSS variable dependency. */
+.rb-graph .node.rect {
+  border-radius: ${cardRadius}px;
+}
+.rb-graph .node.card {
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 0 ${cardPadding}px;
+  overflow: hidden;
+}
+/* One member per row: avatar, then name, aligned left */
+.rb-graph .node.card-member {
+  border-radius: ${memberRowRadius}px;
+  justify-content: flex-start;
+  text-align: left;
+  padding: 0 ${memberRowPadding}px;
+  overflow: hidden;
+}
+.rb-graph .card-member-avatar {
+  position: relative;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: var(--outline-color);
+}
+.rb-graph .card-member-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+.rb-graph .card-member-initial {
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 1;
+}
+.rb-graph .card-member-name {
+  margin-left: ${memberRowPadding + 2}px;
+  font-size: 22px;
+  line-height: 1.1em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* Invited role (link): a dashed outline tells it apart from a sub-role. It is
+   always there, at a fixed width, so it never shifts the card content. The
+   hover and selection outlines are shadows and stack on top of it. */
+.rb-graph .node.card-link {
+  border-style: dashed;
+  border-width: ${cardBorder}px;
+}
+.rb-graph .card-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 100%;
+  font-size: ${titleFontSize}px;
+  line-height: ${titleLineHeight}px;
+  font-weight: bold;
+  padding: ${cardTitlePadding}px 0;
+}
+.rb-graph .card-title-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--title-lines, 1);
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+/* Aligned on the member rows above them */
+.rb-graph .card-leaders {
+  position: relative;
+  flex: none;
+  align-self: flex-start;
+  margin-left: ${memberRowPadding}px;
+}
+.rb-graph .card-leader {
+  display: flex;
+  position: absolute;
+  top: 0;
+  border-radius: 50%;
+  /* Same ground as a member row avatar, so the initials read the same */
+  background-color: var(--outline-color);
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.rb-graph .card-leader-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  pointer-events: none;
+}
+.rb-graph .card-leader-initial {
+  color: white;
+  font-weight: bold;
+  font-size: 22px;
+}
+/* Edges, in a single SVG behind the cards. The stroke keeps a constant
+   on-screen width, like the node outlines. Reading --zoom-scale (which changes
+   every frame) costs one style recomputation on this single element, instead
+   of one per edge. */
+.rb-graph .tree-links {
+  position: absolute;
+  overflow: visible;
+  pointer-events: none;
+  stroke-width: calc(2px / var(--zoom-scale));
+}
+.rb-graph .tree-link {
+  fill: none;
+  stroke: var(--link-color);
+  stroke-linecap: round;
+  transition: ${linkFade};
+}
+/* An edge steps aside while its endpoints move, and while its node is dragged.
+   Hiding is instant, so a stale path is never seen; only the fade back in is
+   animated, and only on the edges the change actually touched. */
+.rb-graph .tree-link.moving,
+.rb-graph .tree-link.dragging {
+  opacity: 0;
+  transition: none;
 }
 
 .rb-graph .circle-title {

@@ -19,13 +19,18 @@ export default authedProcedure
         .oneOf(Object.values(CirclesGraphViews))
         .required(),
       width: yup.number().integer().min(100).max(3000).required(),
+      // Image height (default: square). A hierarchical org chart is much wider
+      // than it is tall, so the client sends the aspect ratio of its layout.
+      height: yup.number().integer().min(100).max(3000),
       colorMode: yup.mixed<'light' | 'dark'>().oneOf(['light', 'dark']),
-      // Show members and deep circles regardless of the zoom scale
-      showAllNodes: yup.boolean(),
+      // List the members inside the circles (default: yes)
+      showMembers: yup.boolean(),
     })
   )
   .mutation(async (opts) => {
-    const { orgId, circleId, view, width, colorMode, showAllNodes } = opts.input
+    const { orgId, circleId, view, width, colorMode } = opts.input
+    const showMembers = opts.input.showMembers ?? true
+    const height = opts.input.height || width
 
     await guardOrg(orgId, Member_Role_Enum.Readonly, opts.ctx)
 
@@ -56,11 +61,11 @@ export default authedProcedure
       view,
       org: orgData,
       width,
-      height: width,
+      height,
       colorMode: colorMode || 'light',
-      showAllNodes,
+      showMembers,
     })
-    const png = await screenshotHtml(html, width, width)
+    const png = await screenshotHtml(html, width, height)
 
     return {
       data: png.toString('base64'),

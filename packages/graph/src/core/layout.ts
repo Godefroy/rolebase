@@ -1,96 +1,108 @@
-import {
-  CircleMemberJoined,
-  OrgData,
-} from '@rolebase/shared/model/OrgData'
 import { truthy } from '@rolebase/shared/helpers/truthy'
-import * as d3 from 'd3'
+import { CircleMemberJoined, OrgData } from '@rolebase/shared/model/OrgData'
 import { textEllipsis } from '../helpers/textEllipsis'
-import settings from '../settings'
-import { CirclesGraphViews, Data, NodeData, NodeType } from '../types'
-import { CircleData, viewStrategies } from './views'
+import {
+  CirclesGraphViews,
+  Data,
+  GraphLayoutKind,
+  Layout,
+  LayoutOptions,
+  NodeType,
+} from '../types'
+import { computePackLayout } from './layouts/pack'
+import { computeTreeLayout } from './layouts/tree'
+import { CircleData, sortById, viewStrategies } from './views'
 
-export interface Layout {
-  // Artificial root node enclosing all circles
-  root: NodeData
-  // All nodes under root (without root), sorted by depth
-  nodes: NodeData[]
-}
+export type { Layout }
 
-// Compute the circle packing layout of circles for a given view.
+// Compute the layout of circles for a given view.
+// The view decides which circles are displayed and how they are placed:
+// packed inside each other, or laid out as a top-down tree of cards.
 // Pure: usable in browser and server.
 export function computeLayout(
   org: OrgData,
   view: CirclesGraphViews,
-  selectedCircleId?: string
+  selectedCircleId?: string,
+  options: LayoutOptions = {}
 ): Layout {
   const strategy = viewStrategies[view]
-  const data = prepareData(strategy.getCircles(org, selectedCircleId), org)
-
-  // Pack data with d3.pack
-  const root = packData(data, strategy.packSorting)
-
-  // Get all nodes under root and rescale them
-  const nodesMap = root.descendants()
-  const minRadius = nodesMap.reduce(
-    (min, node) => (node.r < min ? node.r : min),
-    Infinity
+  const layout = strategy.layout ?? GraphLayoutKind.Pack
+  const data = prepareData(
+    strategy.getCircles(org, selectedCircleId),
+    org,
+    layout,
+    options
   )
-  const nodeScale = 30 / minRadius
-  for (const node of nodesMap) {
-    node.r *= nodeScale
-    node.x *= nodeScale
-    node.y *= nodeScale
-  }
 
-  return { root, nodes: nodesMap.slice(1) }
+  return layout === GraphLayoutKind.Tree
+    ? computeTreeLayout(data)
+    : computePackLayout(data, strategy.packSorting ?? sortById)
 }
 
-function prepareData(circles: CircleData[], org: OrgData): Data {
+function prepareData(
+  circles: CircleData[],
+  org: OrgData,
+  layout: GraphLayoutKind,
+  options: LayoutOptions
+): Data {
   return {
     id: 'root',
     parentId: null,
     type: NodeType.Circle,
     name: '',
-    children: prepareDataInternal(circles, org, null),
+    children: prepareDataInternal(circles, org, layout, options, null),
   }
 }
 
 function prepareDataInternal(
   circles: CircleData[],
   org: OrgData,
+  layout: GraphLayoutKind,
+  options: LayoutOptions,
   parentId: string | null = null
 ): Data[] {
   return circles
     .filter((circle) => circle.parentId == parentId)
     .map((circle) => {
       // Define circle data with role name and resolved color
+      const role = org.roleById.get(circle.roleId)
       const data: Data = {
         id: circle.id,
         entityId: circle.id,
         parentId: circle.parentId,
-        name: org.roleById.get(circle.roleId)?.name ?? '',
+        name: role?.name ?? '',
         type: NodeType.Circle,
         colorHue: org.getColor(circle.id) ?? undefined,
+        parentLink: role?.parentLink,
       }
 
       // Add sub-circles to children
-      const children: Data[] = prepareDataInternal(circles, org, circle.id)
+      const children: Data[] = prepareDataInternal(
+        circles,
+        org,
+        layout,
+        options,
+        circle.id
+      )
 
       // Add circle links
       if (circle.showLinks) {
         const links = org.linksOf(circle.id)
         if (links.length !== 0) {
-          children.push(...circleLinksToData(circle, org))
+          children.push(...circleLinksToData(circle, org, layout, options))
         }
       }
 
       // Members to render (explicit list for the members view, else the
-      // circle's own members when shown)
-      const memberEntries = circle.memberEntries
+      // circle's own members when shown). Left out entirely when they are not
+      // displayed, so a circle is not sized around an empty space.
+      const memberEntries = options.hideMembers
+        ? []
+        : circle.memberEntries
         ? circle.memberEntries
         : circle.showMembers
-          ? org.membersOf(circle.id)
-          : []
+        ? org.membersOf(circle.id)
+        : []
 
       // Add members in a circle to group them
       if (memberEntries.length !== 0 || children.length === 0) {
@@ -102,7 +114,8 @@ function prepareDataInternal(
         data.children = children
       }
 
-      if (circle.participants) {
+      // Leader avatars are members too: they follow the same option
+      if (circle.participants && !options.hideMembers) {
         data.participants = circle.participants
       }
 
@@ -113,7 +126,11 @@ function prepareDataInternal(
 function membersToData(
   circleId: string,
   members: readonly CircleMemberJoined[],
-  colorHue?: number
+  colorHue?: number,
+  // Set when the members are listed under an invited role card: they belong to
+  // the invited circle, and their node ids are scoped to the card so they stay
+  // unique next to the same members under the invited circle's own card
+  memberParentId?: string
 ): Data {
   const node: Data = {
     id: `${circleId}-members`,
@@ -124,9 +141,9 @@ function membersToData(
   if (members.length !== 0) {
     node.children = members.map(
       (entry): Data => ({
-        id: entry.id,
+        id: memberParentId ? `${circleId}_${entry.id}` : entry.id,
         entityId: entry.member.id,
-        parentId: circleId,
+        parentId: memberParentId ?? circleId,
         name: textEllipsis(entry.member.name, 20),
         picture: entry.member.picture,
         type: NodeType.Member,
@@ -137,75 +154,54 @@ function membersToData(
   return node
 }
 
-function circleLinksToData(circle: CircleData, org: OrgData): Data[] {
-  return org.linksOf(circle.id)
+function circleLinksToData(
+  circle: CircleData,
+  org: OrgData,
+  layout: GraphLayoutKind,
+  options: LayoutOptions
+): Data[] {
+  return org
+    .linksOf(circle.id)
     .map((link): Data | undefined => {
       const invitedCircle = org.circleById.get(link.circleId)
       if (!invitedCircle) return
 
       const colorHue =
-        org.getColor(invitedCircle.id) ??
-        org.getColor(circle.id) ??
-        undefined
-      const participants = org.getParticipants(invitedCircle.id)
+        org.getColor(invitedCircle.id) ?? org.getColor(circle.id) ?? undefined
+      const participants = options.hideMembers
+        ? undefined
+        : org.getParticipants(invitedCircle.id)
+      const linkId = `${circle.id}_${link.circleId}`
+
+      // A tree card is read as a whole, so an invited role lists its members
+      // like any other. A packed circle nests inside its inviting circle,
+      // where the members would be a confusing duplicate: it keeps an empty
+      // members circle, for padding, and its leaders.
+      const members =
+        layout === GraphLayoutKind.Tree && !options.hideMembers
+          ? membersToData(
+              linkId,
+              org.membersOf(invitedCircle.id),
+              colorHue,
+              invitedCircle.id
+            )
+          : {
+              id: `${linkId}-members`,
+              parentId: circle.id,
+              name: '',
+              type: NodeType.MembersCircle,
+            }
 
       return {
-        id: `${circle.id}_${link.circleId}`,
+        id: linkId,
         entityId: link.circleId,
         parentId: circle.id,
         name: org.roleById.get(invitedCircle.roleId)?.name ?? '',
         type: NodeType.Circle,
         colorHue,
         participants,
-        // Add empty children for padding
-        children: [
-          {
-            id: `${circle.id}_${link.circleId}-members`,
-            parentId: circle.id,
-            name: '',
-            type: NodeType.MembersCircle,
-          },
-        ],
+        children: [members],
       }
     })
     .filter(truthy)
-}
-
-function packData(
-  data: Data,
-  packSorting: (a: d3.HierarchyNode<Data>, b: d3.HierarchyNode<Data>) => number
-) {
-  const hierarchyNode = d3
-    .hierarchy(data)
-    .sum((d) => d.value || 0)
-    .sort(packSorting)
-
-  return (
-    d3
-      .pack<Data>()
-      .radius(() => settings.memberValue)
-      .padding((d) => {
-        // Circle
-        if (d.data.type === NodeType.Circle) {
-          const hasSubCircles = d.data.children?.some(
-            (c) => c.type === NodeType.Circle
-          )
-          if (!hasSubCircles) return settings.padding.circleWithoutSubCircle
-          const multipleChildren = (d.data.children?.length || 0) > 1
-          return multipleChildren
-            ? settings.padding.circleWithSubCircles
-            : settings.padding.circleWithSingleSubCircle
-        } else if (d.data.type === NodeType.MembersCircle) {
-          // Members Circle
-          return settings.padding.membersCircle
-        }
-        return 0
-      })(hierarchyNode)
-
-      // Sort by depth and Y, then raise
-      .sort((a, b) =>
-        // a.depth === b.depth ? a.y - b.y :
-        a.depth < b.depth ? -1 : 1
-      )
-  )
 }

@@ -1,5 +1,7 @@
+import { getCircleMemberUrlSearch } from '@/circle/contexts/CircleMemberProvider'
 import Loading from '@/common/atoms/Loading'
 import { useIdleCallback } from '@/common/hooks/useIdleCallback'
+import useGraphViewParam from '@/graph/hooks/useGraphViewParam'
 import { useOrgContext } from '@/org/contexts/OrgContext'
 import { useNavigateOrg } from '@/org/hooks/useNavigateOrg'
 import { SearchIcon } from '@chakra-ui/icons'
@@ -42,6 +44,7 @@ export default function SearchGlobalModal(modalProps: UseModalProps) {
   const { colorMode } = useColorMode()
   const { org } = useOrgContext()
   const navigateOrg = useNavigateOrg()
+  const view = useGraphViewParam()
 
   // Search
   const [type, setType] = useState<(typeof searchTypes)[number] | undefined>()
@@ -60,9 +63,23 @@ export default function SearchGlobalModal(modalProps: UseModalProps) {
       if (!item) return
       modalProps.onClose()
       if (item.type === SearchTypes.Member) {
-        navigateOrg(`roles?memberId=${item.id}`)
+        navigateOrg(
+          `roles${getCircleMemberUrlSearch(
+            undefined,
+            item.id,
+            undefined,
+            view
+          )}`
+        )
       } else if (item.type === SearchTypes.Circle) {
-        navigateOrg(`roles?circleId=${item.id}`)
+        navigateOrg(
+          `roles${getCircleMemberUrlSearch(
+            item.id,
+            undefined,
+            undefined,
+            view
+          )}`
+        )
       } else if (item.type === SearchTypes.Thread) {
         navigateOrg(`threads/${item.id}`)
       } else if (item.type === SearchTypes.Meeting) {
@@ -73,7 +90,7 @@ export default function SearchGlobalModal(modalProps: UseModalProps) {
         navigateOrg(`decisions/${item.id}`)
       }
     },
-    []
+    [view]
   )
 
   const {

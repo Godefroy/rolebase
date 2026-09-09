@@ -1,10 +1,11 @@
 import React, { forwardRef, useImperativeHandle, useMemo, useRef } from 'react'
 import { CirclesGraph } from '../core/CirclesGraph'
-import { CirclesGraphViews } from '../types'
+import { CirclesGraphViews, GraphLayoutKind } from '../types'
 import CirclesTitles from './CirclesTitles'
 import { GraphRenderContext } from './GraphRenderContext'
 import Nodes from './Nodes'
 import { Panzoom } from './Panzoom'
+import GraphTreeLinks from './GraphTreeLinks'
 import useCirclesGraph, { CirclesGraphProps } from './hooks/useCirclesGraph'
 import { useNodeCursor } from './hooks/useNodeCursor'
 import { useRepositioningBg } from './hooks/useRepositioningBg'
@@ -37,6 +38,10 @@ export default forwardRef<CirclesGraph | undefined, CirclesGraphViewProps>(
     // Cursor on nodes
     const cursor = useNodeCursor(graph)
 
+    // Hierarchical views render cards linked by edges instead of packed
+    // circles: their name lives in the card, so no title layer
+    const isTree = graph?.layoutKind === GraphLayoutKind.Tree
+
     // Background color shown while moved nodes are hidden (select-relayout)
     const repositioningBg = useRepositioningBg(graph)
 
@@ -64,13 +69,17 @@ export default forwardRef<CirclesGraph | undefined, CirclesGraphViewProps>(
           props.view === CirclesGraphViews.Members
             ? ' rb-graph-show-members'
             : ''
-        }${props.showAllNodes ? ' rb-graph-show-all' : ''}`}
+        }${props.showAllNodes ? ' rb-graph-show-all' : ''}${
+          isTree ? ' rb-graph-tree' : ''
+        }`}
         style={
           {
             width: `${props.width}px`,
             height: `${props.height}px`,
             '--graph-min-size': graphMinSize,
             '--node-cursor': cursor,
+            // Opaque: a translucent stroke would darken where edges cross
+            '--link-color': props.colorMode === 'dark' ? '#585c66' : '#cbcbd1',
           } as React.CSSProperties
         }
         onClick={handleClickOutside}
@@ -88,8 +97,9 @@ export default forwardRef<CirclesGraph | undefined, CirclesGraphViewProps>(
         {graph && (
           <GraphRenderContext.Provider value={renderContext}>
             <Panzoom graph={graph}>
+              {isTree && <GraphTreeLinks graph={graph} />}
               <Nodes graph={graph} />
-              <CirclesTitles graph={graph} />
+              {!isTree && <CirclesTitles graph={graph} />}
             </Panzoom>
           </GraphRenderContext.Provider>
         )}

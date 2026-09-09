@@ -2,7 +2,12 @@ import { OrgData } from '@rolebase/shared/model/OrgData'
 import { getColor } from '../helpers/colors'
 import { omit } from '../helpers/omit'
 import settings from '../settings'
-import { CirclesGraphViews, GraphParams, RootElement } from '../types'
+import {
+  CirclesGraphViews,
+  GraphLayoutKind,
+  GraphParams,
+  RootElement,
+} from '../types'
 import { Graph } from './Graph'
 import { computeLayout } from './layout'
 import { viewStrategies } from './views'
@@ -13,6 +18,8 @@ export class CirclesGraph extends Graph<OrgData> {
   private enterTimeout?: ReturnType<typeof setTimeout>
   // Node positions of the previous layout, to detect which nodes moved
   private prevPositions?: Map<string, { x: number; y: number; r: number }>
+  // Edge paths of the previous layout, to detect which edges changed
+  private prevLinkPaths?: Map<string, string>
   // Set by selectCircle: the next updateData is a relayout, so moved nodes
   // should be hidden during the animation (live data updates must not)
   private isSelectRelayout = false
@@ -33,6 +40,9 @@ export class CirclesGraph extends Graph<OrgData> {
 
     // Always show members on members view
     this.showAllMembers = view === CirclesGraphViews.Members
+
+    // How this view places its nodes (drives culling and rendering)
+    this.layoutKind = viewStrategies[view].layout ?? GraphLayoutKind.Pack
   }
 
   destroy() {
@@ -74,9 +84,10 @@ export class CirclesGraph extends Graph<OrgData> {
     }
   }
 
-  // Background color of the focus circle parent (undefined for a root child)
+  // Background color of the focus circle parent (undefined for a root child).
+  // Only meaningful when circles are nested: a tree keeps the page background.
   private getFocusParentColor(id: string | undefined) {
-    if (!id) return undefined
+    if (!id || this.layoutKind === GraphLayoutKind.Tree) return undefined
     const node = this.nodes.find((n) => n.data.id === id)
     const parent = node?.parent
     if (!parent || parent.data.id === 'root') return undefined
@@ -94,9 +105,16 @@ export class CirclesGraph extends Graph<OrgData> {
     super.updateData(org)
     this.org = org
 
-    const { root, nodes } = computeLayout(org, this.view, this.selectedCircleId)
+    const layout = computeLayout(org, this.view, this.selectedCircleId, {
+      hideMembers: this.params.hideMembers,
+    })
+    const { root, nodes } = layout
     this.root = root
     this.nodes = nodes
+    this.layoutBounds = layout.bounds
+    this.layoutFocus = layout.focus
+    this.layoutFocusBox = layout.focusBox
+    this.layoutLinks = layout.links
 
     const isSelect = this.isSelectRelayout
     this.isSelectRelayout = false
@@ -150,14 +168,44 @@ export class CirclesGraph extends Graph<OrgData> {
       this.repositionedIds = new Set()
     }
 
-    // Update root radius
-    this.updateRootRadius(nodes[0]?.r || root.r || 0)
+    // Edges changed or added by this update. An edge cannot be animated from
+    // one shape to another: it is drawn at its arrival geometry while the
+    // cards are still gliding to theirs, so it stays hidden until they get
+    // there. Edges the update left alone keep their place and stay visible.
+    const prevLinkPaths = this.prevLinkPaths
+    this.prevLinkPaths = new Map(layout.links.map((l) => [l.id, l.path]))
+    const changedLinks = prevLinkPaths
+      ? new Set(
+          layout.links
+            .filter((l) => prevLinkPaths.get(l.id) !== l.path)
+            .map((l) => l.id)
+        )
+      : new Set<string>()
 
-    // Zoom on root circle at first draw, synchronously before culling:
-    // nothing must render with the identity transform, it would mount
-    // a large fully-detailed subset of nodes (crash on mobile)
+    if (animating && !isSelect) {
+      // Mid-animation update: the edges already waiting stay hidden
+      changedLinks.forEach((id) => this.movingLinkIds.add(id))
+    } else {
+      this.movingLinkIds = changedLinks
+    }
+
+    // Update root radius
+    this.updateRootRadius(layout.panRadius || 0)
+
+    // Zoom at first draw, synchronously before culling: nothing must render
+    // with the identity transform, it would mount a large fully-detailed
+    // subset of nodes (crash on mobile).
+    // A packing is fitted whole, its nested circles staying legible at any
+    // size. A tree opens on its first card, framed exactly as selecting it
+    // would: fitting a whole chart would shrink every card past reading.
     if (firstDraw) {
-      this.zoomTo(root.x, root.y, this.focusCircleScale(root), true)
+      const firstCard =
+        this.layoutKind === GraphLayoutKind.Tree ? nodes[0] : undefined
+      if (firstCard) {
+        this.focusCard(firstCard, true)
+      } else {
+        this.zoomTo(root.x, root.y, this.focusCircleScale(root), true)
+      }
     }
 
     // Save and dispatch nodes data
@@ -171,11 +219,16 @@ export class CirclesGraph extends Graph<OrgData> {
     // for a non-select update mid-animation, so the schedule isn't extended.
     if (isSelect || !animating) {
       if (this.enterTimeout) clearTimeout(this.enterTimeout)
-      if (this.enteringIds.size > 0 || this.repositionedIds.size > 0) {
+      if (
+        this.enteringIds.size > 0 ||
+        this.repositionedIds.size > 0 ||
+        this.movingLinkIds.size > 0
+      ) {
         this.enterTimeout = setTimeout(() => {
           this.enterTimeout = undefined
           this.enteringIds = new Set()
           this.repositionedIds = new Set()
+          this.movingLinkIds = new Set()
           // Restore the normal background and re-emit a fresh visible set so
           // React re-renders the (now flat) nodes
           this.emit('repositioningBg', undefined)

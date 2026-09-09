@@ -151,7 +151,7 @@
   "CircleExportPage": {
     "heading": "Exporter une capture",
     "download": "Télécharger au format PNG",
-    "showAllNodes": "Afficher les membres et sous-rôles"
+    "showMembers": "Afficher les membres"
   },
   "ExportPage": {
     "heading": "Export",
@@ -395,6 +395,10 @@
     "AllCircles_desc": "Afficher en même temps tous les Rôles imbriqués et les Membres qui les occupent. La taille de chaque cercle affiché dépend du nombre de Rôles et de Membres qu'il contient.",
     "SimpleCircles": "Holarchie",
     "SimpleCircles_desc": "Afficher à la même taille les Rôles du Rôle sélectionné, avec les membres qui les représentent.",
+    "HierarchyAll": "Hiérarchique",
+    "HierarchyAll_desc": "Afficher tous les Rôles sous forme d'organigramme hiérarchique, du haut vers le bas, avec les Membres qui les occupent.",
+    "HierarchySimple": "Hiérarchique replié",
+    "HierarchySimple_desc": "Afficher l'organigramme hiérarchique replié autour du Rôle sélectionné : ses parents et ses Rôles directs, avec les Membres qui les occupent.",
     "FlatCircle": "Opérationnel",
     "FlatCircle_desc": "Afficher tous les Rôles à un même niveau, mélangés, avec les membres qui les représentent.",
     "Members": "Membres uniquement",

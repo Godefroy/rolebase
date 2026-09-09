@@ -1,3 +1,4 @@
+import useGraphViewParam from '@/graph/hooks/useGraphViewParam'
 import { useNavigateOrg } from '@/org/hooks/useNavigateOrg'
 import { useDisclosure } from '@chakra-ui/react'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
@@ -16,12 +17,15 @@ interface State {
 export function getCircleMemberUrlSearch(
   circleId?: string,
   memberId?: string,
-  parentId?: string
+  parentId?: string,
+  // Graph view to keep across the navigation (see useGraphViewParam)
+  view?: string
 ) {
   const params = new URLSearchParams()
   if (circleId) params.set('circleId', circleId)
   if (memberId) params.set('memberId', memberId)
   if (parentId) params.set('parentId', parentId)
+  if (view) params.set('view', view)
   const search = params.toString()
   return search ? `?${search}` : ''
 }
@@ -32,6 +36,7 @@ interface Props {
 
 export function CircleMemberProvider({ children }: Props) {
   const navigateOrg = useNavigateOrg()
+  const view = useGraphViewParam()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [state, setState] = useState<State>({})
   const [canFocus, setCanFocus] = useState(false)
@@ -64,7 +69,8 @@ export function CircleMemberProvider({ children }: Props) {
       `roles${getCircleMemberUrlSearch(
         state.circleId,
         state.memberId,
-        state.parentId
+        state.parentId,
+        view
       )}`
     )
     // Reset state
