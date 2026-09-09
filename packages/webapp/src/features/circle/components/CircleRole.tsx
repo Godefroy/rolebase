@@ -149,8 +149,8 @@ export default function CircleRole({ skipFetchRole }: Props) {
         align="stretch"
         mb={canEditRole ? fieldsGap : 0}
       >
-        <CircleRoleSubCircles />
         <CircleRoleMembers />
+        <CircleRoleSubCircles />
 
         {role.parentLink && parentCircle && parentCircle.parentId && (
           <Text>
