@@ -3,6 +3,7 @@ import { CirclesGraph } from '../core/CirclesGraph'
 import { CirclesGraphViews, GraphLayoutKind } from '../types'
 import CirclesTitles from './CirclesTitles'
 import { GraphRenderContext } from './GraphRenderContext'
+import Minimap from './Minimap'
 import Nodes from './Nodes'
 import { Panzoom } from './Panzoom'
 import GraphTreeLinks from './GraphTreeLinks'
@@ -80,6 +81,23 @@ export default forwardRef<CirclesGraph | undefined, CirclesGraphViewProps>(
             '--node-cursor': cursor,
             // Opaque: a translucent stroke would darken where edges cross
             '--link-color': props.colorMode === 'dark' ? '#585c66' : '#cbcbd1',
+            // Minimap panel, its hairline and the frame of the current view
+            // in it. The panel is nearly opaque: it sits over the graph, and
+            // the shapes it draws have to read against it.
+            '--minimap-bg':
+              props.colorMode === 'dark'
+                ? 'rgba(26, 26, 30, 0.93)'
+                : 'rgba(255, 255, 255, 0.93)',
+            '--minimap-border-color':
+              props.colorMode === 'dark'
+                ? 'rgba(255, 255, 255, 0.14)'
+                : 'rgba(0, 0, 0, 0.1)',
+            '--minimap-scrim-color':
+              props.colorMode === 'dark'
+                ? 'rgba(0, 0, 0, 0.1)'
+                : 'rgba(90, 90, 100, 0.05)',
+            '--minimap-viewport-color':
+              props.colorMode === 'dark' ? '#a1a1aa' : '#71717a',
           } as React.CSSProperties
         }
         onClick={handleClickOutside}
@@ -101,6 +119,7 @@ export default forwardRef<CirclesGraph | undefined, CirclesGraphViewProps>(
               <Nodes graph={graph} />
               {!isTree && <CirclesTitles graph={graph} />}
             </Panzoom>
+            {props.minimap !== false && <Minimap graph={graph} />}
           </GraphRenderContext.Provider>
         )}
       </div>

@@ -24,8 +24,9 @@ export interface GraphProps<Data, TGraph extends Graph<Data>> {
   showAllNodes?: boolean
   // Leave the members out of the layout (see GraphParams)
   hideMembers?: boolean
-  // Frame the whole layout on the first draw (see GraphParams)
-  fitLayout?: boolean
+  // Overview of the whole layout in the corner of the graph, on by default.
+  // It only shows up when the layout does not fit on screen.
+  minimap?: boolean
   onReady?(): void
 }
 
@@ -42,7 +43,6 @@ export default function useGraph<Data, TGraph extends Graph<Data>>({
   panzoomDisabled,
   showAllNodes,
   hideMembers,
-  fitLayout,
   onReady,
 }: GraphProps<Data, TGraph>) {
   const graphContext = useContext(GraphContext)
@@ -62,7 +62,6 @@ export default function useGraph<Data, TGraph extends Graph<Data>>({
       zoomDisabled: panzoomDisabled,
       showAllNodes,
       hideMembers,
-      fitLayout,
       events: events || {},
     }
     const graph = init(params)

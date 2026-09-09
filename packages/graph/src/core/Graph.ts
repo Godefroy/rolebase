@@ -27,8 +27,11 @@ const defaultFocusCrop: Position = {
   left: 0,
 }
 
+// A focused circle is framed on its own size, never below a floor: a small
+// circle would otherwise fill the screen on its own. The free space around it
+// comes from the framing margin (see fitRatio).
 const defaultFocusCircleScale: ZoomFocusCircleScale = (node) =>
-  Math.max(200, node.r * 1.05)
+  Math.max(200, node.r)
 
 export type GraphEmitterEvents = {
   zoomPosition: [ZoomTransform]
@@ -95,7 +98,6 @@ export abstract class Graph<
   public focusCrop: Position
   protected focusOffsetX: number
   protected focusOffsetY: number
-  protected rootRadius: number
   private unmounted = false
   private lastCullTransform: ZoomTransform | undefined
   private cullRequest: number | undefined
@@ -121,7 +123,6 @@ export abstract class Graph<
     this.focusCrop = focusCrop || defaultFocusCrop
     this.focusOffsetX = getFocusOffsetX(width, focusCrop || defaultFocusCrop)
     this.focusOffsetY = getFocusOffsetY(height, focusCrop || defaultFocusCrop)
-    this.rootRadius = 0
 
     // D3 root selection
     this.d3Root = d3.select<RootElement, NodeData>(element)
@@ -131,6 +132,14 @@ export abstract class Graph<
       .zoom<RootElement, any>()
       .filter((event) => {
         if (this.zoomDisabled) return false
+        // A gesture started on the minimap belongs to the minimap: it moves
+        // the view on its own (the wheel still zooms the graph under it)
+        if (
+          event.type !== 'wheel' &&
+          (event.target as Element | null)?.closest?.('.rb-graph-minimap')
+        ) {
+          return false
+        }
         // Leave Ctrl/Cmd + mousedown on a node to the nodes drag & drop
         // (otherwise d3-zoom stops the event propagation and pans instead)
         const { onCircleMove, onMemberMove } = this.params.events
@@ -211,12 +220,61 @@ export abstract class Graph<
     }
   }
 
+  // Visible (cropped) area: the graph minus what a panel covers
+  get cropWidth() {
+    return this.width - this.focusCrop.left - this.focusCrop.right
+  }
+
+  get cropHeight() {
+    return this.height - this.focusCrop.top - this.focusCrop.bottom
+  }
+
   // Min size of the visible (cropped) area
   get graphMinSize() {
-    return Math.min(
-      this.width - this.focusCrop.left - this.focusCrop.right,
-      this.height - this.focusCrop.top - this.focusCrop.bottom
-    )
+    return Math.min(this.cropWidth, this.cropHeight)
+  }
+
+  // Scale at which the whole layout fits in the visible area. Both dimensions
+  // are used: a tree is much wider than it is tall, and fitting it to a single
+  // radius would shrink it to a sliver.
+  get fitScale() {
+    const { x0, y0, x1, y1 } = this.layoutBounds
+    const width = x1 - x0
+    const height = y1 - y0
+    if (width <= 0 || height <= 0) return 1
+    return Math.min(this.cropWidth / width, this.cropHeight / height)
+  }
+
+  // Applied to a scale that frames something (the whole layout, a circle), so
+  // settings.zoom.fitMargin is left free on each side of the visible area
+  get fitRatio() {
+    return this.zoomDisabled ? 1 : 1 - settings.zoom.fitMargin * 2
+  }
+
+  // Zoom bounds of the current layout: below the min there is nothing left to
+  // make out, above the max nothing left to read.
+  get scaleExtent(): [number, number] {
+    const [minScale, maxScale] = settings.zoom.scaleExtent
+
+    // A hierarchical view is bounded by its own framing: its cards have a
+    // fixed size, so the whole chart is already as small as it is readable,
+    // and a card fills the screen at the max scale. The min never goes above
+    // the scale a card is focused at, or a small chart could not zoom out.
+    if (this.layoutKind === GraphLayoutKind.Tree) {
+      const { focusScale, minScaleRatio, maxScale: treeMax } = settings.tree
+      return [Math.min(this.fitScale * minScaleRatio, focusScale), treeMax]
+    }
+
+    // A packing nests down to tiny circles, so it keeps the default minimum,
+    // lowered when the layout only fits on screen below it
+    return [Math.min(minScale, this.fitScale), maxScale]
+  }
+
+  // Bound applied to a programmatic zoom. A graph without gestures (an export
+  // frame, a preview) has no reading bound to hold: it frames exactly what it
+  // is given, like the static rendering of the same chart does.
+  get maxScale() {
+    return this.zoomDisabled ? Infinity : this.scaleExtent[1]
   }
 
   // Recompute the set of visible nodes (windowing)
@@ -272,39 +330,30 @@ export abstract class Graph<
     }
   }
 
-  updateRootRadius(radius: number) {
-    this.rootRadius = radius
-
-    // A wide tree can need a smaller scale than the default minimum to fit on
-    // screen: lower the bound to the fitting scale, never above it
-    const fitScale = radius > 0 ? this.graphMinSize / (radius * 2) : 1
-    const [minScale, maxScale] = settings.zoom.scaleExtent
-    this.zoomBehaviour.scaleExtent([Math.min(minScale, fitScale), maxScale])
-
+  // Apply the zoom bounds and the pan extent of the current layout and size
+  updateZoomExtent() {
+    this.zoomBehaviour.scaleExtent(this.scaleExtent)
     this.updatePanExtent()
   }
 
-  // Change extent to which we can pan
+  // Extent the view can pan over: the layout box, widened on each side by half
+  // the visible area. An edge of the layout can be brought to the middle of
+  // that area and never further, wherever the layout sits in its coordinates.
   updatePanExtent() {
     const {
-      width,
-      height,
-      rootRadius,
+      focusCrop: { top, right, bottom, left },
+      layoutBounds: { x0, y0, x1, y1 },
       zoomTransform: { k },
-      focusCrop,
     } = this
-    const extentX =
-      rootRadius * 2 * k < width / 2
-        ? width / k - rootRadius
-        : width / k / 2 + rootRadius
-    const extentY =
-      rootRadius * 2 * k < height / 2
-        ? height / k - rootRadius
-        : height / k / 2 + rootRadius
+    const { panMarginRatio } = settings.zoom
+    const marginX = (this.cropWidth * panMarginRatio) / k
+    const marginY = (this.cropHeight * panMarginRatio) / k
 
+    // d3 constrains the whole element, so what a panel covers is added back to
+    // the extent: the bound applies to the visible area, not to the element
     this.zoomBehaviour?.translateExtent([
-      [-extentX + focusCrop.right / k, -extentY + focusCrop.bottom / k],
-      [extentX - focusCrop.left / k, extentY - focusCrop.top / k],
+      [x0 - marginX - left / k, y0 - marginY - top / k],
+      [x1 + marginX + right / k, y1 + marginY + bottom / k],
     ])
   }
 
@@ -322,12 +371,8 @@ export abstract class Graph<
   zoomTo(x: number, y: number, radius = 0, instant = false) {
     const scale = radius
       ? Math.min(
-          settings.zoom.scaleExtent[1],
-          Math.min(
-            this.width - this.focusCrop.left - this.focusCrop.right,
-            this.height - this.focusCrop.top - this.focusCrop.bottom
-          ) /
-            (radius * 2)
+          this.maxScale,
+          (this.graphMinSize * this.fitRatio) / (radius * 2)
         )
       : this.zoomTransform.k
 
@@ -343,14 +388,14 @@ export abstract class Graph<
     instant = false,
     verticalRatio = 0.5
   ) {
-    let k = Math.min(settings.zoom.scaleExtent[1], scale)
+    let k = Math.min(this.maxScale, scale)
 
     // Prevent from zooming to an intermediate state where opacity of members is too low
     if (k > 0.8 && k < 1) {
       k = 0.8
     }
 
-    const cropHeight = this.height - this.focusCrop.top - this.focusCrop.bottom
+    const cropHeight = this.cropHeight
     const offsetY =
       verticalRatio === 0.5
         ? this.focusOffsetY
@@ -375,6 +420,25 @@ export abstract class Graph<
       .call(this.zoomBehaviour.transform, transform)
   }
 
+  // Put a point of the layout at the centre of the visible (cropped) area,
+  // keeping the current scale. Instant, so a drag follows the pointer. The
+  // point is held inside the layout box, the area the pan extent covers.
+  centerOn(x: number, y: number) {
+    const { x0, y0, x1, y1 } = this.layoutBounds
+    const { k } = this.zoomTransform
+    const centerX = Math.min(Math.max(x, x0), x1)
+    const centerY = Math.min(Math.max(y, y0), y1)
+
+    this.d3Root.call(
+      this.zoomBehaviour.transform,
+      new ZoomTransform(
+        k,
+        -centerX * k + this.focusOffsetX,
+        -centerY * k + this.focusOffsetY
+      )
+    )
+  }
+
   // Zoom to fit a box in the visible (cropped) area. Unlike zoomTo, which
   // fits a radius in the smallest dimension, this uses both dimensions: a tree
   // is much wider than it is tall and would otherwise stay tiny.
@@ -383,13 +447,12 @@ export abstract class Graph<
     const height = box.y1 - box.y0
     if (width <= 0 || height <= 0) return
 
-    const cropWidth = this.width - this.focusCrop.left - this.focusCrop.right
-    const cropHeight = this.height - this.focusCrop.top - this.focusCrop.bottom
+    const { cropWidth, cropHeight } = this
 
     this.zoomToScale(
       (box.x0 + box.x1) / 2,
       (box.y0 + box.y1) / 2,
-      Math.min(cropWidth / width, cropHeight / height),
+      Math.min(cropWidth / width, cropHeight / height) * this.fitRatio,
       instant
     )
   }
@@ -403,10 +466,8 @@ export abstract class Graph<
     const focusOffsetY = getFocusOffsetY(height, focusCrop)
 
     // Compute scale change ratio
-    const prevCropWidth =
-      this.width - this.focusCrop.left - this.focusCrop.right
-    const prevCropHeight =
-      this.height - this.focusCrop.top - this.focusCrop.bottom
+    const prevCropWidth = this.cropWidth
+    const prevCropHeight = this.cropHeight
     const cropWidth = width - focusCrop.left - focusCrop.right
     const cropHeight = height - focusCrop.top - focusCrop.bottom
     const scaleRatio =
@@ -425,6 +486,9 @@ export abstract class Graph<
     this.focusCrop = focusCrop
     this.focusOffsetX = focusOffsetX
     this.focusOffsetY = focusOffsetY
+
+    // Both bounds are relative to the visible area, which just changed
+    this.updateZoomExtent()
 
     // If a focus is still animating, this resize was likely caused by the same
     // action (e.g. selecting a circle opens the side panel and resizes the

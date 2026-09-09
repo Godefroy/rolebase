@@ -310,7 +310,6 @@ export function computeTreeLayout(data: Data): Layout {
     bounds,
     focus: { x: root.x, y: root.y, r: root.r },
     focusBox: bounds,
-    panRadius: Math.hypot(width, height) / 2,
     links: buildLinks(nodes),
   }
 }

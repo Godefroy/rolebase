@@ -133,7 +133,6 @@ export default function OrgChartView({
             key={colorMode}
             view={view as CirclesGraphViews}
             folded={folded}
-            fitLayout
             org={org}
             width={size.width}
             height={size.height}

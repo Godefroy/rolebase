@@ -79,6 +79,10 @@ product:
 
 # Organisation d'exemple affichée dans les organigrammes interactifs.
 demo:
+  views:
+    circles: Cercles
+    tree: Arbre hiérarchique
+    members: Trombinoscope
   ui:
     clickRole: Cliquez sur un rôle
     name: Nom

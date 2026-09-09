@@ -58,8 +58,7 @@ export default function CircleExportPage() {
   // Settings. The view is kept in the URL, so opening the export from the org
   // chart lands on the same view and the link stays shareable.
   const graphView: GraphView =
-    parseGraphView(params.view, params.folded === '1') ||
-    defaultGraphView
+    parseGraphView(params.view, params.folded === '1') || defaultGraphView
   const { view, folded } = graphView
   const handleViewChange = useCallback(
     ({ view, folded }: GraphView) =>
@@ -276,6 +275,7 @@ export default function CircleExportPage() {
                     showAllNodes
                     hideMembers={!showMembers}
                     panzoomDisabled
+                    minimap={false}
                     focusCircleScale={(node) => node.r * 1.01}
                     onReady={() => setReady(true)}
                   />

@@ -56,7 +56,6 @@ export function computePackLayout(
     bounds: root.bounds,
     focus: { x: root.x, y: root.y, r: root.r },
     focusBox: root.bounds,
-    panRadius: nodes[0]?.r || root.r,
     links: [],
   }
 }

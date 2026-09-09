@@ -25,18 +25,28 @@ interface Props {
   ui?: DemoUiText
   // Desktop height of the island (mobile is content-driven).
   height?: string
+  // Org chart framing, driven by the tabs above the island
+  view?: CirclesGraphViews
 }
 
 // Editable product preview body: the real org-chart graph plus the real
 // role/member panels, reading the live in-memory org context (DemoOrgProvider).
 // Desktop: graph and panel side by side. Mobile: square graph (capped at
 // 80dvh) with the panel stacked below, so the island grows instead of scrolling.
-export default function DemoGraphEditor({ ui, height = '560px' }: Props) {
+export default function DemoGraphEditor({
+  ui,
+  height = '560px',
+  view = CirclesGraphViews.Circles,
+}: Props) {
   const { t } = useTranslation()
   const toast = useToast()
   const { colorMode } = useColorMode()
   const { orgData, ready } = useOrgContext()
   const actions = useOrgEditActions()
+
+  // The hierarchical tree spreads far wider than the packed circles, so it is
+  // framed on the whole layout and keeps its member cards drawn at any zoom.
+  const isTree = view === CirclesGraphViews.Tree
 
   const boxRef = useRef<HTMLDivElement>(null)
   const boxSize = useElementSize(boxRef)
@@ -135,13 +145,16 @@ export default function DemoGraphEditor({ ui, height = '560px' }: Props) {
         >
           {ready && orgData && boxSize && (
             <Box position="absolute" inset={0}>
+              {/* The graph reads its view at init only, like in the app: a
+                  new key rebuilds it when the tab changes */}
               <CirclesGraph
-                key={colorMode}
-                view={CirclesGraphViews.Circles}
+                key={`${view}${colorMode}`}
+                view={view}
                 org={orgData}
                 events={events}
                 width={boxSize.width}
                 height={boxSize.height}
+                showAllNodes={isTree}
                 selectedCircleId={selection.circleId}
               />
             </Box>
@@ -150,8 +163,8 @@ export default function DemoGraphEditor({ ui, height = '560px' }: Props) {
           {/* Keyboard/drag shortcuts, like the org chart options in the app */}
           <GraphShortcutsButton position="absolute" top={3} right={3} zIndex={1} />
 
-          {/* Hint overlay, shown only while nothing is selected */}
-          {!hasSelection && (
+          {/* Hint overlay, only on the circles view while nothing is selected */}
+          {!hasSelection && view === CirclesGraphViews.Circles && (
             <Flex
               position="absolute"
               bottom="16px"

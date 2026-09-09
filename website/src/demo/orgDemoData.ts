@@ -40,9 +40,17 @@ export interface DemoUiText {
   accountabilities: string
 }
 
+// Labels of the org chart view tabs (Circles / Tree / Members)
+export interface DemoViewsText {
+  circles: string
+  tree: string
+  members: string
+}
+
 export interface DemoTexts {
   roles: Record<string, DemoRoleText>
   ui?: DemoUiText
+  views: DemoViewsText
 }
 
 // --- Roles ----------------------------------------------------------------
@@ -134,7 +142,11 @@ const DEMO_MEMBERS: DemoMember[] = [
   { id: 'member-chloe', name: 'Chloé', avatar: '/demo-avatars/chloe.jpg' },
   { id: 'member-emma', name: 'Emma', avatar: '/demo-avatars/emma.jpg' },
   { id: 'member-tom', name: 'Tom', avatar: '/demo-avatars/tom.jpg' },
-  { id: 'member-camille', name: 'Camille', avatar: '/demo-avatars/camille.jpg' },
+  {
+    id: 'member-camille',
+    name: 'Camille',
+    avatar: '/demo-avatars/camille.jpg',
+  },
 ]
 
 // The member tied to the demo's mock logged-in user (so useCurrentMember
@@ -156,7 +168,10 @@ function buildMembers(): MemberFragment[] {
         inviteEmail: null,
         inviteDate: null,
         // Current member is an org owner so the demo can edit any member.
-        role: m.id === CURRENT_MEMBER_ID ? ('Owner' as MemberFragment['role']) : null,
+        role:
+          m.id === CURRENT_MEMBER_ID
+            ? ('Owner' as MemberFragment['role'])
+            : null,
         archivedAt: null,
       }) as MemberFragment
   )
@@ -179,7 +194,12 @@ interface CircleSpec {
 }
 
 const CIRCLE_SPECS: CircleSpec[] = [
-  { id: 'circle-nova', roleId: 'role-nova', parentId: null, leader: 'member-alice' },
+  {
+    id: 'circle-nova',
+    roleId: 'role-nova',
+    parentId: null,
+    leader: 'member-alice',
+  },
   {
     id: 'circle-product',
     roleId: 'role-product',

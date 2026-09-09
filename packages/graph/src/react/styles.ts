@@ -22,6 +22,8 @@ const {
   memberRowPadding,
 } = settings.tree
 
+const minimap = settings.minimap
+
 // Styles of the graph, scoped under the .rb-graph container class.
 // Rendered in a <style> tag by the graph components, so the package
 // works in the webapp, in a blank page and in server rendering.
@@ -293,6 +295,43 @@ export const graphStyles = `
 .rb-graph .tree-link.dragging {
   opacity: 0;
   transition: none;
+}
+
+/* Minimap: overview of the whole layout, in the bottom right corner of the
+   visible area (its offsets are set inline, a side panel pushes it aside). It
+   sits outside the panzoom, so it stays put while the graph moves under it.
+   Clicking or dragging it moves the view to the pointer. */
+.rb-graph-minimap {
+  position: absolute;
+  z-index: 10;
+  border-radius: ${minimap.radius}px;
+  /* The map fills the panel, so the frame of the view reaches its edges */
+  overflow: hidden;
+  background-color: var(--minimap-bg);
+  box-shadow: 0 0 0 1px var(--minimap-border-color);
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.rb-graph-minimap.dragging {
+  cursor: grabbing;
+}
+.rb-graph-minimap svg {
+  display: block;
+  overflow: hidden;
+}
+/* Everything outside the frame is dimmed: the map says at a glance which part
+   of the chart is on screen. */
+.rb-graph-minimap .minimap-scrim {
+  fill: var(--minimap-scrim-color);
+}
+/* Frame of what is currently on screen. Its stroke keeps its width on screen,
+   whatever the scale the layout is drawn at in the map. */
+.rb-graph-minimap .minimap-viewport {
+  fill: none;
+  stroke: var(--minimap-viewport-color);
+  stroke-width: 1.5px;
+  vector-effect: non-scaling-stroke;
 }
 
 .rb-graph .circle-title {

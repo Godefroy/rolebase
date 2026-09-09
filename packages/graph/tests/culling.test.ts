@@ -5,6 +5,7 @@ import { computeVisibleNodes } from '../src/core/culling'
 import { computeLayout } from '../src/core/layout'
 import { cardTitleHeight, titleLineCount } from '../src/core/layouts/tree'
 import { getDropTargetNode } from '../src/helpers/getDropTargetNode'
+import { minimapNodes } from '../src/helpers/minimapNodes'
 import graphSettings from '../src/settings'
 import {
   CirclesGraphViews,
@@ -820,5 +821,34 @@ describe('hideMembers', () => {
       false
     )
     expect(without.root.r).toBeLessThan(withMembers.root.r)
+  })
+})
+
+describe('minimap nodes', () => {
+  // One root circle, then 3 circles per level over 3 levels: the levels hold
+  // 1, 3, 9 and 27 circles, so their running totals are 1, 4, 13 and 40
+  const layout = computeLayout(buildOrg(3, 3, 2), CirclesGraphViews.Circles)
+
+  const depths = (nodes: typeof layout.nodes) =>
+    [...new Set(nodes.map((node) => node.depth))].sort()
+
+  it('draws the roles only, never the members', () => {
+    const nodes = minimapNodes(layout.nodes, 1000)
+    expect(nodes).toHaveLength(40)
+    expect(nodes.every((node) => node.data.type === NodeType.Circle)).toBe(true)
+  })
+
+  it('keeps the levels whose running total holds in the budget', () => {
+    expect(minimapNodes(layout.nodes, 13)).toHaveLength(13)
+    expect(depths(minimapNodes(layout.nodes, 13))).toEqual([1, 2, 3])
+  })
+
+  it('drops a level whole rather than cutting into it', () => {
+    expect(minimapNodes(layout.nodes, 12)).toHaveLength(4)
+    expect(depths(minimapNodes(layout.nodes, 12))).toEqual([1, 2])
+  })
+
+  it('always draws the first level, however small the budget', () => {
+    expect(minimapNodes(layout.nodes, 0)).toHaveLength(1)
   })
 })

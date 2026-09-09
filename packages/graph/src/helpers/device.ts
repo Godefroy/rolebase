@@ -27,3 +27,7 @@ export const isConstrainedDevice =
 // selected circle (~1 viewport) and its sub-circles still animate.
 export const giantViewportRatio = isConstrainedDevice ? 1.5 : 3
 
+// Screens too small to spare a corner: a phone, in either orientation. The
+// graph already takes the whole screen there, so the map would cover a good
+// part of what it is meant to help read.
+export const smallScreenMediaQuery = '(max-width: 600px), (max-height: 480px)'

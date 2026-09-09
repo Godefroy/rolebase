@@ -79,6 +79,10 @@ product:
 
 # Example organization rendered in the interactive org-chart islands.
 demo:
+  views:
+    circles: Circles
+    tree: Hierarchical tree
+    members: Photo directory
   ui:
     clickRole: Click on a role
     name: Name

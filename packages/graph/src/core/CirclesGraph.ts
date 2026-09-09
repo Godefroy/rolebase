@@ -206,24 +206,18 @@ export class CirclesGraph extends Graph<OrgData> {
       this.movingLinkIds = changedLinks
     }
 
-    // Update root radius
-    this.updateRootRadius(layout.panRadius || 0)
+    // Update the zoom and pan bounds, which follow the layout box
+    this.updateZoomExtent()
 
     // Zoom at first draw, synchronously before culling: nothing must render
     // with the identity transform, it would mount a large fully-detailed
     // subset of nodes (crash on mobile).
-    // A packing is fitted whole, its nested circles staying legible at any
-    // size. A tree opens on its first card, framed exactly as selecting it
-    // would: fitting a whole chart would shrink every card past reading.
-    // fitLayout overrides both and frames the whole box, for a graph that has
-    // to stay inside its container (e.g. the dashboard preview).
+    // Both layouts open on the whole chart: it is what the view is about, and
+    // it is the widest the zoom bounds allow anyway. A packing is framed on
+    // its root circle, a tree on its box, much wider than it is tall.
     if (firstDraw) {
-      const firstCard =
-        this.layoutKind === GraphLayoutKind.Tree ? nodes[0] : undefined
-      if (this.params.fitLayout) {
+      if (this.layoutKind === GraphLayoutKind.Tree) {
         this.zoomToBox(layout.focusBox, true)
-      } else if (firstCard) {
-        this.focusCard(firstCard, true)
       } else {
         this.zoomTo(root.x, root.y, this.focusCircleScale(root), true)
       }

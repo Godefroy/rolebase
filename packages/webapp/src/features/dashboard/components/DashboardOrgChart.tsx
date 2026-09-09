@@ -74,8 +74,8 @@ export default function DashboardOrgChart(boxProps: BoxProps) {
           events={events}
           width={size}
           height={size}
-          fitLayout
           panzoomDisabled
+          minimap={false}
         />
       )}
     </Box>
