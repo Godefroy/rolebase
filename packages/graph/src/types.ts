@@ -15,6 +15,9 @@ export interface GraphParams {
   // Members are not rendered at all: they are left out of the layout, so a
   // card or a circle is only as big as what it actually shows
   hideMembers?: boolean
+  // Frame the whole layout on the first draw, so nothing sits outside the
+  // viewport. Without it a tree opens on its first card instead.
+  fitLayout?: boolean
   focusCircleScale?: (node: NodeData) => number
   focusCrop?: Position
   events: GraphEvents

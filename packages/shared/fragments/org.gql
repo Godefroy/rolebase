@@ -8,6 +8,7 @@ fragment Org on org {
   shareMembers
   governanceMode
   defaultGraphView
+  defaultGraphFolded
   icon
   homeNote
 }

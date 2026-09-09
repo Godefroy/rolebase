@@ -5,7 +5,7 @@ import { useElementSize } from '@/common/hooks/useElementSize'
 import useUpdatableQueryParams from '@/common/hooks/useUpdatableQueryParams'
 import CirclesGraph, { CirclesGraphInstance } from '@/graph/CirclesGraph'
 import { GraphProvider } from '@/graph/contexts/GraphContext'
-import { CirclesGraphViews, GraphLayoutKind } from '@/graph/types'
+import { GraphLayoutKind } from '@/graph/types'
 import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   Box,
@@ -19,16 +19,22 @@ import {
 } from '@chakra-ui/react'
 import { computeLayout } from '@rolebase/graph'
 import { OrgData } from '@rolebase/shared/model/OrgData'
+import {
+  GraphView,
+  defaultGraphView,
+  parseGraphView,
+} from '@rolebase/shared/model/graph'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DownloadIcon } from 'src/icons'
 import { trpc } from 'src/trpc'
 import CircleAndMemberFilters from '../components/CircleAndMemberFilters'
-import GraphViewsSelect, { viewsList } from '../components/GraphViewsSelect'
+import GraphViewsSelect from '../components/GraphViewsSelect'
 
 type CircleExportParams = {
   circleId: string
   view: string
+  folded: string
   showMembers: string
 }
 
@@ -51,13 +57,13 @@ export default function CircleExportPage() {
 
   // Settings. The view is kept in the URL, so opening the export from the org
   // chart lands on the same view and the link stays shareable.
-  const viewParam = params.view as CirclesGraphViews | undefined
-  const view =
-    viewParam && viewsList.includes(viewParam)
-      ? viewParam
-      : CirclesGraphViews.AllCircles
+  const graphView: GraphView =
+    parseGraphView(params.view, params.folded === '1') ||
+    defaultGraphView
+  const { view, folded } = graphView
   const handleViewChange = useCallback(
-    (newView: CirclesGraphViews) => changeParams({ view: newView }),
+    ({ view, folded }: GraphView) =>
+      changeParams({ view, folded: folded ? '1' : undefined }),
     [changeParams]
   )
   const [width, setWidth] = useState(defaultWidth)
@@ -95,7 +101,7 @@ export default function CircleExportPage() {
   // aspect ratio of its layout instead of a square
   const height = useMemo(() => {
     if (!selectedOrg) return width
-    const layout = computeLayout(selectedOrg, view, undefined, {
+    const layout = computeLayout(selectedOrg, view, folded, undefined, {
       hideMembers: !showMembers,
     })
     if (layout.kind !== GraphLayoutKind.Tree) return width
@@ -106,7 +112,7 @@ export default function CircleExportPage() {
       100,
       Math.min(3000, Math.round((width * layoutHeight) / layoutWidth))
     )
-  }, [selectedOrg, view, width, showMembers])
+  }, [selectedOrg, view, folded, width, showMembers])
 
   const previewScale = Math.min(1, (previewSize?.width || width) / width)
 
@@ -120,7 +126,7 @@ export default function CircleExportPage() {
   useEffect(() => {
     if (!ready) return
     setTimeout(handleCenter, 100)
-  }, [circleId, ready, width, height, view])
+  }, [circleId, ready, width, height, view, folded])
 
   // Download as transparent PNG (generated server-side)
   const handleDownload = async () => {
@@ -132,6 +138,7 @@ export default function CircleExportPage() {
         orgId,
         circleId,
         view,
+        folded,
         width,
         height,
         colorMode,
@@ -208,7 +215,7 @@ export default function CircleExportPage() {
             <GraphViewsSelect
               variant="outline"
               size="sm"
-              value={view}
+              value={graphView}
               onChange={handleViewChange}
             />
             <Spacer />
@@ -260,8 +267,9 @@ export default function CircleExportPage() {
                 {orgId && selectedOrg && (
                   <CirclesGraph
                     ref={graphRef}
-                    key={`${view}${colorMode}${showMembers}`}
+                    key={`${view}${folded}${colorMode}${showMembers}`}
                     view={view}
+                    folded={folded}
                     org={selectedOrg}
                     width={width}
                     height={height}

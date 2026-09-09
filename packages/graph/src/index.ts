@@ -6,7 +6,7 @@ export { computeVisibleNodes } from './core/culling'
 export { computeLayout } from './core/layout'
 export { computePackLayout } from './core/layouts/pack'
 export { computeTreeLayout } from './core/layouts/tree'
-export { viewStrategies } from './core/views'
+export { getViewStrategy } from './core/views'
 export type { CircleData, ViewStrategy } from './core/views'
 
 // React components

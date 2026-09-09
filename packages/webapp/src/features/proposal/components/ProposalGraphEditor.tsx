@@ -209,7 +209,7 @@ export default function ProposalGraphEditor({
                     <CirclesGraph
                       ref={graphRef}
                       key={colorMode}
-                      view={CirclesGraphViews.AllCircles}
+                      view={CirclesGraphViews.Circles}
                       org={draft.orgData}
                       events={events}
                       width={boxSize.width}

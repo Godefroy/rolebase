@@ -43,7 +43,7 @@ const fullCircle = (
   parentId: string | null
 ): CircleData => ({ id, roleId, parentId, showMembers: true, showLinks: true })
 
-const allCircles: ViewStrategy = {
+const circles: ViewStrategy = {
   getCircles: (org) =>
     org.circles.map((c) => fullCircle(c.id, c.roleId, c.parentId ?? null)),
   packSorting: (a, b) =>
@@ -53,10 +53,10 @@ const allCircles: ViewStrategy = {
     sortById(a, b),
 }
 
-// Subset of circles based on selected circle.
+// Circles folded around the selected circle.
 // Selected circle and all its parents are included with members.
 // Direct children of those circles are included, with participants and no members.
-const simpleCircles: ViewStrategy = {
+const foldedCircles: ViewStrategy = {
   relayoutOnSelect: true,
   packSorting: sortById,
   getCircles(org, selectedCircleId) {
@@ -106,25 +106,6 @@ const simpleCircles: ViewStrategy = {
   },
 }
 
-// All circles in a flat array, with leaders
-const flatCircle: ViewStrategy = {
-  omitEvents: ['onCircleCopy', 'onCircleMove'],
-  packSorting: sortById,
-  getCircles: (org) =>
-    org.circles
-      .filter((circle) => !org.roleById.get(circle.roleId)?.base)
-      .map(
-        (circle): CircleData => ({
-          id: circle.id,
-          roleId: circle.roleId,
-          parentId: null,
-          showMembers: false,
-          showLinks: false,
-          participants: org.getParticipants(circle.id),
-        })
-      ),
-}
-
 // Root circle with all unique members
 const members: ViewStrategy = {
   omitEvents: ['onCircleCopy', 'onCircleMove'],
@@ -152,32 +133,34 @@ const members: ViewStrategy = {
   },
 }
 
-// Same circles as AllCircles, laid out as a top-down tree of cards
-const hierarchyAll: ViewStrategy = {
+// Same circles as the circles view, laid out as a top-down tree of cards
+const tree: ViewStrategy = {
   layout: GraphLayoutKind.Tree,
-  getCircles: allCircles.getCircles,
+  getCircles: circles.getCircles,
 }
 
-// Same circles as SimpleCircles (the selected circle, its ancestors and their
-// direct children), laid out as a top-down tree of cards. Every card lists its
-// members: a card is read as a whole, so a role on screen always shows who
-// fills it, not just who represents it.
-const hierarchySimple: ViewStrategy = {
+// Same circles as the folded circles view (the selected circle, its ancestors
+// and their direct children), laid out as a top-down tree of cards. Every card
+// lists its members: a card is read as a whole, so a role on screen always
+// shows who fills it, not just who represents it.
+const foldedTree: ViewStrategy = {
   layout: GraphLayoutKind.Tree,
   relayoutOnSelect: true,
   getCircles: (org, selectedCircleId) =>
-    simpleCircles.getCircles(org, selectedCircleId).map((circle) => ({
+    foldedCircles.getCircles(org, selectedCircleId).map((circle) => ({
       ...circle,
       showMembers: true,
       participants: undefined,
     })),
 }
 
-export const viewStrategies: Record<CirclesGraphViews, ViewStrategy> = {
-  [CirclesGraphViews.AllCircles]: allCircles,
-  [CirclesGraphViews.SimpleCircles]: simpleCircles,
-  [CirclesGraphViews.FlatCircle]: flatCircle,
-  [CirclesGraphViews.Members]: members,
-  [CirclesGraphViews.HierarchyAll]: hierarchyAll,
-  [CirclesGraphViews.HierarchySimple]: hierarchySimple,
+// A view and its folding flag decide the strategy. The members view shows the
+// whole organization by definition, so folding it means nothing.
+export function getViewStrategy(
+  view: CirclesGraphViews,
+  folded?: boolean
+): ViewStrategy {
+  if (view === CirclesGraphViews.Members) return members
+  if (view === CirclesGraphViews.Tree) return folded ? foldedTree : tree
+  return folded ? foldedCircles : circles
 }

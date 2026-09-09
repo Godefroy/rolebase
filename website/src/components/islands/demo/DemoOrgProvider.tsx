@@ -79,7 +79,8 @@ export default function DemoOrgProvider({ demo, texts, children }: Props) {
         shareOrg: false,
         shareMembers: false,
         governanceMode: Governance_Mode_Enum.Free,
-        defaultGraphView: CirclesGraphViews.AllCircles,
+        defaultGraphView: CirclesGraphViews.Circles,
+        defaultGraphFolded: false,
       }) as OrgFragment,
     []
   )

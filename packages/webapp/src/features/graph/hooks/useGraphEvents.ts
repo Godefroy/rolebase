@@ -5,7 +5,7 @@ import { useToast } from '@chakra-ui/react'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import useCurrentMember from '../../member/hooks/useCurrentMember'
-import useGraphViewParam from './useGraphViewParam'
+import useGraphViewParam, { setGraphViewParams } from './useGraphViewParam'
 import useOrgMember from '../../member/hooks/useOrgMember'
 import useOrgOwner from '../../member/hooks/useOrgOwner'
 import { GraphEvents } from '../types'
@@ -19,7 +19,7 @@ export default function useGraphEvents(): GraphEvents {
   const navigateOrg = useNavigateOrg()
   // The graph view lives in the URL: carry it over on every navigation, so
   // selecting a circle doesn't reset it to the organization default
-  const view = useGraphViewParam()
+  const graphView = useGraphViewParam()
   const { orgData, editable, governanceMode } = useOrgContext()
   const { moveCircle, copyCircle, addCircleMember, removeCircleMember } =
     useOrgEditActions()
@@ -125,20 +125,20 @@ export default function useGraphEvents(): GraphEvents {
       const params = new URLSearchParams()
       params.set('circleId', circleId)
       if (parentId) params.set('parentId', parentId)
-      if (view) params.set('view', view)
+      setGraphViewParams(params, graphView)
       navigateOrg(`roles?${params.toString()}`)
     },
-    [navigateOrg, view]
+    [navigateOrg, graphView]
   )
   const onMemberClick = useCallback(
     (circleId: string, memberId: string) => {
       const params = new URLSearchParams()
       params.set('circleId', circleId)
       params.set('memberId', memberId)
-      if (view) params.set('view', view)
+      setGraphViewParams(params, graphView)
       navigateOrg(`roles?${params.toString()}`)
     },
-    [navigateOrg, view]
+    [navigateOrg, graphView]
   )
 
   // Move a circle: requires editing the moved circle and adding it under the
@@ -240,7 +240,12 @@ export default function useGraphEvents(): GraphEvents {
     () => ({
       onCircleClick,
       onMemberClick,
-      onClickOutside: () => navigateOrg(view ? `roles?view=${view}` : 'roles'),
+      onClickOutside: () => {
+        const params = new URLSearchParams()
+        setGraphViewParams(params, graphView)
+        const search = params.toString()
+        navigateOrg(search ? `roles?${search}` : 'roles')
+      },
       onCircleMove: canDrag ? onCircleMove : undefined,
       onCircleCopy: canDrag ? onCircleCopy : undefined,
       onMemberMove: canDrag ? onMemberMove : undefined,
@@ -251,7 +256,7 @@ export default function useGraphEvents(): GraphEvents {
       onCircleClick,
       onMemberClick,
       navigateOrg,
-      view,
+      graphView,
       onCircleMove,
       onCircleCopy,
       onMemberMove,

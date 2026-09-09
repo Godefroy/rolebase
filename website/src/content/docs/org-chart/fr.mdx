@@ -15,35 +15,34 @@ L'organigramme interactif est le moyen principal de visualiser votre structure o
 
 Essayez sur l'organisation d'exemple ci-dessous : cliquez un rôle pour zoomer sur ses sous-rôles, glissez pour naviguer, et défilez pour zoomer.
 
-<OrgChartView demo="demo" height="440px" showAllNodes={false} />
+<OrgChartView demo="demo" height="560px" showAllNodes={false} shortcuts />
 
 ## Vues
 
-L'organigramme propose six vues différentes. Vous pouvez définir la vue par défaut dans les [paramètres de l'organisation](/fr/docs/organizations), et basculer entre les vues à tout moment à l'aide du sélecteur.
+L'organigramme propose trois vues, que vous pouvez replier autour du rôle sélectionné. Vous pouvez définir la vue par défaut dans les [paramètres de l'organisation](/fr/docs/organizations), et changer de vue à tout moment à l'aide du sélecteur.
 
-| Vue                       | Description                                                                                                                                           |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Tous les Rôles**        | Affiche la hiérarchie complète de tous les rôles et sous-rôles. La taille de chaque rôle dépend du nombre de sous-rôles et de membres qu'il contient. |
-| **Holarchie**             | Affiche à la même taille les sous-rôles du rôle sélectionné, avec les membres qui les représentent.                                                   |
-| **Hiérarchique**          | Affiche tous les rôles en organigramme hiérarchique de haut en bas, chaque rôle dans une carte reliée à son rôle parent, avec les membres qui l'occupent. |
-| **Hiérarchique replié**   | Affiche le même organigramme recentré sur le rôle sélectionné, avec ses rôles parents, ses rôles directs et les membres qui les occupent.             |
-| **Opérationnel**          | Affiche tous les rôles à un même niveau, mélangés, avec les membres qui les représentent.                                                             |
-| **Membres uniquement**    | Affiche l'organisation du point de vue des membres.                                                                                                   |
+| Vue | Description |
+| --- | --- |
+| **Cercles** | Affiche tous les rôles imbriqués les uns dans les autres. La taille de chaque rôle dépend du nombre de sous-rôles et de membres qu'il contient. |
+| **Arbre hiérarchique** | Affiche tous les rôles en organigramme de haut en bas, chaque rôle dans une carte reliée à son rôle parent, avec les membres qui l'occupent. |
+| **Trombinoscope** | Affiche d'un coup d'œil tous les membres de l'organisation, sans les rôles. |
 
-### Vues hiérarchiques
+### Replier la vue
 
-Les vues **Hiérarchique** et **Hiérarchique replié** présentent la même structure sous la forme d'organigramme hiérarchique descendant, celle à laquelle la plupart des organisations sont habituées. Chaque rôle occupe une carte, reliée à son rôle parent par un trait, et les membres apparaissent dans la carte du rôle qu'ils occupent.
+L'option **Replié**, dans le sélecteur de vue, s'applique aux vues **Cercles** et **Arbre hiérarchique**. Elle n'affiche que le rôle sélectionné, ses rôles parents et leurs rôles directs, à la même taille, plutôt que toute l'organisation. Sur une grande organisation, c'est ce qui garde la lecture confortable.
 
-Toutes les interactions restent identiques aux vues en cercles : cliquer sur un rôle pour l'ouvrir, glisser-déposer pour déplacer un rôle ou un membre, zoomer et naviguer librement.
+### Arbre hiérarchique
 
-<OrgChartView demo="demo" view="HierarchyAll" height="440px" />
+La vue **Arbre hiérarchique** présente la même structure sous la forme d'organigramme descendant, celle à laquelle la plupart des organisations sont habituées. Chaque rôle occupe une carte, reliée à son rôle parent par un trait, et les membres apparaissent dans la carte du rôle qu'ils occupent.
 
-Sur une grande organisation, l'organigramme complet devient large. La vue **Hiérarchique replié** garde alors la lecture confortable en n'affichant que la ligne des rôles parents et les rôles directs du rôle sélectionné.
+Toutes les interactions restent identiques à la vue en cercles : cliquer sur un rôle pour l'ouvrir, glisser-déposer pour déplacer un rôle ou un membre, zoomer et naviguer librement.
+
+<OrgChartView demo="classic" view="Tree" height="560px" shortcuts />
 
 <Callout type="tip" title="Navigation">
-  Quelle que soit la vue par défaut, les utilisateurs peuvent toujours basculer
-  entre les vues et cliquer sur n'importe quel rôle pour explorer son contenu.
-  La vue courante figure dans l'adresse de la page, donc un lien partagé ouvre
+  Quelle que soit la vue par défaut, les utilisateurs peuvent toujours changer
+  de vue et cliquer sur n'importe quel rôle pour explorer son contenu. La vue
+  courante figure dans l'adresse de la page, donc un lien partagé ouvre
   l'organigramme dans la vue et sur le rôle que vous aviez à l'écran.
 </Callout>
 

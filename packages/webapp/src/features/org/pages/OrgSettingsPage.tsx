@@ -3,6 +3,7 @@ import IconTextButton from '@/common/atoms/IconTextButton'
 import { Title } from '@/common/atoms/Title'
 import useCopyUrl from '@/common/hooks/useCopyUrl'
 import { CirclesGraphViews } from '@/graph/types'
+import { defaultGraphView, parseGraphView } from '@rolebase/shared/model/graph'
 import {
   Button,
   Flex,
@@ -40,6 +41,7 @@ interface Values {
   name: string
   governanceMode: Governance_Mode_Enum
   defaultGraphView: CirclesGraphViews
+  defaultGraphFolded: boolean
 }
 
 const resolver = yupResolver(
@@ -64,15 +66,21 @@ export default function OrgSettingsPage() {
     register,
     control,
     reset,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm<Values>({ resolver })
 
   // Init form data
   useEffect(() => {
     if (!org) return
+    const graphView =
+      parseGraphView(org.defaultGraphView, org.defaultGraphFolded) ||
+      defaultGraphView
     reset({
       name: org.name,
-      defaultGraphView: org.defaultGraphView || CirclesGraphViews.AllCircles,
+      defaultGraphView: graphView.view,
+      defaultGraphFolded: graphView.folded,
       governanceMode: org.governanceMode,
     })
   }, [org])
@@ -144,16 +152,16 @@ export default function OrgSettingsPage() {
 
           <FormControl>
             <FormLabel>{t('OrgEditModal.defaultGraphView')}</FormLabel>
-            <Controller
-              name="defaultGraphView"
-              control={control}
-              render={({ field }) => (
-                <GraphViewsSelect
-                  value={field.value}
-                  onChange={field.onChange}
-                  variant="outline"
-                />
-              )}
+            <GraphViewsSelect
+              value={{
+                view: watch('defaultGraphView'),
+                folded: watch('defaultGraphFolded'),
+              }}
+              onChange={({ view, folded }) => {
+                setValue('defaultGraphView', view)
+                setValue('defaultGraphFolded', folded)
+              }}
+              variant="outline"
             />
           </FormControl>
 

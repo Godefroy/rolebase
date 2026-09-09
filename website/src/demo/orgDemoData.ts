@@ -19,7 +19,7 @@ import { OrgData } from '@rolebase/shared/model/OrgData'
 // Member avatars are served from /public/demo-avatars by absolute URL so the
 // client island renders them without bundler processing.
 
-export type DemoOrgKey = 'demo' | 'simple'
+export type DemoOrgKey = 'demo' | 'simple' | 'classic'
 
 const ORG_ID = 'demo-org'
 
@@ -52,6 +52,10 @@ export interface DemoTexts {
 interface RoleSpec {
   id: string
   key: string
+  // Represents its circle to the parent circle: stacked under its parent card
+  // in the tree view, and held by a single member
+  parentLink?: boolean
+  // Reusable role definition shared by several circles (e.g. Leader)
   base?: boolean
   hue?: number
 }
@@ -62,7 +66,24 @@ const ROLE_SPECS: RoleSpec[] = [
   { id: 'role-design', key: 'design', hue: 320 },
   { id: 'role-dev', key: 'dev', hue: 150 },
   { id: 'role-business', key: 'business', hue: 40 },
-  { id: 'role-leader', key: 'leader', base: true },
+  { id: 'role-leader', key: 'leader', base: true, parentLink: true },
+]
+
+// A classic company org chart, used to illustrate the hierarchical tree view:
+// departments and teams, each led by a named director rather than a generic
+// Leader role.
+const CLASSIC_ROLE_SPECS: RoleSpec[] = [
+  { id: 'role-company', key: 'nova' },
+  { id: 'role-tech', key: 'tech', hue: 210 },
+  { id: 'role-sales', key: 'sales', hue: 40 },
+  { id: 'role-engineering', key: 'engineering', hue: 150 },
+  { id: 'role-infra', key: 'infra', hue: 190 },
+  { id: 'role-field', key: 'field', hue: 20 },
+  { id: 'role-marketing', key: 'marketing', hue: 320 },
+  { id: 'role-ceo', key: 'ceo', parentLink: true },
+  { id: 'role-cto', key: 'cto', parentLink: true },
+  { id: 'role-csales', key: 'csales', parentLink: true },
+  { id: 'role-cfinance', key: 'cfinance', hue: 280 },
 ]
 
 const ROLE_BASE = {
@@ -80,20 +101,9 @@ const ROLE_BASE = {
   colorHue: null as number | null,
 }
 
-function buildRoles(texts: DemoTexts): RoleFragment[] {
-  return ROLE_SPECS.map((spec) => {
+function buildRoles(texts: DemoTexts, specs: RoleSpec[]): RoleFragment[] {
+  return specs.map((spec) => {
     const text = texts.roles[spec.key] ?? { name: spec.key }
-    if (spec.base) {
-      return {
-        ...ROLE_BASE,
-        id: spec.id,
-        name: text.name,
-        base: true,
-        singleMember: true,
-        parentLink: true,
-        colorHue: 0,
-      } as RoleFragment
-    }
     return {
       ...ROLE_BASE,
       id: spec.id,
@@ -101,7 +111,10 @@ function buildRoles(texts: DemoTexts): RoleFragment[] {
       purpose: text.purpose ?? '',
       domain: text.domain ?? '',
       accountabilities: text.accountabilities ?? '',
-      colorHue: spec.hue ?? null,
+      base: spec.base ?? false,
+      singleMember: spec.parentLink ?? false,
+      parentLink: spec.parentLink ?? false,
+      colorHue: spec.hue ?? (spec.parentLink ? 0 : null),
     } as RoleFragment
   })
 }
@@ -151,14 +164,16 @@ function buildMembers(): MemberFragment[] {
 
 // --- Circles --------------------------------------------------------------
 
-// A circle for a "real" role, plus an optional Leader sub-circle holding the
+// A circle for a "real" role, plus an optional leader sub-circle holding the
 // circle's leader member.
 interface CircleSpec {
   id: string
   roleId: string
   parentId: string | null
-  // member id of the leader (creates a Leader sub-circle with that member)
+  // member id of the leader (creates a leader sub-circle with that member)
   leader?: string
+  // role of that leader sub-circle (defaults to the generic Leader role)
+  leaderRoleId?: string
   // direct members of the circle (besides the leader)
   members?: string[]
 }
@@ -193,7 +208,61 @@ const CIRCLE_SPECS: CircleSpec[] = [
   },
 ]
 
-function buildCircles(): {
+const CLASSIC_CIRCLE_SPECS: CircleSpec[] = [
+  {
+    id: 'circle-company',
+    roleId: 'role-company',
+    parentId: null,
+    leader: 'member-alice',
+    leaderRoleId: 'role-ceo',
+  },
+  {
+    id: 'circle-tech',
+    roleId: 'role-tech',
+    parentId: 'circle-company',
+    leader: 'member-bruno',
+    leaderRoleId: 'role-cto',
+  },
+  {
+    id: 'circle-engineering',
+    roleId: 'role-engineering',
+    parentId: 'circle-tech',
+    members: ['member-tom'],
+  },
+  {
+    id: 'circle-infra',
+    roleId: 'role-infra',
+    parentId: 'circle-tech',
+    members: ['member-chloe'],
+  },
+  {
+    id: 'circle-sales',
+    roleId: 'role-sales',
+    parentId: 'circle-company',
+    leader: 'member-camille',
+    leaderRoleId: 'role-csales',
+  },
+  {
+    id: 'circle-field',
+    roleId: 'role-field',
+    parentId: 'circle-sales',
+    members: ['member-emma'],
+  },
+  {
+    id: 'circle-marketing',
+    roleId: 'role-marketing',
+    parentId: 'circle-sales',
+    members: ['member-alice'],
+  },
+  {
+    id: 'circle-finance',
+    roleId: 'role-cfinance',
+    parentId: 'circle-company',
+    members: ['member-chloe'],
+  },
+]
+
+function buildCircles(specs: CircleSpec[]): {
   circles: CircleFragment[]
   circleMembers: CircleMemberFragment[]
 } {
@@ -212,7 +281,7 @@ function buildCircles(): {
     } as CircleMemberFragment)
   }
 
-  for (const spec of CIRCLE_SPECS) {
+  for (const spec of specs) {
     circles.push({
       id: spec.id,
       orgId: ORG_ID,
@@ -228,7 +297,7 @@ function buildCircles(): {
       circles.push({
         id: leaderCircleId,
         orgId: ORG_ID,
-        roleId: 'role-leader',
+        roleId: spec.leaderRoleId ?? 'role-leader',
         parentId: spec.id,
         archivedAt: null,
       } as CircleFragment)
@@ -264,9 +333,12 @@ export function getDemoFragments(
   key: DemoOrgKey,
   texts: DemoTexts
 ): DemoFragments {
-  const roles = buildRoles(texts)
+  const classic = key === 'classic'
+  const roles = buildRoles(texts, classic ? CLASSIC_ROLE_SPECS : ROLE_SPECS)
   const members = buildMembers()
-  let { circles, circleMembers } = buildCircles()
+  let { circles, circleMembers } = buildCircles(
+    classic ? CLASSIC_CIRCLE_SPECS : CIRCLE_SPECS
+  )
 
   if (key === 'simple') {
     circles = circles.filter((c) => SIMPLE_CIRCLE_IDS.has(c.id))

@@ -56,7 +56,7 @@ async function main() {
 
   const width = 800
   const html = renderStaticGraphPage({
-    view: CirclesGraphViews.AllCircles,
+    view: CirclesGraphViews.Circles,
     org,
     width,
     height: width,

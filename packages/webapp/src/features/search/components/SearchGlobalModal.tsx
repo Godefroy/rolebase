@@ -44,7 +44,7 @@ export default function SearchGlobalModal(modalProps: UseModalProps) {
   const { colorMode } = useColorMode()
   const { org } = useOrgContext()
   const navigateOrg = useNavigateOrg()
-  const view = useGraphViewParam()
+  const graphView = useGraphViewParam()
 
   // Search
   const [type, setType] = useState<(typeof searchTypes)[number] | undefined>()
@@ -68,7 +68,7 @@ export default function SearchGlobalModal(modalProps: UseModalProps) {
             undefined,
             item.id,
             undefined,
-            view
+            graphView
           )}`
         )
       } else if (item.type === SearchTypes.Circle) {
@@ -77,7 +77,7 @@ export default function SearchGlobalModal(modalProps: UseModalProps) {
             item.id,
             undefined,
             undefined,
-            view
+            graphView
           )}`
         )
       } else if (item.type === SearchTypes.Thread) {
@@ -90,7 +90,7 @@ export default function SearchGlobalModal(modalProps: UseModalProps) {
         navigateOrg(`decisions/${item.id}`)
       }
     },
-    [view]
+    [graphView]
   )
 
   const {

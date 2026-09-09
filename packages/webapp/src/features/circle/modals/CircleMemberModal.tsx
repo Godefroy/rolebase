@@ -27,7 +27,7 @@ export default function CircleMemberModal({
 }: Props) {
   const handleClose = useNormalClickHandler(modalProps.onClose, true)
   const path = usePathInOrg('roles')
-  const view = useGraphViewParam()
+  const graphView = useGraphViewParam()
 
   if (!circleId && !memberId) return null
 
@@ -45,7 +45,7 @@ export default function CircleMemberModal({
                   circleId,
                   memberId,
                   undefined,
-                  view
+                  graphView
                 )}`}
                 onClick={handleClose}
               />
@@ -61,7 +61,7 @@ export default function CircleMemberModal({
                       circleId,
                       undefined,
                       undefined,
-                      view
+                      graphView
                     )}`}
                     onClick={handleClose}
                   />

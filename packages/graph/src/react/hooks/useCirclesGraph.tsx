@@ -7,12 +7,14 @@ import useGraph, { GraphProps } from './useGraph'
 export interface CirclesGraphProps
   extends Omit<GraphProps<OrgData, CirclesGraph>, 'data' | 'init'> {
   view: CirclesGraphViews
+  // Fold the view around the selected circle
+  folded?: boolean
   org: OrgData
 }
 
 export default function useCirclesGraph(
   elementRef: RefObject<RootElement>,
-  { view, org, ...props }: CirclesGraphProps
+  { view, folded, org, ...props }: CirclesGraphProps
 ) {
   const graphProps = useMemo(
     () => ({
@@ -22,7 +24,12 @@ export default function useCirclesGraph(
         if (!elementRef.current) {
           throw new Error('Graph: Element ref is not set')
         }
-        return new CirclesGraph(elementRef.current, view, params)
+        return new CirclesGraph(
+          elementRef.current,
+          view,
+          folded ?? false,
+          params
+        )
       },
     }),
     [props, org]

@@ -1,6 +1,5 @@
 import Switch from '@/common/atoms/Switch'
 import useCopyUrl from '@/common/hooks/useCopyUrl'
-import { CirclesGraphViews } from '@/graph/types'
 import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   Button,
@@ -20,6 +19,7 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { useUpdateOrgMutation } from '@gql'
+import { GraphView, defaultGraphView } from '@rolebase/shared/model/graph'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CopyIcon } from 'src/icons'
@@ -34,14 +34,14 @@ export default function CirclesShareModal(modalProps: UseModalProps) {
   // State
   const [shareOrg, setShareOrg] = useState(org?.shareOrg)
   const [shareMembers, setShareMembers] = useState(org?.shareMembers)
-  const [view, setView] = useState(CirclesGraphViews.AllCircles)
+  const [graphView, setGraphView] = useState<GraphView>(defaultGraphView)
   const [zoom, setZoom] = useState(true)
   const [transparent, setTransparent] = useState(false)
 
   // URL
-  const url = `${settings.url}/share/?orgId=${org?.id}&view=${view}${
-    zoom ? '&zoom' : ''
-  }${transparent ? '&transparent' : ''}`
+  const url = `${settings.url}/share/?orgId=${org?.id}&view=${graphView.view}${
+    graphView.folded ? '&folded=1' : ''
+  }${zoom ? '&zoom' : ''}${transparent ? '&transparent' : ''}`
   const copyUrl = useCopyUrl(url)
 
   // Embed code
@@ -107,8 +107,8 @@ export default function CirclesShareModal(modalProps: UseModalProps) {
                   </Heading>
                   <GraphViewsSelect
                     variant="outline"
-                    value={view}
-                    onChange={setView}
+                    value={graphView}
+                    onChange={setGraphView}
                   />
                   <Switch isChecked={zoom} onChange={() => setZoom((z) => !z)}>
                     {t('CirclesShareModal.zoom')}

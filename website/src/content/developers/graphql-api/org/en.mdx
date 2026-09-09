@@ -13,7 +13,8 @@ category: 'org-members'
 | `slug` | `String` | URL-friendly unique identifier (optional) |
 | `archivedAt` | `Timestamp` | When the organization was archived; null if active |
 | `createdAt` | `Timestamp` | When the organization was created |
-| `defaultGraphView` | `String` | Default graph view setting (optional) |
+| `defaultGraphView` | `String` | Default org chart view: `Circles`, `Tree` or `Members` (optional) |
+| `defaultGraphFolded` | `Boolean` | Fold the default view around the selected role (default: false) |
 | `governanceMode` | `governance_mode` | Who can change the org chart: `Free` (all members), `Agile` (role leaders), `Strict` (proposals only). Default: `Free` |
 | `shareMembers` | `Boolean` | Whether member information is publicly shared (default: false) |
 | `shareOrg` | `Boolean` | Whether organization information is publicly shared (default: false) |

@@ -18,6 +18,8 @@ export default authedProcedure
         .mixed<CirclesGraphViews>()
         .oneOf(Object.values(CirclesGraphViews))
         .required(),
+      // Fold the view around the selected circle (default: no)
+      folded: yup.boolean(),
       width: yup.number().integer().min(100).max(3000).required(),
       // Image height (default: square). A hierarchical org chart is much wider
       // than it is tall, so the client sends the aspect ratio of its layout.
@@ -28,7 +30,7 @@ export default authedProcedure
     })
   )
   .mutation(async (opts) => {
-    const { orgId, circleId, view, width, colorMode } = opts.input
+    const { orgId, circleId, view, folded, width, colorMode } = opts.input
     const showMembers = opts.input.showMembers ?? true
     const height = opts.input.height || width
 
@@ -59,6 +61,7 @@ export default authedProcedure
     // and screenshot it as a transparent PNG
     const html = renderStaticGraphPage({
       view,
+      folded,
       org: orgData,
       width,
       height,

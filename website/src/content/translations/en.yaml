@@ -123,3 +123,23 @@ demo:
         Track revenue and key metrics.
     leader:
       name: Leader
+    tech:
+      name: Technology
+    sales:
+      name: Commerce
+    engineering:
+      name: Engineering
+    infra:
+      name: Infrastructure
+    field:
+      name: Field sales
+    marketing:
+      name: Marketing
+    ceo:
+      name: Chief Executive Officer
+    cto:
+      name: Chief Technology Officer
+    csales:
+      name: Sales Director
+    cfinance:
+      name: Finance Director

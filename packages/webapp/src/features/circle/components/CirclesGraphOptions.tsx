@@ -1,5 +1,5 @@
 import GraphShortcutsModal from '@/graph/components/GraphShortcutsModal'
-import { CirclesGraphViews } from '@/graph/types'
+import { graphButtonsProps } from '@/graph/components/graphButtonsProps'
 import useOrgAdmin from '@/member/hooks/useOrgAdmin'
 import useOrgMember from '@/member/hooks/useOrgMember'
 import useOrgOwner from '@/member/hooks/useOrgOwner'
@@ -17,6 +17,7 @@ import {
   StyleProps,
   useDisclosure,
 } from '@chakra-ui/react'
+import { GraphView } from '@rolebase/shared/model/graph'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -31,36 +32,13 @@ import CirclesShareModal from '../modals/CirclesShareModal'
 import GraphViewsSelect from './GraphViewsSelect'
 
 interface CirclesGraphOptionsProps extends StyleProps {
-  view: CirclesGraphViews
-  onViewChange: (view: CirclesGraphViews) => void
-}
-
-export const graphButtonsProps = {
-  variant: 'outline',
-  size: 'sm',
-  fontWeight: 'normal',
-  border: 0,
-  bg: 'white',
-  _hover: {
-    bg: 'gray.100',
-  },
-  _active: {
-    bg: 'gray.200',
-  },
-  _dark: {
-    bg: 'gray.700',
-    _hover: {
-      bg: 'gray.600',
-    },
-    _active: {
-      bg: 'gray.550',
-    },
-  },
+  value: GraphView
+  onChange: (value: GraphView) => void
 }
 
 export default function CirclesGraphOptions({
-  view,
-  onViewChange,
+  value,
+  onChange,
   ...styleProps
 }: CirclesGraphOptionsProps) {
   const { t } = useTranslation()
@@ -78,8 +56,8 @@ export default function CirclesGraphOptions({
   return (
     <Flex justifyContent="space-between" {...styleProps}>
       <GraphViewsSelect
-        value={view}
-        onChange={onViewChange}
+        value={value}
+        onChange={onChange}
         {...graphButtonsProps}
         fontWeight="bold"
       />

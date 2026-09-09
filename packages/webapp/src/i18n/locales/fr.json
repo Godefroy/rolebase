@@ -391,18 +391,15 @@
     "hours": "Heures / semaine"
   },
   "GraphViewsSelect": {
-    "AllCircles": "Tous les Rôles",
-    "AllCircles_desc": "Afficher en même temps tous les Rôles imbriqués et les Membres qui les occupent. La taille de chaque cercle affiché dépend du nombre de Rôles et de Membres qu'il contient.",
-    "SimpleCircles": "Holarchie",
-    "SimpleCircles_desc": "Afficher à la même taille les Rôles du Rôle sélectionné, avec les membres qui les représentent.",
-    "HierarchyAll": "Hiérarchique",
-    "HierarchyAll_desc": "Afficher tous les Rôles sous forme d'organigramme hiérarchique, du haut vers le bas, avec les Membres qui les occupent.",
-    "HierarchySimple": "Hiérarchique replié",
-    "HierarchySimple_desc": "Afficher l'organigramme hiérarchique replié autour du Rôle sélectionné : ses parents et ses Rôles directs, avec les Membres qui les occupent.",
-    "FlatCircle": "Opérationnel",
-    "FlatCircle_desc": "Afficher tous les Rôles à un même niveau, mélangés, avec les membres qui les représentent.",
-    "Members": "Membres uniquement",
-    "Members_desc": "Afficher tous les Membres."
+    "Circles": "Cercles",
+    "Circles_desc": "Afficher tous les rôles imbriqués les uns dans les autres, avec les membres qui les occupent. La taille de chaque cercle dépend du nombre de rôles et de membres qu'il contient.",
+    "Tree": "Arbre hiérarchique",
+    "Tree_desc": "Afficher les rôles sous forme d'organigramme de cartes, du haut vers le bas, avec les membres qui les occupent.",
+    "Members": "Trombinoscope",
+    "Members_desc": "Afficher d'un coup d'œil tous les membres de l'organisation, sans les rôles.",
+    "folded": "Replié",
+    "folded_desc": "Afficher uniquement le rôle sélectionné, ses parents et leurs rôles directs, plutôt que toute l'organisation.",
+    "foldedLabel": "{{view}} (replié)"
   },
   "ImportPage": {
     "title": "Importer une organisation.",

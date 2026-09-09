@@ -123,3 +123,23 @@ demo:
         Suivre le chiffre d'affaires et les indicateurs clés.
     leader:
       name: Leader
+    tech:
+      name: Direction technique
+    sales:
+      name: Commerce
+    engineering:
+      name: Développement
+    infra:
+      name: Infrastructure
+    field:
+      name: Ventes
+    marketing:
+      name: Marketing
+    ceo:
+      name: Directeur général
+    cto:
+      name: Directeur technique
+    csales:
+      name: Directeur commercial
+    cfinance:
+      name: Directeur administratif et financier

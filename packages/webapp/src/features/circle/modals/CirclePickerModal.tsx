@@ -51,7 +51,8 @@ export default function CirclePickerModal({ onSelect, ...modalProps }: Props) {
         <ModalBody ref={boxRef} p={0} position="relative">
           {orgData && boxSize && (
             <CirclesGraph
-              view={CirclesGraphViews.SimpleCircles}
+              view={CirclesGraphViews.Circles}
+              folded
               org={orgData}
               events={events}
               width={width}

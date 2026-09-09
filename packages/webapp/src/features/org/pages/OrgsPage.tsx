@@ -152,7 +152,7 @@ export default function OrgsPage() {
           {orgData && boxSize && (
             <CirclesGraph
               key={colorMode}
-              view={CirclesGraphViews.AllCircles}
+              view={CirclesGraphViews.Circles}
               org={orgData}
               events={events}
               width={boxSize.width}

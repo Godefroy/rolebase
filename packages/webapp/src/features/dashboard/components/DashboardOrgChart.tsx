@@ -1,7 +1,6 @@
 import { useElementSize } from '@/common/hooks/useElementSize'
 import CirclesGraph from '@/graph/CirclesGraph'
 import useGraphEvents from '@/graph/hooks/useGraphEvents'
-import { CirclesGraphViews } from '@/graph/types'
 import { useOrgContext } from '@/org/contexts/OrgContext'
 import { useNavigateOrg } from '@/org/hooks/useNavigateOrg'
 import {
@@ -14,6 +13,7 @@ import {
   useColorMode,
 } from '@chakra-ui/react'
 import { getOrgPath } from '@rolebase/shared/helpers/getOrgPath'
+import { defaultGraphView, parseGraphView } from '@rolebase/shared/model/graph'
 import React, { useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
@@ -33,6 +33,10 @@ export default function DashboardOrgChart(boxProps: BoxProps) {
   const circles = orgData?.circles
   const { onCircleClick, onMemberClick } = useGraphEvents()
   const events = useMemo(() => ({ onCircleClick, onMemberClick }), [])
+
+  // The organization default view, always folded: the dashboard only has room
+  // for the roles around the selected one
+  const { view } = parseGraphView(org?.defaultGraphView) || defaultGraphView
 
   // Color mode
   const { colorMode } = useColorMode()
@@ -63,12 +67,14 @@ export default function DashboardOrgChart(boxProps: BoxProps) {
     <Box ref={boxRef} h={size} {...boxProps}>
       {org && orgData && size && (
         <CirclesGraph
-          key={colorMode}
-          view={CirclesGraphViews.AllCircles}
+          key={`${view}${colorMode}`}
+          view={view}
+          folded
           org={orgData}
           events={events}
           width={size}
           height={size}
+          fitLayout
           panzoomDisabled
         />
       )}

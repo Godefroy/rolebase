@@ -4,13 +4,14 @@ import { omit } from '../helpers/omit'
 import settings from '../settings'
 import {
   CirclesGraphViews,
+  GraphEvents,
   GraphLayoutKind,
   GraphParams,
   RootElement,
 } from '../types'
 import { Graph } from './Graph'
 import { computeLayout } from './layout'
-import { viewStrategies } from './views'
+import { getViewStrategy } from './views'
 
 export class CirclesGraph extends Graph<OrgData> {
   public org?: OrgData
@@ -27,10 +28,12 @@ export class CirclesGraph extends Graph<OrgData> {
   constructor(
     element: RootElement,
     public view: CirclesGraphViews,
+    public folded: boolean,
     params: GraphParams
   ) {
     // Remove events disabled in this view
-    const { omitEvents } = viewStrategies[view]
+    const strategy = getViewStrategy(view, folded)
+    const { omitEvents } = strategy
     super(
       element,
       omitEvents
@@ -42,7 +45,14 @@ export class CirclesGraph extends Graph<OrgData> {
     this.showAllMembers = view === CirclesGraphViews.Members
 
     // How this view places its nodes (drives culling and rendering)
-    this.layoutKind = viewStrategies[view].layout ?? GraphLayoutKind.Pack
+    this.layoutKind = strategy.layout ?? GraphLayoutKind.Pack
+  }
+
+  // Drop the events this view disables, so a later handler update (see
+  // useGraph) cannot bring them back
+  setEvents(events: GraphEvents) {
+    const { omitEvents } = getViewStrategy(this.view, this.folded)
+    super.setEvents(omitEvents ? omit(events, ...omitEvents) : events)
   }
 
   destroy() {
@@ -64,7 +74,10 @@ export class CirclesGraph extends Graph<OrgData> {
 
     // Relayout when the view depends on the selected circle. Hide moved nodes
     // during the animation (see updateData).
-    if (viewStrategies[this.view].relayoutOnSelect && this.inputData) {
+    if (
+      getViewStrategy(this.view, this.folded).relayoutOnSelect &&
+      this.inputData
+    ) {
       this.isSelectRelayout = true
       this.updateData(this.inputData)
     }
@@ -105,9 +118,13 @@ export class CirclesGraph extends Graph<OrgData> {
     super.updateData(org)
     this.org = org
 
-    const layout = computeLayout(org, this.view, this.selectedCircleId, {
-      hideMembers: this.params.hideMembers,
-    })
+    const layout = computeLayout(
+      org,
+      this.view,
+      this.folded,
+      this.selectedCircleId,
+      { hideMembers: this.params.hideMembers }
+    )
     const { root, nodes } = layout
     this.root = root
     this.nodes = nodes
@@ -198,10 +215,14 @@ export class CirclesGraph extends Graph<OrgData> {
     // A packing is fitted whole, its nested circles staying legible at any
     // size. A tree opens on its first card, framed exactly as selecting it
     // would: fitting a whole chart would shrink every card past reading.
+    // fitLayout overrides both and frames the whole box, for a graph that has
+    // to stay inside its container (e.g. the dashboard preview).
     if (firstDraw) {
       const firstCard =
         this.layoutKind === GraphLayoutKind.Tree ? nodes[0] : undefined
-      if (firstCard) {
+      if (this.params.fitLayout) {
+        this.zoomToBox(layout.focusBox, true)
+      } else if (firstCard) {
         this.focusCard(firstCard, true)
       } else {
         this.zoomTo(root.x, root.y, this.focusCircleScale(root), true)

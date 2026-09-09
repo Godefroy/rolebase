@@ -8,10 +8,11 @@ import useQueryParams from '@/common/hooks/useQueryParams'
 import Page404 from '@/common/pages/Page404'
 import CirclesGraph from '@/graph/CirclesGraph'
 import { GraphProvider } from '@/graph/contexts/GraphContext'
-import { CirclesGraphViews, GraphEvents } from '@/graph/types'
+import { GraphEvents } from '@/graph/types'
 import ReadonlyOrgProvider from '@/org/contexts/ReadonlyOrgProvider'
 import { Governance_Mode_Enum } from '@gql'
 import { OrgData } from '@rolebase/shared/model/OrgData'
+import { defaultGraphView, parseGraphView } from '@rolebase/shared/model/graph'
 import { Box } from '@chakra-ui/react'
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import settings from 'src/settings'
@@ -22,7 +23,8 @@ import ModalPanel from './ModalPanel'
 
 type Params = {
   orgId: string
-  view: CirclesGraphViews
+  view: string
+  folded: string
   zoom: string
 }
 
@@ -57,10 +59,9 @@ export default function OrgPage() {
   }
 
   // Graph view
-  const view =
-    queryParams.view && CirclesGraphViews[queryParams.view]
-      ? queryParams.view
-      : CirclesGraphViews.AllCircles
+  const { view, folded } =
+    parseGraphView(queryParams.view, queryParams.folded === '1') ||
+    defaultGraphView
 
   // Build read-only org data from the public payload (in-memory, never edited).
   const orgData = useMemo<OrgData | undefined>(() => {
@@ -100,7 +101,14 @@ export default function OrgPage() {
       }))
     )
 
-    return new OrgData({ circles, circleMembers, circleLinks, roles: data.roles, members, governanceMode: Governance_Mode_Enum.Strict })
+    return new OrgData({
+      circles,
+      circleMembers,
+      circleLinks,
+      roles: data.roles,
+      members,
+      governanceMode: Governance_Mode_Enum.Strict,
+    })
   }, [data, queryParams.orgId])
 
   // Selected circle & member
@@ -147,6 +155,7 @@ export default function OrgPage() {
           {orgData && boxSize && (
             <CirclesGraph
               view={view}
+              folded={folded}
               org={orgData}
               events={events}
               width={boxSize.width}

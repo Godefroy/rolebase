@@ -75,7 +75,8 @@ Génère l’organigramme sous forme d’image PNG, pour tout membre y compris R
 | --- | --- | --- |
 | `orgId` | `uuid` | Organisation visée. Requis. |
 | `circleId` | `uuid` | Ne générer que ce rôle et ses descendants. Optionnel, l’organigramme complet par défaut. |
-| `view` | `String` | Vue à générer : `AllCircles`, `SimpleCircles`, `HierarchyAll`, `HierarchySimple`, `FlatCircle` ou `Members`. Requis. |
+| `view` | `String` | Vue à générer : `Circles`, `Tree` ou `Members`. Requis. |
+| `folded` | `Boolean` | Replier la vue autour du rôle sélectionné. Optionnel, désactivé par défaut, sans effet sur `Members`. |
 | `width` | `Int` | Largeur de l’image en pixels, entre 100 et 3000. Requis. |
 | `height` | `Int` | Hauteur de l’image en pixels, entre 100 et 3000. Optionnel, carrée par défaut. |
 | `colorMode` | `String` | `light` ou `dark`. Optionnel, `light` par défaut. |

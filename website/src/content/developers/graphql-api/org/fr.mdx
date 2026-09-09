@@ -13,7 +13,8 @@ category: 'org-members'
 | `slug` | `String` | Identifiant unique adapté aux URL (optionnel) |
 | `archivedAt` | `Timestamp` | Date d'archivage de l'organisation ; null si actif |
 | `createdAt` | `Timestamp` | Date de création de l'organisation |
-| `defaultGraphView` | `String` | Paramètre de vue graphique par défaut (optionnel) |
+| `defaultGraphView` | `String` | Vue par défaut de l'organigramme : `Circles`, `Tree` ou `Members` (optionnel) |
+| `defaultGraphFolded` | `Boolean` | Replier la vue par défaut autour du rôle sélectionné (par défaut : false) |
 | `governanceMode` | `governance_mode` | Qui peut modifier l'organigramme : `Free` (tous les membres), `Agile` (leaders de rôle), `Strict` (uniquement par proposition). Par défaut : `Free` |
 | `shareMembers` | `Boolean` | Indique si les informations des membres sont partagées publiquement (par défaut : false) |
 | `shareOrg` | `Boolean` | Indique si les informations de l'organisation sont partagées publiquement (par défaut : false) |

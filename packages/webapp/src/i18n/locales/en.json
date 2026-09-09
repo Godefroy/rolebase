@@ -390,18 +390,15 @@
     "hours": "Heures / week"
   },
   "GraphViewsSelect": {
-    "AllCircles": "All Roles",
-    "AllCircles_desc": "Display all nested Roles and the Members who occupy them. The size of each displayed circle depends on the number of Roles and Members it contains.",
-    "SimpleCircles": "Holarchy",
-    "SimpleCircles_desc": "Display at the same size the Roles of the selected Role, with the members who represent them.",
-    "HierarchyAll": "Hierarchical",
-    "HierarchyAll_desc": "Show all Roles as a top-down hierarchical org chart, with the Members who fill them.",
-    "HierarchySimple": "Folded hierarchical",
-    "HierarchySimple_desc": "Show the hierarchical org chart folded around the selected Role: its parents and its direct Roles, with the Members who fill them.",
-    "FlatCircle": "Operational",
-    "FlatCircle_desc": "Display all Roles at the same level, mixed, with the members who represent them.",
-    "Members": "Members only",
-    "Members_desc": "Display all Members."
+    "Circles": "Circles",
+    "Circles_desc": "Show every role nested inside its parent, with the members who fill them. The size of each circle depends on the number of roles and members it contains.",
+    "Tree": "Hierarchical tree",
+    "Tree_desc": "Show the roles as a top-down org chart of cards, with the members who fill them.",
+    "Members": "Photo directory",
+    "Members_desc": "Show every member of the organization at a glance, without the roles.",
+    "folded": "Folded",
+    "folded_desc": "Show only the selected role, its parents and their direct roles, instead of the whole organization.",
+    "foldedLabel": "{{view}} (folded)"
   },
   "LangModal": {
     "heading": "Language"

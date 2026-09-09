@@ -20,6 +20,8 @@ import {
 
 export interface StaticCirclesGraphProps {
   view: CirclesGraphViews
+  // Fold the view around the selected circle
+  folded?: boolean
   org: OrgData
   width: number
   height: number
@@ -36,6 +38,7 @@ export interface StaticCirclesGraphProps {
 // browser once the markup is mounted and fonts are loaded.
 export default function StaticCirclesGraph({
   view,
+  folded,
   org,
   width,
   height,
@@ -45,10 +48,10 @@ export default function StaticCirclesGraph({
 }: StaticCirclesGraphProps) {
   const layout = useMemo(
     () =>
-      computeLayout(org, view, selectedCircleId, {
+      computeLayout(org, view, folded, selectedCircleId, {
         hideMembers: !showMembers,
       }),
-    [org, view, selectedCircleId, showMembers]
+    [org, view, folded, selectedCircleId, showMembers]
   )
   const { root } = layout
   const isTree = layout.kind === GraphLayoutKind.Tree

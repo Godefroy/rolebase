@@ -137,7 +137,7 @@ export default function DemoGraphEditor({ ui, height = '560px' }: Props) {
             <Box position="absolute" inset={0}>
               <CirclesGraph
                 key={colorMode}
-                view={CirclesGraphViews.AllCircles}
+                view={CirclesGraphViews.Circles}
                 org={orgData}
                 events={events}
                 width={boxSize.width}

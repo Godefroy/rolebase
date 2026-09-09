@@ -5,8 +5,12 @@ import { getLangFromUrl, getTranslations } from '../utils/i18n'
 interface Props {
   // Which example organization to render ('demo' | 'simple')
   demo?: string
-  // Graph framing ('AllCircles' | 'Members' | ...)
+  // Graph framing ('Circles' | 'Tree' | 'Members')
   view?: string
+  // Fold the view around the selected role
+  folded?: boolean
+  // Overlay the shortcuts button, like the org chart options in the app
+  shortcuts?: boolean
   // Force members and deep circles visible at any zoom (static illustration)
   showAllNodes?: boolean
   // Zoom in on this circle on load
@@ -19,7 +23,9 @@ interface Props {
 
 const {
   demo = 'demo',
-  view = 'AllCircles',
+  view = 'Circles',
+  folded = false,
+  shortcuts = false,
   showAllNodes = true,
   focus,
   height = '420px',
@@ -34,6 +40,9 @@ const t = await getTranslations(lang)
     client:only="react"
     demo={demo}
     view={view}
+    folded={folded}
+    shortcuts={shortcuts}
+    lang={lang}
     showAllNodes={showAllNodes}
     focus={focus}
     texts={t.demo}

@@ -24,6 +24,8 @@ export interface GraphProps<Data, TGraph extends Graph<Data>> {
   showAllNodes?: boolean
   // Leave the members out of the layout (see GraphParams)
   hideMembers?: boolean
+  // Frame the whole layout on the first draw (see GraphParams)
+  fitLayout?: boolean
   onReady?(): void
 }
 
@@ -40,6 +42,7 @@ export default function useGraph<Data, TGraph extends Graph<Data>>({
   panzoomDisabled,
   showAllNodes,
   hideMembers,
+  fitLayout,
   onReady,
 }: GraphProps<Data, TGraph>) {
   const graphContext = useContext(GraphContext)
@@ -59,6 +62,7 @@ export default function useGraph<Data, TGraph extends Graph<Data>>({
       zoomDisabled: panzoomDisabled,
       showAllNodes,
       hideMembers,
+      fitLayout,
       events: events || {},
     }
     const graph = init(params)
@@ -74,7 +78,7 @@ export default function useGraph<Data, TGraph extends Graph<Data>>({
   // first would keep operating on the initial org data — e.g. moving a member a
   // second time would read stale state and silently turn the move into a copy.
   useEffect(() => {
-    if (graphRef.current) graphRef.current.params.events = events || {}
+    graphRef.current?.setEvents(events || {})
   }, [events])
 
   // Update data, once the graph is instanciated and children

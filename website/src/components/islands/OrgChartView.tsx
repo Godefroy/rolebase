@@ -1,4 +1,5 @@
-import { CirclesGraphView } from '@rolebase/graph'
+import GraphShortcutsButton from '@/graph/components/GraphShortcutsButton'
+import { CirclesGraphView, GraphProvider } from '@rolebase/graph'
 import { CirclesGraphViews, type GraphEvents } from '@rolebase/graph'
 import type { OrgData } from '@rolebase/shared/model/OrgData'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -8,6 +9,7 @@ import {
   type DemoTexts,
 } from '../../demo/orgDemoData'
 import { currentLang, track } from '../../utils/analytics'
+import WebappProviders from './WebappProviders'
 
 interface Props {
   // Which example organization to render ('demo' | 'simple'), as a string
@@ -15,8 +17,14 @@ interface Props {
   demo?: string
   // Translated role texts (the `demo` i18n subtree), passed from the wrapper
   texts: DemoTexts
-  // Graph framing ('AllCircles' | 'Members' | …), as a string from the wrapper
+  // Graph framing ('Circles' | 'Tree' | 'Members'), as a string from the wrapper
   view?: string
+  // Fold the view around the selected role
+  folded?: boolean
+  // Overlay the shortcuts button, like the org chart options in the app
+  shortcuts?: boolean
+  // Language of the shortcuts button and modal
+  lang?: string
   // Force members and deep circles visible at any zoom (static illustration)
   showAllNodes?: boolean
   // Zoom in on this circle on load (cleaner than showAllNodes for nested views)
@@ -27,10 +35,15 @@ interface Props {
 // Read-only, illustrative org chart used in documentation pages. Renders a
 // static example organization with pan/zoom and circle selection only (no
 // editing). Built on the same D3 graph as the product (`@rolebase/graph`).
+// Always framed on the whole chart: an illustration has to show what it
+// illustrates, where the product opens a tree on its first card.
 export default function OrgChartView({
   demo = 'demo',
   texts,
-  view = CirclesGraphViews.AllCircles,
+  view = CirclesGraphViews.Circles,
+  folded = false,
+  shortcuts = false,
+  lang = 'en',
   showAllNodes = true,
   focus,
   colorMode = 'light',
@@ -98,32 +111,53 @@ export default function OrgChartView({
   )
 
   return (
-    <div
-      ref={containerRef}
-      style={{
-        width: '100%',
-        height: '100%',
-        textAlign: 'left',
-        borderRadius: '0.75rem',
-        border: '1px solid rgba(124, 58, 237, 0.18)',
-        overflow: 'hidden',
-        background: '#fafafa',
-      }}
-    >
-      {size && (
-        <CirclesGraphView
-          ref={graphRef as never}
-          key={colorMode}
-          view={view as CirclesGraphViews}
-          org={org}
-          width={size.width}
-          height={size.height}
-          colorMode={colorMode}
-          events={events}
-          selectedCircleId={selectedCircleId}
-          showAllNodes={showAllNodes}
-        />
-      )}
-    </div>
+    // The shortcuts modal reads the graph from this context to list only the
+    // interactions this chart answers to
+    <GraphProvider>
+      <div
+        ref={containerRef}
+        style={{
+          position: 'relative',
+          width: '100%',
+          height: '100%',
+          textAlign: 'left',
+          borderRadius: '0.75rem',
+          border: '1px solid rgba(124, 58, 237, 0.18)',
+          overflow: 'hidden',
+          background: '#fafafa',
+        }}
+      >
+        {size && (
+          <CirclesGraphView
+            ref={graphRef as never}
+            key={colorMode}
+            view={view as CirclesGraphViews}
+            folded={folded}
+            fitLayout
+            org={org}
+            width={size.width}
+            height={size.height}
+            colorMode={colorMode}
+            events={events}
+            selectedCircleId={selectedCircleId}
+            showAllNodes={showAllNodes}
+          />
+        )}
+
+        {shortcuts && (
+          <WebappProviders lang={lang}>
+            {/* Clicking a role only zooms here: there is no panel to open, and
+                nothing is editable */}
+            <GraphShortcutsButton
+              only={['zoom', 'pan']}
+              position="absolute"
+              top={3}
+              right={3}
+              zIndex={1}
+            />
+          </WebappProviders>
+        )}
+      </div>
+    </GraphProvider>
   )
 }

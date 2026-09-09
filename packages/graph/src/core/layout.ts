@@ -11,21 +11,23 @@ import {
 } from '../types'
 import { computePackLayout } from './layouts/pack'
 import { computeTreeLayout } from './layouts/tree'
-import { CircleData, sortById, viewStrategies } from './views'
+import { CircleData, getViewStrategy, sortById } from './views'
 
 export type { Layout }
 
 // Compute the layout of circles for a given view.
 // The view decides which circles are displayed and how they are placed:
 // packed inside each other, or laid out as a top-down tree of cards.
+// Folded, it only draws the selected circle, its ancestors and their children.
 // Pure: usable in browser and server.
 export function computeLayout(
   org: OrgData,
   view: CirclesGraphViews,
+  folded?: boolean,
   selectedCircleId?: string,
   options: LayoutOptions = {}
 ): Layout {
-  const strategy = viewStrategies[view]
+  const strategy = getViewStrategy(view, folded)
   const layout = strategy.layout ?? GraphLayoutKind.Pack
   const data = prepareData(
     strategy.getCircles(org, selectedCircleId),

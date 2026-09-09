@@ -14,7 +14,7 @@ export default function useCircleMemberLink(
   const { orgId } = useOrgContext()
   const circleMemberContext = useContext(CircleMemberContext)
   const path = usePathInOrg('roles')
-  const view = useGraphViewParam()
+  const graphView = useGraphViewParam()
 
   const goToCircle = useCallback(() => {
     circleMemberContext?.goTo(circleId, memberId, parentId)
@@ -28,10 +28,10 @@ export default function useCircleMemberLink(
         circleId,
         memberId,
         parentId,
-        view
+        graphView
       )}`,
       onClick: handleClick,
     }),
-    [circleId, memberId, parentId, orgId, view, handleClick]
+    [circleId, memberId, parentId, orgId, graphView, handleClick]
   )
 }

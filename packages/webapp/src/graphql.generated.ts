@@ -13176,6 +13176,7 @@ export type Org = {
   decisions: Array<Decision>;
   /** An aggregate relationship */
   decisions_aggregate: Decision_Aggregate;
+  defaultGraphFolded: Scalars['Boolean']['output'];
   defaultGraphView: Scalars['graph_views']['output'];
   /** An array relationship */
   files: Array<Org_File>;
@@ -13574,6 +13575,7 @@ export type Org_Bool_Exp = {
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   decisions?: InputMaybe<Decision_Bool_Exp>;
   decisions_aggregate?: InputMaybe<Decision_Aggregate_Bool_Exp>;
+  defaultGraphFolded?: InputMaybe<Boolean_Comparison_Exp>;
   defaultGraphView?: InputMaybe<String_Comparison_Exp>;
   files?: InputMaybe<Org_File_Bool_Exp>;
   files_aggregate?: InputMaybe<Org_File_Aggregate_Bool_Exp>;
@@ -13836,6 +13838,7 @@ export type Org_Insert_Input = {
   circles?: InputMaybe<Circle_Arr_Rel_Insert_Input>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   decisions?: InputMaybe<Decision_Arr_Rel_Insert_Input>;
+  defaultGraphFolded?: InputMaybe<Scalars['Boolean']['input']>;
   defaultGraphView?: InputMaybe<Scalars['String']['input']>;
   files?: InputMaybe<Org_File_Arr_Rel_Insert_Input>;
   governanceMode?: InputMaybe<Governance_Mode_Enum>;
@@ -13923,6 +13926,7 @@ export type Org_Order_By = {
   circles_aggregate?: InputMaybe<Circle_Aggregate_Order_By>;
   createdAt?: InputMaybe<Order_By>;
   decisions_aggregate?: InputMaybe<Decision_Aggregate_Order_By>;
+  defaultGraphFolded?: InputMaybe<Order_By>;
   defaultGraphView?: InputMaybe<Order_By>;
   files_aggregate?: InputMaybe<Org_File_Aggregate_Order_By>;
   governanceMode?: InputMaybe<Order_By>;
@@ -13961,6 +13965,8 @@ export enum Org_Select_Column {
   /** column name */
   CreatedAt = 'createdAt',
   /** column name */
+  DefaultGraphFolded = 'defaultGraphFolded',
+  /** column name */
   DefaultGraphView = 'defaultGraphView',
   /** column name */
   GovernanceMode = 'governanceMode',
@@ -13988,6 +13994,7 @@ export enum Org_Select_Column {
 export type Org_Set_Input = {
   archivedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  defaultGraphFolded?: InputMaybe<Scalars['Boolean']['input']>;
   defaultGraphView?: InputMaybe<Scalars['String']['input']>;
   governanceMode?: InputMaybe<Governance_Mode_Enum>;
   homeNote?: InputMaybe<Scalars['String']['input']>;
@@ -14013,6 +14020,7 @@ export type Org_Stream_Cursor_Input = {
 export type Org_Stream_Cursor_Value_Input = {
   archivedAt?: InputMaybe<Scalars['timestamptz']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  defaultGraphFolded?: InputMaybe<Scalars['Boolean']['input']>;
   defaultGraphView?: InputMaybe<Scalars['String']['input']>;
   governanceMode?: InputMaybe<Governance_Mode_Enum>;
   homeNote?: InputMaybe<Scalars['String']['input']>;
@@ -14252,6 +14260,8 @@ export enum Org_Update_Column {
   ArchivedAt = 'archivedAt',
   /** column name */
   CreatedAt = 'createdAt',
+  /** column name */
+  DefaultGraphFolded = 'defaultGraphFolded',
   /** column name */
   DefaultGraphView = 'defaultGraphView',
   /** column name */
@@ -23393,9 +23403,9 @@ export type ThreadActivityMemberFragment = { __typename?: 'member', id: string, 
 
 export type NewsFragment = { __typename?: 'news', id?: string | null, createdAt?: string | null, decision?: { __typename?: 'decision', id: string, orgId: string, circleId: string, memberId: string, title: string, description: string, archivedAt?: string | null, createdAt: string, private: boolean } | null, meeting?: { __typename?: 'meeting', id: string, orgId: string, circleId: string, startDate: string, endDate: string, ended: boolean, title: string, currentStepId?: string | null, summary: string, private: boolean, meeting_attendees: Array<{ __typename?: 'meeting_attendee', id: string, meetingId: string, memberId: string, present?: boolean | null, startNotified: boolean }> } | null, thread?: { __typename?: 'thread', id: string, orgId: string, circleId: string, initiatorMemberId: string, title: string, createdAt: string, archivedAt?: string | null, pinned: boolean, status: Thread_Status_Enum, private: boolean, activities: Array<{ __typename?: 'thread_activity', id: string, threadId: string, userId: string, createdAt: string, type: Thread_Activity_Type_Enum, data: any, member?: { __typename?: 'member', id: string, userId?: string | null, name: string, picture?: string | null, archivedAt?: string | null } | null, reactions: Array<{ __typename?: 'thread_activity_reaction', id: string, userId: string, shortcode: string, member?: { __typename?: 'member', id: string, userId?: string | null, name: string, picture?: string | null, archivedAt?: string | null } | null }>, refThread?: { __typename?: 'thread', id: string, orgId: string, circleId: string, initiatorMemberId: string, title: string, createdAt: string, archivedAt?: string | null, pinned: boolean, status: Thread_Status_Enum, private: boolean, extra_members: Array<{ __typename?: 'thread_extra_member', id: string, threadId: string, memberId: string }> } | null, refMeeting?: { __typename?: 'meeting', id: string, orgId: string, circleId: string, startDate: string, endDate: string, ended: boolean, title: string, currentStepId?: string | null, summary: string, private: boolean, meeting_attendees: Array<{ __typename?: 'meeting_attendee', id: string, meetingId: string, memberId: string, present?: boolean | null, startNotified: boolean }> } | null, refTask?: { __typename?: 'task', id: string, orgId: string, circleId: string, memberId?: string | null, title: string, description: string, archivedAt?: string | null, createdAt: string, dueDate?: string | null, status: Task_Status_Enum, private: boolean } | null, refDecision?: { __typename?: 'decision', id: string, orgId: string, circleId: string, memberId: string, title: string, description: string, archivedAt?: string | null, createdAt: string, private: boolean } | null }>, extra_members: Array<{ __typename?: 'thread_extra_member', id: string, threadId: string, memberId: string }> } | null };
 
-export type OrgFragment = { __typename?: 'org', id: string, name: string, archivedAt?: string | null, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, governanceMode: Governance_Mode_Enum, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null };
+export type OrgFragment = { __typename?: 'org', id: string, name: string, archivedAt?: string | null, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, governanceMode: Governance_Mode_Enum, defaultGraphView: CirclesGraphViews, defaultGraphFolded: boolean, icon?: string | null, homeNote?: string | null };
 
-export type OrgDataFragment = { __typename?: 'org', id: string, name: string, archivedAt?: string | null, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, governanceMode: Governance_Mode_Enum, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null, org_subscription?: { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum } | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archivedAt?: string | null }>, circleMembers: Array<{ __typename?: 'circle_member', id: string, orgId: string, circleId: string, memberId: string, createdAt: string, archivedAt?: string | null }>, circleLinks: Array<{ __typename?: 'circle_link', id: string, orgId: string, parentId: string, circleId: string, createdAt: string, archivedAt?: string | null }>, roles: Array<{ __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null }>, members: Array<{ __typename?: 'member', id: string, orgId: string, archivedAt?: string | null, name: string, description: string, pictureFileId?: string | null, picture?: string | null, userId?: string | null, inviteEmail?: string | null, inviteDate?: string | null, role?: Member_Role_Enum | null }> };
+export type OrgDataFragment = { __typename?: 'org', id: string, name: string, archivedAt?: string | null, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, governanceMode: Governance_Mode_Enum, defaultGraphView: CirclesGraphViews, defaultGraphFolded: boolean, icon?: string | null, homeNote?: string | null, org_subscription?: { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum } | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archivedAt?: string | null }>, circleMembers: Array<{ __typename?: 'circle_member', id: string, orgId: string, circleId: string, memberId: string, createdAt: string, archivedAt?: string | null }>, circleLinks: Array<{ __typename?: 'circle_link', id: string, orgId: string, parentId: string, circleId: string, createdAt: string, archivedAt?: string | null }>, roles: Array<{ __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null }>, members: Array<{ __typename?: 'member', id: string, orgId: string, archivedAt?: string | null, name: string, description: string, pictureFileId?: string | null, picture?: string | null, userId?: string | null, inviteEmail?: string | null, inviteDate?: string | null, role?: Member_Role_Enum | null }> };
 
 export type OrgSubscriptionFragment = { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum };
 
@@ -23934,28 +23944,28 @@ export type GetOrgQueryVariables = Exact<{
 }>;
 
 
-export type GetOrgQuery = { __typename?: 'query_root', org_by_pk?: { __typename?: 'org', id: string, name: string, archivedAt?: string | null, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, governanceMode: Governance_Mode_Enum, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null } | null };
+export type GetOrgQuery = { __typename?: 'query_root', org_by_pk?: { __typename?: 'org', id: string, name: string, archivedAt?: string | null, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, governanceMode: Governance_Mode_Enum, defaultGraphView: CirclesGraphViews, defaultGraphFolded: boolean, icon?: string | null, homeNote?: string | null } | null };
 
 export type OrgsSubscriptionVariables = Exact<{
   userId: Scalars['uuid']['input'];
 }>;
 
 
-export type OrgsSubscription = { __typename?: 'subscription_root', member: Array<{ __typename?: 'member', org: { __typename?: 'org', id: string, name: string, archivedAt?: string | null, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, governanceMode: Governance_Mode_Enum, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archivedAt?: string | null, role: { __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null } }> } }> };
+export type OrgsSubscription = { __typename?: 'subscription_root', member: Array<{ __typename?: 'member', org: { __typename?: 'org', id: string, name: string, archivedAt?: string | null, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, governanceMode: Governance_Mode_Enum, defaultGraphView: CirclesGraphViews, defaultGraphFolded: boolean, icon?: string | null, homeNote?: string | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archivedAt?: string | null, role: { __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null } }> } }> };
 
 export type OrgSubscriptionVariables = Exact<{
   id: Scalars['uuid']['input'];
 }>;
 
 
-export type OrgSubscription = { __typename?: 'subscription_root', org_by_pk?: { __typename?: 'org', id: string, name: string, archivedAt?: string | null, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, governanceMode: Governance_Mode_Enum, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null, org_subscription?: { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum } | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archivedAt?: string | null }>, circleMembers: Array<{ __typename?: 'circle_member', id: string, orgId: string, circleId: string, memberId: string, createdAt: string, archivedAt?: string | null }>, circleLinks: Array<{ __typename?: 'circle_link', id: string, orgId: string, parentId: string, circleId: string, createdAt: string, archivedAt?: string | null }>, roles: Array<{ __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null }>, members: Array<{ __typename?: 'member', id: string, orgId: string, archivedAt?: string | null, name: string, description: string, pictureFileId?: string | null, picture?: string | null, userId?: string | null, inviteEmail?: string | null, inviteDate?: string | null, role?: Member_Role_Enum | null }> } | null };
+export type OrgSubscription = { __typename?: 'subscription_root', org_by_pk?: { __typename?: 'org', id: string, name: string, archivedAt?: string | null, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, governanceMode: Governance_Mode_Enum, defaultGraphView: CirclesGraphViews, defaultGraphFolded: boolean, icon?: string | null, homeNote?: string | null, org_subscription?: { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum } | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archivedAt?: string | null }>, circleMembers: Array<{ __typename?: 'circle_member', id: string, orgId: string, circleId: string, memberId: string, createdAt: string, archivedAt?: string | null }>, circleLinks: Array<{ __typename?: 'circle_link', id: string, orgId: string, parentId: string, circleId: string, createdAt: string, archivedAt?: string | null }>, roles: Array<{ __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null }>, members: Array<{ __typename?: 'member', id: string, orgId: string, archivedAt?: string | null, name: string, description: string, pictureFileId?: string | null, picture?: string | null, userId?: string | null, inviteEmail?: string | null, inviteDate?: string | null, role?: Member_Role_Enum | null }> } | null };
 
 export type OrgBySlugSubscriptionVariables = Exact<{
   slug: Scalars['String']['input'];
 }>;
 
 
-export type OrgBySlugSubscription = { __typename?: 'subscription_root', org: Array<{ __typename?: 'org', id: string, name: string, archivedAt?: string | null, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, governanceMode: Governance_Mode_Enum, defaultGraphView: CirclesGraphViews, icon?: string | null, homeNote?: string | null, org_subscription?: { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum } | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archivedAt?: string | null }>, circleMembers: Array<{ __typename?: 'circle_member', id: string, orgId: string, circleId: string, memberId: string, createdAt: string, archivedAt?: string | null }>, circleLinks: Array<{ __typename?: 'circle_link', id: string, orgId: string, parentId: string, circleId: string, createdAt: string, archivedAt?: string | null }>, roles: Array<{ __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null }>, members: Array<{ __typename?: 'member', id: string, orgId: string, archivedAt?: string | null, name: string, description: string, pictureFileId?: string | null, picture?: string | null, userId?: string | null, inviteEmail?: string | null, inviteDate?: string | null, role?: Member_Role_Enum | null }> }> };
+export type OrgBySlugSubscription = { __typename?: 'subscription_root', org: Array<{ __typename?: 'org', id: string, name: string, archivedAt?: string | null, createdAt: string, slug?: string | null, shareOrg: boolean, shareMembers: boolean, governanceMode: Governance_Mode_Enum, defaultGraphView: CirclesGraphViews, defaultGraphFolded: boolean, icon?: string | null, homeNote?: string | null, org_subscription?: { __typename?: 'org_subscription', id: string, stripeSubscriptionId?: string | null, stripeCustomerId: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum } | null, circles: Array<{ __typename?: 'circle', id: string, orgId: string, roleId: string, parentId?: string | null, archivedAt?: string | null }>, circleMembers: Array<{ __typename?: 'circle_member', id: string, orgId: string, circleId: string, memberId: string, createdAt: string, archivedAt?: string | null }>, circleLinks: Array<{ __typename?: 'circle_link', id: string, orgId: string, parentId: string, circleId: string, createdAt: string, archivedAt?: string | null }>, roles: Array<{ __typename?: 'role', id: string, base: boolean, name: string, singleMember: boolean, parentLink: boolean, colorHue?: number | null }>, members: Array<{ __typename?: 'member', id: string, orgId: string, archivedAt?: string | null, name: string, description: string, pictureFileId?: string | null, picture?: string | null, userId?: string | null, inviteEmail?: string | null, inviteDate?: string | null, role?: Member_Role_Enum | null }> }> };
 
 export type UpdateOrgMutationVariables = Exact<{
   id: Scalars['uuid']['input'];
@@ -24629,6 +24639,7 @@ export const OrgFragmentDoc = gql`
   shareMembers
   governanceMode
   defaultGraphView
+  defaultGraphFolded
   icon
   homeNote
 }

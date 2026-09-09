@@ -11,7 +11,8 @@ import {
   UseModalProps,
   VStack,
 } from '@chakra-ui/react'
-import React from 'react'
+import { GraphContext, GraphEvents } from '@rolebase/graph'
+import React, { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   CirclePick,
@@ -23,7 +24,7 @@ import {
 
 type IconComponent = React.ComponentType<{ size?: number | string }>
 
-type ShortcutKey =
+export type ShortcutKey =
   | 'zoom'
   | 'pan'
   | 'open'
@@ -32,18 +33,40 @@ type ShortcutKey =
   | 'moveMember'
   | 'addMember'
 
-const shortcuts: { key: ShortcutKey; Icon: IconComponent }[] = [
+// The graph event a shortcut relies on. Pan and zoom depend on the panzoom
+// behaviour instead, so they have no handler.
+const shortcuts: {
+  key: ShortcutKey
+  Icon: IconComponent
+  event?: keyof GraphEvents
+}[] = [
   { key: 'zoom', Icon: SearchIcon },
   { key: 'pan', Icon: PanIcon },
-  { key: 'open', Icon: CirclePick },
-  { key: 'moveRole', Icon: MoveIcon },
-  { key: 'copyRole', Icon: CopyIcon },
-  { key: 'moveMember', Icon: MoveIcon },
-  { key: 'addMember', Icon: CopyIcon },
+  { key: 'open', Icon: CirclePick, event: 'onCircleClick' },
+  { key: 'moveRole', Icon: MoveIcon, event: 'onCircleMove' },
+  { key: 'copyRole', Icon: CopyIcon, event: 'onCircleCopy' },
+  { key: 'moveMember', Icon: MoveIcon, event: 'onMemberMove' },
+  { key: 'addMember', Icon: CopyIcon, event: 'onMemberAdd' },
 ]
 
-export default function GraphShortcutsModal(modalProps: UseModalProps) {
+interface Props extends UseModalProps {
+  // Narrow the list further, for a graph whose handlers are wired but lead
+  // nowhere the reader can follow (e.g. a click that only zooms, with no panel)
+  only?: ShortcutKey[]
+}
+
+export default function GraphShortcutsModal({ only, ...modalProps }: Props) {
   const { t } = useTranslation()
+
+  // Only list what this graph actually answers to: a view can disable an
+  // interaction, and a read-only chart wires none of them.
+  const graph = useContext(GraphContext)?.graph
+  const visible = shortcuts.filter(({ key, event }) => {
+    if (only && !only.includes(key)) return false
+    if (!graph) return true
+    if (!event) return !graph.zoomDisabled
+    return !!graph.params.events[event]
+  })
 
   return (
     <Modal isCentered size="lg" {...modalProps}>
@@ -53,7 +76,7 @@ export default function GraphShortcutsModal(modalProps: UseModalProps) {
         <ModalCloseButton />
         <ModalBody pb={6}>
           <VStack align="stretch" spacing={4}>
-            {shortcuts.map(({ key, Icon }) => (
+            {visible.map(({ key, Icon }) => (
               <Flex key={key} align="center">
                 <Flex
                   align="center"

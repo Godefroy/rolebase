@@ -104,7 +104,7 @@ export default function CircleContent({
   const { isDraft } = useOrgContext()
   const circleContext = useContext(CircleContext)
   const navigateOrg = useNavigateOrg()
-  const view = useGraphViewParam()
+  const graphView = useGraphViewParam()
 
   // Tabs
   const { params, changeParams } = useUpdatableQueryParams<Params>()
@@ -192,7 +192,9 @@ export default function CircleContent({
                     onClick={() =>
                       navigateOrg(
                         `export-circle?circleId=${circle.id}${
-                          view ? `&view=${view}` : ''
+                          graphView.view ? `&view=${graphView.view}` : ''
+                        }${
+                          graphView.folded ? `&folded=${graphView.folded}` : ''
                         }`
                       )
                     }

@@ -77,7 +77,7 @@ function buildOrg(
 describe('computeLayout', () => {
   it('packs all circles and members into nodes', () => {
     const org = buildOrg(3, 3, 2)
-    const { root, nodes } = computeLayout(org, CirclesGraphViews.AllCircles)
+    const { root, nodes } = computeLayout(org, CirclesGraphViews.Circles)
 
     const circleNodes = nodes.filter((n) => n.data.type === NodeType.Circle)
     const memberNodes = nodes.filter((n) => n.data.type === NodeType.Member)
@@ -94,7 +94,7 @@ describe('computeLayout', () => {
 
 describe('computeVisibleNodes', () => {
   const org = buildOrg(4, 4, 3)
-  const layout = computeLayout(org, CirclesGraphViews.AllCircles)
+  const layout = computeLayout(org, CirclesGraphViews.Circles)
   const totalCircles = org.circles.length
 
   // Transform fitting the root circle in a 1000x1000 viewport
@@ -234,7 +234,7 @@ describe('computeVisibleNodes', () => {
 
 describe('computeTreeLayout', () => {
   const org = buildOrg(3, 3, 2)
-  const layout = computeLayout(org, CirclesGraphViews.HierarchyAll)
+  const layout = computeLayout(org, CirclesGraphViews.Tree)
   const cards = layout.nodes.filter((n) => n.data.type === NodeType.Circle)
   const members = layout.nodes.filter((n) => n.data.type === NodeType.Member)
 
@@ -261,7 +261,7 @@ describe('computeTreeLayout', () => {
     // Two siblings with different member counts, so their cards differ in
     // height: they must line up on their top, not on their center
     const unevenOrg = buildUnevenOrg()
-    const uneven = computeLayout(unevenOrg, CirclesGraphViews.HierarchyAll)
+    const uneven = computeLayout(unevenOrg, CirclesGraphViews.Tree)
     const siblings = uneven.nodes.filter(
       (n) => n.data.type === NodeType.Circle && n.depth === 2
     )
@@ -329,11 +329,7 @@ describe('computeTreeLayout', () => {
 
   it('folds the tree on the selected circle', () => {
     const child = org.circles.find((c) => c.parentId === 'c0')!
-    const folded = computeLayout(
-      org,
-      CirclesGraphViews.HierarchySimple,
-      child.id
-    )
+    const folded = computeLayout(org, CirclesGraphViews.Tree, true, child.id)
     const foldedIds = folded.nodes
       .filter((n) => n.data.type === NodeType.Circle)
       .map((n) => n.data.id)
@@ -409,7 +405,7 @@ function buildUnevenOrg(): OrgData {
 
 describe('computeVisibleNodes on a tree', () => {
   const org = buildOrg(3, 3, 2)
-  const layout = computeLayout(org, CirclesGraphViews.HierarchyAll)
+  const layout = computeLayout(org, CirclesGraphViews.Tree)
   const fitK =
     1000 /
     Math.max(
@@ -483,7 +479,7 @@ describe('computeVisibleNodes on a tree', () => {
 
 describe('tree links culling', () => {
   const org = buildOrg(3, 3, 2)
-  const layout = computeLayout(org, CirclesGraphViews.HierarchyAll)
+  const layout = computeLayout(org, CirclesGraphViews.Tree)
 
   it('builds one edge per card below the root', () => {
     const cards = layout.nodes.filter((n) => n.data.type === NodeType.Circle)
@@ -567,7 +563,7 @@ describe('tree cards', () => {
 
   it('grows the card, and pushes its member rows down, with the title', () => {
     const org = buildOrg(2, 1, 2)
-    const layout = computeLayout(org, CirclesGraphViews.HierarchyAll)
+    const layout = computeLayout(org, CirclesGraphViews.Tree)
     const card = layout.nodes.find((n) => n.data.type === NodeType.Circle)!
     const firstRow = layout.nodes.find(
       (n) => n.data.type === NodeType.Member && n.parent?.parent === card
@@ -620,10 +616,7 @@ function buildParentLinkOrg(): OrgData {
 }
 
 describe('parent-link cards', () => {
-  const layout = computeLayout(
-    buildParentLinkOrg(),
-    CirclesGraphViews.HierarchyAll
-  )
+  const layout = computeLayout(buildParentLinkOrg(), CirclesGraphViews.Tree)
   const card = (id: string) => layout.nodes.find((n) => n.data.id === id)!
 
   it('stacks them under the card they represent, not beside its children', () => {
@@ -661,10 +654,7 @@ describe('parent-link cards', () => {
 })
 
 describe('getDropTargetNode', () => {
-  const layout = computeLayout(
-    buildParentLinkOrg(),
-    CirclesGraphViews.HierarchyAll
-  )
+  const layout = computeLayout(buildParentLinkOrg(), CirclesGraphViews.Tree)
   const card = (id: string) => layout.nodes.find((n) => n.data.id === id)!
 
   it('sends a role dropped on a parent-link role to the circle it represents', () => {
@@ -678,10 +668,7 @@ describe('getDropTargetNode', () => {
   })
 
   it('assigns a member dropped on a parent-link role to it', () => {
-    const memberOrg = computeLayout(
-      buildOrg(1, 1, 1),
-      CirclesGraphViews.HierarchyAll
-    )
+    const memberOrg = computeLayout(buildOrg(1, 1, 1), CirclesGraphViews.Tree)
     const member = memberOrg.nodes.find((n) => n.data.type === NodeType.Member)!
     expect(getDropTargetNode(card('p0.link'), member)).toBe(card('p0.link'))
   })
@@ -752,10 +739,7 @@ function buildUnevenTree(): OrgData {
 }
 
 describe('tree compaction', () => {
-  const layout = computeLayout(
-    buildUnevenTree(),
-    CirclesGraphViews.HierarchyAll
-  )
+  const layout = computeLayout(buildUnevenTree(), CirclesGraphViews.Tree)
   const cards = layout.nodes.filter((n) => n.data.type === NodeType.Circle)
 
   it('never overlaps two cards', () => {
@@ -787,10 +771,11 @@ describe('hideMembers', () => {
   const org = buildOrg(2, 1, 3)
 
   it('leaves the members out and shrinks the cards that listed them', () => {
-    const withMembers = computeLayout(org, CirclesGraphViews.HierarchyAll)
+    const withMembers = computeLayout(org, CirclesGraphViews.Tree)
     const without = computeLayout(
       org,
-      CirclesGraphViews.HierarchyAll,
+      CirclesGraphViews.Tree,
+      false,
       undefined,
       {
         hideMembers: true,
@@ -822,14 +807,13 @@ describe('hideMembers', () => {
   })
 
   it('shrinks the packed circles too', () => {
-    const withMembers = computeLayout(org, CirclesGraphViews.AllCircles)
+    const withMembers = computeLayout(org, CirclesGraphViews.Circles)
     const without = computeLayout(
       org,
-      CirclesGraphViews.AllCircles,
+      CirclesGraphViews.Circles,
+      false,
       undefined,
-      {
-        hideMembers: true,
-      }
+      { hideMembers: true }
     )
 
     expect(without.nodes.some((n) => n.data.type === NodeType.Member)).toBe(

@@ -7,6 +7,7 @@ import settings from '../settings'
 import {
   Bounds,
   Data,
+  GraphEvents,
   GraphLayoutKind,
   GraphParams,
   NodeData,
@@ -179,6 +180,13 @@ export abstract class Graph<
         }
       })
     this.d3Root.call(this.zoomBehaviour)
+  }
+
+  // Replace the event handlers. Subclasses narrow them: CirclesGraph drops the
+  // ones its view disables, so the handlers the graph really answers to stay
+  // the single source of truth (the shortcuts modal reads them).
+  setEvents(events: GraphEvents) {
+    this.params.events = events
   }
 
   destroy() {

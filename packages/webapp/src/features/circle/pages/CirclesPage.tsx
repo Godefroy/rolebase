@@ -6,11 +6,15 @@ import useUpdatableQueryParams from '@/common/hooks/useUpdatableQueryParams'
 import CirclesGraph from '@/graph/CirclesGraph'
 import { GraphProvider } from '@/graph/contexts/GraphContext'
 import useGraphEvents from '@/graph/hooks/useGraphEvents'
-import { CirclesGraphViews } from '@/graph/types'
 import { SidebarContext } from '@/layout/contexts/SidebarContext'
 import MemberContent from '@/member/components/MemberContent'
 import { useOrgContext } from '@/org/contexts/OrgContext'
 import { Box, useBreakpointValue, useColorMode } from '@chakra-ui/react'
+import {
+  GraphView,
+  defaultGraphView,
+  parseGraphView,
+} from '@rolebase/shared/model/graph'
 import React, {
   useCallback,
   useContext,
@@ -22,7 +26,6 @@ import React, {
 import { useTranslation } from 'react-i18next'
 import CircleContent from '../components/CircleContent'
 import CirclesGraphOptions from '../components/CirclesGraphOptions'
-import { viewsList } from '../components/GraphViewsSelect'
 import { CircleProvider } from '../contexts/CIrcleContext'
 
 type CirclesPageParams = {
@@ -30,6 +33,7 @@ type CirclesPageParams = {
   memberId: string
   parentId: string
   view: string
+  folded: string
 }
 
 enum Panels {
@@ -69,14 +73,14 @@ export default function CirclesPage() {
 
   // Graph view, kept in the URL like the selected circle so it is shareable
   // and survives navigation. Falls back to the organization default.
-  const viewParam = queryParams.view as CirclesGraphViews | undefined
-  const view =
-    viewParam && viewsList.includes(viewParam)
-      ? viewParam
-      : org?.defaultGraphView || CirclesGraphViews.AllCircles
+  const graphView: GraphView =
+    parseGraphView(queryParams.view, queryParams.folded === '1') ||
+    parseGraphView(org?.defaultGraphView, org?.defaultGraphFolded) ||
+    defaultGraphView
 
   const handleViewChange = useCallback(
-    (newView: CirclesGraphViews) => changeParams({ view: newView }),
+    ({ view, folded }: GraphView) =>
+      changeParams({ view, folded: folded ? '1' : undefined }),
     [changeParams]
   )
 
@@ -157,8 +161,9 @@ export default function CirclesPage() {
       >
         {org && orgData && boxSize && (
           <CirclesGraph
-            key={view + colorMode}
-            view={view}
+            key={`${graphView.view}${graphView.folded}${colorMode}`}
+            view={graphView.view}
+            folded={graphView.folded}
             org={orgData}
             events={events}
             width={boxSize.width}
@@ -189,8 +194,8 @@ export default function CirclesPage() {
       )}
 
       <CirclesGraphOptions
-        view={view}
-        onViewChange={handleViewChange}
+        value={graphView}
+        onChange={handleViewChange}
         position="absolute"
         top={0}
         left={0}
