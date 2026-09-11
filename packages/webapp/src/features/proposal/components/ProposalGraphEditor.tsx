@@ -6,6 +6,7 @@ import {
 } from '@/circle/contexts/CircleMemberContext'
 import Loading from '@/common/atoms/Loading'
 import { useElementSize } from '@/common/hooks/useElementSize'
+import useIsSidePanel from '@/common/hooks/useIsSidePanel'
 import CirclesGraph, { CirclesGraphInstance } from '@/graph/CirclesGraph'
 import GraphShortcutsButton from '@/graph/components/GraphShortcutsButton'
 import { GraphProvider } from '@/graph/contexts/GraphContext'
@@ -19,7 +20,6 @@ import {
   Flex,
   Heading,
   Text,
-  useBreakpointValue,
   useColorMode,
 } from '@chakra-ui/react'
 import useCurrentMember from '@/member/hooks/useCurrentMember'
@@ -54,7 +54,7 @@ export default function ProposalGraphEditor({
   // On desktop (lg+) the role panel and changes list sit in a fixed side panel
   // to the right of the graph, each with its own scroll. Below lg they flow
   // below the graph and the whole modal scrolls as one (like CirclesPage).
-  const isSidePanel = useBreakpointValue({ base: false, lg: true }) ?? false
+  const isSidePanel = useIsSidePanel()
 
   // The current member acts as a leader of the thread's circle while editing,
   // so they can prepare changes on it (Agile governance).

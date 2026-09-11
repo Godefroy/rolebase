@@ -1,6 +1,7 @@
 import ModalPanel, { modalPanelWidth } from '@/common/atoms/ModalPanel'
 import { Title } from '@/common/atoms/Title'
 import { useElementSize } from '@/common/hooks/useElementSize'
+import useIsSidePanel from '@/common/hooks/useIsSidePanel'
 import useOverflowHidden from '@/common/hooks/useOverflowHidden'
 import useUpdatableQueryParams from '@/common/hooks/useUpdatableQueryParams'
 import CirclesGraph from '@/graph/CirclesGraph'
@@ -10,7 +11,7 @@ import useGraphEvents from '@/graph/hooks/useGraphEvents'
 import { SidebarContext } from '@/layout/contexts/SidebarContext'
 import MemberContent from '@/member/components/MemberContent'
 import { useOrgContext } from '@/org/contexts/OrgContext'
-import { Box, useBreakpointValue, useColorMode } from '@chakra-ui/react'
+import { Box, useColorMode } from '@chakra-ui/react'
 import {
   GraphView,
   defaultGraphView,
@@ -50,7 +51,7 @@ export default function CirclesPage() {
   // On desktop (lg+) the panel is a fixed side panel and the page does not
   // scroll. Below lg the graph and panel stack vertically and the whole page
   // scrolls as one, the graph taking the first part of the screen.
-  const isSidePanel = useBreakpointValue({ base: false, lg: true }) ?? false
+  const isSidePanel = useIsSidePanel()
   useOverflowHidden(isSidePanel)
 
   const { params: queryParams, changeParams } =
@@ -103,10 +104,7 @@ export default function CirclesPage() {
 
   // Zoom offset to keep the focused circle visible next to the side panel
   const focusCropRight =
-    useBreakpointValue({
-      base: 0,
-      lg: panel === Panels.None ? 0 : modalPanelWidth,
-    }) || 0
+    isSidePanel && panel !== Panels.None ? modalPanelWidth : 0
   const focusCrop = useMemo(
     () => ({
       top: 0,

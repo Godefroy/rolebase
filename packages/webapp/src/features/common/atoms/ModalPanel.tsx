@@ -1,9 +1,9 @@
+import useIsSidePanel from '@/common/hooks/useIsSidePanel'
 import {
   Box,
   Modal,
   ModalContextProvider,
   ModalProps,
-  useBreakpointValue,
 } from '@chakra-ui/react'
 import React, { useMemo } from 'react'
 
@@ -17,7 +17,7 @@ export default function ModalPanel({
 }: ModalProps) {
   // On desktop (lg+) the panel is a fixed side panel with its own scroll.
   // Below lg it flows inline below the graph so the whole page scrolls as one.
-  const isSidePanel = useBreakpointValue({ base: false, lg: true }) ?? false
+  const isSidePanel = useIsSidePanel()
 
   // Provide a minimal modal context so close buttons keep working inline,
   // where there is no Chakra Modal wrapper.
