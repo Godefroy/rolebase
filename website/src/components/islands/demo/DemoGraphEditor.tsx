@@ -7,6 +7,7 @@ import { CircleProvider } from '@/circle/contexts/CIrcleContext'
 import { useElementSize } from '@/common/hooks/useElementSize'
 import CirclesGraph from '@/graph/CirclesGraph'
 import GraphShortcutsButton from '@/graph/components/GraphShortcutsButton'
+import GraphShortcutsContent from '@/graph/components/GraphShortcutsContent'
 import useGraphContextMenu from '@/graph/hooks/useGraphContextMenu'
 import MemberContent from '@/member/components/MemberContent'
 import { useOrgContext, useOrgEditActions } from '@/org/contexts/OrgContext'
@@ -17,10 +18,12 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { DemoUiText } from '../../../demo/orgDemoData'
 
-interface Selection {
-  circleId?: string
-  memberId?: string
-}
+// What the panel next to the org chart shows: a selection made in the chart,
+// or the org chart shortcuts (the app opens them as a panel too).
+type Panel =
+  | { kind: 'circle'; circleId: string }
+  | { kind: 'member'; memberId: string; circleId?: string }
+  | { kind: 'shortcuts' }
 
 interface Props {
   ui?: DemoUiText
@@ -51,20 +54,23 @@ export default function DemoGraphEditor({
 
   const boxRef = useRef<HTMLDivElement>(null)
   const boxSize = useElementSize(boxRef)
-  const [selection, setSelection] = useState<Selection>({})
-  const hasSelection = !!(selection.circleId || selection.memberId)
+  const [panel, setPanel] = useState<Panel | undefined>()
+  // The circle the chart is focused on, when the panel comes from a selection
+  const panelCircleId =
+    panel && 'circleId' in panel ? panel.circleId : undefined
+  const panelMemberId = panel?.kind === 'member' ? panel.memberId : undefined
 
   // When the selected role or member is archived it leaves the org data, so
   // close the panel.
   useEffect(() => {
     if (!ready || !orgData) return
     if (
-      (selection.circleId && !orgData.getCircle(selection.circleId)) ||
-      (selection.memberId && !orgData.getMember(selection.memberId))
+      (panelCircleId && !orgData.getCircle(panelCircleId)) ||
+      (panelMemberId && !orgData.getMember(panelMemberId))
     ) {
-      setSelection({})
+      setPanel(undefined)
     }
-  }, [orgData, ready, selection.circleId, selection.memberId])
+  }, [orgData, ready, panelCircleId, panelMemberId])
 
   // Right click menu: the role actions only (no org-wide navigation here)
   const { events: contextMenuEvents, contextMenu } = useGraphContextMenu({
@@ -93,9 +99,10 @@ export default function DemoGraphEditor({
     }
     return {
       ...contextMenuEvents,
-      onCircleClick: (circleId) => setSelection({ circleId }),
-      onMemberClick: (circleId, memberId) => setSelection({ circleId, memberId }),
-      onClickOutside: () => setSelection({}),
+      onCircleClick: (circleId) => setPanel({ kind: 'circle', circleId }),
+      onMemberClick: (circleId, memberId) =>
+        setPanel({ kind: 'member', circleId, memberId }),
+      onClickOutside: () => setPanel(undefined),
       onCircleMove: async (circleId, targetCircleId) => {
         await actions.moveCircle(circleId, targetCircleId)
         return true
@@ -117,13 +124,20 @@ export default function DemoGraphEditor({
 
   const circleMemberValue = useMemo<CircleMemberContextValue>(
     () => ({
-      circleId: selection.circleId,
-      memberId: selection.memberId,
+      circleId: panelCircleId,
+      memberId: panelMemberId,
       parentId: undefined,
       canFocus: false,
-      goTo: (circleId, memberId) => setSelection({ circleId, memberId }),
+      goTo: (circleId, memberId) =>
+        setPanel(
+          memberId
+            ? { kind: 'member', circleId, memberId }
+            : circleId
+              ? { kind: 'circle', circleId }
+              : undefined
+        ),
     }),
-    [selection]
+    [panelCircleId, panelMemberId]
   )
 
   return (
@@ -163,18 +177,24 @@ export default function DemoGraphEditor({
                 width={boxSize.width}
                 height={boxSize.height}
                 showAllNodes={isTree}
-                selectedCircleId={selection.circleId}
+                selectedCircleId={panelCircleId}
               />
             </Box>
           )}
 
           {contextMenu}
 
-          {/* Keyboard/drag shortcuts, like the org chart options in the app */}
-          <GraphShortcutsButton position="absolute" top={3} right={3} zIndex={1} />
+          {/* Keyboard/drag shortcuts, opened in the panel like in the app */}
+          <GraphShortcutsButton
+            position="absolute"
+            top={3}
+            right={3}
+            zIndex={1}
+            onClick={() => setPanel({ kind: 'shortcuts' })}
+          />
 
-          {/* Hint overlay, only on the circles view while nothing is selected */}
-          {!hasSelection && view === CirclesGraphViews.Circles && (
+          {/* Hint overlay, only on the circles view while no panel is open */}
+          {!panel && view === CirclesGraphViews.Circles && (
             <Flex
               position="absolute"
               bottom="16px"
@@ -200,9 +220,10 @@ export default function DemoGraphEditor({
           )}
         </Box>
 
-        {/* Role / member panel, only when something is selected. Desktop: to the
-            right with its own scroll. Mobile: below, full height (no scroll). */}
-        {hasSelection && (
+        {/* Panel, only when a role, a member or the shortcuts are open.
+            Desktop: to the right with its own scroll. Mobile: below, full
+            height (no scroll). */}
+        {panel && (
           <Flex
             w={{ base: '100%', md: '340px' }}
             maxW={{ base: '100%', md: '45%' }}
@@ -212,14 +233,19 @@ export default function DemoGraphEditor({
             minH={0}
             overflowY={{ base: 'visible', md: 'auto' }}
           >
-            {selection.memberId ? (
+            {panel.kind === 'shortcuts' ? (
+              <GraphShortcutsContent
+                flowHeight
+                onClose={() => setPanel(undefined)}
+              />
+            ) : panel.kind === 'member' ? (
               <MemberContent
-                id={selection.memberId}
-                onClose={() => setSelection({})}
+                id={panel.memberId}
+                onClose={() => setPanel(undefined)}
               />
             ) : (
-              <CircleProvider circleId={selection.circleId!}>
-                <CircleContent onlyRole onClose={() => setSelection({})} />
+              <CircleProvider circleId={panel.circleId}>
+                <CircleContent onlyRole onClose={() => setPanel(undefined)} />
               </CircleProvider>
             )}
           </Flex>

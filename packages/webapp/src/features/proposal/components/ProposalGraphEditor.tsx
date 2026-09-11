@@ -8,7 +8,7 @@ import Loading from '@/common/atoms/Loading'
 import { useElementSize } from '@/common/hooks/useElementSize'
 import useIsSidePanel from '@/common/hooks/useIsSidePanel'
 import CirclesGraph, { CirclesGraphInstance } from '@/graph/CirclesGraph'
-import GraphShortcutsButton from '@/graph/components/GraphShortcutsButton'
+import GraphShortcutsModalButton from '@/graph/components/GraphShortcutsModalButton'
 import { GraphProvider } from '@/graph/contexts/GraphContext'
 import useGraphContextMenu from '@/graph/hooks/useGraphContextMenu'
 import { CirclesGraphViews, GraphEvents } from '@/graph/types'
@@ -226,7 +226,7 @@ export default function ProposalGraphEditor({
                   selectedCircleId={selectedCircleId}
                 />
               )}
-              <GraphShortcutsButton position="absolute" top={2} right={2} />
+              <GraphShortcutsModalButton position="absolute" top={2} right={2} />
               {contextMenu}
             </Box>
 

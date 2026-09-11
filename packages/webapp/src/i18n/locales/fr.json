@@ -81,7 +81,7 @@
   "BaseRoleCreateModal": {
     "heading": "Créer un rôle de base"
   },
-  "BaseRolesModal": {
+  "BaseRolesPanel": {
     "heading": "Rôles de base",
     "info": "Les rôles de base sont des rôles prédéfinis qui peuvent être utilisés à plusieurs endroits dans l'organigramme.",
     "empty": "Aucun rôle de base",
@@ -262,7 +262,7 @@
   "CirclePickerModal": {
     "selectBtn": "Sélectionner"
   },
-  "CirclesShareModal": {
+  "CirclesSharePanel": {
     "heading": "Partager l'organigramme",
     "enable": "Activer le partage",
     "enableHelp": "Le partage publie une page publique de votre organigramme, consultable par toute personne disposant du lien et intégrable dans votre site, sans compte Rolebase.",
@@ -283,11 +283,6 @@
   "CircleThreads": {
     "create": "Créer une discussion",
     "empty": "Aucune discussion pour le moment"
-  },
-  "CirclesKeyboardShortcutsModal": {
-    "heading": "Raccourcis clavier",
-    "CmdClick": "Déplacer un rôle ou un membre avec la souris",
-    "CmdShiftClick": "Copier un rôle ou un membre avec la souris"
   },
   "CirclesGraphOptions": {
     "settings": "Réglages",
@@ -1403,7 +1398,7 @@
     "viewCircle": "Sélectionnez un rôle pour le consulter.",
     "changes": "Modifications"
   },
-  "GraphShortcutsModal": {
+  "GraphShortcuts": {
     "button": "Raccourcis",
     "heading": "Raccourcis de l'organigramme",
     "zoom_label": "Zoom",
@@ -1579,7 +1574,7 @@
     "heading": "Discussions",
     "create": "Nouvelle discussion"
   },
-  "VacantRolesModal": {
+  "VacantRolesPanel": {
     "heading": "Rôles vacants",
     "empty": "Aucun rôle vacant 🎉"
   },

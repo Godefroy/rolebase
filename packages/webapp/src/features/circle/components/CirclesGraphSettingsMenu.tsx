@@ -1,14 +1,11 @@
 import AnchoredMenu from '@/common/atoms/actionsMenu/AnchoredMenu'
 import { menuListProps } from '@/common/atoms/actionsMenu/menuListProps'
 import useUpdatableQueryParams from '@/common/hooks/useUpdatableQueryParams'
-import GraphShortcutsModal from '@/graph/components/GraphShortcutsModal'
 import { graphButtonsProps } from '@/graph/components/graphButtonsProps'
 import useOrgAdmin from '@/member/hooks/useOrgAdmin'
 import useOrgMember from '@/member/hooks/useOrgMember'
 import useOrgOwner from '@/member/hooks/useOrgOwner'
 import { useOrgContext } from '@/org/contexts/OrgContext'
-import BaseRolesModal from '@/role/modals/BaseRolesModal'
-import VacantRolesModal from '@/role/modals/VacantRolesModal'
 import {
   IconButton,
   Menu,
@@ -18,7 +15,7 @@ import {
   Portal,
 } from '@chakra-ui/react'
 import { PointerPosition } from '@rolebase/graph'
-import React, { useRef, useState } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   HelpIcon,
@@ -28,27 +25,24 @@ import {
   ShareIcon,
   VacantCircle,
 } from 'src/icons'
-import CirclesShareModal from '../modals/CirclesShareModal'
-
-type ModalKind = 'shortcuts' | 'baseRoles' | 'vacantRoles' | 'share'
+import { CirclesPanel } from '../circlesPanels'
 
 interface Props {
   // Anchor the menu at a viewport point (right click on the org chart
   // background) instead of rendering the settings button that opens it
   anchor?: PointerPosition
-  // Anchored mode: the menu is done (closed, and no modal left open), the
-  // caller can unmount it
+  // Anchored mode: the menu is closed, the caller can unmount it
   onClose?(): void
 }
 
 // Org chart options, shared by the button above the graph and the context menu
-// of its background. Owns the modals its items open, so they survive the menu
-// closing. Items that need the database are hidden in an in-memory org
-// (proposal draft, website demo).
+// of its background. Each item opens a panel of the org chart page, through the
+// `panel` query param. Items that need the database are hidden in an in-memory
+// org (proposal draft, website demo).
 export default function CirclesGraphSettingsMenu({ anchor, onClose }: Props) {
   const { t } = useTranslation()
   const { changeParams } = useUpdatableQueryParams<{
-    logs: string
+    panel: string
     circleId: string
     memberId: string
     parentId: string
@@ -58,30 +52,10 @@ export default function CirclesGraphSettingsMenu({ anchor, onClose }: Props) {
   const isOwner = useOrgOwner()
   const { hasBackend } = useOrgContext()
 
-  // A single modal at a time. The ref is read while the menu closes, before
-  // the state update is applied.
-  const [modal, setModal] = useState<ModalKind | undefined>()
-  const modalRef = useRef<ModalKind | undefined>()
-  const openModal = (kind: ModalKind) => {
-    modalRef.current = kind
-    setModal(kind)
-  }
-  const handleModalClose = () => {
-    modalRef.current = undefined
-    setModal(undefined)
-    if (anchor) onClose?.()
-  }
-
-  // Anchored mode: closing the menu ends it, unless it opened a modal
-  const handleMenuClose = () => {
-    if (!modalRef.current) onClose?.()
-  }
-
-  // The history is a panel of the org chart page, opened by a query param.
   // Any current selection is cleared so a single panel is open at a time.
-  const handleOpenLogs = () =>
+  const openPanel = (panel: CirclesPanel) =>
     changeParams({
-      logs: '1',
+      panel,
       circleId: undefined,
       memberId: undefined,
       parentId: undefined,
@@ -93,15 +67,15 @@ export default function CirclesGraphSettingsMenu({ anchor, onClose }: Props) {
     <>
       <MenuItem
         icon={<HelpIcon size={20} />}
-        onClick={() => openModal('shortcuts')}
+        onClick={() => openPanel('shortcuts')}
       >
-        {t('GraphShortcutsModal.button')}
+        {t('GraphShortcuts.button')}
       </MenuItem>
 
       {isOwner && hasBackend && (
         <MenuItem
           icon={<RoleIcon size={20} />}
-          onClick={() => openModal('baseRoles')}
+          onClick={() => openPanel('baseRoles')}
         >
           {t('CirclesGraphOptions.baseRoles')}
         </MenuItem>
@@ -109,13 +83,16 @@ export default function CirclesGraphSettingsMenu({ anchor, onClose }: Props) {
 
       <MenuItem
         icon={<VacantCircle size={20} />}
-        onClick={() => openModal('vacantRoles')}
+        onClick={() => openPanel('vacantRoles')}
       >
         {t('CirclesGraphOptions.vacantRoles')}
       </MenuItem>
 
       {hasBackend && (
-        <MenuItem icon={<LogsIcon size={20} />} onClick={handleOpenLogs}>
+        <MenuItem
+          icon={<LogsIcon size={20} />}
+          onClick={() => openPanel('logs')}
+        >
           {t('CirclesGraphOptions.logs')}
         </MenuItem>
       )}
@@ -123,7 +100,7 @@ export default function CirclesGraphSettingsMenu({ anchor, onClose }: Props) {
       {isAdmin && hasBackend && (
         <MenuItem
           icon={<ShareIcon size={20} />}
-          onClick={() => openModal('share')}
+          onClick={() => openPanel('share')}
         >
           {t('CirclesGraphOptions.share')}
         </MenuItem>
@@ -131,42 +108,26 @@ export default function CirclesGraphSettingsMenu({ anchor, onClose }: Props) {
     </>
   )
 
+  if (anchor) {
+    return (
+      <AnchoredMenu anchor={anchor} onClose={() => onClose?.()}>
+        {items}
+      </AnchoredMenu>
+    )
+  }
+
   return (
-    <>
-      {anchor ? (
-        <AnchoredMenu anchor={anchor} onClose={handleMenuClose}>
-          {items}
-        </AnchoredMenu>
-      ) : (
-        <Menu isLazy placement="bottom-end">
-          <MenuButton
-            as={IconButton}
-            aria-label={t('CirclesGraphOptions.settings')}
-            icon={<SettingsIcon size={20} />}
-            {...graphButtonsProps}
-          />
+    <Menu isLazy placement="bottom-end">
+      <MenuButton
+        as={IconButton}
+        aria-label={t('CirclesGraphOptions.settings')}
+        icon={<SettingsIcon size={20} />}
+        {...graphButtonsProps}
+      />
 
-          <Portal>
-            <MenuList {...menuListProps}>{items}</MenuList>
-          </Portal>
-        </Menu>
-      )}
-
-      {modal === 'shortcuts' && (
-        <GraphShortcutsModal isOpen onClose={handleModalClose} />
-      )}
-
-      {modal === 'baseRoles' && (
-        <BaseRolesModal isOpen onClose={handleModalClose} />
-      )}
-
-      {modal === 'vacantRoles' && (
-        <VacantRolesModal isOpen onClose={handleModalClose} />
-      )}
-
-      {modal === 'share' && (
-        <CirclesShareModal isOpen onClose={handleModalClose} />
-      )}
-    </>
+      <Portal>
+        <MenuList {...menuListProps}>{items}</MenuList>
+      </Portal>
+    </Menu>
   )
 }

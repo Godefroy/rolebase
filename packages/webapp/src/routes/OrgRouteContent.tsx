@@ -98,7 +98,7 @@ export default function OrgRouteContent() {
             {/* History is now a panel of the org chart page */}
             <Route
               path="logs"
-              element={<NavigateInOrg to="roles" search="?logs=1" />}
+              element={<NavigateInOrg to="roles" search="?panel=logs" />}
             />
 
             <Route path="*" element={<Page404 />} />

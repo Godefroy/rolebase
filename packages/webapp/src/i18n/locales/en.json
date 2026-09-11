@@ -81,7 +81,7 @@
   "BaseRoleCreateModal": {
     "heading": "Create a basic role"
   },
-  "BaseRolesModal": {
+  "BaseRolesPanel": {
     "heading": "Organization's basic roles",
     "info": "Basic roles are predefined roles that can be used in several places in the org chart.",
     "empty": "No basic roles",
@@ -262,7 +262,7 @@
   "CirclePickerModal": {
     "selectBtn": "Select"
   },
-  "CirclesShareModal": {
+  "CirclesSharePanel": {
     "heading": "Share your org chart",
     "enable": "Enable sharing",
     "enableHelp": "Sharing publishes a public page of your org chart, readable by anyone with the link and embeddable in your website, without a Rolebase account.",
@@ -283,11 +283,6 @@
   "CircleThreads": {
     "create": "Create a discussion",
     "empty": "No discussion yet"
-  },
-  "CirclesKeyboardShortcutsModal": {
-    "heading": "Keyboard shortcuts",
-    "CmdClick": "Move a role or member with the mouse",
-    "CmdShiftClick": "Copy a role or member with the mouse"
   },
   "CirclesGraphOptions": {
     "settings": "Settings",
@@ -1367,7 +1362,7 @@
     "viewCircle": "Select a role to view it.",
     "changes": "Changes"
   },
-  "GraphShortcutsModal": {
+  "GraphShortcuts": {
     "button": "Shortcuts",
     "heading": "Org chart shortcuts",
     "zoom_label": "Zoom",
@@ -1546,7 +1541,7 @@
     "heading": "Discussions",
     "create": "New discussion"
   },
-  "VacantRolesModal": {
+  "VacantRolesPanel": {
     "heading": "Vacant roles",
     "empty": "No vacant roles 🎉"
   },

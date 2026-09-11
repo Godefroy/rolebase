@@ -10,7 +10,6 @@ import useGraphContextMenu from '@/graph/hooks/useGraphContextMenu'
 import useGraphEvents from '@/graph/hooks/useGraphEvents'
 import useGraphView from '@/graph/hooks/useGraphView'
 import { SidebarContext } from '@/layout/contexts/SidebarContext'
-import LogsContent from '@/log/components/LogsContent'
 import MemberContent from '@/member/components/MemberContent'
 import { useOrgContext } from '@/org/contexts/OrgContext'
 import { Box, useColorMode } from '@chakra-ui/react'
@@ -24,8 +23,10 @@ import React, {
   useState,
 } from 'react'
 import { useTranslation } from 'react-i18next'
+import { CirclesPanel, isCirclesPanel } from '../circlesPanels'
 import CircleContent from '../components/CircleContent'
 import CirclesGraphOptions from '../components/CirclesGraphOptions'
+import CirclesPanelContent from '../components/CirclesPanelContent'
 import { CircleProvider } from '../contexts/CIrcleContext'
 
 type CirclesPageParams = {
@@ -34,14 +35,15 @@ type CirclesPageParams = {
   parentId: string
   view: string
   folded: string
-  logs: string
+  panel: string
 }
 
 enum Panels {
   None,
   Circle,
   Member,
-  Logs,
+  // A panel of the settings menu, named by the `panel` query param
+  Settings,
 }
 
 export default function CirclesPage() {
@@ -65,6 +67,7 @@ export default function CirclesPage() {
 
   // Panels
   const [panel, setPanel] = useState<Panels>(Panels.None)
+  const [settingsPanel, setSettingsPanel] = useState<CirclesPanel | undefined>()
   const [circleId, setCircleId] = useState<string | undefined>()
   const [memberId, setMemberId] = useState<string | null | undefined>()
   const [parentId, setParentId] = useState<string | undefined>()
@@ -95,7 +98,7 @@ export default function CirclesPage() {
         circleId: undefined,
         memberId: undefined,
         parentId: undefined,
-        logs: undefined,
+        panel: undefined,
       }),
     [changeParams]
   )
@@ -121,15 +124,19 @@ export default function CirclesPage() {
     setCircleId(queryParams.circleId)
     setParentId(queryParams.parentId)
 
-    // Open panel. A selection made from the history panel (a link in a log
-    // entry) takes over the panel, and closing it goes back to the org chart.
+    // Open panel. A selection made from a settings panel (a link in a log
+    // entry, a vacant role) takes over the panel, and closing it goes back to
+    // the org chart.
+    setSettingsPanel(
+      isCirclesPanel(queryParams.panel) ? queryParams.panel : undefined
+    )
     if (queryParams.memberId) {
       setMemberId(queryParams.memberId)
       setPanel(Panels.Member)
     } else if (queryParams.circleId) {
       setPanel(Panels.Circle)
-    } else if (queryParams.logs) {
-      setPanel(Panels.Logs)
+    } else if (isCirclesPanel(queryParams.panel)) {
+      setPanel(Panels.Settings)
     } else {
       setPanel(Panels.None)
     }
@@ -197,9 +204,13 @@ export default function CirclesPage() {
         </ModalPanel>
       )}
 
-      {panel === Panels.Logs && (
+      {panel === Panels.Settings && settingsPanel && (
         <ModalPanel isOpen onClose={handleClosePanel}>
-          <LogsContent changeTitle flowHeight={!isSidePanel} />
+          <CirclesPanelContent
+            panel={settingsPanel}
+            changeTitle
+            flowHeight={!isSidePanel}
+          />
         </ModalPanel>
       )}
 

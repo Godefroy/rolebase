@@ -38,14 +38,19 @@ export default function useGraphContextMenu({
           memberId,
           position,
         })),
-      onBackgroundContextMenu: (position) =>
-        setTarget((prev) => ({
-          key: (prev?.key ?? 0) + 1,
-          type: 'background',
-          position,
-        })),
+      // The background menu holds the org chart options, which open panels of
+      // the org chart page: they lead nowhere in a role-only chart (proposal
+      // editor, website demo).
+      onBackgroundContextMenu: onlyRole
+        ? undefined
+        : (position) =>
+            setTarget((prev) => ({
+              key: (prev?.key ?? 0) + 1,
+              type: 'background',
+              position,
+            })),
     }),
-    []
+    [onlyRole]
   )
 
   const contextMenu = target ? (

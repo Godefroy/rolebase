@@ -1,4 +1,4 @@
-import GraphShortcutsButton from '@/graph/components/GraphShortcutsButton'
+import GraphShortcutsModalButton from '@/graph/components/GraphShortcutsModalButton'
 import { CirclesGraphView, GraphProvider } from '@rolebase/graph'
 import { CirclesGraphViews, type GraphEvents } from '@rolebase/graph'
 import type { OrgData } from '@rolebase/shared/model/OrgData'
@@ -147,7 +147,7 @@ export default function OrgChartView({
           <WebappProviders lang={lang}>
             {/* Clicking a role only zooms here: there is no panel to open, and
                 nothing is editable */}
-            <GraphShortcutsButton
+            <GraphShortcutsModalButton
               only={['zoom', 'pan']}
               position="absolute"
               top={3}

@@ -1,9 +1,8 @@
 import Loading from '@/common/atoms/Loading'
-import ModalCloseStaticButton from '@/common/atoms/ModalCloseStaticButton'
+import PanelLayout from '@/common/atoms/PanelLayout'
 import TextErrors from '@/common/atoms/TextErrors'
-import { Title } from '@/common/atoms/Title'
 import { useOrgContext } from '@/org/contexts/OrgContext'
-import { Box, Flex, Heading, Spacer } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import { useLastLogsQuery } from '@gql'
 import React, { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -20,11 +19,7 @@ interface Props {
   onClose?: () => void
 }
 
-export default function LogsContent({
-  changeTitle,
-  flowHeight,
-  onClose,
-}: Props) {
+export default function LogsContent({ flowHeight, ...panelProps }: Props) {
   const { t } = useTranslation()
   const { orgId } = useOrgContext()
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -78,42 +73,22 @@ export default function LogsContent({
   }, [logs, loading, flowHeight])
 
   return (
-    <Flex direction="column" h={flowHeight ? undefined : '100%'}>
-      {changeTitle && <Title>{t('LogsContent.heading')}</Title>}
+    <PanelLayout
+      title={t('LogsContent.heading')}
+      flowHeight={flowHeight}
+      bodyRef={scrollRef}
+      bodyProps={{ px: 3 }}
+      {...panelProps}
+    >
+      {logs && (
+        <LogsList logs={logs} groupByDay onCancelled={() => refetch()} />
+      )}
 
-      <Flex
-        alignItems="center"
-        pl={6}
-        pr={2}
-        py={3}
-        bg="menulight"
-        _dark={{ bg: 'menudark' }}
-      >
-        <Heading as="h1" size="md" fontWeight="bold">
-          {t('LogsContent.heading')}
-        </Heading>
-        <Spacer />
-        <ModalCloseStaticButton onClose={onClose} />
-      </Flex>
-
-      <Box
-        ref={scrollRef}
-        flex={flowHeight ? undefined : 1}
-        minH={flowHeight ? undefined : 0}
-        overflowY={flowHeight ? undefined : 'auto'}
-        px={3}
-        py={5}
-      >
-        {logs && (
-          <LogsList logs={logs} groupByDay onCancelled={() => refetch()} />
-        )}
-
-        <Box ref={bottomRef} mt={3} textAlign="center">
-          {loading && <Loading active />}
-        </Box>
-
-        <TextErrors errors={[error]} />
+      <Box ref={bottomRef} mt={3} textAlign="center">
+        {loading && <Loading active />}
       </Box>
-    </Flex>
+
+      <TextErrors errors={[error]} />
+    </PanelLayout>
   )
 }
