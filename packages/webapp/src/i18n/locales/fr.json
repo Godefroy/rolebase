@@ -264,7 +264,9 @@
   },
   "CirclesShareModal": {
     "heading": "Partager l'organigramme",
-    "headingEnable": "Activer le partage",
+    "enable": "Activer le partage",
+    "enableHelp": "Le partage publie une page publique de votre organigramme, consultable par toute personne disposant du lien et intégrable dans votre site, sans compte Rolebase.",
+    "headingAccess": "Accès",
     "shareOrg": "Organigramme des Rôles",
     "shareOrgHelp": "Noms et raisons d'être uniquement.",
     "shareMembers": "Membres",

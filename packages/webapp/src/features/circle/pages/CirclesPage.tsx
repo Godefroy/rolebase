@@ -8,16 +8,13 @@ import CirclesGraph from '@/graph/CirclesGraph'
 import { GraphProvider } from '@/graph/contexts/GraphContext'
 import useGraphContextMenu from '@/graph/hooks/useGraphContextMenu'
 import useGraphEvents from '@/graph/hooks/useGraphEvents'
+import useGraphView from '@/graph/hooks/useGraphView'
 import { SidebarContext } from '@/layout/contexts/SidebarContext'
 import LogsContent from '@/log/components/LogsContent'
 import MemberContent from '@/member/components/MemberContent'
 import { useOrgContext } from '@/org/contexts/OrgContext'
 import { Box, useColorMode } from '@chakra-ui/react'
-import {
-  GraphView,
-  defaultGraphView,
-  parseGraphView,
-} from '@rolebase/shared/model/graph'
+import { GraphView } from '@rolebase/shared/model/graph'
 import React, {
   useCallback,
   useContext,
@@ -74,10 +71,7 @@ export default function CirclesPage() {
 
   // Graph view, kept in the URL like the selected circle so it is shareable
   // and survives navigation. Falls back to the organization default.
-  const graphView: GraphView =
-    parseGraphView(queryParams.view, queryParams.folded === '1') ||
-    parseGraphView(org?.defaultGraphView, org?.defaultGraphFolded) ||
-    defaultGraphView
+  const graphView = useGraphView()
 
   // Graph events, plus the right click menu rendered below the graph
   const graphEvents = useGraphEvents()

@@ -1,7 +1,11 @@
 import Switch from '@/common/atoms/Switch'
 import useCopyUrl from '@/common/hooks/useCopyUrl'
+import useGraphView from '@/graph/hooks/useGraphView'
 import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
   Button,
   Flex,
   FormControl,
@@ -19,7 +23,7 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { useUpdateOrgMutation } from '@gql'
-import { GraphView, defaultGraphView } from '@rolebase/shared/model/graph'
+import { GraphView } from '@rolebase/shared/model/graph'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CopyIcon } from 'src/icons'
@@ -31,10 +35,11 @@ export default function CirclesShareModal(modalProps: UseModalProps) {
   const { org } = useOrgContext()
   const [updateOrg] = useUpdateOrgMutation()
 
-  // State
+  // State. The shared view starts on the one the org chart is drawn with.
+  const currentGraphView = useGraphView()
   const [shareOrg, setShareOrg] = useState(org?.shareOrg)
   const [shareMembers, setShareMembers] = useState(org?.shareMembers)
-  const [graphView, setGraphView] = useState<GraphView>(defaultGraphView)
+  const [graphView, setGraphView] = useState<GraphView>(currentGraphView)
   const [zoom, setZoom] = useState(true)
   const [transparent, setTransparent] = useState(false)
 
@@ -71,36 +76,51 @@ export default function CirclesShareModal(modalProps: UseModalProps) {
 
         <ModalBody py={6}>
           <VStack spacing={10} align="stretch">
-            <VStack spacing={4} align="start">
-              <Heading as="h2" size="sm">
-                {t('CirclesShareModal.headingEnable')}
-              </Heading>
+            <VStack spacing={4} align="stretch">
+              <Switch isChecked={shareOrg} onChange={handleShareOrg}>
+                {t('CirclesShareModal.enable')}
+              </Switch>
 
-              <FormControl>
-                <Switch isChecked={shareOrg} onChange={handleShareOrg}>
-                  {t('CirclesShareModal.shareOrg')}
-                </Switch>
-                <FormHelperText ml="40px">
-                  {t('CirclesShareModal.shareOrgHelp')}
-                </FormHelperText>
-              </FormControl>
-
-              <FormControl>
-                <Switch
-                  isChecked={shareMembers}
-                  isDisabled={!shareOrg}
-                  onChange={handleShareMembers}
-                >
-                  {t('CirclesShareModal.shareMembers')}
-                </Switch>
-                <FormHelperText ml="40px">
-                  {t('CirclesShareModal.shareMembersHelp')}
-                </FormHelperText>
-              </FormControl>
+              {!shareOrg && (
+                <Alert status="info">
+                  <AlertIcon />
+                  <AlertDescription>
+                    {t('CirclesShareModal.enableHelp')}
+                  </AlertDescription>
+                </Alert>
+              )}
             </VStack>
 
             {shareOrg && (
               <>
+                <VStack spacing={4} align="start">
+                  <Heading as="h2" size="sm">
+                    {t('CirclesShareModal.headingAccess')}
+                  </Heading>
+
+                  <FormControl>
+                    {/* The org chart is what is shared, it cannot be opted out */}
+                    <Switch isChecked isDisabled>
+                      {t('CirclesShareModal.shareOrg')}
+                    </Switch>
+                    <FormHelperText ml="40px">
+                      {t('CirclesShareModal.shareOrgHelp')}
+                    </FormHelperText>
+                  </FormControl>
+
+                  <FormControl>
+                    <Switch
+                      isChecked={shareMembers}
+                      onChange={handleShareMembers}
+                    >
+                      {t('CirclesShareModal.shareMembers')}
+                    </Switch>
+                    <FormHelperText ml="40px">
+                      {t('CirclesShareModal.shareMembersHelp')}
+                    </FormHelperText>
+                  </FormControl>
+                </VStack>
+
                 <VStack spacing={4} align="start">
                   <Heading as="h2" size="sm">
                     {t('CirclesShareModal.view')}

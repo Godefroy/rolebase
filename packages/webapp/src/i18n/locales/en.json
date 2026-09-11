@@ -264,7 +264,9 @@
   },
   "CirclesShareModal": {
     "heading": "Share your org chart",
-    "headingEnable": "Enable sharing",
+    "enable": "Enable sharing",
+    "enableHelp": "Sharing publishes a public page of your org chart, readable by anyone with the link and embeddable in your website, without a Rolebase account.",
+    "headingAccess": "Access",
     "shareOrg": "Roles Org Chart",
     "shareOrgHelp": "Names and purposes only.",
     "shareMembers": "Members",
