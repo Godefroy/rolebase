@@ -3,7 +3,11 @@ import { OrgData } from '@rolebase/shared/model/OrgData'
 import { describe, expect, it } from 'vitest'
 import { computeVisibleNodes } from '../src/core/culling'
 import { computeLayout } from '../src/core/layout'
-import { cardTitleHeight, titleLineCount } from '../src/core/layouts/tree'
+import {
+  cardShowsLeaders,
+  cardTitleHeight,
+  titleLineCount,
+} from '../src/core/layouts/tree'
 import { getDropTargetNode } from '../src/helpers/getDropTargetNode'
 import { minimapNodes } from '../src/helpers/minimapNodes'
 import graphSettings from '../src/settings'
@@ -544,6 +548,10 @@ describe('tree links culling', () => {
   })
 })
 
+// Title block height of a card carrying this name
+const titleHeight = (name: string) =>
+  cardTitleHeight({ id: 'card', name, type: NodeType.Circle })
+
 describe('tree cards', () => {
   it('sizes the title block from the wrapped name', () => {
     const short = titleLineCount('Design')
@@ -552,8 +560,8 @@ describe('tree cards', () => {
     )
     expect(short).toBe(1)
     expect(long).toBeGreaterThan(1)
-    expect(cardTitleHeight('Design')).toBeLessThan(
-      cardTitleHeight('Responsable du développement backend et infrastructure')
+    expect(titleHeight('Design')).toBeLessThan(
+      titleHeight('Responsable du développement backend et infrastructure')
     )
 
     // A name that would take more lines than the cap is clamped
@@ -572,7 +580,7 @@ describe('tree cards', () => {
 
     // The first row starts right below the title block
     expect(firstRow.y - firstRow.h / 2).toBeCloseTo(
-      card.y - card.h / 2 + cardTitleHeight(card.data.name),
+      card.y - card.h / 2 + cardTitleHeight(card.data),
       5
     )
   })
@@ -583,7 +591,16 @@ function buildParentLinkOrg(): OrgData {
   const circles: any[] = []
   const roles: any[] = []
 
-  const add = (id: string, parentId: string | null, parentLink: boolean) => {
+  const members: any[] = []
+  const circleMembers: any[] = []
+
+  const add = (
+    id: string,
+    parentId: string | null,
+    parentLink: boolean,
+    name = `Role ${id}`,
+    memberCount = 0
+  ) => {
     circles.push({
       id,
       orgId: 'org1',
@@ -594,24 +611,44 @@ function buildParentLinkOrg(): OrgData {
     roles.push({
       id: `role-${id}`,
       base: false,
-      name: `Role ${id}`,
+      name,
       singleMember: false,
       parentLink,
       colorHue: null,
     })
+    for (let k = 0; k < memberCount; k++) {
+      const mid = `pm-${id}-${k}`
+      members.push({
+        id: mid,
+        orgId: 'org1',
+        archived: false,
+        name: `Member ${mid}`,
+        description: '',
+      })
+      circleMembers.push({
+        id: `cm-${id}-${mid}`,
+        orgId: 'org1',
+        circleId: id,
+        memberId: mid,
+        createdAt: '',
+        archived: false,
+      })
+    }
   }
 
-  add('p0', null, false)
-  add('p0.link', 'p0', true)
+  add('p0', null, false, 'Role p0', 2)
+  // Two representative roles, added in reverse alphabetical order
+  add('p0.link', 'p0', true, 'Zeta')
+  add('p0.link2', 'p0', true, 'Alpha')
   add('p0.a', 'p0', false)
   add('p0.b', 'p0', false)
 
   return new OrgData({
     circles,
-    circleMembers: [],
+    circleMembers,
     circleLinks: [],
     roles,
-    members: [],
+    members,
     governanceMode: Governance_Mode_Enum.Strict,
   })
 }
@@ -638,19 +675,232 @@ describe('parent-link cards', () => {
     expect(a.y).not.toBeCloseTo(link.y, 5)
   })
 
-  it('hangs the sibling edges from the bottom of the stack', () => {
-    const link = card('p0.link')
+  it('stacks them in the order the role panel lists them', () => {
     const parent = card('p0')
+    const alpha = card('p0.link2')
+    const zeta = card('p0.link')
+
+    // Sorted by name, whatever their order in the data
+    expect(alpha.y).toBeLessThan(zeta.y)
+    expect(alpha.y - alpha.h / 2).toBeGreaterThan(parent.y + parent.h / 2)
+    // And the normal children hang below the bottom of the stack
+    expect(card('p0.a').y - card('p0.a').h / 2).toBeGreaterThan(
+      zeta.y + zeta.h / 2
+    )
+  })
+
+  it('hangs the sibling edges from the bottom of the stack', () => {
+    const parent = card('p0')
+    const bottom = card('p0.link')
     const startY = (id: string) => {
       const path = layout.links.find((l) => l.id === id)!.path
       return Number(path.match(/^M[-\d.]+,([-\d.]+)/)![1])
     }
 
-    // The stacked card hangs from its parent
-    expect(startY('p0.link')).toBeCloseTo(parent.y + parent.h / 2, 5)
-    // Its siblings hang from it, not from the parent
-    expect(startY('p0.a')).toBeCloseTo(link.y + link.h / 2, 5)
-    expect(startY('p0.b')).toBeCloseTo(link.y + link.h / 2, 5)
+    // The first stacked card hangs from its parent
+    expect(startY('p0.link2')).toBeCloseTo(parent.y + parent.h / 2, 5)
+    // The cards of a stack are flush against each other: no edge between them
+    expect(layout.links.find((l) => l.id === 'p0.link')).toBeUndefined()
+    // The siblings hang from the bottom of the stack, not from the parent
+    expect(startY('p0.a')).toBeCloseTo(bottom.y + bottom.h / 2, 5)
+    expect(startY('p0.b')).toBeCloseTo(bottom.y + bottom.h / 2, 5)
+  })
+})
+
+describe('members card', () => {
+  const layout = computeLayout(buildParentLinkOrg(), CirclesGraphViews.Tree)
+  const card = (id: string) => layout.nodes.find((n) => n.data.id === id)!
+  const membersCards = layout.nodes.filter((n) => n.data.membersCard)
+
+  it('moves the members of a role with a representative to a nameless card', () => {
+    // Only p0 has both members and a representative role
+    expect(membersCards.length).toBe(1)
+    const membersCard = membersCards[0]
+    const role = card('p0')
+
+    expect(membersCard.data.name).toBe('')
+    // It stands for the role above it
+    expect(membersCard.parent).toBe(role)
+    expect(membersCard.data.entityId).toBe(role.data.id)
+    // And holds the rows that role no longer lists
+    const rows = membersCard
+      .descendants()
+      .filter((n) => n.data.type === NodeType.Member)
+    expect(rows.length).toBe(2)
+    for (const row of rows) {
+      expect(row.y - row.h / 2).toBeGreaterThanOrEqual(
+        membersCard.y - membersCard.h / 2
+      )
+      expect(row.data.parentId).toBe(role.data.id)
+    }
+
+    // The role card is left as short as one with no member at all
+    expect(role.h).toBeCloseTo(
+      cardTitleHeight(role.data) + graphSettings.tree.cardPadding,
+      5
+    )
+    // Below the stack of representatives, first among the sub-roles
+    const siblings = [membersCard, card('p0.a'), card('p0.b')].sort(
+      (a, b) => a.x - b.x
+    )
+    expect(siblings[0]).toBe(membersCard)
+    expect(membersCard.y - membersCard.h / 2).toBeCloseTo(
+      card('p0.a').y - card('p0.a').h / 2,
+      5
+    )
+  })
+
+  it('keeps the members of a role without a representative inside its card', () => {
+    // Every circle here holds members and sub-roles, and none is a representative
+    const withSubRoles = computeLayout(
+      buildOrg(2, 1, 2),
+      CirclesGraphViews.Tree
+    )
+    expect(withSubRoles.nodes.some((n) => n.data.membersCard)).toBe(false)
+
+    const parent = withSubRoles.nodes.find((n) => n.data.id === 'c0')!
+    const rows = parent
+      .descendants()
+      .filter(
+        (n) => n.data.type === NodeType.Member && n.parent?.parent === parent
+      )
+    expect(rows.length).toBe(2)
+    for (const row of rows) {
+      expect(row.y + row.h / 2).toBeLessThanOrEqual(parent.y + parent.h / 2)
+    }
+  })
+})
+
+// Root with two children, the second holding members and a representative,
+// invited into the first through a circle link
+function buildLinkOrg(): OrgData {
+  const circles: any[] = []
+  const roles: any[] = []
+  const members: any[] = []
+  const circleMembers: any[] = []
+
+  const add = (
+    id: string,
+    parentId: string | null,
+    parentLink: boolean,
+    memberIds: string[] = []
+  ) => {
+    circles.push({
+      id,
+      orgId: 'org1',
+      roleId: `role-${id}`,
+      parentId,
+      archived: false,
+    })
+    roles.push({
+      id: `role-${id}`,
+      base: false,
+      name: `Role ${id}`,
+      singleMember: false,
+      parentLink,
+      colorHue: null,
+    })
+    for (const mid of memberIds) {
+      if (!members.some((m) => m.id === mid)) {
+        members.push({
+          id: mid,
+          orgId: 'org1',
+          archived: false,
+          name: `Member ${mid}`,
+          description: '',
+        })
+      }
+      circleMembers.push({
+        id: `cm-${id}-${mid}`,
+        orgId: 'org1',
+        circleId: id,
+        memberId: mid,
+        createdAt: '',
+        archived: false,
+      })
+    }
+  }
+
+  add('k0', null, false)
+  add('k0.a', 'k0', false)
+  add('k0.b', 'k0', false, ['km1', 'km2'])
+  add('k0.b.rep', 'k0.b', true, ['km3'])
+
+  return new OrgData({
+    circles,
+    circleMembers,
+    circleLinks: [
+      {
+        id: 'cl1',
+        orgId: 'org1',
+        parentId: 'k0.a',
+        circleId: 'k0.b',
+        createdAt: '',
+        archivedAt: null,
+      } as any,
+    ],
+    roles,
+    members,
+    governanceMode: Governance_Mode_Enum.Strict,
+  })
+}
+
+describe('invited roles', () => {
+  const layout = computeLayout(buildLinkOrg(), CirclesGraphViews.Tree)
+  const node = (id: string) => layout.nodes.find((n) => n.data.id === id)!
+
+  it('lists the representatives of an invited role, not its members', () => {
+    const linkCard = node('k0.a_k0.b')
+    const rows = linkCard
+      .descendants()
+      .filter((n) => n.data.type === NodeType.Member)
+
+    // One row for the representative, none for the members of the invited role
+    expect(rows.map((n) => n.data.entityId)).toEqual(['km3'])
+    // Listed as rows, so no avatar row on top of them
+    expect(cardShowsLeaders(linkCard.data)).toBe(false)
+    // Sized for its title and that one row
+    expect(linkCard.h).toBeCloseTo(
+      cardTitleHeight(linkCard.data) +
+        graphSettings.tree.memberRowHeight +
+        graphSettings.tree.cardPadding,
+      5
+    )
+
+    // The invited role still lists its own members under its own card
+    const invited = node('k0.b')
+    expect(
+      invited.descendants().filter((n) => n.data.type === NodeType.Member)
+        .length
+    ).toBe(3)
+  })
+
+  it('folds around the circle an invited role stands for', () => {
+    const org = buildLinkOrg()
+    // The invited role is selected under the id of its card
+    for (const view of [CirclesGraphViews.Tree, CirclesGraphViews.Circles]) {
+      const folded = computeLayout(org, view, true, 'k0.a_k0.b')
+      const ids = folded.nodes
+        .filter((n) => n.data.type === NodeType.Circle)
+        .map((n) => n.data.id)
+
+      // The invited circle, its ancestors and their children, not an empty view
+      expect(ids).toContain('k0.b')
+      expect(ids).toContain('k0')
+      expect(ids).toContain('k0.a')
+    }
+  })
+
+  it('draws the same representatives as avatars in the circles view', () => {
+    const packed = computeLayout(buildLinkOrg(), CirclesGraphViews.Circles)
+    const linkCircle = packed.nodes.find((n) => n.data.id === 'k0.a_k0.b')!
+
+    expect(
+      linkCircle.data.participants
+        ?.filter((p) => p.leader)
+        .map((p) => p.member.id)
+    ).toEqual(['km3'])
+    expect(cardShowsLeaders(linkCircle.data)).toBe(true)
   })
 })
 
@@ -672,6 +922,14 @@ describe('getDropTargetNode', () => {
     const memberOrg = computeLayout(buildOrg(1, 1, 1), CirclesGraphViews.Tree)
     const member = memberOrg.nodes.find((n) => n.data.type === NodeType.Member)!
     expect(getDropTargetNode(card('p0.link'), member)).toBe(card('p0.link'))
+  })
+
+  it('takes members on a members card, and sends roles to the role above it', () => {
+    const membersCard = layout.nodes.find((n) => n.data.membersCard)!
+    const member = layout.nodes.find((n) => n.data.type === NodeType.Member)!
+
+    expect(getDropTargetNode(membersCard, member)).toBe(membersCard)
+    expect(getDropTargetNode(membersCard, card('p0.a'))).toBe(card('p0'))
   })
 })
 
@@ -796,7 +1054,7 @@ describe('hideMembers', () => {
     expect(cards(without).length).toBe(cards(withMembers).length)
     for (const card of cards(without)) {
       expect(card.h).toBeCloseTo(
-        cardTitleHeight(card.data.name) + graphSettings.tree.cardPadding,
+        cardTitleHeight(card.data) + graphSettings.tree.cardPadding,
         5
       )
     }

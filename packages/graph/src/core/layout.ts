@@ -1,5 +1,7 @@
 import { truthy } from '@rolebase/shared/helpers/truthy'
-import { CircleMemberJoined, OrgData } from '@rolebase/shared/model/OrgData'
+import { MemberSummaryFragment } from '@rolebase/shared/gql'
+import { OrgData } from '@rolebase/shared/model/OrgData'
+import { Participant } from '@rolebase/shared/model/member'
 import { textEllipsis } from '../helpers/textEllipsis'
 import {
   CirclesGraphViews,
@@ -106,8 +108,30 @@ function prepareDataInternal(
         ? org.membersOf(circle.id)
         : []
 
+      // A role with a representative role stacked under it lists its members
+      // in a nameless card of its own, placed first among its sub-roles: kept
+      // inside the card, they would come between the role and the
+      // representative that hangs from it. Any other role holds its members.
+      if (
+        layout === GraphLayoutKind.Tree &&
+        memberEntries.length !== 0 &&
+        children.some(
+          (child) => child.type === NodeType.Circle && child.parentLink
+        )
+      ) {
+        children.unshift({
+          id: membersCardId(circle.id),
+          entityId: circle.id,
+          parentId: circle.id,
+          name: '',
+          type: NodeType.Circle,
+          colorHue: data.colorHue,
+          membersCard: true,
+          children: [membersToData(circle.id, memberEntries, data.colorHue)],
+        })
+      }
       // Add members in a circle to group them
-      if (memberEntries.length !== 0 || children.length === 0) {
+      else if (memberEntries.length !== 0 || children.length === 0) {
         children.push(membersToData(circle.id, memberEntries, data.colorHue))
       }
 
@@ -125,11 +149,23 @@ function prepareDataInternal(
     })
 }
 
+// Id of the nameless card listing the members of a role. Free of "_", which
+// marks an invited role (link) everywhere else.
+function membersCardId(circleId: string): string {
+  return `${circleId}-memberscard`
+}
+
+// One row of a card: a circle member, or a representative of an invited role
+interface MemberEntry {
+  id: string
+  member: MemberSummaryFragment
+}
+
 function membersToData(
   circleId: string,
-  members: readonly CircleMemberJoined[],
+  members: readonly MemberEntry[],
   colorHue?: number,
-  // Set when the members are listed under an invited role card: they belong to
+  // Set when the rows are listed under an invited role card: they belong to
   // the invited circle, and their node ids are scoped to the card so they stay
   // unique next to the same members under the invited circle's own card
   memberParentId?: string
@@ -156,6 +192,23 @@ function membersToData(
   return node
 }
 
+// Representatives a card lists for an invited role: the participants the
+// circles view draws as leader avatars, one row per member
+function leaderEntries(participants: readonly Participant[]): MemberEntry[] {
+  const entries: MemberEntry[] = []
+  for (const participant of participants) {
+    if (!participant.leader) continue
+    if (entries.some((entry) => entry.member.id === participant.member.id)) {
+      continue
+    }
+    entries.push({
+      id: `${participant.circleId}-${participant.member.id}`,
+      member: participant.member,
+    })
+  }
+  return entries
+}
+
 function circleLinksToData(
   circle: CircleData,
   org: OrgData,
@@ -175,15 +228,16 @@ function circleLinksToData(
         : org.getParticipants(invitedCircle.id)
       const linkId = `${circle.id}_${link.circleId}`
 
-      // A tree card is read as a whole, so an invited role lists its members
-      // like any other. A packed circle nests inside its inviting circle,
-      // where the members would be a confusing duplicate: it keeps an empty
-      // members circle, for padding, and its leaders.
+      // An invited role shows its representatives, never its members: the
+      // members belong to the invited role and reading them here would
+      // duplicate them. A tree card lists them as rows, like the members of
+      // any other card; a packed circle draws them as avatars from its
+      // participants, and keeps an empty members circle for padding.
       const members =
-        layout === GraphLayoutKind.Tree && !options.hideMembers
+        layout === GraphLayoutKind.Tree && participants
           ? membersToData(
               linkId,
-              org.membersOf(invitedCircle.id),
+              leaderEntries(participants),
               colorHue,
               invitedCircle.id
             )

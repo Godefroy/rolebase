@@ -37,6 +37,13 @@ export interface ViewStrategy {
 export const sortById = (a: HierarchyNode<Data>, b: HierarchyNode<Data>) =>
   a.data.id.localeCompare(b.data.id)
 
+// Circle a selected node stands for. An invited role is selected under the id
+// of its card, "<invitingCircleId>_<circleId>": it stands for the circle it
+// invites, which is where a folded view has to open.
+export function selectedCircleOf(nodeId?: string): string | undefined {
+  return nodeId?.split('_').pop()
+}
+
 const fullCircle = (
   id: string,
   roleId: string,
@@ -61,8 +68,9 @@ const foldedCircles: ViewStrategy = {
   packSorting: sortById,
   getCircles(org, selectedCircleId) {
     // Get selected circle or root circle
+    const circleId = selectedCircleOf(selectedCircleId)
     let circle: CircleFragment | undefined = org.circles.find((c) =>
-      selectedCircleId ? c.id === selectedCircleId : c.parentId === null
+      circleId ? c.id === circleId : c.parentId === null
     )
     if (!circle) {
       console.error('Circle not found')

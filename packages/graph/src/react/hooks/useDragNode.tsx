@@ -48,7 +48,10 @@ export function useDragNode(graph: Graph | undefined, node: NodeData) {
       events?.onCircleMove &&
       events?.onMemberMove &&
       // Disable for invited circles (links)
-      node.data.id.indexOf('_') === -1,
+      node.data.id.indexOf('_') === -1 &&
+      // A members card stands for the role above it: it receives members,
+      // it is not moved itself
+      !node.data.membersCard,
     [node, graph]
   )
 
@@ -62,7 +65,9 @@ export function useDragNode(graph: Graph | undefined, node: NodeData) {
     const events = graph.params.events
     if (!events) return false
     if (!dragTargets.current || !dragTarget.current) return false
-    const targetCircleId = dragTarget.current.node.data.id
+    // A members card drops into the role it lists the members of
+    const targetCircleId =
+      dragTarget.current.node.data.entityId ?? dragTarget.current.node.data.id
 
     try {
       const differentParent = node.data.parentId !== targetCircleId

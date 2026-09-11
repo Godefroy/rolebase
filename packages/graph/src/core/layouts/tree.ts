@@ -71,9 +71,11 @@ export function titleLineCount(name: string): number {
   return Math.min(lines, t.titleMaxLines)
 }
 
-// Height of the title block of a card
-export function cardTitleHeight(name: string): number {
-  return 2 * t.cardTitlePadding + titleLineCount(name) * t.titleLineHeight
+// Height of the title block of a card. A members card has no name, so it only
+// keeps the inner padding above its first row.
+export function cardTitleHeight(data: Data): number {
+  if (data.membersCard) return t.cardPadding
+  return 2 * t.cardTitlePadding + titleLineCount(data.name) * t.titleLineHeight
 }
 
 // A card lists its members, and falls back to its leaders when it has none
@@ -103,6 +105,20 @@ function stackGap(parent: Data, index: number): number {
   return parent.parentLink || index > 0 ? t.stackInnerGapY : t.stackGapY
 }
 
+// Parent-link cards hanging from a card, in the order the role panel lists
+// them (by name, ids breaking ties), so a stack reads the same in both places
+function stackChildren(node: NodeData): NodeData[] {
+  return ((node.children ?? []) as NodeData[])
+    .filter(
+      (child) => child.data.type === NodeType.Circle && child.data.parentLink
+    )
+    .sort(
+      (a, b) =>
+        a.data.name.localeCompare(b.data.name) ||
+        a.data.id.localeCompare(b.data.id)
+    )
+}
+
 // Cards that hang one level below this one, descending through the stacked
 // parent-link cards
 function levelChildNodes(node: NodeData): NodeData[] {
@@ -128,6 +144,8 @@ export function computeTreeLayout(data: Data): Layout {
   const cardRoot = d3.hierarchy(data, levelChildren)
   cardRoot.sort(
     (a, b) =>
+      // A members card comes first, before the sub-roles
+      Number(!!b.data.membersCard) - Number(!!a.data.membersCard) ||
       a.data.name.localeCompare(b.data.name) ||
       a.data.id.localeCompare(b.data.id)
   )
@@ -165,9 +183,7 @@ export function computeTreeLayout(data: Data): Layout {
   const placeStack = (card: NodeData): number => {
     let bottom = card.y + card.h / 2
     let index = 0
-    for (const child of (card.children ?? []) as NodeData[]) {
-      if (child.data.type !== NodeType.Circle || !child.data.parentLink)
-        continue
+    for (const child of stackChildren(card)) {
       child.x = card.x
       child.y = bottom + stackGap(card.data, index) + child.h / 2
       bottom = placeStack(child)
@@ -234,9 +250,7 @@ export function computeTreeLayout(data: Data): Layout {
         const card = node.parent as NodeData | null
         const members = (node.children ?? []) as NodeData[]
         const step = t.memberRowHeight + t.memberRowGap
-        const top = card
-          ? card.y - card.h / 2 + cardTitleHeight(card.data.name)
-          : 0
+        const top = card ? card.y - card.h / 2 + cardTitleHeight(card.data) : 0
 
         // One row per member, spanning the card width
         members.forEach((member, index) => {
@@ -320,9 +334,7 @@ export function computeTreeLayout(data: Data): Layout {
 function linkSource(node: NodeData, parent: NodeData): NodeData {
   if (!node.data.parentLink) return stackBottom(parent)
 
-  const stack = ((parent.children ?? []) as NodeData[]).filter(
-    (child) => child.data.type === NodeType.Circle && child.data.parentLink
-  )
+  const stack = stackChildren(parent)
   const index = stack.indexOf(node)
   return index > 0 ? stackBottom(stack[index - 1]) : parent
 }
@@ -331,9 +343,7 @@ function linkSource(node: NodeData, parent: NodeData): NodeData {
 function stackBottom(node: NodeData): NodeData {
   let lowest = node
   const visit = (card: NodeData) => {
-    for (const child of (card.children ?? []) as NodeData[]) {
-      if (child.data.type !== NodeType.Circle || !child.data.parentLink)
-        continue
+    for (const child of stackChildren(card)) {
       if (child.y + child.h / 2 > lowest.y + lowest.h / 2) lowest = child
       visit(child)
     }
@@ -434,7 +444,7 @@ function membersHeight(count: number): number {
 
 // A card holds a title, then either its members or its leaders
 export function cardHeight(data: Data): number {
-  const title = cardTitleHeight(data.name)
+  const title = cardTitleHeight(data)
   const members = memberChildren(data)
   if (members.length !== 0) {
     return title + membersHeight(members.length) + t.cardPadding

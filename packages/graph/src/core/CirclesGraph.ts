@@ -11,7 +11,7 @@ import {
 } from '../types'
 import { Graph } from './Graph'
 import { computeLayout } from './layout'
-import { getViewStrategy } from './views'
+import { getViewStrategy, selectedCircleOf } from './views'
 
 export class CirclesGraph extends Graph<OrgData> {
   public org?: OrgData
@@ -82,19 +82,42 @@ export class CirclesGraph extends Graph<OrgData> {
       this.updateData(this.inputData)
     }
 
+    // An invited role is selected under the id of its card. A folded view is
+    // rebuilt around the circle it invites and no longer draws that card, so
+    // the selection falls back to the circle itself: it is highlighted and
+    // framed like any other.
+    const drawnId = this.drawnNodeId(id)
+    if (drawnId !== id) {
+      this.selectedCircleId = drawnId
+      this.emit('selectCircle', drawnId)
+    }
+
     // While moved nodes are hidden, fill the background with the focus circle
     // parent color (instead of the white page) so the focus looks nested in it
     this.emit(
       'repositioningBg',
-      this.repositionedIds.size > 0 ? this.getFocusParentColor(id) : undefined
+      this.repositionedIds.size > 0
+        ? this.getFocusParentColor(drawnId)
+        : undefined
     )
 
     // Focus immediately, after the relayout so it targets the new positions.
     // No deferral: with the compositing optimizations the focus animation is
     // cheap enough to run together with the data query and the side panel.
-    if (id) {
-      this.focusNodeId(id, true)
+    if (drawnId) {
+      this.focusNodeId(drawnId, true)
     }
+  }
+
+  // Node the current layout draws for a selected circle. An invited role is
+  // selected under the id of its card ("<invitingCircleId>_<circleId>"); when
+  // the layout has no such card, the circle it invites stands for it.
+  private drawnNodeId(id: string | undefined) {
+    const has = (nodeId?: string) =>
+      !!nodeId && !!this.nodes?.some((node) => node.data.id === nodeId)
+    if (!id || has(id)) return id
+    const circleId = selectedCircleOf(id)
+    return has(circleId) ? circleId : id
   }
 
   // Background color of the focus circle parent (undefined for a root child).

@@ -126,6 +126,9 @@ export interface Data {
   // "Représentant"): stacked under its parent rather than laid out beside its
   // siblings in the hierarchical views
   parentLink?: boolean
+  // Nameless card holding the members of a role that also has sub-roles, laid
+  // out as its first child in the hierarchical views (see prepareDataInternal)
+  membersCard?: boolean
   value?: number
   children?: Array<Data>
   participants?: readonly Participant[]

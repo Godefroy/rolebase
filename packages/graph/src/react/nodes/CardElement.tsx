@@ -33,12 +33,17 @@ export default memo(function CardElement({
   // Invited circles (links) appear as a dashed card under their inviting circle
   const isLink = node.data.id.indexOf('_') !== -1
 
+  // Nameless card listing the members of the role above it: no title block
+  const isMembersCard = !!node.data.membersCard
+
   return (
     <NodeElement
       node={node}
       selected={selected}
       hidden={hidden}
-      className={`card${isLink ? ' card-link' : ''}`}
+      className={`card${isLink ? ' card-link' : ''}${
+        isMembersCard ? ' card-members' : ''
+      }`}
       onClick={
         onCircleClick
           ? () => {
@@ -51,23 +56,25 @@ export default memo(function CardElement({
           : undefined
       }
     >
-      <div
-        className="card-title"
-        style={{ height: `${cardTitleHeight(node.data.name)}px` }}
-      >
-        {/* Clamped to the line count the layout sized the card for, so a name
-            the estimate falls short on ellipsizes instead of overflowing */}
-        <span
-          className="card-title-text"
-          style={
-            {
-              '--title-lines': titleLineCount(node.data.name),
-            } as React.CSSProperties
-          }
+      {!isMembersCard && (
+        <div
+          className="card-title"
+          style={{ height: `${cardTitleHeight(node.data)}px` }}
         >
-          {node.data.name}
-        </span>
-      </div>
+          {/* Clamped to the line count the layout sized the card for, so a name
+              the estimate falls short on ellipsizes instead of overflowing */}
+          <span
+            className="card-title-text"
+            style={
+              {
+                '--title-lines': titleLineCount(node.data.name),
+              } as React.CSSProperties
+            }
+          >
+            {node.data.name}
+          </span>
+        </div>
+      )}
 
       {showLeaders && cardShowsLeaders(node.data) && (
         <CardLeadersElement node={node} />
