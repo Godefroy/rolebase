@@ -9,6 +9,7 @@ import { GraphProvider } from '@/graph/contexts/GraphContext'
 import useGraphContextMenu from '@/graph/hooks/useGraphContextMenu'
 import useGraphEvents from '@/graph/hooks/useGraphEvents'
 import { SidebarContext } from '@/layout/contexts/SidebarContext'
+import LogsContent from '@/log/components/LogsContent'
 import MemberContent from '@/member/components/MemberContent'
 import { useOrgContext } from '@/org/contexts/OrgContext'
 import { Box, useColorMode } from '@chakra-ui/react'
@@ -36,12 +37,14 @@ type CirclesPageParams = {
   parentId: string
   view: string
   folded: string
+  logs: string
 }
 
 enum Panels {
   None,
   Circle,
   Member,
+  Logs,
 }
 
 export default function CirclesPage() {
@@ -98,6 +101,7 @@ export default function CirclesPage() {
         circleId: undefined,
         memberId: undefined,
         parentId: undefined,
+        logs: undefined,
       }),
     [changeParams]
   )
@@ -123,12 +127,15 @@ export default function CirclesPage() {
     setCircleId(queryParams.circleId)
     setParentId(queryParams.parentId)
 
-    // Open panel
+    // Open panel. A selection made from the history panel (a link in a log
+    // entry) takes over the panel, and closing it goes back to the org chart.
     if (queryParams.memberId) {
       setMemberId(queryParams.memberId)
       setPanel(Panels.Member)
     } else if (queryParams.circleId) {
       setPanel(Panels.Circle)
+    } else if (queryParams.logs) {
+      setPanel(Panels.Logs)
     } else {
       setPanel(Panels.None)
     }
@@ -193,6 +200,12 @@ export default function CirclesPage() {
       {panel === Panels.Member && memberId && (
         <ModalPanel isOpen onClose={handleClosePanel}>
           <MemberContent id={memberId} changeTitle />
+        </ModalPanel>
+      )}
+
+      {panel === Panels.Logs && (
+        <ModalPanel isOpen onClose={handleClosePanel}>
+          <LogsContent changeTitle flowHeight={!isSidePanel} />
         </ModalPanel>
       )}
 

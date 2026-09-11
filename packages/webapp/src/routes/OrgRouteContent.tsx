@@ -7,7 +7,6 @@ import Page404 from '@/common/pages/Page404'
 import DashboardPage from '@/dashboard/pages/DashboardPage'
 import DecisionPage from '@/decision/pages/DecisionPage '
 import SettingsLayout from '@/layout/components/SettingsLayout'
-import LogsPage from '@/log/pages/LogsPage'
 import MeetingPage from '@/meeting/pages/MeetingPage'
 import MeetingRecurringPage from '@/meeting/pages/MeetingRecurringPage'
 import { useSubscribeCurrentMeeting } from '@/member/hooks/useSubscribeCurrentMeeting'
@@ -70,7 +69,6 @@ export default function OrgRouteContent() {
             <Route path="tasks/:taskId" element={<TaskPage />} />
             <Route path="tasks" element={<TasksPage />} />
             <Route path="decisions/:decisionId" element={<DecisionPage />} />
-            <Route path="logs" element={<LogsPage />} />
             <Route path="export-circle" element={<CircleExportPage />} />
             <Route path="settings" element={<SettingsLayout />}>
               <Route path="members" element={<MembersPage />} />
@@ -95,6 +93,12 @@ export default function OrgRouteContent() {
             <Route
               path="subscription"
               element={<NavigateInOrg to="settings/subscription" />}
+            />
+
+            {/* History is now a panel of the org chart page */}
+            <Route
+              path="logs"
+              element={<NavigateInOrg to="roles" search="?logs=1" />}
             />
 
             <Route path="*" element={<Page404 />} />

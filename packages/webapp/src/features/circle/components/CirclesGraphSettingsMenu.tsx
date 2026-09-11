@@ -1,12 +1,12 @@
 import AnchoredMenu from '@/common/atoms/actionsMenu/AnchoredMenu'
 import { menuListProps } from '@/common/atoms/actionsMenu/menuListProps'
+import useUpdatableQueryParams from '@/common/hooks/useUpdatableQueryParams'
 import GraphShortcutsModal from '@/graph/components/GraphShortcutsModal'
 import { graphButtonsProps } from '@/graph/components/graphButtonsProps'
 import useOrgAdmin from '@/member/hooks/useOrgAdmin'
 import useOrgMember from '@/member/hooks/useOrgMember'
 import useOrgOwner from '@/member/hooks/useOrgOwner'
 import { useOrgContext } from '@/org/contexts/OrgContext'
-import { useNavigateOrg } from '@/org/hooks/useNavigateOrg'
 import BaseRolesModal from '@/role/modals/BaseRolesModal'
 import VacantRolesModal from '@/role/modals/VacantRolesModal'
 import {
@@ -47,7 +47,12 @@ interface Props {
 // (proposal draft, website demo).
 export default function CirclesGraphSettingsMenu({ anchor, onClose }: Props) {
   const { t } = useTranslation()
-  const navigateOrg = useNavigateOrg()
+  const { changeParams } = useUpdatableQueryParams<{
+    logs: string
+    circleId: string
+    memberId: string
+    parentId: string
+  }>()
   const isMember = useOrgMember()
   const isAdmin = useOrgAdmin()
   const isOwner = useOrgOwner()
@@ -71,6 +76,16 @@ export default function CirclesGraphSettingsMenu({ anchor, onClose }: Props) {
   const handleMenuClose = () => {
     if (!modalRef.current) onClose?.()
   }
+
+  // The history is a panel of the org chart page, opened by a query param.
+  // Any current selection is cleared so a single panel is open at a time.
+  const handleOpenLogs = () =>
+    changeParams({
+      logs: '1',
+      circleId: undefined,
+      memberId: undefined,
+      parentId: undefined,
+    })
 
   if (!isMember) return null
 
@@ -100,10 +115,7 @@ export default function CirclesGraphSettingsMenu({ anchor, onClose }: Props) {
       </MenuItem>
 
       {hasBackend && (
-        <MenuItem
-          icon={<LogsIcon size={20} />}
-          onClick={() => navigateOrg('logs')}
-        >
+        <MenuItem icon={<LogsIcon size={20} />} onClick={handleOpenLogs}>
           {t('CirclesGraphOptions.logs')}
         </MenuItem>
       )}
