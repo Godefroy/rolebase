@@ -27,7 +27,13 @@ export default memo(function CircleElement({
   hidden,
 }: Props) {
   const { events } = useGraphRenderContext()
-  const { onCircleClick } = events
+  const { onCircleClick, onCircleContextMenu } = events
+
+  // Pass parentId if this is an invited circle (id contains underscore)
+  const parentId =
+    node.data.id.indexOf('_') !== -1
+      ? node.data.parentId ?? undefined
+      : undefined
 
   return (
     <NodeElement
@@ -40,12 +46,20 @@ export default memo(function CircleElement({
         onCircleClick
           ? () => {
               if (!node.data.entityId) return
-              // Pass parentId if this is an invited circle (id contains underscore)
-              const parentId =
-                node.data.id.indexOf('_') !== -1
-                  ? node.data.parentId
-                  : undefined
-              onCircleClick(node.data.entityId, parentId ?? undefined)
+              onCircleClick(node.data.entityId, parentId)
+            }
+          : undefined
+      }
+      onContextMenu={
+        onCircleContextMenu
+          ? (event) => {
+              if (!node.data.entityId) return
+              event.preventDefault()
+              onCircleContextMenu(
+                node.data.entityId,
+                { x: event.clientX, y: event.clientY },
+                parentId
+              )
             }
           : undefined
       }

@@ -99,6 +99,7 @@ export abstract class Graph<
   protected focusOffsetX: number
   protected focusOffsetY: number
   private unmounted = false
+  private removeMouseUpForwarding?: () => void
   private lastCullTransform: ZoomTransform | undefined
   private cullRequest: number | undefined
   // Last programmatic focus, replayed against the new size when a resize
@@ -132,6 +133,9 @@ export abstract class Graph<
       .zoom<RootElement, any>()
       .filter((event) => {
         if (this.zoomDisabled) return false
+        // Only the primary button pans: a right click opens the context menu
+        // (d3-zoom's default button check is replaced by this filter)
+        if (event.button) return false
         // A gesture started on the minimap belongs to the minimap: it moves
         // the view on its own (the wheel still zooms the graph under it)
         if (
@@ -189,6 +193,61 @@ export abstract class Graph<
         }
       })
     this.d3Root.call(this.zoomBehaviour)
+
+    this.forwardSwallowedMouseUp()
+  }
+
+  // d3-zoom swallows the mouse events of the gesture it handles: while
+  // dragging it listens on the window in the capture phase and stops their
+  // propagation, so the mouseup ending a click in the graph never reaches the
+  // document. Anything listening there for a click outside itself (a menu, a
+  // popover) then stays open. Forward the swallowed mouseup to the document.
+  private forwardSwallowedMouseUp() {
+    const element = this.element
+    if (!element || typeof window === 'undefined') return
+
+    let inGraph = false
+    let swallowed = false
+
+    const onMouseDown = () => {
+      inGraph = true
+    }
+
+    // Registered before d3-zoom's own window listener (it adds one on each
+    // mousedown), so this runs first whatever the gesture.
+    const onWindowMouseUp = (event: MouseEvent) => {
+      if (!inGraph) return
+      inGraph = false
+      swallowed = true
+      // The document listeners run right after this one: forward a copy only
+      // if the event never got to them.
+      setTimeout(() => {
+        if (!swallowed) return
+        swallowed = false
+        document.dispatchEvent(
+          new MouseEvent('mouseup', {
+            bubbles: false,
+            clientX: event.clientX,
+            clientY: event.clientY,
+            button: event.button,
+          })
+        )
+      })
+    }
+
+    const onDocumentMouseUp = () => {
+      swallowed = false
+    }
+
+    element.addEventListener('mousedown', onMouseDown, true)
+    window.addEventListener('mouseup', onWindowMouseUp, true)
+    document.addEventListener('mouseup', onDocumentMouseUp, true)
+
+    this.removeMouseUpForwarding = () => {
+      element.removeEventListener('mousedown', onMouseDown, true)
+      window.removeEventListener('mouseup', onWindowMouseUp, true)
+      document.removeEventListener('mouseup', onDocumentMouseUp, true)
+    }
   }
 
   // Replace the event handlers. Subclasses narrow them: CirclesGraph drops the
@@ -201,6 +260,7 @@ export abstract class Graph<
   destroy() {
     this.unmounted = true
     this.d3Root.on('.zoom', null)
+    this.removeMouseUpForwarding?.()
     if (this.cullRequest !== undefined) {
       cancelAnimationFrame(this.cullRequest)
     }

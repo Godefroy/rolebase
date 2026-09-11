@@ -1,19 +1,9 @@
-import ActionsMenu from '@/common/atoms/actionsMenu/ActionsMenu'
-import ArchiveMenuItem from '@/common/atoms/actionsMenu/ArchiveMenuItem'
-import DuplicateMenuItem from '@/common/atoms/actionsMenu/DuplicateMenuItem'
-import EditMenuItem from '@/common/atoms/actionsMenu/EditMenuItem'
-import ExportMenuItem from '@/common/atoms/actionsMenu/ExportMenuItem'
-import MoveMenuItem from '@/common/atoms/actionsMenu/MoveMenuItem'
 import TitleLink from '@/common/atoms/TitleLink'
 import ModalCloseStaticButton from '@/common/atoms/ModalCloseStaticButton'
 import Tab from '@/common/atoms/Tab'
 import { Title } from '@/common/atoms/Title'
 import useUpdatableQueryParams from '@/common/hooks/useUpdatableQueryParams'
 import useOrgMember from '@/member/hooks/useOrgMember'
-import useOrgOwner from '@/member/hooks/useOrgOwner'
-import { useOrgContext } from '@/org/contexts/OrgContext'
-import useGraphViewParam from '@/graph/hooks/useGraphViewParam'
-import { useNavigateOrg } from '@/org/hooks/useNavigateOrg'
 import ParticipantsNumber from '@/participants/components/ParticipantsNumber'
 import {
   Alert,
@@ -22,7 +12,6 @@ import {
   Box,
   Flex,
   Heading,
-  MenuItem,
   Spacer,
   TabList,
   TabPanel,
@@ -38,18 +27,12 @@ import {
   DecisionsIcon,
   MeetingsIcon,
   NewsIcon,
-  RoleIcon,
-  SeparateIcon,
   TasksIcon,
   ThreadsIcon,
 } from 'src/icons'
 import RoleEditModal from '../../role/modals/RoleEditModal'
 import { CircleContext } from '../contexts/CIrcleContext'
-import CircleCopyModal from '../modals/CircleCopyModal'
-import CircleDeleteModal from '../modals/CircleDeleteModal'
-import CircleMoveModal from '../modals/CircleMoveModal'
-import MakeBaseRoleModal from '../modals/MakeBaseRoleModal'
-import SeparateBaseRoleModal from '../modals/SeparateBaseRoleModal'
+import CircleActionsMenu from './CircleActionsMenu'
 import CircleBreadcrumb from './CircleBreadcrumb'
 import CircleByIdButton from './CircleByIdButton'
 import CircleDecisions from './CircleDecisions'
@@ -100,11 +83,7 @@ export default function CircleContent({
 }: Props) {
   const { t } = useTranslation()
   const isMember = useOrgMember() && !readOnly
-  const isOrgOwner = useOrgOwner()
-  const { isDraft } = useOrgContext()
   const circleContext = useContext(CircleContext)
-  const navigateOrg = useNavigateOrg()
-  const graphView = useGraphViewParam()
 
   // Tabs
   const { params, changeParams } = useUpdatableQueryParams<Params>()
@@ -115,13 +94,8 @@ export default function CircleContent({
     changeParams({ tab: tabName })
   }
 
-  // Modals
+  // The role title opens the same edit modal as the actions menu
   const editRoleModal = useDisclosure()
-  const deleteModal = useDisclosure()
-  const duplicateModal = useDisclosure()
-  const moveModal = useDisclosure()
-  const makeBaseRoleModal = useDisclosure()
-  const separateBaseRoleModal = useDisclosure()
 
   if (!circleContext) {
     return (
@@ -135,21 +109,7 @@ export default function CircleContent({
     )
   }
 
-  const { circle, role, participants, canEditCircle, canEditRole } =
-    circleContext
-
-  // An archived role only offers Restore (from the alert in CircleRole) and
-  // Duplicate, which reads it into a new role without changing it.
-  const canRestructure = canEditCircle && !circle.archivedAt
-
-  // Base role actions. Turning a role into a base role is org-owner only (a
-  // base role edit propagates everywhere). Detaching from a base role follows
-  // the circle's structural edit permission. Neither applies to the root circle
-  // or in an in-memory proposal draft.
-  const canMakeBaseRole =
-    isOrgOwner && canRestructure && !isDraft && !role.base && !!circle.parentId
-  const canSeparateBaseRole =
-    canRestructure && !isDraft && role.base && !!circle.parentId
+  const { circle, role, participants, canEditRole } = circleContext
 
   return (
     <>
@@ -178,49 +138,11 @@ export default function CircleContent({
               </Box>
             )}
 
-            {isMember && (
-              <ActionsMenu>
-                {canEditRole && <EditMenuItem onClick={editRoleModal.onOpen} />}
-                {canRestructure && circle.parentId && (
-                  <MoveMenuItem onClick={moveModal.onOpen} />
-                )}
-                {canEditCircle && circle.parentId && (
-                  <DuplicateMenuItem onClick={duplicateModal.onOpen} />
-                )}
-                {!onlyRole && !circle.archivedAt && (
-                  <ExportMenuItem
-                    onClick={() =>
-                      navigateOrg(
-                        `export-circle?circleId=${circle.id}${
-                          graphView.view ? `&view=${graphView.view}` : ''
-                        }${
-                          graphView.folded ? `&folded=${graphView.folded}` : ''
-                        }`
-                      )
-                    }
-                  />
-                )}
-                {canMakeBaseRole && (
-                  <MenuItem
-                    icon={<RoleIcon size={20} />}
-                    onClick={makeBaseRoleModal.onOpen}
-                  >
-                    {t('common.makeBaseRole')}
-                  </MenuItem>
-                )}
-                {canSeparateBaseRole && (
-                  <MenuItem
-                    icon={<SeparateIcon size={20} />}
-                    onClick={separateBaseRoleModal.onOpen}
-                  >
-                    {t('common.separateBaseRole')}
-                  </MenuItem>
-                )}
-                {canRestructure && circle.parentId && (
-                  <ArchiveMenuItem onClick={deleteModal.onOpen} />
-                )}
-              </ActionsMenu>
-            )}
+            <CircleActionsMenu
+              onlyRole={onlyRole}
+              readOnly={readOnly}
+              onEditRole={editRoleModal.onOpen}
+            />
 
             {headerIcons}
             <ModalCloseStaticButton onClose={onClose} />
@@ -310,39 +232,6 @@ export default function CircleContent({
 
       {editRoleModal.isOpen && role && (
         <RoleEditModal role={role} isOpen onClose={editRoleModal.onClose} />
-      )}
-
-      {deleteModal.isOpen && (
-        <CircleDeleteModal
-          id={circle.id}
-          isOpen
-          onClose={deleteModal.onClose}
-        />
-      )}
-
-      {moveModal.isOpen && (
-        <CircleMoveModal isOpen onClose={moveModal.onClose} />
-      )}
-
-      {duplicateModal.isOpen && (
-        <CircleCopyModal isOpen onClose={duplicateModal.onClose} />
-      )}
-
-      {makeBaseRoleModal.isOpen && (
-        <MakeBaseRoleModal
-          role={role}
-          isOpen
-          onClose={makeBaseRoleModal.onClose}
-        />
-      )}
-
-      {separateBaseRoleModal.isOpen && (
-        <SeparateBaseRoleModal
-          circleId={circle.id}
-          role={role}
-          isOpen
-          onClose={separateBaseRoleModal.onClose}
-        />
       )}
     </>
   )

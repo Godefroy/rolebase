@@ -9,6 +9,7 @@ import { useElementSize } from '@/common/hooks/useElementSize'
 import CirclesGraph, { CirclesGraphInstance } from '@/graph/CirclesGraph'
 import GraphShortcutsButton from '@/graph/components/GraphShortcutsButton'
 import { GraphProvider } from '@/graph/contexts/GraphContext'
+import useGraphContextMenu from '@/graph/hooks/useGraphContextMenu'
 import { CirclesGraphViews, GraphEvents } from '@/graph/types'
 import DraftOrgProvider from '@/org/contexts/DraftOrgProvider'
 import ReadonlyOrgProvider from '@/org/contexts/ReadonlyOrgProvider'
@@ -88,17 +89,25 @@ export default function ProposalGraphEditor({
     return () => clearTimeout(timeout)
   }, [draft.ready, circleId])
 
+  // Right click menu: the role actions only (no org-wide navigation here)
+  const { events: contextMenuEvents, contextMenu } = useGraphContextMenu({
+    onlyRole: true,
+    readOnly,
+  })
+
   // Editor graph events: edits go through the draft actions, selection is local.
   // In read-only mode, only selection is kept (no editing).
   const events: GraphEvents = useMemo(
     () =>
       readOnly
         ? {
+            ...contextMenuEvents,
             onCircleClick: (circleId) => setSelectedCircleId(circleId),
             onMemberClick: (circleId) => setSelectedCircleId(circleId),
             onClickOutside: () => setSelectedCircleId(undefined),
           }
         : {
+            ...contextMenuEvents,
             onCircleClick: (circleId) => setSelectedCircleId(circleId),
             onMemberClick: (circleId) => setSelectedCircleId(circleId),
             onClickOutside: () => setSelectedCircleId(undefined),
@@ -118,7 +127,7 @@ export default function ProposalGraphEditor({
               return true
             },
           },
-    [actions, readOnly]
+    [actions, readOnly, contextMenuEvents]
   )
 
   const handleDone = () => {
@@ -142,135 +151,139 @@ export default function ProposalGraphEditor({
   const content = (
     <CircleMemberContext.Provider value={circleMemberValue}>
       <GraphProvider>
-            <Flex
-              direction="column"
-              h={isSidePanel ? '100%' : undefined}
-              minH={isSidePanel ? 0 : '100%'}
-              flex={isSidePanel ? '1' : undefined}
-            >
-              <Flex
-                p={3}
-                align="center"
-                borderBottomWidth="1px"
-                bg="yellow.50"
-                _dark={{ bg: 'yellow.900' }}
-              >
-                <Box>
-                  <Heading size="md">
-                    {t(
-                      readOnly
-                        ? 'ProposalGraphEditor.headingView'
-                        : 'ProposalGraphEditor.heading'
-                    )}
-                  </Heading>
-                  {!readOnly && (
-                    <Text
-                      mt={1}
-                      fontSize="sm"
-                      color="gray.500"
-                      _dark={{ color: 'gray.300' }}
-                    >
-                      {t('ProposalGraphEditor.subtitle')}
-                    </Text>
-                  )}
-                </Box>
-                <Box flex="1" />
-                <Button
-                  colorScheme="yellow"
-                  onClick={readOnly ? onClose : handleDone}
+        <Flex
+          direction="column"
+          h={isSidePanel ? '100%' : undefined}
+          minH={isSidePanel ? 0 : '100%'}
+          flex={isSidePanel ? '1' : undefined}
+        >
+          <Flex
+            p={3}
+            align="center"
+            borderBottomWidth="1px"
+            bg="yellow.50"
+            _dark={{ bg: 'yellow.900' }}
+          >
+            <Box>
+              <Heading size="md">
+                {t(
+                  readOnly
+                    ? 'ProposalGraphEditor.headingView'
+                    : 'ProposalGraphEditor.heading'
+                )}
+              </Heading>
+              {!readOnly && (
+                <Text
+                  mt={1}
+                  fontSize="sm"
+                  color="gray.500"
+                  _dark={{ color: 'gray.300' }}
                 >
-                  {t(readOnly ? 'common.close' : 'ProposalGraphEditor.done')}
-                </Button>
-              </Flex>
+                  {t('ProposalGraphEditor.subtitle')}
+                </Text>
+              )}
+            </Box>
+            <Box flex="1" />
+            <Button
+              colorScheme="yellow"
+              onClick={readOnly ? onClose : handleDone}
+            >
+              {t(readOnly ? 'common.close' : 'ProposalGraphEditor.done')}
+            </Button>
+          </Flex>
 
-              {/*
+          {/*
                 Graph + panel. The direction flips with the breakpoint (row on
                 desktop, column below lg) but the graph Box below stays the same
                 element either way, so its ResizeObserver (useElementSize) keeps
                 tracking the window resize instead of going stale on a remount.
               */}
-              <Flex
-                direction={isSidePanel ? 'row' : 'column'}
+          <Flex
+            direction={isSidePanel ? 'row' : 'column'}
+            flex={isSidePanel ? '1' : undefined}
+            minH={isSidePanel ? 0 : undefined}
+          >
+            {/* Graph: fills the space next to the panel on desktop, a
+                    fixed-height band above the panel when stacked. */}
+            <Box
+              ref={boxRef}
+              flex={isSidePanel ? '1' : undefined}
+              h={isSidePanel ? undefined : '50dvh'}
+              flexShrink={0}
+              position="relative"
+              overflow="hidden"
+            >
+              {!draft.ready && <Loading active center />}
+              {draft.ready && draft.orgData && boxSize && (
+                <CirclesGraph
+                  ref={graphRef}
+                  key={colorMode}
+                  view={CirclesGraphViews.Circles}
+                  org={draft.orgData}
+                  events={events}
+                  width={boxSize.width}
+                  height={boxSize.height}
+                  selectedCircleId={selectedCircleId}
+                />
+              )}
+              <GraphShortcutsButton position="absolute" top={2} right={2} />
+              {contextMenu}
+            </Box>
+
+            {/* Side panel (desktop) / stacked below the graph (mobile):
+                    role then changes list. */}
+            <Flex
+              direction="column"
+              w={isSidePanel ? '420px' : 'full'}
+              maxW={isSidePanel ? '40%' : undefined}
+              borderLeftWidth={isSidePanel ? '1px' : undefined}
+              borderTopWidth={isSidePanel ? undefined : '1px'}
+              minH={isSidePanel ? 0 : undefined}
+            >
+              <Box
                 flex={isSidePanel ? '1' : undefined}
                 minH={isSidePanel ? 0 : undefined}
               >
-                {/* Graph: fills the space next to the panel on desktop, a
-                    fixed-height band above the panel when stacked. */}
-                <Box
-                  ref={boxRef}
-                  flex={isSidePanel ? '1' : undefined}
-                  h={isSidePanel ? undefined : '50dvh'}
-                  flexShrink={0}
-                  position="relative"
-                  overflow="hidden"
-                >
-                  {!draft.ready && <Loading active center />}
-                  {draft.ready && draft.orgData && boxSize && (
-                    <CirclesGraph
-                      ref={graphRef}
-                      key={colorMode}
-                      view={CirclesGraphViews.Circles}
-                      org={draft.orgData}
-                      events={events}
-                      width={boxSize.width}
-                      height={boxSize.height}
-                      selectedCircleId={selectedCircleId}
+                {selectedCircleId ? (
+                  <CircleProvider circleId={selectedCircleId}>
+                    <CircleContent
+                      onlyRole
+                      readOnly={readOnly}
+                      flowHeight={!isSidePanel}
+                      onClose={() => setSelectedCircleId(undefined)}
                     />
-                  )}
-                  <GraphShortcutsButton position="absolute" top={2} right={2} />
-                </Box>
-
-                {/* Side panel (desktop) / stacked below the graph (mobile):
-                    role then changes list. */}
-                <Flex
-                  direction="column"
-                  w={isSidePanel ? '420px' : 'full'}
-                  maxW={isSidePanel ? '40%' : undefined}
-                  borderLeftWidth={isSidePanel ? '1px' : undefined}
-                  borderTopWidth={isSidePanel ? undefined : '1px'}
-                  minH={isSidePanel ? 0 : undefined}
-                >
-                  <Box flex={isSidePanel ? '1' : undefined} minH={isSidePanel ? 0 : undefined}>
-                    {selectedCircleId ? (
-                      <CircleProvider circleId={selectedCircleId}>
-                        <CircleContent
-                          onlyRole
-                          readOnly={readOnly}
-                          flowHeight={!isSidePanel}
-                          onClose={() => setSelectedCircleId(undefined)}
-                        />
-                      </CircleProvider>
-                    ) : (
-                      <Box p={4} color="gray.500" _dark={{ color: 'gray.300' }}>
-                        {t(
-                          readOnly
-                            ? 'ProposalGraphEditor.viewCircle'
-                            : 'ProposalGraphEditor.selectCircle'
-                        )}
-                      </Box>
+                  </CircleProvider>
+                ) : (
+                  <Box p={4} color="gray.500" _dark={{ color: 'gray.300' }}>
+                    {t(
+                      readOnly
+                        ? 'ProposalGraphEditor.viewCircle'
+                        : 'ProposalGraphEditor.selectCircle'
                     )}
                   </Box>
+                )}
+              </Box>
 
-                  {/* Changes: scrolls within the panel on desktop, flows to its
+              {/* Changes: scrolls within the panel on desktop, flows to its
                       natural height when stacked. */}
-                  <Box
-                    borderTopWidth="1px"
-                    p={4}
-                    maxH={isSidePanel ? '35%' : undefined}
-                    overflowY={isSidePanel ? 'auto' : undefined}
-                    flexShrink={0}
-                  >
-                    <Heading size="sm" mb={3}>
-                      {t('ProposalGraphEditor.changes')}
-                    </Heading>
-                    <ProposalLogList
-                      logs={draft.logs}
-                      onRemove={readOnly ? undefined : draft.removeLog}
-                    />
-                  </Box>
-                </Flex>
-              </Flex>
+              <Box
+                borderTopWidth="1px"
+                p={4}
+                maxH={isSidePanel ? '35%' : undefined}
+                overflowY={isSidePanel ? 'auto' : undefined}
+                flexShrink={0}
+              >
+                <Heading size="sm" mb={3}>
+                  {t('ProposalGraphEditor.changes')}
+                </Heading>
+                <ProposalLogList
+                  logs={draft.logs}
+                  onRemove={readOnly ? undefined : draft.removeLog}
+                />
+              </Box>
             </Flex>
+          </Flex>
+        </Flex>
       </GraphProvider>
     </CircleMemberContext.Provider>
   )

@@ -13,10 +13,21 @@ L'organigramme interactif est le moyen principal de visualiser votre structure o
 - **Défiler** pour zoomer et dézoomer.
 - Basculer entre les vues à l'aide du sélecteur de vue.
 - Utiliser la **mini-carte** affichée en bas à droite sur ordinateur, qui situe votre position dès que l'organigramme dépasse l'écran, et cliquer ou glisser dessus pour vous déplacer.
+- **Cliquer droit** sur un rôle, un membre ou le fond pour ouvrir le menu des actions disponibles à cet endroit (voir ci-dessous).
 
 Essayez sur l'organisation d'exemple ci-dessous : cliquez un rôle pour zoomer sur ses sous-rôles, glissez pour naviguer, et défilez pour zoomer.
 
 <OrgChartView demo="demo" height="560px" showAllNodes={false} shortcuts />
+
+## Menu du clic droit
+
+Un clic droit ouvre les actions disponibles à l'endroit cliqué, sans quitter l'organigramme :
+
+- Sur un **rôle**, les actions de son panneau : le modifier, le déplacer dans un autre rôle, le dupliquer, l'exporter, le transformer en rôle de base ou l'en séparer, et l'archiver. Le déplacement et la duplication ouvrent un formulaire où vous choisissez le rôle de destination.
+- Sur un **membre**, le retirer du rôle dans lequel vous avez cliqué.
+- Sur le **fond**, les options de l'organigramme : raccourcis clavier, rôles de base, rôles vacants, historique et partage.
+
+Chaque menu ne propose que ce que votre [mode de gouvernance](/fr/docs/governance-modes) et vos droits autorisent.
 
 ## Vues
 

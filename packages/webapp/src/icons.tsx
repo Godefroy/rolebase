@@ -61,6 +61,7 @@ import {
   Play,
   Profile,
   Profile2User,
+  ProfileRemove,
   Receipt,
   Record,
   RecordCircle,
@@ -158,6 +159,7 @@ export const PollIcon = Chart2
 export const PrivacyIcon = Lock1
 export const RandomIcon = Shuffle
 export const ReactionIcon = EmojiHappy
+export const RemoveMemberIcon = ProfileRemove
 export const RestoreIcon = ArchiveBox
 export const RoleIcon = Record
 export const RotateLeftIcon = ArrowRotateLeft

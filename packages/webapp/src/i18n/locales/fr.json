@@ -102,10 +102,11 @@
   },
   "CircleCopyModal": {
     "heading": "Dupliquer un rôle",
-    "action1": "Ouvrez l'Organigramme",
-    "action2": "Appuyez sur les touches",
-    "action3": "Faites glisser le rôle avec la souris (clic sans relâcher) en maintenant les touches enfoncées.",
-    "action4": "Déposez-le dans le rôle souhaité."
+    "label": "Dupliquer le rôle {{name}} dans :",
+    "noTarget": "Aucun rôle ne peut accueillir cette copie.",
+    "submit": "Dupliquer",
+    "toast": "Rôle {{name}} dupliqué dans {{parent}}",
+    "dragHint": "Dans l'organigramme, vous pouvez aussi dupliquer un rôle en le faisant glisser dans un autre rôle avec les touches <kbd>{{key}}</kbd> et <kbd>⇧</kbd> enfoncées."
   },
   "CircleDecisions": {
     "create": "Créer une décision",
@@ -190,10 +191,11 @@
   },
   "CircleMoveModal": {
     "heading": "Déplacer un rôle",
-    "action1": "Ouvrez l'Organigramme.",
-    "action2": "Appuyez sur la touche",
-    "action3": "Faites glisser le rôle avec la souris (clic sans relâcher) en maintenant la touche enfoncée.",
-    "action4": "Déposez-le dans le rôle souhaité."
+    "label": "Déplacer le rôle {{name}} dans :",
+    "noTarget": "Aucun rôle ne peut accueillir ce rôle.",
+    "submit": "Déplacer",
+    "toast": "Rôle {{name}} déplacé dans {{parent}}",
+    "dragHint": "Dans l'organigramme, vous pouvez aussi déplacer un rôle en le faisant glisser dans un autre rôle avec la touche <kbd>{{key}}</kbd> enfoncée."
   },
   "CirclePrivacy": {
     "tooltip": "Sécurité",
@@ -685,6 +687,9 @@
     "showWeekend": "Afficher le week-end",
     "hideWeekend": "Masquer le week-end",
     "create": "Nouvelle réunion"
+  },
+  "MemberActionsMenu": {
+    "removeFromRole": "Retirer du rôle"
   },
   "MemberContent": {
     "notFound": "Membre introuvable",

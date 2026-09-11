@@ -27,12 +27,23 @@ export default memo(function MemberElement({
   const { events } = useGraphRenderContext()
 
   // Click
-  const { onMemberClick } = events
+  const { onMemberClick, onMemberContextMenu } = events
   const handleClick = onMemberClick
     ? () =>
         node.data.parentId &&
         node.data.entityId &&
         onMemberClick?.(node.data.parentId, node.data.entityId)
+    : undefined
+
+  const handleContextMenu = onMemberContextMenu
+    ? (event: React.MouseEvent) => {
+        if (!node.data.parentId || !node.data.entityId) return
+        event.preventDefault()
+        onMemberContextMenu(node.data.parentId, node.data.entityId, {
+          x: event.clientX,
+          y: event.clientY,
+        })
+      }
     : undefined
 
   // Name
@@ -49,6 +60,7 @@ export default memo(function MemberElement({
       hidden={hidden}
       className="member"
       onClick={handleClick}
+      onContextMenu={handleContextMenu}
     >
       {node.data.picture && !inEnterGroup && (
         // <img> (not a background-image) so the platform decodes it

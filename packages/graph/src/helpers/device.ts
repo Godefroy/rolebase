@@ -31,3 +31,7 @@ export const giantViewportRatio = isConstrainedDevice ? 1.5 : 3
 // graph already takes the whole screen there, so the map would cover a good
 // part of what it is meant to help read.
 export const smallScreenMediaQuery = '(max-width: 600px), (max-height: 480px)'
+
+// macOS, where ctrl + click is a right click (the drag & drop modifier is ⌘)
+export const isMac =
+  typeof navigator !== 'undefined' ? /Mac/i.test(navigator.platform) : false

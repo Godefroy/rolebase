@@ -1,6 +1,7 @@
 import { truthy } from '@rolebase/shared/helpers/truthy'
 import React, { useEffect, useMemo, useRef } from 'react'
 import { Graph } from '../../core/Graph'
+import { isMac } from '../../helpers/device'
 import { getDropTargetNode } from '../../helpers/getDropTargetNode'
 import { isPointInsideNode } from '../../helpers/isPointInsideNode'
 import { NodeData, NodeType } from '../../types'
@@ -127,10 +128,11 @@ export function useDragNode(graph: Graph | undefined, node: NodeData) {
     const isDragging =
       graph &&
       canDrag &&
-      // Disable when mousewheel is pressed
-      event.button !== 1 &&
-      // Control/Command key is pressed
-      (event.ctrlKey || event.metaKey)
+      // Only the primary button drags: the others pan or open the context menu
+      event.button === 0 &&
+      // Control/Command key is pressed. On macOS ctrl + click is a right
+      // click, so only ⌘ drags there (the shortcut shown to the user)
+      (isMac ? event.metaKey : event.ctrlKey || event.metaKey)
     if (!isDragging) return
 
     // Register mouse position

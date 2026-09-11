@@ -134,8 +134,27 @@ export interface Data {
   participants?: readonly Participant[]
 }
 
+// Viewport coordinates of a pointer event, to anchor a menu on it
+export interface PointerPosition {
+  x: number
+  y: number
+}
+
 export interface GraphEvents {
   onCircleClick?(circleId: string, parentId?: string): void
+  // Right click on a circle, a member, or the graph background. The handler
+  // gets the pointer position so the app can open a menu there.
+  onCircleContextMenu?(
+    circleId: string,
+    position: PointerPosition,
+    parentId?: string
+  ): void
+  onMemberContextMenu?(
+    circleId: string,
+    memberId: string,
+    position: PointerPosition
+  ): void
+  onBackgroundContextMenu?(position: PointerPosition): void
   // Move handlers return whether the move was applied: the graph keeps the node
   // at its new place (true) or resets the drag (false, e.g. refused by
   // permissions). Backend rejections throw and are treated as not moved too.

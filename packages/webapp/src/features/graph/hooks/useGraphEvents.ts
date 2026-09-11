@@ -1,6 +1,6 @@
 import { useOrgContext, useOrgEditActions } from '@/org/contexts/OrgContext'
 import { useNavigateOrg } from '@/org/hooks/useNavigateOrg'
-import { Governance_Mode_Enum } from '@gql'
+import useOrgEditPermissions from '@/org/hooks/useOrgEditPermissions'
 import { useToast } from '@chakra-ui/react'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -20,9 +20,10 @@ export default function useGraphEvents(): GraphEvents {
   // The graph view lives in the URL: carry it over on every navigation, so
   // selecting a circle doesn't reset it to the organization default
   const graphView = useGraphViewParam()
-  const { orgData, editable, governanceMode } = useOrgContext()
+  const { orgData, editable } = useOrgContext()
   const { moveCircle, copyCircle, addCircleMember, removeCircleMember } =
     useOrgEditActions()
+  const { getPerms, canAddSubCircleTo } = useOrgEditPermissions()
 
   // Run a drag action, surfacing any error (e.g. a rejected mutation) as a
   // toast and reporting failure so the graph resets the drag.
@@ -56,43 +57,6 @@ export default function useGraphEvents(): GraphEvents {
         isClosable: true,
       }),
     [toast]
-  )
-
-  // Per-circle permissions, the same rules as the panels and the Hasura
-  // permissions, so drags never perform (or partially perform) an action the
-  // server would reject.
-  const getPerms = useCallback(
-    (circleId: string) => {
-      const circle = orgData?.getCircle(circleId)
-      const role = circle && orgData?.getRole(circle.roleId)
-      if (!orgData || !circle || !role || !editable) return undefined
-      return orgData.getCirclePermissions(
-        circle,
-        role,
-        currentMember?.id,
-        isMember,
-        isOrgOwner
-      )
-    },
-    [orgData, editable, currentMember, isMember, isOrgOwner]
-  )
-
-  // Whether a sub-circle (parent-link or normal) may be added under a target
-  // circle, or to the root (owner / Free only).
-  const canAddSubCircleTo = useCallback(
-    (targetCircleId: string | null, parentLink: boolean) => {
-      if (!targetCircleId) {
-        return (
-          editable &&
-          (isOrgOwner || governanceMode === Governance_Mode_Enum.Free)
-        )
-      }
-      const perms = getPerms(targetCircleId)
-      return parentLink
-        ? !!perms?.canEditSubCirclesParentLinks
-        : !!perms?.canEditSubCircles
-    },
-    [getPerms, editable, isOrgOwner, governanceMode]
   )
 
   // Why assigning a member to a target circle is refused, or undefined if it is

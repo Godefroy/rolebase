@@ -20,7 +20,7 @@ const { memberAvatarSize } = settings.tree
 // Memoized: a culling pass only re-renders changed elements
 export default memo(function CardMemberElement({ node, hidden }: Props) {
   const { events } = useGraphRenderContext()
-  const { onMemberClick } = events
+  const { onMemberClick, onMemberContextMenu } = events
 
   return (
     <NodeElement
@@ -33,6 +33,18 @@ export default memo(function CardMemberElement({ node, hidden }: Props) {
               node.data.parentId &&
               node.data.entityId &&
               onMemberClick(node.data.parentId, node.data.entityId)
+          : undefined
+      }
+      onContextMenu={
+        onMemberContextMenu
+          ? (event) => {
+              if (!node.data.parentId || !node.data.entityId) return
+              event.preventDefault()
+              onMemberContextMenu(node.data.parentId, node.data.entityId, {
+                x: event.clientX,
+                y: event.clientY,
+              })
+            }
           : undefined
       }
     >

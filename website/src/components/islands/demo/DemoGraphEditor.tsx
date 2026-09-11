@@ -7,6 +7,7 @@ import { CircleProvider } from '@/circle/contexts/CIrcleContext'
 import { useElementSize } from '@/common/hooks/useElementSize'
 import CirclesGraph from '@/graph/CirclesGraph'
 import GraphShortcutsButton from '@/graph/components/GraphShortcutsButton'
+import useGraphContextMenu from '@/graph/hooks/useGraphContextMenu'
 import MemberContent from '@/member/components/MemberContent'
 import { useOrgContext, useOrgEditActions } from '@/org/contexts/OrgContext'
 import { Box, Flex, useColorMode, useToast } from '@chakra-ui/react'
@@ -65,6 +66,12 @@ export default function DemoGraphEditor({
     }
   }, [orgData, ready, selection.circleId, selection.memberId])
 
+  // Right click menu: the role actions only (no org-wide navigation here)
+  const { events: contextMenuEvents, contextMenu } = useGraphContextMenu({
+    view,
+    onlyRole: true,
+  })
+
   const events: GraphEvents = useMemo(() => {
     // A single-member role can hold only one member; warn and refuse otherwise.
     const memberAddRefused = (circleId: string) => {
@@ -85,6 +92,7 @@ export default function DemoGraphEditor({
       return false
     }
     return {
+      ...contextMenuEvents,
       onCircleClick: (circleId) => setSelection({ circleId }),
       onMemberClick: (circleId, memberId) => setSelection({ circleId, memberId }),
       onClickOutside: () => setSelection({}),
@@ -105,7 +113,7 @@ export default function DemoGraphEditor({
         return true
       },
     }
-  }, [actions, orgData, toast, t])
+  }, [actions, orgData, toast, t, contextMenuEvents])
 
   const circleMemberValue = useMemo<CircleMemberContextValue>(
     () => ({
@@ -159,6 +167,8 @@ export default function DemoGraphEditor({
               />
             </Box>
           )}
+
+          {contextMenu}
 
           {/* Keyboard/drag shortcuts, like the org chart options in the app */}
           <GraphShortcutsButton position="absolute" top={3} right={3} zIndex={1} />

@@ -102,10 +102,11 @@
   },
   "CircleCopyModal": {
     "heading": "Duplicate a role",
-    "action1": "Open the Org chart.",
-    "action2": "Press the keys",
-    "action3": "Drag the role with your mouse (click without releasing) while holding down the key.",
-    "action4": "Drop it in the desired role."
+    "label": "Duplicate the role {{name}} into:",
+    "noTarget": "There is no role you can duplicate this role into.",
+    "submit": "Duplicate",
+    "toast": "Role {{name}} duplicated into {{parent}}",
+    "dragHint": "In the org chart, you can also duplicate a role by dragging it into another role while holding the <kbd>{{key}}</kbd> and <kbd>⇧</kbd> keys."
   },
   "CircleDecisions": {
     "create": "Create a decision",
@@ -187,10 +188,11 @@
   },
   "CircleMoveModal": {
     "heading": "Move a role",
-    "action1": "Open the Org chart.",
-    "action2": "Press the key",
-    "action3": "Drag the role with your mouse (click without releasing) while holding down the key.",
-    "action4": "Drop it in the desired role."
+    "label": "Move the role {{name}} into:",
+    "noTarget": "There is no role you can move this role into.",
+    "submit": "Move",
+    "toast": "Role {{name}} moved into {{parent}}",
+    "dragHint": "In the org chart, you can also move a role by dragging it into another role while holding the <kbd>{{key}}</kbd> key."
   },
   "CircleNews": {
     "empty": "The latest activities will appear here: new discussions, completed meetings, decisions made, etc."
@@ -651,6 +653,9 @@
     "showWeekend": "Show weekend",
     "hideWeekend": "Hide weekend",
     "create": "New meeting"
+  },
+  "MemberActionsMenu": {
+    "removeFromRole": "Remove from the role"
   },
   "MemberContent": {
     "notFound": "Member not found",

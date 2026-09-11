@@ -28,7 +28,7 @@ export default memo(function CardElement({
   hidden,
 }: Props) {
   const { events } = useGraphRenderContext()
-  const { onCircleClick } = events
+  const { onCircleClick, onCircleContextMenu } = events
 
   // Invited circles (links) appear as a dashed card under their inviting circle
   const isLink = node.data.id.indexOf('_') !== -1
@@ -50,6 +50,19 @@ export default memo(function CardElement({
               if (!node.data.entityId) return
               onCircleClick(
                 node.data.entityId,
+                isLink ? node.data.parentId ?? undefined : undefined
+              )
+            }
+          : undefined
+      }
+      onContextMenu={
+        onCircleContextMenu
+          ? (event) => {
+              if (!node.data.entityId) return
+              event.preventDefault()
+              onCircleContextMenu(
+                node.data.entityId,
+                { x: event.clientX, y: event.clientY },
                 isLink ? node.data.parentId ?? undefined : undefined
               )
             }

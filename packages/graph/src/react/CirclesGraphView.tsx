@@ -53,6 +53,18 @@ export default forwardRef<CirclesGraph | undefined, CirclesGraphViewProps>(
       }
     }
 
+    // The graph never shows the browser context menu, whether or not the app
+    // opens one of its own (node right clicks bubble up to here too).
+    const handleContextMenu = (event: React.MouseEvent<HTMLDivElement>) => {
+      event.preventDefault()
+      // Right click on the background (nodes handle their own menu)
+      if (event.target !== containerRef.current) return
+      props.events?.onBackgroundContextMenu?.({
+        x: event.clientX,
+        y: event.clientY,
+      })
+    }
+
     const renderContext = useMemo(
       () => ({
         graph,
@@ -101,6 +113,7 @@ export default forwardRef<CirclesGraph | undefined, CirclesGraphViewProps>(
           } as React.CSSProperties
         }
         onClick={handleClickOutside}
+        onContextMenu={handleContextMenu}
       >
         <style>{graphStyles}</style>
         <div

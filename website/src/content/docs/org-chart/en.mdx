@@ -13,10 +13,21 @@ The interactive org chart is the primary way to visualize your organizational st
 - **Scroll** to zoom in and out.
 - Switch between views using the view selector.
 - Use the **minimap** shown in the bottom right corner on desktop, which tells you where you are as soon as the org chart grows past the screen, and click or drag it to move around.
+- **Right click** a role, a member or the background to open the menu of actions available there (see below).
 
 Try it on the example organization below: click a role to zoom into its sub-roles, drag to pan, and scroll to zoom.
 
 <OrgChartView demo="demo" height="560px" showAllNodes={false} shortcuts />
+
+## Right click menu
+
+A right click opens the actions available where you clicked, without leaving the org chart:
+
+- On a **role**, the actions of its panel: edit it, move it into another role, duplicate it, export it, turn it into a base role or separate it from one, and archive it. Moving and duplicating open a form where you pick the target role.
+- On a **member**, remove them from the role you clicked them in.
+- On the **background**, the org chart options: keyboard shortcuts, base roles, vacant roles, history and sharing.
+
+Each menu only lists what your [governance mode](/en/docs/governance-modes) and your rights allow.
 
 ## Views
 

@@ -5,6 +5,7 @@ import useOverflowHidden from '@/common/hooks/useOverflowHidden'
 import useUpdatableQueryParams from '@/common/hooks/useUpdatableQueryParams'
 import CirclesGraph from '@/graph/CirclesGraph'
 import { GraphProvider } from '@/graph/contexts/GraphContext'
+import useGraphContextMenu from '@/graph/hooks/useGraphContextMenu'
 import useGraphEvents from '@/graph/hooks/useGraphEvents'
 import { SidebarContext } from '@/layout/contexts/SidebarContext'
 import MemberContent from '@/member/components/MemberContent'
@@ -67,16 +68,22 @@ export default function CirclesPage() {
   const [memberId, setMemberId] = useState<string | null | undefined>()
   const [parentId, setParentId] = useState<string | undefined>()
 
-  // Data
-  const circles = orgData?.circles
-  const events = useGraphEvents()
-
   // Graph view, kept in the URL like the selected circle so it is shareable
   // and survives navigation. Falls back to the organization default.
   const graphView: GraphView =
     parseGraphView(queryParams.view, queryParams.folded === '1') ||
     parseGraphView(org?.defaultGraphView, org?.defaultGraphFolded) ||
     defaultGraphView
+
+  // Graph events, plus the right click menu rendered below the graph
+  const graphEvents = useGraphEvents()
+  const { events: contextMenuEvents, contextMenu } = useGraphContextMenu({
+    view: graphView.view,
+  })
+  const events = useMemo(
+    () => ({ ...graphEvents, ...contextMenuEvents }),
+    [graphEvents, contextMenuEvents]
+  )
 
   const handleViewChange = useCallback(
     ({ view, folded }: GraphView) =>
@@ -174,6 +181,8 @@ export default function CirclesPage() {
           />
         )}
       </Box>
+
+      {contextMenu}
 
       {panel === Panels.Circle && circleId && (
         <ModalPanel isOpen onClose={handleClosePanel}>

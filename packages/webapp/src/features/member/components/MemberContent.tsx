@@ -14,23 +14,19 @@ import {
   Button,
   Flex,
   Heading,
-  useDisclosure,
   VStack,
 } from '@chakra-ui/react'
 import { useGetMemberQuery } from '@gql'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useOrgContext, useOrgEditActions } from '@/org/contexts/OrgContext'
-import useCurrentMember from '../hooks/useCurrentMember'
 import useOrgAdmin from '../hooks/useOrgAdmin'
 import { MemberEditableField } from './MemberEditableField'
 import MemberNameEditable from './MemberNameEditable'
 import MemberOrgRoleSelect from './MemberOrgRoleSelect'
 import MemberPictureEdit from './MemberPictureEdit'
 import MemberRoles from './MemberRoles'
-import ActionsMenu from '@/common/atoms/actionsMenu/ActionsMenu'
-import ArchiveMenuItem from '@/common/atoms/actionsMenu/ArchiveMenuItem'
-import MemberDeleteModal from '../modals/MemberDeleteModal'
+import MemberActionsMenu from './MemberActionsMenu'
 
 interface Props {
   id: string
@@ -59,9 +55,6 @@ export default function MemberContent({
   })
   const member = orgMember ?? fetched?.member_by_pk ?? undefined
   const isAdmin = useOrgAdmin()
-  const currentMember = useCurrentMember()
-  // Members can't archive themselves.
-  const isSelf = !!currentMember && currentMember.id === id
   // Members are readonly in a proposal draft (a proposal changes the org chart,
   // not member profiles) and in read-only orgs.
   const canEdit =
@@ -73,7 +66,6 @@ export default function MemberContent({
   const canEditProfile = canEdit && !!hasBackend
   const avatarSrc =
     getResizedImageUrl(member?.picture, AVATAR_HEADING_WIDTH) || undefined
-  const deleteModal = useDisclosure()
 
   // Restore an archived member (backend only, admins).
   const canRestore = isAdmin && !!hasBackend && !isDraft
@@ -107,11 +99,7 @@ export default function MemberContent({
       <Box pt={3} pb={10} position="relative">
         <Box position="absolute" top={2} right={2}>
           {headerIcons}
-          {isAdmin && editable && !isDraft && !isSelf && (
-            <ActionsMenu>
-              <ArchiveMenuItem onClick={deleteModal.onOpen} />
-            </ActionsMenu>
-          )}
+          <MemberActionsMenu id={id} />
           <ModalCloseStaticButton onClose={onClose} />
         </Box>
 
@@ -183,14 +171,6 @@ export default function MemberContent({
           <MemberRoles member={member} />
         </VStack>
       </Box>
-
-      {deleteModal.isOpen && (
-        <MemberDeleteModal
-          id={id}
-          isOpen={deleteModal.isOpen}
-          onClose={deleteModal.onClose}
-        />
-      )}
     </>
   )
 }
