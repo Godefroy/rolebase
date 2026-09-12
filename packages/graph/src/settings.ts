@@ -54,7 +54,7 @@ export default {
     // Zoom scale applied when a card is selected. Fixed, because every card
     // has the same size: it puts a card and its neighbours on screen at a
     // readable size whatever the depth or the number of children.
-    focusScale: 1,
+    focusScale: 0.7,
     // Where the focused card sits vertically in the visible area. High up,
     // because a card's children hang below it and have to stay in view.
     focusVerticalRatio: 0.25,
