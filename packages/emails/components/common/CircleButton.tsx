@@ -1,4 +1,4 @@
-import { Button } from '@react-email/components'
+import { Button } from 'react-email'
 import { circleColor } from '@rolebase/shared/helpers/circleColor'
 import React from 'react'
 

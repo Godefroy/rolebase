@@ -1,4 +1,4 @@
-import { render } from '@react-email/components'
+import { render } from 'react-email'
 import React from 'react'
 import Meeting, { MeetingEmailProps } from '../components/templates/Meeting'
 import i18n from '../i18n'
@@ -18,7 +18,7 @@ export default async function sendMeetingEmail(
   })
 
   // Render email to HTML
-  const emailHTML = render(<Meeting {...emailProps} />)
+  const emailHTML = await render(<Meeting {...emailProps} />)
 
   try {
     await sendEmail({

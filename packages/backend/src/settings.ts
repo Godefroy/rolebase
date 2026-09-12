@@ -8,7 +8,9 @@ dotenv.config({
 
 export default {
   port: 8888,
-  url: process.env.WEBAPP_URL || 'http://localhost:3000',
+  // Fallback matches the webapp dev server (see webapp vite.config.ts). Every
+  // deployed environment sets WEBAPP_URL from the Nhost secrets.
+  url: process.env.WEBAPP_URL || 'http://localhost:5175',
   backendUrl: process.env.BACKEND_URL || 'http://localhost:8888',
 
   // Opt-in, so a deployment that forgets to set NODE_ENV stays on the safe side

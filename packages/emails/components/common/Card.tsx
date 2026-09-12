@@ -1,4 +1,4 @@
-import { Container, Heading } from '@react-email/components'
+import { Container, Heading } from 'react-email'
 import React, { ReactNode } from 'react'
 
 interface Props {

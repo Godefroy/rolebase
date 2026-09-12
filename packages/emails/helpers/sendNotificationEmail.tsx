@@ -1,4 +1,4 @@
-import { render } from '@react-email/components'
+import { render } from 'react-email'
 import React from 'react'
 import Notification from '../components/templates/Notification'
 import settings from '../settings'
@@ -23,7 +23,7 @@ export default async function sendNotificationEmail({
   ctaUrl,
   ctaLabel,
 }: Params) {
-  const emailHTML = render(
+  const emailHTML = await render(
     <Notification
       title={title}
       paragraphs={paragraphs}

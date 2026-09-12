@@ -8,9 +8,6 @@
     "tsc": "tsgo"
   },
   "dependencies": {
-    "@react-email/button": "^0.0.10",
-    "@react-email/components": "^0.0.7",
-    "@react-email/html": "^0.0.4",
     "date-fns": "^2.29.3",
     "date-fns-tz": "^2.0.1",
     "dotenv": "^16.0.3",
@@ -18,13 +15,16 @@
     "node-mailjet": "^5.1.1",
     "nodemailer": "^8.0.1",
     "react": "^18.2.0",
-    "react-email": "^1.9.4"
+    "react-dom": "^18.2.0",
+    "react-email": "^6.9.5"
   },
   "devDependencies": {
+    "@react-email/ui": "^6.9.5",
     "@types/dotenv": "^8.2.0",
     "@types/node": "^18.8.3",
     "@types/nodemailer": "^7.0.11",
     "@types/react": "^18.2.21",
+    "@types/react-dom": "^18.2.0",
     "@typescript/native-preview": "^7.0.0-dev.20260707.2",
     "tsx": "^4.7.1",
     "typescript": "^5.2.2"

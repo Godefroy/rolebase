@@ -1,4 +1,4 @@
-import { render } from '@react-email/components'
+import { render } from 'react-email'
 import React from 'react'
 import MemberActiviy from '../components/templates/MemberActivity'
 import i18n from '../i18n'
@@ -28,7 +28,7 @@ export default async function sendMemberActivityEmail({
   })
 
   // Render email to HTML
-  const emailHTML = render(
+  const emailHTML = await render(
     <MemberActiviy
       type={type}
       lang={lang}

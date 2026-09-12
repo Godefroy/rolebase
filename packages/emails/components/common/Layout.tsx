@@ -6,9 +6,10 @@ import {
   Html,
   Img,
   Preview,
+  pixelBasedPreset,
   Section,
   Tailwind,
-} from '@react-email/components'
+} from 'react-email'
 import settings from '@rolebase/backend/src/settings'
 import React, { ReactNode } from 'react'
 
@@ -28,7 +29,7 @@ export default function Layout({
       <Head>
         <Font
           fontFamily="Basiercircle"
-          fallbackFontFamily="Arial"
+          fallbackFontFamily={['Arial', 'sans-serif']}
           webFont={{
             url: `${clientUrl}/emails/basiercircle-regular-webfont.woff2`,
             format: 'woff2',
@@ -37,7 +38,7 @@ export default function Layout({
         />
         <Font
           fontFamily="Basiercircle"
-          fallbackFontFamily="Arial"
+          fallbackFontFamily={['Arial', 'sans-serif']}
           webFont={{
             url: `${clientUrl}/emails/basiercircle-medium-webfont.woff2`,
             format: 'woff2',
@@ -46,7 +47,7 @@ export default function Layout({
         />
         <Font
           fontFamily="Basiercircle"
-          fallbackFontFamily="Arial"
+          fallbackFontFamily={['Arial', 'sans-serif']}
           webFont={{
             url: `${clientUrl}/emails/basiercircle-semibold-webfont.woff2`,
             format: 'woff2',
@@ -57,10 +58,11 @@ export default function Layout({
       {preview && <Preview>{preview}</Preview>}
       <Tailwind
         config={{
+          presets: [pixelBasedPreset],
           theme: {
             extend: {
               fontFamily: {
-                basier: ['Basiercircle'],
+                basier: ['Basiercircle', 'Arial', 'sans-serif'],
               },
             },
           },

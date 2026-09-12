@@ -1,4 +1,4 @@
-import { Section, Text } from '@react-email/components'
+import { Section, Text } from 'react-email'
 import React from 'react'
 import i18n from '../../i18n'
 import Card from '../common/Card'

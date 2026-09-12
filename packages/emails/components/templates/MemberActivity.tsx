@@ -1,4 +1,4 @@
-import { Column, Img, Row, Section, Text } from '@react-email/components'
+import { Column, Img, Row, Section, Text } from 'react-email'
 import settings from '@rolebase/backend/src/settings'
 import React from 'react'
 import i18n from '../../i18n'

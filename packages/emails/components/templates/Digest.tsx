@@ -1,11 +1,4 @@
-import {
-  Column,
-  Heading,
-  Img,
-  Row,
-  Section,
-  Text,
-} from '@react-email/components'
+import { Column, Heading, Img, Row, Section, Text } from 'react-email'
 import settings from '@rolebase/backend/src/settings'
 import { formatInTimeZone } from 'date-fns-tz'
 import React, { Fragment } from 'react'

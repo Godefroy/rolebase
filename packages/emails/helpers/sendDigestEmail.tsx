@@ -1,4 +1,4 @@
-import { render } from '@react-email/components'
+import { render } from 'react-email'
 import React from 'react'
 import Digest, { OrgDigest } from '../components/templates/Digest'
 import i18n from '../i18n'
@@ -21,7 +21,7 @@ export default async function sendDigestEmail({
   const subject = i18n.t('emails:Digest.subject', { lng: lang })
 
   // Render email to HTML
-  const emailHTML = render(
+  const emailHTML = await render(
     <Digest lang={lang} timezone={timezone} orgDigests={orgDigests} />
   )
 
