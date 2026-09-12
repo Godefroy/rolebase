@@ -30,6 +30,16 @@ export default function MeetingAlertNotStarted({ onEdit, ...boxProps }: Props) {
   const { meeting, isToday, isStartTimePassed, videoConfUrl, handleNextStep } =
     useContext(MeetingContext)!
 
+  // The link only opens the edition modal: keep the browser from navigating
+  // to the hash
+  const handleEditClick = useCallback(
+    (event: React.MouseEvent<HTMLAnchorElement>) => {
+      event.preventDefault()
+      onEdit()
+    },
+    [onEdit]
+  )
+
   // Meeting archiving
   const [updateMeeting] = useUpdateMeetingMutation()
   const handleArchive = () => {
@@ -110,7 +120,13 @@ export default function MeetingAlertNotStarted({ onEdit, ...boxProps }: Props) {
             date: startDateLocale,
           }}
           components={{
-            date: <Link href="#" textDecoration="underline" onClick={onEdit} />,
+            date: (
+              <Link
+                href="#"
+                textDecoration="underline"
+                onClick={handleEditClick}
+              />
+            ),
           }}
         />
       </AlertDescription>
