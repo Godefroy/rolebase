@@ -1,0 +1,72 @@
+---
+title: 'History'
+description: 'Follow every change made to the org chart, see who made it and when, and undo it.'
+order: 4.7
+---
+
+## Overview
+
+The history records every change made to the org chart: roles created, moved, duplicated or archived, members assigned or removed, roles invited into other roles, and role content edited. Each entry names its author, dates the change, and stays undoable.
+
+The history covers the structure of the organization. Discussions, tasks, meetings and decisions have their own trail in the [news feed](/en/docs/news-feed).
+
+## Opening the history
+
+The history is a panel of the [org chart](/en/docs/org-chart) page. Two ways to open it:
+
+- Click the settings button above the org chart, then **History**.
+- Right click the org chart background, then **History**.
+
+Entries are grouped by day, most recent first, and the list loads more as you scroll down.
+
+## Reading an entry
+
+Each entry shows the photo and the name of its author, a sentence describing what changed, and the time it happened. The roles and members named in the sentence are links: click one to open it in the org chart.
+
+An entry that has been undone appears struck through, followed by a new entry naming the member who undid it.
+
+## What is recorded
+
+| Action | What it covers |
+| --- | --- |
+| **Role created** | A role created inside another role, or duplicated from an existing one |
+| **Role moved** | A role moved into another role |
+| **Role archived** | A role archived with everything nested under it |
+| **Member assigned** | A member added to a role, or removed from it |
+| **Role invited** | A role invited into another role, and the removal of that invitation |
+| **Role edited** | The name, purpose, domain, accountabilities and other content of a role |
+
+Changes applied by an approved [proposal](/en/docs/proposals) are recorded the same way, under the name of the member who wrote the proposal.
+
+## Undoing an action
+
+Point at an entry and click the button on its right. A window opens with the action, a **Show changes** link that details the values before and after, and a **Cancel this action** button.
+
+Undoing replays the change backwards with your own rights. An action is undoable when you could have made the same change yourself under your [governance mode](/en/docs/governance-modes), so the button appears only on the entries you are allowed to revert. The organization Owner undoes everything.
+
+Two cases go further than a simple revert:
+
+- Undoing the archiving of a role restores the role together with everything that was archived alongside it.
+- Undoing the creation of a role archives that role and everything nested under it since.
+
+<Callout type="warning" title="When the data has changed since">
+  If the roles or members touched by the action have changed since then,
+  Rolebase warns you and asks you to confirm with a checkbox, because those more
+  recent changes can be lost.
+</Callout>
+
+An undo is recorded as an entry of its own and stays final. To return to the previous state, make the change again.
+
+## Actions during a meeting
+
+A [meeting](/en/docs/meetings) page lists the org chart changes made while it was running, under **Actions during the meeting**. Open the section to read them, and undo one from there when needed.
+
+## Changes applied by a decision
+
+When a [proposal](/en/docs/proposals) is approved, the changes it carried reach the live org chart and land in the history. The [decision](/en/docs/decisions) saved by the proposal lists them under **Org chart changes**, which keeps the record of what was decided next to the record of what was applied.
+
+## Next Steps
+
+- [Explore the org chart](/en/docs/org-chart) and its other panels.
+- [Choose a governance mode](/en/docs/governance-modes) to set who changes what.
+- [Create a proposal](/en/docs/proposals) to decide a structural change together.

@@ -1,0 +1,72 @@
+---
+title: 'Historique'
+description: "Suivez chaque modification de l'organigramme, voyez qui l'a faite et quand, et annulez-la."
+order: 4.7
+---
+
+## Vue d'ensemble
+
+L'historique enregistre chaque modification de l'organigramme : rôles créés, déplacés, dupliqués ou archivés, membres assignés ou retirés, rôles invités dans d'autres rôles, et contenu des rôles modifié. Chaque entrée nomme son auteur, date la modification et reste annulable.
+
+L'historique couvre la structure de l'organisation. Les discussions, les tâches, les réunions et les décisions ont leur propre suivi dans le [fil d'actualité](/fr/docs/news-feed).
+
+## Ouvrir l'historique
+
+L'historique est un panneau de la page [organigramme](/fr/docs/org-chart). Deux façons de l'ouvrir :
+
+- Cliquez sur le bouton de réglages au-dessus de l'organigramme, puis sur **Historique**.
+- Cliquez droit sur le fond de l'organigramme, puis sur **Historique**.
+
+Les entrées sont regroupées par jour, de la plus récente à la plus ancienne, et la liste se complète au fil du défilement.
+
+## Lire une entrée
+
+Chaque entrée affiche la photo et le nom de son auteur, une phrase décrivant ce qui a changé, et l'heure de l'action. Les rôles et les membres cités dans la phrase sont des liens : cliquez dessus pour les ouvrir dans l'organigramme.
+
+Une entrée annulée apparaît barrée, suivie d'une nouvelle entrée qui nomme le membre à l'origine de l'annulation.
+
+## Ce qui est enregistré
+
+| Action | Ce qu'elle couvre |
+| --- | --- |
+| **Rôle créé** | Un rôle créé dans un autre rôle, ou dupliqué à partir d'un rôle existant |
+| **Rôle déplacé** | Un rôle déplacé dans un autre rôle |
+| **Rôle archivé** | Un rôle archivé avec tout ce qui se trouve sous lui |
+| **Membre assigné** | Un membre ajouté à un rôle, ou retiré de ce rôle |
+| **Rôle invité** | Un rôle invité dans un autre rôle, et le retrait de cette invitation |
+| **Rôle modifié** | Le nom, la raison d'être, le domaine, les redevabilités et le reste du contenu d'un rôle |
+
+Les modifications appliquées par une [proposition](/fr/docs/proposals) approuvée sont enregistrées de la même façon, au nom du membre qui a rédigé la proposition.
+
+## Annuler une action
+
+Pointez une entrée et cliquez sur le bouton à sa droite. Une fenêtre s'ouvre avec l'action, un lien **Voir les modifications** qui détaille les valeurs avant et après, et un bouton **Annuler cette action**.
+
+Annuler rejoue la modification à l'envers avec vos propres droits. Une action est annulable lorsque vous auriez pu faire vous-même la même modification dans votre [mode de gouvernance](/fr/docs/governance-modes), si bien que le bouton apparaît uniquement sur les entrées que vous avez le droit d'annuler. Le propriétaire de l'organisation annule tout.
+
+Deux cas vont plus loin qu'un simple retour en arrière :
+
+- Annuler l'archivage d'un rôle restaure le rôle avec tout ce qui a été archivé en même temps que lui.
+- Annuler la création d'un rôle archive ce rôle et tout ce qui a été créé sous lui depuis.
+
+<Callout type="warning" title="Quand les données ont changé depuis">
+  Si les rôles ou les membres concernés par l'action ont changé depuis,
+  Rolebase vous prévient et vous demande de confirmer avec une case à cocher,
+  car ces modifications plus récentes peuvent être perdues.
+</Callout>
+
+Une annulation est enregistrée comme une entrée à part entière et reste définitive. Pour revenir à l'état précédent, refaites la modification.
+
+## Actions pendant une réunion
+
+La page d'une [réunion](/fr/docs/meetings) liste les modifications de l'organigramme faites pendant son déroulement, sous **Actions pendant la réunion**. Ouvrez la section pour les lire, et annulez-en une depuis cet endroit si besoin.
+
+## Modifications appliquées par une décision
+
+Lorsqu'une [proposition](/fr/docs/proposals) est approuvée, les modifications qu'elle portait arrivent dans l'organigramme et s'inscrivent dans l'historique. La [décision](/fr/docs/decisions) enregistrée par la proposition les liste sous **Modifications de l'organigramme**, ce qui garde la trace de ce qui a été décidé à côté de la trace de ce qui a été appliqué.
+
+## Prochaines étapes
+
+- [Explorer l'organigramme](/fr/docs/org-chart) et ses autres panneaux.
+- [Choisir un mode de gouvernance](/fr/docs/governance-modes) pour définir qui modifie quoi.
+- [Créer une proposition](/fr/docs/proposals) pour décider ensemble d'un changement de structure.
