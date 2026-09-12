@@ -24,7 +24,6 @@ export default memo(function Nodes({ graph }: Props) {
   // Mount leaders avatars only when they can be visible (zoom scale near 1),
   // like members: prevents loading hundreds of images at once on page load
   const showLeaders =
-    isTree ||
     graph.showAllNodes ||
     graph.zoomTransform.k * settings.culling.memberScaleMargin > 1
 
@@ -69,7 +68,6 @@ export default memo(function Nodes({ graph }: Props) {
               key={node.data.id}
               node={node}
               selected={selected}
-              showLeaders={showLeaders}
               hidden={hidden}
             />
           ) : (

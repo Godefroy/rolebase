@@ -1,19 +1,12 @@
 import React, { memo } from 'react'
-import {
-  cardShowsLeaders,
-  cardTitleHeight,
-  titleLineCount,
-} from '../../core/layouts/tree'
+import { cardTitleHeight, titleLineCount } from '../../core/layouts/tree'
 import { NodeData } from '../../types'
 import { useGraphRenderContext } from '../GraphRenderContext'
-import CardLeadersElement from './CardLeadersElement'
 import NodeElement from './NodeElement'
 
 interface Props {
   node: NodeData
   selected?: boolean
-  // Mount leaders avatars only when they can be visible (see CircleElement)
-  showLeaders?: boolean
   // Temporarily hidden during a select-relayout animation (see NodeElement)
   hidden?: boolean
 }
@@ -24,7 +17,6 @@ interface Props {
 export default memo(function CardElement({
   node,
   selected,
-  showLeaders = true,
   hidden,
 }: Props) {
   const { events } = useGraphRenderContext()
@@ -87,10 +79,6 @@ export default memo(function CardElement({
             {node.data.name}
           </span>
         </div>
-      )}
-
-      {showLeaders && cardShowsLeaders(node.data) && (
-        <CardLeadersElement node={node} />
       )}
     </NodeElement>
   )

@@ -3,11 +3,7 @@ import { OrgData } from '@rolebase/shared/model/OrgData'
 import { describe, expect, it } from 'vitest'
 import { computeVisibleNodes } from '../src/core/culling'
 import { computeLayout } from '../src/core/layout'
-import {
-  cardShowsLeaders,
-  cardTitleHeight,
-  titleLineCount,
-} from '../src/core/layouts/tree'
+import { cardTitleHeight, titleLineCount } from '../src/core/layouts/tree'
 import { getDropTargetNode } from '../src/helpers/getDropTargetNode'
 import { minimapNodes } from '../src/helpers/minimapNodes'
 import graphSettings from '../src/settings'
@@ -857,8 +853,6 @@ describe('invited roles', () => {
 
     // One row for the representative, none for the members of the invited role
     expect(rows.map((n) => n.data.entityId)).toEqual(['km3'])
-    // Listed as rows, so no avatar row on top of them
-    expect(cardShowsLeaders(linkCard.data)).toBe(false)
     // Sized for its title and that one row
     expect(linkCard.h).toBeCloseTo(
       cardTitleHeight(linkCard.data) +
@@ -900,7 +894,40 @@ describe('invited roles', () => {
         ?.filter((p) => p.leader)
         .map((p) => p.member.id)
     ).toEqual(['km3'])
-    expect(cardShowsLeaders(linkCircle.data)).toBe(true)
+    // Drawn as avatars from the participants, so the circle lists no member
+    expect(
+      linkCircle.descendants().filter((n) => n.data.type === NodeType.Member)
+    ).toEqual([])
+  })
+})
+
+describe('folded tree', () => {
+  const org = buildLinkOrg()
+  // Folded on the root circle: its children are folded cards
+  const layout = computeLayout(org, CirclesGraphViews.Tree, true, 'k0')
+  const node = (id: string) => layout.nodes.find((n) => n.data.id === id)!
+  const rows = (id: string) =>
+    node(id)
+      .descendants()
+      .filter((n) => n.data.type === NodeType.Member)
+
+  it('lists the representatives of a folded role, not its members', () => {
+    // k0.b is folded: its representative, not its two members
+    expect(rows('k0.b').map((n) => n.data.entityId)).toEqual(['km3'])
+    // The rows belong to the representative role, and are scoped to the card
+    expect(rows('k0.b')[0].data.parentId).toBe('k0.b.rep')
+    expect(rows('k0.b')[0].data.id).toBe('k0.b_k0.b.rep-km3')
+  })
+
+  it('keeps the members of the open role', () => {
+    const open = computeLayout(org, CirclesGraphViews.Tree, true, 'k0.b')
+    const ids = open.nodes
+      .filter((n) => n.data.type === NodeType.Member)
+      .map((n) => n.data.entityId)
+
+    // The selected circle is open: its own members are listed
+    expect(ids).toContain('km1')
+    expect(ids).toContain('km2')
   })
 })
 

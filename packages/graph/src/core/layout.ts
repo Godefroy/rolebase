@@ -98,14 +98,18 @@ function prepareDataInternal(
       }
 
       // Members to render (explicit list for the members view, else the
-      // circle's own members when shown). Left out entirely when they are not
-      // displayed, so a circle is not sized around an empty space.
+      // circle's own members when shown). A folded card shows its
+      // representatives instead, like an invited role card. Left out entirely
+      // when they are not displayed, so a circle is not sized around an empty
+      // space.
       const memberEntries = options.hideMembers
         ? []
         : circle.memberEntries
         ? circle.memberEntries
         : circle.showMembers
         ? org.membersOf(circle.id)
+        : layout === GraphLayoutKind.Tree && circle.participants
+        ? leaderEntries(circle.participants)
         : []
 
       // A role with a representative role stacked under it lists its members
@@ -155,10 +159,13 @@ function membersCardId(circleId: string): string {
   return `${circleId}-memberscard`
 }
 
-// One row of a card: a circle member, or a representative of an invited role
+// One row of a card: a member of the role, or a representative listed on a
+// card the member does not belong to (invited role, folded role)
 interface MemberEntry {
   id: string
   member: MemberSummaryFragment
+  // Circle the member belongs to, when it is not the card's own circle
+  circleId?: string
 }
 
 function membersToData(
@@ -177,23 +184,24 @@ function membersToData(
     type: NodeType.MembersCircle,
   }
   if (members.length !== 0) {
-    node.children = members.map(
-      (entry): Data => ({
-        id: memberParentId ? `${circleId}_${entry.id}` : entry.id,
+    node.children = members.map((entry): Data => {
+      const memberCircleId = memberParentId ?? entry.circleId
+      return {
+        id: memberCircleId ? `${circleId}_${entry.id}` : entry.id,
         entityId: entry.member.id,
-        parentId: memberParentId ?? circleId,
+        parentId: memberCircleId ?? circleId,
         name: textEllipsis(entry.member.name, 20),
         picture: entry.member.picture,
         type: NodeType.Member,
         colorHue,
-      })
-    )
+      }
+    })
   }
   return node
 }
 
-// Representatives a card lists for an invited role: the participants the
-// circles view draws as leader avatars, one row per member
+// Representatives a card lists instead of members (invited role, folded role):
+// the participants the circles view draws as leader avatars, one row per member
 function leaderEntries(participants: readonly Participant[]): MemberEntry[] {
   const entries: MemberEntry[] = []
   for (const participant of participants) {
@@ -204,6 +212,7 @@ function leaderEntries(participants: readonly Participant[]): MemberEntry[] {
     entries.push({
       id: `${participant.circleId}-${participant.member.id}`,
       member: participant.member,
+      circleId: participant.circleId,
     })
   }
   return entries

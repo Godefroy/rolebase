@@ -240,38 +240,6 @@ export const graphStyles = `
   overflow: hidden;
   overflow-wrap: anywhere;
 }
-/* Aligned on the member rows above them */
-.rb-graph .card-leaders {
-  position: relative;
-  flex: none;
-  align-self: flex-start;
-  margin-left: ${memberRowPadding}px;
-}
-.rb-graph .card-leader {
-  display: flex;
-  position: absolute;
-  top: 0;
-  border-radius: 50%;
-  /* Same ground as a member row avatar, so the initials read the same */
-  background-color: var(--outline-color);
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-.rb-graph .card-leader-image {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-  pointer-events: none;
-}
-.rb-graph .card-leader-initial {
-  color: white;
-  font-weight: bold;
-  font-size: 22px;
-}
 /* Edges, in a single SVG behind the cards. The stroke keeps a constant
    on-screen width, like the node outlines. Reading --zoom-scale (which changes
    every frame) costs one style recomputation on this single element, instead

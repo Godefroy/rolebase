@@ -83,9 +83,6 @@ export default {
     memberRowRadius: 8,
     memberRowPadding: 7,
     memberAvatarSize: 30,
-    // Leader avatars of a card that shows participants instead of members
-    leaderRadius: 22,
-    leaderGap: 6,
   },
   // Overview of the whole layout, in the bottom right corner of the graph
   minimap: {

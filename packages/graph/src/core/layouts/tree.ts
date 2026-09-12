@@ -78,14 +78,6 @@ export function cardTitleHeight(data: Data): number {
   return 2 * t.cardTitlePadding + titleLineCount(data.name) * t.titleLineHeight
 }
 
-// A card lists its members, and falls back to its leaders when it has none
-export function cardShowsLeaders(data: Data): boolean {
-  return (
-    memberChildren(data).length === 0 &&
-    !!data.participants?.some((participant) => participant.leader)
-  )
-}
-
 // Circle children that take a slot in the level below. A parent-link card
 // stacks under the card it represents instead, so the horizontal packing
 // descends straight through it.
@@ -442,15 +434,13 @@ function membersHeight(count: number): number {
     : 0
 }
 
-// A card holds a title, then either its members or its leaders
+// A card holds a title, then the rows it lists (its members, or the
+// representatives it stands in for)
 export function cardHeight(data: Data): number {
   const title = cardTitleHeight(data)
   const members = memberChildren(data)
   if (members.length !== 0) {
     return title + membersHeight(members.length) + t.cardPadding
-  }
-  if (cardShowsLeaders(data)) {
-    return title + 2 * t.leaderRadius + t.cardPadding
   }
   return title + t.cardPadding
 }

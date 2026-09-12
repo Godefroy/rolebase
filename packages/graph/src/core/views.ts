@@ -148,18 +148,13 @@ const tree: ViewStrategy = {
 }
 
 // Same circles as the folded circles view (the selected circle, its ancestors
-// and their direct children), laid out as a top-down tree of cards. Every card
-// lists its members: a card is read as a whole, so a role on screen always
-// shows who fills it, not just who represents it.
+// and their direct children), laid out as a top-down tree of cards. A folded
+// card lists its representatives rather than its members, like an invited role
+// card: its members are read by opening it.
 const foldedTree: ViewStrategy = {
   layout: GraphLayoutKind.Tree,
   relayoutOnSelect: true,
-  getCircles: (org, selectedCircleId) =>
-    foldedCircles.getCircles(org, selectedCircleId).map((circle) => ({
-      ...circle,
-      showMembers: true,
-      participants: undefined,
-    })),
+  getCircles: foldedCircles.getCircles,
 }
 
 // A view and its folding flag decide the strategy. The members view shows the
