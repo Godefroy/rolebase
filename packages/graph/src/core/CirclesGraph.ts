@@ -235,11 +235,18 @@ export class CirclesGraph extends Graph<OrgData> {
     // Zoom at first draw, synchronously before culling: nothing must render
     // with the identity transform, it would mount a large fully-detailed
     // subset of nodes (crash on mobile).
-    // Both layouts open on the whole chart: it is what the view is about, and
-    // it is the widest the zoom bounds allow anyway. A packing is framed on
-    // its root circle, a tree on its box, much wider than it is tall.
+    // A selected circle is framed on itself: changing view remounts the graph,
+    // and the circle being read has to stay in sight from one view to the next
+    // (selectCircle ran before this first layout, with nothing to focus yet).
+    // Without a selection, both layouts open on the whole chart: it is what the
+    // view is about, and it is the widest the zoom bounds allow anyway. A
+    // packing is framed on its root circle, a tree on its box, much wider than
+    // it is tall.
     if (firstDraw) {
-      if (this.layoutKind === GraphLayoutKind.Tree) {
+      const selectedId = this.drawnNodeId(this.selectedCircleId)
+      if (selectedId && nodes.some((node) => node.data.id === selectedId)) {
+        this.focusNodeId(selectedId, true, true)
+      } else if (this.layoutKind === GraphLayoutKind.Tree) {
         this.zoomToBox(layout.focusBox, true)
       } else {
         this.zoomTo(root.x, root.y, this.focusCircleScale(root), true)
