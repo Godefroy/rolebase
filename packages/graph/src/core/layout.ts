@@ -97,6 +97,15 @@ function prepareDataInternal(
         }
       }
 
+      // Sub-roles the view leaves out (folded card): marked with an ellipsis
+      // below the card, telling the role opens on more
+      if (
+        layout === GraphLayoutKind.Tree &&
+        hasHiddenChildren(org, circle.id, children)
+      ) {
+        data.hiddenChildren = true
+      }
+
       // Members to render (explicit list for the members view, else the
       // circle's own members when shown). A folded card shows its
       // representatives instead, like an invited role card. Left out entirely
@@ -151,6 +160,23 @@ function prepareDataInternal(
 
       return data
     })
+}
+
+// Whether a role holds sub-roles the layout does not draw. A representative
+// role is stacked on the card it represents rather than laid out below it, so
+// it does not count on its own: only the sub-roles it holds do.
+function hasHiddenChildren(
+  org: OrgData,
+  circleId: string,
+  children: Data[]
+): boolean {
+  const renderedIds = new Set(children.map((child) => child.id))
+  return org.childrenOf(circleId).some((child) => {
+    if (renderedIds.has(child.id)) return false
+    return org.roleById.get(child.roleId)?.parentLink
+      ? hasHiddenChildren(org, child.id, [])
+      : true
+  })
 }
 
 // Id of the nameless card listing the members of a role. Free of "_", which

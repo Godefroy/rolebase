@@ -20,6 +20,9 @@ const {
   titleLineHeight,
   memberRowRadius,
   memberRowPadding,
+  cardWidth,
+  hiddenChildrenFontSize,
+  hiddenChildrenHeight,
 } = settings.tree
 
 const minimap = settings.minimap
@@ -100,6 +103,7 @@ export const graphStyles = `
    the per-frame --zoom-scale. */
 .rb-graph .node.selected::after,
 .rb-graph .node.clickable:hover::after,
+.rb-graph .card-hidden-children:hover + .node.card.clickable::after,
 .rb-graph .node.drag-target::after {
   content: '';
   position: absolute;
@@ -110,7 +114,8 @@ export const graphStyles = `
   border-width: calc(4px / var(--zoom-scale) / var(--node-scale));
   pointer-events: none;
 }
-.rb-graph .node.clickable:hover::after {
+.rb-graph .node.clickable:hover::after,
+.rb-graph .card-hidden-children:hover + .node.card.clickable::after {
   border-color: var(--hover-outline-color);
 }
 .rb-graph .node.drag-node {
@@ -240,6 +245,30 @@ export const graphStyles = `
   overflow: hidden;
   overflow-wrap: anywhere;
 }
+/* Sub-roles a folded card leaves out: an ellipsis in the gap below the card,
+   in the colour of the edges. Drawn beside the card rather than inside it,
+   which clips its content, and part of the clickable area of the card: it
+   opens the role, and outlines it on hover (sibling rule above). */
+.rb-graph .card-hidden-children {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: ${cardWidth}px;
+  height: ${hiddenChildrenHeight}px;
+  margin-left: -${cardWidth / 2}px;
+  font-size: ${hiddenChildrenFontSize}px;
+  line-height: 0.5;
+  font-weight: bold;
+  color: var(--link-color);
+  transition: translate ${moveTransition};
+}
+/* An export (the export page and the image it produces) shows everything at
+   once and opens nothing: the invitation to open the role is noise there */
+.rb-graph-show-all .card-hidden-children {
+  display: none;
+}
+
 /* Edges, in a single SVG behind the cards. The stroke keeps a constant
    on-screen width, like the node outlines. Reading --zoom-scale (which changes
    every frame) costs one style recomputation on this single element, instead

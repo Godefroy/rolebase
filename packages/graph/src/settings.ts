@@ -64,6 +64,10 @@ export default {
     // pull back a little further.
     maxScale: 1.5,
     minScaleRatio: 0.8,
+    // Ellipsis marking the sub-roles a folded card leaves out, drawn in the
+    // gap below it
+    hiddenChildrenFontSize: 48,
+    hiddenChildrenHeight: 40,
     // Horizontal gap between two sibling cards
     gapX: 44,
     // Vertical gap between two levels

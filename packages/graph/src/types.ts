@@ -129,6 +129,9 @@ export interface Data {
   // Nameless card holding the members of a role that also has sub-roles, laid
   // out as its first child in the hierarchical views (see prepareDataInternal)
   membersCard?: boolean
+  // Holds sub-roles the view leaves out (folded card): the hierarchical views
+  // mark it with an ellipsis below the card
+  hiddenChildren?: boolean
   value?: number
   children?: Array<Data>
   participants?: readonly Participant[]
