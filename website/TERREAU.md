@@ -140,6 +140,10 @@ transactionnelle. S'il apprend un concept, c'est informationnel → blog.
 
 **Volume** : ne jamais suivre un terme à 0 volume confirmé.
 
+**Pages de documentation** (`/docs`, `/guides`, `/developers`, `/api`) : elles ne portent que des
+termes propres à Rolebase. Un terme générique se range sur un article ou une fiche de glossaire, et
+s'il attend un contenu à écrire, ce contenu figure au backlog avec le terme dans ses `details`.
+
 ---
 
 ## 7. Où vit le contenu
