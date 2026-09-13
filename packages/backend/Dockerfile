@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 FROM node:20-alpine
 
 # Chromium for org chart PNG export (puppeteer-core)
@@ -18,9 +19,9 @@ ENV NODE_OPTIONS=--max-old-space-size=2048
 ENV GENERATE_SOURCEMAP=false
 
 # Next.js comes with @react-email/ui (email preview, dev only) and makes the layer too big for the Nhost registry
-RUN npm install \
-  && rm -rf node_modules/next node_modules/@next node_modules/@react-email/ui \
-  && npm cache clean --force
+RUN --mount=type=cache,target=/root/.npm \
+  npm ci \
+  && rm -rf node_modules/next node_modules/@next node_modules/@react-email/ui
 
 COPY ../.. .
 

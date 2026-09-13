@@ -1,5 +1,5 @@
 # Copy of https://github.com/nhost-actions/workflows/blob/main/.github/workflows/build-and-release-nhost-run.yaml
-# with Dockerfile path
+# with Dockerfile path and one native runner per platform
 
 ---
 name: 'Release Workflow'
@@ -35,15 +35,22 @@ on:
         required: true
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+  # One native runner per platform (QEMU emulation of arm64 is ~10x slower)
+  build:
+    strategy:
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-24.04
+          - platform: linux/arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
 
     steps:
       - name: 'Check out repository'
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install Nhost CLI
-        id: install-nhost-cli
         uses: nhost-actions/install-nhost-cli@v1
 
       - name: Authenticate with Nhost
@@ -54,22 +61,76 @@ jobs:
       - name: Configure docker credentials
         uses: nhost-actions/configure-container-registry@v1
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Prepare
+        run: |
+          IMAGE='${{ inputs.IMAGE }}'
+          echo "IMAGE_NAME=${IMAGE%:*}" >> "$GITHUB_ENV"
+          PLATFORM='${{ matrix.platform }}'
+          echo "PLATFORM_PAIR=${PLATFORM//\//-}" >> "$GITHUB_ENV"
+
+      - name: Build and push by digest
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ inputs.DOCKER_CONTEXT }}
+          file: ${{ inputs.DOCKER_FILE }}
+          platforms: ${{ matrix.platform }}
+          outputs: type=image,name=${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=true
+          cache-from: type=gha,scope=${{ env.PLATFORM_PAIR }}
+          cache-to: type=gha,mode=max,scope=${{ env.PLATFORM_PAIR }}
+
+      - name: Export digest
+        run: |
+          mkdir -p ${{ runner.temp }}/digests
+          digest='${{ steps.build.outputs.digest }}'
+          touch "${{ runner.temp }}/digests/${digest#sha256:}"
+
+      - name: Upload digest
+        uses: actions/upload-artifact@v4
+        with:
+          name: digests-${{ env.PLATFORM_PAIR }}
+          path: ${{ runner.temp }}/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  deploy:
+    needs: [build]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 'Check out repository'
+        uses: actions/checkout@v4
+
+      - name: Install Nhost CLI
+        uses: nhost-actions/install-nhost-cli@v1
+
+      - name: Authenticate with Nhost
+        uses: nhost-actions/authenticate@v1
+        with:
+          pat: ${{ secrets.PAT }}
+
+      - name: Configure docker credentials
+        uses: nhost-actions/configure-container-registry@v1
+
+      - name: Download digests
+        uses: actions/download-artifact@v4
+        with:
+          path: ${{ runner.temp }}/digests
+          pattern: digests-*
+          merge-multiple: true
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
-      - name: Build and push
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: ${{ inputs.DOCKER_FILE }}
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: ${{ inputs.IMAGE }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+      - name: Create multi-platform manifest
+        working-directory: ${{ runner.temp }}/digests
+        run: |
+          IMAGE='${{ inputs.IMAGE }}'
+          docker buildx imagetools create -t "$IMAGE" $(printf "${IMAGE%:*}@sha256:%s " *)
+          docker buildx imagetools inspect "$IMAGE"
 
       - name: Deploy service configuration
         uses: nhost-actions/nhost-run-config-deploy@v1
