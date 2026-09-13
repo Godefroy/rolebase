@@ -3,6 +3,8 @@ export enum UserLocalStorageKeys {
   ThreadDrafts = 'thread-draft-{id}',
   SidebarWidth = 'sidebar-width',
   DefaultOrgId = 'default-org-id',
+  OnboardingTodoCollapsed = 'onboarding-todo-collapsed-{id}',
+  OrgLifecycleTracked = 'org-lifecycle-{id}',
 }
 
 export function resetUserLocalStorage() {

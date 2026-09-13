@@ -134,6 +134,7 @@ select_permissions:
         - iconFileId
         - id
         - name
+        - onboardingTodo
         - shareMembers
         - shareOrg
         - slug
@@ -153,6 +154,7 @@ update_permissions:
         - iconFileId
         - name
         - onboardingOrgType
+        - onboardingTodo
         - shareMembers
         - shareOrg
       filter:

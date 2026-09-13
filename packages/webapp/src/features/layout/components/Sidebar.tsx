@@ -51,6 +51,7 @@ import SidebarTopIcon from './SidebarTopIcon'
 import SidebarTopIconLink from './SidebarTopIconLink'
 import UserSettingsMenuList from './UserSettingsMenuList'
 import useOrgMember from '@/member/hooks/useOrgMember'
+import OnboardingTodo from '@/onboarding/components/OnboardingTodo'
 
 // Force reset with fast refresh
 // @refresh reset
@@ -211,6 +212,8 @@ export default function Sidebar() {
                 showShortcut={!isMobile}
                 onClick={searchModal.onOpen}
               />
+
+              <OnboardingTodo />
 
               <SidebarItemLink to={`${rootPath}news`} icon={NewsIcon}>
                 {t('Sidebar.news')}

@@ -1,0 +1,23 @@
+---
+title: 'Users'
+description: 'tRPC procedure of the user router: check that an email domain can receive emails before signing in.'
+order: 7.5
+---
+
+Procedures of the `user` router. The account itself (name, locale, metadata) is read and written through GraphQL; this router groups the checks that need network access on the server side.
+
+## Query `user.checkEmailDomain`
+
+Tells whether a domain can receive emails, by looking up its MX records. The app calls it before sending a sign-in code, to flag right away an address whose domain does not exist or has no mail server. This procedure is public because it is used before signing in, so it receives the domain alone, never the full address.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `domain` | `String` | Domain to check, for example `example.com`. Required. |
+
+It returns `{ valid }`. `valid` is `false` when the domain is malformed, unknown, has no MX record, or declares that it accepts no email. Any other DNS error, such as a lookup taking more than two seconds, does not blame the domain: the answer is then `true`, so signing in always stays possible. The backend keeps each answer in memory for an hour.
+
+```typescript
+const { valid } = await trpc.user.checkEmailDomain.query({
+  domain: 'example.com',
+})
+```

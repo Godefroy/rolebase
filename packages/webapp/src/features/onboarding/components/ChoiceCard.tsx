@@ -49,7 +49,7 @@ export default function ChoiceCard({
           {label}
         </Text>
         {description && (
-          <Text fontSize="xs" color="gray.500">
+          <Text fontSize="xs" color="gray.500" whiteSpace="pre-line">
             {description}
           </Text>
         )}

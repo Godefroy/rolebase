@@ -491,7 +491,15 @@
     "submit": "Continuer",
     "terms": "En continuant, vous reconnaissez avoir compris et accepté {{termsAndPrivacy}}",
     "codeHeading": "Nous avons envoyé un code à 6 chiffres à {{email}}",
-    "codeDescription": "Entrez votre code"
+    "codeDescription": "Entrez votre code",
+    "notReceived": "Pas reçu ? Vérifiez vos courriers indésirables, ou demandez un nouveau code.",
+    "resend": "Renvoyer le code",
+    "resendIn_one": "Renvoyer le code dans {{count}} seconde",
+    "resendIn_other": "Renvoyer le code dans {{count}} secondes",
+    "resent": "Nouveau code envoyé à {{email}}. Il remplace le précédent.",
+    "changeEmail": "Modifier l'adresse",
+    "invalidDomain": "Ce domaine ne reçoit pas d'emails. Vérifiez l'adresse.",
+    "invalidCode": "Code incorrect ou expiré. Vérifiez le dernier email reçu, ou demandez un nouveau code."
   },
   "AuthPage": {
     "loginWithPassword": "Connexion avec mot de passe",
@@ -937,11 +945,6 @@
     "declineButton": "Non merci",
     "feedback": "Merci ! Avez-vous des suggestions ? Est-ce qu'on peut vous aider ?",
     "helpButton": "Parler à un humain"
-  },
-  "BookDemoModal": {
-    "title": "Découvrez Rolebase",
-    "message": "Vous souhaitez une visite gratuite et personnalisée de Rolebase ?",
-    "button": "Réserver une démo"
   },
   "ReactionAddButton": {
     "tooltip": "Ajouter une réaction…"
@@ -1693,42 +1696,62 @@
   "useUpdateTaskStatus": {
     "toast": "Tâche marquée comme \"{{status}}\""
   },
-  "OrgTypeSelect": {
-    "Classic": "Classique",
-    "Classic_desc": "Organisation hiérarchique classique, avec des responsables et des réunions d'équipe régulières.",
-    "HolacracyV5": "Holacratie (v5)",
-    "HolacracyV5_desc": "Gouvernance par cercles (Constitution v5) : Leader, Représentant, et réunions de triage.",
-    "HolacracyV4": "Holacratie (v4)",
-    "HolacracyV4_desc": "Gouvernance par cercles (Constitution v4) : Premier Lien, Second Lien, et réunions de triage.",
-    "Sociocracy": "Sociocratie",
-    "Sociocracy_desc": "Gouvernance par consentement, avec un leader, un délégué et des réunions de politique."
-  },
   "OrgSetupModal": {
-    "heading": "Configurez votre organisation",
-    "subheading": "Choisissez un modèle d'organisation. Nous créerons les rôles de base et les modèles de réunion adaptés. Vous pourrez tout modifier ensuite.",
-    "orgType": "Modèle d'organisation",
+    "model": {
+      "heading": "Qui décide, dans vos équipes ?",
+      "subheading": "Nous créerons les rôles de base et les modèles de réunion adaptés à votre fonctionnement.",
+      "editable": "Ce choix n'est qu'un point de départ : vous pouvez modifier les rôles de base et les modèles de réunion à tout moment, au fil de l'évolution de votre organisation.",
+      "baseRoles": "Rôles de base : {{roles}}",
+      "meetingTemplates": "Modèles de réunion : {{templates}}",
+      "v4": "Vous suivez la constitution Holacracy v4 ?",
+      "options": {
+        "Classic": "Un responsable décide pour son équipe",
+        "Sociocracy": "L'équipe décide ensemble, avec des rôles élus",
+        "HolacracyV5": "Nous pratiquons déjà l'Holacratie",
+        "HolacracyV4": "Nous pratiquons l'Holacratie, constitution v4"
+      }
+    },
     "roles": {
       "heading": "Quels sont les principaux rôles et équipes ?",
-      "help": "Dans Rolebase, un rôle est une unité d'organisation qui peut être occupée par une personne ou par une équipe. Ajoutez les principaux rôles et équipes de {{orgName}} et indiquez qui en est responsable. Vous pourrez tout modifier ensuite.",
-      "customPlaceholder": "Ajouter un rôle..."
+      "help": "Dans Rolebase, un rôle est une unité d'organisation qui peut être occupée par une personne ou par une équipe. Ajoutez les principaux rôles et équipes de {{orgName}}, et leurs responsables si vous les connaissez. Vous pourrez tout modifier ensuite.",
+      "addHeading": "Ajouter un rôle",
+      "customPlaceholder": "Ou tapez le nom d'un rôle..."
     },
-    "responsible": "Responsable",
-    "selectResponsible": "Choisir un responsable",
     "participants": "Autres participants",
-    "addParticipant": "Ajouter un participant",
-    "avatars": {
-      "heading": "Ajoutez des photos",
-      "help": "Ajoutez une photo pour chaque membre afin de rendre l'organigramme plus vivant.",
-      "skip": "Passer cette étape"
+    "invite": {
+      "heading": "Invitez votre équipe",
+      "help": "Chaque personne invitée reçoit un email pour rejoindre l'organisation. Laissez vide celles que vous préférez inviter plus tard.",
+      "empty": "Aucun membre à inviter pour l'instant. Vous pourrez inviter votre équipe à tout moment depuis la prise en main.",
+      "emailLabel": "Email de {{name}}",
+      "pricing": "Les 5 premiers comptes sont gratuits. Au-delà, 5 € par mois par compte. Les membres sans compte sont illimités.",
+      "limitReached_one": "Votre plan inclut {{count}} invitation en plus de votre compte. Vous pourrez inviter les autres membres en passant à un plan supérieur, une fois la configuration terminée.",
+      "limitReached_other": "Votre plan inclut {{count}} invitations en plus de votre compte. Vous pourrez inviter les autres membres en passant à un plan supérieur, une fois la configuration terminée.",
+      "later": "Plus tard",
+      "send_one": "Envoyer l'invitation",
+      "send_other": "Envoyer les {{count}} invitations",
+      "partialError_one": "{{count}} invitation n'a pas pu être envoyée. Réessayez depuis la prise en main.",
+      "partialError_other": "{{count}} invitations n'ont pas pu être envoyées. Réessayez depuis la prise en main."
     },
     "ready": "Votre organigramme est prêt"
   },
+  "OnboardingTodo": {
+    "title": "Prise en main",
+    "expand": "Déplier la prise en main",
+    "collapse": "Replier la prise en main",
+    "menu": "Options de la prise en main",
+    "dismiss": "Masquer définitivement",
+    "bookDemo": "Réserver une démo gratuite",
+    "items": {
+      "orgChart": "Créer votre organigramme",
+      "invite": "Inviter votre équipe",
+      "recurringMeeting": "Planifier une réunion récurrente",
+      "photos": "Ajouter des photos de membres",
+      "meeting": "Tenir votre première réunion",
+      "thread": "Ouvrir un premier sujet"
+    }
+  },
   "Onboarding": {
     "finish": "Terminer",
-    "username": {
-      "heading": "Bienvenue ! Quel est votre nom ?",
-      "name": "Prénom et nom"
-    },
     "orgName": {
       "heading": "Créez votre organisation"
     },

@@ -457,7 +457,15 @@
     "submit": "Continue",
     "terms": "By continuing, you acknowledge that you have understood and accepted {{termsAndPrivacy}}",
     "codeHeading": "We've sent a 6-digit code to {{email}}",
-    "codeDescription": "Enter your code"
+    "codeDescription": "Enter your code",
+    "notReceived": "Didn't get it? Check your spam folder, or ask for a new code.",
+    "resend": "Resend the code",
+    "resendIn_one": "Resend the code in {{count}} second",
+    "resendIn_other": "Resend the code in {{count}} seconds",
+    "resent": "New code sent to {{email}}. It replaces the previous one.",
+    "changeEmail": "Change address",
+    "invalidDomain": "This domain doesn't receive emails. Check the address.",
+    "invalidCode": "Incorrect or expired code. Check the latest email you received, or ask for a new code."
   },
   "AuthPage": {
     "loginWithPassword": "Log in with password",
@@ -903,11 +911,6 @@
     "declineButton": "No thanks",
     "feedback": "Thank you! Do you have any suggestions? Can we help you?",
     "helpButton": "Talk to a human"
-  },
-  "BookDemoModal": {
-    "title": "Discover Rolebase",
-    "message": "Want a free personalized tour of Rolebase?",
-    "button": "Book a demo"
   },
   "ReactionAddButton": {
     "tooltip": "Add reaction…"
@@ -1692,42 +1695,62 @@
       "text": "The format of your file is not supported by our import system at this time. \nA request has been sent to support to help you within 12 hours."
     }
   },
-  "OrgTypeSelect": {
-    "Classic": "Classic",
-    "Classic_desc": "Classic hierarchical organization, with managers and regular team meetings.",
-    "HolacracyV5": "Holacracy (v5)",
-    "HolacracyV5_desc": "Circle-based governance (Constitution v5): Leader, Representative, and tactical meetings.",
-    "HolacracyV4": "Holacracy (v4)",
-    "HolacracyV4_desc": "Circle-based governance (Constitution v4): Lead Link, Rep Link, and tactical meetings.",
-    "Sociocracy": "Sociocracy",
-    "Sociocracy_desc": "Consent-based governance, with a leader, a delegate and policy meetings."
-  },
   "OrgSetupModal": {
-    "heading": "Set up your organization",
-    "subheading": "Choose an organizational model. We'll create the matching base roles and meeting templates. You can change everything afterwards.",
-    "orgType": "Organizational model",
+    "model": {
+      "heading": "Who makes decisions in your teams?",
+      "subheading": "We'll create the base roles and meeting templates that fit the way you work.",
+      "editable": "This choice is only a starting point: you can change the base roles and meeting templates at any time, as your organization evolves.",
+      "baseRoles": "Base roles: {{roles}}",
+      "meetingTemplates": "Meeting templates: {{templates}}",
+      "v4": "Following the Holacracy v4 constitution?",
+      "options": {
+        "Classic": "A manager decides for their team",
+        "Sociocracy": "The team decides together, with elected roles",
+        "HolacracyV5": "We already practice Holacracy",
+        "HolacracyV4": "We practice Holacracy, constitution v4"
+      }
+    },
     "roles": {
       "heading": "What are the main roles and teams?",
-      "help": "In Rolebase, a role is an organizational unit that can be held by a single person or by a team. Add the main roles and teams of {{orgName}} and who is responsible for each. You can change everything later.",
-      "customPlaceholder": "Add a role..."
+      "help": "In Rolebase, a role is an organizational unit that can be filled by a person or a team. Add the main roles and teams of {{orgName}}, and who leads them if you know. You can change everything later.",
+      "addHeading": "Add a role",
+      "customPlaceholder": "Or type a role name..."
     },
-    "responsible": "Responsible",
-    "selectResponsible": "Select a responsible",
     "participants": "Other participants",
-    "addParticipant": "Add participant",
-    "avatars": {
-      "heading": "Add photos",
-      "help": "Add a photo for each member to bring the org chart to life.",
-      "skip": "Skip this step"
+    "invite": {
+      "heading": "Invite your team",
+      "help": "Each invited person receives an email to join the organization. Leave empty the ones you'd rather invite later.",
+      "empty": "No members to invite yet. You can invite your team anytime from Getting started.",
+      "emailLabel": "Email of {{name}}",
+      "pricing": "The first 5 accounts are free. Beyond that, €5 per month per account. Members without an account are unlimited.",
+      "limitReached_one": "Your plan includes {{count}} invitation besides your own account. You can invite the other members by upgrading to a higher plan once the setup is done.",
+      "limitReached_other": "Your plan includes {{count}} invitations besides your own account. You can invite the other members by upgrading to a higher plan once the setup is done.",
+      "later": "Later",
+      "send_one": "Send the invitation",
+      "send_other": "Send the {{count}} invitations",
+      "partialError_one": "{{count}} invitation couldn't be sent. Try again from Getting started.",
+      "partialError_other": "{{count}} invitations couldn't be sent. Try again from Getting started."
     },
     "ready": "Your org chart is ready"
   },
+  "OnboardingTodo": {
+    "title": "Getting started",
+    "expand": "Expand Getting started",
+    "collapse": "Collapse Getting started",
+    "menu": "Getting started options",
+    "dismiss": "Hide for good",
+    "bookDemo": "Book a free demo",
+    "items": {
+      "orgChart": "Create your org chart",
+      "invite": "Invite your team",
+      "recurringMeeting": "Schedule a recurring meeting",
+      "photos": "Add photos of members",
+      "meeting": "Hold your first meeting",
+      "thread": "Open a first thread"
+    }
+  },
   "Onboarding": {
     "finish": "Finish",
-    "username": {
-      "heading": "Welcome! What's your name?",
-      "name": "Full name"
-    },
     "orgName": {
       "heading": "Create your organization"
     },

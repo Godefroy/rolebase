@@ -1,1 +1,1 @@
-Connexion à Rolebase
+Votre code de connexion Rolebase : ${ticket}

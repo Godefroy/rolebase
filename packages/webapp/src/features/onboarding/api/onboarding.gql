@@ -1,0 +1,24 @@
+# Existence of a recurring meeting and of the first collaborative objects of
+# an org, for the onboarding todo and the activation tracking. One row each is
+# enough: no counting.
+# Nested under the org: a subscription allows a single top-level field.
+subscription onboardingActivity($orgId: uuid!) {
+  org_by_pk(id: $orgId) {
+    id
+    meetings(
+      where: { ended: { _eq: true }, archivedAt: { _is_null: true } }
+      limit: 1
+    ) {
+      id
+    }
+    meetings_recurring(where: { archivedAt: { _is_null: true } }, limit: 1) {
+      id
+    }
+    threads(where: { archivedAt: { _is_null: true } }, limit: 1) {
+      id
+    }
+    decisions(where: { archivedAt: { _is_null: true } }, limit: 1) {
+      id
+    }
+  }
+}

@@ -1,5 +1,5 @@
 import { useAuth } from '@/user/hooks/useAuth'
-import { useChangeDisplayNameMutation, useChangeMetadataMutation } from '@gql'
+import { useChangeMetadataMutation } from '@gql'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { getOrgPath } from '@rolebase/shared/helpers/getOrgPath'
 import { nameSchema, slugSchema } from '@rolebase/shared/schemas'
@@ -15,7 +15,6 @@ import * as yup from 'yup'
 import { OTHER_VALUE } from '../onboardingOptions'
 
 export interface OnboardingValues {
-  name: string
   roleChoice: string
   roleOther: string
   objectiveChoices: string[]
@@ -26,15 +25,9 @@ export interface OnboardingValues {
   slug: string
 }
 
-export type OnboardingStep =
-  | 'username'
-  | 'role'
-  | 'objective'
-  | 'source'
-  | 'orgName'
+export type OnboardingStep = 'role' | 'objective' | 'source' | 'orgName'
 
 const schema = yup.object().shape({
-  name: nameSchema.required(),
   orgName: nameSchema.required(),
   slug: slugSchema.required(),
 })
@@ -55,26 +48,24 @@ function resolveChoices(choices: string[], other: string): string | undefined {
   return resolved.length ? resolved.join(', ') : undefined
 }
 
-// Drives the onboarding wizard for non-invited new users: collects the display
-// name (if missing), a short profile (role, objective, source) via predefined
-// choices, and the first org. On finish it creates the org (with profile stats)
-// and redirects into it, triggering the org-setup step (model + seeding).
+// Drives the onboarding wizard for non-invited new users: opens on the first
+// org's name, then a short profile (role, objective, source) via predefined
+// choices. On finish it creates the org (with profile stats) and redirects
+// into it, triggering the org-setup step (model + seeding). The display name
+// is collected before, by UserNamePage (AppRoute).
 export default function useOnboardingForm() {
   const { t } = useTranslation()
   const { user } = useAuth()
   const navigate = useNavigate()
 
-  // Skip steps whose value we already have: the display name (when signup set
-  // one) and any profile answer already stored in the user metadata. Snapshot
-  // once so the step list stays stable: submitting writes the metadata and
-  // refreshes the session, which would otherwise shrink the steps mid-flow.
+  // Skip profile steps already answered in the user metadata. Snapshot once so
+  // the step list stays stable: submitting writes the metadata and refreshes
+  // the session, which would otherwise shrink the steps mid-flow.
   const [needs] = useState(() => ({
-    name: !!user && user.displayName === user.email,
     role: !user?.metadata?.onboardingRole,
     objective: !user?.metadata?.onboardingObjective,
     source: !user?.metadata?.onboardingSource,
   }))
-  const needsName = needs.name
   const needsRole = needs.role
   const needsObjective = needs.objective
   const needsSource = needs.source
@@ -82,7 +73,6 @@ export default function useOnboardingForm() {
   const formMethods = useForm<OnboardingValues>({
     resolver: yupResolver(schema),
     defaultValues: {
-      name: needsName ? '' : user?.displayName ?? '',
       roleChoice: '',
       roleOther: '',
       objectiveChoices: [],
@@ -105,22 +95,21 @@ export default function useOnboardingForm() {
 
   const steps = useMemo<OnboardingStep[]>(
     () =>
+      // The org name comes first: it is what the person came to do. The
+      // profile questions follow, before the org is created on finish.
       [
-        needsName && 'username',
+        'orgName',
         needsRole && 'role',
         needsObjective && 'objective',
         needsSource && 'source',
-        'orgName',
       ].filter(Boolean) as OnboardingStep[],
-    [needsName, needsRole, needsObjective, needsSource]
+    [needsRole, needsObjective, needsSource]
   )
 
   // Whether the current step is complete enough to continue
   const values = watch()
   const isStepValid = (step: OnboardingStep): boolean => {
     switch (step) {
-      case 'username':
-        return !!values.name?.trim()
       case 'role':
         return (
           !!values.roleChoice &&
@@ -140,23 +129,18 @@ export default function useOnboardingForm() {
     }
   }
 
-  const [changeDisplayName] = useChangeDisplayNameMutation()
   const [changeMetadata] = useChangeMetadataMutation()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error | undefined>()
+  // The slug is taken: the wizard goes back to the org name step
+  const [conflict, setConflict] = useState(false)
 
   const submit = formMethods.handleSubmit(async (data) => {
     if (!user?.id) return
     setLoading(true)
     setError(undefined)
+    setConflict(false)
     try {
-      // Set display name when it was missing after signup
-      if (needsName) {
-        await changeDisplayName({
-          variables: { userId: user.id, displayName: data.name },
-        })
-      }
-
       // Store the profile answers collected in this run into the user metadata
       // (stats), preserving any value that was already present and skipped.
       if (needsRole || needsObjective || needsSource) {
@@ -198,13 +182,14 @@ export default function useOnboardingForm() {
       navigate(`${getOrgPath({ id: newOrgId, slug: data.slug })}/roles`)
     } catch (e: any) {
       setLoading(false)
-      const message =
-        e.message === 'Conflict'
-          ? t('OrgSlugModal.already-exists')
-          : e.message || e.toString()
+      const isConflict = e.message === 'Conflict'
+      setConflict(isConflict)
+      const message = isConflict
+        ? t('OrgSlugModal.already-exists')
+        : e.message || e.toString()
       setError(new Error(message))
     }
   })
 
-  return { formMethods, steps, isStepValid, submit, loading, error }
+  return { formMethods, steps, isStepValid, submit, loading, error, conflict }
 }

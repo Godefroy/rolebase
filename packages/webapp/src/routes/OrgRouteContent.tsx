@@ -15,6 +15,7 @@ import OrgSetupTrigger from '@/onboarding/components/OrgSetupTrigger'
 import NavigateInOrg from '@/org/components/NavigateInOrg'
 import { useOrgContext } from '@/org/contexts/OrgContext'
 import useAnalyticsIdentity from '@/org/hooks/useAnalyticsIdentity'
+import useOrgLifecycleTracking from '@/org/hooks/useOrgLifecycleTracking'
 import ExportPage from '@/org/pages/ExportPage'
 import OrgSettingsPage from '@/org/pages/OrgSettingsPage'
 import TaskPage from '@/task/pages/TaskPage'
@@ -43,6 +44,9 @@ export default function OrgRouteContent() {
 
   // Plan, org type and size, attached to the analytics session
   useAnalyticsIdentity()
+
+  // Return and activation events of young orgs
+  useOrgLifecycleTracking()
 
   return (
     <Suspense fallback={<Loading active center />}>

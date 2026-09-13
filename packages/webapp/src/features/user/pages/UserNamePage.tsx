@@ -13,10 +13,11 @@ import {
 import { useChangeDisplayNameMutation } from '@gql'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { nameSchema } from '@rolebase/shared/schemas'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
+import { track } from 'src/analytics'
 import { nhost } from 'src/nhost'
 import * as yup from 'yup'
 import { useAuth } from '../hooks/useAuth'
@@ -26,6 +27,18 @@ const schema = yup.object().shape({
 })
 
 type Values = yup.InferType<typeof schema>
+
+// Suggested name from the email's local part: "jean.dupont" -> "Jean Dupont"
+function getNameFromEmail(email: string | undefined): string {
+  const localPart = email?.split('@')[0] ?? ''
+  return localPart
+    .replace(/\+.*$/, '')
+    .split(/[._-]+/)
+    .map((word) => word.replace(/\d+/g, ''))
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ')
+}
 
 export default function UserNamePage() {
   const { t } = useTranslation()
@@ -44,9 +57,13 @@ export default function UserNamePage() {
   } = useForm<Values>({
     resolver: yupResolver(schema),
     defaultValues: {
-      name: '',
+      name: getNameFromEmail(user?.email),
     },
   })
+
+  useEffect(() => {
+    track('user_name_viewed')
+  }, [])
 
   const onSubmit = handleSubmit(async ({ name }) => {
     if (!user?.id) return
@@ -58,8 +75,16 @@ export default function UserNamePage() {
         variables: { userId: user.id, displayName: name },
       })
 
-      // Refresh user data
+      track('user_name_set')
+
+      // Refresh user data: AppRoute leaves this page once the session carries
+      // the new name. If the refreshed session still has the old one, reload
+      // so the person is never stuck on a page that says it saved.
       await nhost.refreshSession(0)
+      if (nhost.getUserSession()?.user?.displayName === user.email) {
+        window.location.reload()
+        return
+      }
 
       toast({
         title: t('CurrentUserModal.toastSuccess'),

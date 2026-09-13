@@ -25,9 +25,10 @@
       "cta": "Sign in"
     },
     "signin-otp": {
-      "subject": "Sign in to Rolebase",
+      "subject": "Your Rolebase sign-in code: ${ticket}",
       "title": "Sign in to Rolebase",
-      "description": "To sign in to your Rolebase account, please enter the code below."
+      "description": "To sign in to your Rolebase account, please enter the code below.",
+      "hint": "Go back to the Rolebase tab and enter this code. It replaces any code sent before."
     }
   },
   "Meeting": {
@@ -59,6 +60,24 @@
       "heading": "Meetings",
       "description": "These meetings took place:",
       "title": "Meeting {{title}}"
+    }
+  },
+  "OnboardingReminder": {
+    "noOrg": {
+      "subject": "Create your team’s org chart",
+      "title": "Your Rolebase account is ready",
+      "paragraph1": "Hi {{name}}, all that’s left is to create your organization.",
+      "paragraph2": "Give it a name, then add your main roles and the people who hold them. You watch the org chart come together as you go.",
+      "paragraph3": "Then invite your team so everyone can see who does what.",
+      "cta": "Create my organization"
+    },
+    "noInvite": {
+      "subject": "Show your team the {{org}} org chart",
+      "title": "Bring your team into {{org}}",
+      "paragraph1": "Hi {{name}}, the {{org}} org chart is in place. Now invite the people you work with.",
+      "paragraph2": "Each colleague who joins finds their roles and knows who to turn to for each topic. You can then prepare the next meeting together.",
+      "paragraph3": "To invite someone, all you need is their email address.",
+      "cta": "Invite my team"
     }
   }
 }

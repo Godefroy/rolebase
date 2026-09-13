@@ -11,6 +11,7 @@ fragment Org on org {
   defaultGraphFolded
   icon
   homeNote
+  onboardingTodo
 }
 
 # Flat org data: circles, members, roles and the join tables (circleMembers,

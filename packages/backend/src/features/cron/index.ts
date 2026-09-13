@@ -4,6 +4,7 @@ import endOldMeetings from './endOldMeetings'
 import resendInvitations from './resendInvitations'
 import resolveProposals from './resolveProposals'
 import sendDigestEmails from './sendDigestEmails'
+import sendOnboardingReminders from './sendOnboardingReminders'
 
 export default router({
   createNextRecurringMeetings,
@@ -11,4 +12,5 @@ export default router({
   resendInvitations,
   resolveProposals,
   sendDigestEmails,
+  sendOnboardingReminders,
 })

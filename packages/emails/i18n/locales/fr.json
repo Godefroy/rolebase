@@ -25,9 +25,10 @@
       "cta": "Connexion"
     },
     "signin-otp": {
-      "subject": "Connexion à Rolebase",
+      "subject": "Votre code de connexion Rolebase : ${ticket}",
       "title": "Connexion à Rolebase",
-      "description": "Pour vous connecter à votre compte Rolebase, merci de bien vouloir saisir le code ci-dessous."
+      "description": "Pour vous connecter à votre compte Rolebase, merci de bien vouloir saisir le code ci-dessous.",
+      "hint": "Revenez sur l'onglet Rolebase et saisissez ce code. Il remplace les codes envoyés précédemment."
     }
   },
   "Meeting": {
@@ -59,6 +60,24 @@
       "heading": "Réunions",
       "description": "Ces réunions ont eu lieu :",
       "title": "Réunion {{title}}"
+    }
+  },
+  "OnboardingReminder": {
+    "noOrg": {
+      "subject": "Créez l’organigramme de votre équipe",
+      "title": "Votre compte Rolebase est prêt",
+      "paragraph1": "Bonjour {{name}}, il vous reste à créer votre organisation.",
+      "paragraph2": "Donnez-lui un nom, puis ajoutez vos principaux rôles et les personnes qui les tiennent. Vous voyez l’organigramme se dessiner au fur et à mesure.",
+      "paragraph3": "Invitez ensuite votre équipe pour que chacun voie qui fait quoi.",
+      "cta": "Créer mon organisation"
+    },
+    "noInvite": {
+      "subject": "Montrez l’organigramme de {{org}} à votre équipe",
+      "title": "Faites entrer votre équipe dans {{org}}",
+      "paragraph1": "Bonjour {{name}}, l’organigramme de {{org}} est en place. Invitez maintenant les personnes qui travaillent avec vous.",
+      "paragraph2": "Chaque collègue qui rejoint l’organisation retrouve ses rôles et sait à qui s’adresser pour chaque sujet. Vous pouvez ensuite préparer la prochaine réunion ensemble.",
+      "paragraph3": "Pour inviter quelqu’un, son adresse email suffit.",
+      "cta": "Inviter mon équipe"
     }
   }
 }

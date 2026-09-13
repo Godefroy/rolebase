@@ -4,6 +4,7 @@ import {
   Flex,
   Heading,
   Input,
+  SimpleGrid,
   Text,
   VStack,
   Wrap,
@@ -13,6 +14,7 @@ import { useOrgContext } from '@/org/contexts/OrgContext'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CreateIcon } from 'src/icons'
+import OrgSetupGraphPreview from '../components/OrgSetupGraphPreview'
 import { MAIN_ROLE_EXAMPLES } from '../orgRoleExamples'
 import { OrgType } from '../orgTypes'
 import RoleAssignmentItem from './RoleAssignmentItem'
@@ -48,66 +50,80 @@ export default function OrgSetupStepRoles({
   }
 
   return (
-    <VStack spacing={5} align="stretch">
-      <Box>
-        <Heading as="h1" size="md">
-          {t('OrgSetupModal.roles.heading')}
+    <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={8}>
+      <VStack spacing={5} align="stretch">
+        <Box>
+          <Heading as="h1" size="md">
+            {t('OrgSetupModal.roles.heading')}
+          </Heading>
+          <Text mt={1} fontSize="sm" color="gray.500">
+            {t('OrgSetupModal.roles.help', { orgName: org?.name ?? '' })}
+          </Text>
+        </Box>
+
+        {roles.length > 0 && (
+          <VStack spacing={3} align="stretch" my={5}>
+            {roles.map((role) => (
+              <RoleAssignmentItem
+                key={role.id}
+                role={role}
+                orgType={orgType}
+                onChange={(patch) => onChange(role.id, patch)}
+                onRemove={() => onRemove(role.id)}
+              />
+            ))}
+          </VStack>
+        )}
+
+        <Heading as="h2" size="sm">
+          {t('OrgSetupModal.roles.addHeading')}
         </Heading>
-        <Text mt={1} fontSize="sm" color="gray.500">
-          {t('OrgSetupModal.roles.help', { orgName: org?.name ?? '' })}
-        </Text>
+
+        <Wrap>
+          {MAIN_ROLE_EXAMPLES.map((example) => {
+            const name = t(`Onboarding.roleExamples.${example}`)
+            return (
+              <WrapItem key={example}>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  leftIcon={<CreateIcon size="1em" />}
+                  isDisabled={hasName(name)}
+                  onClick={() => onAdd(name)}
+                >
+                  {name}
+                </Button>
+              </WrapItem>
+            )
+          })}
+        </Wrap>
+
+        <Flex gap={2}>
+          <Input
+            value={custom}
+            onChange={(e) => setCustom(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault()
+                addCustom()
+              }
+            }}
+            placeholder={t('OrgSetupModal.roles.customPlaceholder')}
+            autoComplete="off"
+          />
+          <Button onClick={addCustom} isDisabled={!custom.trim()}>
+            {t('common.add')}
+          </Button>
+        </Flex>
+      </VStack>
+
+      {/* The grid cell stretches to the form's height, so the preview can stay
+          in view while a long list of roles scrolls */}
+      <Box display={{ base: 'none', lg: 'block' }}>
+        <Box position="sticky" top={6}>
+          <OrgSetupGraphPreview roles={roles} />
+        </Box>
       </Box>
-
-      {roles.length > 0 && (
-        <VStack spacing={3} align="stretch" my={5}>
-          {roles.map((role) => (
-            <RoleAssignmentItem
-              key={role.id}
-              role={role}
-              orgType={orgType}
-              onChange={(patch) => onChange(role.id, patch)}
-              onRemove={() => onRemove(role.id)}
-            />
-          ))}
-        </VStack>
-      )}
-
-      <Wrap>
-        {MAIN_ROLE_EXAMPLES.map((example) => {
-          const name = t(`Onboarding.roleExamples.${example}`)
-          return (
-            <WrapItem key={example}>
-              <Button
-                size="sm"
-                variant="outline"
-                leftIcon={<CreateIcon size="1em" />}
-                isDisabled={hasName(name)}
-                onClick={() => onAdd(name)}
-              >
-                {name}
-              </Button>
-            </WrapItem>
-          )
-        })}
-      </Wrap>
-
-      <Flex gap={2}>
-        <Input
-          value={custom}
-          onChange={(e) => setCustom(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              e.preventDefault()
-              addCustom()
-            }
-          }}
-          placeholder={t('OrgSetupModal.roles.customPlaceholder')}
-          autoComplete="off"
-        />
-        <Button onClick={addCustom} isDisabled={!custom.trim()}>
-          {t('common.add')}
-        </Button>
-      </Flex>
-    </VStack>
+    </SimpleGrid>
   )
 }

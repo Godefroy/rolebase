@@ -1,33 +1,10 @@
 import { useOrgContext, useOrgEditActions } from '@/org/contexts/OrgContext'
-import {
-  useCreateMeetingRecurringMutation,
-  useCreateMeetingTemplateMutation,
-} from '@gql'
-import { getUTCDateFromDate } from '@rolebase/shared/helpers/RRuleUTC'
+import { useCreateMeetingTemplateMutation } from '@gql'
 import { MeetingStepConfig } from '@rolebase/shared/model/meeting'
-import { ParticipantsScope } from '@rolebase/shared/model/participants'
-import { getTimeZone } from '@utils/dates'
 import { nanoid } from 'nanoid'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { RRule } from 'rrule'
-import { OrgType, orgTypePresets, SeedRecurrence } from '../orgTypes'
-
-// Build a full rrule from a seed recurrence: the configured weekday at the
-// configured hour, in the user's timezone (so meetings aren't at midnight).
-// Monthly recurrences target the first such weekday of the month (BYSETPOS=1),
-// so they never land on a weekend.
-function buildRecurrenceRrule(recurrence: SeedRecurrence): string {
-  const dtstart = new Date()
-  dtstart.setHours(recurrence.hour, 0, 0, 0)
-  return new RRule({
-    freq: recurrence.freq === 'weekly' ? RRule.WEEKLY : RRule.MONTHLY,
-    byweekday: [recurrence.weekday],
-    bysetpos: recurrence.freq === 'monthly' ? 1 : undefined,
-    dtstart: getUTCDateFromDate(dtstart),
-    tzid: getTimeZone(),
-  }).toString()
-}
+import { OrgType, orgTypePresets } from '../orgTypes'
 
 export interface SeedRoleInput {
   name: string
@@ -44,13 +21,14 @@ export interface SeedOrgInput {
 // Build the initial org chart client-side from the onboarding answers:
 // the model's base governance roles (created once), one circle per main role
 // under the root with members assigned, plus the model's meeting templates.
+// No recurring meeting is scheduled here: planning one is a line of the
+// onboarding todo, once the team is there.
 // Must run within the new org's OrgContext.
 export default function useSeedOrg() {
   const { t } = useTranslation()
   const { orgId } = useOrgContext()
   const { createCircle, createRole, addCircleMember } = useOrgEditActions()
   const [createMeetingTemplate] = useCreateMeetingTemplateMutation()
-  const [createMeetingRecurring] = useCreateMeetingRecurringMutation()
 
   return useCallback(
     async ({ orgType, rootCircleId, roles }: SeedOrgInput): Promise<void> => {
@@ -103,11 +81,7 @@ export default function useSeedOrg() {
         }
       }
 
-      // Meeting templates (and a recurring meeting on the root circle)
-      const scope: ParticipantsScope = {
-        members: [],
-        circles: [{ id: rootCircleId, children: true, excludeMembers: [] }],
-      }
+      // Meeting templates
       for (const template of preset.meetingTemplates) {
         const stepsConfig: MeetingStepConfig[] = template.steps.map((type) => ({
           id: nanoid(8),
@@ -115,7 +89,7 @@ export default function useSeedOrg() {
           title: t(`common.meetingSteps.${type}`),
         }))
 
-        const { data } = await createMeetingTemplate({
+        await createMeetingTemplate({
           variables: {
             values: {
               orgId,
@@ -124,33 +98,8 @@ export default function useSeedOrg() {
             },
           },
         })
-        const createdTemplate = data?.insert_meeting_template_one
-        if (createdTemplate && template.recurrence) {
-          await createMeetingRecurring({
-            variables: {
-              values: {
-                orgId,
-                circleId: rootCircleId,
-                templateId: createdTemplate.id,
-                rrule: buildRecurrenceRrule(template.recurrence),
-                duration: template.recurrence.duration,
-                scope,
-                private: false,
-                invitedReadonly: false,
-              },
-            },
-          })
-        }
       }
     },
-    [
-      orgId,
-      t,
-      createCircle,
-      createRole,
-      addCircleMember,
-      createMeetingTemplate,
-      createMeetingRecurring,
-    ]
+    [orgId, t, createCircle, createRole, addCircleMember, createMeetingTemplate]
   )
 }

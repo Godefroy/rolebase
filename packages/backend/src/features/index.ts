@@ -13,6 +13,7 @@ import proposal from './proposal'
 import search from './search'
 import superAdmin from './superAdmin'
 import trigger from './trigger'
+import user from './user'
 
 export const trpcRouter = router({
   ai,
@@ -28,6 +29,7 @@ export const trpcRouter = router({
   search,
   superAdmin,
   trigger,
+  user,
 
   // Health check for Nhost
   healthz: publicProcedure.query(() => 'ok'),

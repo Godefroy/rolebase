@@ -16,14 +16,27 @@ import React, { ReactNode } from 'react'
 interface Props {
   preview?: string
   clientUrl?: string
+  // The logo links to the app. Off for the sign-in code email, where a link
+  // reads as a sign-in link and leads back to the email step instead.
+  logoLink?: boolean
   children: ReactNode
 }
 
 export default function Layout({
   preview,
   clientUrl = settings.url,
+  logoLink = true,
   children,
 }: Props) {
+  const logo = (
+    <Img
+      src={`${clientUrl}/logo.png`}
+      width="150"
+      alt="Rolebase"
+      className="my-0 mx-auto"
+    />
+  )
+
   return (
     <Html>
       <Head>
@@ -74,14 +87,7 @@ export default function Layout({
             style={{ backgroundColor: '#f9f6f3' }}
           >
             <Section>
-              <a href={clientUrl}>
-                <Img
-                  src={`${clientUrl}/logo.png`}
-                  width="150"
-                  alt="Rolebase"
-                  className="my-0 mx-auto"
-                />
-              </a>
+              {logoLink ? <a href={clientUrl}>{logo}</a> : logo}
             </Section>
 
             {children}

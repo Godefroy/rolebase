@@ -74,8 +74,6 @@ export default function RoleAssignmentItem({
             allowCreate
             onAdd={setResponsible}
             onRemove={() => onChange({ responsibleId: undefined })}
-            // The responsible is required, so prompt it with a primary button
-            buttonProps={{ colorScheme: 'blue', variant: 'solid' }}
           />
         </FormControl>
 

@@ -17,7 +17,11 @@ export default function NhostOtpEmail({
     i18n.t(`emails:NhostEmail.${type}.${key}`, { lng: lang })
 
   return (
-    <Layout preview={t('description')} clientUrl="${clientUrl}">
+    <Layout
+      preview={t('description')}
+      clientUrl="${clientUrl}"
+      logoLink={false}
+    >
       <Card title={t('title')}>
         <Section className="px-5">
           <Text>{t('description')}</Text>
@@ -26,6 +30,9 @@ export default function NhostOtpEmail({
           <Text className="bg-[#f5f5f5] text-[#29241f] py-3 rounded-lg text-xl tracking-widest font-semibold text-center">
             {'${ticket}'}
           </Text>
+        </Section>
+        <Section className="px-5">
+          <Text>{t('hint')}</Text>
         </Section>
       </Card>
     </Layout>

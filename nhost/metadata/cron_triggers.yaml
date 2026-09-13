@@ -43,3 +43,12 @@
     - name: x-nhost-webhook-secret
       value_from_env: NHOST_WEBHOOK_SECRET
   comment: ""
+- name: send-onboarding-reminders
+  webhook: '{{BACKEND_URL}}/cron.sendOnboardingReminders'
+  schedule: 15 * * * *
+  include_in_metadata: true
+  payload: {}
+  headers:
+    - name: x-nhost-webhook-secret
+      value_from_env: NHOST_WEBHOOK_SECRET
+  comment: ""

@@ -1,1 +1,1 @@
-Sign in to Rolebase
+Your Rolebase sign-in code: ${ticket}

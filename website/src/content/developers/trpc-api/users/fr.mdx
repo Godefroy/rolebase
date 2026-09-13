@@ -1,0 +1,23 @@
+---
+title: 'Utilisateurs'
+description: 'Procédure tRPC du routeur user : vérifier qu’un domaine d’email peut recevoir des emails avant la connexion.'
+order: 7.5
+---
+
+Procédures du routeur `user`. Le compte lui-même (nom, langue, métadonnées) se lit et s’écrit en GraphQL ; ce routeur regroupe les vérifications qui demandent un accès au réseau côté serveur.
+
+## Requête `user.checkEmailDomain`
+
+Indique si un domaine peut recevoir des emails, en cherchant ses enregistrements MX. L’application l’appelle avant d’envoyer un code de connexion, pour signaler tout de suite une adresse dont le domaine n’existe pas ou n’a pas de serveur de messagerie. Cette procédure est publique, car elle sert avant toute connexion : elle reçoit donc le domaine seul, jamais l’adresse complète.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `domain` | `String` | Domaine à vérifier, par exemple `example.com`. Requis. |
+
+Elle renvoie `{ valid }`. `valid` vaut `false` quand le domaine est mal formé, inconnu, sans enregistrement MX, ou quand il déclare n’accepter aucun email. Une autre erreur DNS, comme une recherche qui dépasse deux secondes, ne met pas le domaine en cause : la réponse vaut alors `true`, pour que la connexion reste toujours possible. Le backend garde chaque réponse en mémoire pendant une heure.
+
+```typescript
+const { valid } = await trpc.user.checkEmailDomain.query({
+  domain: 'example.com',
+})
+```
