@@ -1,5 +1,5 @@
 import GraphShortcutsModalButton from '@/graph/components/GraphShortcutsModalButton'
-import { CirclesGraphView, GraphProvider } from '@rolebase/graph'
+import { CirclesGraphView, GraphProvider, isMac } from '@rolebase/graph'
 import { CirclesGraphViews, type GraphEvents } from '@rolebase/graph'
 import type { OrgData } from '@rolebase/shared/model/OrgData'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -140,6 +140,11 @@ export default function OrgChartView({
             events={events}
             selectedCircleId={selectedCircleId}
             showAllNodes={showAllNodes}
+            scrollable
+            scrollZoomHint={texts.ui?.scrollZoom.replace(
+              '{key}',
+              isMac ? '⌘' : 'Ctrl'
+            )}
           />
         )}
 

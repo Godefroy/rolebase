@@ -20,6 +20,11 @@ export interface GraphProps<Data, TGraph extends Graph<Data>> {
   focusCircleScale?: ZoomFocusCircleScale
   selectedCircleId?: string
   panzoomDisabled?: boolean
+  // Let the page scroll over the graph (see GraphParams)
+  scrollable?: boolean
+  // Shown over a scrollable graph when the wheel scrolls the page, to tell
+  // how to zoom instead (pointer devices only)
+  scrollZoomHint?: string
   // Show members and deep circles at any zoom scale (e.g. export)
   showAllNodes?: boolean
   // Leave the members out of the layout (see GraphParams)
@@ -41,6 +46,7 @@ export default function useGraph<Data, TGraph extends Graph<Data>>({
   focusCircleScale,
   selectedCircleId,
   panzoomDisabled,
+  scrollable,
   showAllNodes,
   hideMembers,
   onReady,
@@ -60,6 +66,7 @@ export default function useGraph<Data, TGraph extends Graph<Data>>({
       focusCrop,
       focusCircleScale,
       zoomDisabled: panzoomDisabled,
+      scrollable,
       showAllNodes,
       hideMembers,
       events: events || {},

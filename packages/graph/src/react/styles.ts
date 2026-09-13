@@ -40,6 +40,32 @@ export const graphStyles = `
   overflow: hidden;
   font-family: ${settings.style.fontFamily};
 }
+.rb-graph-scrollable {
+  /* The browser pans the page, the graph keeps the pinch */
+  touch-action: pan-x pan-y;
+}
+/* How to zoom a scrollable graph, shown when the wheel scrolls the page */
+.rb-graph-scroll-hint {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background-color: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 500;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.rb-graph-scroll-hint.visible {
+  opacity: 1;
+  transition-duration: 0.15s;
+}
 .rb-graph-panzoom {
   position: relative;
   transform-origin: top left;

@@ -71,7 +71,12 @@ export default function GraphShortcutsList({ only }: Props) {
           <Box>
             <Text fontWeight="bold">{t(`GraphShortcuts.${key}_label`)}</Text>
             <Text fontSize="sm" color="gray.500" _dark={{ color: 'gray.300' }}>
-              {t(`GraphShortcuts.${key}_desc`)}
+              {t(
+                // A scrollable graph leaves the plain wheel to the page
+                key === 'zoom' && graph?.params.scrollable
+                  ? 'GraphShortcuts.zoomScroll_desc'
+                  : `GraphShortcuts.${key}_desc`
+              )}
             </Text>
           </Box>
         </Flex>

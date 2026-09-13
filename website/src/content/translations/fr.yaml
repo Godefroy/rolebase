@@ -85,6 +85,7 @@ demo:
     members: Trombinoscope
   ui:
     clickRole: Cliquez sur un rôle
+    scrollZoom: Utilisez {key} + molette pour zoomer dans l'organigramme
     name: Nom
     purpose: Raison d'être
     domain: Domaine

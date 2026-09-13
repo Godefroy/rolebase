@@ -1406,6 +1406,7 @@
     "heading": "Raccourcis de l'organigramme",
     "zoom_label": "Zoom",
     "zoom_desc": "Faites défiler avec la molette de la souris (ou pincez sur un pavé tactile).",
+    "zoomScroll_desc": "Maintenez Ctrl (⌘ sur Mac) et faites défiler avec la molette, ou pincez.",
     "pan_label": "Déplacer la vue",
     "pan_desc": "Glissez le fond vide pour vous déplacer dans l'organigramme.",
     "open_label": "Ouvrir un rôle",

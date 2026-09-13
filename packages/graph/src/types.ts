@@ -10,6 +10,9 @@ export interface GraphParams {
   height: number
   colorMode: GraphColorMode
   zoomDisabled?: boolean
+  // The page scrolls over the graph: the wheel zooms only with Ctrl/Cmd (a
+  // trackpad pinch sends it too), and a touch screen needs two fingers
+  scrollable?: boolean
   // Show members and deep circles at any zoom scale (e.g. export)
   showAllNodes?: boolean
   // Members are not rendered at all: they are left out of the layout, so a

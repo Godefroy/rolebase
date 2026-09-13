@@ -34,6 +34,8 @@ export interface DemoRoleText {
 
 export interface DemoUiText {
   clickRole: string
+  // Shown when the wheel scrolls the page over the chart, {key} is ⌘ or Ctrl
+  scrollZoom: string
   name: string
   purpose: string
   domain: string

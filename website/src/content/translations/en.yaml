@@ -85,6 +85,7 @@ demo:
     members: Photo directory
   ui:
     clickRole: Click on a role
+    scrollZoom: Use {key} + scroll to zoom the org chart
     name: Name
     purpose: Purpose
     domain: Domain

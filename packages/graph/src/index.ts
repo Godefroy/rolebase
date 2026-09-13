@@ -21,6 +21,7 @@ export { default as StaticCirclesGraph } from './static/StaticCirclesGraph'
 export type { StaticCirclesGraphProps } from './static/StaticCirclesGraph'
 
 // Helpers
+export { isMac } from './helpers/device'
 export { getDropTargetNode } from './helpers/getDropTargetNode'
 
 // Types and settings

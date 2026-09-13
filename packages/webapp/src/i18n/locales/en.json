@@ -1370,6 +1370,7 @@
     "heading": "Org chart shortcuts",
     "zoom_label": "Zoom",
     "zoom_desc": "Scroll up or down with the mouse wheel (or pinch on a trackpad).",
+    "zoomScroll_desc": "Hold Ctrl (⌘ on Mac) and scroll with the mouse wheel, or pinch.",
     "pan_label": "Move the view",
     "pan_desc": "Drag the empty background to pan around the chart.",
     "open_label": "Open a role",

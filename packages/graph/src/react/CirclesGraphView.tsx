@@ -5,6 +5,7 @@ import CirclesTitles from './CirclesTitles'
 import { GraphRenderContext } from './GraphRenderContext'
 import Minimap from './Minimap'
 import Nodes from './Nodes'
+import ScrollZoomHint from './ScrollZoomHint'
 import { Panzoom } from './Panzoom'
 import GraphTreeLinks from './GraphTreeLinks'
 import useCirclesGraph, { CirclesGraphProps } from './hooks/useCirclesGraph'
@@ -84,7 +85,7 @@ export default forwardRef<CirclesGraph | undefined, CirclesGraphViewProps>(
             : ''
         }${props.showAllNodes ? ' rb-graph-show-all' : ''}${
           isTree ? ' rb-graph-tree' : ''
-        }`}
+        }${props.scrollable ? ' rb-graph-scrollable' : ''}`}
         style={
           {
             width: `${props.width}px`,
@@ -133,6 +134,9 @@ export default forwardRef<CirclesGraph | undefined, CirclesGraphViewProps>(
               {!isTree && <CirclesTitles graph={graph} />}
             </Panzoom>
             {props.minimap !== false && <Minimap graph={graph} />}
+            {props.scrollable && props.scrollZoomHint && (
+              <ScrollZoomHint graph={graph} label={props.scrollZoomHint} />
+            )}
           </GraphRenderContext.Provider>
         )}
       </div>

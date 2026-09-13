@@ -37,6 +37,8 @@ export type GraphEmitterEvents = {
   zoomPosition: [ZoomTransform]
   zoomScale: [number]
   zoom: [ZoomTransform]
+  // A wheel left to the page scroll (scrollable graph, no Ctrl/Cmd)
+  wheelScroll: void
   resize: void
   nodesData: [NodeData[]]
   visibleNodes: [VisibleNodes]
@@ -133,6 +135,17 @@ export abstract class Graph<
       .zoom<RootElement, any>()
       .filter((event) => {
         if (this.zoomDisabled) return false
+        // A scrollable graph leaves the wheel and the one-finger swipe to the
+        // page: zoom takes Ctrl/Cmd (or a pinch), panning by touch two fingers
+        if (this.params.scrollable) {
+          if (event.type === 'wheel' && !event.ctrlKey && !event.metaKey) {
+            this.emit('wheelScroll')
+            return false
+          }
+          if (event.type === 'touchstart' && event.touches.length < 2) {
+            return false
+          }
+        }
         // Only the primary button pans: a right click opens the context menu
         // (d3-zoom's default button check is replaced by this filter)
         if (event.button) return false

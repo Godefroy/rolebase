@@ -13,7 +13,11 @@ import MemberContent from '@/member/components/MemberContent'
 import { useOrgContext, useOrgEditActions } from '@/org/contexts/OrgContext'
 import { Box, Flex, useColorMode, useToast } from '@chakra-ui/react'
 import { ArrowUpIcon } from 'src/icons'
-import { CirclesGraphViews, type GraphEvents } from '@rolebase/graph'
+import {
+  CirclesGraphViews,
+  isMac,
+  type GraphEvents,
+} from '@rolebase/graph'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { DemoUiText } from '../../../demo/orgDemoData'
@@ -178,6 +182,11 @@ export default function DemoGraphEditor({
                 height={boxSize.height}
                 showAllNodes={isTree}
                 selectedCircleId={panelCircleId}
+                scrollable
+                scrollZoomHint={ui?.scrollZoom.replace(
+                  '{key}',
+                  isMac ? '⌘' : 'Ctrl'
+                )}
               />
             </Box>
           )}
