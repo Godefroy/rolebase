@@ -17,7 +17,10 @@ COPY ../../packages/graph/package.json ./packages/graph/
 ENV NODE_OPTIONS=--max-old-space-size=2048
 ENV GENERATE_SOURCEMAP=false
 
-RUN npm install
+# Next.js comes with @react-email/ui (email preview, dev only) and makes the layer too big for the Nhost registry
+RUN npm install \
+  && rm -rf node_modules/next node_modules/@next node_modules/@react-email/ui \
+  && npm cache clean --force
 
 COPY ../.. .
 
