@@ -10,24 +10,31 @@ export enum CirclesGraphViews {
 export interface GraphView {
   view: CirclesGraphViews
   folded: boolean
+  // List the members inside the roles. The members view is made of members, so
+  // it is always on there.
+  members: boolean
 }
 
 export const defaultGraphView: GraphView = {
   view: CirclesGraphViews.Circles,
   folded: false,
+  members: true,
 }
 
 // Read a view from values coming from a URL, an embed or the database.
 // An unknown view is left to the caller's default. The members view is never
-// folded.
+// folded and always shows its members.
 export function parseGraphView(
   view: string | null | undefined,
-  folded?: boolean | null
+  folded?: boolean | null,
+  members?: boolean | null
 ): GraphView | undefined {
   if (!view || !(view in CirclesGraphViews)) return undefined
   const parsed = view as CirclesGraphViews
+  const isMembersView = parsed === CirclesGraphViews.Members
   return {
     view: parsed,
-    folded: parsed !== CirclesGraphViews.Members && !!folded,
+    folded: !isMembersView && !!folded,
+    members: isMembersView || members !== false,
   }
 }

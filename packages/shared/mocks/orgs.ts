@@ -11,4 +11,5 @@ export const org: OrgFragment = {
   governanceMode: Governance_Mode_Enum.Free,
   defaultGraphView: CirclesGraphViews.Circles,
   defaultGraphFolded: false,
+  defaultGraphMembers: true,
 }

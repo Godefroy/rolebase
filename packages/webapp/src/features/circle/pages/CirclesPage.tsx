@@ -35,6 +35,7 @@ type CirclesPageParams = {
   parentId: string
   view: string
   folded: string
+  members: string
   panel: string
 }
 
@@ -87,8 +88,12 @@ export default function CirclesPage() {
   )
 
   const handleViewChange = useCallback(
-    ({ view, folded }: GraphView) =>
-      changeParams({ view, folded: folded ? '1' : undefined }),
+    ({ view, folded, members }: GraphView) =>
+      changeParams({
+        view,
+        folded: folded ? '1' : undefined,
+        members: members ? undefined : '0',
+      }),
     [changeParams]
   )
 
@@ -167,16 +172,17 @@ export default function CirclesPage() {
           isSidePanel
             ? undefined
             : panel === Panels.None
-            ? `calc(100dvh - ${sidebarContext?.height || 0}px)`
-            : '50dvh'
+              ? `calc(100dvh - ${sidebarContext?.height || 0}px)`
+              : '50dvh'
         }
         overflow="hidden"
       >
         {org && orgData && boxSize && (
           <CirclesGraph
-            key={`${graphView.view}${graphView.folded}${colorMode}`}
+            key={`${graphView.view}${graphView.folded}${graphView.members}${colorMode}`}
             view={graphView.view}
             folded={graphView.folded}
+            hideMembers={!graphView.members}
             org={orgData}
             events={events}
             width={boxSize.width}

@@ -127,6 +127,7 @@ select_permissions:
         - archivedAt
         - createdAt
         - defaultGraphFolded
+        - defaultGraphMembers
         - defaultGraphView
         - governanceMode
         - homeNote
@@ -148,6 +149,7 @@ update_permissions:
     permission:
       columns:
         - defaultGraphFolded
+        - defaultGraphMembers
         - defaultGraphView
         - homeNote
         - icon

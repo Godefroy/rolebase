@@ -151,8 +151,7 @@
   },
   "CircleExportPage": {
     "heading": "Exporter une capture",
-    "download": "Télécharger au format PNG",
-    "showMembers": "Afficher les membres"
+    "download": "Télécharger au format PNG"
   },
   "ExportPage": {
     "heading": "Export",
@@ -266,12 +265,11 @@
     "heading": "Partager l'organigramme",
     "enable": "Activer le partage",
     "enableHelp": "Le partage publie une page publique de votre organigramme, consultable par toute personne disposant du lien et intégrable dans votre site, sans compte Rolebase.",
-    "headingAccess": "Accès",
-    "shareOrg": "Organigramme des Rôles",
-    "shareOrgHelp": "Noms et raisons d'être uniquement.",
-    "shareMembers": "Membres",
-    "shareMembersHelp": "Noms et photos uniquement.",
-    "view": "Visualisation",
+    "headingPublished": "Paramètres de publication",
+    "shareMembers": "Publier les membres",
+    "shareMembersHelp": "Noms et photos uniquement. S'applique à tous vos liens.",
+    "headingLink": "Paramètres du lien",
+    "headingLinkHelp": "Ces réglages sont contenus dans l'adresse ci-dessous. Vous pouvez créer plusieurs liens avec des réglages différents.",
     "zoom": "Activer le zoom et le déplacement à la souris",
     "transparent": "Fond transparent",
     "link": "Lien de partage",
@@ -398,7 +396,9 @@
     "Members_desc": "Afficher d'un coup d'œil tous les membres de l'organisation, sans les rôles.",
     "folded": "Replié",
     "folded_desc": "Afficher uniquement le rôle sélectionné, ses parents et leurs rôles directs, plutôt que toute l'organisation.",
-    "foldedLabel": "{{view}} (replié)"
+    "foldedLabel": "{{view}} (replié)",
+    "members": "Afficher les membres",
+    "members_desc": "Afficher les membres qui occupent chaque rôle. Décochez pour ne garder que les rôles."
   },
   "ImportPage": {
     "title": "Importer une organisation.",

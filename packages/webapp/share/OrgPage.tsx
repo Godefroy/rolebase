@@ -58,7 +58,8 @@ export default function OrgPage() {
     console.error(error)
   }
 
-  // Graph view
+  // Graph view. The members are drawn when the organization publishes them:
+  // the public payload simply leaves them out otherwise.
   const { view, folded } =
     parseGraphView(queryParams.view, queryParams.folded === '1') ||
     defaultGraphView

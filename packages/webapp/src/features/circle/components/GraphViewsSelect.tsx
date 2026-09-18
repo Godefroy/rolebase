@@ -19,6 +19,9 @@ import { ChevronDownIcon } from 'src/icons'
 interface Props extends Omit<ButtonProps, 'value' | 'onChange'> {
   value: GraphView
   onChange: (value: GraphView) => void
+  // Offer the members option, on by default. The share panel leaves it out:
+  // publishing the members is a setting of the organization, not of a link.
+  membersOption?: boolean
 }
 
 const viewsList = [
@@ -30,15 +33,21 @@ const viewsList = [
 export default function GraphViewsSelect({
   value,
   onChange,
+  membersOption = true,
   ...buttonProps
 }: Props) {
   const { t } = useTranslation()
 
-  const { view, folded } = value
-  // The members view shows the whole organization by definition
-  const foldable = view !== CirclesGraphViews.Members
+  const { view, folded, members } = value
+  // The members view shows the whole organization by definition, and is made
+  // of members: neither option applies to it
+  const optionable = view !== CirclesGraphViews.Members
 
   const label = t(`GraphViewsSelect.${view}` as any)
+
+  const options: string[] = []
+  if (optionable && folded) options.push('folded')
+  if (optionable && membersOption && members) options.push('members')
 
   return (
     <Menu>
@@ -47,7 +56,7 @@ export default function GraphViewsSelect({
         rightIcon={<ChevronDownIcon size="1em" />}
         {...buttonProps}
       >
-        {foldable && folded
+        {optionable && folded
           ? t('GraphViewsSelect.foldedLabel', { view: label })
           : label}
       </MenuButton>
@@ -60,7 +69,7 @@ export default function GraphViewsSelect({
               value={itemView}
               alignItems="start"
               pt={2}
-              onClick={() => onChange({ view: itemView, folded })}
+              onClick={() => onChange({ view: itemView, folded, members })}
             >
               <Flex flexDirection="column" alignItems="left" mt={-2} mb={2}>
                 <Text fontWeight="bold">
@@ -74,22 +83,49 @@ export default function GraphViewsSelect({
           ))}
         </MenuOptionGroup>
 
-        {foldable && (
+        {optionable && (
           <>
-            <MenuDivider />
-            <MenuOptionGroup type="checkbox" value={folded ? ['folded'] : []}>
+            {/* The view descriptions are tall: a hairline gets lost between
+                them */}
+            <MenuDivider
+              my={3}
+              opacity={1}
+              borderBottomWidth="2px"
+              borderColor="gray.200"
+              _dark={{ borderColor: 'gray.550' }}
+            />
+            <MenuOptionGroup type="checkbox" value={options}>
               <MenuItemOption
                 value="folded"
                 alignItems="start"
                 pt={2}
                 closeOnSelect={false}
-                onClick={() => onChange({ view, folded: !folded })}
+                onClick={() => onChange({ view, folded: !folded, members })}
               >
                 <Flex flexDirection="column" alignItems="left" mt={-2} mb={2}>
                   <Text fontWeight="bold">{t('GraphViewsSelect.folded')}</Text>
                   <Text fontSize="sm">{t('GraphViewsSelect.folded_desc')}</Text>
                 </Flex>
               </MenuItemOption>
+
+              {membersOption && (
+                <MenuItemOption
+                  value="members"
+                  alignItems="start"
+                  pt={2}
+                  closeOnSelect={false}
+                  onClick={() => onChange({ view, folded, members: !members })}
+                >
+                  <Flex flexDirection="column" alignItems="left" mt={-2} mb={2}>
+                    <Text fontWeight="bold">
+                      {t('GraphViewsSelect.members')}
+                    </Text>
+                    <Text fontSize="sm">
+                      {t('GraphViewsSelect.members_desc')}
+                    </Text>
+                  </Flex>
+                </MenuItemOption>
+              )}
             </MenuOptionGroup>
           </>
         )}

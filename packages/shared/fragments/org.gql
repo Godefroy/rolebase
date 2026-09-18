@@ -9,6 +9,7 @@ fragment Org on org {
   governanceMode
   defaultGraphView
   defaultGraphFolded
+  defaultGraphMembers
   icon
   homeNote
   onboardingTodo

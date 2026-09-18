@@ -12,6 +12,7 @@ import {
   FormHelperText,
   Heading,
   Input,
+  Text,
   Textarea,
   VStack,
 } from '@chakra-ui/react'
@@ -30,16 +31,23 @@ interface Props {
 }
 
 // Public sharing of the org chart (link and embed code), as a panel of the org
-// chart page.
+// chart page. It answers two separate questions, and shows them as two
+// sections: what the organization publishes, which is stored and holds for
+// every visitor, and how a given link frames the page, which travels in its
+// address and can differ from one link to the next.
 export default function CirclesShareContent(panelProps: Props) {
   const { t } = useTranslation()
   const { org } = useOrgContext()
   const [updateOrg] = useUpdateOrgMutation()
 
-  // State. The shared view starts on the one the org chart is drawn with.
-  const currentGraphView = useGraphView()
+  // Published, stored on the organization
   const [shareOrg, setShareOrg] = useState(org?.shareOrg)
   const [shareMembers, setShareMembers] = useState(org?.shareMembers)
+
+  // Link settings. The shared view starts on the one the org chart is drawn
+  // with. Its members option is left out of the selector here: the members are
+  // published or not, above.
+  const currentGraphView = useGraphView()
   const [graphView, setGraphView] = useState<GraphView>(currentGraphView)
   const [zoom, setZoom] = useState(true)
   const [transparent, setTransparent] = useState(false)
@@ -72,6 +80,10 @@ export default function CirclesShareContent(panelProps: Props) {
     <PanelLayout title={t('CirclesSharePanel.heading')} {...panelProps}>
       <VStack spacing={8} align="stretch">
         <VStack spacing={4} align="stretch">
+          <Heading as="h2" size="sm">
+            {t('CirclesSharePanel.headingPublished')}
+          </Heading>
+
           <Switch isChecked={shareOrg} onChange={handleShareOrg}>
             {t('CirclesSharePanel.enable')}
           </Switch>
@@ -82,42 +94,35 @@ export default function CirclesShareContent(panelProps: Props) {
               {t('CirclesSharePanel.enableHelp')}
             </AlertDescription>
           </Alert>
+
+          {shareOrg && (
+            <FormControl>
+              <Switch isChecked={shareMembers} onChange={handleShareMembers}>
+                {t('CirclesSharePanel.shareMembers')}
+              </Switch>
+              <FormHelperText ml="40px">
+                {t('CirclesSharePanel.shareMembersHelp')}
+              </FormHelperText>
+            </FormControl>
+          )}
         </VStack>
 
         {shareOrg && (
           <>
             <VStack spacing={4} align="start">
-              <Heading as="h2" size="sm">
-                {t('CirclesSharePanel.headingAccess')}
-              </Heading>
+              <VStack spacing={1} align="start">
+                <Heading as="h2" size="sm">
+                  {t('CirclesSharePanel.headingLink')}
+                </Heading>
+                <Text fontSize="sm" color="gray.500">
+                  {t('CirclesSharePanel.headingLinkHelp')}
+                </Text>
+              </VStack>
 
-              <FormControl>
-                {/* The org chart is what is shared, it cannot be opted out */}
-                <Switch isChecked isDisabled>
-                  {t('CirclesSharePanel.shareOrg')}
-                </Switch>
-                <FormHelperText ml="40px">
-                  {t('CirclesSharePanel.shareOrgHelp')}
-                </FormHelperText>
-              </FormControl>
-
-              <FormControl>
-                <Switch isChecked={shareMembers} onChange={handleShareMembers}>
-                  {t('CirclesSharePanel.shareMembers')}
-                </Switch>
-                <FormHelperText ml="40px">
-                  {t('CirclesSharePanel.shareMembersHelp')}
-                </FormHelperText>
-              </FormControl>
-            </VStack>
-
-            <VStack spacing={4} align="start">
-              <Heading as="h2" size="sm">
-                {t('CirclesSharePanel.view')}
-              </Heading>
               <GraphViewsSelect
                 variant="outline"
                 value={graphView}
+                membersOption={false}
                 onChange={setGraphView}
               />
               <Switch isChecked={zoom} onChange={() => setZoom((z) => !z)}>
@@ -134,7 +139,7 @@ export default function CirclesShareContent(panelProps: Props) {
             {/* The panel is narrow: the copy button sits below its field
                 instead of next to it */}
             <VStack spacing={3} align="stretch">
-              <Heading as="h2" size="sm">
+              <Heading as="h3" size="xs">
                 {t('CirclesSharePanel.link')}
               </Heading>
               <Input value={url} isReadOnly />
@@ -149,7 +154,7 @@ export default function CirclesShareContent(panelProps: Props) {
             </VStack>
 
             <VStack spacing={3} align="stretch">
-              <Heading as="h2" size="sm">
+              <Heading as="h3" size="xs">
                 {t('CirclesSharePanel.embed')}
               </Heading>
               <Textarea value={embed} isReadOnly h="120px" />

@@ -36,7 +36,12 @@ export default function DashboardOrgChart(boxProps: BoxProps) {
 
   // The organization default view, always folded: the dashboard only has room
   // for the roles around the selected one
-  const { view } = parseGraphView(org?.defaultGraphView) || defaultGraphView
+  const { view, members } =
+    parseGraphView(
+      org?.defaultGraphView,
+      undefined,
+      org?.defaultGraphMembers
+    ) || defaultGraphView
 
   // Color mode
   const { colorMode } = useColorMode()
@@ -67,9 +72,10 @@ export default function DashboardOrgChart(boxProps: BoxProps) {
     <Box ref={boxRef} h={size} {...boxProps}>
       {org && orgData && size && (
         <CirclesGraph
-          key={`${view}${colorMode}`}
+          key={`${view}${members}${colorMode}`}
           view={view}
           folded
+          hideMembers={!members}
           org={orgData}
           events={events}
           width={size}

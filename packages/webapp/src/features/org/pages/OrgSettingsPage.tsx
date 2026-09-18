@@ -42,6 +42,7 @@ interface Values {
   governanceMode: Governance_Mode_Enum
   defaultGraphView: CirclesGraphViews
   defaultGraphFolded: boolean
+  defaultGraphMembers: boolean
 }
 
 const resolver = yupResolver(
@@ -75,12 +76,16 @@ export default function OrgSettingsPage() {
   useEffect(() => {
     if (!org) return
     const graphView =
-      parseGraphView(org.defaultGraphView, org.defaultGraphFolded) ||
-      defaultGraphView
+      parseGraphView(
+        org.defaultGraphView,
+        org.defaultGraphFolded,
+        org.defaultGraphMembers
+      ) || defaultGraphView
     reset({
       name: org.name,
       defaultGraphView: graphView.view,
       defaultGraphFolded: graphView.folded,
+      defaultGraphMembers: graphView.members,
       governanceMode: org.governanceMode,
     })
   }, [org])
@@ -156,10 +161,12 @@ export default function OrgSettingsPage() {
               value={{
                 view: watch('defaultGraphView'),
                 folded: watch('defaultGraphFolded'),
+                members: watch('defaultGraphMembers'),
               }}
-              onChange={({ view, folded }) => {
+              onChange={({ view, folded, members }) => {
                 setValue('defaultGraphView', view)
                 setValue('defaultGraphFolded', folded)
+                setValue('defaultGraphMembers', members)
               }}
               variant="outline"
             />

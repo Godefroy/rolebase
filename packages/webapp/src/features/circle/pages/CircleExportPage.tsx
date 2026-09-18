@@ -10,7 +10,6 @@ import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   Box,
   Button,
-  Checkbox,
   Flex,
   Heading,
   Spacer,
@@ -35,7 +34,7 @@ type CircleExportParams = {
   circleId: string
   view: string
   folded: string
-  showMembers: string
+  members: string
 }
 
 const defaultWidth = 2048
@@ -58,22 +57,22 @@ export default function CircleExportPage() {
   // Settings. The view is kept in the URL, so opening the export from the org
   // chart lands on the same view and the link stays shareable.
   const graphView: GraphView =
-    parseGraphView(params.view, params.folded === '1') || defaultGraphView
-  const { view, folded } = graphView
+    parseGraphView(
+      params.view,
+      params.folded === '1',
+      params.members !== '0'
+    ) || defaultGraphView
+  const { view, folded, members: showMembers } = graphView
   const handleViewChange = useCallback(
-    ({ view, folded }: GraphView) =>
-      changeParams({ view, folded: folded ? '1' : undefined }),
+    ({ view, folded, members }: GraphView) =>
+      changeParams({
+        view,
+        folded: folded ? '1' : undefined,
+        members: members ? undefined : '0',
+      }),
     [changeParams]
   )
   const [width, setWidth] = useState(defaultWidth)
-
-  // Kept in the URL too. On by default, so only the off state is written.
-  const showMembers = params.showMembers !== '0'
-  const handleShowMembersChange = useCallback(
-    (checked: boolean) =>
-      changeParams({ showMembers: checked ? undefined : '0' }),
-    [changeParams]
-  )
 
   // Data
   const { orgId, orgData, getOrgResult } = useOrgContext()
@@ -125,7 +124,7 @@ export default function CircleExportPage() {
   useEffect(() => {
     if (!ready) return
     setTimeout(handleCenter, 100)
-  }, [circleId, ready, width, height, view, folded])
+  }, [circleId, ready, width, height, view, folded, showMembers])
 
   // Download as transparent PNG (generated server-side)
   const handleDownload = async () => {
@@ -218,15 +217,6 @@ export default function CircleExportPage() {
               onChange={handleViewChange}
             />
             <Spacer />
-            <Checkbox
-              isChecked={showMembers}
-              size="sm"
-              onChange={(event) =>
-                handleShowMembersChange(event.target.checked)
-              }
-            >
-              {t('CircleExportPage.showMembers')}
-            </Checkbox>
             <Flex alignItems="center">
               <NumberInput
                 value={width}

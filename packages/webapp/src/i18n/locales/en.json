@@ -151,8 +151,7 @@
   },
   "CircleExportPage": {
     "heading": "Export a capture",
-    "download": "Download as PNG",
-    "showMembers": "Show members"
+    "download": "Download as PNG"
   },
   "ExportPage": {
     "heading": "Export",
@@ -266,12 +265,11 @@
     "heading": "Share your org chart",
     "enable": "Enable sharing",
     "enableHelp": "Sharing publishes a public page of your org chart, readable by anyone with the link and embeddable in your website, without a Rolebase account.",
-    "headingAccess": "Access",
-    "shareOrg": "Roles Org Chart",
-    "shareOrgHelp": "Names and purposes only.",
-    "shareMembers": "Members",
-    "shareMembersHelp": "Names and photos only.",
-    "view": "View",
+    "headingPublished": "Publishing settings",
+    "shareMembers": "Publish members",
+    "shareMembersHelp": "Names and photos only. Applies to all your links.",
+    "headingLink": "Link settings",
+    "headingLinkHelp": "These settings are part of the address below. You can create several links with different settings.",
     "zoom": "Enable zoom and mouse movement",
     "transparent": "Transparent background",
     "link": "Share link",
@@ -397,7 +395,9 @@
     "Members_desc": "Show every member of the organization at a glance, without the roles.",
     "folded": "Folded",
     "folded_desc": "Show only the selected role, its parents and their direct roles, instead of the whole organization.",
-    "foldedLabel": "{{view}} (folded)"
+    "foldedLabel": "{{view}} (folded)",
+    "members": "Show members",
+    "members_desc": "Show the members who fill each role. Uncheck it to keep the roles alone."
   },
   "LangModal": {
     "heading": "Language"
