@@ -148,3 +148,6 @@ demo:
       name: Directeur commercial
     cfinance:
       name: Directeur administratif et financier
+
+video:
+  play: Lire la vidéo

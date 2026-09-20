@@ -1,4 +1,6 @@
 ---
+import { getTranslations, getLangFromUrl } from '../utils/i18n'
+
 interface Props {
   videoId: string
   aspect?: string
@@ -6,11 +8,17 @@ interface Props {
 }
 
 const { videoId, aspect = '16/9', class: className } = Astro.props
+
+const lang = getLangFromUrl(Astro.url)
+const t = await getTranslations(lang)
 ---
 
 <div
   class:list={["relative overflow-hidden rounded-2xl cursor-pointer group bg-gray-900", className]}
   style={`aspect-ratio: ${aspect}`}
+  role="button"
+  tabindex="0"
+  aria-label={t.video.play}
   data-video-trigger
   data-video-id={videoId}
 >
@@ -44,13 +52,25 @@ const { videoId, aspect = '16/9', class: className } = Astro.props
 <script>
   function initYouTubeEmbeds() {
     document.querySelectorAll("[data-video-trigger]").forEach((trigger) => {
-      trigger.addEventListener("click", () => {
-        const videoId = (trigger as HTMLElement).dataset.videoId
+      const play = () => {
+        const el = trigger as HTMLElement
+        const videoId = el.dataset.videoId
         const embed = trigger.querySelector("[data-video-embed]")
         const iframe = embed?.querySelector("iframe")
         if (iframe && videoId && embed) {
           iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`
           embed.classList.remove("hidden")
+          el.removeAttribute("role")
+          el.removeAttribute("tabindex")
+          el.removeAttribute("aria-label")
+        }
+      }
+      trigger.addEventListener("click", play)
+      trigger.addEventListener("keydown", (event) => {
+        const key = (event as KeyboardEvent).key
+        if (key === "Enter" || key === " ") {
+          event.preventDefault()
+          play()
         }
       })
     })

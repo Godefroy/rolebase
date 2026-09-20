@@ -148,3 +148,6 @@ demo:
       name: Sales Director
     cfinance:
       name: Finance Director
+
+video:
+  play: Play the video
