@@ -2,7 +2,7 @@
 
 Ce fichier centralise **tout ce qui est spécifique à ce site** pour les skills `terreau-*` :
 identité, positionnement, ICP, angles différenciants, concurrents à exclure, pages canoniques,
-ciblage des mots-clés, organisation du contenu, conventions visuelles et pages evergreen.
+ciblage des mots-clés, organisation du contenu et conventions visuelles.
 
 Les skills `terreau-*` sont génériques et partagées entre tous les sites : elles ne contiennent
 aucune valeur de ce fichier, elles le lisent.
@@ -258,22 +258,7 @@ Le modèle sort ~1024 px : réduire ensuite pour le web
 
 ---
 
-## 10. Pages evergreen
-
-Pages à garder factuellement à jour, avec leur cadence. La skill `terreau-update-evergreen` respecte
-la fenêtre de cooldown.
-
-**Trimestriel (1 refresh max par 90 jours)** :
-
-- aucune pour l'instant
-
-**Mensuel (1 refresh max par 30 jours)** :
-
-- aucune pour l'instant
-
----
-
-## 11. Publication et vérifications
+## 10. Publication et vérifications
 
 - **Build** : `npm run build` depuis `website/` (le serveur de dev tourne en local, lire sa sortie
   suffit souvent).
