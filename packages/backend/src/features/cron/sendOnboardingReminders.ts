@@ -12,6 +12,7 @@ const hour = 60 * 60 * 1000
 
 // Onboarding reminders, one email each, sent once per user:
 // - noOrg: signed in (code validated) 1 to 48 hours ago, still no organization
+// - noSetup: organization created 1 to 48 hours ago, setup left unfinished
 // - noInvite: organization set up 24 to 72 hours ago, nobody invited yet
 // The windows only catch recent signups, so older users never receive them.
 export default webhookProcedure.mutation(async () => {
@@ -36,6 +37,27 @@ export default webhookProcedure.mutation(async () => {
     await markSent(user.id, metadata, 'noOrg')
   }
 
+  const { org: unsetOrgs } = await adminRequest(GET_ORGS_WITHOUT_SETUP, {
+    from: at(48),
+    to: at(1),
+  })
+  for (const org of unsetOrgs) {
+    const user = org.members[0]?.user
+    if (!user?.email) continue
+    const metadata: UserMetadata = user.metadata || {}
+    if (metadata.onboardingReminders?.noSetup) continue
+
+    await sendReminder({
+      type: 'noSetup',
+      email: user.email,
+      lang: user.locale,
+      replace: { name: user.displayName, org: org.name },
+      // The setup modal opens by itself in an org that isn't set up
+      ctaUrl: `${settings.url}${getOrgPath(org)}/`,
+    })
+    await markSent(user.id, metadata, 'noSetup')
+  }
+
   const { org: orgs } = await adminRequest(GET_ORGS_WITHOUT_INVITE, {
     from: at(72),
     to: at(24),
@@ -57,8 +79,10 @@ export default webhookProcedure.mutation(async () => {
   }
 })
 
+type ReminderType = 'noOrg' | 'noSetup' | 'noInvite'
+
 interface ReminderParams {
-  type: 'noOrg' | 'noInvite'
+  type: ReminderType
   email: string
   lang: string
   replace: Record<string, string>
@@ -97,7 +121,7 @@ async function sendReminder({
 async function markSent(
   userId: string,
   metadata: UserMetadata,
-  type: 'noOrg' | 'noInvite'
+  type: ReminderType
 ) {
   await updateUserMetadata(userId, {
     ...metadata,
@@ -123,6 +147,35 @@ const GET_USERS_WITHOUT_ORG = gql(`
       displayName
       locale
       metadata
+    }
+  }
+`)
+
+const GET_ORGS_WITHOUT_SETUP = gql(`
+  query getOrgsWithoutSetup($from: timestamptz!, $to: timestamptz!) {
+    org(
+      where: {
+        createdAt: { _gte: $from, _lte: $to }
+        archivedAt: { _is_null: true }
+        onboardingTodo: { _is_null: true }
+        _not: { roles: { base: { _eq: true } } }
+      }
+    ) {
+      id
+      name
+      slug
+      members(
+        where: { role: { _eq: Owner }, userId: { _is_null: false } }
+        limit: 1
+      ) {
+        user {
+          id
+          email
+          displayName
+          locale
+          metadata
+        }
+      }
     }
   }
 `)

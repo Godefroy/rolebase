@@ -8,6 +8,8 @@ import { OrgType, orgTypePresets } from '../orgTypes'
 
 export interface SeedRoleInput {
   name: string
+  // Seeded as the model's leader base role in the root circle
+  isLeaderBaseRole?: boolean
   responsibleId?: string
   participantIds: string[]
 }
@@ -58,6 +60,15 @@ export default function useSeedOrg() {
 
       // One circle per main role under the root
       for (const role of roles) {
+        if (role.isLeaderBaseRole) {
+          if (!leaderRole || !role.responsibleId) continue
+          const leadCircleId = await createCircle(rootCircleId, leaderRole)
+          if (leadCircleId) {
+            await addCircleMember(leadCircleId, role.responsibleId)
+          }
+          continue
+        }
+
         const circleId = await createCircle(rootCircleId, role.name)
         if (!circleId) continue
 

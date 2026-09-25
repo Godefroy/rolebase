@@ -8,6 +8,10 @@ export interface PendingInvitation {
   orgName: string
 }
 
+// An invitation often arrives while the person waits in the onboarding wizard
+// (they signed up before a colleague invited them): check again regularly
+const REFRESH_INTERVAL = 30 * 1000
+
 // Invitations waiting for the current user's email address, to offer joining
 // an org instead of creating one. Only fetched when enabled, so users who
 // already have an org never trigger the request.
@@ -17,12 +21,24 @@ export default function usePendingInvitations(enabled: boolean) {
 
   useEffect(() => {
     if (!enabled) return
+    let active = true
+
+    const fetchInvitations = () =>
+      trpc.member.getPendingInvitations
+        .query()
+        .then((result) => active && setInvitations(result))
+        .catch((error) => console.error(error))
+
     setLoading(true)
-    trpc.member.getPendingInvitations
-      .query()
-      .then(setInvitations)
-      .catch((error) => console.error(error))
-      .finally(() => setLoading(false))
+    fetchInvitations().finally(() => active && setLoading(false))
+
+    const interval = setInterval(fetchInvitations, REFRESH_INTERVAL)
+    window.addEventListener('focus', fetchInvitations)
+    return () => {
+      active = false
+      clearInterval(interval)
+      window.removeEventListener('focus', fetchInvitations)
+    }
   }, [enabled])
 
   return { invitations, loading: enabled && loading }

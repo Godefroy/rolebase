@@ -21,24 +21,13 @@ import { track } from 'src/analytics'
 import { nhost } from 'src/nhost'
 import * as yup from 'yup'
 import { useAuth } from '../hooks/useAuth'
+import { getNameFromEmail } from '@utils/getNameFromEmail'
 
 const schema = yup.object().shape({
   name: nameSchema.required(),
 })
 
 type Values = yup.InferType<typeof schema>
-
-// Suggested name from the email's local part: "jean.dupont" -> "Jean Dupont"
-function getNameFromEmail(email: string | undefined): string {
-  const localPart = email?.split('@')[0] ?? ''
-  return localPart
-    .replace(/\+.*$/, '')
-    .split(/[._-]+/)
-    .map((word) => word.replace(/\d+/g, ''))
-    .filter(Boolean)
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(' ')
-}
 
 export default function UserNamePage() {
   const { t } = useTranslation()

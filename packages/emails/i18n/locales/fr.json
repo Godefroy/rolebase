@@ -71,6 +71,14 @@
       "paragraph3": "Invitez ensuite votre équipe pour que chacun voie qui fait quoi.",
       "cta": "Créer mon organisation"
     },
+    "noSetup": {
+      "subject": "Terminez l’organigramme de {{org}}",
+      "title": "{{org}} est presque prête",
+      "paragraph1": "Bonjour {{name}}, votre organisation {{org}} est créée. Il reste à choisir son fonctionnement et à ajouter ses principaux rôles.",
+      "paragraph2": "Comptez deux minutes : l’organigramme se dessine au fur et à mesure, et tout reste modifiable ensuite.",
+      "paragraph3": "Vous pourrez ensuite inviter votre équipe.",
+      "cta": "Terminer la configuration"
+    },
     "noInvite": {
       "subject": "Montrez l’organigramme de {{org}} à votre équipe",
       "title": "Faites entrer votre équipe dans {{org}}",

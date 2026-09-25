@@ -4,6 +4,7 @@ import {
   Flex,
   FormControl,
   FormLabel,
+  Heading,
   IconButton,
   Input,
   SimpleGrid,
@@ -49,13 +50,20 @@ export default function RoleAssignmentItem({
   return (
     <Box borderWidth="1px" borderRadius="md" p={4}>
       <Flex mb={4} gap={2} align="center">
-        <Input
-          value={role.name}
-          onChange={(e) => onChange({ name: e.target.value })}
-          flex={1}
-          size="lg"
-          autoComplete="off"
-        />
+        {role.isLeaderBaseRole ? (
+          // A base role of the model: its name comes with the model
+          <Heading as="h3" size="sm" flex={1} py={2}>
+            {role.name}
+          </Heading>
+        ) : (
+          <Input
+            value={role.name}
+            onChange={(e) => onChange({ name: e.target.value })}
+            flex={1}
+            size="lg"
+            autoComplete="off"
+          />
+        )}
         <IconButton
           aria-label={t('common.delete')}
           icon={<DeleteIcon size="1em" />}
@@ -66,7 +74,9 @@ export default function RoleAssignmentItem({
 
       <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
         <FormControl>
-          <FormLabel fontSize="sm">{leaderLabel}</FormLabel>
+          <FormLabel fontSize="sm">
+            {role.isLeaderBaseRole ? t('OrgSetupModal.holder') : leaderLabel}
+          </FormLabel>
           <MembersMultiSelect
             membersIds={role.responsibleId ? [role.responsibleId] : []}
             excludeMembersIds={role.participantIds}
@@ -77,16 +87,20 @@ export default function RoleAssignmentItem({
           />
         </FormControl>
 
-        <FormControl>
-          <FormLabel fontSize="sm">{t('OrgSetupModal.participants')}</FormLabel>
-          <MembersMultiSelect
-            membersIds={role.participantIds}
-            excludeMembersIds={role.responsibleId ? [role.responsibleId] : []}
-            allowCreate
-            onAdd={addParticipant}
-            onRemove={removeParticipant}
-          />
-        </FormControl>
+        {!role.isLeaderBaseRole && (
+          <FormControl>
+            <FormLabel fontSize="sm">
+              {t('OrgSetupModal.participants')}
+            </FormLabel>
+            <MembersMultiSelect
+              membersIds={role.participantIds}
+              excludeMembersIds={role.responsibleId ? [role.responsibleId] : []}
+              allowCreate
+              onAdd={addParticipant}
+              onRemove={removeParticipant}
+            />
+          </FormControl>
+        )}
       </SimpleGrid>
     </Box>
   )

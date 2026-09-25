@@ -38,3 +38,17 @@ export function track(name: string, props?: TrackProps) {
 export function identify(props: TrackProps) {
   window.umami?.identify(clean(props) ?? {})
 }
+
+// Sends an event once per browser for the same name and properties. For
+// events fired on `pagehide`, which also fires on every reload: without it, a
+// person reloading a step five times counts as five abandonments.
+export function trackOnce(name: string, props?: TrackProps) {
+  const key = `tracked:${name}:${JSON.stringify(clean(props) ?? {})}`
+  try {
+    if (localStorage.getItem(key)) return
+    localStorage.setItem(key, '1')
+  } catch {
+    // Storage unavailable: send anyway
+  }
+  track(name, props)
+}

@@ -31,13 +31,15 @@ export default function OrgSetupGraphPreview({ roles }: Props) {
     const rootCircle = orgData?.circles.find((c) => !c.parentId)
     if (!orgData || !rootCircle) return undefined
 
+    // The leader base role shows as such: a single-member role linked to its
+    // parent, in the color the seeding gives it
     const draftRoles: RoleSummaryFragment[] = roles.map((role) => ({
       id: `draft-role-${role.id}`,
-      base: false,
+      base: !!role.isLeaderBaseRole,
       name: role.name,
-      singleMember: false,
-      parentLink: false,
-      colorHue: null,
+      singleMember: !!role.isLeaderBaseRole,
+      parentLink: !!role.isLeaderBaseRole,
+      colorHue: role.isLeaderBaseRole ? 0 : null,
     }))
     const draftCircles: CircleFragment[] = roles.map((role) => ({
       id: `draft-circle-${role.id}`,

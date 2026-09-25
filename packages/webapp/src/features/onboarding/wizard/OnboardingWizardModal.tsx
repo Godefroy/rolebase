@@ -6,7 +6,7 @@ import { Box, Button, Flex, Spacer } from '@chakra-ui/react'
 import React, { useEffect, useRef, useState } from 'react'
 import { FormProvider } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { track } from 'src/analytics'
+import { track, trackOnce } from 'src/analytics'
 import { ChevronLeftIcon, ChevronRightIcon } from 'src/icons'
 import useOnboardingForm, { OnboardingStep } from './hooks/useOnboardingForm'
 import StepObjective from './steps/StepObjective'
@@ -40,11 +40,12 @@ export default function OnboardingWizardModal() {
     useOnboardingForm()
 
   // Sent once per person, not on every mount of the modal (reloads remount
-  // it). The wizard skips steps whose answer is already known, so the step
-  // list is the only honest denominator for the funnel.
+  // it, sometimes before the metadata is saved: trackOnce covers that). The
+  // wizard skips steps whose answer is already known, so the step list is the
+  // only honest denominator for the funnel.
   useEffect(() => {
     if (metadata?.onboardingStartedAt) return
-    track('onboarding_started', {
+    trackOnce('onboarding_started', {
       steps: steps.join(','),
       stepsCount: steps.length,
     })
@@ -65,7 +66,7 @@ export default function OnboardingWizardModal() {
   stepRef.current = step
   useEffect(() => {
     const handlePageHide = () =>
-      track('onboarding_abandoned', { step: stepRef.current })
+      trackOnce('onboarding_abandoned', { step: stepRef.current })
     window.addEventListener('pagehide', handlePageHide)
     return () => window.removeEventListener('pagehide', handlePageHide)
   }, [])

@@ -12,6 +12,7 @@ import {
 import React, { useRef, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
+import { track } from 'src/analytics'
 import { trpc } from 'src/trpc'
 import useOrg from '../hooks/useOrg'
 
@@ -30,6 +31,13 @@ export default function OrgDeleteModal({ id, ...alertProps }: Props) {
   // Archive org and set loading=true while waiting for org to disappear
   const handleDelete = async () => {
     setLoading(true)
+    // Orgs deleted minutes after their setup say something about onboarding
+    if (org) {
+      const ageMinutes = Math.round(
+        (Date.now() - new Date(org.createdAt).getTime()) / 60000
+      )
+      track('org_archived', { ageMinutes })
+    }
     await trpc.org.archiveOrg.mutate({
       orgId: org?.id ?? '',
     })

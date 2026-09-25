@@ -7,12 +7,15 @@ import { Member_Role_Enum, useUpdateOrgMutation } from '@gql'
 import { nanoid } from 'nanoid'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { track } from 'src/analytics'
+import { track, trackOnce } from 'src/analytics'
 import { ChevronLeftIcon, ChevronRightIcon, EmailIcon } from 'src/icons'
 import { trpc } from 'src/trpc'
-import { getValidInvites } from '../getValidInvites'
+import useCreateMember from '@/member/hooks/useCreateMember'
+import useCurrentMember from '@/member/hooks/useCurrentMember'
+import { getNameFromEmail } from '@utils/getNameFromEmail'
+import { getValidInvites, isNewInvite } from '../getValidInvites'
 import useSeedOrg from '../hooks/useSeedOrg'
-import { OrgType } from '../orgTypes'
+import { getRepresentativeRole, OrgType } from '../orgTypes'
 import OrgSetupStepInvite from './OrgSetupStepInvite'
 import OrgSetupStepModel from './OrgSetupStepModel'
 import OrgSetupStepRoles from './OrgSetupStepRoles'
@@ -41,6 +44,7 @@ export default function OrgSetupModal({ onClose }: Props) {
   const { orgId, orgData } = useOrgContext()
   const [updateOrg] = useUpdateOrgMutation()
   const seedOrg = useSeedOrg()
+  const createMember = useCreateMember()
   const { availableSeats } = useSubscriptionData()
 
   useEffect(() => {
@@ -52,6 +56,38 @@ export default function OrgSetupModal({ onClose }: Props) {
   const [roles, setRoles] = useState<RoleDraft[]>([])
   const [emails, setEmails] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(false)
+
+  // Start the roles step with a first role held by the person setting up, so
+  // it shows what a filled role looks like and can be continued right away:
+  // a "Direction" role for a classic org, the model's leader base role in the
+  // root circle otherwise. Replaced when the model changes, until edited.
+  const currentMember = useCurrentMember()
+  const prefilledRole = useRef<RoleDraft>()
+  const prefillRoles = () => {
+    const isClassic = orgType === OrgType.Classic
+    const leaderName = t(
+      `Onboarding.roles.${getRepresentativeRole(orgType).nameKey}.name`
+    )
+    const untouched =
+      roles.length === 0 ||
+      (roles.length === 1 && roles[0] === prefilledRole.current)
+    if (!untouched || !currentMember?.userId) {
+      // Keep the leader base role named after the current model
+      setRoles((rs) =>
+        rs.map((r) => (r.isLeaderBaseRole ? { ...r, name: leaderName } : r))
+      )
+      return
+    }
+    const role: RoleDraft = {
+      id: nanoid(8),
+      name: isClassic ? t('Onboarding.roleExamples.direction') : leaderName,
+      isLeaderBaseRole: !isClassic,
+      responsibleId: currentMember.id,
+      participantIds: [],
+    }
+    prefilledRole.current = role
+    setRoles([role])
+  }
 
   const rootCircle = useMemo(
     () => orgData?.circles.find((c) => !c.parentId),
@@ -71,7 +107,7 @@ export default function OrgSetupModal({ onClose }: Props) {
   stepRef.current = step
   useEffect(() => {
     const handlePageHide = () =>
-      track('org_setup_abandoned', { step: stepRef.current })
+      trackOnce('org_setup_abandoned', { step: stepRef.current })
     window.addEventListener('pagehide', handlePageHide)
     return () => window.removeEventListener('pagehide', handlePageHide)
   }, [])
@@ -86,11 +122,16 @@ export default function OrgSetupModal({ onClose }: Props) {
     setRoles((rs) => rs.filter((r) => r.id !== id))
 
   // Send the invitations one by one: a failure on one address does not stop
-  // the others. Returns the number of invitations sent.
+  // the others. People typed by their address alone become members first,
+  // named after it. Returns the number of invitations sent.
   const sendInvites = async () => {
     let sent = 0
-    for (const { memberId, email } of invites) {
+    for (const invite of invites) {
+      const { email } = invite
       try {
+        const memberId = isNewInvite(invite.memberId)
+          ? await createMember(getNameFromEmail(email) || email)
+          : invite.memberId
         await trpc.member.inviteMember.mutate({
           memberId,
           email,
@@ -130,6 +171,7 @@ export default function OrgSetupModal({ onClose }: Props) {
         rootCircleId: rootCircle.id,
         roles: roles.map((r) => ({
           name: r.name.trim(),
+          isLeaderBaseRole: r.isLeaderBaseRole,
           responsibleId: r.responsibleId,
           participantIds: r.participantIds,
         })),
@@ -167,6 +209,7 @@ export default function OrgSetupModal({ onClose }: Props) {
 
   const handleNextFromModel = () => {
     track('org_setup_model_done', { orgType })
+    prefillRoles()
     setStep(SetupStep.Roles)
   }
 

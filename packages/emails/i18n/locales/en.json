@@ -71,6 +71,14 @@
       "paragraph3": "Then invite your team so everyone can see who does what.",
       "cta": "Create my organization"
     },
+    "noSetup": {
+      "subject": "Finish the {{org}} org chart",
+      "title": "{{org}} is almost ready",
+      "paragraph1": "Hi {{name}}, your organization {{org}} is created. All that’s left is to choose how it works and add its main roles.",
+      "paragraph2": "It takes two minutes: the org chart comes together as you go, and you can change everything afterwards.",
+      "paragraph3": "Then invite your team.",
+      "cta": "Finish the setup"
+    },
     "noInvite": {
       "subject": "Show your team the {{org}} org chart",
       "title": "Bring your team into {{org}}",

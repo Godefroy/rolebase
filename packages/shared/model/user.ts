@@ -15,6 +15,7 @@ export interface UserMetadata {
   // Onboarding reminder emails already sent (ISO dates)
   onboardingReminders?: {
     noOrg?: string
+    noSetup?: string
     noInvite?: string
   }
 }

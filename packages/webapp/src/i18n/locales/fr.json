@@ -1719,11 +1719,13 @@
       "customPlaceholder": "Ou tapez le nom d'un rôle..."
     },
     "participants": "Autres participants",
+    "holder": "Occupé par",
     "invite": {
       "heading": "Invitez votre équipe",
       "help": "Chaque personne invitée reçoit un email pour rejoindre l'organisation. Laissez vide celles que vous préférez inviter plus tard.",
-      "empty": "Aucun membre à inviter pour l'instant. Vous pourrez inviter votre équipe à tout moment depuis la prise en main.",
       "emailLabel": "Email de {{name}}",
+      "newEmailLabel": "Email de la personne à inviter",
+      "add": "Ajouter une personne",
       "pricing": "Les 5 premiers comptes sont gratuits. Au-delà, 5 € par mois par compte. Les membres sans compte sont illimités.",
       "limitReached_one": "Votre plan inclut {{count}} invitation en plus de votre compte. Vous pourrez inviter les autres membres en passant à un plan supérieur, une fois la configuration terminée.",
       "limitReached_other": "Votre plan inclut {{count}} invitations en plus de votre compte. Vous pourrez inviter les autres membres en passant à un plan supérieur, une fois la configuration terminée.",
@@ -1754,7 +1756,8 @@
   "Onboarding": {
     "finish": "Terminer",
     "orgName": {
-      "heading": "Créez votre organisation"
+      "heading": "Créez votre organisation",
+      "joinTeam": "Votre équipe utilise déjà Rolebase ? Demandez à un administrateur de vous inviter avec l'adresse {{email}}. Vous pourrez rejoindre l'organisation ici dès l'envoi de l'invitation."
     },
     "roles": {
       "manager": {

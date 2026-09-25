@@ -6,16 +6,19 @@ import {
   Input,
   InputGroup,
   InputLeftAddon,
+  Text,
   VStack,
 } from '@chakra-ui/react'
 import React from 'react'
 import { useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import { useAuth } from '@/user/hooks/useAuth'
 import settings from 'src/settings'
 import { OnboardingValues } from '../hooks/useOnboardingForm'
 
 export default function StepOrgName() {
   const { t } = useTranslation()
+  const { user } = useAuth()
   const {
     register,
     formState: { errors },
@@ -44,6 +47,12 @@ export default function StepOrgName() {
           <FormErrorMessage>{errors.slug.message}</FormErrorMessage>
         )}
       </FormControl>
+
+      {/* People whose team already uses Rolebase often sign up before being
+          invited: the invitation replaces this wizard as soon as it is sent */}
+      <Text fontSize="sm" color="gray.500">
+        {t('Onboarding.orgName.joinTeam', { email: user?.email ?? '' })}
+      </Text>
     </VStack>
   )
 }
