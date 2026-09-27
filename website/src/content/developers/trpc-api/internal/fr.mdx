@@ -10,7 +10,7 @@ Ces procédures existent pour la plateforme elle-même, pas pour les intégratio
 
 Appelées sur une planification avec le secret de webhook. Aucune ne prend d’input.
 
-| Procédure | Ce qu’elle fait |
+| Procédure | Description |
 | --- | --- |
 | `cron.createNextRecurringMeetings` | Crée les prochaines occurrences des configurations de réunions récurrentes. |
 | `cron.endOldMeetings` | Clôture les réunions restées en cours après leur fin. |
@@ -23,7 +23,7 @@ Appelées sur une planification avec le secret de webhook. Aucune ne prend d’i
 
 Appelés par Hasura sur un changement en base, avec le secret de webhook.
 
-| Procédure | Ce qu’elle fait |
+| Procédure | Description |
 | --- | --- |
 | `trigger` | Répercute une ligne insérée, modifiée ou supprimée dans l’index de recherche et les calendriers connectés. |
 | `proposal.onVote` | Résout une proposition dès que les votes rendent l’issue certaine. |
@@ -34,7 +34,7 @@ Les fournisseurs de calendrier poussent aussi leurs propres changements sur les 
 
 Réservées à un token d’accès portant le rôle `admin`.
 
-| Procédure | Ce qu’elle fait |
+| Procédure | Description |
 | --- | --- |
 | `participants.recomputeCache` | Reconstruit le cache derrière [`circle_participant`](/fr/developers/graphql-api/circle_participant). |
 | `search.reindexAll` | Vide et reconstruit tout l’index de recherche. |
