@@ -2,6 +2,7 @@
 title: 'Best Alternative to GlassFrog for Self-Managed Teams'
 summary: 'Comparing GlassFrog and Rolebase for self-management: features, pricing, open source, and flexibility for teams beyond strict Holacracy.'
 date: 2026-03-28
+update: 2026-09-29
 image: './glassfrog-homepage.png'
 similarPosts:
   - 'holacracy-intro'
@@ -10,7 +11,7 @@ similarPosts:
 
 If your team practices Holacracy, sociocracy, or any form of self-management, you have likely encountered GlassFrog. Built by HolacracyOne, it has long been the default software for organizations running Holacracy. But as self-management practices evolve and diversify, many teams are looking for tools that offer more flexibility, better pricing, and a modern user experience. Rolebase is an open source platform designed for exactly these teams: organizations that want the clarity of role-based governance without being locked into a single framework.
 
-GlassFrog deserves recognition for its role in making Holacracy operational at scale. It is the official tool from the creators of Holacracy, and for organizations deeply committed to the Holacracy constitution, it provides a well-structured environment with strong meeting formats, governance processes, and an AI companion (FrogBot) that understands your company's policies. Trusted by large companies like Siemens, Danone, and Engie, GlassFrog has proven its value for enterprise-level Holacracy practice.
+GlassFrog deserves recognition for its role in making Holacracy operational at scale. It is the official tool from the creators of Holacracy, and for organizations deeply committed to the Holacracy constitution, it provides a well-structured environment with strong meeting formats, governance processes, and an AI companion (FrogBot) that understands your company's policies. Trusted by large companies like Siemens, Danone, Engie and ABN AMRO, GlassFrog has proven its value for enterprise-level Holacracy practice.
 
 ![GlassFrog homepage](./glassfrog-homepage.png)
 
@@ -36,7 +37,7 @@ GlassFrog's Premium plan is $7/user/month, which is reasonable on its own. Howev
 
 ### Closed source with limited integrations
 
-GlassFrog integrates with Slack, Jira, and Asana, but the platform is closed source. Organizations that need to audit their tools, self-host for compliance reasons, or build custom integrations have limited options. The API is available but rate-limited to 50 calls/hour on the free plan.
+GlassFrog integrates with Slack, Jira, and Asana on the Premium plan, but the platform is closed source. Organizations that need to audit their tools, self-host for compliance reasons, or build custom integrations have limited options. The API allows 50 calls an hour on the free plan and 25 calls per user per hour on Premium. A newer version of the API, still in beta, raises the Premium limit to 500 calls per user per hour.
 
 ## How Rolebase approaches things differently
 
@@ -68,7 +69,7 @@ Rolebase includes all features in every plan, from the free tier to the paid pla
 
 ## Feature comparison
 
-Here is a side-by-side look at both platforms' capabilities (as of March 2026).
+Here is a side-by-side look at both platforms' capabilities, checked on 29 September 2026.
 
 | Feature | GlassFrog | Rolebase |
 |---|---|---|
@@ -76,45 +77,55 @@ Here is a side-by-side look at both platforms' capabilities (as of March 2026).
 | Role-based governance | Holacracy-focused | Framework-agnostic |
 | Structured meetings | Tactical + Governance | Customizable step-based |
 | Meeting templates | Yes (Agile meeting library) | Yes |
-| Tasks and projects | Yes (sub-projects on Premium) | Yes (included in all plans) |
+| Tasks and projects | Yes (projects and actions, sub-projects on Premium) | Yes (included in all plans) |
 | Discussions | Via tension inbox | Dedicated discussions per role |
 | Decisions tracking | Via governance | Yes, per role |
 | OKRs / Goals | $1.50/user/month add-on | Not available |
-| AI companion | FrogBot ($1.50/user/month add-on) | Not available |
-| Integrations | Slack, Jira, Asana | Calendar sync (iCal), API |
-| Data import | Limited | Yes (including from Holaspirit) |
+| AI | FrogBot assistant ($1.50/user/month add-on) | Meeting summary and role drafting (included) |
+| Integrations | Slack, Jira, Asana (Premium) | Google Calendar, Outlook, iCal feed |
+| Data import | CSV | Holaspirit (Talkspirit) file |
+| Data export | JSON (Premium) | XLSX or JSON (all plans) |
 | Open source | No | Yes (MIT license) |
 | Self-hosting | No | Yes |
 | GDPR compliance | Yes | Yes (EU servers) |
-| API access | Yes (rate-limited) | Yes (GraphQL) |
+| API access | Yes (50 calls/hour on Free) | Yes (GraphQL and tRPC) |
 | Real-time collaboration | Limited | Yes |
 
-GlassFrog has the edge on OKRs and AI-powered assistance with FrogBot, features Rolebase does not currently offer. GlassFrog also has more mature third-party integrations with Slack, Jira, and Asana. Rolebase leads on openness, pricing transparency, and flexibility in governance model.
+GlassFrog offers OKRs, which Rolebase lacks. Its AI goes further: FrogBot turns a tension into a governance proposal checked against your policies, while Rolebase's AI stays limited to meeting summaries and drafting a role. GlassFrog also connects to Slack, Jira, and Asana, which Rolebase does not. Rolebase leads on openness, pricing transparency, and flexibility in governance model.
 
 ## Pricing comparison
 
 ![Rolebase pricing](../../../assets/screenshots/rolebase-pricing.png)
 
-Understanding the full cost of each platform helps make an informed decision. Here is how pricing compares as of March 2026.
+GlassFrog publishes its prices in US dollars and Rolebase in euros. Both price lists come from each vendor's pricing page, checked on 29 September 2026.
 
 **GlassFrog:**
-- Free plan: up to 10 users, basic features
-- Premium: $7/user/month (or $70/user/year)
-- OKRs add-on: +$1.50/user/month
-- FrogBot AI add-on: +$1.50/user/month
-- Enterprise: custom pricing for 500+ users
-- Unlimited free viewer accounts on Premium
+- Free: up to 10 users with no time limit, including circles, roles, policies and both meeting types
+- Premium: $7/user/month, or $70/user/year on annual billing, with a 30-day trial
+- Goals and Targets (OKRs) add-on: +$1.50/user/month, or $15/user/year
+- FrogBot AI add-on: +$1.50/user/month, or $15/user/year
+- Special pricing on request above 250 users, enterprise terms above 500
+- Unlimited free viewer accounts on Premium, for people who hold no role
+- Non-profit discount on request
 
 **Rolebase:**
 - Small (Free): all features, up to 5 active members, unlimited inactive members for the org chart
-- Startup: 5 euros/month/user, up to 200 active members, includes 1h/month coaching and priority support
+- Startup: €5/user/month, unlimited active members, includes 1h/month coaching and priority support
 - Enterprise: custom pricing with unlimited guest members and custom consulting
 - Non-profit discounts or free access available
 - Self-hosting: free (MIT license), you cover server costs
 
-For a team of 50 active members wanting the full feature set:
-- GlassFrog Premium with all add-ons: approximately $500/month ($10/user)
-- Rolebase Startup: 250 euros/month (5 euros/user), with coaching included
+On monthly billing, here is what you pay each month, by team size:
+
+| Team size | GlassFrog Free | GlassFrog Premium | GlassFrog Premium + OKRs + FrogBot | Rolebase |
+|---|---|---|---|---|
+| 5 users | $0 | $35 | $50 | €0 (Free plan) |
+| 10 users | $0 | $70 | $100 | €50 |
+| 25 users | Not available | $175 | $250 | €125 |
+| 50 users | Not available | $350 | $500 | €250 |
+| 100 users | Not available | $700 | $1,000 | €500 |
+
+GlassFrog's free plan leaves out the integrations, custom meetings and data export, which all come with Premium. On annual billing, GlassFrog Premium with both add-ons costs $100 per user per year, that is $5,000 a year for 50 people. Rolebase bills monthly only, so the same team pays €3,000 a year (12 × €250), coaching included.
 
 Rolebase's pricing is straightforward: one price, all features. GlassFrog's modular pricing can become complex as you add capabilities your team needs.
 
@@ -141,15 +152,15 @@ For teams that are just getting started with horizontal management, Rolebase off
 
 ## Making the switch
 
-Migrating from GlassFrog to Rolebase is designed to be straightforward. Rolebase supports data import to help you bring your organizational structure over. You can import roles, members, and structural data so you do not have to rebuild everything from scratch.
+The simplest route is to rebuild your structure in Rolebase from your GlassFrog data, circle by circle. It is also a good moment to drop the roles nobody fills anymore.
 
-The transition process typically looks like this:
-
-1. **Export your data** from GlassFrog (available on the Premium plan with full data download)
-2. **Create your organization** in Rolebase and import your structure
-3. **Invite your team** and assign roles
+1. **Export your data** from GlassFrog: in the Admin menu, open Organization Settings, then the Exports tab, and download the JSON file. Keep it as an archive of your governance history. Export is a Premium feature: on the free plan, start the 30-day Premium trial to get it.
+2. **Create your organization** in Rolebase and rebuild your circles and roles from the top of your structure down. Copy each role's purpose, domains and accountabilities from GlassFrog. For a role you are redefining, the "Fill automatically" button drafts its properties from its name.
+3. **Add your members** and invite those who need an account. People who don't need one can stay in the org chart as inactive members, at no cost.
 4. **Run a pilot meeting** to let everyone get comfortable with the new interface
 5. **Gradually transition** your ongoing governance to Rolebase
+
+On the Startup plan, you can spend the monthly hour of coaching on setting up this structure with the Rolebase team.
 
 Because Rolebase is free to start with, you can run both platforms in parallel during a transition period. This lets your team compare the experience firsthand before making a full switch.
 
