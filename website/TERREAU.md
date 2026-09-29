@@ -72,6 +72,11 @@ préfixe de la locale du contenu qui le contient.
    ce sont des pratiques que le produit ne gère pas. Aucune fonctionnalité de feedback, d'élection,
    de suivi de compétences, de gestion de carrière ni d'analyse de climat n'existe dans
    `packages/webapp`, vérifié le 2026-07-28.
+   L'import automatique ne couvre que Holaspirit/Talkspirit : les autres sources de l'écran
+   d'import envoient une demande au support, et la plupart des outils exportent trop peu pour
+   migrer. Sur la migration depuis un autre outil, conseiller la démarche (export de l'outil
+   source comme archive, reconstruction des rôles, membres inactifs) plutôt qu'écrire que Rolebase
+   ne l'importe pas.
 5. **Cas clients publics** : citer les études de cas de la collection `client-cases/` avec un lien
    vers leur page.
 
