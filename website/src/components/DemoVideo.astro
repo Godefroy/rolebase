@@ -1,0 +1,87 @@
+---
+/**
+ * Demo video block, for a video file served by the site (under `public/`).
+ * Shows the poster under a light overlay with a large rounded play triangle in
+ * the middle, and downloads nothing until the click (`preload="none"`), then
+ * plays fullscreen with the native controls (inline if fullscreen is refused).
+ * At the end it leaves fullscreen and shows the play button again.
+ *
+ * Props:
+ *   - `src`: URL of the video file.
+ *   - `poster`: URL of the image shown before playback.
+ *   - `playLabel`: accessible label of the play button, already translated.
+ *   - `aspect?`: CSS aspect ratio, `'16/9'` by default.
+ */
+interface Props {
+  src: string
+  poster: string
+  playLabel: string
+  aspect?: string
+  class?: string
+}
+
+const { src, poster, playLabel, aspect = '16/9', class: className } = Astro.props
+---
+
+<div
+  data-demo-video
+  class:list={['relative overflow-hidden rounded-2xl bg-bg-main', className]}
+  style={`aspect-ratio: ${aspect}`}
+>
+  <video
+    class="absolute inset-0 size-full"
+    src={src}
+    poster={poster}
+    preload="none"
+    playsinline
+  />
+  <button
+    type="button"
+    aria-label={playLabel}
+    class="group absolute inset-0 flex cursor-pointer items-center justify-center bg-gray-900/5 transition-colors duration-200 hover:bg-transparent focus-visible:bg-transparent focus-visible:outline-none"
+  >
+    {/* Rounded corners come from a thick stroke with round joins, in the same
+        colour as the fill. */}
+    <svg
+      viewBox="0 0 100 100"
+      aria-hidden="true"
+      class="size-16 text-yellow-300 drop-shadow-sm transition-transform duration-200 group-hover:scale-110 group-focus-visible:scale-110 sm:size-28"
+    >
+      <path
+        d="M33 20 L33 80 L85 50 Z"
+        fill="currentColor"
+        stroke="currentColor"
+        stroke-width="14"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </button>
+</div>
+
+<script>
+  for (const root of document.querySelectorAll<HTMLElement>('[data-demo-video]')) {
+    const video = root.querySelector('video')
+    const button = root.querySelector('button')
+    if (!video || !button) continue
+
+    button.addEventListener('click', function handleClick() {
+      button.hidden = true
+      video.controls = true
+      video.focus()
+      void video.play()
+      // Must run inside the click to count as a user gesture. iOS Safari only
+      // supports fullscreen on the video element through its prefixed API.
+      const iosVideo = video as HTMLVideoElement & { webkitEnterFullscreen?: () => void }
+      if (video.requestFullscreen) video.requestFullscreen().catch(() => {})
+      else iosVideo.webkitEnterFullscreen?.()
+    })
+
+    video.addEventListener('ended', function handleEnded() {
+      const iosVideo = video as HTMLVideoElement & { webkitExitFullscreen?: () => void }
+      if (document.fullscreenElement) document.exitFullscreen().catch(() => {})
+      else iosVideo.webkitExitFullscreen?.()
+      video.controls = false
+      button.hidden = false
+    })
+  }
+</script>

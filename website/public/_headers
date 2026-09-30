@@ -1,0 +1,4 @@
+# Videos are versioned by filename (`-v1`, `-v2`...): bump the suffix on a new
+# render instead of overwriting the file.
+/video/*
+  Cache-Control: public, max-age=31536000, immutable
