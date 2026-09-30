@@ -1,6 +1,7 @@
 // Renders the reel with headless Chromium, then muxes it with the soundtrack.
-//   node render.mjs                     full render to out/rolebase-reel.mp4
-//   node render.mjs preview 1.2,7.5     single frames (seconds) to preview/
+//   node render.mjs [lang]                  full render to out/rolebase-reel-<lang>.mp4
+//   node render.mjs [lang] preview 1.2,7.5  single frames (seconds) to preview/<lang>/
+// lang is a key of STRINGS in reel.js, en by default.
 import { chromium } from '../../website/node_modules/playwright/index.mjs'
 import { execFileSync } from 'child_process'
 import fs from 'fs'
@@ -9,9 +10,12 @@ import path from 'path'
 const dir = path.dirname(new URL(import.meta.url).pathname)
 process.chdir(dir)
 const FPS = 60, DUR = 24
-const times = process.argv[2] === 'preview' ? process.argv[3].split(',').map(Number) : null
+const args = process.argv.slice(2)
+const lang = args[0] && args[0] !== 'preview' ? args.shift() : 'en'
+const times = args[0] === 'preview' ? args[1].split(',').map(Number) : null
 const frames = times ?? Array.from({ length: FPS * DUR }, (_, i) => i / FPS)
-const outDir = times ? 'preview' : 'frames'
+const outDir = times ? `preview/${lang}` : 'frames'
+const video = `out/rolebase-reel-${lang}.mp4`
 
 execFileSync('node', ['extract.mjs'], { stdio: 'inherit' })
 fs.rmSync(outDir, { recursive: true, force: true })
@@ -23,7 +27,7 @@ const t0 = Date.now()
 async function worker(w) {
   const page = await browser.newPage({ viewport: { width: 1920, height: 1080 } })
   page.on('pageerror', e => console.log('pageerror:', e.message))
-  await page.goto('file://' + dir + '/index.html')
+  await page.goto(`file://${dir}/index.html?lang=${lang}`)
   await page.waitForFunction(() => window.READY === true, null, { timeout: 20000 })
   for (let f = w; f < frames.length; f += WORKERS) {
     await page.evaluate(t => renderFrame(t), frames[f])
@@ -40,6 +44,6 @@ if (!times) {
   execFileSync('node', ['synth.mjs'], { stdio: 'inherit' })
   execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-framerate', String(FPS), '-i', 'frames/%05d.png', '-i', 'out/audio.wav',
     '-c:v', 'libx264', '-preset', 'slow', '-crf', '14', '-pix_fmt', 'yuv420p', '-c:a', 'aac', '-b:a', '256k',
-    '-movflags', '+faststart', '-shortest', 'out/rolebase-reel.mp4'], { stdio: 'inherit' })
-  console.log('out/rolebase-reel.mp4')
+    '-movflags', '+faststart', '-shortest', video], { stdio: 'inherit' })
+  console.log(video)
 }

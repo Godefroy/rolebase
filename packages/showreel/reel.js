@@ -4,6 +4,32 @@ const C = {
   cream: '#FDF6EA', paper: '#FFFDF8', ink: '#19160F', violet: '#9A65F6',
   lilac: '#D3A7E4', peach: '#FAA68C', yellow: '#FDED99', gray: '#6B5E51',
 }
+// Every on-screen text, per language (`index.html?lang=fr`, English by default).
+const STRINGS = {
+  en: {
+    groups: ['Product', 'Sales', 'Operations', 'People'],
+    roles: [['Designer', 'Developer', 'Product Owner'], ['Account Exec', 'Partnerships'], ['Finance', 'Legal', 'IT'], ['Recruiting', 'Care']],
+    question: ['Who', 'does', 'what?'],
+    purpose: 'Make every screen a joy to use.',
+    acc: ['Design user flows', 'Run weekly user tests', 'Own the design system'],
+    meetTitle: 'Meetings that end on time.', meetHighlight: 3,
+    steps: ['Check-in', 'Threads', 'Decisions', 'Check-out'], done: 'Done',
+    blitz: ['Roles', 'Org chart', 'Meetings', 'Decisions', 'Tasks', 'Autonomy'],
+    tagline: 'Clarify who does what.',
+  },
+  fr: {
+    groups: ['Produit', 'Ventes', 'Opérations', 'RH'],
+    roles: [['Designer', 'Développeur', 'Product Owner'], ['Commercial', 'Partenariats'], ['Finance', 'Juridique', 'IT'], ['Recrutement', 'Bien-être']],
+    question: ['Qui', 'fait', 'quoi\u00A0?'],
+    purpose: 'Des écrans limpides et agréables.',
+    acc: ['Concevoir les parcours', 'Tester chaque semaine', 'Tenir le design system'],
+    meetTitle: 'Des réunions qui finissent à l’heure.', meetHighlight: 4,
+    steps: ['Tour de table', 'Discussions', 'Décisions', 'Clôture'], done: 'Terminé',
+    blitz: ['Rôles', 'Organigramme', 'Réunions', 'Décisions', 'Tâches', 'Autonomie'],
+    tagline: 'Clarifiez qui fait quoi.',
+  },
+}
+const L = STRINGS[new URLSearchParams(location.search).get('lang')] ?? STRINGS.en
 const out = document.getElementById('c').getContext('2d')
 const buf = document.createElement('canvas'); buf.width = W; buf.height = H
 const ctx = buf.getContext('2d')
@@ -121,19 +147,20 @@ function checkMark(x, y, s, p, color, lw) {
 
 // ================= SCENE 1+2: chaos -> org chart -> zoom =================
 const GROUPS = [
-  { name: 'Product', x: -170, y: -90, r: 200, fill: C.lilac, roles: [
-    { n: 'Designer', x: -80, y: -60, r: 70, m: 3 }, { n: 'Developer', x: 75, y: -55, r: 70, m: 3 }, { n: 'Product Owner', x: 0, y: 85, r: 70, m: 3 }] },
-  { name: 'Sales', x: 190, y: -130, r: 150, fill: C.peach, roles: [
-    { n: 'Account Exec', x: -60, y: -15, r: 60, m: 2 }, { n: 'Partnerships', x: 62, y: 22, r: 60, m: 2 }] },
-  { name: 'Operations', x: 130, y: 200, r: 150, fill: C.yellow, roles: [
-    { n: 'Finance', x: -60, y: -45, r: 52, m: 2 }, { n: 'Legal', x: 60, y: -45, r: 52, m: 2 }, { n: 'IT', x: 0, y: 60, r: 52, m: 2 }] },
-  { name: 'People', x: -150, y: 250, r: 110, fill: C.violet, roles: [
-    { n: 'Recruiting', x: -45, y: 0, r: 45, m: 2 }, { n: 'Care', x: 48, y: 0, r: 45, m: 2 }] },
+  { name: L.groups[0], x: -170, y: -90, r: 200, fill: C.lilac, roles: [
+    { x: -80, y: -60, r: 70, m: 3 }, { x: 75, y: -55, r: 70, m: 3 }, { x: 0, y: 85, r: 70, m: 3 }] },
+  { name: L.groups[1], x: 190, y: -130, r: 150, fill: C.peach, roles: [
+    { x: -60, y: -15, r: 60, m: 2 }, { x: 62, y: 22, r: 60, m: 2 }] },
+  { name: L.groups[2], x: 130, y: 200, r: 150, fill: C.yellow, roles: [
+    { x: -60, y: -45, r: 52, m: 2 }, { x: 60, y: -45, r: 52, m: 2 }, { x: 0, y: 60, r: 52, m: 2 }] },
+  { name: L.groups[3], x: -150, y: 250, r: 110, fill: C.violet, roles: [
+    { x: -45, y: 0, r: 45, m: 2 }, { x: 48, y: 0, r: 45, m: 2 }] },
 ]
 const SLOTS = []
 GROUPS.forEach((g, gi) => {
   g.pop = 4.25 + gi * .18
   g.roles.forEach((r, ri) => {
+    r.n = L.roles[gi][ri]
     r.wx = g.x + r.x; r.wy = g.y + r.y; r.pop = g.pop + .2 + ri * .07
     const ar = r.r * .2
     for (let k = 0; k < r.m; k++)
@@ -158,7 +185,7 @@ function chaos(d, t) {
   return [Math.cos(a) * d.dist * b + w * Math.sin(t * d.f1 + d.p1) * d.wx,
     Math.sin(a) * d.dist * .58 * b + w * Math.cos(t * d.f2 + d.p2) * d.wy]
 }
-const Q_WORDS = ['Who', 'does', 'what?']
+const Q_WORDS = L.question
 const Q_TIMES = [1.0, 1.5, 2.0]
 
 function sceneOrg(t) {
@@ -252,7 +279,7 @@ function sceneOrg(t) {
     const total = ws.reduce((a, b) => a + b, 0) + gap * 2
     let x = -total / 2
     const xs = ws.map(w => { const r = x; x += w + gap; return r })
-    // marker behind "what?"
+    // marker behind the last word
     const m0 = E.inOut3(P(t, 2.2, 2.5)), m1 = E.inOut3(P(t, 3.0, 3.3))
     if (m0 > 0 && m1 < 1) {
       const x0 = xs[2] - 16, w = ws[2] + 32
@@ -275,7 +302,7 @@ function sceneOrg(t) {
 
 // ================= SCENE 3: role card =================
 const X0 = -640
-const ACC = ['Design user flows', 'Run weekly user tests', 'Own the design system']
+const ACC = L.acc
 function sceneCard(t) {
   bg(C.paper)
   cam(0, 0, 1 + .18 * (1 - E.outExpo(P(t, 8.0, 8.8))) + .03 * P(t, 8, 11), t)
@@ -283,20 +310,20 @@ function sceneCard(t) {
   const pa = E.outExpo(P(t, 8.05, 8.5))
   if (pa > 0) {
     ctx.save(); ctx.globalAlpha = pa; ctx.translate(X0 + (1 - pa) * -40, -300)
-    const w = 58 + measure('Product', 30, 500) + 26
+    const w = 58 + measure(GROUPS[0].name, 30, 500) + 26
     rr(0, -30, w, 60, 30, C.lilac, C.ink, 3)
     circ(30, 0, 10, C.ink, null)
-    text('Product', 52, 1, 30, C.ink, 500, 'left')
+    text(GROUPS[0].name, 52, 1, 30, C.ink, 500, 'left')
     ctx.restore()
   }
   // title
   const ta = E.outExpo(P(t, 8.1, 8.75))
   ctx.save(); ctx.beginPath(); ctx.rect(X0 - 20, -275, 1100, 190); ctx.clip()
-  text('Designer', X0 - 6, -130 + (1 - ta) * 190, 150, C.ink, 600, 'left', 'alphabetic', -3)
+  text(DESIGNER.n, X0 - 6, -130 + (1 - ta) * 190, 150, C.ink, 600, 'left', 'alphabetic', -3)
   ctx.restore()
   // purpose
   const pu = E.outExpo(P(t, 8.3, 8.9))
-  if (pu > 0) { ctx.globalAlpha = pu; text('Make every screen a joy to use.', X0 + (1 - pu) * 40, -40, 46, C.gray, 400, 'left', 'alphabetic'); ctx.globalAlpha = 1 }
+  if (pu > 0) { ctx.globalAlpha = pu; text(L.purpose, X0 + (1 - pu) * 40, -40, 46, C.gray, 400, 'left', 'alphabetic'); ctx.globalAlpha = 1 }
   // accountabilities
   ACC.forEach((a, k) => {
     const s = 8.5 + .5 * k, y = 70 + k * 84
@@ -326,20 +353,20 @@ function sceneCard(t) {
 }
 
 // ================= SCENE 4: meeting =================
-const STEPS = ['Check-in', 'Threads', 'Decisions', 'Check-out']
+const STEPS = L.steps
 const RING = { x: -400, y: 40, r: 240 }
 function sceneMeet(t) {
   bg(C.ink)
   cam(0, 0, 1 + .12 * (1 - E.outExpo(P(t, 11, 11.7))) + .03 * P(t, 11, 14), t)
   // title
-  const words = 'Meetings that end on time.'.split(' ')
+  const words = L.meetTitle.split(' ')
   const size = 64, gap = measure(' ', size)
   const ws = words.map(w => measure(w, size))
   let x = -(ws.reduce((a, b) => a + b, 0) + gap * (words.length - 1)) / 2
   ctx.save(); ctx.beginPath(); ctx.rect(-1000, -440, 2000, 120); ctx.clip()
   words.forEach((w, i) => {
     const e = E.outExpo(P(t, 11.1 + i * .05, 11.7 + i * .05))
-    text(w, x, -380 + (1 - e) * 90, size, i >= 3 ? C.yellow : C.cream, 600, 'left')
+    text(w, x, -380 + (1 - e) * 90, size, i >= L.meetHighlight ? C.yellow : C.cream, 600, 'left')
     x += ws[i] + gap
   })
   ctx.restore()
@@ -364,7 +391,7 @@ function sceneMeet(t) {
   const secs = Math.round((1 - p) * 45 * 60)
   const mm = String(Math.floor(secs / 60)).padStart(2, '0'), ss = String(secs % 60).padStart(2, '0')
   text(`${mm}:${ss}`, 0, -12, 108, C.cream, 600, 'center', 'middle', 2)
-  text(p >= 1 ? 'Done' : STEPS[Math.min(3, Math.floor(q))], 0, 74, 36, C.lilac, 500)
+  text(p >= 1 ? L.done : STEPS[Math.min(3, Math.floor(q))], 0, 74, 36, C.lilac, 500)
   ctx.restore()
 
   // agenda
@@ -396,11 +423,13 @@ function sceneMeet(t) {
 }
 
 // ================= SCENE 5: word blitz =================
-const WORDS = [['Roles', C.yellow, C.ink], ['Org chart', C.violet, C.cream], ['Meetings', C.peach, C.ink],
-  ['Decisions', C.ink, C.yellow], ['Tasks', C.lilac, C.ink], ['Autonomy', C.cream, C.violet]]
+const WORDS = [[C.yellow, C.ink], [C.violet, C.cream], [C.peach, C.ink],
+  [C.ink, C.yellow], [C.lilac, C.ink], [C.cream, C.violet]].map((c, k) => [L.blitz[k], ...c])
 const ORIG = [[0, 0], [-760, 360], [760, -340], [-700, -380], [700, 380], [0, 0]]
 const BSIZE = 250
-function wordScale(k, t) { const s = 14 + .5 * k; return 1 + .07 * E.out3(P(t, s, s + .75)) }
+// long words shrink to keep a margin on each side
+const fitScale = w => Math.min(1, 1600 / measure(w, BSIZE, 600, -4))
+function wordScale(k, t) { const s = 14 + .5 * k; return fitScale(WORDS[k][0]) * (1 + .07 * E.out3(P(t, s, s + .75))) }
 function blitzLayer(k, t) {
   const [w, bgc, fg] = WORDS[k], s0 = 14 + .5 * k
   ctx.fillStyle = bgc; ctx.fillRect(-2000, -2000, 4000, 4000)
@@ -434,11 +463,11 @@ function sceneBlitz(t) {
   ctx.restore()
 }
 const R2 = rng(5)
-const FALL = [...'Autonomy'].map(() => ({ d: R2() * .12, rot: (R2() - .5) * 5, vx: (R2() - .5) * 300 }))
+const FALL = [...WORDS[5][0]].map(() => ({ d: R2() * .12, rot: (R2() - .5) * 5, vx: (R2() - .5) * 300 }))
 function fallingWord(t) {
   const sc = wordScale(5, 16.75)
   ctx.save(); ctx.scale(sc, sc)
-  letters('Autonomy', BSIZE, 600, -4).forEach((l, j) => {
+  letters(WORDS[5][0], BSIZE, 600, -4).forEach((l, j) => {
     const f = FALL[j], lt = Math.max(0, t - 16.75 - f.d)
     const y = 8 + .5 * 7000 * lt * lt - 260 * lt
     if (y > 900) return
@@ -544,13 +573,13 @@ function sceneLogo(t) {
   }
   // tagline with the marker callback
   if (t > 20.9) {
-    const words = 'Clarify who does what.'.split(' '), size = 66, gap = measure(' ', size, 500)
+    const words = L.tagline.split(' '), size = 66, gap = measure(' ', size, 500)
     const ws = words.map(w => measure(w, size, 500))
-    let x = -(ws.reduce((a, b) => a + b, 0) + gap * 3) / 2
+    let x = -(ws.reduce((a, b) => a + b, 0) + gap * (words.length - 1)) / 2
     const xs = ws.map(w => { const r = x; x += w + gap; return r })
     const me = E.inOut3(P(t, 21.55, 21.95))
     if (me > 0) {
-      const mx = xs[1] - 14, mw = measure('who does what', size, 500) + 28
+      const mx = xs[1] - 14, mw = measure(words.slice(1).join(' ').replace(/\.$/, ''), size, 500) + 28
       rr(mx, 146, mw * me, 50, 10, C.yellow, null)
     }
     ctx.save(); ctx.beginPath(); ctx.rect(-900, 70, 1800, 150); ctx.clip()
