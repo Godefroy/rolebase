@@ -5,6 +5,8 @@
  * the middle, and downloads nothing until the click (`preload="none"`), then
  * plays fullscreen with the native controls (inline if fullscreen is refused).
  * At the end it leaves fullscreen and shows the play button again.
+ * Tracks `site_video_played` on the click and `site_video_completed` at the
+ * end, with the file name (language and version included) as `video`.
  *
  * Props:
  *   - `src`: URL of the video file.
@@ -59,16 +61,26 @@ const { src, poster, playLabel, aspect = '16/9', class: className } = Astro.prop
 </div>
 
 <script>
+  import { currentLang, stripLang, track } from '../utils/analytics'
+
   for (const root of document.querySelectorAll<HTMLElement>('[data-demo-video]')) {
     const video = root.querySelector('video')
     const button = root.querySelector('button')
     if (!video || !button) continue
+
+    const trackVideo = (name: string) =>
+      track(name, {
+        video: video.getAttribute('src')?.split('/').pop()?.replace(/\.\w+$/, ''),
+        page: stripLang(location.pathname),
+        lang: currentLang(),
+      })
 
     button.addEventListener('click', function handleClick() {
       button.hidden = true
       video.controls = true
       video.focus()
       void video.play()
+      trackVideo('site_video_played')
       // Must run inside the click to count as a user gesture. iOS Safari only
       // supports fullscreen on the video element through its prefixed API.
       const iosVideo = video as HTMLVideoElement & { webkitEnterFullscreen?: () => void }
@@ -77,6 +89,7 @@ const { src, poster, playLabel, aspect = '16/9', class: className } = Astro.prop
     })
 
     video.addEventListener('ended', function handleEnded() {
+      trackVideo('site_video_completed')
       const iosVideo = video as HTMLVideoElement & { webkitExitFullscreen?: () => void }
       if (document.fullscreenElement) document.exitFullscreen().catch(() => {})
       else iosVideo.webkitExitFullscreen?.()
