@@ -11,7 +11,7 @@ export function useOrgRouteParams(): { orgId?: string; slug?: string } {
   const orgId = uuidRegex.test(orgMatch?.params.orgId ?? '')
     ? orgMatch?.params.orgId
     : undefined
-  const slug = orgId ? undefined : slugMatch?.params.slug ?? undefined
+  const slug = orgId ? undefined : (slugMatch?.params.slug ?? undefined)
   return { orgId, slug }
 }
 

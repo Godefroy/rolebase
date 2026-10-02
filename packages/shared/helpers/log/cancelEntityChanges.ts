@@ -6,7 +6,7 @@ import {
 } from '../../model/log'
 
 export async function cancelEntityChanges<
-  Entity extends { archivedAt?: string | null }
+  Entity extends { archivedAt?: string | null },
 >(
   entityChanges: EntityChange<Entity>[] | undefined,
   getEntity: EntityMethodGet<Entity>,

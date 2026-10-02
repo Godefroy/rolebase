@@ -54,7 +54,15 @@ export default function ReadonlyOrgProvider({
       getOrgResult: () => undefined,
       actions: noopOrgEditActions,
     }),
-    [orgData, roleOverlays, org, orgId, subscription, governanceMode, getOrgData]
+    [
+      orgData,
+      roleOverlays,
+      org,
+      orgId,
+      subscription,
+      governanceMode,
+      getOrgData,
+    ]
   )
 
   return <OrgContext.Provider value={value}>{children}</OrgContext.Provider>

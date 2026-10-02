@@ -3,11 +3,7 @@ import useDraftOrgEditActions from '@/proposal/hooks/useDraftOrgEditActions'
 import { ProposalDraft } from '@/proposal/hooks/useProposalDraft'
 import { OrgData } from '@rolebase/shared/model/OrgData'
 import React, { ReactNode, useCallback, useMemo, useRef } from 'react'
-import {
-  OrgContext,
-  OrgContextValue,
-  useOrgContext,
-} from './OrgContext'
+import { OrgContext, OrgContextValue, useOrgContext } from './OrgContext'
 
 interface Props {
   draft: ProposalDraft

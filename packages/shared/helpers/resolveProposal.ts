@@ -44,7 +44,15 @@ export function isResultCertain(
   const fill = (vote: string) =>
     votes.concat(Array.from({ length: remaining }, () => ({ vote })))
 
-  const best = resolveProposal(mode, fill('approve'), participantsCount).approved
-  const worst = resolveProposal(mode, fill('object'), participantsCount).approved
+  const best = resolveProposal(
+    mode,
+    fill('approve'),
+    participantsCount
+  ).approved
+  const worst = resolveProposal(
+    mode,
+    fill('object'),
+    participantsCount
+  ).approved
   return best === worst
 }

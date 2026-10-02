@@ -48,7 +48,14 @@ export default function OrgsPage() {
     const rootCircles = orgs.map((org) => org.circles[0]).filter(truthy)
     const roles = rootCircles.map((c) => c.role).filter(truthy)
     // Multi-org display graph (no permission checks): governance mode is inert.
-    return new OrgData({ circles: rootCircles, circleMembers: [], circleLinks: [], roles, members: [], governanceMode: Governance_Mode_Enum.Strict })
+    return new OrgData({
+      circles: rootCircles,
+      circleMembers: [],
+      circleLinks: [],
+      roles,
+      members: [],
+      governanceMode: Governance_Mode_Enum.Strict,
+    })
   }, [orgs])
 
   // Graph events

@@ -45,7 +45,9 @@ describe('applyEntitiesChanges', () => {
       archivedAt: null,
     }
     const changes: EntitiesChanges = {
-      circles: [{ type: EntityChangeType.Create, id: 'circle-new', data: newCircle }],
+      circles: [
+        { type: EntityChangeType.Create, id: 'circle-new', data: newCircle },
+      ],
     }
     await applyEntitiesChanges(changes, {
       circles: arrayApplyMethods(circles),
@@ -91,9 +93,12 @@ describe('applyEntitiesChanges', () => {
       circles: arrayApplyMethods(circles),
     } as EntitiesApplyMethods)
 
-    await cancelLogChanges({ changes } as any, {
-      circles: arrayMethods(circles),
-    } as EntitiesMethods)
+    await cancelLogChanges(
+      { changes } as any,
+      {
+        circles: arrayMethods(circles),
+      } as EntitiesMethods
+    )
 
     expect(circles.find((c) => c.id === 'circle-agence-dev')?.parentId).toBe(
       'circle-agence'
@@ -102,7 +107,9 @@ describe('applyEntitiesChanges', () => {
 
   it('replayLogs flags a log referencing a missing entity', async () => {
     const circles = mockCircles.map((c) => ({ ...c }))
-    const methods = { circles: arrayApplyMethods(circles) } as EntitiesApplyMethods
+    const methods = {
+      circles: arrayApplyMethods(circles),
+    } as EntitiesApplyMethods
     const { failedLogIds } = await replayLogs(
       [
         {

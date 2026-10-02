@@ -8,11 +8,7 @@ import { OrgData } from '@rolebase/shared/model/OrgData'
 import { omit } from '@utils/omit'
 import React, { ReactNode, useCallback, useMemo, useRef } from 'react'
 import DbOrgActionsLayer from './DbOrgActionsLayer'
-import {
-  noopOrgEditActions,
-  OrgContext,
-  OrgContextValue,
-} from './OrgContext'
+import { noopOrgEditActions, OrgContext, OrgContextValue } from './OrgContext'
 
 interface Props {
   orgId?: string
@@ -41,8 +37,7 @@ export default function DbOrgProvider({ orgId, slug, children }: Props) {
   const resolvedOrgId = orgId ?? result?.id
 
   const orgData = useMemo<OrgData | undefined>(
-    () =>
-      result ? new OrgData(result) : undefined,
+    () => (result ? new OrgData(result) : undefined),
     [result]
   )
 

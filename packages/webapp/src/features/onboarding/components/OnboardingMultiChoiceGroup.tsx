@@ -28,7 +28,12 @@ export default function OnboardingMultiChoiceGroup({
   }
 
   return (
-    <SimpleGrid columns={columns} spacing={2.5} role="group" aria-label={ariaLabel}>
+    <SimpleGrid
+      columns={columns}
+      spacing={2.5}
+      role="group"
+      aria-label={ariaLabel}
+    >
       {options.map((option) => (
         <ChoiceCard
           key={option.value}

@@ -55,7 +55,13 @@ const Step = Meeting_Step_Type_Enum
 const holacracyTemplates: SeedMeetingTemplate[] = [
   {
     titleKey: 'tactical',
-    steps: [Step.Tour, Step.Checklist, Step.Indicators, Step.Tasks, Step.Threads],
+    steps: [
+      Step.Tour,
+      Step.Checklist,
+      Step.Indicators,
+      Step.Tasks,
+      Step.Threads,
+    ],
   },
   {
     titleKey: 'governance',
@@ -115,7 +121,13 @@ export const orgTypePresets: Record<OrgType, OrgTypePreset> = {
     meetingTemplates: [
       {
         titleKey: 'operational',
-        steps: [Step.Tour, Step.Checklist, Step.Indicators, Step.Tasks, Step.Threads],
+        steps: [
+          Step.Tour,
+          Step.Checklist,
+          Step.Indicators,
+          Step.Tasks,
+          Step.Threads,
+        ],
       },
       {
         titleKey: 'policy',

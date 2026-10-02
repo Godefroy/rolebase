@@ -16,8 +16,10 @@ import { track } from 'src/analytics'
 import { trpc } from 'src/trpc'
 import useOrg from '../hooks/useOrg'
 
-interface Props
-  extends Omit<AlertDialogProps, 'children' | 'leastDestructiveRef'> {
+interface Props extends Omit<
+  AlertDialogProps,
+  'children' | 'leastDestructiveRef'
+> {
   id: string
 }
 

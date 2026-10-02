@@ -90,8 +90,9 @@ export class HolaspiritImporter extends Importer {
       throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR' })
     }
 
-    const orgName = this.data['Circles & Roles'].find((c) => !c['Circle ID'])
-      ?.Role
+    const orgName = this.data['Circles & Roles'].find(
+      (c) => !c['Circle ID']
+    )?.Role
     if (!orgName) {
       throw new TRPCError({ code: 'BAD_REQUEST', message: 'No org name found' })
     }
@@ -126,10 +127,10 @@ export class HolaspiritImporter extends Importer {
         member.Privilege === 'owner'
           ? Member_Role_Enum.Owner
           : member.Privilege === 'admin'
-          ? Member_Role_Enum.Admin
-          : member.Privilege === 'member'
-          ? Member_Role_Enum.Member
-          : Member_Role_Enum.Readonly
+            ? Member_Role_Enum.Admin
+            : member.Privilege === 'member'
+              ? Member_Role_Enum.Member
+              : Member_Role_Enum.Readonly
 
       const picture =
         // Try to import avatar file

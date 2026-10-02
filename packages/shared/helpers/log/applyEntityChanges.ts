@@ -18,7 +18,7 @@ export class EntityChangeError extends Error {
 // Update => apply newData.
 // Delete => archive (symmetric with the archive convention used everywhere).
 export async function applyEntityChanges<
-  Entity extends { id: string; archivedAt?: string | null }
+  Entity extends { id: string; archivedAt?: string | null },
 >(
   entityChanges: EntityChange<Entity>[] | undefined,
   methods: EntityApplyMethods<Entity>
