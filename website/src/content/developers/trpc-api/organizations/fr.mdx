@@ -14,6 +14,7 @@ Crée une organisation pour l’utilisateur connecté, qui en devient le [`membe
 | --- | --- | --- |
 | `name` | `String` | Nom de l’organisation. Requis. |
 | `slug` | `String` | Slug d’URL, unique parmi toutes les organisations. Requis. |
+| `withEmailDomainIcon` | `Boolean` | Utiliser comme icône de l’organisation celle du site derrière le domaine de l’email professionnel de l’utilisateur. Optionnel. Sans effet pour une messagerie grand public ou un site sans icône connue. |
 
 La procédure renvoie l’identifiant de la nouvelle organisation. Un slug déjà pris ou réservé répond `CONFLICT`.
 

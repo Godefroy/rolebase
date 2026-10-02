@@ -14,6 +14,7 @@ Creates an organization for the signed-in user, who becomes its Owner [`member`]
 | --- | --- | --- |
 | `name` | `String` | Organization name. Required. |
 | `slug` | `String` | URL slug, unique across all organizations. Required. |
+| `withEmailDomainIcon` | `Boolean` | Use the icon of the website behind the user's company email domain as the organization icon. Optional. Ignored for a free mailbox provider or a site without a known icon. |
 
 It returns the id of the new organization. A slug already taken or on the reserved list answers `CONFLICT`.
 

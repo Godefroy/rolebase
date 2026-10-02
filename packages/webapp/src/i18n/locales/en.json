@@ -856,8 +856,6 @@
   "OrgEditModal": {
     "heading": "Edit Organization {{org}}",
     "slug": "URL",
-    "icon": "Icon",
-    "iconHelp": "Shown next to your organization name in the sidebar.",
     "governance": "Governance",
     "governanceFree": "Free",
     "governanceFreeHelp": "All members can edit the whole org chart.",
@@ -867,8 +865,9 @@
     "governanceStrictHelp": "Roles can only be changed through proposals (Holacracy).",
     "defaultGraphView": "Default org chart view"
   },
-  "OrgIconEdit": {
-    "editIcon": "Edit icon"
+  "OrgIconMenu": {
+    "label": "Change the icon",
+    "upload": "Upload an image"
   },
   "OrgSlugModal": {
     "heading": "URL of organization {{org}}",

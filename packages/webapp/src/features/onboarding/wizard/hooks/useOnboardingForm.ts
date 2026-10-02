@@ -1,3 +1,4 @@
+import useUploadOrgIcon from '@/org/hooks/useUploadOrgIcon'
 import { useAuth } from '@/user/hooks/useAuth'
 import { useChangeMetadataMutation } from '@gql'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -9,7 +10,8 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { track } from 'src/analytics'
 import { nhost } from 'src/nhost'
-import { getNameFromEmailDomain } from '@utils/getNameFromEmailDomain'
+import { getEmailDomainIconUrl } from '@rolebase/shared/helpers/getEmailDomainIconUrl'
+import { getNameFromEmailDomain } from '@rolebase/shared/helpers/getNameFromEmailDomain'
 import slugify from 'slugify'
 import { trpc } from 'src/trpc'
 import * as yup from 'yup'
@@ -24,6 +26,11 @@ export interface OnboardingValues {
   sourceOther: string
   orgName: string
   slug: string
+  // Image uploaded as the org icon
+  iconFile: File | null
+  // The website behind the email domain has an icon, kept as the org icon
+  // when no image is uploaded
+  domainIcon: boolean
 }
 
 export type OnboardingStep = 'role' | 'objective' | 'source' | 'orgName'
@@ -77,7 +84,9 @@ export default function useOnboardingForm() {
     const firstName = user?.displayName?.trim().split(' ')[0]
     return (
       getNameFromEmailDomain(user?.email) ||
-      (firstName ? t('Onboarding.orgName.defaultName', { name: firstName }) : '')
+      (firstName
+        ? t('Onboarding.orgName.defaultName', { name: firstName })
+        : '')
     )
   })
 
@@ -92,9 +101,23 @@ export default function useOnboardingForm() {
       sourceOther: '',
       orgName: defaultOrgName,
       slug: slugify(defaultOrgName, { strict: true }).toLowerCase(),
+      iconFile: null,
+      domainIcon: false,
     },
   })
   const { watch, setValue, clearErrors } = formMethods
+
+  // Suggest the icon of a company email domain's website as the org icon.
+  // Without a known icon, Google's service answers a 16px globe.
+  useEffect(() => {
+    const iconUrl = getEmailDomainIconUrl(user?.email)
+    if (!iconUrl) return
+    const image = new window.Image()
+    image.onload = () => {
+      if (image.naturalWidth >= 32) setValue('domainIcon', true)
+    }
+    image.src = iconUrl
+  }, [])
 
   // Auto-fill slug from org name
   const orgName = watch('orgName')
@@ -135,13 +158,16 @@ export default function useOnboardingForm() {
         )
       case 'source':
         // Optional: continue unless "other" is picked without text
-        return values.sourceChoice !== OTHER_VALUE || !!values.sourceOther.trim()
+        return (
+          values.sourceChoice !== OTHER_VALUE || !!values.sourceOther.trim()
+        )
       case 'orgName':
         return true // validated via the yup resolver on submit
     }
   }
 
   const [changeMetadata] = useChangeMetadataMutation()
+  const uploadOrgIcon = useUploadOrgIcon()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error | undefined>()
   // The slug is taken: the wizard goes back to the org name step
@@ -182,12 +208,26 @@ export default function useOnboardingForm() {
         await nhost.refreshSession(0)
       }
 
-      // Create the org
+      // Create the org. The backend stores the email domain's icon.
+      const withEmailDomainIcon = !data.iconFile && data.domainIcon
       const newOrgId = await trpc.org.createOrg.mutate({
         name: data.orgName,
         slug: data.slug,
+        withEmailDomainIcon,
       })
-      track('onboarding_org_created', { orgId: newOrgId })
+      track('onboarding_org_created', {
+        orgId: newOrgId,
+        icon: data.iconFile
+          ? 'upload'
+          : withEmailDomainIcon
+            ? 'domain'
+            : 'none',
+      })
+
+      // A failed upload never blocks the onboarding
+      if (data.iconFile) {
+        await uploadOrgIcon(newOrgId, data.iconFile).catch(console.error)
+      }
 
       // Go straight into the new org (by slug, without waiting for the store).
       // The org-setup step opens there automatically (fresh, unseeded org).

@@ -890,8 +890,6 @@
   "OrgEditModal": {
     "heading": "Modifier l'organisation {{org}}",
     "slug": "URL",
-    "icon": "Icône",
-    "iconHelp": "Affichée à côté du nom de votre organisation dans la barre latérale.",
     "governance": "Gouvernance",
     "governanceFree": "Libre",
     "governanceFreeHelp": "Tous les membres peuvent modifier tout l'organigramme.",
@@ -901,8 +899,9 @@
     "governanceStrictHelp": "Les rôles peuvent uniquement être modifiés par proposition (Holacratie).",
     "defaultGraphView": "Vue par défaut de l'organigramme"
   },
-  "OrgIconEdit": {
-    "editIcon": "Modifier l'icône"
+  "OrgIconMenu": {
+    "label": "Modifier l'icône",
+    "upload": "Uploader une image"
   },
   "OrgSlugModal": {
     "heading": "URL de l'organisation {{org}}",

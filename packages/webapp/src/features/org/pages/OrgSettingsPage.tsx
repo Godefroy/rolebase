@@ -8,9 +8,9 @@ import {
   Button,
   Flex,
   FormControl,
-  FormHelperText,
   FormLabel,
   Heading,
+  HStack,
   Input,
   InputGroup,
   InputRightElement,
@@ -121,16 +121,13 @@ export default function OrgSettingsPage() {
           <Heading as="h1" size="lg">
             {t('Settings.orgSettings')}
           </Heading>
-          <FormControl isInvalid={!!errors.name}>
-            <FormLabel>{t('common.name')}</FormLabel>
-            <Input {...register('name')} autoComplete="off" />
-          </FormControl>
-
-          <FormControl>
-            <FormLabel>{t('OrgEditModal.icon')}</FormLabel>
-            <OrgIconEdit id={orgId} icon={org.icon} name={org.name} />
-            <FormHelperText>{t('OrgEditModal.iconHelp')}</FormHelperText>
-          </FormControl>
+          <HStack spacing={4} w="100%">
+            <OrgIconEdit id={orgId} icon={org.icon} />
+            <FormControl isInvalid={!!errors.name}>
+              <FormLabel>{t('common.name')}</FormLabel>
+              <Input {...register('name')} autoComplete="off" />
+            </FormControl>
+          </HStack>
 
           <FormControl>
             <FormLabel>{t('OrgEditModal.slug')}</FormLabel>

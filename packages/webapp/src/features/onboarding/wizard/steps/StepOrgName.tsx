@@ -3,13 +3,16 @@ import {
   FormErrorMessage,
   FormLabel,
   Heading,
+  HStack,
   Input,
   InputGroup,
   InputLeftAddon,
   Text,
   VStack,
 } from '@chakra-ui/react'
-import React, { useEffect } from 'react'
+import OrgIconMenu from '@/org/components/OrgIconMenu'
+import { getEmailDomainIconUrl } from '@rolebase/shared/helpers/getEmailDomainIconUrl'
+import React, { useEffect, useMemo } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/user/hooks/useAuth'
@@ -24,8 +27,12 @@ export default function StepOrgName() {
   const {
     register,
     clearErrors,
+    watch,
+    setValue,
     formState: { errors },
   } = formMethods
+  const iconFile = watch('iconFile')
+  const domainIcon = watch('domainIcon')
   const checkSlug = useCheckOrgSlug(formMethods)
 
   // The org name can be prefilled: check its slug right away
@@ -37,19 +44,48 @@ export default function StepOrgName() {
     checkSlug()
   }
 
+  // The org doesn't exist yet: show the uploaded image from memory, else the
+  // email domain's icon from Google's service
+  const iconFileUrl = useMemo(
+    () => (iconFile ? URL.createObjectURL(iconFile) : undefined),
+    [iconFile]
+  )
+  useEffect(
+    () => () => {
+      if (iconFileUrl) URL.revokeObjectURL(iconFileUrl)
+    },
+    [iconFileUrl]
+  )
+  const iconSrc =
+    iconFileUrl || (domainIcon ? getEmailDomainIconUrl(user?.email) : undefined)
+
+  const handleUploadIcon = (file: File) => setValue('iconFile', file)
+
+  const handleRemoveIcon = () => {
+    setValue('iconFile', null)
+    setValue('domainIcon', false)
+  }
+
   return (
     <VStack spacing={5} align="stretch">
       <Heading as="h1" size="md">
         {t('Onboarding.orgName.heading')}
       </Heading>
 
-      <FormControl isInvalid={!!errors.orgName}>
-        <FormLabel>{t('OrgCreateModal.create.name')}</FormLabel>
-        <Input
-          {...register('orgName', { onBlur: handleBlur })}
-          autoComplete="off"
+      <HStack spacing={4}>
+        <OrgIconMenu
+          src={iconSrc}
+          onUpload={handleUploadIcon}
+          onRemove={handleRemoveIcon}
         />
-      </FormControl>
+        <FormControl isInvalid={!!errors.orgName}>
+          <FormLabel>{t('OrgCreateModal.create.name')}</FormLabel>
+          <Input
+            {...register('orgName', { onBlur: handleBlur })}
+            autoComplete="off"
+          />
+        </FormControl>
+      </HStack>
 
       <FormControl isInvalid={!!errors.slug}>
         <FormLabel>{t('OrgCreateModal.create.slug')}</FormLabel>
