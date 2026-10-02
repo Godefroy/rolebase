@@ -32,6 +32,20 @@ Change le slug d’URL d’une organisation, pour un Admin ou un Owner.
 
 Comme pour `createOrg`, un slug déjà pris ou réservé répond `CONFLICT`. La procédure ne renvoie rien.
 
+## Query `org.isOrgSlugAvailable`
+
+Indique si un slug est libre pour une nouvelle organisation, pour qu’un formulaire signale un slug déjà pris avant d’appeler `createOrg`.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `slug` | `String` | Slug à vérifier. Requis. |
+
+La procédure renvoie `false` quand le slug est réservé ou déjà utilisé par une organisation, archivées comprises, et `true` sinon.
+
+```typescript
+const available = await trpc.org.isOrgSlugAvailable.query({ slug: 'acme' })
+```
+
 ## Mutation `org.setGovernanceMode`
 
 Définit qui peut modifier l’organigramme. Réservée à l’Owner, d’où une procédure plutôt qu’une mise à jour GraphQL : Hasura ne sait pas restreindre une seule colonne aux Owners tout en laissant les Admins modifier les autres réglages.

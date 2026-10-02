@@ -1757,6 +1757,7 @@
     "finish": "Terminer",
     "orgName": {
       "heading": "Créez votre organisation",
+      "defaultName": "Organisation de {{name}}",
       "joinTeam": "Votre équipe utilise déjà Rolebase ? Demandez à un administrateur de vous inviter avec l'adresse {{email}}. Vous pourrez rejoindre l'organisation ici dès l'envoi de l'invitation."
     },
     "roles": {

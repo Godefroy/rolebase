@@ -1756,6 +1756,7 @@
     "finish": "Finish",
     "orgName": {
       "heading": "Create your organization",
+      "defaultName": "{{name}}'s organization",
       "joinTeam": "Your team already uses Rolebase? Ask an admin to invite {{email}}. You can join the organization right here as soon as the invitation is sent."
     },
     "roles": {

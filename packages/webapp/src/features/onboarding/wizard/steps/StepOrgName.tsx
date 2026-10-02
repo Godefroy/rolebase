@@ -9,20 +9,33 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '@/user/hooks/useAuth'
 import settings from 'src/settings'
+import useCheckOrgSlug from '../hooks/useCheckOrgSlug'
 import { OnboardingValues } from '../hooks/useOnboardingForm'
 
 export default function StepOrgName() {
   const { t } = useTranslation()
   const { user } = useAuth()
+  const formMethods = useFormContext<OnboardingValues>()
   const {
     register,
+    clearErrors,
     formState: { errors },
-  } = useFormContext<OnboardingValues>()
+  } = formMethods
+  const checkSlug = useCheckOrgSlug(formMethods)
+
+  // The org name can be prefilled: check its slug right away
+  useEffect(() => {
+    checkSlug()
+  }, [])
+
+  const handleBlur = () => {
+    checkSlug()
+  }
 
   return (
     <VStack spacing={5} align="stretch">
@@ -32,7 +45,10 @@ export default function StepOrgName() {
 
       <FormControl isInvalid={!!errors.orgName}>
         <FormLabel>{t('OrgCreateModal.create.name')}</FormLabel>
-        <Input {...register('orgName')} autoComplete="off" />
+        <Input
+          {...register('orgName', { onBlur: handleBlur })}
+          autoComplete="off"
+        />
       </FormControl>
 
       <FormControl isInvalid={!!errors.slug}>
@@ -41,7 +57,13 @@ export default function StepOrgName() {
           <InputLeftAddon _dark={{ borderColor: 'whiteAlpha.400' }}>
             {settings.url}/
           </InputLeftAddon>
-          <Input {...register('slug')} maxLength={30} />
+          <Input
+            {...register('slug', {
+              onChange: () => clearErrors('slug'),
+              onBlur: handleBlur,
+            })}
+            maxLength={30}
+          />
         </InputGroup>
         {errors.slug && (
           <FormErrorMessage>{errors.slug.message}</FormErrorMessage>

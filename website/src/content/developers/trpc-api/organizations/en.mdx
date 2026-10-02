@@ -32,6 +32,20 @@ Changes the URL slug of an organization, for an Admin or Owner.
 
 Like `createOrg`, a slug already taken or reserved answers `CONFLICT`. It returns nothing.
 
+## Query `org.isOrgSlugAvailable`
+
+Tells whether a slug can be used for a new organization, so a form can flag a taken slug before calling `createOrg`.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `slug` | `String` | Slug to check. Required. |
+
+It returns `false` when the slug is reserved or already used by an organization, archived ones included, and `true` otherwise.
+
+```typescript
+const available = await trpc.org.isOrgSlugAvailable.query({ slug: 'acme' })
+```
+
 ## Mutation `org.setGovernanceMode`
 
 Sets who is allowed to change the org chart. Reserved to the Owner, which is why it is a procedure rather than a GraphQL update: Hasura cannot restrict a single column to Owners while Admins edit the other org settings.

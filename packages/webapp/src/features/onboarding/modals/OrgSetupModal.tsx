@@ -177,7 +177,8 @@ export default function OrgSetupModal({ onClose }: Props) {
         })),
       })
 
-      if (!withInvites && membersToInvite.length > 0) {
+      // Also sent for a solo org, whose invite step shows empty email fields
+      if (!withInvites) {
         track('invite_step_skipped', { membersCount: membersToInvite.length })
       }
       const invitedCount = withInvites ? await sendInvites() : 0

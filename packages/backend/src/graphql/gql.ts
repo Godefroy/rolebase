@@ -71,6 +71,7 @@ const documents = {
     "\n  mutation createDecisionsImport($decisions: [decision_insert_input!]!) {\n    insert_decision(objects: $decisions) {\n      returning {\n        id\n      }\n    }\n  }": types.CreateDecisionsImportDocument,
     "\n  mutation createTasksImport($tasks: [task_insert_input!]!) {\n    insert_task(objects: $tasks) {\n      returning {\n        id\n      }\n    }\n  }": types.CreateTasksImportDocument,
     "\n      query GetFileByName($name: String!) {\n        files(where: { name: { _eq: $name } }) {\n          id\n        }\n      }\n    ": types.GetFileByNameDocument,
+    "\n  query getOrgBySlug($slug: String!) {\n    org(where: { slug: { _eq: $slug } }, limit: 1) {\n      id\n    }\n  }": types.GetOrgBySlugDocument,
     "\n  query getOrgData($orgId: uuid!) {\n    org_by_pk(id: $orgId) {\n      governanceMode\n      circles(where: { archivedAt: { _is_null: true } }) {\n        ...Circle\n      }\n      circleMembers(where: { archivedAt: { _is_null: true } }) {\n        ...CircleMember\n      }\n      circleLinks(where: { archivedAt: { _is_null: true } }) {\n        ...CircleLink\n      }\n      roles(where: { archivedAt: { _is_null: true } }) {\n        ...RoleSummary\n      }\n      members(where: { archivedAt: { _is_null: true } }) {\n        ...Member\n      }\n    }\n  }\n": types.GetOrgDataDocument,
     "\n  query getOrgDataWithArchived($orgId: uuid!) {\n    org_by_pk(id: $orgId) {\n      governanceMode\n      circles {\n        ...Circle\n      }\n      circleMembers(where: { archivedAt: { _is_null: true } }) {\n        ...CircleMember\n      }\n      circleLinks(where: { archivedAt: { _is_null: true } }) {\n        ...CircleLink\n      }\n      roles {\n        ...RoleSummary\n      }\n      members(where: { archivedAt: { _is_null: true } }) {\n        ...Member\n      }\n    }\n  }\n": types.GetOrgDataWithArchivedDocument,
     "\n  mutation setGovernanceMode(\n    $id: uuid!\n    $governanceMode: governance_mode_enum!\n  ) {\n    update_org_by_pk(\n      pk_columns: { id: $id }\n      _set: { governanceMode: $governanceMode }\n    ) {\n      id\n    }\n  }": types.SetGovernanceModeDocument,
@@ -412,6 +413,10 @@ export function gql(source: "\n  mutation createTasksImport($tasks: [task_insert
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n      query GetFileByName($name: String!) {\n        files(where: { name: { _eq: $name } }) {\n          id\n        }\n      }\n    "): (typeof documents)["\n      query GetFileByName($name: String!) {\n        files(where: { name: { _eq: $name } }) {\n          id\n        }\n      }\n    "];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query getOrgBySlug($slug: String!) {\n    org(where: { slug: { _eq: $slug } }, limit: 1) {\n      id\n    }\n  }"): (typeof documents)["\n  query getOrgBySlug($slug: String!) {\n    org(where: { slug: { _eq: $slug } }, limit: 1) {\n      id\n    }\n  }"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

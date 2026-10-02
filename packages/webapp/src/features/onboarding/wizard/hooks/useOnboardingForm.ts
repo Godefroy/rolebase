@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { track } from 'src/analytics'
 import { nhost } from 'src/nhost'
+import { getNameFromEmailDomain } from '@utils/getNameFromEmailDomain'
 import slugify from 'slugify'
 import { trpc } from 'src/trpc'
 import * as yup from 'yup'
@@ -70,6 +71,16 @@ export default function useOnboardingForm() {
   const needsObjective = needs.objective
   const needsSource = needs.source
 
+  // Prefill the org name from a company email's domain, else from the first
+  // name, so the first step can be passed in one click
+  const [defaultOrgName] = useState(() => {
+    const firstName = user?.displayName?.trim().split(' ')[0]
+    return (
+      getNameFromEmailDomain(user?.email) ||
+      (firstName ? t('Onboarding.orgName.defaultName', { name: firstName }) : '')
+    )
+  })
+
   const formMethods = useForm<OnboardingValues>({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -79,17 +90,18 @@ export default function useOnboardingForm() {
       objectiveOther: '',
       sourceChoice: '',
       sourceOther: '',
-      orgName: '',
-      slug: '',
+      orgName: defaultOrgName,
+      slug: slugify(defaultOrgName, { strict: true }).toLowerCase(),
     },
   })
-  const { watch, setValue } = formMethods
+  const { watch, setValue, clearErrors } = formMethods
 
   // Auto-fill slug from org name
   const orgName = watch('orgName')
   useEffect(() => {
     if (orgName) {
       setValue('slug', slugify(orgName, { strict: true }).toLowerCase())
+      clearErrors('slug')
     }
   }, [orgName])
 
@@ -184,6 +196,7 @@ export default function useOnboardingForm() {
       setLoading(false)
       const isConflict = e.message === 'Conflict'
       setConflict(isConflict)
+      if (isConflict) track('onboarding_slug_conflict', { step: 'submit' })
       const message = isConflict
         ? t('OrgSlugModal.already-exists')
         : e.message || e.toString()

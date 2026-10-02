@@ -2,6 +2,7 @@
 // domains, never full addresses.
 // 1. Delay between each new account (created on its first code request) and
 //    its first code email: a delay means codes weren't sent (outage).
+//    Password signups get a confirmation email instead of a code.
 // 2. Brevo events of the accounts that never entered their code: delivered,
 //    bounced, blocked...
 // Usage, from the repo root (IPv4: the IPv4 address is the one authorized in
@@ -14,6 +15,7 @@ const startDate = from.toISOString().slice(0, 10)
 const endDate = new Date().toISOString().slice(0, 10)
 const hasura = env.HASURA_PROD_GRAPHQL_URL.replace(/\/v1\/graphql\/?$/, '')
 const CODE_SUBJECT = /code/i // "Votre code de connexion Rolebase", "Your Rolebase sign-in code"
+const CONFIRM_SUBJECT = /confirm/i // "Confirm your email address"
 
 async function sql(q) {
   const r = await fetch(hasura + '/v2/query', {
@@ -55,30 +57,37 @@ for (let offset = 0; ; offset += 2500) {
   if (events.length < 2500) break
 }
 const codeTimes = {}
-for (const e of requests.filter((e) => CODE_SUBJECT.test(e.subject || ''))) {
-  ;(codeTimes[e.email.toLowerCase()] ||= []).push(Date.parse(e.date))
+const confirmTimes = {}
+for (const e of requests) {
+  const times = CODE_SUBJECT.test(e.subject || '')
+    ? codeTimes
+    : CONFIRM_SUBJECT.test(e.subject || '')
+      ? confirmTimes
+      : undefined
+  if (times) (times[e.email.toLowerCase()] ||= []).push(Date.parse(e.date))
 }
 const users = await sql(
-  `select lower(email), extract(epoch from created_at) * 1000, email_verified from auth.users where not is_anonymous and created_at >= '${from.toISOString()}' order by created_at`
+  `select lower(email), extract(epoch from created_at) * 1000, email_verified, password_hash is not null from auth.users where not is_anonymous and created_at >= '${from.toISOString()}' order by created_at`
 )
 console.log(
   '== Delay of the first code email after account creation (> 5 min is abnormal)'
 )
 let late = 0
-for (const [email, createdMs, verified] of users) {
+for (const [email, createdMs, verified, password] of users) {
   const created = Number(createdMs)
-  const first = (codeTimes[email] || [])
+  const isPassword = password === 't'
+  const first = ((isPassword ? confirmTimes : codeTimes)[email] || [])
     .filter((t) => t >= created - 60000)
     .sort()[0]
   const delay =
     first === undefined ? undefined : Math.round((first - created) / 60000)
   if (delay === undefined || delay > 5) late++
   console.log(
-    `${new Date(created).toISOString().slice(5, 16)} ${email.split('@')[1]} verified=${verified} ${delay === undefined ? 'NO CODE EMAIL' : delay + ' min'}`
+    `${new Date(created).toISOString().slice(5, 16)} ${email.split('@')[1]} verified=${verified}${isPassword ? ' password' : ''} ${delay === undefined ? (isPassword ? 'NO CONFIRMATION EMAIL' : 'NO CODE EMAIL') : delay + ' min'}`
   )
 }
 console.log(
-  `${late} of ${users.length} accounts without a code email within 5 minutes`
+  `${late} of ${users.length} accounts without a code or confirmation email within 5 minutes`
 )
 
 // 2. Accounts that never entered their code

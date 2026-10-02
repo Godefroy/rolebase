@@ -8,6 +8,7 @@ import { FormProvider } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { track, trackOnce } from 'src/analytics'
 import { ChevronLeftIcon, ChevronRightIcon } from 'src/icons'
+import useCheckOrgSlug from './hooks/useCheckOrgSlug'
 import useOnboardingForm, { OnboardingStep } from './hooks/useOnboardingForm'
 import StepObjective from './steps/StepObjective'
 import StepOrgName from './steps/StepOrgName'
@@ -38,6 +39,7 @@ export default function OnboardingWizardModal() {
   const { metadata, setMetadata } = useUserMetadata()
   const { formMethods, steps, isStepValid, submit, loading, error, conflict } =
     useOnboardingForm()
+  const checkSlug = useCheckOrgSlug(formMethods)
 
   // Sent once per person, not on every mount of the modal (reloads remount
   // it, sometimes before the metadata is saved: trackOnce covers that). The
@@ -80,7 +82,7 @@ export default function OnboardingWizardModal() {
     if (step === 'orgName') {
       // Validate the org name/slug via the resolver before moving on
       const valid = await formMethods.trigger(['orgName', 'slug'])
-      if (!valid) return
+      if (!valid || !(await checkSlug())) return
     }
 
     // Predefined choices only: the free-text "other" answers stay out of
