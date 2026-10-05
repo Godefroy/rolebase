@@ -34,6 +34,11 @@ if (similarSlugs.length > 0) {
 
 // `BlogPosting` schema for the article itself. The `BreadcrumbList` is emitted
 // separately by `<Breadcrumb>`, and `Organization` / `WebSite` by `BaseLayout`.
+const organization = {
+  '@type': 'Organization',
+  'name': config.siteName,
+  'url': `${config.site}/`,
+}
 const articleSchema = {
   '@context': 'https://schema.org',
   '@type': 'BlogPosting',
@@ -48,12 +53,10 @@ const articleSchema = {
   ...((post.data.update ?? post.data.date) && {
     dateModified: (post.data.update ?? post.data.date)!.toISOString(),
   }),
-  ...(post.data.author && { author: { '@type': 'Person', 'name': post.data.author } }),
-  'publisher': {
-    '@type': 'Organization',
-    'name': config.siteName,
-    'url': `${config.site}/`,
-  },
+  // Google requires an `author` for the rich result: posts without one are
+  // credited to the organization.
+  'author': post.data.author ? { '@type': 'Person', 'name': post.data.author } : organization,
+  'publisher': organization,
 }
 ---
 
