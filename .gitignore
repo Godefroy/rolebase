@@ -29,8 +29,8 @@ stats.html
 .mcp-web-inspector
 .playwright-mcp
 
-# Shared Terreau skills (symlinks to the terreau repo)
-.claude/skills/terreau-*
+# Shared Bibop skills (symlinks to the bibop repo)
+.claude/skills/bibop-*
 
 # Pi agent
 .pi/*
