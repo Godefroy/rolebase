@@ -1,0 +1,18 @@
+{
+  "meeting": {
+    "ical": {
+      "title": "{{role}} - {{title}}",
+      "description": "Notizen: {{url}}",
+      "description_videoConf": "Notizen: {{url}}\nVideokonferenz: {{videoConf}}"
+    }
+  },
+  "app": {
+    "disconnected": {
+      "subject": "Deine {{appName}}-Verbindung wurde getrennt",
+      "title": "{{appName}} getrennt",
+      "body1": "Deine {{appName}}-Kalenderverbindung funktioniert nicht mehr, weil der Zugriff widerrufen wurde oder abgelaufen ist.",
+      "body2": "Deine Meetings werden nicht mehr synchronisiert. Verbinde die App erneut, um die Synchronisierung fortzusetzen.",
+      "cta": "{{appName}} erneut verbinden"
+    }
+  }
+}

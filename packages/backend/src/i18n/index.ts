@@ -1,4 +1,5 @@
 import i18next from 'i18next'
+import de from './locales/de.json'
 import en from './locales/en.json'
 import fr from './locales/fr.json'
 
@@ -9,6 +10,9 @@ export const resources = {
   },
   en: {
     translation: en,
+  },
+  de: {
+    translation: de,
   },
 }
 

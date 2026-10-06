@@ -1,0 +1,1890 @@
+{
+  "ActionsMenu": {
+    "label": "Aktionen"
+  },
+  "ActivityDeleteModal": {
+    "heading": "Nachricht löschen",
+    "info1": "Bist du sicher, dass du diese Nachricht löschen möchtest?",
+    "info2": "Kein Widerruf möglich!"
+  },
+  "ActivityPollModal": {
+    "headingEdit": "Umfrage-Einstellungen",
+    "headingCreate": "Umfrage hinzufügen",
+    "help": "Nutze eine Umfrage, um subjektive Meinungen zu sammeln. Für eine gemeinsame Entscheidung nutze stattdessen eine \"Entscheidung\" oder \"Wahl\".",
+    "resetNeeded": "Diese Umfrage wurde bereits beantwortet. Du kannst sie nicht ändern, außer du löschst die Antworten",
+    "resetBtn": "Antworten löschen",
+    "question": "Frage",
+    "questionPlaceholder": "Wer, was, wo, wann?",
+    "choices": "Antwortmöglichkeiten",
+    "choicePlacholder": "Auswahl #{n}}",
+    "addChoice": "Antwortmöglichkeit hinzufügen",
+    "options": "Optionen",
+    "multiple": "Mehrere Antworten",
+    "minAnswers": "Mindestanzahl auszuwählender Antworten",
+    "maxAnswers": "Höchstanzahl auszuwählender Antworten",
+    "points": "Zu verteilende Punkte",
+    "canAddChoices": "Teilnehmer dürfen Antwortmöglichkeiten hinzufügen",
+    "anonymous": "Anonyme Antworten",
+    "randomize": "Antworten in zufälliger Reihenfolge anzeigen",
+    "hideUntilEnd": "Ergebnisse bis zum Abschluss ausblenden",
+    "endWhenAllVoted": "Schließen, wenn alle Teilnehmer abgestimmt haben",
+    "endDate": "Enddatum"
+  },
+  "APICard": {
+    "description": "Greife über unsere GraphQL API auf alles in Rolebase zu und bearbeite es. Erstelle API-Schlüssel, um deine Anfragen zu authentifizieren.",
+    "empty": "Du hast noch keine API-Schlüssel.",
+    "colName": "Name",
+    "colKey": "Schlüssel",
+    "keyNamePlaceholder": "Name des API-Schlüssels...",
+    "createKey": "API-Schlüssel erstellen",
+    "createSuccess": "API-Schlüssel erstellt",
+    "viewDocs": "API-Dokumentation ansehen"
+  },
+  "APIKeyRow": {
+    "deleteConfirm": "Bist du sicher, dass du den API-Schlüssel {{name}} löschen möchtest?",
+    "deleteSuccess": "API-Schlüssel gelöscht",
+    "renameSuccess": "API-Schlüssel umbenannt",
+    "copyToast": "API-Schlüssel in die Zwischenablage kopiert"
+  },
+  "AppCalendarOrgSelect": {
+    "placeholder": "Meetings synchronisieren",
+    "remove": "Synchronisierung beenden",
+    "confirmSyncHeading": "Meetings synchronisieren",
+    "confirmSyncInfo": "Bist du sicher, dass du Meetings mit deinem Kalender synchronisieren möchtest?",
+    "confirmSyncButton": "Synchronisieren",
+    "confirmStopHeading": "Meeting-Synchronisierung beenden",
+    "confirmStopInfo": "Bist du sicher, dass du die Synchronisierung von Meetings mit deinem Kalender beenden möchtest?",
+    "confirmStopButton": "Synchronisierung beenden"
+  },
+  "AppCard": {
+    "install": "Verbinden",
+    "uninstall": "Trennen",
+    "readonly": "Nur Lesen",
+    "apps": {
+      "Office365": {
+        "title": "Outlook Kalender",
+        "description": "Synchronisiere deinen Rolebase Kalender mit Outlook / Office 365 / Teams Calendar.",
+        "descriptionInstalled": "Wähle aus, welche Kalender für die Verfügbarkeitsprüfung genutzt werden und mit welchem Kalender deine Meetings synchronisiert werden."
+      },
+      "GoogleCalendar": {
+        "title": "Google Calendar",
+        "description": "Synchronisiere deinen Rolebase Kalender mit Google Calendar. Diese App entspricht der <a href=\"https://developers.google.com/terms/api-services-user-data-policy\">Google API Services User Data Policy</a>, einschließlich der Limited Use-Anforderungen.",
+        "descriptionInstalled": "Wähle aus, welche Kalender für die Verfügbarkeitsprüfung genutzt werden und mit welchem Kalender deine Meetings synchronisiert werden."
+      }
+    }
+  },
+  "AppsPage": {
+    "heading": "Integrationen",
+    "apiInfo": "Suchst du die GraphQL-API und deine API-Schlüssel?",
+    "apiLink": "Zur API-Seite"
+  },
+  "BaseRoleCreateModal": {
+    "heading": "Basisrolle erstellen"
+  },
+  "BaseRolesPanel": {
+    "heading": "Basisrollen der Organisation",
+    "info": "Basisrollen sind vordefinierte Rollen, die an mehreren Stellen im Organigramm verwendet werden können.",
+    "empty": "Keine Basisrollen",
+    "create": "Basisrolle erstellen"
+  },
+  "CircleAndMemberFilters": {
+    "circle": "Rolle",
+    "member": "Mitglied"
+  },
+  "CircleContent": {
+    "notFound": "Rolle nicht gefunden",
+    "tabRole": "Rolle",
+    "tabNews": "Neuigkeiten",
+    "tabThreads": "Diskussionen",
+    "tabMeetings": "Meetings",
+    "tabTasks": "Aufgaben",
+    "tabDecisions": "Entscheidungen"
+  },
+  "CircleCopyModal": {
+    "heading": "Rolle duplizieren",
+    "label": "Die Rolle {{name}} duplizieren nach:",
+    "noTarget": "Es gibt keine Rolle, in die du diese Rolle duplizieren kannst.",
+    "submit": "Duplizieren",
+    "toast": "Rolle {{name}} nach {{parent}} dupliziert",
+    "dragHint": "Im Organigramm kannst du eine Rolle auch duplizieren, indem du sie bei gedrückten Tasten <kbd>{{key}}</kbd> und <kbd>⇧</kbd> in eine andere Rolle ziehst."
+  },
+  "CircleDecisions": {
+    "create": "Entscheidung erstellen",
+    "empty": "Noch keine Entscheidung"
+  },
+  "CircleDeleteModal": {
+    "heading": "Rolle archivieren",
+    "info": "Bist du sicher, dass du die Rolle <b>{{name}}</b> archivieren möchtest? Unterrollen, Mitglieder, eingeladene Rollen, Meetings, Diskussionen, Aufgaben und Entscheidungen werden mit ihr archiviert.",
+    "restoreNote": "Nichts geht verloren: Du kannst die Rolle und alles damit Archivierte jederzeit aus dem Verlauf wiederherstellen.",
+    "toast": "Rolle \"{{name}}\" archiviert",
+    "confirmButton": "{{name}} archivieren",
+    "recurringMeetings": "{{count}} wiederkehrende Meetings",
+    "recurringMeetings_one": "1 wiederkehrendes Meeting",
+    "entities": "Diese Rolle und ihre Unterrollen enthalten Elemente, die mit ihr archiviert werden:",
+    "threads": "{{count}} Diskussionen",
+    "threads_one": "1 Diskussion",
+    "meetings": "{{count}} Meetings",
+    "meetings_one": "1 Meeting",
+    "tasks": "{{count}} Aufgaben",
+    "tasks_one": "1 Aufgabe",
+    "decisions": "{{count}} Entscheidungen",
+    "decisions_one": "1 Entscheidung"
+  },
+  "MakeBaseRoleModal": {
+    "heading": "In eine Basisrolle umwandeln",
+    "info": "Die Rolle <b>{{name}}</b> wird zu einer Basisrolle: einer gemeinsamen Definition, die du überall im Organigramm wiederverwenden kannst.",
+    "consequence1": "Die Rolle erscheint in der Liste der Basisrollen und kann zu anderen Rollen hinzugefügt werden.",
+    "consequence2": "Änderungen an ihr aktualisieren jede Stelle, an der sie verwendet wird.",
+    "consequence3": "Nur Inhaber der Organisation können eine Basisrolle bearbeiten.",
+    "confirmButton": "In Basisrolle umwandeln",
+    "toast": "\"{{name}}\" ist jetzt eine Basisrolle"
+  },
+  "SeparateBaseRoleModal": {
+    "heading": "Von der Basisrolle trennen",
+    "info": "<b>{{name}}</b> ist eine Basisrolle, die im gesamten Organigramm geteilt wird. Durch das Trennen erhält diese Rolle eine eigene, unabhängige Kopie.",
+    "consequence1": "Diese Rolle behält ihren aktuellen Inhalt, teilt ihn aber nicht mehr mit der Basisrolle.",
+    "consequence2": "Künftige Änderungen an der Basisrolle wirken sich nicht mehr auf diese Rolle aus.",
+    "consequence3": "Andere Rollen, die die Basisrolle verwenden, sind nicht betroffen.",
+    "irreversible": "Das Trennen ist dauerhaft: Du kannst diese Rolle anschließend nicht wieder mit der Basisrolle verbinden.",
+    "confirmButton": "Trennen",
+    "toast": "\"{{name}}\" von der Basisrolle getrennt"
+  },
+  "CircleExportPage": {
+    "heading": "Aufnahme exportieren",
+    "download": "Als PNG herunterladen"
+  },
+  "ExportPage": {
+    "heading": "Export",
+    "description": "Exportiere die Daten deiner Organisation. Wähle ein Format und die Entitäten, die du einschließen möchtest.",
+    "format": "Format",
+    "entities": "Zu exportierende Entitäten",
+    "button": "Export",
+    "toastSuccess": "Export heruntergeladen!",
+    "toastError": "Beim Export ist ein Fehler aufgetreten.",
+    "entity": {
+      "members": "Mitglieder",
+      "orgChart": "Organigramm (Rollen, Unterrollen, Zuweisungen)",
+      "decisions": "Entscheidungen",
+      "tasks": "Aufgaben",
+      "threads": "Diskussionen",
+      "meetings": "Meetings"
+    }
+  },
+  "CircleFormController": {
+    "label": "Rolle"
+  },
+  "CircleMeetings": {
+    "create": "Meeting erstellen",
+    "recurring": "Wiederkehrende Meetings"
+  },
+  "CircleLinkDeleteModal": {
+    "heading": "Rolleinladung entfernen",
+    "info": "Bist du sicher, dass du die Einladung der Rolle <b>{{invitedRole}}</b> aus der Rolle <b>{{role}}</b> entfernen willst?"
+  },
+  "CircleMemberDeleteModal": {
+    "heading": "Rolle eines Mitglieds entfernen",
+    "info": "Bist du sicher, dass du die Rolle <b>{{role}}</b> vom Mitglied <b>{{member}}</b> entfernen möchtest?"
+  },
+  "CircleMoveModal": {
+    "heading": "Eine Rolle verschieben",
+    "label": "Verschiebe die Rolle {{name}} in:",
+    "noTarget": "Es gibt keine Rolle, in die du diese Rolle verschieben kannst.",
+    "submit": "Verschieben",
+    "toast": "Rolle {{name}} nach {{parent}} verschoben",
+    "dragHint": "Im Organigramm kannst du eine Rolle auch verschieben, indem du sie bei gedrückter <kbd>{{key}}</kbd>-Taste in eine andere Rolle ziehst."
+  },
+  "CircleNews": {
+    "empty": "Die neuesten Aktivitäten erscheinen hier: neue Diskussionen, abgeschlossene Meetings, getroffene Entscheidungen usw."
+  },
+  "CirclePrivacy": {
+    "tooltip": "Sicherheit",
+    "role": "Wer kann die Rolle {{role}} ändern:",
+    "role_members": "Wer kann die Rolle {{role}} und ihre Mitglieder ändern:",
+    "roleAndSubRoles": "Wer kann die Rolle {{role}} und ihre Unterrollen ändern:",
+    "subRoles": "Wer kann Unterrollen ändern:",
+    "subRoles_members": "Wer kann Unterrollen und Mitglieder ändern:",
+    "roleOwner": "Inhaber",
+    "strictExplanation": "Diese Rolle ist durch strikte Governance geschützt. Änderungen laufen über einen Vorschlag.",
+    "createProposal": "Vorschlag erstellen",
+    "whoCanAssignMembers": "Wer kann Mitglieder zuweisen:"
+  },
+  "CircleRole": {
+    "archived": "Diese Rolle ist archiviert.",
+    "restore": "Wiederherstellen",
+    "purpose": "Zweck",
+    "purposePlaceholder": "Zweck, den sie verfolgt...",
+    "domain": "Domäne",
+    "domainPlaceholder": "Was nur sie tun kann...",
+    "accountabilities": "Verantwortlichkeiten",
+    "accountabilitiesPlaceholder": "Was sie tun soll...",
+    "checklist": "Checkliste",
+    "checklistPlaceholder": "Liste wiederkehrender Aktionen...",
+    "indicators": "Indikatoren",
+    "indicatorsPlaceholder": "Liste der Indikatoren...",
+    "notes": "Notizen",
+    "notesPlaceholder": "Notizen, Links...",
+    "representCircle": "Vertritt Rolle <link />",
+    "representInCircle": "in Rolle <link />",
+    "generate": "Automatisch ausfüllen"
+  },
+  "CircleRoleMembers": {
+    "labelSingleMember": "Besetzt von",
+    "labelMultiMembers": "Mitglieder"
+  },
+  "CircleRoleSubCircles": {
+    "roles": "Rollen",
+    "addRole": "Rolle erstellen",
+    "addRepresentative": "Vertreter hinzufügen",
+    "inviteRole": "Rolle einladen",
+    "linkTooltip": "Eingeladene Rolle",
+    "removeLink": "Eingeladene Rolle entfernen"
+  },
+  "CircleRoleLinkParents": {
+    "title": "Nimmt teil an"
+  },
+  "CircleRoleNoRights": {
+    "heading": "Vorbehaltene Änderungen",
+    "baseText": "Die Rolle {{role}} ist eine Basisrolle: ihre Konfiguration wird von jeder Rolle verwendet, die sie nutzt, daher können nur die Eigentümer der Organisation sie bearbeiten.",
+    "baseSeparate": "Um diese Rolle hier anzupassen, trenne sie über das Aktionsmenü von der Basisrolle.",
+    "actionsText": "Um {{actions}}, frage die Mitglieder, die das Recht besitzen, oder reiche einen Vorschlag bei den Teilnehmenden der Rolle ein.",
+    "actionRole": "die Rolle zu bearbeiten",
+    "actionSubRoles": "Unterrollen zu verwalten",
+    "actionMembers": "Mitglieder zuzuweisen",
+    "seeWhoCanEdit": "Klicke auf das Schloss oben rechts, um zu sehen, wer direkt bearbeiten kann.",
+    "createProposal": "Vorschlag erstellen"
+  },
+  "CirclesPage": {
+    "title": "Organigramm von {{org}}",
+    "empty": "Dein Organigramm ist momentan leer.",
+    "clickCircle": "Klicke auf die Rolle, um eine Rolle oder ein Mitglied hinzuzufügen."
+  },
+  "CirclePickerModal": {
+    "selectBtn": "Auswählen"
+  },
+  "CirclesSharePanel": {
+    "heading": "Organigramm teilen",
+    "enable": "Teilen aktivieren",
+    "enableHelp": "Beim Teilen wird eine öffentliche Seite deines Organigramms veröffentlicht, die jeder mit dem Link lesen und in deine Website einbetten kann, ohne Rolebase-Konto.",
+    "headingPublished": "Veröffentlichungseinstellungen",
+    "shareMembers": "Mitglieder veröffentlichen",
+    "shareMembersHelp": "Nur Namen und Fotos. Gilt für alle deine Links.",
+    "headingLink": "Link-Einstellungen",
+    "headingLinkHelp": "Diese Einstellungen sind Teil der Adresse unten. Du kannst mehrere Links mit unterschiedlichen Einstellungen erstellen.",
+    "zoom": "Zoom und Mausbewegung aktivieren",
+    "transparent": "Transparenter Hintergrund",
+    "link": "Link teilen",
+    "embed": "iframe-Code einbetten"
+  },
+  "CircleTasks": {
+    "create": "Aufgabe erstellen"
+  },
+  "CircleThreads": {
+    "create": "Diskussion erstellen",
+    "empty": "Noch keine Diskussion"
+  },
+  "CirclesGraphOptions": {
+    "settings": "Einstellungen",
+    "baseRoles": "Basisrollen",
+    "vacantRoles": "Unbesetzte Rollen",
+    "logs": "Verlauf",
+    "share": "Teilen"
+  },
+  "GraphActions": {
+    "noPermission": "Du hast keine Berechtigung dafür",
+    "singleMemberFull": "Diese Rolle kann nur ein Mitglied haben"
+  },
+  "CircleWithLeaderItem": {
+    "linkTooltip": "Die Rolle {{role}} vertreten"
+  },
+  "ColorController": {
+    "paletteTooltip": "Häufig verwendete Farben"
+  },
+  "CurrentUserModal": {
+    "heading": "Meine Zugangsdaten",
+    "name": "Vor- und Nachname",
+    "phone": "Telefonnummer",
+    "email": "E-Mail",
+    "emailPlaceholder": "E-Mail-Adresse...",
+    "password": "Passwort ändern",
+    "passwordPlaceholder": "Neues Passwort...",
+    "toastSuccess": "Informationen aktualisiert"
+  },
+  "UserNamePage": {
+    "heading": "Willkommen! Wie heißt du?",
+    "name": "Vor- und Nachname",
+    "submit": "Weiter"
+  },
+  "DashboardMyInfosItem": {
+    "footer": "Mehr anzeigen"
+  },
+  "DashboardHomeNote": {
+    "title": "Startnotiz",
+    "placeholder": "Füge eine Notiz für die Mitglieder deiner Organisation hinzu…"
+  },
+  "DashboardMyRoles": {
+    "title": "Meine Rollen"
+  },
+  "DashboardMyMeetings": {
+    "title": "Meine nächsten Meetings",
+    "add": "Neues Meeting"
+  },
+  "DashboardMyThreads": {
+    "title": "Meine Diskussionen",
+    "add": "Neue Diskussion",
+    "empty": "Keine Diskussion."
+  },
+  "DashboardMyTasks": {
+    "title": "Meine Aufgaben",
+    "add": "Neue Aufgabe"
+  },
+  "DashboardNews": {
+    "heading": "Neuigkeiten",
+    "empty": "Die neuesten Aktivitäten von {{org}} erscheinen hier: neue Diskussionen, abgeschlossene Meetings, getroffene Entscheidungen usw.",
+    "circle": "Rolle",
+    "type": "Typ"
+  },
+  "DashboardNewsDecision": {
+    "action": "<author /> hat eine Entscheidung registriert"
+  },
+  "DashboardNewsMeeting": {
+    "action": "Ein Meeting hat stattgefunden"
+  },
+  "DashboardNewsThread": {
+    "action": "<author /> hat eine Diskussion gestartet"
+  },
+  "DashboardOrgChart": {
+    "empty": "Dein Organigramm ist derzeit leer.",
+    "edit": "Organigramm bearbeiten"
+  },
+  "DashboardPage": {
+    "title": "Start",
+    "heading": "Hallo {{firstName}}"
+  },
+  "DecisionContent": {
+    "heading": "Entscheidung",
+    "changes": "Organigramm-Änderungen",
+    "private": "Private Entscheidung: Nur Teilnehmende von {{role}} können die Entscheidung sehen."
+  },
+  "DecisionItem": {
+    "open": "Entscheidung öffnen"
+  },
+  "DecisionDeleteModal": {
+    "heading": "Entscheidung löschen",
+    "info": "Bist du sicher, dass du die Entscheidung <b>{{name}}</b> löschen möchtest?"
+  },
+  "DecisionEditModal": {
+    "headingEdit": "Entscheidung bearbeiten",
+    "headingCreate": "Neue Entscheidung",
+    "title": "Entscheidung",
+    "titlePlaceholder": "Was hast du entschieden?",
+    "description": "Beschreibungen",
+    "descriptionPlaceholder": "Warum hast du diese Entscheidung getroffen?",
+    "private": "Private Entscheidung",
+    "privateHelp": "Nur Teilnehmer von {{role}} können die Entscheidung sehen.",
+    "privateNotAllowed": "Du musst Teilnehmer von {{role}} sein, um die Entscheidung privat zu machen."
+  },
+  "DurationSelect": {
+    "min": "Min / Woche",
+    "hours": "Stunden / Woche"
+  },
+  "GraphViewsSelect": {
+    "Circles": "Rollen",
+    "Circles_desc": "Zeigt jede Rolle in ihrer übergeordneten Rolle verschachtelt, mit den Mitgliedern, die sie besetzen. Die Größe jeder Rolle hängt von der Anzahl der enthaltenen Rollen und Mitglieder ab.",
+    "Tree": "Hierarchischer Baum",
+    "Tree_desc": "Zeigt die Rollen als Organigramm aus Karten von oben nach unten, mit den Mitgliedern, die sie besetzen.",
+    "Members": "Fotoverzeichnis",
+    "Members_desc": "Zeigt alle Mitglieder der Organisation auf einen Blick, ohne die Rollen.",
+    "folded": "Eingeklappt",
+    "folded_desc": "Zeigt nur die ausgewählte Rolle, ihre übergeordneten Rollen und deren direkte Rollen, statt der gesamten Organisation.",
+    "foldedLabel": "{{view}} (eingeklappt)",
+    "members": "Mitglieder anzeigen",
+    "members_desc": "Zeigt die Mitglieder, die jede Rolle besetzen. Deaktiviere die Option, um nur die Rollen anzuzeigen."
+  },
+  "LangModal": {
+    "heading": "Sprache"
+  },
+  "LogCancelModal": {
+    "heading": "Aktion rückgängig machen",
+    "hadChanges": "Die Daten haben sich seit dieser Aktion geändert. Du verlierst möglicherweise neuere Änderungen, wenn du diese Aktion rückgängig machst.",
+    "acceptCheckbox": "Ich verstehe, dass ich Änderungen verlieren kann",
+    "showChanges": "Änderungen anzeigen",
+    "cancel": "Diese Aktion abbrechen",
+    "toastSuccess": "Aktion abgebrochen"
+  },
+  "LogCancelText": {
+    "canceled": "hat die Aktion abgebrochen:"
+  },
+  "LogItem": {
+    "open": "Anzeigen / Abbrechen"
+  },
+  "LogText": {
+    "circleRoot": "die Wurzel",
+    "CircleCreate": "<author /> hat die Rolle <circle /> in <parentCircle /> erstellt",
+    "CircleMove": "<author /> hat die Rolle <circle /> nach <parentCircle /> verschoben",
+    "CircleCopy": "<author /> hat die Rolle <circle /> nach <parentCircle /> kopiert",
+    "CircleArchive": "<author /> hat die Rolle <circle /> archiviert",
+    "CircleMemberAdd": "<author /> hat <member /> zur Rolle <circle /> hinzugefügt",
+    "CircleMemberRemove": "<author /> hat <member /> aus der Rolle <circle /> entfernt",
+    "CircleLinkAdd": "<author /> hat die Rolle <invitedCircle /> in die Rolle <circle /> eingeladen",
+    "CircleLinkRemove": "<author /> hat die Einladung der Rolle <invitedCircle /> aus der Rolle <circle /> entfernt",
+    "RoleCreate": "<author /> hat die Rolle <role /> erstellt",
+    "RoleUpdate": "<author /> hat die Rolle <role /> geändert",
+    "RoleArchive": "<author /> hat die Rolle <role /> archiviert",
+    "MemberCreate": "<author /> hat das Mitglied <member /> erstellt",
+    "MemberUpdate": "<author /> hat das Mitglied <member /> geändert",
+    "MemberArchive": "<author /> hat das Mitglied <member /> archiviert",
+    "TaskCreate": "<author /> hat die Aufgabe <task /> erstellt",
+    "TaskUpdate": "<author /> hat die Aufgabe <task /> geändert",
+    "TaskStatusUpdate": "<author /> hat die Aufgabe <task /> als <status /> markiert",
+    "ThreadStatusUpdate": "<author /> hat die Diskussion <task /> von <prevStatus /> zu <status /> geändert",
+    "TaskArchive": "<author /> hat die Aufgabe <task /> archiviert",
+    "DecisionCreate": "<author /> hat die Entscheidung <decision /> erstellt",
+    "DecisionUpdate": "<author /> hat die Entscheidung <decision /> geändert",
+    "DecisionArchive": "<author /> hat die Entscheidung <decision /> archiviert"
+  },
+  "LoginForm": {
+    "heading": "Anmelden",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "resetPassword": "Passwort vergessen?",
+    "submit": "Anmelden",
+    "signup": "Konto erstellen"
+  },
+  "OtpForm": {
+    "heading": "Wo autonome Teams zusammenkommen, um Großartiges zu leisten",
+    "subheading": "Melde dich bei deinem Rolebase-Konto an",
+    "email": "E-Mail",
+    "emailPlaceholder": "Gib deine E-Mail-Adresse ein...",
+    "submit": "Weiter",
+    "terms": "Indem du fortfährst, bestätigst du, dass du {{termsAndPrivacy}} verstanden und akzeptiert hast",
+    "codeHeading": "Wir haben einen 6-stelligen Code an {{email}} gesendet",
+    "codeDescription": "Gib deinen Code ein",
+    "notReceived": "Nichts erhalten? Prüfe deinen Spam-Ordner oder fordere einen neuen Code an.",
+    "resend": "Code erneut senden",
+    "resendIn_one": "Code in {{count}} Sekunde erneut senden",
+    "resendIn_other": "Code in {{count}} Sekunden erneut senden",
+    "resent": "Neuer Code an {{email}} gesendet. Er ersetzt den vorherigen.",
+    "changeEmail": "Adresse ändern",
+    "invalidDomain": "Diese Domäne empfängt keine E-Mails. Prüfe die Adresse.",
+    "invalidCode": "Falscher oder abgelaufener Code. Prüfe die letzte E-Mail, die du erhalten hast, oder fordere einen neuen Code an."
+  },
+  "AuthPage": {
+    "loginWithPassword": "Mit Passwort anmelden",
+    "loginWithOtp": "Mit Code anmelden",
+    "createAccount": "Konto erstellen",
+    "haveAccount": "Hast du bereits ein Konto?",
+    "invitationInfo": "Du wurdest eingeladen, {{orgName}} beizutreten. Melde dich an oder registriere dich mit deiner E-Mail-Adresse, um die Einladung anzunehmen."
+  },
+  "LogsList": {
+    "empty": "Keine Aktion"
+  },
+  "LogsContent": {
+    "heading": "Verlauf"
+  },
+  "MeetingActionsMenu": {
+    "edit": "Einstellungen",
+    "forceEdit": "Bericht bearbeiten",
+    "cancelStart": "Start abbrechen",
+    "restart": "Neu starten"
+  },
+  "MeetingAlertEnded": {
+    "stop": "Speichern und Bearbeitung beenden"
+  },
+  "MeetingAlertNotStarted": {
+    "start": "Starten",
+    "toastStarted": "Meeting gestartet!",
+    "future": "Das Meeting kann am <date>{{date}}</date> gestartet werden",
+    "past": "Das Meeting hätte am <date>{{date}}</date> starten sollen"
+  },
+  "MeetingAttendees": {
+    "maybe": "Vielleicht",
+    "absent": "Abwesend",
+    "present": "Anwesend",
+    "add": "Mitglied einladen",
+    "confirmRemove": "Bist du sicher, dass du diesen Teilnehmer aus dem Meeting entfernen möchtest?"
+  },
+  "MeetingContainer": {
+    "title": "Meeting {{title}} - {{circle}}"
+  },
+  "MeetingContent": {
+    "videoConf": "Videokonferenz beitreten",
+    "notInvited": "Du bist nicht zu diesem Meeting eingeladen. Bitte einen Teilnehmer, dich einzuladen, wenn du teilnehmen möchtest.",
+    "archived": "Dieses Meeting wurde gelöscht. Du kannst es über das Menü oben rechts wiederherstellen.",
+    "logs": "Aktionen während des Meetings"
+  },
+  "MeetingContentEmpty": {
+    "new": "Neuen Bericht vorbereiten",
+    "copy": "Vorheriges Meeting kopieren",
+    "or": "oder"
+  },
+  "MeetingHeader": {
+    "heading": "Meeting {{title}}",
+    "started": "Gestartet",
+    "ended": "Beendet",
+    "private": "Privates Meeting: Nur Teilnehmer von {{role}} und zusätzliche Gäste können das Meeting sehen."
+  },
+  "MeetingEditModal": {
+    "headingEdit": "Meeting-Einstellungen",
+    "headingCreate": "Neues Meeting",
+    "duplicateInfo": "Der Bericht des duplizierten Meetings wird in diesem neuen Meeting übernommen.",
+    "title": "Titel",
+    "titlePrefix": "Meeting",
+    "titlePlaceholder": "Titel...",
+    "start": "Beginn",
+    "duration": "Dauer",
+    "durationSuffix": "Minuten",
+    "recurrence": "Wiederholung",
+    "participants": "Teilnehmende",
+    "steps": "Schritte",
+    "private": "Privates Meeting",
+    "privateHelp": "Nur Teilnehmende von {{role}} und zusätzliche Gäste können das Meeting sehen.",
+    "privateNotAllowed": "Du musst zu den Teilnehmenden von {{role}} gehören oder zum Meeting eingeladen sein, um es privat zu machen.",
+    "invitedReadonly": "Nur Lesen",
+    "invitedReadonlyHelp": "Nur Teilnehmende von {{role}} können den Meeting-Bericht bearbeiten.",
+    "toastCreated": "Meeting erstellt!",
+    "toastUpdated": "Meeting aktualisiert!"
+  },
+  "MeetingExportModal": {
+    "heading": "Meeting-Agenda exportieren",
+    "url": "iCal-URL",
+    "help": "Die Synchronisierung ist einseitig und kann einige Minuten dauern. Für eine schnelle bidirektionale Synchronisierung verbinde einen Kalender (siehe <apps>Integrationen</apps>)"
+  },
+  "MeetingItem": {
+    "title": "Meeting {{title}}",
+    "open": "Meeting öffnen"
+  },
+  "MeetingOpenCurrent": {
+    "heading": "Laufendes Meeting",
+    "info": "Du hast ein laufendes Meeting. Möchtest du teilnehmen?"
+  },
+  "MeetingPanelEnded": {
+    "headingWrite": "Meeting-Zusammenfassung schreiben",
+    "headingRead": "Meeting-Zusammenfassung",
+    "info": "Es wird hier, in den Neuigkeiten und in deinen Integrationen sichtbar sein.",
+    "generate": "Automatisch generieren"
+  },
+  "MeetingPanelStarted": {
+    "next": "Nächster Schritt",
+    "end": "Meeting beenden"
+  },
+  "MeetingRecurringDeleteModal": {
+    "heading": "Wiederkehrendes Meeting löschen",
+    "info": "Bist du sicher, dass du das wiederkehrende Meeting <b>{{name}}</b> aus <b>{{circle}}</b> löschen willst?"
+  },
+  "MeetingRecurringEditModal": {
+    "headingEdit": "Wiederkehrendes Meeting",
+    "headingCreate": "Neues wiederkehrendes Meeting",
+    "recurrence": "Wiederholung",
+    "toastCreated": "Wiederkehrendes Meeting erstellt!",
+    "toastUpdated": "Wiederkehrendes Meeting aktualisiert!"
+  },
+  "MeetingRecurringListModal": {
+    "heading": "Wiederkehrende Meetings",
+    "empty": "Zurzeit keine wiederkehrenden Meetings.",
+    "create": "Wiederkehrendes Meeting erstellen"
+  },
+  "MeetingRecurringModal": {
+    "info": "Dieses Meeting ist wiederkehrend. Der von dir ausgewählte Termin existiert noch nicht. Du kannst ihn erstellen oder warten, bis er automatisch erstellt wird.",
+    "createLabel": "Meeting erstellen und bearbeiten vom",
+    "create": "Meeting erstellen",
+    "edit": "Wiederholung bearbeiten"
+  },
+  "MeetingRecurringPage": {
+    "title": "Wiederkehrendes Meeting"
+  },
+  "MeetingsList": {
+    "empty": "Kein Meeting geplant."
+  },
+  "MeetingStepContent": {
+    "addNotes": "Notizen schreiben",
+    "notesPlaceholder": "Notizen...",
+    "notAllowed": "Du hast keinen Zugriff auf dieses Meeting."
+  },
+  "MeetingStepContentTasks": {
+    "logs": "Während des Meetings geänderte Aufgaben"
+  },
+  "MeetingStepContentThreadItem": {
+    "notAllowed": "Private Diskussion",
+    "privateWarning": "Diese Diskussion ist nicht privat, solange das Meeting privat ist. Alle können die Notizen sehen. Du kannst die Diskussion privat machen, indem du zu ihren Einstellungen gehst.",
+    "notAllowedParticipantsWarning": "{{count}} Teilnehmer haben keinen Zugriff auf diese private Diskussion: {{participants}}",
+    "notAllowedParticipantsWarning_one": "{{count}} Teilnehmer hat keinen Zugriff auf diese private Diskussion: {{participants}}"
+  },
+  "MeetingStepContentThreads": {
+    "add": "Diskussion anhängen",
+    "create": "Neue Diskussion",
+    "randomize": "Zufällig anordnen"
+  },
+  "MeetingStepSortableItem": {
+    "placeholder": "Schritt-Titel..."
+  },
+  "MeetingStepsConfigController": {
+    "addStep": "Schritt hinzufügen",
+    "empty": "Du musst mindestens einen Schritt zur Agenda hinzufügen."
+  },
+  "MeetingTemplateDeleteModal": {
+    "heading": "Meeting-Vorlage löschen",
+    "info": "Bist du sicher, dass du die Vorlage <b>{{name}}</b> löschen möchtest?"
+  },
+  "MeetingTemplateIdFormControl": {
+    "template": "Vorlage",
+    "select": "Vorlage auswählen"
+  },
+  "MeetingTemplateMenu": {
+    "menu": "Vorlage verwenden"
+  },
+  "MeetingTemplateMenuList": {
+    "create": "Vorlage erstellen"
+  },
+  "MeetingTemplateEditModal": {
+    "headingEdit": "Meeting-Vorlage",
+    "headingCreate": "Neue Meeting-Vorlage",
+    "title": "Titel",
+    "titlePlaceholder": "Titel...",
+    "steps": "Schritte",
+    "toastCreated": "Meeting-Vorlage erstellt!",
+    "toastUpdated": "Meeting-Vorlage aktualisiert!"
+  },
+  "MeetingTemplateListModal": {
+    "heading": "Meeting-Vorlagen",
+    "empty": "Keine Meeting-Vorlage",
+    "create": "Meeting-Vorlage erstellen"
+  },
+  "MeetingsPage": {
+    "heading": "Meetings",
+    "settings": "Einstellungen",
+    "templates": "Meeting-Vorlagen",
+    "recurring": "Wiederkehrende Meetings",
+    "export": "Export (iCal)",
+    "apps": "Kalender-App verbinden",
+    "showWeekend": "Wochenende anzeigen",
+    "hideWeekend": "Wochenende ausblenden",
+    "create": "Neues Meeting"
+  },
+  "MemberActionsMenu": {
+    "removeFromRole": "Aus der Rolle entfernen"
+  },
+  "MemberContent": {
+    "notFound": "Mitglied nicht gefunden",
+    "archived": "Dieses Mitglied ist archiviert.",
+    "restore": "Wiederherstellen",
+    "memberRolesHeading": "Zugewiesene Rollen",
+    "description": "Beschreibung",
+    "descriptionPlaceholder": "Wer ist {{name}}?"
+  },
+  "MemberNameEditable": {
+    "tooltip": "Mitgliedsnamen bearbeiten",
+    "toastSuccess": "Mitgliedsname aktualisiert"
+  },
+  "MemberCreateModal": {
+    "heading": "Mitglied hinzufügen"
+  },
+  "MemberDeleteModal": {
+    "heading": "Mitglied archivieren",
+    "info": "Bist du sicher, dass du das Mitglied <b>{{name}}</b> archivieren möchtest?",
+    "toast": "Mitglied \"{{name}}\" archiviert"
+  },
+  "MemberEditModal": {
+    "heading": "Mitglied {{member}} bearbeiten",
+    "invitation": {
+      "heading": "Berechtigungen",
+      "email": "E-Mail",
+      "emailPlaceholder": "E-Mail-Adresse..."
+    }
+  },
+  "MemberOrgRoleSelect": {
+    "invite": "Einladen",
+    "removeAccess": "Zugriff auf Organisation entfernen",
+    "saved": "Berechtigung erfolgreich aktualisiert",
+    "viewPendingInvitation": "Ausstehende Einladung anzeigen",
+    "roles": {
+      "title": "Berechtigung ändern",
+      "Readonly": {
+        "title": "Nur lesen",
+        "description": "Das Mitglied kann das Organigramm nur ansehen, aber nicht ändern. Kann öffentliche Meetings, Diskussionen und Aufgaben ansehen, aber nicht teilnehmen."
+      },
+      "Member": {
+        "title": "Mitglied",
+        "description": "Das Mitglied kann Rollen ändern, in denen es Leader ist, oder alles bearbeiten, wenn die Governance nicht geschützt ist (siehe Organisationseinstellungen). Kann an Meetings, Diskussionen und Aufgaben teilnehmen."
+      },
+      "Admin": {
+        "title": "Administrator",
+        "description": "Das Mitglied kann Mitglieder einladen und die Freigabe des Organigramms verwalten."
+      },
+      "Owner": {
+        "title": "Inhaber",
+        "description": "Das Mitglied kann das Abonnement verwalten, Inhaber und Administratoren ernennen, die Basisrollen der Organisation ändern und das gesamte Organigramm bearbeiten, auch wenn die Governance geschützt ist."
+      }
+    }
+  },
+  "MemberRemoveAccessModal": {
+    "title": "Zugriff auf Organisation entfernen",
+    "description": "Bist du sicher, dass du {{name}} den Zugriff auf diese Organisation entziehen möchtest? Diese Person kann dann keine Aktivitäten mehr einsehen oder daran teilnehmen.",
+    "confirm": "Zugriff entfernen",
+    "success": "Zugriff erfolgreich entfernt"
+  },
+  "MemberRoleItem": {
+    "removeTooltip": "{{member}} aus {{role}} entfernen",
+    "focusTooltip": "Den Graphen auf die Rolle {{role}} fokussieren"
+  },
+  "MemberInviteModal": {
+    "heading": "{{member}} einladen",
+    "email": "E-Mail",
+    "emailPlaceholder": "member@example.com",
+    "invite": "Einladung senden",
+    "toastInvited": "Du hast {{member}} eingeladen, der Organisation beizutreten!"
+  },
+  "MemberInvitationModal": {
+    "heading": "Offene Einladung für {{member}}",
+    "awaiting": "Einladung an {{email}} am {{date}} gesendet, wartet auf Annahme.",
+    "resend": "Erneut senden",
+    "revoke": "Einladung widerrufen",
+    "toastReInvited": "Du hast {{member}} erneut eingeladen, der Organisation beizutreten.",
+    "toastRevocated": "Einladung widerrufen"
+  },
+  "MemberInvitationPage": {
+    "title": "Einladung, der Organisation {{orgName}} beizutreten",
+    "accept": "Einladung annehmen",
+    "cancel": "Abbrechen",
+    "toastSuccess": "Einladung angenommen"
+  },
+  "PendingInvitationsModal": {
+    "heading_one": "Du wurdest eingeladen, einer Organisation beizutreten",
+    "heading_other": "Du wurdest eingeladen, Organisationen beizutreten",
+    "join": "Beitreten",
+    "createOrg": "Eigene Organisation erstellen"
+  },
+  "MemberPictureCropModal": {
+    "heading": "Foto zuschneiden",
+    "rotate": "Um 90° drehen",
+    "toastSuccess": "Neues Foto gespeichert, du siehst großartig aus!"
+  },
+  "MemberPictureEdit": {
+    "editPicture": "Bild bearbeiten"
+  },
+  "MemberRoles": {
+    "empty": {
+      "noRole": "{{name}} hat momentan keine Rolle.",
+      "canEdit": "Du kannst ihn/sie im Organigramm zu einer Rolle hinzufügen."
+    },
+    "emptyCurrentMember": {
+      "noRole": "Du hast momentan keine Rolle.",
+      "canEdit": "Du kannst dich im Organigramm selbst zu einer Rolle hinzufügen."
+    }
+  },
+  "MembersInviteModal": {
+    "heading": "Mitglieder per E-Mail einladen",
+    "toastSuccess_one": "{{count}} Mitglied wurde eingeladen!",
+    "toastSuccess_other": "{{count}} Mitglieder wurden eingeladen!",
+    "emailPlaceholder": "E-Mail...",
+    "invite": "Einladen ({{count}})"
+  },
+  "MembersMultiSelect": {
+    "choose": "Mitglied auswählen",
+    "add": "Mitglied hinzufügen"
+  },
+  "MembersPage": {
+    "heading": "Mitglieder",
+    "searchPlaceholder": "Suchen...",
+    "invite": "Mitglieder einladen",
+    "stats": {
+      "active": "Aktive Mitglieder",
+      "invited": "Eingeladene Mitglieder",
+      "inactive": "Nichteingeladene Mitglieder"
+    },
+    "showArchived": "Archivierte Mitglieder anzeigen",
+    "hideArchived": "Archivierte Mitglieder ausblenden",
+    "noArchived": "Keine archivierten Mitglieder",
+    "encouragement": {
+      "message": "Lade Mitglieder in deine Organisation ein, um das volle Potenzial von Rolebase zu nutzen!",
+      "limitWarning": "Du nutzt derzeit den kostenlosen Plan mit einem Limit von {{limit}} aktiven Mitgliedern.",
+      "upgradePlan": "Auf einen kostenpflichtigen Plan upgraden"
+    },
+    "tags": {
+      "readonly": "Nur lesen",
+      "member": "Teilnehmer",
+      "admin": "Admin",
+      "owner": "Eigentümer",
+      "invited": "Eingeladen",
+      "notInvited": "Nicht eingeladen"
+    }
+  },
+  "ModalBackButton": {
+    "label": "Zurück"
+  },
+  "ModalCloseStaticButton": {
+    "label": "Schließen"
+  },
+  "ModalMaximizeButton": {
+    "label": "In Vollbild öffnen"
+  },
+  "NotificationsSettingsModal": {
+    "heading": "Benachrichtigungen",
+    "digest": "E-Mail-Zusammenfassung der Aktivitäten",
+    "disabledInfo": "Wenn du die Zusammenfassung aktivierst, kannst du die Häufigkeit der E-Mails anpassen. Wir empfehlen, sie zu aktivieren, um wichtige Diskussionen in deiner Organisation zu verfolgen.",
+    "toastSuccess": "Benachrichtigungseinstellungen gespeichert!"
+  },
+  "OAuthRedirectPage": {
+    "Office365": {
+      "success": "Dein Outlook / Office 365-Konto ist verbunden! Du kannst diese Seite schließen und den zu synchronisierenden Kalender auswählen."
+    },
+    "GoogleCalendar": {
+      "success": "Dein Google Calendar-Konto ist verbunden! Du kannst diese Seite schließen und den zu synchronisierenden Kalender auswählen."
+    },
+    "error": "Ein Fehler ist aufgetreten, bitte versuche es erneut 🙏",
+    "back": "Integrationen"
+  },
+  "OrgCreateModal": {
+    "join": {
+      "heading": "Einer Organisation beitreten",
+      "text": "Um einer Organisation beizutreten, musst du von einem Administrator der Organisation eingeladen werden. Du musst auf den Button in der E-Mail klicken, die du erhalten hast. Wenn du keine E-Mail erhalten hast, kannst du den Administrator bitten, die Einladung erneut zu senden."
+    },
+    "create": {
+      "heading": "Organisation erstellen",
+      "name": "Name der Organisation",
+      "slug": "Benutzerdefinierte URL"
+    },
+    "import": {
+      "heading": "Organisation importieren",
+      "text": "Wenn du Daten in einer anderen App hast, kannst du sie in eine neue Rolebase-Organisation importieren!",
+      "button": "Importieren"
+    }
+  },
+  "OrgDeleteModal": {
+    "heading": "Organisation löschen",
+    "info": "Bist du sicher, dass du die Organisation <b>{{name}}</b> löschen möchtest?",
+    "warningSubscription": "Wenn ein Abonnement läuft, wird dir der nicht genutzte Zeitraum erstattet"
+  },
+  "OrgEditModal": {
+    "heading": "Organisation {{org}} bearbeiten",
+    "slug": "URL",
+    "governance": "Governance",
+    "governanceFree": "Frei",
+    "governanceFreeHelp": "Alle Mitglieder können das gesamte Organigramm bearbeiten.",
+    "governanceAgile": "Agil",
+    "governanceAgileHelp": "Rollen können von ihren Leadern bearbeitet werden.",
+    "governanceStrict": "Strikt",
+    "governanceStrictHelp": "Rollen können nur über Vorschläge geändert werden (Holacracy).",
+    "defaultGraphView": "Standardansicht des Organigramms"
+  },
+  "OrgIconMenu": {
+    "label": "Icon ändern",
+    "upload": "Bild hochladen"
+  },
+  "OrgSlugModal": {
+    "heading": "URL der Organisation {{org}}",
+    "slug": "URL",
+    "slugPlaceholder": "{{slug}} (zum Beispiel)",
+    "already-exists": "Diese URL wird bereits verwendet."
+  },
+  "OrgSwitch": {
+    "orgs": "Organisationen",
+    "create": "Organisation erstellen"
+  },
+  "OrgsPage": {
+    "heading": "Meine Organisationen"
+  },
+  "Page404": {
+    "heading": "Seite nicht gefunden",
+    "home": "Zurück zur Startseite"
+  },
+  "ParticipantsCircleExtraMembers": {
+    "invite": "Einladen",
+    "circleParticipants": "Teilnehmer von {{role}}",
+    "inviteButton": "Mich hinzufügen",
+    "inviteWarning": "Du bist nicht Teil der Teilnehmer. Möchtest du dich selbst hinzufügen?"
+  },
+  "ParticipantsNumber": {
+    "tooltip": "Teilnehmer"
+  },
+  "ParticipantScopeInput": {
+    "addMember": "Mitglied hinzufügen",
+    "addCircle": "Rolle hinzufügen",
+    "includeChildren": "Unterrollen einbeziehen",
+    "noParticipant": "Kein Teilnehmer in dieser Rolle"
+  },
+  "RateAppModal": {
+    "question": "Wie bewertest du deine Erfahrung mit Rolebase?",
+    "thanks": "Wow, danke 😃",
+    "gift": "Wir haben ein Geschenk für dich!",
+    "giftDescription": "Veröffentliche einfach deine Bewertung über Rolebase auf Capterra und erhalte einen 20€ Amazon-Gutschein. Das würde uns sehr helfen 🙏",
+    "giftButton": "Bewertung schreiben = 🎁 20 €",
+    "declineButton": "Nein, danke",
+    "feedback": "Danke! Hast du Anregungen? Können wir dir helfen?",
+    "helpButton": "Mit einem Menschen sprechen"
+  },
+  "ReactionAddButton": {
+    "tooltip": "Reaktion hinzufügen…"
+  },
+  "RichEditor": {
+    "heading1": "Überschrift 1",
+    "heading2": "Überschrift 2",
+    "heading3": "Überschrift 3",
+    "bulletList": "Aufzählung",
+    "orderedList": "Nummerierte Liste",
+    "taskList": "Checkliste",
+    "table": "Tabelle",
+    "quote": "Zitat",
+    "codeBlock": "Codeblock",
+    "divider": "Trennlinie",
+    "image": "Bild",
+    "file": "Datei",
+    "youtube": "YouTube-Video",
+    "youtubePrompt": "YouTube-Video-URL",
+    "bold": "Fett",
+    "italic": "Kursiv",
+    "underline": "Unterstrichen",
+    "strike": "Durchgestrichen",
+    "code": "Code",
+    "link": "Link",
+    "linkPlaceholder": "Link einfügen…",
+    "unlink": "Link entfernen",
+    "addRowBelow": "Zeile hinzufügen",
+    "addColumnRight": "Spalte hinzufügen",
+    "deleteRow": "Zeile löschen",
+    "deleteColumn": "Spalte löschen",
+    "toggleHeaderRow": "Kopfzeile umschalten",
+    "deleteTable": "Tabelle löschen"
+  },
+  "RoleEditableField": {
+    "baseRoleInfo": "Die Änderung gilt für alle Rollen {{role}} der Organisation, da es eine Basisrolle ist."
+  },
+  "ResetPasswordPage": {
+    "heading": "Passwort vergessen?",
+    "done1": "Eine E-Mail zum Zurücksetzen des Passworts wurde an dich gesendet!",
+    "done2": "Überprüfe dein Postfach.",
+    "email": "E-Mail",
+    "reset": "Mein Passwort zurücksetzen"
+  },
+  "RoleDeleteModal": {
+    "heading": "Rolle entfernen",
+    "info": "Bist du sicher, dass du die Rolle <b>{{name}}</b> löschen möchtest?"
+  },
+  "RoleEditModal": {
+    "heading": "Rolle {{name}} bearbeiten",
+    "baseInfo": "Diese Rolle ist eine Basisrolle, die an mehreren Stellen verwendet werden kann.",
+    "name": "Rollenname",
+    "singleMember": "Kann nur von einem einzigen Mitglied besetzt werden",
+    "parentLink": "Repräsentiert ihre übergeordnete Rolle (Link)",
+    "parentLinkHelp": "Nur Eigentümer der Organisation und Mitglieder, die sowohl die übergeordnete Rolle als auch die Großelternrolle repräsentieren, können diese Rolle ändern.",
+    "color": "Farbe anpassen"
+  },
+  "RoleGeneratorModal": {
+    "heading": "Rolle {{role}}",
+    "info": "Diese Eigenschaften wurden von einer KI verfasst. Du kannst sie jetzt bearbeiten, bevor du sie speicherst.",
+    "loading": "Rollen-Eigenschaften werden generiert...",
+    "waitInfo": "Dies kann einige zehn Sekunden dauern."
+  },
+  "RRuleEditor": {
+    "repeat": "Alle",
+    "freqs": {
+      "YEARLY_one": "Jahr",
+      "YEARLY_other": "Jahre",
+      "MONTHLY_one": "Monat",
+      "MONTHLY_other": "Monate",
+      "WEEKLY_one": "Woche",
+      "WEEKLY_other": "Wochen",
+      "DAILY_one": "Tag",
+      "DAILY_other": "Tage",
+      "MONTHLY": "Monat"
+    },
+    "startDate": "Startdatum",
+    "end": "Ende",
+    "never": "Nie",
+    "until": "Am Datum",
+    "count": "Nach",
+    "count-suffix": "Mal",
+    "byweekday": "Am",
+    "bymonthday": "Am",
+    "bymonthday-suffix": "des Monats",
+    "bysetpos": {
+      "1": "Erste",
+      "2": "Zweite",
+      "3": "Dritte",
+      "4": "Vierte",
+      "-1": "Letzte"
+    },
+    "bymonth": "Im",
+    "nextDates": "Nächste Termine anzeigen"
+  },
+  "SearchGlobalModal": {
+    "placeholder": "{{org}} durchsuchen...",
+    "in": "In:",
+    "noResults": "Keine Ergebnisse gefunden"
+  },
+  "SearchResultsList": {
+    "canCreate": "Tippen zum Erstellen oder Suchen"
+  },
+  "SettingsMenu": {
+    "org": {
+      "heading": "Organisation",
+      "members": "Mitglieder",
+      "settings": "Einstellungen",
+      "subscription": "Abonnement",
+      "superAdmin": "Admin"
+    },
+    "user": {
+      "heading": "Mein Konto",
+      "member": "Meine Mitgliedsdaten",
+      "credentials": "Meine Zugangsdaten",
+      "notifications": "Benachrichtigungen",
+      "apps": "Integrationen",
+      "api": "API-Schlüssel",
+      "signout": "Abmelden"
+    }
+  },
+  "Settings": {
+    "heading": "Einstellungen",
+    "members": "Mitglieder",
+    "orgSettings": "Organisation",
+    "subscription": "Abonnement",
+    "billing": "Abrechnung",
+    "apps": "Integrationen",
+    "api": "API-Schlüssel",
+    "export": "Export",
+    "superAdmin": "Administration",
+    "toastSaved": "Einstellungen gespeichert!"
+  },
+  "Sidebar": {
+    "close": "Seitenleiste schließen",
+    "lock": "Seitenleiste offen halten",
+    "orgs": "Organisationen",
+    "settings": "Einstellungen",
+    "menu": "Menü",
+    "news": "Neuigkeiten",
+    "roles": "Organigramm",
+    "threads": "Diskussionen",
+    "meetings": "Meetings",
+    "tasks": "Aufgaben",
+    "search": "Suchen",
+    "help": "Hilfe"
+  },
+  "HelpMenu": {
+    "documentation": "Dokumentation",
+    "contact": "Kontaktiere uns"
+  },
+  "SignupForm": {
+    "heading": "Erstelle dein Rolebase-Konto",
+    "name": "Vor- und Nachname",
+    "phone": "Telefonnummer",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "terms": "Ich akzeptiere {{termsAndPrivacy}}",
+    "submit": "Mein Konto erstellen",
+    "haveAccount": "Du hast bereits ein Konto?",
+    "login": "Anmelden"
+  },
+  "SubscriptionPage": {
+    "heading": "Abonnement"
+  },
+  "BillingPage": {
+    "heading": "Abrechnung",
+    "billingInfo": "Abrechnungsinformationen"
+  },
+  "SubscriptionTabs": {
+    "subscription": "Abonnement",
+    "mustBeOwner": "Du musst Eigentümer dieser Organisation sein, um das Abonnement zu verwalten",
+    "cancelSubscriptionModal": {
+      "heading": "Bist du sicher, dass du dein Abonnement kündigen willst?",
+      "desc1": "Diese Aktion wird am Ende des Abonnementzeitraums wirksam.",
+      "desc2": "Deine Organisation kann dann nur noch 5 eingeladene Mitglieder haben.",
+      "desc3": "Du verlierst die personalisierte Unterstützung und den Priority-Support unseres Teams."
+    },
+    "openInvoice": {
+      "title": "Eine Rechnung wartet auf Zahlung",
+      "desc": "Zahle deine Rechnung über {{amount}} €, um dein Abonnement zu aktivieren. Solange sie offen ist, kannst du dein Abonnement nicht ändern.",
+      "blocked": "Zahle die offene Rechnung, bevor du dein Abonnement änderst.",
+      "pay": "Rechnung bezahlen"
+    },
+    "invoiceTab": {
+      "heading": "Rechnungsverlauf",
+      "desc": "Hier findest du alle vergangenen Rechnungen und kannst sie herunterladen.",
+      "noInvoice": "Du hast keine Rechnung",
+      "amount": "Betrag",
+      "invoiceDate": "Rechnungsdatum",
+      "invoice": "Rechnung",
+      "download": "Herunterladen",
+      "pay": "Bezahlen",
+      "status": "Status",
+      "paymentStatus": {
+        "paid": "Bezahlt",
+        "draft": "Entwurf",
+        "open": "Offen",
+        "uncollectible": "Uneinbringlich",
+        "void": "Storniert"
+      }
+    },
+    "paymentModal": {
+      "subscribeToPlan": "{{plan}}-Tarif",
+      "details": "Abrechnungsdaten",
+      "payment": "Zahlung",
+      "summary": "Zusammenfassung",
+      "next": "Weiter",
+      "confirm": "Bestätigen",
+      "prev": "Zurück",
+      "subscription": "Abonnement:",
+      "pricePerSeat": "Preis pro Nutzer:",
+      "nbSeat": "Anzahl der Nutzer:",
+      "subTotal": "Zwischensumme",
+      "total": "Gesamt",
+      "totalWithVAT": "Gesamt (MwSt. {{percentage}}% / {{amount}}€)",
+      "pricePerMonth": "{{price}} €/Monat",
+      "promotionPlaceholder": "Aktionscode",
+      "dueNow": "Jetzt fällig",
+      "invalidPromotionCode": "Ungültiger Aktionscode",
+      "duration": "Für die ersten {{durationInMonth}} Monate, danach {{price}}€/Monat"
+    },
+    "accountTab": {
+      "billingEmail": "Abrechnungs-E-Mail",
+      "billingDetails": "Rechnungsadresse",
+      "invalidBillingDetails": "Ungültige Abrechnungsdaten",
+      "currentSubscription": "Aktuelles Abonnement",
+      "paymentMethod": "Zahlungsmethode",
+      "updateBillingEmail": "Abrechnungs-E-Mail aktualisieren",
+      "billingEmailUpdated": "Abrechnungs-E-Mail aktualisiert",
+      "billingEmailUpdateError": "Fehler beim Aktualisieren der Abrechnungs-E-Mail",
+      "updateBillingDetails": "Abrechnungsdaten aktualisieren",
+      "billingDetailsUpdated": "Abrechnungsdaten aktualisiert",
+      "billingDetailsUpdateError": "Fehler beim Aktualisieren der Abrechnungsdaten",
+      "paymentMethodUpdateError": "Fehler beim Aktualisieren der Zahlungsmethode",
+      "paymentMethodUpdated": "Zahlungsmethode aktualisiert",
+      "updatepaymentMethod": "Zahlungsmethode aktualisieren"
+    }
+  },
+  "SubscriptionInvoiceCalculationDetails": {
+    "title": "Wie wird meine Rechnung berechnet?",
+    "explaination": "Der Betrag deiner Rechnung wird folgendermaßen berechnet:",
+    "desc1": "Jedes aktive Mitglied (Mitglied mit einem Rolebase-Konto) kostet 5 Euro pro Monat",
+    "desc2": "Wenn ein aktiver Nutzer während des Monats hinzugefügt wird, wird der Betrag zwischen dem aktuellen Datum und dem Ende des Abrechnungszyklus anteilig berechnet und deiner nächsten Rechnung hinzugefügt",
+    "desc3": "Wenn ein aktiver Nutzer während des Monats gelöscht wird, wird eine Gutschrift für die im Monat verbrachte Zeit auf deine nächste Rechnung angerechnet"
+  },
+  "SubscriptionLimitsAlert": {
+    "notEnoughSeats": "Dein aktuelles Abonnement ist auf {{limit}} aktive Mitglieder begrenzt und hat nicht genügend freie Plätze.",
+    "upgradePlan": "Auf einen höheren Plan upgraden"
+  },
+  "SubscriptionPlans": {
+    "currentPlan": "Aktueller Plan",
+    "activeMember_one": "{{count}}/{{total}} aktives Mitglied",
+    "activeMember_other": "{{count}}/{{total}} aktive Mitglieder",
+    "upgradePlan": "Auf diesen Plan upgraden",
+    "downgradePlan": "Zu diesem Plan zurückkehren",
+    "selectPlan": "Diesen Plan auswählen",
+    "contactUs": "Kontaktiere uns",
+    "included": "Enthalten",
+    "upcomingInvoiceAmount": "Nächste Rechnung",
+    "drawdownOn": "Abbuchung am",
+    "paymentMethod": "Zahlungsmethode",
+    "expiresAt": "Läuft ab",
+    "card": "Karte",
+    "subscriptionExpires": "Dein Abonnement endet am",
+    "activateOnSubscriptionEnd": "Wird aktiviert, wenn das aktuelle Abonnement endet",
+    "reactivateSubscription": "Mein Abonnement reaktivieren",
+    "upcomingInvoiceHelp": "Erfahre, wie dieser Betrag monatlich berechnet wird",
+    "active": "Aktiv",
+    "unsubscribeDate": "Dein Abonnement endet am {{date}}",
+    "subscriptionResumed": "Dein Abonnement wurde fortgesetzt",
+    "noBillingAccount": "Du hast noch kein Abrechnungskonto",
+    "subscriptionSuccess": "Danke für dein Vertrauen!",
+    "subscriptionCreated": "Dein Abonnement wurde erfolgreich erstellt 😀",
+    "invoiceAvailable": "Deine Rechnung über {{amount}} € kann im Tab Rechnungen heruntergeladen werden",
+    "free": {
+      "title": "Kostenlos",
+      "desc": "Perfekt zum Ausprobieren oder für die Arbeit im kleinen Team",
+      "feature1": "Preis: 0 €",
+      "feature2": "Alle Funktionen",
+      "feature3": "Begrenzt auf 5 aktive Mitglieder"
+    },
+    "startup": {
+      "title": "Startup",
+      "desc": "Um dein gesamtes Team in die gemeinsame Governance einzubeziehen.",
+      "feature1": "Preis: 5 €/Monat/Mitglied",
+      "feature2": "Alle Funktionen",
+      "feature3": "Unbegrenzte aktive Mitglieder",
+      "feature4": "1 Std./Monat Support"
+    },
+    "business": {
+      "title": "Business",
+      "desc": "Individueller Bedarf? Kontaktiere unser Team!",
+      "feature1": "Alle Funktionen",
+      "feature2": "Unbegrenzte Mitglieder",
+      "feature3": "Bevorzugte Tipps und Support",
+      "feature4": "Individuelle Integrationen"
+    }
+  },
+  "SuperAdmin": {
+    "heading": "Administration",
+    "sidebar": {
+      "dashboard": "Dashboard",
+      "orgs": "Organisationen",
+      "users": "Benutzer",
+      "maintenance": "Wartung"
+    },
+    "dashboard": {
+      "heading": "Dashboard",
+      "totalOrgs": "Organisationen",
+      "totalUsers": "Benutzer",
+      "dau": "DAU (24h)",
+      "mau": "MAU (30d)",
+      "growth": "Wachstum",
+      "period": {
+        "30d": "30 Tage",
+        "90d": "90 Tage",
+        "1y": "1 Jahr",
+        "3y": "3 Jahre"
+      }
+    },
+    "orgs": {
+      "heading": "Organisationen",
+      "searchPlaceholder": "Organisationen suchen...",
+      "total": "Organisationen",
+      "noSubscription": "Kostenlos",
+      "columns": {
+        "name": "Name",
+        "slug": "Slug",
+        "created": "Erstellt",
+        "members": "Mitglieder",
+        "subscription": "Abonnement"
+      }
+    },
+    "users": {
+      "heading": "Benutzer",
+      "searchPlaceholder": "Benutzer suchen...",
+      "total": "Benutzer",
+      "active": "Aktiviert",
+      "disabled": "Deaktiviert",
+      "columns": {
+        "name": "Name",
+        "email": "E-Mail",
+        "created": "Erstellt",
+        "lastSeen": "Zuletzt gesehen",
+        "orgs": "Organisationen",
+        "status": "Status"
+      },
+      "impersonate": "Anmelden als"
+    },
+    "impersonation": {
+      "banner": "Angemeldet als {{name}}",
+      "stop": "Zurück zu meinem Konto"
+    },
+    "maintenance": {
+      "heading": "Wartung",
+      "searchReindex": "Suchmaschine neu indizieren",
+      "recomputeCache": "circle_participant_cache neu berechnen"
+    },
+    "pagination": {
+      "previous": "Zurück",
+      "next": "Weiter"
+    }
+  },
+  "SuperAdminPage": {
+    "heading": "Admin-Dashboard",
+    "searchReindex": "Suchmaschine neu indexieren",
+    "recomputeCircleParticipantCache": "circle_participant_cache neu berechnen"
+  },
+  "TaskContent": {
+    "headingEdit": "Aufgabe",
+    "headingCreate": "Neue Aufgabe",
+    "titlePlaceholder": "Zu erreichendes Ergebnis...",
+    "circle": "Rolle",
+    "memberId": "Zugewiesenes Mitglied",
+    "dueDate": "Frist",
+    "description": "Beschreibung",
+    "notes": "Notizen, Links...",
+    "privateTooltip": "Private Aufgabe: Nur Teilnehmende von {{role}} und das zugewiesene Mitglied können die Aufgabe sehen und bearbeiten.",
+    "private": "Private Aufgabe",
+    "privateHelp": "Nur Teilnehmende von {{role}} und das zugewiesene Mitglied können die Aufgabe sehen und bearbeiten.",
+    "privateNotAllowed": "Du musst zu den Teilnehmenden von {{role}} gehören oder der Aufgabe zugewiesen sein, um sie privat zu machen."
+  },
+  "TaskDeleteModal": {
+    "heading": "Aufgabe löschen",
+    "info": "Bist du sicher, dass du die Aufgabe <b>{{name}}</b> löschen willst?"
+  },
+  "TaskItem": {
+    "open": "Aufgabe öffnen"
+  },
+  "TasksKanban": {
+    "createTask": "Aufgabe hinzufügen",
+    "showDoneTasks": "Erledigte Aufgaben anzeigen"
+  },
+  "TasksList": {
+    "empty": "Keine Aufgabe"
+  },
+  "TasksHeader": {
+    "kanban": "Kanban",
+    "list": "Liste"
+  },
+  "TasksPage": {
+    "heading": "Aufgaben",
+    "create": "Neue Aufgabe"
+  },
+  "TextError": {
+    "auth/invalid-email": "Ungültige E-Mail-Adresse.",
+    "auth/user-disabled": "Dein Konto ist deaktiviert.",
+    "auth/user-not-found": "Zu dieser Adresse gibt es kein Konto.",
+    "auth/wrong-password": "Falsches Passwort.",
+    "auth/email-already-in-use": "Diese E-Mail-Adresse wird bereits verwendet.",
+    "auth/weak-password": "Dieses Passwort ist zu schwach. Bitte wähle ein längeres."
+  },
+  "ThemeSwitch": {
+    "tooltip": "Helles/dunkles Design"
+  },
+  "ThreadActivities": {
+    "emptyTitle": "Diskussion erstellt",
+    "emptyDescription": "Du kannst eine erste Nachricht senden 👇"
+  },
+  "ThreadActivityCreate": {
+    "archived": "Diese Diskussion wurde gelöscht. Du kannst sie über das Menü oben rechts wiederherstellen.",
+    "placeholder": "Nachricht...",
+    "poll": "Umfrage",
+    "proposal": "Vorschlag"
+  },
+  "ProposalModal": {
+    "headingCreate": "Neuer Vorschlag",
+    "headingEdit": "Vorschlag bearbeiten",
+    "title": "Titel der Entscheidung",
+    "titlePlaceholder": "Was wird entschieden",
+    "circleRequired": "Bitte wähle eine Rolle",
+    "description": "Beschreibung",
+    "orgChart": "Änderungen am Organigramm",
+    "editOrgChart": "Organigramm bearbeiten",
+    "decisionMode": "Entscheidungsmodus",
+    "decisionMode_consent": "Zustimmung",
+    "decisionMode_unanimity": "Einstimmigkeit",
+    "decisionMode_simpleMajority": "Einfache Mehrheit",
+    "decisionMode_absoluteMajority": "Absolute Mehrheit",
+    "voters": "Wer darf wählen",
+    "voters_thread": "Teilnehmer der Diskussion",
+    "voters_circle": "Teilnehmer der Rolle",
+    "allowAbstain": "Enthaltung erlauben",
+    "showVoters": "Bei der Entscheidung offenlegen, wer was gewählt hat",
+    "resolution": "Beschluss",
+    "earlyResolution": "Frühzeitig beschließen, wenn das Ergebnis sicher ist",
+    "hasResolutionDate": "Eine Frist für den Beschluss festlegen"
+  },
+  "ProposalGraphEditor": {
+    "heading": "Organigramm bearbeiten",
+    "headingView": "Geändertes Organigramm",
+    "subtitle": "Diese Änderungen werden mit dem Vorschlag gespeichert und erst nach seiner Annahme auf das Organigramm angewendet.",
+    "done": "Bestätigen",
+    "selectCircle": "Wähle eine Rolle zum Bearbeiten.",
+    "viewCircle": "Wähle eine Rolle zum Anzeigen.",
+    "changes": "Änderungen"
+  },
+  "GraphShortcuts": {
+    "button": "Tastenkürzel",
+    "heading": "Organigramm-Tastenkürzel",
+    "zoom_label": "Zoom",
+    "zoom_desc": "Scrolle mit dem Mausrad nach oben oder unten (oder zoome mit zwei Fingern auf dem Trackpad).",
+    "zoomScroll_desc": "Halte Ctrl (⌘ auf dem Mac) gedrückt und scrolle mit dem Mausrad, oder zoome mit zwei Fingern.",
+    "pan_label": "Ansicht verschieben",
+    "pan_desc": "Ziehe den leeren Hintergrund, um das Organigramm zu verschieben.",
+    "open_label": "Rolle öffnen",
+    "open_desc": "Klicke auf eine Rolle, um sie im Seitenpanel anzusehen und zu bearbeiten.",
+    "moveRole_label": "Rolle verschieben",
+    "moveRole_desc": "Ziehe die Rolle und lege sie auf einer anderen Rolle ab.",
+    "copyRole_label": "Rolle kopieren",
+    "copyRole_desc": "Halte Shift gedrückt und ziehe die Rolle auf eine andere Rolle.",
+    "moveMember_label": "Mitglied verschieben",
+    "moveMember_desc": "Ziehe das Mitglied und lege es auf einer anderen Rolle ab.",
+    "addMember_label": "Mitglied kopieren",
+    "addMember_desc": "Halte Shift gedrückt und ziehe das Mitglied auf eine andere Rolle."
+  },
+  "ProposalLogList": {
+    "empty": "Noch keine Änderungen.",
+    "error": "Diese Änderung kann nicht angewendet werden. Entferne sie, damit der Vorschlag wieder gültig ist.",
+    "viewDiff": "Änderungen anzeigen"
+  },
+  "ProposalLogDiffModal": {
+    "heading": "Änderungen"
+  },
+  "ProposalLog": {
+    "CircleCreate": "Rolle <circle/> in <parentCircle/> erstellen",
+    "CircleMove": "Rolle <circle/> nach <parentCircle/> verschieben",
+    "CircleCopy": "Rolle <circle/> nach <parentCircle/> kopieren",
+    "CircleArchive": "Rolle <circle/> archivieren",
+    "CircleMemberAdd": "<member/> zu Rolle <circle/> hinzufügen",
+    "CircleMemberRemove": "<member/> aus Rolle <circle/> entfernen",
+    "CircleLinkAdd": "Rolle <invitedCircle/> in <circle/> einladen",
+    "CircleLinkRemove": "Einladung der Rolle <invitedCircle/> aus <circle/> entfernen",
+    "RoleUpdate": "Rolle <role/> bearbeiten"
+  },
+  "ThreadActivityProposal": {
+    "intro": "schlägt vor, diese Entscheidung zu treffen:",
+    "cannotVote_thread": "Nur die Teilnehmenden dieser Diskussion können über diesen Vorschlag abstimmen.",
+    "cannotVote_circle": "Nur die Teilnehmenden dieser Rolle können über diesen Vorschlag abstimmen.",
+    "voteProgress": "{{count}}/{{total}} abgestimmt",
+    "viewOrgChart": "Geändertes Organigramm ansehen",
+    "voteMode_consent": "Konsent-Abstimmung",
+    "voteMode_unanimity": "Einstimmige Abstimmung",
+    "voteMode_simpleMajority": "Einfache Mehrheit",
+    "voteMode_absoluteMajority": "Absolute Mehrheit",
+    "approve": "Ich stimme zu",
+    "consent": "Ich gebe Konsent",
+    "object": "Ich erhebe Einwand",
+    "oppose": "Ich bin dagegen",
+    "abstain": "Ich enthalte mich",
+    "resolve": "Auflösen",
+    "resolveNow": "Jetzt auflösen",
+    "recreate": "Neu erstellen",
+    "viewDecision": "Gespeicherte Entscheidung ansehen",
+    "manage": "Verwalten",
+    "remind": "Zum Abstimmen erinnern",
+    "cancel": "Abbrechen",
+    "cancelAndDuplicate": "Abbrechen und neu erstellen",
+    "status_inProgress": "Läuft",
+    "status_approved": "Angenommen",
+    "status_refused": "Abgelehnt",
+    "status_canceled": "Abgebrochen",
+    "applyError": "Die Änderungen am Organigramm konnten nicht angewendet werden (eine Entität existiert nicht mehr)."
+  },
+  "ProposalScrollButton": {
+    "label": "Vorschlag in Bearbeitung"
+  },
+  "ProposalCancelModal": {
+    "heading": "Vorschlag abbrechen",
+    "info": "Dieser Vorschlag wird abgebrochen. Diese Aktion kann nicht rückgängig gemacht werden.",
+    "confirm": "Vorschlag abbrechen",
+    "headingDuplicate": "Abbrechen und duplizieren",
+    "infoDuplicate": "Dieser Vorschlag wird abgebrochen und eine neue bearbeitbare Kopie wird geöffnet.",
+    "confirmDuplicate": "Abbrechen und duplizieren",
+    "dismiss": "Vorschlag behalten"
+  },
+  "ProposalResolveModal": {
+    "heading": "Vorschlag entscheiden",
+    "mode": "Entscheidungsmodus:",
+    "votes": "{{approve}} dafür und {{object}} dagegen, von {{total}} Abstimmenden.",
+    "outcomeApproved": "Basierend auf den aktuellen Stimmen wird der Vorschlag angenommen.",
+    "outcomeRefused": "Basierend auf den aktuellen Stimmen wird der Vorschlag abgelehnt.",
+    "applyNote": "Die vorbereiteten Organigramm-Änderungen werden angewendet und eine Entscheidung wird festgehalten.",
+    "confirm": "Entscheiden"
+  },
+  "ThreadActivityProposalEvent": {
+    "proposal": "Vorschlag",
+    "canceled": "hat den Vorschlag <proposal>{{title}}</proposal> abgebrochen",
+    "voteReminder": "erinnert an die Abstimmung über den Vorschlag <proposal>{{title}}</proposal>",
+    "result_approved": "Der Vorschlag <proposal>{{title}}</proposal> wurde angenommen:",
+    "result_refused": "Der Vorschlag <proposal>{{title}}</proposal> wurde abgelehnt:",
+    "yes": "Ja",
+    "no": "Nein",
+    "abstain": "Enthaltung"
+  },
+  "ProposalVotersModal": {
+    "heading": "Abstimmende",
+    "tab_all": "Alle",
+    "tab_approve": "Ja",
+    "tab_object": "Nein",
+    "tab_abstain": "Enthaltung",
+    "empty": "Keine Abstimmenden"
+  },
+  "ThreadActivityDecision": {
+    "text": "hat eine Entscheidung erstellt:",
+    "notAllowed": "Du hast keinen Zugriff auf diese Entscheidung."
+  },
+  "ThreadActivityMeeting": {
+    "text": "hat ein Meeting erstellt:",
+    "notAllowed": "Du hast keinen Zugriff auf dieses Meeting."
+  },
+  "ThreadActivityMeetingNote": {
+    "title": "Meeting-Notizen"
+  },
+  "ThreadActivityPoll": {
+    "text": "hat eine Umfrage erstellt",
+    "showResults": "Ergebnisse anzeigen",
+    "changeVote": "Meine Stimme ändern"
+  },
+  "ThreadActivityPollResult": {
+    "anonymous": "Anonym"
+  },
+  "ThreadActivityPollVote": {
+    "chooseN_one": "Wähle {{count}} Option.",
+    "chooseN_other": "Wähle {{count}} Optionen.",
+    "chooseMin_one": "Wähle mindestens {{count}} Option.",
+    "chooseMin_other": "Wähle mindestens {{count}} Optionen.",
+    "chooseMax_one": "Maximal {{count}} Option.",
+    "chooseMax_other": "Maximal {{count}} Optionen.",
+    "chooseMinAndMax": "Wähle zwischen {{min}} und {{max}} Optionen.",
+    "chooseMultiple": "Mehrere Antworten möglich.",
+    "anonymous": "Die Antworten sind anonym.",
+    "pointsDistributed": "Du hast alle deine Punkte verteilt.",
+    "pointsRemaining_one": "Du hast noch {{count}} Punkt zu verteilen",
+    "pointsRemaining_other": "Du hast noch {{count}} Punkte zu verteilen",
+    "pointsExceeded_one": "Du hast {{count}} Punkt zu viel verteilt",
+    "pointsExceeded_other": "Du hast {{count}} Punkte zu viel verteilt",
+    "vote": "Abstimmen",
+    "revealLater": "Die Ergebnisse werden später bekannt gegeben.",
+    "revealAllVoted": "Die Ergebnisse werden bekannt gegeben, sobald alle Teilnehmenden abgestimmt haben.",
+    "revealDate": "Die Ergebnisse werden am {{date}} bekannt gegeben.",
+    "revealDateOrAllVoted": "Die Ergebnisse werden am {{date}} oder bekannt gegeben, sobald alle Teilnehmenden abgestimmt haben.",
+    "chooseMax": "Höchstens {{count}} Auswahl.",
+    "chooseMin": "Wähle mindestens {{count}} Auswahl.",
+    "chooseN": "Wähle {{count}} Auswahl."
+  },
+  "ThreadActivityTask": {
+    "text": "hat eine Aufgabe erstellt:",
+    "notAllowed": "Du hast keinen Zugriff auf diese Aufgabe."
+  },
+  "ThreadActivityThread": {
+    "text": "hat eine Diskussion erstellt:",
+    "notAllowed": "Du hast keinen Zugriff auf diese Diskussion."
+  },
+  "ThreadContent": {
+    "private": "Private Diskussion: Nur Teilnehmende von {{role}} und zusätzliche Gäste können die Diskussion sehen.",
+    "pin": "Für alle anpinnen",
+    "unpin": "Loslösen",
+    "pinned": "Angepinnt"
+  },
+  "ThreadEditModal": {
+    "headingEdit": "Diskussionseinstellungen",
+    "headingCreate": "Neue Diskussion",
+    "title": "Titel",
+    "titlePlaceholder": "Worüber diskutieren wir?...",
+    "status": "Status",
+    "private": "Private Diskussion",
+    "privateHelp": "Nur Teilnehmer von {{role}} und zusätzliche Gäste können die Diskussion sehen.",
+    "privateNotAllowed": "Du musst Teilnehmer von {{role}} sein oder zur Diskussion eingeladen werden, um sie privat zu machen."
+  },
+  "ThreadItem": {
+    "open": "Diskussion öffnen"
+  },
+  "ThreadsList": {
+    "empty": "Keine Diskussion."
+  },
+  "ThreadsPage": {
+    "heading": "Diskussionen",
+    "create": "Neue Diskussion"
+  },
+  "VacantRolesPanel": {
+    "heading": "Unbesetzte Rollen",
+    "empty": "Keine unbesetzten Rollen 🎉"
+  },
+  "VerifyEmailModal": {
+    "heading": "Bestätige deine E-Mail-Adresse",
+    "text": "Du solltest eine E-Mail erhalten haben (prüfe deinen Spam-Ordner). Klicke auf den Link in der E-Mail, um deine Adresse zu bestätigen 🙏",
+    "resend": "Neuen Link per E-Mail erhalten"
+  },
+  "VideoConfFormControl": {
+    "enable": "Videokonferenz",
+    "jitsi": "Jitsi",
+    "url": "URL (Meet, Zoom, Teams usw.)",
+    "urlError": "Ungültige URL"
+  },
+  "common": {
+    "save": "Speichern",
+    "create": "Erstellen",
+    "add": "Hinzufügen",
+    "send": "Senden",
+    "open": "Öffnen",
+    "skip": "Überspringen",
+    "confirm": "Bestätigen",
+    "createThread": "Diskussion",
+    "createMeeting": "Meeting",
+    "createTask": "Aufgabe",
+    "createDecision": "Entscheidung",
+    "close": "Schließen",
+    "edit": "Bearbeiten",
+    "move": "Verschieben",
+    "apply": "Anwenden",
+    "duplicate": "Duplizieren",
+    "export": "Exportieren (PNG)",
+    "makeBaseRole": "In eine Basisrolle umwandeln",
+    "separateBaseRole": "Von der Basisrolle trennen",
+    "archive": "Archivieren",
+    "unarchive": "Wiederherstellen",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "remove": "Entfernen",
+    "clear": "Leeren",
+    "show": "Anzeigen",
+    "hide": "Ausblenden",
+    "seeMore": "Mehr anzeigen",
+    "seeLess": "Weniger anzeigen",
+    "markUnread": "Als ungelesen markieren",
+    "filters": "Filter",
+    "archives": "Archiv",
+    "archived": "Archiviert",
+    "memberDisabled": "Deaktiviertes Mitglied",
+    "error": "Fehler",
+    "name": "Name",
+    "copy": "Kopieren",
+    "copyLink": "Link kopieren",
+    "toastCopied": "URL kopiert",
+    "none": "Keine",
+    "you": "Du",
+    "errorOccurred": "Ein Fehler ist aufgetreten.",
+    "errorRetry": "Ein Fehler ist aufgetreten. Bitte versuche es später erneut.",
+    "errorContact": "Falls das Problem bleibt, kontaktiere uns unter contact@rolebase.io",
+    "emptyParagraphPlaceholder": "Drücke '/' für Befehle …",
+    "termsAndPrivacy": "die <a href=\"/en/terms\">Allgemeinen Geschäftsbedingungen</a> und die <a href=\"/en/privacy\">Datenschutzerklärung</a>",
+    "dates": {
+      "today": "Heute",
+      "tomorrow": "Morgen",
+      "dateHourSeparator": " um "
+    },
+    "searchTypes": {
+      "All": "Alles",
+      "Member": "Mitglieder",
+      "Circle": "Rollen",
+      "Thread": "Diskussionen",
+      "Meeting": "Meetings",
+      "Task": "Aufgaben",
+      "Decision": "Entscheidungen"
+    },
+    "meetingSteps": {
+      "Tour": "Freie Notiz",
+      "Tour_desc": "Für eine freie Diskussion oder eine Runde am Tisch. Du kannst Notizen machen.",
+      "Threads": "Diskussionen",
+      "Threads_desc": "Um die Diskussionen zur Rolle durchzugehen. Ideal als Agenda. Du kannst zu jeder ausgewählten Diskussion Notizen machen.",
+      "Checklist": "Checkliste",
+      "Checklist_desc": "Um die wiederkehrenden Aktionen der Rolle durchzugehen. Die Checkliste der Rolle wird beim Erstellen des Meetings automatisch in die Notiz aufgenommen.",
+      "Indicators": "Indikatoren",
+      "Indicators_desc": "Um die Indikatoren der Rolle durchzugehen. Die Indikatoren der Rolle werden beim Erstellen des Meetings automatisch in die Notiz aufgenommen.",
+      "Tasks": "Aufgaben",
+      "Tasks_desc": "Um die Aufgaben der Rolle durchzugehen und die nächsten Schritte vorzubereiten."
+    },
+    "taskStatus": {
+      "Open": "Zu erledigen",
+      "InProgress": "In Arbeit",
+      "InReview": "In Prüfung",
+      "Blocked": "Blockiert",
+      "Done": "Erledigt",
+      "NotDone": "Nicht erledigt"
+    },
+    "threadStatus": {
+      "Preparation": "In Vorbereitung",
+      "Active": "In Arbeit",
+      "Blocked": "Blockiert",
+      "Closed": "Erledigt",
+      "NotClosed": "Nicht erledigt"
+    },
+    "back": "Zurück",
+    "next": "Weiter",
+    "continue": "Weiter"
+  },
+  "useCirclePicker": {
+    "pickCircle": "Im Organigramm auswählen"
+  },
+  "useCreateTask": {
+    "toast": "Aufgabe erstellt!"
+  },
+  "useSearch": {
+    "create": "\"{{name}}\" erstellen"
+  },
+  "useUpdateTaskStatus": {
+    "toast": "Aufgabe als \"{{status}}\" markiert"
+  },
+  "ImportPage": {
+    "title": "Eine Organisation importieren.",
+    "provider": {
+      "heading": "Eine Organisation importieren von...",
+      "text": "Woher stammen deine Daten?",
+      "other": "Andere App",
+      "otherName": "Name der App oder des Formats",
+      "otherSubmit": "Weiter"
+    },
+    "upload": {
+      "button": "Datei zum Importieren auswählen",
+      "heading": "Import von {{provider}}",
+      "terms": "Ich bestätige, dass die Daten mir gehören und dass ich berechtigt bin, sie zu importieren.",
+      "text-Holaspirit": "Exportiere deine Organisation aus Holaspirit (<a href=\"https://help.holaspirit.com/en/article/export-your-organizations-data-as-an-admin-uarmx4/\">Wie? \n</a>),<br />und wähle dann die resultierende Datei auf deiner Festplatte aus."
+    },
+    "loading": {
+      "text": "Deine Organisation wird erstellt.",
+      "heading": "Import läuft"
+    },
+    "success": {
+      "heading": "Deine Organisation ist bereit 🎉",
+      "text": "",
+      "button": "Meine Organisation öffnen"
+    },
+    "error": {
+      "heading": "Ein Fehler ist aufgetreten",
+      "text": "Eine Nachricht wurde an den Support gesendet."
+    },
+    "unknown": {
+      "heading": "Datei nicht unterstützt, aber wir können dir helfen",
+      "text": "Das Format deiner Datei wird derzeit von unserem Importsystem nicht unterstützt. \nEine Anfrage wurde an den Support gesendet, um dir innerhalb von 12 Stunden zu helfen."
+    }
+  },
+  "OrgSetupModal": {
+    "model": {
+      "heading": "Wer trifft Entscheidungen in deinen Teams?",
+      "subheading": "Wir erstellen die Basisrollen und Meeting-Vorlagen, die zu deiner Arbeitsweise passen.",
+      "editable": "Diese Auswahl ist nur ein Ausgangspunkt: Du kannst die Basisrollen und Meeting-Vorlagen jederzeit ändern, wenn sich deine Organisation weiterentwickelt.",
+      "baseRoles": "Basisrollen: {{roles}}",
+      "meetingTemplates": "Meeting-Vorlagen: {{templates}}",
+      "v4": "Folgt ihr der Holacracy-v4-Verfassung?",
+      "options": {
+        "Classic": "Ein Manager entscheidet für sein Team",
+        "Sociocracy": "Das Team entscheidet gemeinsam, mit gewählten Rollen",
+        "HolacracyV5": "Wir praktizieren bereits Holacracy",
+        "HolacracyV4": "Wir praktizieren Holacracy, Verfassung v4"
+      }
+    },
+    "roles": {
+      "heading": "Was sind die wichtigsten Rollen und Teams?",
+      "help": "In Rolebase ist eine Rolle eine organisatorische Einheit, die von einer Person oder einem Team ausgefüllt werden kann. Füge die wichtigsten Rollen und Teams von {{orgName}} hinzu, und wer sie leitet, falls du es weißt. Du kannst später alles ändern.",
+      "addHeading": "Rolle hinzufügen",
+      "customPlaceholder": "Oder gib einen Rollennamen ein..."
+    },
+    "participants": "Weitere Teilnehmende",
+    "holder": "Besetzt von",
+    "invite": {
+      "heading": "Lade dein Team ein",
+      "help": "Jede eingeladene Person erhält eine E-Mail, um der Organisation beizutreten. Lass die leer, die du lieber später einlädst.",
+      "emailLabel": "E-Mail von {{name}}",
+      "newEmailLabel": "E-Mail der einzuladenden Person",
+      "add": "Person hinzufügen",
+      "pricing": "Die ersten 5 Konten sind kostenlos. Danach 5 € pro Monat pro Konto. Mitglieder ohne Konto sind unbegrenzt.",
+      "limitReached_one": "Dein Plan umfasst {{count}} Einladung zusätzlich zu deinem eigenen Konto. Du kannst die anderen Mitglieder einladen, indem du nach Abschluss der Einrichtung auf einen höheren Plan upgradest.",
+      "limitReached_other": "Dein Plan umfasst {{count}} Einladungen zusätzlich zu deinem eigenen Konto. Du kannst die anderen Mitglieder einladen, indem du nach Abschluss der Einrichtung auf einen höheren Plan upgradest.",
+      "later": "Später",
+      "send_one": "Einladung senden",
+      "send_other": "{{count}} Einladungen senden",
+      "partialError_one": "{{count}} Einladung konnte nicht gesendet werden. Versuche es erneut über Erste Schritte.",
+      "partialError_other": "{{count}} Einladungen konnten nicht gesendet werden. Versuche es erneut über Erste Schritte."
+    },
+    "ready": "Dein Organigramm ist bereit"
+  },
+  "OnboardingTodo": {
+    "title": "Erste Schritte",
+    "expand": "Erste Schritte ausklappen",
+    "collapse": "Erste Schritte einklappen",
+    "menu": "Optionen für erste Schritte",
+    "dismiss": "Dauerhaft ausblenden",
+    "bookDemo": "Kostenlose Demo buchen",
+    "items": {
+      "orgChart": "Organigramm erstellen",
+      "invite": "Team einladen",
+      "recurringMeeting": "Wiederkehrendes Meeting planen",
+      "photos": "Fotos von Mitgliedern hinzufügen",
+      "meeting": "Erstes Meeting abhalten",
+      "thread": "Erste Diskussion eröffnen"
+    }
+  },
+  "Onboarding": {
+    "finish": "Abschließen",
+    "orgName": {
+      "heading": "Erstelle deine Organisation",
+      "defaultName": "{{name}}s Organisation",
+      "joinTeam": "Dein Team nutzt Rolebase bereits? Bitte einen Administrator, {{email}} einzuladen. Du kannst der Organisation direkt hier beitreten, sobald die Einladung versendet wurde."
+    },
+    "roles": {
+      "manager": {
+        "name": "Manager",
+        "purpose": "Führe das Team zu seinen Zielen.",
+        "domain": "Organisation der Arbeit des Teams",
+        "accountabilities": "- Ziele und Prioritäten des Teams festlegen\n- Arbeit organisieren und Verantwortlichkeiten zuweisen\n- Teammitglieder unterstützen und entwickeln"
+      },
+      "representative": {
+        "name": "Vertreter",
+        "purpose": "Vertritt das Team gegenüber der gesamten Organisation.",
+        "domain": "",
+        "accountabilities": "- Bedürfnisse und Feedback des Teams nach oben weitergeben\n- Entscheidungen zurück ins Team bringen"
+      },
+      "circleLead": {
+        "name": "Leader",
+        "purpose": "Verantwortet den übergreifenden Zweck der Rolle.",
+        "domain": "Rollenzuweisungen innerhalb der Rolle",
+        "accountabilities": "- Mitglieder den Rollen der Rolle zuweisen\n- Strategien zur Priorisierung festlegen\n- Den relativen Wert von Aufwänden zur Lösung von Prioritätskonflikten beurteilen\n- Zweck und Verantwortlichkeiten übernehmen, die nicht von anderen Rollen abgedeckt sind"
+      },
+      "circleRep": {
+        "name": "Vertreter",
+        "purpose": "Die Spannungen, die diese Rolle betreffen, an die übergeordnete Rolle weiterleiten und dort lösen.",
+        "domain": "",
+        "accountabilities": "- Von den Mitgliedern der Rolle übermittelte Spannungen verstehen\n- Erkennen, welche davon in die übergeordnete Rolle gehören\n- Diese Spannungen in der übergeordneten Rolle bearbeiten, um Einschränkungen der Rolle zu beseitigen"
+      },
+      "leadLink": {
+        "name": "Lead Link",
+        "purpose": "Den übergeordneten Zweck der Rolle innehaben und ausdrücken.",
+        "domain": "Die Domänen der Rolle",
+        "accountabilities": "- Mitglieder Rollen zuweisen und Zuweisungen entfernen\n- Regelmäßig die Passung von Rollen bewerten und Feedback geben\n- Prioritäten und Strategien der Rolle festlegen\n- Blockaden für den Zweck der Rolle erkennen und beseitigen"
+      },
+      "repLink": {
+        "name": "Rep Link",
+        "purpose": "Spannungen aus den Rollen der Rolle bearbeiten und an die übergeordnete Rolle weiterleiten.",
+        "domain": "",
+        "accountabilities": "- Spannungen der Mitglieder der Rolle verstehen\n- Zunächst versuchen, sie innerhalb der Rolle zu lösen\n- Ungelöste Spannungen über Governance an die übergeordnete Rolle weiterleiten"
+      },
+      "leader": {
+        "name": "Leader",
+        "purpose": "Die operativen Aktivitäten der Rolle koordinieren, um ihr Ziel zu erreichen.",
+        "domain": "Das Tagesgeschäft der Rolle",
+        "accountabilities": "- Die Arbeit der Rolle koordinieren (was, von wem, wie es zusammenpasst)\n- Operative Entscheidungen im Rahmen der Richtlinien treffen\n- Die Perspektive der übergeordneten Rolle in die Rolle tragen (Top-down-Link)"
+      },
+      "delegate": {
+        "name": "Delegierter",
+        "purpose": "Die Rolle in der übergeordneten Rolle vertreten.",
+        "domain": "",
+        "accountabilities": "- Der übergeordneten Rolle mitteilen, was kommuniziert werden muss (Bottom-up-Link)\n- An den Entscheidungen der übergeordneten Rolle teilnehmen"
+      },
+      "secretary": {
+        "name": "Sekretär",
+        "purpose": "Die Aufzeichnungen und den Meeting-Rhythmus der Rolle stabilisieren.",
+        "domain": "Die Aufzeichnungen der Rolle (Governance- und Meeting-Notizen)",
+        "accountabilities": "- Meetings der Rolle planen\n- Meeting-Notizen und Entscheidungen erfassen und veröffentlichen\n- Governance-Aufzeichnungen aktuell halten"
+      },
+      "facilitator": {
+        "name": "Moderator",
+        "purpose": "Sicherstellen, dass Meetings gut ablaufen und der Entscheidungsprozess eingehalten wird.",
+        "domain": "",
+        "accountabilities": "- Die Governance- und operativen Meetings der Rolle moderieren\n- Die Agenda vorbereiten und den Entscheidungsprozess leiten\n- Wahlen für die gewählten Rollen der Rolle auslösen"
+      }
+    },
+    "meetings": {
+      "teamWeekly": "Wöchentliches Team-Meeting",
+      "retrospective": "Monatliche Retrospektive",
+      "tactical": "Taktisches Meeting",
+      "governance": "Governance-Meeting",
+      "operational": "Operatives Meeting",
+      "policy": "Richtlinien-Meeting"
+    },
+    "role": {
+      "heading": "Was ist deine Rolle?"
+    },
+    "objective": {
+      "heading": "Was möchtest du mit Rolebase erreichen?"
+    },
+    "source": {
+      "heading": "Wie hast du von Rolebase erfahren?"
+    },
+    "otherPlaceholder": "Bitte angeben...",
+    "options": {
+      "role": {
+        "executive": "Geschäftsführung",
+        "manager": "Manager",
+        "hr": "Personalwesen",
+        "coach": "Coach / Berater",
+        "operations": "Betrieb",
+        "other": "Sonstiges"
+      },
+      "objective": {
+        "clarify_roles": "Rollen und Verantwortlichkeiten klären",
+        "structure_org": "Die Organisation strukturieren",
+        "governance": "Governance einrichten",
+        "meetings": "Meetings verbessern",
+        "collaboration": "Zusammenarbeit verbessern",
+        "other": "Sonstiges"
+      },
+      "source": {
+        "search": "Suchmaschine",
+        "social": "Soziale Medien",
+        "word_of_mouth": "Mundpropaganda",
+        "blog": "Blogbeitrag",
+        "ai": "KI-Assistent",
+        "event": "Event oder Konferenz",
+        "other": "Sonstiges"
+      }
+    },
+    "roleExamples": {
+      "direction": "Management",
+      "tech": "Technik",
+      "production": "Produktion",
+      "product": "Produkt",
+      "business": "Business",
+      "marketing": "Marketing",
+      "sales": "Vertrieb",
+      "admin": "Verwaltung",
+      "finance": "Finanzen",
+      "hr": "Personalwesen"
+    }
+  }
+}

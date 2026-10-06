@@ -2,16 +2,19 @@ import { MenuDivider, MenuItem, MenuList } from '@chakra-ui/react'
 import { Crisp } from 'crisp-sdk-web'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { langs } from 'src/i18n'
 import { FileIcon, HelpIcon } from 'src/icons'
 import settings from 'src/settings'
+
+// Languages the website documentation is actually translated into. The
+// webapp may ship more locales than the website, so fall back to English.
+const docsLangs = ['en', 'fr']
 
 export default function HelpMenuList() {
   const { t, i18n } = useTranslation()
 
   // Documentation is on the website, in the user's language
   const lang = i18n.language.split('-')[0]
-  const docsLang = langs.includes(lang as (typeof langs)[number]) ? lang : 'en'
+  const docsLang = docsLangs.includes(lang) ? lang : 'en'
 
   const handleContact = () => {
     if (Crisp.chat.isVisible()) {

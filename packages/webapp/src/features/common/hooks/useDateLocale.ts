@@ -1,11 +1,12 @@
 import { Locale } from 'date-fns'
-import { enUS, fr } from 'date-fns/locale'
+import { de, enUS, fr } from 'date-fns/locale'
 import { useTranslation } from 'react-i18next'
 import { locales } from 'src/i18n'
 
 const dateLocales: Record<keyof typeof locales, Locale> = {
   fr,
   en: enUS,
+  de,
 }
 
 export default function useDateLocale(): Locale {

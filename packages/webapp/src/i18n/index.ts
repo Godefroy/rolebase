@@ -1,6 +1,7 @@
 import i18n from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import { initReactI18next } from 'react-i18next'
+import de from './locales/de.json'
 import en from './locales/en.json'
 import fr from './locales/fr.json'
 
@@ -16,6 +17,11 @@ const resources = {
     name: 'English',
     emoji: '🇬🇧',
     translation: en,
+  },
+  de: {
+    name: 'Deutsch',
+    emoji: '🇩🇪',
+    translation: de,
   },
 }
 
@@ -34,6 +40,13 @@ i18n
   .init({
     defaultNS,
     resources,
+    // Fall back to English for any language we don't ship, and treat
+    // region-qualified codes (en-US, fr-CA, …) as their base language.
+    // Without `fallbackLng`, i18next returns the raw key (e.g. "OtpForm.heading").
+    fallbackLng: 'en',
+    supportedLngs: ['en', 'fr', 'de'],
+    nonExplicitSupportedLngs: true,
+    load: 'languageOnly',
     interpolation: {
       escapeValue: false,
     },

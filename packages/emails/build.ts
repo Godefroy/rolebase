@@ -19,7 +19,7 @@ const types = [
   'signin-otp',
 ]
 
-const langs = ['fr', 'en']
+const langs = ['fr', 'en', 'de']
 
 async function build() {
   for (const lang of langs) {

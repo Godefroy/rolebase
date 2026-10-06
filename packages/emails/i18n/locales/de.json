@@ -1,0 +1,91 @@
+{
+  "NhostEmail": {
+    "email-confirm-change": {
+      "subject": "Bestätige deine E-Mail-Änderung",
+      "title": "E-Mail-Adresse ändern",
+      "description": "Du hast beantragt, die E-Mail-Adresse für dein Rolebase-Konto zu ändern. Falls du das nicht angefordert hast, ignoriere diese Nachricht.",
+      "cta": "E-Mail-Änderung bestätigen"
+    },
+    "email-verify": {
+      "subject": "Bestätige deine E-Mail-Adresse",
+      "title": "Willkommen bei Rolebase!",
+      "description": "Um dein Konto zu bestätigen, klicke bitte auf den Button unten.",
+      "cta": "Meine E-Mail-Adresse bestätigen"
+    },
+    "password-reset": {
+      "subject": "Setze dein Passwort zurück",
+      "title": "Passwort ändern",
+      "description": "Du hast beantragt, dein Passwort zurückzusetzen. Falls du das nicht angefordert hast, ignoriere diese Nachricht.",
+      "cta": "Mein Passwort ändern"
+    },
+    "signin-passwordless": {
+      "subject": "Sicherer Anmeldelink",
+      "title": "Bei Rolebase anmelden",
+      "description": "Klicke auf diesen einmaligen Link, um dich bei deinem Rolebase-Konto anzumelden.",
+      "cta": "Anmelden"
+    },
+    "signin-otp": {
+      "subject": "Dein Rolebase-Anmeldecode: ${ticket}",
+      "title": "Bei Rolebase anmelden",
+      "description": "Um dich bei deinem Rolebase-Konto anzumelden, gib bitte den Code unten ein.",
+      "hint": "Gehe zurück zum Rolebase-Tab und gib diesen Code ein. Er ersetzt jeden zuvor gesendeten Code."
+    }
+  },
+  "Meeting": {
+    "subject": "Meeting gestartet: {{title}} - {{role}}",
+    "title": "Meeting {{title}} - {{role}}",
+    "preview": "Das Meeting startet jetzt 🙌",
+    "activity": "Das Meeting startet jetzt 🙌",
+    "cta": "Meeting öffnen"
+  },
+  "MemberActivity": {
+    "OrgInvitation": {
+      "subject": "Einladung zur Organisation von {{org}}",
+      "title": "Einladung zur Organisation von {{org}}",
+      "preview": "{{member}} lädt dich ein, {{org}} auf Rolebase beizutreten.",
+      "activity": "<b>{{member}}</b> lädt dich ein, <b>{{org}}</b> auf Rolebase beizutreten.",
+      "cta": "Einladung annehmen"
+    }
+  },
+  "Digest": {
+    "subject": "Letzte Aktivitäten auf Rolebase",
+    "threads": {
+      "heading": "Themen",
+      "description": "Neuigkeiten in den Themen, denen du folgst:",
+      "activities_zero": "Neues Thema!",
+      "activities_one": "{{count}} neue Nachricht",
+      "activities_other": "{{count}} neue Nachrichten"
+    },
+    "meetings": {
+      "heading": "Meetings",
+      "description": "Diese Meetings haben stattgefunden:",
+      "title": "Meeting {{title}}"
+    }
+  },
+  "OnboardingReminder": {
+    "noOrg": {
+      "subject": "Erstelle das Organigramm deines Teams",
+      "title": "Dein Rolebase-Konto ist bereit",
+      "paragraph1": "Hallo {{name}}, es fehlt nur noch deine Organisation.",
+      "paragraph2": "Gib ihr einen Namen und füge dann deine wichtigsten Rollen und die Personen hinzu, die sie ausfüllen. Das Organigramm entsteht Schritt für Schritt vor deinen Augen.",
+      "paragraph3": "Lade dann dein Team ein, damit alle sehen, wer was macht.",
+      "cta": "Meine Organisation erstellen"
+    },
+    "noSetup": {
+      "subject": "Vervollständige das Organigramm von {{org}}",
+      "title": "{{org}} ist fast bereit",
+      "paragraph1": "Hallo {{name}}, deine Organisation {{org}} ist erstellt. Es fehlt nur noch die Wahl, wie sie funktioniert, und das Hinzufügen der wichtigsten Rollen.",
+      "paragraph2": "Es dauert zwei Minuten: Das Organigramm entsteht Schritt für Schritt, und du kannst später alles ändern.",
+      "paragraph3": "Lade dann dein Team ein.",
+      "cta": "Setup abschließen"
+    },
+    "noInvite": {
+      "subject": "Zeig deinem Team das Organigramm von {{org}}",
+      "title": "Hol dein Team in {{org}}",
+      "paragraph1": "Hallo {{name}}, das Organigramm von {{org}} steht. Jetzt lade die Menschen ein, mit denen du arbeitest.",
+      "paragraph2": "Jede Kollegin und jeder Kollege, der beitritt, findet die eigenen Rollen und weiß, an wen sie sich bei welchem Thema wenden können. Danach könnt ihr gemeinsam das nächste Meeting vorbereiten.",
+      "paragraph3": "Um jemanden einzuladen, brauchst du nur die E-Mail-Adresse.",
+      "cta": "Mein Team einladen"
+    }
+  }
+}

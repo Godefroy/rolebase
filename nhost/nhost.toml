@@ -72,7 +72,7 @@ allowed = ['user', 'me']
 
 [auth.user.locale]
 default = 'en'
-allowed = ['en', 'fr']
+allowed = ['en', 'fr', 'de']
 
 [auth.user.gravatar]
 enabled = false

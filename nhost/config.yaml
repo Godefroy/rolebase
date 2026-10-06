@@ -34,7 +34,7 @@ auth:
     enabled: false
     rating: ''
   locale:
-    allowed: en
+    allowed: en, fr, de
     default: en
   password:
     hibp_enabled: false
