@@ -17,7 +17,55 @@ turndown.remove([
   'style',
   'noscript',
   'iframe',
+  'button',
 ])
+
+// Page chrome inside <main> (docs sidebar, table of contents, breadcrumb,
+// previous/next links) is a `nav`, alone or in an `aside`. An `aside` without
+// a `nav` is content (key takeaways, call to action) and stays.
+turndown.remove(
+  (node) =>
+    node.nodeName === 'NAV' ||
+    (node.nodeName === 'ASIDE' && !!node.querySelector('nav'))
+)
+
+// Fence long enough to wrap code that itself contains backtick fences.
+function fence(code: string, lang: string): string {
+  const longest = Math.max(
+    2,
+    ...(code.match(/`{3,}/g) ?? []).map((run) => run.length)
+  )
+  const marks = '`'.repeat(longest + 1)
+  return `\n\n${marks}${lang}\n${code}\n${marks}\n\n`
+}
+
+// Expressive Code renders one `<div class="ec-line">` per line, which Turndown
+// would flatten into a single paragraph. Rebuild the fenced block, with the
+// frame's file name as a lead line.
+turndown.addRule('expressiveCode', {
+  filter: (node) =>
+    node.nodeName === 'DIV' && node.classList.contains('expressive-code'),
+  replacement: (_content, node) => {
+    const element = node as HTMLElement
+    const pre = element.querySelector('pre')
+    if (!pre) return ''
+    const lines = Array.from(pre.querySelectorAll('.ec-line')).map((line) =>
+      (line.querySelector('.code') ?? line).textContent!.replace(/\n$/, '')
+    )
+    const lang = pre.getAttribute('data-language') ?? ''
+    const title = element.querySelector('figcaption .title')?.textContent
+    const code = fence(lines.join('\n'), lang === 'plaintext' ? '' : lang)
+    return title ? `\n\n\`${title}\`${code}` : code
+  },
+})
+
+// Mermaid diagrams stay as source, rendered in the browser by the site.
+turndown.addRule('mermaid', {
+  filter: (node) =>
+    node.nodeName === 'PRE' && node.classList.contains('mermaid'),
+  replacement: (_content, node) =>
+    fence(node.textContent!.replace(/\n$/, ''), 'mermaid'),
+})
 
 function decodeHtmlEntities(str: string): string {
   return str
@@ -56,6 +104,9 @@ export default function enrichMd(): AstroIntegration {
           if (!mainMatch) continue
 
           // Extract metadata from <head>
+          // The 404 pages are no content.
+          if (/(^|\/)404\.html$/.test(htmlFile)) continue
+
           const titleMatch = html.match(/<title[^>]*>([^<]*)<\/title>/)
           const descMatch = html.match(
             /<meta\s+name="description"\s+content="([^"]*)"/
@@ -73,7 +124,7 @@ export default function enrichMd(): AstroIntegration {
           // Build URL from file path
           const slug = relative(distDir, htmlPath)
             .replace(/\.html$/, '')
-            .replace(/\/index$/, '')
+            .replace(/(^|\/)index$/, '')
           const url = slug ? `${siteUrl}/${slug}` : `${siteUrl}/`
 
           // Build frontmatter
