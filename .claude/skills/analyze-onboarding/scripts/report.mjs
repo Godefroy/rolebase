@@ -187,6 +187,7 @@ show(
 
 for (const [event, prop] of [
   ['onboarding_abandoned', 'step'],
+  ['onboarding_slug_conflict', 'step'],
   ['org_setup_abandoned', 'step'],
   ['org_setup_completed', 'orgType'],
   ['org_setup_failed', 'reason'],

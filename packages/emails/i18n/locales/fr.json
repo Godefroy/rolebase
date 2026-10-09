@@ -83,6 +83,8 @@
       "subject": "Montrez l’organigramme de {{org}} à votre équipe",
       "title": "Faites entrer votre équipe dans {{org}}",
       "paragraph1": "Bonjour {{name}}, l’organigramme de {{org}} est en place. Invitez maintenant les personnes qui travaillent avec vous.",
+      "paragraph1Members_one": "Bonjour {{name}}, l’organigramme de {{org}} est en place. Vous y avez ajouté {{count}} membre qui ne le voit pas encore : invitez-le avec son adresse email.",
+      "paragraph1Members_other": "Bonjour {{name}}, l’organigramme de {{org}} est en place. Vous y avez ajouté {{count}} membres qui ne le voient pas encore : invitez-les avec leur adresse email.",
       "paragraph2": "Chaque collègue qui rejoint l’organisation retrouve ses rôles et sait à qui s’adresser pour chaque sujet. Vous pouvez ensuite préparer la prochaine réunion ensemble.",
       "paragraph3": "Pour inviter quelqu’un, son adresse email suffit.",
       "cta": "Inviter mon équipe"

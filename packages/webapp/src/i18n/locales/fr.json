@@ -1746,6 +1746,8 @@
     "items": {
       "orgChart": "Créer votre organigramme",
       "invite": "Inviter votre équipe",
+      "inviteMembers_one": "Inviter {{count}} membre sans accès",
+      "inviteMembers_other": "Inviter {{count}} membres sans accès",
       "recurringMeeting": "Planifier une réunion récurrente",
       "photos": "Ajouter des photos de membres",
       "meeting": "Tenir votre première réunion",

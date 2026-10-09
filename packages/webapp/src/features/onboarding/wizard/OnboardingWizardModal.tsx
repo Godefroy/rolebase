@@ -44,9 +44,14 @@ export default function OnboardingWizardModal() {
   // Sent once per person, not on every mount of the modal (reloads remount
   // it, sometimes before the metadata is saved: trackOnce covers that). The
   // wizard skips steps whose answer is already known, so the step list is the
-  // only honest denominator for the funnel.
+  // only honest denominator for the funnel. A wizard already started sends
+  // onboarding_resumed instead: it tells a reload or a later return from a
+  // real abandonment, both reported by onboarding_abandoned.
   useEffect(() => {
-    if (metadata?.onboardingStartedAt) return
+    if (metadata?.onboardingStartedAt) {
+      trackOnce('onboarding_resumed')
+      return
+    }
     trackOnce('onboarding_started', {
       steps: steps.join(','),
       stepsCount: steps.length,

@@ -6,6 +6,7 @@ import { gql } from '../../gql'
 import settings from '../../settings'
 import { authedProcedure } from '../../trpc/authedProcedure'
 import { adminRequest } from '../../utils/adminRequest'
+import { isConstraintViolation } from '../../utils/isConstraintViolation'
 import { nhost } from '../../utils/nhost'
 
 export default authedProcedure
@@ -30,7 +31,8 @@ export default authedProcedure
       id: opts.ctx.userId!,
     })
 
-    // Create org
+    // Create org. The unique slug is the only expected constraint: any other
+    // failure is a real error, reported as such.
     let orgId: string
     try {
       const orgResult = await adminRequest(CREATE_ORG, {
@@ -40,25 +42,26 @@ export default authedProcedure
         memberName: userResult.user!.displayName,
       })
       orgId = orgResult.insert_org_one!.id
-
-      // Create role
-      const roleResult = await adminRequest(CREATE_ROLE, {
-        orgId,
-        name,
-      })
-      const roleId = roleResult.insert_role_one!.id
-
-      // Create circle
-      await adminRequest(CREATE_CIRCLE, {
-        orgId,
-        roleId,
-      })
-
-      // Base roles and meeting templates are seeded client-side during
-      // onboarding (OrgSetupModal), based on the chosen organizational model.
     } catch (error) {
+      if (!isConstraintViolation(error)) throw error
       throw new TRPCError({ code: 'CONFLICT', message: 'Conflict' })
     }
+
+    // Create role
+    const roleResult = await adminRequest(CREATE_ROLE, {
+      orgId,
+      name,
+    })
+    const roleId = roleResult.insert_role_one!.id
+
+    // Create circle
+    await adminRequest(CREATE_CIRCLE, {
+      orgId,
+      roleId,
+    })
+
+    // Base roles and meeting templates are seeded client-side during
+    // onboarding (OrgSetupModal), based on the chosen organizational model.
 
     // A missing icon never fails the creation
     if (withEmailDomainIcon) {

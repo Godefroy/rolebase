@@ -83,6 +83,8 @@
       "subject": "Show your team the {{org}} org chart",
       "title": "Bring your team into {{org}}",
       "paragraph1": "Hi {{name}}, the {{org}} org chart is in place. Now invite the people you work with.",
+      "paragraph1Members_one": "Hi {{name}}, the {{org}} org chart is in place. You added {{count}} member to it who can’t see it yet: invite them with their email address.",
+      "paragraph1Members_other": "Hi {{name}}, the {{org}} org chart is in place. You added {{count}} members to it who can’t see it yet: invite them with their email addresses.",
       "paragraph2": "Each colleague who joins finds their roles and knows who to turn to for each topic. You can then prepare the next meeting together.",
       "paragraph3": "To invite someone, all you need is their email address.",
       "cta": "Invite my team"

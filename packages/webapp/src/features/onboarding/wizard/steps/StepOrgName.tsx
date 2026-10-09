@@ -35,9 +35,11 @@ export default function StepOrgName() {
   const domainIcon = watch('domainIcon')
   const checkSlug = useCheckOrgSlug(formMethods)
 
-  // The org name can be prefilled: check its slug right away
+  // The org name can be prefilled: check its slug right away, and replace a
+  // prefilled slug that is taken by a free variant
   useEffect(() => {
-    checkSlug()
+    const { isDirty } = formMethods.getFieldState('orgName')
+    checkSlug(!isDirty && !formMethods.getFieldState('slug').isDirty)
   }, [])
 
   const handleBlur = () => {

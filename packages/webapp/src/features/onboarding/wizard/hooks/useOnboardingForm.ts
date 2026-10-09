@@ -236,7 +236,9 @@ export default function useOnboardingForm() {
       setLoading(false)
       const isConflict = e.message === 'Conflict'
       setConflict(isConflict)
-      if (isConflict) track('onboarding_slug_conflict', { step: 'submit' })
+      track(isConflict ? 'onboarding_slug_conflict' : 'onboarding_org_failed', {
+        step: 'submit',
+      })
       const message = isConflict
         ? t('OrgSlugModal.already-exists')
         : e.message || e.toString()

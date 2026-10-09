@@ -1,4 +1,5 @@
 import Loading from '@/common/atoms/Loading'
+import useQueryParams from '@/common/hooks/useQueryParams'
 import { Title } from '@/common/atoms/Title'
 import { useOrgContext } from '@/org/contexts/OrgContext'
 import { useMembersSubscription } from '@gql'
@@ -62,6 +63,12 @@ export default function MembersPage() {
     onOpen: onInviteOpen,
     onClose: onInviteClose,
   } = useDisclosure()
+
+  // The onboarding reminder email links here with ?invite
+  const { invite } = useQueryParams<{ invite: string }>()
+  useEffect(() => {
+    if (isAdmin && invite !== undefined) onInviteOpen()
+  }, [isAdmin])
 
   // Search
   const { items, search, loading } = useAlgoliaSearch()

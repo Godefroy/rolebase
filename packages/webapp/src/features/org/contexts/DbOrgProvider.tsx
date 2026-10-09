@@ -33,7 +33,15 @@ export default function DbOrgProvider({ orgId, slug, children }: Props) {
 
   const result = dataId?.org_by_pk ?? dataSlug?.org[0]
   const error = errorId ?? errorSlug
-  const loading = loadingId || loadingSlug
+  // A subscription that was just enabled (navigation into an org) reports
+  // loading=false until it subscribes: without its first answer, it is still
+  // loading. Otherwise the org page renders its 404, which sends a person
+  // without any org (e.g. who just created their first one) back to "/".
+  const loading =
+    loadingId ||
+    loadingSlug ||
+    (!!orgId && !dataId && !errorId) ||
+    (!!slug && !dataSlug && !errorSlug)
   const resolvedOrgId = orgId ?? result?.id
 
   const orgData = useMemo<OrgData | undefined>(

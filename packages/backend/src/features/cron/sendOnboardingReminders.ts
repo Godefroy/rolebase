@@ -68,12 +68,19 @@ export default webhookProcedure.mutation(async () => {
     const metadata: UserMetadata = user.metadata || {}
     if (metadata.onboardingReminders?.noInvite) continue
 
+    // Name the members typed at the setup who still can't see the org chart,
+    // and open the invite modal, pre-filled with them
+    const withoutAccess = org.members_aggregate.aggregate?.count ?? 0
     await sendReminder({
       type: 'noInvite',
       email: user.email,
       lang: user.locale,
       replace: { name: user.displayName, org: org.name },
-      ctaUrl: `${settings.url}${getOrgPath(org)}/news`,
+      count: withoutAccess,
+      paragraphs: withoutAccess
+        ? ['paragraph1Members', 'paragraph2']
+        : ['paragraph1', 'paragraph2', 'paragraph3'],
+      ctaUrl: `${settings.url}${getOrgPath(org)}/settings/members?invite`,
     })
     await markSent(user.id, metadata, 'noInvite')
   }
@@ -86,6 +93,9 @@ interface ReminderParams {
   email: string
   lang: string
   replace: Record<string, string>
+  // Plural form of the texts that have one
+  count?: number
+  paragraphs?: string[]
   ctaUrl: string
 }
 
@@ -94,11 +104,17 @@ async function sendReminder({
   email,
   lang,
   replace,
+  count,
+  paragraphs: paragraphKeys = ['paragraph1', 'paragraph2', 'paragraph3'],
   ctaUrl,
 }: ReminderParams) {
   const t = (key: string) =>
-    i18n.t(`emails:OnboardingReminder.${type}.${key}`, { lng: lang, replace })
-  const paragraphs = ['paragraph1', 'paragraph2', 'paragraph3']
+    i18n.t(`emails:OnboardingReminder.${type}.${key}`, {
+      lng: lang,
+      replace,
+      count,
+    })
+  const paragraphs = paragraphKeys
     .map((key) => t(key))
     // Missing keys come back as the key path itself
     .filter((text) => !text.includes('OnboardingReminder.'))
@@ -194,6 +210,17 @@ const GET_ORGS_WITHOUT_INVITE = gql(`
       id
       name
       slug
+      members_aggregate(
+        where: {
+          userId: { _is_null: true }
+          inviteEmail: { _is_null: true }
+          archivedAt: { _is_null: true }
+        }
+      ) {
+        aggregate {
+          count
+        }
+      }
       members(
         where: { role: { _eq: Owner }, userId: { _is_null: false } }
         limit: 1

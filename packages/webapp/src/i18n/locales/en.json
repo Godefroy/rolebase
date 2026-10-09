@@ -1745,6 +1745,8 @@
     "items": {
       "orgChart": "Create your org chart",
       "invite": "Invite your team",
+      "inviteMembers_one": "Invite {{count}} member without access",
+      "inviteMembers_other": "Invite {{count}} members without access",
       "recurringMeeting": "Schedule a recurring meeting",
       "photos": "Add photos of members",
       "meeting": "Hold your first meeting",

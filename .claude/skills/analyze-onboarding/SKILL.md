@@ -39,7 +39,7 @@ It prints weekly cohorts, one line per self-serve signup of the window, invitees
 
 - Give counts next to percentages. Below about 10 people per group, describe a trend to watch, never a conclusion. Compare with the 4 previous weeks.
 - The last week's 7-day metrics are still incomplete.
-- Umami: count unique sessions. A session is per device and per day, so one person can span several. Abandonment events fire on `pagehide` (close or reload), once per browser and step.
+- Umami: count unique sessions. A session is per device and per day, so one person can span several. Abandonment events fire on `pagehide` (close or reload), once per browser and step. A later `onboarding_resumed` in the same browser means a reload or a return, not a loss.
 - Self-serve = signups minus `joined_team` (invitees).
 - Leave out internal accounts (lonestone domains) and obvious tests.
 - When numbers look odd, rebuild individual journeys by matching database timestamps with Umami sequences.
