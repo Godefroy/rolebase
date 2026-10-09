@@ -100,9 +100,9 @@ Routing pages (`src/pages/[lang]/{section}/[slug].astro`) use a `[lang]` param a
 
 ### Content sections
 
-- **Documentation** (`docs/`): User-facing documentation for non-developers. Uses `<GuidePage>` wrapper in the page template.
-- **Guides** (`guides/`): Step-by-step guides. Uses `<GuidePage section="guides">` wrapper. Documentation and Guides share the same sidebar.
-- **Developers** (`developers/`): Technical documentation. Uses `<DocPage section="developers">` wrapper.
+- **Documentation** (`docs/`): User-facing documentation for non-developers. Uses `<DocPage>` wrapper in the page template.
+- **Guides** (`guides/`): Step-by-step guides. Uses `<DocPage section="guides">` wrapper.
+- **Developers** (`developers/`): Technical documentation. Uses `<DocPage section="developers">` wrapper. Documentation, Guides and Developers share the same sidebar, in that order.
 - **API Reference** (`api/`): GraphQL entity schema documentation. Uses `<ApiReference>` wrapper.
 - **Blog** (`blog/`): Blog posts. Uses `<BlogPost>` component.
 - **Client Cases** (`client-cases/`): Case studies. Uses `<ClientCasePage>` component.

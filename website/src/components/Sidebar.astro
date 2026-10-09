@@ -10,12 +10,6 @@ import {
 } from '../utils/i18n'
 import NavLink from './NavLink.astro'
 
-interface Props {
-  section: 'docs' | 'guides' | 'developers'
-}
-
-const { section } = Astro.props
-
 const lang = getLangFromUrl(Astro.url)
 const t = await getTranslations(lang)
 
@@ -56,83 +50,78 @@ function entriesToItems(entries: { id: string; data: { title: string } }[], base
   })
 }
 
-const sections: SidebarSection[] = []
+const allDocs = await getCollection('docs')
+const docs = sortEntries(allDocs.filter((e) => getLangFromId(e.id) === lang))
 
-if (section === 'docs' || section === 'guides') {
-  const allDocs = await getCollection('docs')
-  const docs = sortEntries(allDocs.filter((e) => getLangFromId(e.id) === lang))
+const allGuides = await getCollection('guides')
+const guides = sortEntries(allGuides.filter((e) => getLangFromId(e.id) === lang))
 
-  const allGuides = await getCollection('guides')
-  const guides = sortEntries(allGuides.filter((e) => getLangFromId(e.id) === lang))
+const allDevs = await getCollection('developers')
+const devs = allDevs
+  .filter((e) => getLangFromId(e.id) === lang)
+  .map((e) => ({ ...e, slug: getNestedSlugFromId(e.id) }))
 
-  sections.push(
-    { title: t.documentation, items: entriesToItems(docs, '/docs') },
-    { title: t.guides, items: entriesToItems(guides, '/guides') }
-  )
-} else if (section === 'developers') {
-  const allDevs = await getCollection('developers')
-  const devs = allDevs
-    .filter((e) => getLangFromId(e.id) === lang)
-    .map((e) => ({ ...e, slug: getNestedSlugFromId(e.id) }))
+// Reference sections (the GraphQL API, the tRPC API) hold their pages in a
+// nested folder, listed under the section's own page.
+const isNested = (slug: string) => slug.includes('/')
 
-  // Reference sections (the GraphQL API, the tRPC API) hold their pages in a
-  // nested folder, listed under the section's own page.
-  const isNested = (slug: string) => slug.includes('/')
+// Headings used to group the GraphQL entity pages. Pages without a category
+// are listed first, without a heading.
+const allCategories = await getCollection('api-categories')
+const categories = allCategories.sort(
+  (a, b) => (a.data.order ?? Infinity) - (b.data.order ?? Infinity)
+)
 
-  // Headings used to group the GraphQL entity pages. Pages without a category
-  // are listed first, without a heading.
-  const allCategories = await getCollection('api-categories')
-  const categories = allCategories.sort(
-    (a, b) => (a.data.order ?? Infinity) - (b.data.order ?? Infinity)
-  )
+function childGroups(parentSlug: string): SidebarGroup[] {
+  const children = devs.filter((e) => e.slug.startsWith(`${parentSlug}/`))
+  if (children.length === 0) return []
 
-  function childGroups(parentSlug: string): SidebarGroup[] {
-    const children = devs.filter((e) => e.slug.startsWith(`${parentSlug}/`))
-    if (children.length === 0) return []
+  const toLinks = (entries: typeof children) =>
+    entries.map((e) => ({
+      path: `/developers/${e.slug}`,
+      label: e.data.title,
+    }))
 
-    const toLinks = (entries: typeof children) =>
-      entries.map((e) => ({
-        path: `/developers/${e.slug}`,
-        label: e.data.title,
-      }))
-
-    return [
-      { links: toLinks(sortEntries(children.filter((e) => !e.data.category))) },
-      ...categories.map((cat) => ({
-        title: cat.data.title[lang],
-        links: toLinks(
-          children
-            .filter((e) => e.data.category === cat.id)
-            .sort((a, b) => a.data.title.localeCompare(b.data.title))
-        ),
-      })),
-    ].filter((group) => group.links.length > 0)
-  }
-
-  sections.push({
-    title: t.developers,
-    items: sortEntries(devs.filter((e) => !isNested(e.slug))).map((e) => {
-      const slug = getNestedSlugFromId(e.id)
-      const path = slug ? `/developers/${slug}` : '/developers'
-      const groups = slug ? childGroups(slug) : []
-      return {
-        path,
-        label: e.data.title,
-        groups: groups.length > 0 ? groups : undefined,
-        // Nested sections are collapsed, unless the current page is the
-        // section's own page or one of its children.
-        expanded: Astro.url.pathname.startsWith(langPath(lang, path)),
-      }
-    }),
-  })
+  return [
+    { links: toLinks(sortEntries(children.filter((e) => !e.data.category))) },
+    ...categories.map((cat) => ({
+      title: cat.data.title[lang],
+      links: toLinks(
+        children
+          .filter((e) => e.data.category === cat.id)
+          .sort((a, b) => a.data.title.localeCompare(b.data.title))
+      ),
+    })),
+  ].filter((group) => group.links.length > 0)
 }
+
+const developerItems: SidebarItem[] = sortEntries(devs.filter((e) => !isNested(e.slug)))
+  .map((e) => {
+    const slug = getNestedSlugFromId(e.id)
+    const path = slug ? `/developers/${slug}` : '/developers'
+    const groups = slug ? childGroups(slug) : []
+    return {
+      path,
+      label: e.data.title,
+      groups: groups.length > 0 ? groups : undefined,
+      // Nested sections are collapsed, unless the current page is the
+      // section's own page or one of its children.
+      expanded: Astro.url.pathname.startsWith(langPath(lang, path)),
+    }
+  })
+
+const sections: SidebarSection[] = [
+  { title: t.documentation, items: entriesToItems(docs, '/docs') },
+  { title: t.guides, items: entriesToItems(guides, '/guides') },
+  { title: t.developers, items: developerItems },
+]
 ---
 
-<aside class="hidden md:block w-65 min-w-65 border-r border-border p-6 pr-4 bg-bg-secondary h-[calc(100vh-56px)] overflow-y-auto sticky top-14" data-sidebar>
+<aside class="hidden md:block w-65 min-w-65 border-r border-border py-6 px-3 bg-bg-secondary h-[calc(100vh-56px)] overflow-y-auto sticky top-14" data-sidebar>
   <nav>
     {sections.map((s) => (
       <div class="mb-6">
-        <h3 class="text-xs uppercase tracking-wide text-text-secondary mb-2 border-none p-0">{s.title}</h3>
+        <h3 class="text-base font-bold text-text-main mt-0 mb-2 px-3 py-0 border-none">{s.title}</h3>
         <div class="flex flex-col">
           {s.items.map(item => item.groups ? (
             <div data-subnav-item>
@@ -179,6 +168,14 @@ if (section === 'docs' || section === 'guides') {
 </style>
 
 <script>
+  // The sidebar lists every section, so bring the current page into view.
+  const sidebar = document.querySelector<HTMLElement>('[data-sidebar]')
+  const current = sidebar?.querySelector<HTMLElement>('[aria-current="page"]')
+  if (sidebar && current) {
+    const offset = current.getBoundingClientRect().top - sidebar.getBoundingClientRect().top
+    sidebar.scrollTop += offset - sidebar.clientHeight / 3
+  }
+
   // Bound on the whole document so the sidebar copy cloned into the mobile
   // menu (see TopNavShell) toggles too.
   document.querySelectorAll('[data-subnav-toggle]').forEach((toggle) => {

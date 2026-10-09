@@ -27,6 +27,7 @@ const active
   href={resolvedHref}
   target={external ? '_blank' : undefined}
   rel={external ? 'noopener noreferrer' : undefined}
+  aria-current={active ? 'page' : undefined}
   class:list={[
     'px-3 py-1.5 rounded-md text-sm font-medium no-underline hover:no-underline',
     external ? 'inline-flex items-center gap-1.5' : 'block',

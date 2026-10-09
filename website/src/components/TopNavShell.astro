@@ -8,19 +8,15 @@ const lp = (path: string) => langPath(lang, path)
 
 interface Props {
   staticHeader?: boolean
-  logoSuffix?: string
 }
 
-const { staticHeader = false, logoSuffix } = Astro.props
+const { staticHeader = false } = Astro.props
 ---
 
 <header class:list={["border-b border-border bg-white z-50", staticHeader ? '' : 'sticky top-0']}>
   <div class="flex items-center justify-between px-6 h-14">
     <!-- Logo -->
-    <div class="flex items-center gap-2">
-      <a href={lp('')} class="no-underline hover:no-underline"><Logo class="h-6" /></a>
-      {logoSuffix && <span class="font-bold text-lg text-text-secondary pt-1">{logoSuffix}</span>}
-    </div>
+    <a href={lp('')} class="no-underline hover:no-underline"><Logo class="h-6" /></a>
 
     <!-- Desktop menu -->
     <div class="hidden md:flex md:items-center md:gap-8 md:flex-1 md:ml-8">

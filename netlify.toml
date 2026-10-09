@@ -1,3 +1,3 @@
 [build]
-  command = "npm ci && npx turbo build && cd website && npm install && npm run build && cd .. && mkdir -p dist && cp -r packages/webapp/dist/* dist/ && cp -r website/dist/* dist/ && cat packages/webapp/dist/_redirects >> dist/_redirects"
+  command = "npm ci && npx turbo build && cd website && npm install && npm run build && cd .. && mkdir -p dist && cp -r packages/webapp/dist/* dist/ && cp -r website/dist/* dist/ && cat packages/webapp/dist/_redirects >> dist/_redirects && echo >> dist/_headers && cat packages/webapp/dist/_headers >> dist/_headers"
   publish = "dist"
