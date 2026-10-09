@@ -1,0 +1,81 @@
+---
+title: 'Utiliser Rolebase avec un assistant IA'
+description: "Connectez Claude, ChatGPT ou Mistral Vibe à Rolebase, puis posez vos questions et faites évoluer votre organisation en langage naturel."
+order: 5
+---
+
+Un assistant IA connecté à Rolebase connaît votre organisation : vos rôles, vos membres, vos réunions, vos discussions, vos tâches et vos décisions. Vous lui parlez en langage naturel, et il consulte ou met à jour Rolebase pour vous. Ce guide vous accompagne de la connexion à vos premiers usages.
+
+## Avant de commencer
+
+Assurez-vous d'avoir :
+
+- Un compte Rolebase avec au moins une [organisation](/fr/docs/organizations).
+- Un compte sur l'un de ces assistants : Claude (web, ordinateur ou mobile), ChatGPT (offre payante) ou Mistral Vibe.
+
+## Étape 1 : connecter votre assistant
+
+1. Dans Rolebase, créez une clé API depuis **Mon compte > Clés API**, en lui donnant le nom de votre assistant.
+2. Ajoutez Rolebase comme connecteur dans votre assistant, en suivant les étapes de la page [Connecteur MCP](/fr/docs/mcp) pour [Claude](/fr/docs/mcp#claude), [ChatGPT](/fr/docs/mcp#chatgpt) ou [Mistral Vibe](/fr/docs/mcp#mistral-vibe).
+3. Dans une nouvelle conversation, vérifiez que le connecteur Rolebase est activé.
+
+<Callout type="tip" title="Vous travaillez dans un terminal ?">
+  Les agents de développement comme Claude Code, Codex, Cursor ou VS Code
+  peuvent utiliser la [skill Rolebase](/fr/developers/skill) à la place du
+  connecteur. Elle appelle directement l'API Rolebase avec votre clé API, et
+  tout ce guide fonctionne de la même façon.
+</Callout>
+
+## Étape 2 : découvrir votre organisation
+
+Commencez par des questions simples pour vérifier que tout fonctionne et voir ce que l'assistant comprend :
+
+- « Quelles sont mes organisations Rolebase ? »
+- « Décris l'organigramme de l'organisation Acme. »
+- « Qui tient le rôle de Facilitateur dans Produit ? »
+- « Quels rôles n'ont aucun membre affecté ? »
+- « Quels sont mes rôles, et leurs redevabilités ? »
+
+Si vous êtes membre de plusieurs organisations, l'assistant vous demande sur laquelle travailler. Vous pouvez aussi la nommer dès votre première question.
+
+## Étape 3 : préparer et suivre le travail
+
+L'assistant croise les informations de Rolebase pour vous faire gagner du temps :
+
+- « Prépare l'ordre du jour de notre prochaine réunion d'équipe à partir des discussions ouvertes. »
+- « Résume les décisions prises ce mois-ci. »
+- « Liste les tâches en retard, par membre. »
+- « Qu'est-ce qui a été dit lors de la dernière réunion Produit ? »
+
+## Étape 4 : faire évoluer votre organisation
+
+Vous pouvez aussi demander des changements :
+
+- « Crée une tâche pour Marie : envoyer le bilan trimestriel avant vendredi. »
+- « Ajoute un rôle Communication sous Marketing, avec cette raison d'être : faire connaître nos actions. »
+- « Affecte Paul au rôle Support. »
+
+Avant tout changement, l'assistant décrit ce qu'il s'apprête à faire et attend votre feu vert. Votre assistant vous demande aussi d'autoriser chaque utilisation de Rolebase, sauf si vous l'autorisez une fois pour toutes.
+
+<Callout type="info" title="Vos permissions s'appliquent">
+  L'assistant agit avec vos propres droits : il voit et modifie exactement ce
+  que vous pouvez voir et modifier dans Rolebase. Dans une organisation en
+  [mode de gouvernance](/fr/docs/governance-modes) strict, les changements de
+  structure passent par des propositions, pour lui comme pour vous.
+</Callout>
+
+## Bonnes pratiques
+
+- **Soyez précis.** Nommez l'organisation, le rôle ou la personne concernés, et l'assistant ira droit au but.
+- **Vérifiez dans Rolebase.** Après un changement important, ouvrez l'organigramme ou la page concernée pour constater le résultat.
+- **Une clé par assistant.** Si vous utilisez plusieurs assistants, créez une clé pour chacun : vous pourrez en révoquer une sans toucher aux autres.
+
+## Confidentialité
+
+Les données lues par l'assistant sont envoyées à son fournisseur (Anthropic pour Claude, OpenAI pour ChatGPT, Mistral AI pour Mistral Vibe) et traitées selon ses conditions. Mistral AI est une entreprise française. Vous coupez l'accès à tout moment en supprimant la clé API dans **Mon compte > Clés API**.
+
+## Et ensuite ?
+
+- [Configurez le connecteur MCP](/fr/docs/mcp) dans un autre assistant.
+- Développeurs : connectez Claude Code, Codex, Cursor ou VS Code avec le [serveur MCP](/fr/developers/mcp) ou la [skill Rolebase](/fr/developers/skill).
+- [Animez votre première réunion](/fr/guides/run-your-first-meeting) avec l'ordre du jour préparé par votre assistant.

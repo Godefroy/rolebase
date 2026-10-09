@@ -1,0 +1,61 @@
+---
+title: 'Skill Rolebase'
+description: "Laissez Claude Code, Codex, Cursor ou VS Code piloter votre compte Rolebase via l'API avec la skill Rolebase."
+order: 2.3
+---
+
+<Button label="Télécharger la skill Rolebase" href="/downloads/rolebase-skill.zip" variant="primary" size="sm" />
+
+## Vue d'ensemble
+
+La skill Rolebase apprend à un agent de développement à piloter tout votre compte Rolebase via l'API HTTP ([GraphQL](/fr/developers/graphql-api) et [tRPC](/fr/developers/trpc-api)), avec `curl` et une clé API lue dans l'environnement. Elle fonctionne dans tout agent qui dispose d'un terminal et prend en charge le standard ouvert Agent Skills : Claude Code, Codex, Cursor, VS Code avec GitHub Copilot et d'autres.
+
+## Skill ou serveur MCP
+
+La skill est une alternative au [serveur MCP](/fr/developers/mcp). Les deux donnent à l'agent le même guide : règles de conduite (accord avant toute écriture, bonne organisation, vocabulaire de l'application), modèle de données et requêtes prêtes à l'emploi.
+
+- Choisissez le **serveur MCP** pour les assistants sans terminal, comme Claude, ChatGPT ou Mistral Vibe, ou si vous préférez un connecteur géré par votre outil.
+- Choisissez la **skill** quand l'agent travaille dans un terminal : rien à configurer au-delà d'une variable d'environnement, et l'agent peut scripter ses appels.
+
+Pour connecter un assistant conversationnel pas à pas, consultez le guide [Utiliser Rolebase avec un assistant IA](/fr/guides/use-an-ai-assistant).
+
+## Définir la clé API
+
+Créez une clé depuis **Mon compte > Clés API** dans Rolebase, puis définissez-la dans l'environnement depuis lequel l'agent démarre, par exemple dans le profil de votre shell :
+
+```bash
+export ROLEBASE_API_KEY=<votre-cle-api>
+# Facultatif, pour une instance auto-hébergée ou locale
+export ROLEBASE_API_URL=http://localhost:8888
+```
+
+La skill ne demande jamais la clé dans la conversation et ne l'affiche jamais.
+
+## Installer la skill
+
+### Claude Code
+
+Installez le plugin Rolebase, qui contient la skill :
+
+```
+/plugin marketplace add Godefroy/rolebase
+/plugin install rolebase@rolebase
+```
+
+### Codex, Cursor et VS Code
+
+Ces outils chargent tous les skills depuis `~/.agents/skills/`. Décompressez-y le fichier téléchargé, ou récupérez la skill directement depuis un terminal :
+
+```bash
+mkdir -p ~/.agents/skills/rolebase && cd ~/.agents/skills/rolebase
+curl -fsSLO https://raw.githubusercontent.com/Godefroy/rolebase/main/plugins/rolebase/skills/rolebase/SKILL.md
+curl -fsSLO https://raw.githubusercontent.com/Godefroy/rolebase/main/plugins/rolebase/skills/rolebase/reference.md
+```
+
+Pour la partager avec l'équipe d'un projet, placez plutôt le même dossier dans `.agents/skills/rolebase/` à la racine du dépôt.
+
+## Mises à jour
+
+La skill se trouve dans [`plugins/rolebase/skills/rolebase`](https://github.com/Godefroy/rolebase/tree/main/plugins/rolebase/skills/rolebase) et suit l'évolution du produit. Pour la mettre à jour, lancez `/plugin marketplace update rolebase` dans Claude Code, ou téléchargez de nouveau la skill.
+
+Quand l'API contredit la skill, l'agent consulte la documentation en ligne, poursuit avec le comportement à jour et vous signale ce qui était dépassé.

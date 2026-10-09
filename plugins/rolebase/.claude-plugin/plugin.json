@@ -1,0 +1,8 @@
+{
+  "name": "rolebase",
+  "version": "1.0.0",
+  "description": "Manage your Rolebase account from Claude Code through the Rolebase API: org chart, roles, members, meetings, threads, tasks and decisions.",
+  "homepage": "https://rolebase.io/en/developers/mcp",
+  "repository": "https://github.com/Godefroy/rolebase",
+  "license": "MIT"
+}

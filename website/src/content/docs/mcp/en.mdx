@@ -1,0 +1,81 @@
+---
+title: 'MCP Connector'
+description: 'Give ChatGPT, Claude or Mistral Vibe access to your Rolebase data with the MCP connector and an API key.'
+order: 11.2
+---
+
+## Overview
+
+The MCP connector links an [AI assistant](/en/guides/use-an-ai-assistant) to your Rolebase account. MCP (Model Context Protocol) is the open standard assistants use to connect to other services. Setting it up takes two steps: create an API key in Rolebase, then add the connector in your assistant.
+
+## Create an API key
+
+1. In Rolebase, open the settings menu and go to **My account > API keys**.
+2. Click **Create API key**, name it after the assistant (for instance "Claude"), then click **Create**.
+3. Copy the key with the copy button.
+
+## Add the connector
+
+Every assistant asks for the server URL, `https://api.rolebase.io/mcp`, and for your API key, which it sends with each request.
+
+### Claude
+
+1. Go to [Customize > Connectors](https://claude.ai/customize/connectors) and click **Add custom connector**.
+2. Name it "Rolebase" and enter the server URL.
+3. For authentication, choose **No sign-in**.
+4. Under **Request headers**, pick `x-api-key` and paste your API key as the value.
+5. Click **Add**.
+
+The connector is then available on the web, in the desktop app and on mobile.
+
+The **Request headers** section is gradually opening to Claude accounts. If it is missing from your dialog, enter `https://api.rolebase.io/mcp/YOUR_API_KEY` as the server URL instead, and skip step 4.
+
+<Callout type="warning" title="Key in the URL">
+  With this option, the URL contains your API key: whoever has it can act in
+  Rolebase on your behalf. Share it with nobody, and delete the key in Rolebase
+  if it leaks.
+</Callout>
+
+<Callout type="warning" title="Claude Team and Enterprise">
+  On these plans, an Owner adds the connector for the whole Claude organization,
+  with a single API key. All members would then act in Rolebase with the
+  Owner's account.
+</Callout>
+
+### Mistral Vibe
+
+1. Open the **Connectors** page and add a connector from the **Custom MCP Connector** tab.
+2. Name it `rolebase`, enter the server URL, then click **Connect**.
+3. When Mistral Vibe asks for authentication, choose the bearer token option and paste your API key.
+
+### ChatGPT
+
+ChatGPT only accepts connectors with no authentication or with an OAuth sign-in. The API key therefore goes in the URL of the connector:
+
+```
+https://api.rolebase.io/mcp/YOUR_API_KEY
+```
+
+<Callout type="warning" title="Key in the URL">
+  This URL contains your API key: whoever has it can act in Rolebase on your
+  behalf. Share it with nobody, and delete the key in Rolebase if it leaks.
+</Callout>
+
+1. In ChatGPT on the web, open **Settings**, then **Apps** (called **Connectors** on some accounts).
+2. In the advanced settings, turn on **Developer mode** if ChatGPT asks for it.
+3. Create an app: name it "Rolebase", paste the URL above with your key and choose **No authentication**.
+4. In a conversation, turn on the Rolebase app from the **+** menu.
+
+Custom apps are available on paid ChatGPT plans, depending on the options OpenAI opens to your account.
+
+### Developer tools
+
+To connect Claude Code, Codex, Cursor or VS Code, see the [MCP server](/en/developers/mcp) page of the Developers section. These agents can also use the [Rolebase skill](/en/developers/skill) instead of the connector: it calls the Rolebase API directly with your API key.
+
+## Check the connection
+
+Ask your assistant "What are my Rolebase organizations?". It should list them. If it reports a missing or invalid API key, check the URL, or create a new key and add the connector again.
+
+## Revoke access
+
+Delete the API key in **My account > API keys**. The assistant loses access right away, and your other keys keep working.

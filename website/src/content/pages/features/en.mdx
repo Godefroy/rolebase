@@ -74,6 +74,28 @@ description: 'Role mapping, meeting facilitation, decision tracking and shared t
   </Fragment>
 </SplitSection>
 
+<PageSection>
+  <CenteredSection class="max-w-3xl mx-auto">
+    ## Run Rolebase from Claude, ChatGPT or Mistral
+
+    Connect your AI assistant to your organization and ask it in plain language who holds which role, to prepare the agenda of the next meeting or to create a task. The assistant reads and updates Rolebase for you.
+  </CenteredSection>
+</PageSection>
+
+<FeatureGrid class="mt-12">
+  <FeatureItem icon="mcp" title="MCP connector">
+    Add Rolebase as a connector in Claude, on the web, desktop or mobile, in ChatGPT or in Mistral Vibe. It relies on MCP, the open standard of AI assistants, and takes a few minutes to set up with an API key.
+  </FeatureItem>
+
+  <FeatureItem icon="brain" title="Rolebase skill">
+    For coding agents such as Claude Code, Codex, Cursor or VS Code, the Rolebase skill manages your whole account through the API, as an alternative to the connector.
+  </FeatureItem>
+</FeatureGrid>
+
+<CenteredSection class="mt-12">
+  <Button label="Connect an AI assistant" href="/en/guides/use-an-ai-assistant" variant="outline-primary" />
+</CenteredSection>
+
 <PageSection class="mt-24">
   <CtaBanner title="Your organization deserves it" primaryLabel="Request a demo" primaryHref="/en/contact" secondaryLabel="Try it yourself" secondaryHref="/signup">
     Free until you're ready to bring your whole team on board! Try it yourself
@@ -138,10 +160,37 @@ description: 'Role mapping, meeting facilitation, decision tracking and shared t
     Restrict structural changes to circle leaders to secure your governance.
   </FeatureItem>
 
-  <FeatureItem icon="opensource" title="Open source">
-    The source code is available under the MIT license. You can audit it, modify it, or self-host it.
+</FeatureGrid>
+
+<PageSection>
+  <CenteredSection class="max-w-3xl mx-auto">
+    ## Developer friendly
+
+    Rolebase is open source and fully programmable: integrate it with your tools, automate your processes or host it yourself.
+  </CenteredSection>
+</PageSection>
+
+<FeatureGrid class="mt-12">
+  <FeatureItem icon="api" title="GraphQL API">
+    Read and update all the data of your organizations with an API key that carries your permissions. A playground built into the documentation lets you test your queries.
+  </FeatureItem>
+
+  <FeatureItem icon="code" title="Business procedures">
+    Create an organization, invite members or export data by calling the backend procedures, each one documented.
+  </FeatureItem>
+
+  <FeatureItem icon="github" title="Open source">
+    The source code is available under the MIT license on GitHub. Audit it, adapt it to your needs or contribute to the project.
+  </FeatureItem>
+
+  <FeatureItem icon="selfhost" title="Self-hosting">
+    Host your own Rolebase instance to keep control over your data and infrastructure.
   </FeatureItem>
 </FeatureGrid>
+
+<CenteredSection class="mt-12">
+  <Button label="Developer documentation" href="/en/developers" variant="outline-primary" />
+</CenteredSection>
 
 <PageSection class="mt-24">
   <CtaBanner title="Ready to get started?" primaryLabel="See pricing" primaryHref="/en/pricing" secondaryLabel="Try for free" secondaryHref="/signup">

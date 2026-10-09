@@ -1,0 +1,14 @@
+{
+  "name": "rolebase",
+  "owner": {
+    "name": "Rolebase",
+    "url": "https://rolebase.io"
+  },
+  "plugins": [
+    {
+      "name": "rolebase",
+      "source": "./plugins/rolebase",
+      "description": "Manage your Rolebase account from Claude Code through the Rolebase API: org chart, roles, members, meetings, threads, tasks and decisions."
+    }
+  ]
+}

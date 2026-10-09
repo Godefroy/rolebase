@@ -1,0 +1,61 @@
+---
+title: 'Rolebase skill'
+description: 'Let Claude Code, Codex, Cursor or VS Code manage your Rolebase account through the API with the Rolebase skill.'
+order: 2.3
+---
+
+<Button label="Download the Rolebase skill" href="/downloads/rolebase-skill.zip" variant="primary" size="sm" />
+
+## Overview
+
+The Rolebase skill teaches a coding agent to manage your whole Rolebase account through the HTTP API ([GraphQL](/en/developers/graphql-api) and [tRPC](/en/developers/trpc-api)), with `curl` and an API key read from the environment. It works in any agent that has a terminal and supports the open Agent Skills standard: Claude Code, Codex, Cursor, VS Code with GitHub Copilot and others.
+
+## Skill or MCP server
+
+The skill is an alternative to the [MCP server](/en/developers/mcp). Both give the agent the same guide: working rules (approval before any write, right organization, app vocabulary), the data model and ready-made queries.
+
+- Use the **MCP server** for assistants without a terminal, such as Claude, ChatGPT or Mistral Vibe, or when you prefer a connector managed by your tool.
+- Use the **skill** when the agent works in a terminal: nothing to configure beyond an environment variable, and the agent can script its calls.
+
+To connect a chat assistant step by step, see the [Use Rolebase with an AI assistant](/en/guides/use-an-ai-assistant) guide.
+
+## Set the API key
+
+Create a key from **My account > API keys** in Rolebase, then set it in the environment the agent starts from, for instance in your shell profile:
+
+```bash
+export ROLEBASE_API_KEY=<your-api-key>
+# Optional, for a self-hosted or local instance
+export ROLEBASE_API_URL=http://localhost:8888
+```
+
+The skill never asks for the key in the conversation and never prints it.
+
+## Install the skill
+
+### Claude Code
+
+Install the Rolebase plugin, which contains the skill:
+
+```
+/plugin marketplace add Godefroy/rolebase
+/plugin install rolebase@rolebase
+```
+
+### Codex, Cursor and VS Code
+
+These tools all load skills from `~/.agents/skills/`. Unzip the downloaded file there, or fetch the skill directly from a terminal:
+
+```bash
+mkdir -p ~/.agents/skills/rolebase && cd ~/.agents/skills/rolebase
+curl -fsSLO https://raw.githubusercontent.com/Godefroy/rolebase/main/plugins/rolebase/skills/rolebase/SKILL.md
+curl -fsSLO https://raw.githubusercontent.com/Godefroy/rolebase/main/plugins/rolebase/skills/rolebase/reference.md
+```
+
+To share it with a project team, put the same folder in `.agents/skills/rolebase/` at the root of the repository instead.
+
+## Updates
+
+The skill lives in [`plugins/rolebase/skills/rolebase`](https://github.com/Godefroy/rolebase/tree/main/plugins/rolebase/skills/rolebase) and follows the product. To update it, run `/plugin marketplace update rolebase` in Claude Code, or download the skill again.
+
+When the API contradicts the skill, the agent checks the online documentation, carries on with the current behavior, and tells you what was out of date.

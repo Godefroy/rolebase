@@ -136,6 +136,7 @@ When modifying the product, update the documentation accordingly **in all langua
 6. **New integration or app**: Update `content/docs/apps-integrations/`.
 7. **Changed subscription plans**: Update `content/docs/subscriptions/` and `content/api/org_subscription/`.
 8. **New, changed, or removed tRPC route**: Keep the tRPC API reference (`content/developers/trpc-api/`, one page per router plus `internal/`) in sync when a backend tRPC procedure is added, renamed, removed, or changes its input. Also update the router table on `trpc-api/index/`.
+9. **Rolebase skill**: Keep `plugins/rolebase/skills/rolebase/` (`SKILL.md`, and `reference.md`, also sent by the MCP server) in sync with the API and the developer docs.
 
 #### Before every commit
 

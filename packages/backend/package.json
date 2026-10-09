@@ -19,6 +19,7 @@
   "dependencies": {
     "@jrmdayn/googleapis-batcher": "^0.5.0",
     "@microsoft/microsoft-graph-types-beta": "^0.40.0-preview",
+    "@modelcontextprotocol/sdk": "^1.32.1",
     "@nhost/nhost-js": "^4.7.0",
     "@rolebase/editor": "*",
     "@rolebase/graph": "*",
@@ -45,7 +46,8 @@
     "slugify": "^1.6.6",
     "stripe": "^11.7.0",
     "xlsx": "^0.18.5",
-    "yup": "^1.3.3"
+    "yup": "^1.3.3",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",

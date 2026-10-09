@@ -4,6 +4,7 @@ import apps from './apps'
 import circle from './circle'
 import cron from './cron'
 import './graphql'
+import './mcp'
 import meeting from './meeting'
 import member from './member'
 import org from './org'
@@ -32,7 +33,7 @@ export const trpcRouter = router({
   user,
 
   // Health check for Nhost
-  healthz: publicProcedure.query(() => 'ok'),
+  healthz: publicProcedure.meta({ internal: true }).query(() => 'ok'),
 })
 
 export type TrpcRouter = typeof trpcRouter

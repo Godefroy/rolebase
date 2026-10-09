@@ -1,7 +1,7 @@
 import * as yup from 'yup'
 import { registerRestRoutes } from '../../rest/registerRestRoutes'
 import { authenticateApiKey } from '../../utils/authenticateApiKey'
-import { nhost } from '../../utils/nhost'
+import { userGraphqlRequest } from '../../utils/userGraphqlRequest'
 
 // Public GraphQL API
 // Keys are stored in api_key table
@@ -33,23 +33,13 @@ registerRestRoutes(async (app) => {
       try {
         const { query, variables, operationName } =
           await payloadSchema.validate(req.body)
-        const { body } = await nhost.graphql.request(
-          { query, variables, operationName },
-          {
-            headers: {
-              // The SDK spreads these options over its base fetch init, which
-              // replaces the whole `headers` object and drops the default
-              // Content-Type. Without it Hasura cannot parse the body and fails
-              // with "key query not found", so re-add it here.
-              'Content-Type': 'application/json',
-              // Mandatory to scope to the user
-              'X-Hasura-User-Id': userId,
-              'X-Hasura-Role': 'user',
-            },
-          }
-        )
+        const result = await userGraphqlRequest(userId, {
+          query,
+          variables,
+          operationName,
+        })
         // Forward both data and errors so query errors surface to the client.
-        res.send({ data: body.data, errors: body.errors })
+        res.send(result)
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error)
         res.status(400).send({ errors: [{ message }] })

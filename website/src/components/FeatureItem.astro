@@ -13,11 +13,15 @@ import {
   Activity,
   ShieldTick,
   Code1,
+  Code,
+  Data,
+  Driver,
   Edit2,
   Category,
   Setting4,
   Flash,
 } from 'iconsax-astro'
+import SvgIcon from './Icon.astro'
 
 const iconMap: Record<string, any> = {
   dashboard: Home2,
@@ -33,6 +37,9 @@ const iconMap: Record<string, any> = {
   activity: Activity,
   governance: ShieldTick,
   opensource: Code1,
+  api: Data,
+  code: Code,
+  selfhost: Driver,
   realtime: Edit2,
   allinone: Category,
   flexible: Setting4,
@@ -41,7 +48,8 @@ const iconMap: Record<string, any> = {
 
 interface Props {
   title: string
-  icon: keyof typeof iconMap
+  // An iconsax icon from the map above, or the name of an SVG in src/assets/icons
+  icon: string
   class?: string
 }
 
@@ -51,7 +59,11 @@ const Icon = iconMap[icon]
 
 <div class:list={['flex gap-4', className]}>
   <div class="flex-shrink-0 w-10 h-10 rounded-lg bg-primary-light/10 flex items-center justify-center">
-    <Icon size="24" color="var(--color-primary)" />
+    {Icon ? (
+      <Icon size="24" color="var(--color-primary)" />
+    ) : (
+      <SvgIcon icon={icon} class="w-6 text-primary" />
+    )}
   </div>
   <div>
     <h3 class="font-semibold text-base mt-0 mb-1">{title}</h3>

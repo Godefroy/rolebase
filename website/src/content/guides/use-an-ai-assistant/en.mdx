@@ -1,0 +1,81 @@
+---
+title: 'Use Rolebase with an AI assistant'
+description: 'Connect Claude, ChatGPT or Mistral Vibe to Rolebase, then ask questions and evolve your organization in plain language.'
+order: 5
+---
+
+An AI assistant connected to Rolebase knows your organization: your roles, members, meetings, discussions, tasks and decisions. You talk to it in plain language, and it reads or updates Rolebase for you. This guide takes you from the connection to your first uses.
+
+## Before you start
+
+Make sure you have:
+
+- A Rolebase account with at least one [organization](/en/docs/organizations).
+- An account on one of these assistants: Claude (web, desktop or mobile), ChatGPT (paid plan) or Mistral Vibe.
+
+## Step 1: connect your assistant
+
+1. In Rolebase, create an API key from **My account > API keys**, named after your assistant.
+2. Add Rolebase as a connector in your assistant, following the steps of the [MCP connector](/en/docs/mcp) page for [Claude](/en/docs/mcp#claude), [ChatGPT](/en/docs/mcp#chatgpt) or [Mistral Vibe](/en/docs/mcp#mistral-vibe).
+3. In a new conversation, check that the Rolebase connector is turned on.
+
+<Callout type="tip" title="Working in a terminal?">
+  Coding agents such as Claude Code, Codex, Cursor or VS Code can use the
+  [Rolebase skill](/en/developers/skill) instead of the connector. It calls the
+  Rolebase API directly with your API key, and everything in this guide works
+  the same way.
+</Callout>
+
+## Step 2: explore your organization
+
+Start with simple questions to check that everything works and see what the assistant understands:
+
+- "What are my Rolebase organizations?"
+- "Describe the org chart of the Acme organization."
+- "Who holds the Facilitator role in Product?"
+- "Which roles have no member assigned?"
+- "What are my roles, and their accountabilities?"
+
+If you belong to several organizations, the assistant asks which one to work on. You can also name it in your first question.
+
+## Step 3: prepare and follow up the work
+
+The assistant cross-checks Rolebase data to save you time:
+
+- "Prepare the agenda of our next team meeting from the open discussions."
+- "Summarize the decisions made this month."
+- "List the overdue tasks, by member."
+- "What was said in the last Product meeting?"
+
+## Step 4: evolve your organization
+
+You can also ask for changes:
+
+- "Create a task for Marie to send the quarterly report by Friday."
+- "Add a Communication role under Marketing, with this purpose: make our work known."
+- "Assign Paul to the Support role."
+
+Before any change, the assistant describes what it is about to do and waits for your go. Your assistant also asks you to approve each use of Rolebase, unless you allow it permanently.
+
+<Callout type="info" title="Your permissions apply">
+  The assistant acts with your own rights: it sees and changes exactly what you
+  can see and change in Rolebase. In an organization using the strict
+  [governance mode](/en/docs/governance-modes), structure changes go through
+  proposals, for the assistant as for you.
+</Callout>
+
+## Good practices
+
+- **Be specific.** Name the organization, role or person concerned, and the assistant gets straight to the point.
+- **Check in Rolebase.** After an important change, open the org chart or the page concerned to see the result.
+- **One key per assistant.** If you use several assistants, create a key for each one, so you can revoke one without affecting the others.
+
+## Privacy
+
+The data the assistant reads is sent to its provider (Anthropic for Claude, OpenAI for ChatGPT, Mistral AI for Mistral Vibe) and handled under that provider's terms. Mistral AI is a French company. You cut access at any time by deleting the API key in **My account > API keys**.
+
+## What's next?
+
+- [Set up the MCP connector](/en/docs/mcp) in another assistant.
+- Developers: connect Claude Code, Codex, Cursor or VS Code with the [MCP server](/en/developers/mcp) or the [Rolebase skill](/en/developers/skill).
+- [Run your first meeting](/en/guides/run-your-first-meeting) with the agenda your assistant prepared.

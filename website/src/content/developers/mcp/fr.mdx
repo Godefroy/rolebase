@@ -1,0 +1,99 @@
+---
+title: 'Serveur MCP'
+description: "Connectez Claude Code, Codex, Cursor ou VS Code à Rolebase avec le serveur MCP, et son fonctionnement."
+order: 2.2
+---
+
+## Vue d'ensemble
+
+Rolebase expose un serveur [Model Context Protocol](https://modelcontextprotocol.io) (MCP) : les assistants IA peuvent consulter et modifier les organisations avec les permissions de l'utilisateur à qui appartient la clé API. Pour ChatGPT, Claude et Mistral Vibe, consultez la page [Connecteur MCP](/fr/docs/mcp) de la documentation.
+
+## Point d'accès
+
+| Environnement       | URL                           |
+| ------------------- | ----------------------------- |
+| Production          | `https://api.rolebase.io/mcp` |
+| Développement local | `http://localhost:8888/mcp`   |
+
+Le serveur utilise le transport Streamable HTTP et ne garde aucune session entre les requêtes. Il s'authentifie avec une [clé API](/fr/developers/use-the-api#authentification), envoyée dans l'en-tête `x-api-key`, sous la forme `Authorization: Bearer <votre-cle-api>`, ou, uniquement pour les clients qui n'acceptent aucun en-tête comme ChatGPT, dans l'URL (`/mcp/<votre-cle-api>`). Une clé absente ou invalide reçoit une réponse `400` : les clients affichent l'erreur au lieu de lancer une connexion OAuth.
+
+<Callout type="warning" title="Clé dans l'URL">
+  Réservez la forme URL aux clients qui n'offrent aucune autre option : le
+  client peut afficher ou conserver l'URL, et quiconque la voit obtient la clé.
+  Les logs du serveur la masquent.
+</Callout>
+
+## Outils de développement
+
+Créez une clé API depuis **Mon compte > Clés API**, puis ajoutez le serveur à votre outil.
+
+### Claude Code
+
+```bash
+claude mcp add --transport http rolebase https://api.rolebase.io/mcp \
+  --header "x-api-key: <votre-cle-api>"
+```
+
+### Codex
+
+Ajoutez le serveur à `~/.codex/config.toml`. La CLI Codex, l'extension pour IDE et l'application de bureau partagent ce fichier. La clé est lue dans la variable d'environnement `ROLEBASE_API_KEY` :
+
+```toml
+[mcp_servers.rolebase]
+url = "https://api.rolebase.io/mcp"
+env_http_headers = { "x-api-key" = "ROLEBASE_API_KEY" }
+```
+
+### Cursor
+
+Ajoutez le serveur à `~/.cursor/mcp.json` pour tous vos projets, ou à `.cursor/mcp.json` dans un projet :
+
+```json
+{
+  "mcpServers": {
+    "rolebase": {
+      "url": "https://api.rolebase.io/mcp",
+      "headers": { "x-api-key": "<votre-cle-api>" }
+    }
+  }
+}
+```
+
+### VS Code
+
+Dans la palette de commandes, lancez **MCP: Open User Configuration** pour modifier le `mcp.json` de votre profil utilisateur, disponible dans tous vos espaces de travail. Pour un seul projet, créez plutôt `.vscode/mcp.json`. Avec cette configuration, VS Code demande la clé au premier démarrage du serveur et la conserve de façon sécurisée : le fichier ne contient aucun secret.
+
+```json
+{
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "rolebase-api-key",
+      "description": "Clé API Rolebase",
+      "password": true
+    }
+  ],
+  "servers": {
+    "rolebase": {
+      "type": "http",
+      "url": "https://api.rolebase.io/mcp",
+      "headers": { "x-api-key": "${input:rolebase-api-key}" }
+    }
+  }
+}
+```
+
+## Outils
+
+| Outil             | Rôle                                                                                                   |
+| ----------------- | ------------------------------------------------------------------------------------------------------ |
+| `graphql`         | Exécute une requête ou une mutation sur l'[API GraphQL](/fr/developers/graphql-api).                    |
+| `graphql_schema`  | Liste les champs racines du schéma GraphQL, ou affiche un type avec ses champs.                        |
+| `trpc_procedures` | Liste les [procédures tRPC](/fr/developers/trpc-api) que l'assistant peut appeler, avec leurs entrées. |
+| `trpc`            | Appelle une procédure tRPC, par exemple pour inviter un membre ou archiver un rôle et ses sous-rôles.  |
+
+Ces outils exposent le schéma GraphQL et le routeur tRPC tels quels : l'assistant travaille toujours avec l'API à jour. Les [procédures internes](/fr/developers/trpc-api/internal) restent hors de sa portée. À la connexion, le serveur envoie aussi à l'assistant le guide partagé avec la [skill Rolebase](/fr/developers/skill).
+
+## Alternative : la skill Rolebase
+
+Pour les agents qui travaillent dans un terminal, la [skill Rolebase](/fr/developers/skill) est une alternative au serveur MCP : elle appelle l'API HTTP avec une clé API lue dans l'environnement, et suit le même guide. Pour connecter un assistant conversationnel comme Claude, ChatGPT ou Mistral Vibe, consultez le guide [Utiliser Rolebase avec un assistant IA](/fr/guides/use-an-ai-assistant).

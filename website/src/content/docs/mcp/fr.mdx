@@ -1,0 +1,82 @@
+---
+title: 'Connecteur MCP'
+description: "Donnez à ChatGPT, Claude ou Mistral Vibe l'accès à vos données Rolebase avec le connecteur MCP et une clé API."
+order: 11.2
+---
+
+## Vue d'ensemble
+
+Le connecteur MCP relie un [assistant IA](/fr/guides/use-an-ai-assistant) à votre compte Rolebase. MCP (Model Context Protocol) est le standard ouvert qu'utilisent les assistants pour se connecter à d'autres services. La mise en place tient en deux étapes : créer une clé API dans Rolebase, puis ajouter le connecteur dans votre assistant.
+
+## Créer une clé API
+
+1. Dans Rolebase, ouvrez le menu des paramètres et allez dans **Mon compte > Clés API**.
+2. Cliquez sur **Créer une clé API**, donnez-lui le nom de l'assistant (par exemple « Claude »), puis cliquez sur **Créer**.
+3. Copiez la clé avec le bouton de copie.
+
+## Ajouter le connecteur
+
+Chaque assistant demande l'URL du serveur, `https://api.rolebase.io/mcp`, et votre clé API, qu'il envoie avec chaque requête.
+
+### Claude
+
+1. Allez dans [Customize > Connectors](https://claude.ai/customize/connectors) et cliquez sur **Add custom connector**.
+2. Nommez-le « Rolebase » et saisissez l'URL du serveur.
+3. Pour l'authentification, choisissez **No sign-in**.
+4. Dans **Request headers**, sélectionnez `x-api-key` et collez votre clé API comme valeur.
+5. Cliquez sur **Add**.
+
+Le connecteur est alors disponible sur le web, dans l'application de bureau et sur mobile.
+
+La section **Request headers** s'ouvre progressivement aux comptes Claude. Si elle manque dans votre fenêtre, saisissez plutôt `https://api.rolebase.io/mcp/VOTRE_CLE_API` comme URL du serveur, et passez l'étape 4.
+
+<Callout type="warning" title="Clé dans l'URL">
+  Avec cette option, l'URL contient votre clé API : la personne qui la détient
+  peut agir dans Rolebase en votre nom. Ne la partagez avec personne, et
+  supprimez la clé dans Rolebase si elle a fuité.
+</Callout>
+
+<Callout type="warning" title="Claude Team et Enterprise">
+  Sur ces offres, un propriétaire ajoute le connecteur pour toute l'organisation
+  Claude, avec une seule clé API. Tous les membres agiraient alors dans Rolebase
+  avec le compte de ce propriétaire.
+</Callout>
+
+### Mistral Vibe
+
+1. Ouvrez la page **Connecteurs** et ajoutez un connecteur depuis l'onglet de connecteur MCP personnalisé (**Custom MCP Connector**).
+2. Nommez-le `rolebase`, saisissez l'URL du serveur, puis cliquez sur **Connecter**.
+3. Quand Mistral Vibe demande l'authentification, choisissez l'option jeton bearer et collez votre clé API.
+
+### ChatGPT
+
+ChatGPT accepte uniquement les connecteurs sans authentification ou avec une connexion OAuth. La clé API se place donc dans l'URL du connecteur :
+
+```
+https://api.rolebase.io/mcp/VOTRE_CLE_API
+```
+
+<Callout type="warning" title="Clé dans l'URL">
+  Cette URL contient votre clé API : la personne qui la détient peut agir dans
+  Rolebase en votre nom. Ne la partagez avec personne, et supprimez la clé dans
+  Rolebase si elle a fuité.
+</Callout>
+
+1. Dans ChatGPT sur le web, ouvrez les **Paramètres**, puis **Applications** (appelé **Connecteurs** sur certains comptes).
+2. Dans les paramètres avancés, activez le **mode développeur** si ChatGPT le demande.
+3. Créez une application : nommez-la « Rolebase », collez l'URL ci-dessus avec votre clé et choisissez **Aucune authentification**.
+4. Dans une conversation, activez l'application Rolebase depuis le menu **+**.
+
+Les applications personnalisées sont disponibles sur les offres payantes de ChatGPT, selon les options qu'OpenAI ouvre à votre compte.
+
+### Outils de développement
+
+Pour connecter Claude Code, Codex, Cursor ou VS Code, consultez la page [Serveur MCP](/fr/developers/mcp) de la section Développeurs. Ces agents peuvent aussi utiliser la [skill Rolebase](/fr/developers/skill) à la place du connecteur : elle appelle directement l'API Rolebase avec votre clé API.
+
+## Vérifier la connexion
+
+Demandez à votre assistant « Quelles sont mes organisations Rolebase ? ». Il doit les lister. S'il signale une clé API manquante ou invalide, vérifiez l'URL, ou créez une nouvelle clé et ajoutez de nouveau le connecteur.
+
+## Révoquer l'accès
+
+Supprimez la clé API dans **Mon compte > Clés API**. L'assistant perd l'accès immédiatement, et vos autres clés continuent de fonctionner.
