@@ -70,6 +70,18 @@ Le panneau sépare deux décisions. Dans **Paramètres de publication**, la page
 
 Dans **Paramètres du lien**, vous choisissez la vue sur laquelle la page s'ouvre, la possibilité pour les visiteurs de zoomer et de se déplacer, et un fond transparent pour se fondre dans votre propre site. Ces réglages sont contenus dans l'adresse, donc vous pouvez créer plusieurs liens avec des réglages différents. Le panneau vous donne un lien à partager et un code iframe pour intégrer l'organigramme dans une page de votre site.
 
+Le lien contient l'identifiant de votre organisation, la vue choisie et les options activées :
+
+```
+https://rolebase.io/share/?orgId=ID_DE_VOTRE_ORGANISATION&view=Circles&zoom
+```
+
+Le code iframe reprend ce même lien, à coller dans le code HTML de votre page. Vous pouvez ajuster `width` et `height` à votre mise en page :
+
+```html
+<iframe src="https://rolebase.io/share/?orgId=ID_DE_VOTRE_ORGANISATION&view=Circles&zoom" width="95%" height="800" frameborder="0"></iframe>
+```
+
 Désactiver **Activer le partage** retire aussitôt la page publique.
 
 ## Prochaines étapes

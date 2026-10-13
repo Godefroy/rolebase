@@ -70,6 +70,18 @@ The panel separates two decisions. Under **Publishing settings**, the public pag
 
 Under **Link settings**, you choose the view the page opens on, whether visitors can zoom and pan, and whether the background stays transparent to blend into your own site. These settings are part of the address, so you can create several links with different settings. The panel gives you a link to share and an iframe code to embed the org chart in a page of your website.
 
+The link carries your organization's identifier, the chosen view and the options you turned on:
+
+```
+https://rolebase.io/share/?orgId=YOUR_ORGANIZATION_ID&view=Circles&zoom
+```
+
+The iframe code wraps that same link, ready to paste into the HTML of your page. You can adjust `width` and `height` to fit your layout:
+
+```html
+<iframe src="https://rolebase.io/share/?orgId=YOUR_ORGANIZATION_ID&view=Circles&zoom" width="95%" height="800" frameborder="0"></iframe>
+```
+
 Turning **Enable sharing** off takes the public page down right away.
 
 ## Next Steps
