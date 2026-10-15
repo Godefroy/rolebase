@@ -1,4 +1,6 @@
 ---
+import { getLangFromUrl, langPath } from '../utils/i18n'
+
 interface Props {
   /** Ancestors of the page, from the section root down to its direct parent. */
   trail: { label: string; href: string }[]
@@ -11,7 +13,7 @@ const { trail, title, hideTitle = false, class: className } = Astro.props
 
 const linkClass = 'text-text-secondary hover:text-text-main hover:underline transition-colors'
 const origin = Astro.site?.origin ?? ''
-const items = [{ label: 'Rolebase', href: '/' }, ...trail]
+const items = [{ label: 'Rolebase', href: langPath(getLangFromUrl(Astro.url), '') }, ...trail]
 ---
 
 <nav class:list={['text-sm text-text-secondary', className]}>
