@@ -286,39 +286,36 @@ export default function OrgSetupModal({ onClose }: Props) {
             {t('common.continue')}
           </Button>
         )}
-        {step === SetupStep.Invite &&
-          (invites.length > 0 ? (
-            <>
-              <Link
-                as="button"
-                type="button"
-                textDecoration="underline"
-                onClick={() => finish(false)}
-                pointerEvents={loading ? 'none' : undefined}
-                opacity={loading ? 0.5 : 1}
-              >
-                {t('OrgSetupModal.invite.later')}
-              </Link>
-              <Button
-                colorScheme="blue"
-                leftIcon={<EmailIcon size="1em" />}
-                onClick={() => finish(true)}
-                isLoading={loading}
-                // The step shows the plan's limit instead
-                isDisabled={invites.length > availableSeats}
-              >
-                {t('OrgSetupModal.invite.send', { count: invites.length })}
-              </Button>
-            </>
-          ) : (
+        {/* Inviting is the main action, waiting for a first address:
+            organizations almost never invite once the setup is over */}
+        {step === SetupStep.Invite && (
+          <>
+            <Link
+              as="button"
+              type="button"
+              textDecoration="underline"
+              onClick={() => finish(false)}
+              pointerEvents={loading ? 'none' : undefined}
+              opacity={loading ? 0.5 : 1}
+            >
+              {t('OrgSetupModal.invite.later')}
+            </Link>
             <Button
               colorScheme="blue"
-              onClick={() => finish(false)}
+              leftIcon={<EmailIcon size="1em" />}
+              onClick={() => finish(true)}
               isLoading={loading}
+              // The step shows the plan's limit instead
+              isDisabled={
+                invites.length === 0 || invites.length > availableSeats
+              }
             >
-              {t('Onboarding.finish')}
+              {invites.length > 0
+                ? t('OrgSetupModal.invite.send', { count: invites.length })
+                : t('OrgSetupModal.invite.sendNone')}
             </Button>
-          ))}
+          </>
+        )}
       </Flex>
     </BrandModal>
   )

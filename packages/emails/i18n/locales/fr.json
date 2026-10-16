@@ -85,8 +85,9 @@
       "paragraph1": "Bonjour {{name}}, l’organigramme de {{org}} est en place. Invitez maintenant les personnes qui travaillent avec vous.",
       "paragraph1Members_one": "Bonjour {{name}}, l’organigramme de {{org}} est en place. Vous y avez ajouté {{count}} membre qui ne le voit pas encore : invitez-le avec son adresse email.",
       "paragraph1Members_other": "Bonjour {{name}}, l’organigramme de {{org}} est en place. Vous y avez ajouté {{count}} membres qui ne le voient pas encore : invitez-les avec leur adresse email.",
-      "paragraph2": "Chaque collègue qui rejoint l’organisation retrouve ses rôles et sait à qui s’adresser pour chaque sujet. Vous pouvez ensuite préparer la prochaine réunion ensemble.",
-      "paragraph3": "Pour inviter quelqu’un, son adresse email suffit.",
+      "paragraph2": "En solo, vous avez un organigramme. À plusieurs, Rolebase devient l’outil de travail de l’équipe : chacun retrouve ses rôles et ses redevabilités, voit qui porte quoi et sait à qui s’adresser pour chaque sujet, sans avoir à vous le demander.",
+      "paragraph3": "Les réunions prennent aussi tout leur sens : chacun ajoute ses points à l’ordre du jour, et les décisions et les tâches restent rattachées aux rôles et aux bonnes personnes. Entre deux réunions, les sujets avancent dans les discussions.",
+      "paragraph4": "Pour inviter quelqu’un, son adresse email suffit. Les 5 premiers comptes sont gratuits.",
       "cta": "Inviter mon équipe"
     }
   }

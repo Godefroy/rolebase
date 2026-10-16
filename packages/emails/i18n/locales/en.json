@@ -85,8 +85,9 @@
       "paragraph1": "Hi {{name}}, the {{org}} org chart is in place. Now invite the people you work with.",
       "paragraph1Members_one": "Hi {{name}}, the {{org}} org chart is in place. You added {{count}} member to it who can’t see it yet: invite them with their email address.",
       "paragraph1Members_other": "Hi {{name}}, the {{org}} org chart is in place. You added {{count}} members to it who can’t see it yet: invite them with their email addresses.",
-      "paragraph2": "Each colleague who joins finds their roles and knows who to turn to for each topic. You can then prepare the next meeting together.",
-      "paragraph3": "To invite someone, all you need is their email address.",
+      "paragraph2": "On your own, you have an org chart. Together, Rolebase becomes your team’s workspace: everyone finds their roles and accountabilities, sees who holds what and knows who to turn to for each topic, without having to ask you.",
+      "paragraph3": "Meetings make sense too: everyone adds their points to the agenda, and decisions and tasks stay attached to the roles and the right people. Between meetings, topics move forward in threads.",
+      "paragraph4": "To invite someone, all you need is their email address. The first 5 accounts are free.",
       "cta": "Invite my team"
     }
   }

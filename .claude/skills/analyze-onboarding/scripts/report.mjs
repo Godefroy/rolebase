@@ -193,6 +193,8 @@ for (const [event, prop] of [
   ['org_setup_failed', 'reason'],
   ['org_archived', 'ageMinutes'],
   ['onboarding_todo_dismissed', 'doneCount'],
+  // 0 = solo org, more = members typed at the setup and left uninvited
+  ['invite_step_skipped', 'membersCount'],
 ]) {
   const values = await umami(
     `/websites/${WEBSITE}/event-data/values?startAt=${Date.parse(from)}&endAt=${now}&event=${event}&propertyName=${prop}`
@@ -209,11 +211,34 @@ for (const e of cur
   .filter((e) => FUNNEL.test(e.eventName))
   .sort((a, b) => a.createdAt.localeCompare(b.createdAt)))
   (bySession[e.sessionId] ||= []).push(e)
+const obSessions = Object.entries(bySession).filter(([, evs]) =>
+  evs.some((e) => /^(onboarding_|org_setup)/.test(e.eventName))
+)
+// The account behind each session: AuthProvider identifies it with the user
+// id. A session is per device and day, so it holds the last account signed in.
+const sessionUser = {}
+for (const [session] of obSessions) {
+  const props = await umami(
+    `/websites/${WEBSITE}/sessions/${session}/properties`
+  ).catch(() => [])
+  const userId = props.find((p) => p.dataKey === 'userId')?.stringValue
+  if (/^[0-9a-f-]{36}$/.test(userId || '')) sessionUser[session] = userId
+}
+const accounts = {}
+const userIds = Object.values(sessionUser)
+if (userIds.length)
+  for (const [id, domain, created, orgs] of (
+    await sql(`
+select u.id, split_part(u.email,'@',2), to_char(u.created_at,'YYYY-MM-DD'),
+  (select count(*) from member m where m."userId"=u.id)
+from auth.users u where u.id in (${userIds.map((id) => `'${id}'`).join(',')})`)
+  ).slice(1))
+    accounts[id] = `${domain} (account ${created}, ${orgs} orgs now)`
+
 console.log(
   '\n== Umami: sessions of the window touching onboarding (ob = onboarding_, setup = org_setup_)'
 )
-for (const [session, evs] of Object.entries(bySession)) {
-  if (!evs.some((e) => /^(onboarding_|org_setup)/.test(e.eventName))) continue
+for (const [session, evs] of obSessions) {
   const seq = []
   for (const e of evs) {
     const n = e.eventName
@@ -226,6 +251,7 @@ for (const [session, evs] of Object.entries(bySession)) {
     evs[0].createdAt.slice(5, 16),
     session.slice(0, 6),
     evs[0].country || '',
+    accounts[sessionUser[session]] || '?',
     seq.map((x) => (x.c > 1 ? `${x.n}x${x.c}` : x.n)).join(' > ')
   )
 }

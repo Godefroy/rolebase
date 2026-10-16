@@ -78,8 +78,8 @@ export default webhookProcedure.mutation(async () => {
       replace: { name: user.displayName, org: org.name },
       count: withoutAccess,
       paragraphs: withoutAccess
-        ? ['paragraph1Members', 'paragraph2']
-        : ['paragraph1', 'paragraph2', 'paragraph3'],
+        ? ['paragraph1Members', 'paragraph2', 'paragraph3', 'paragraph4']
+        : ['paragraph1', 'paragraph2', 'paragraph3', 'paragraph4'],
       ctaUrl: `${settings.url}${getOrgPath(org)}/settings/members?invite`,
     })
     await markSent(user.id, metadata, 'noInvite')

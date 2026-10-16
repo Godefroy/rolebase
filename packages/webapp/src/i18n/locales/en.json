@@ -1720,7 +1720,7 @@
     "holder": "Held by",
     "invite": {
       "heading": "Invite your team",
-      "help": "Each invited person receives an email to join the organization. Leave empty the ones you'd rather invite later.",
+      "help": "Each invited person receives an email to join the organization, find their roles and prepare meetings with you.",
       "emailLabel": "Email of {{name}}",
       "newEmailLabel": "Email of the person to invite",
       "add": "Add someone",
@@ -1730,6 +1730,7 @@
       "later": "Later",
       "send_one": "Send the invitation",
       "send_other": "Send the {{count}} invitations",
+      "sendNone": "Send the invitations",
       "partialError_one": "{{count}} invitation couldn't be sent. Try again from Getting started.",
       "partialError_other": "{{count}} invitations couldn't be sent. Try again from Getting started."
     },

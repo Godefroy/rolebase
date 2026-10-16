@@ -117,9 +117,12 @@ export default function OrgSetupStepInvite({ emails, onChange }: Props) {
         </Button>
       </Box>
 
-      <Text fontSize="sm" color="gray.500">
-        {t('OrgSetupModal.invite.pricing')}
-      </Text>
+      {/* Pricing only matters once the plan's free seats are filled */}
+      {isLimitReached && (
+        <Text fontSize="sm" color="gray.500">
+          {t('OrgSetupModal.invite.pricing')}
+        </Text>
+      )}
 
       {isLimitReached && members.length + newIds.length > availableSeats && (
         <Text fontSize="sm">

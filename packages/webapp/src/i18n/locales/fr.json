@@ -1721,7 +1721,7 @@
     "holder": "Occupé par",
     "invite": {
       "heading": "Invitez votre équipe",
-      "help": "Chaque personne invitée reçoit un email pour rejoindre l'organisation. Laissez vide celles que vous préférez inviter plus tard.",
+      "help": "Chaque personne invitée reçoit un email pour rejoindre l'organisation, retrouver ses rôles et préparer les réunions avec vous.",
       "emailLabel": "Email de {{name}}",
       "newEmailLabel": "Email de la personne à inviter",
       "add": "Ajouter une personne",
@@ -1731,6 +1731,7 @@
       "later": "Plus tard",
       "send_one": "Envoyer l'invitation",
       "send_other": "Envoyer les {{count}} invitations",
+      "sendNone": "Envoyer les invitations",
       "partialError_one": "{{count}} invitation n'a pas pu être envoyée. Réessayez depuis la prise en main.",
       "partialError_other": "{{count}} invitations n'ont pas pu être envoyées. Réessayez depuis la prise en main."
     },
