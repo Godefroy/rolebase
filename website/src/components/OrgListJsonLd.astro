@@ -1,7 +1,8 @@
 ---
 /**
- * `ItemList` schema for a ranked listicle: one `Organization` per ranked
- * player, in the order the `items` array gives them. Goes at the very end of
+ * `ItemList` schema for a ranked listicle: one `Organization` (or the
+ * `itemType` given) per ranked player, in the order the `items` array gives
+ * them. Goes at the very end of
  * the article, after the conclusion, so the prose stays first in the source.
  */
 import JsonLd from './JsonLd.astro'
@@ -11,6 +12,8 @@ interface Item {
   name: string
   /** Canonical URL of the ranked player. */
   url: string
+  /** Author names, for an `itemType` such as `Book`. */
+  authors?: string[]
 }
 
 interface Props {
@@ -18,11 +21,13 @@ interface Props {
   name: string
   /** Optional one-line description of what the list ranks. */
   description?: string
+  /** Schema.org type of the ranked players. Defaults to `Organization`. */
+  itemType?: string
   /** Ranked players, in ranking order. */
   items: Item[]
 }
 
-const { name, description, items } = Astro.props
+const { name, description, itemType = 'Organization', items } = Astro.props
 ---
 
 <JsonLd
@@ -37,9 +42,17 @@ const { name, description, items } = Astro.props
       '@type': 'ListItem',
       'position': index + 1,
       'item': {
-        '@type': 'Organization',
+        '@type': itemType,
         'name': item.name,
         'url': item.url,
+        ...(item.authors
+          ? {
+              author: item.authors.map((author) => ({
+                '@type': 'Person',
+                'name': author,
+              })),
+            }
+          : {}),
       },
     })),
   }}
