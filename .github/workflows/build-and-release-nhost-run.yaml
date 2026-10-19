@@ -66,35 +66,40 @@ jobs:
 
       - name: Prepare
         run: |
-          IMAGE='${{ inputs.IMAGE }}'
-          echo "IMAGE_NAME=${IMAGE%:*}" >> "$GITHUB_ENV"
           PLATFORM='${{ matrix.platform }}'
           echo "PLATFORM_PAIR=${PLATFORM//\//-}" >> "$GITHUB_ENV"
 
-      - name: Build and push by digest
+      # Each platform image is pushed with its own tag (IMAGE-linux-amd64...)
+      # rather than by digest: the Nhost registry intermittently answers 403
+      # or "service not found" on untagged manifests
+      - name: Build and push
         id: build
+        continue-on-error: true
         uses: docker/build-push-action@v6
         with:
           context: ${{ inputs.DOCKER_CONTEXT }}
           file: ${{ inputs.DOCKER_FILE }}
           platforms: ${{ matrix.platform }}
-          outputs: type=image,name=${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=true
+          tags: ${{ inputs.IMAGE }}-${{ env.PLATFORM_PAIR }}
+          push: true
           cache-from: type=gha,scope=${{ env.PLATFORM_PAIR }}
           cache-to: type=gha,mode=max,scope=${{ env.PLATFORM_PAIR }}
 
-      - name: Export digest
-        run: |
-          mkdir -p ${{ runner.temp }}/digests
-          digest='${{ steps.build.outputs.digest }}'
-          touch "${{ runner.temp }}/digests/${digest#sha256:}"
+      # Retry once after a transient registry error, layers come from the cache
+      - name: Wait before retry
+        if: steps.build.outcome == 'failure'
+        run: sleep 30
 
-      - name: Upload digest
-        uses: actions/upload-artifact@v4
+      - name: Build and push (retry)
+        if: steps.build.outcome == 'failure'
+        uses: docker/build-push-action@v6
         with:
-          name: digests-${{ env.PLATFORM_PAIR }}
-          path: ${{ runner.temp }}/digests/*
-          if-no-files-found: error
-          retention-days: 1
+          context: ${{ inputs.DOCKER_CONTEXT }}
+          file: ${{ inputs.DOCKER_FILE }}
+          platforms: ${{ matrix.platform }}
+          tags: ${{ inputs.IMAGE }}-${{ env.PLATFORM_PAIR }}
+          push: true
+          cache-from: type=gha,scope=${{ env.PLATFORM_PAIR }}
 
   deploy:
     needs: [build]
@@ -115,21 +120,18 @@ jobs:
       - name: Configure docker credentials
         uses: nhost-actions/configure-container-registry@v1
 
-      - name: Download digests
-        uses: actions/download-artifact@v4
-        with:
-          path: ${{ runner.temp }}/digests
-          pattern: digests-*
-          merge-multiple: true
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
       - name: Create multi-platform manifest
-        working-directory: ${{ runner.temp }}/digests
         run: |
           IMAGE='${{ inputs.IMAGE }}'
-          docker buildx imagetools create -t "$IMAGE" $(printf "${IMAGE%:*}@sha256:%s " *)
+          for attempt in 1 2 3; do
+            docker buildx imagetools create -t "$IMAGE" "$IMAGE-linux-amd64" "$IMAGE-linux-arm64" && break
+            [ "$attempt" = 3 ] && exit 1
+            echo "Registry error, retrying in $((attempt * 30))s"
+            sleep $((attempt * 30))
+          done
           docker buildx imagetools inspect "$IMAGE"
 
       - name: Deploy service configuration
