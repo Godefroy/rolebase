@@ -180,7 +180,7 @@ cpu = 1000
 memory = 2048
 
 [postgres.resources.storage]
-capacity = 10
+capacity = 20
 
 [provider]
 [provider.smtp]
