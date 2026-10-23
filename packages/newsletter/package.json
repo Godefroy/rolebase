@@ -1,0 +1,20 @@
+{
+  "name": "@rolebase/newsletter",
+  "version": "1.0.0",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "newsletter": "tsx src/cli.ts",
+    "tsc": "tsc --noEmit"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "marked": "^17.0.6",
+    "yaml": "^2.8.3"
+  },
+  "devDependencies": {
+    "@types/node": "^18.8.3",
+    "tsx": "^4.7.1",
+    "typescript": "^5.2.2"
+  }
+}

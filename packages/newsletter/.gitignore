@@ -1,0 +1,3 @@
+.env
+# Users already sent a legal email, to resume an interrupted send
+campaigns/*/sent.txt
