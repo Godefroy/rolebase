@@ -44,12 +44,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [])
 
-  // Who is in the session, in pseudonymous form: user id and the onboarding
-  // answers already collected in the user metadata, never the email or name.
+  // Who is in the session: the onboarding answers already collected in the
+  // user metadata, never the user id, email or name (see the privacy policy).
   useEffect(() => {
     if (!user) return
     identify({
-      userId: user.id,
       locale: user.locale,
       emailVerified: user.emailVerified,
       onboardingRole: user.metadata?.onboardingRole as string | undefined,
