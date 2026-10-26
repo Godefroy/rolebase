@@ -21,7 +21,7 @@ export default function DeletionConfirmInput({
     <FormControl>
       <FormLabel fontSize="sm">
         <Trans
-          i18nKey="SuperAdmin.deletion.confirm"
+          i18nKey="Deletion.confirm"
           values={{ expected }}
           components={{ b: <Code colorScheme="red" fontSize="sm" /> }}
         />

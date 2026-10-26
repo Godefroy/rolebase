@@ -69,9 +69,13 @@ Un membre jamais invité répond `NOT_FOUND`. La procédure ne renvoie rien.
 
 ## Mutation `member.archiveMember`
 
-Archive un membre, le détache de son compte utilisateur et efface son rôle d’accès et son invitation. Un Admin archive n’importe quel membre, archiver un Owner demande le rôle Owner, et le dernier Owner actif est protégé. Un membre ne peut pas s’archiver lui-même, ce qui répond `FORBIDDEN`.
+Archive un membre, le détache de son compte utilisateur et efface son rôle d’accès et son invitation. Un Admin archive n’importe quel membre, archiver un Owner demande le rôle Owner, et le dernier Owner actif est protégé. Un membre ne peut pas s’archiver lui-même, ce qui répond `FORBIDDEN` : il passe par `member.leaveOrg`.
 
 La procédure prend `{ memberId }`, met à jour le nombre de sièges de l’abonnement quand le membre était rattaché à un utilisateur, et ne renvoie rien.
+
+## Mutation `member.leaveOrg`
+
+L’utilisateur courant quitte une organisation : son membre est archivé comme avec `member.archiveMember`, sans demander le rôle Admin. La procédure prend `{ orgId }`, met à jour le nombre de sièges de l’abonnement et ne renvoie rien. Le dernier Owner actif ne peut pas partir, ce qui répond `BAD_REQUEST`.
 
 ## Mutation `member.restoreMember`
 

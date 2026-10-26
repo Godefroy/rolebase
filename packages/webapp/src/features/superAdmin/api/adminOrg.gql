@@ -1,0 +1,37 @@
+query AdminOrg($id: uuid!) {
+  org_by_pk(id: $id) {
+    id
+    name
+    slug
+    createdAt
+    archivedAt
+    org_subscription {
+      id
+      status
+      type
+      createdAt
+      stripeCustomerId
+      stripeSubscriptionId
+    }
+    members(
+      where: { archivedAt: { _is_null: true } }
+      order_by: { name: asc }
+    ) {
+      id
+      name
+      role
+      inviteEmail
+      user {
+        id
+        displayName
+        email
+        lastSeen
+      }
+    }
+    circles_aggregate(where: { archivedAt: { _is_null: true } }) {
+      aggregate {
+        count
+      }
+    }
+  }
+}

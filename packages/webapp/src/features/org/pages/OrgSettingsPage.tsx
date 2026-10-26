@@ -5,6 +5,7 @@ import useCopyUrl from '@/common/hooks/useCopyUrl'
 import { CirclesGraphViews } from '@/graph/types'
 import { defaultGraphView, parseGraphView } from '@rolebase/shared/model/graph'
 import {
+  Box,
   Button,
   Flex,
   FormControl,
@@ -34,7 +35,7 @@ import useOrg from '../hooks/useOrg'
 import { useOrgContext } from '@/org/contexts/OrgContext'
 import GovernanceModeSelect from '../components/GovernanceModeSelect'
 import OrgIconEdit from '../components/OrgIconEdit'
-import OrgDeleteModal from '../modals/OrgDeleteModal'
+import OrgDeletionCard from '../components/OrgDeletionCard'
 import OrgSlugModal from '../modals/OrgSlugModal '
 
 interface Values {
@@ -59,7 +60,6 @@ export default function OrgSettingsPage() {
   const isOwner = useOrgOwner()
   const [editOrg] = useUpdateOrgMutation()
 
-  const deleteModal = useDisclosure()
   const slugModal = useDisclosure()
 
   const {
@@ -185,14 +185,7 @@ export default function OrgSettingsPage() {
             />
           </FormControl>
 
-          <Flex w="100%" justify="space-between" pt={4}>
-            <Button
-              colorScheme="red"
-              variant="ghost"
-              onClick={deleteModal.onOpen}
-            >
-              {t('common.delete')}
-            </Button>
+          <Flex w="100%" justify="flex-end" pt={4}>
             <Button colorScheme="blue" type="submit">
               {t('common.save')}
             </Button>
@@ -200,8 +193,10 @@ export default function OrgSettingsPage() {
         </VStack>
       </form>
 
-      {deleteModal.isOpen && (
-        <OrgDeleteModal id={orgId} isOpen onClose={deleteModal.onClose} />
+      {isOwner && (
+        <Box maxW="xl" mt={16}>
+          <OrgDeletionCard orgId={orgId} />
+        </Box>
       )}
 
       {slugModal.isOpen && (

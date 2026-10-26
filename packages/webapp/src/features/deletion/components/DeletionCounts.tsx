@@ -15,7 +15,7 @@ export default function DeletionCounts({ counts }: Props) {
   if (entries.length === 0) {
     return (
       <Text fontSize="sm" color="gray.500">
-        {t('SuperAdmin.deletion.nothing')}
+        {t('Deletion.nothing')}
       </Text>
     )
   }
@@ -26,7 +26,7 @@ export default function DeletionCounts({ counts }: Props) {
         <DeletionCountTile
           key={key}
           count={count}
-          label={t(`SuperAdmin.deletion.counts.${key}` as any, { count })}
+          label={t(`Deletion.counts.${key}` as any, { count })}
         />
       ))}
     </SimpleGrid>

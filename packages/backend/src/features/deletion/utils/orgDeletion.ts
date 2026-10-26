@@ -1,4 +1,5 @@
 import { isSubscriptionActive } from '@rolebase/shared/model/subscription'
+import { TRPCError } from '@trpc/server'
 import { gql } from '../../../gql'
 import { adminRequest } from '../../../utils/adminRequest'
 import { nhost } from '../../../utils/nhost'
@@ -22,6 +23,47 @@ export interface OrgSubscriptionSummary {
   type: string | null
   status: string
   active: boolean
+}
+
+export interface OrgDeletionPreview {
+  org: { id: string; name: string; slug?: string | null }
+  counts: OrgDeletionCounts
+  files: number
+  subscription: OrgSubscriptionSummary | null
+}
+
+export async function getOrg(orgId: string) {
+  const { org_by_pk } = await adminRequest(GET_ORG, { orgId })
+  if (!org_by_pk) {
+    throw new TRPCError({ code: 'NOT_FOUND', message: 'Org not found' })
+  }
+  return org_by_pk
+}
+
+export async function getOrgDeletionPreview(
+  orgId: string
+): Promise<OrgDeletionPreview> {
+  const org = await getOrg(orgId)
+  const [counts, files, subscriptions] = await Promise.all([
+    getOrgDeletionCounts([orgId]),
+    getOrgFileIds([orgId]),
+    getOrgSubscriptions([orgId]),
+  ])
+  const subscription = subscriptions[0]
+
+  return {
+    org,
+    counts,
+    files: files.length,
+    subscription: subscription
+      ? {
+          orgId: subscription.orgId,
+          type: subscription.type,
+          status: subscription.status,
+          active: subscription.active,
+        }
+      : null,
+  }
 }
 
 export async function getOrgDeletionCounts(
@@ -132,6 +174,27 @@ export async function deleteFiles(fileIds: string[]): Promise<number> {
   }
   return failed
 }
+
+// Deletes the orgs, their content and their files for good. Returns the
+// number of files that could not be deleted.
+export async function deleteOrgsForGood(orgIds: string[]): Promise<number> {
+  if (orgIds.length === 0) return 0
+  // Files are listed before their references disappear
+  const fileIds = await getOrgFileIds(orgIds)
+  await cancelOrgSubscriptions(orgIds)
+  await deleteOrgs(orgIds)
+  return deleteFiles(fileIds)
+}
+
+const GET_ORG = gql(`
+  query getOrgForDeletion($orgId: uuid!) {
+    org_by_pk(id: $orgId) {
+      id
+      name
+      slug
+    }
+  }
+`)
 
 const GET_ORGS_COUNTS = gql(`
   query getOrgsDeletionCounts($orgIds: [uuid!]!) {

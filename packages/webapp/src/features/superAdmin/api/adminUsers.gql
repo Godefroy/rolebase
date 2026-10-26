@@ -1,4 +1,9 @@
-query AdminUsers($limit: Int!, $offset: Int!, $search: String!, $searchCitext: citext!) {
+query AdminUsers(
+  $limit: Int!
+  $offset: Int!
+  $search: String!
+  $searchCitext: citext!
+) {
   users(
     limit: $limit
     offset: $offset
@@ -13,6 +18,7 @@ query AdminUsers($limit: Int!, $offset: Int!, $search: String!, $searchCitext: c
     id
     displayName
     email
+    avatarUrl
     createdAt
     lastSeen
     disabled

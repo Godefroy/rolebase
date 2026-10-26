@@ -1,8 +1,13 @@
-query AdminOrgs($limit: Int!, $offset: Int!, $search: String!) {
+query AdminOrgs(
+  $limit: Int!
+  $offset: Int!
+  $search: String!
+  $active: Boolean!
+) {
   org(
     limit: $limit
     offset: $offset
-    where: { name: { _ilike: $search }, archivedAt: { _is_null: true } }
+    where: { name: { _ilike: $search }, archivedAt: { _is_null: $active } }
     order_by: { createdAt: desc }
   ) {
     id
@@ -22,7 +27,7 @@ query AdminOrgs($limit: Int!, $offset: Int!, $search: String!) {
     }
   }
   org_aggregate(
-    where: { name: { _ilike: $search }, archivedAt: { _is_null: true } }
+    where: { name: { _ilike: $search }, archivedAt: { _is_null: $active } }
   ) {
     aggregate {
       count

@@ -40,6 +40,7 @@ import MemberOrgRoleSelect from '../components/MemberOrgRoleSelect'
 import useOrgAdmin from '../hooks/useOrgAdmin'
 import useOrgOwner from '../hooks/useOrgOwner'
 import MembersInviteModal from '../modals/MembersInviteModal'
+import OrgLeaveCard from '@/org/components/OrgLeaveCard'
 
 export default function MembersPage() {
   const { t } = useTranslation()
@@ -267,6 +268,10 @@ export default function MembersPage() {
         </Box>
 
         <Loading active={loading} size="md" />
+
+        <Box mt={10}>
+          <OrgLeaveCard />
+        </Box>
       </VStack>
 
       {isInviteOpen && <MembersInviteModal isOpen onClose={onInviteClose} />}

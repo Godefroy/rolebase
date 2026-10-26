@@ -2,12 +2,16 @@ import Loading from '@/common/atoms/Loading'
 import TextError from '@/common/atoms/TextError'
 import { useAdminOrgsQuery } from '@gql'
 import {
-  Button,
+  Avatar,
+  Box,
+  Flex,
   Heading,
   HStack,
   Input,
+  Tab,
   Table,
-  Tag,
+  TabList,
+  Tabs,
   Tbody,
   Td,
   Text,
@@ -18,17 +22,20 @@ import {
 import debounce from 'lodash.debounce'
 import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { getOrgPath } from '@rolebase/shared/helpers/getOrgPath'
-import { Link } from 'react-router'
-import DeleteOrgButton from '../components/DeleteOrgButton'
+import AdminPagination from '../components/AdminPagination'
+import AdminSubscriptionTag from '../components/AdminSubscriptionTag'
+import AdminTableRow from '../components/AdminTableRow'
+import useAdminSelection from '../hooks/useAdminSelection'
 
 const PAGE_SIZE = 50
 
 export default function AdminOrgsPage() {
   const { t } = useTranslation()
+  const { orgId, openOrg } = useAdminSelection()
   const [search, setSearch] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
   const [offset, setOffset] = useState(0)
+  const [archived, setArchived] = useState(false)
 
   const debouncedSetSearch = useMemo(
     () =>
@@ -44,6 +51,7 @@ export default function AdminOrgsPage() {
       limit: PAGE_SIZE,
       offset,
       search: debouncedSearch ? `%${debouncedSearch}%` : '%',
+      active: !archived,
     },
   })
 
@@ -54,19 +62,36 @@ export default function AdminOrgsPage() {
     debouncedSetSearch(e.target.value)
   }
 
+  const handleTabChange = (index: number) => {
+    setArchived(index === 1)
+    setOffset(0)
+  }
+
   return (
     <>
       <Heading size="md" mb={6}>
         {t('SuperAdmin.orgs.heading')}
       </Heading>
 
-      <Input
-        placeholder={t('SuperAdmin.orgs.searchPlaceholder')}
-        value={search}
-        onChange={handleSearchChange}
-        mb={4}
-        maxW="400px"
-      />
+      <Flex mb={4} gap={4} align="center" wrap="wrap">
+        <Input
+          placeholder={t('SuperAdmin.orgs.searchPlaceholder')}
+          value={search}
+          onChange={handleSearchChange}
+          maxW="400px"
+        />
+        <Tabs
+          variant="soft-rounded"
+          size="sm"
+          index={archived ? 1 : 0}
+          onChange={handleTabChange}
+        >
+          <TabList>
+            <Tab>{t('SuperAdmin.orgs.tabs.active')}</Tab>
+            <Tab>{t('SuperAdmin.orgs.tabs.archived')}</Tab>
+          </TabList>
+        </Tabs>
+      </Flex>
 
       {loading && <Loading active center />}
       {error && <TextError error={error} />}
@@ -81,31 +106,33 @@ export default function AdminOrgsPage() {
             <Thead>
               <Tr>
                 <Th>{t('SuperAdmin.orgs.columns.name')}</Th>
-                <Th>{t('SuperAdmin.orgs.columns.slug')}</Th>
                 <Th>{t('SuperAdmin.orgs.columns.created')}</Th>
                 <Th isNumeric>{t('SuperAdmin.orgs.columns.members')}</Th>
                 <Th>{t('SuperAdmin.orgs.columns.subscription')}</Th>
-                <Th />
               </Tr>
             </Thead>
             <Tbody>
               {data.org.map((org) => (
-                <Tr key={org.id}>
+                <AdminTableRow
+                  key={org.id}
+                  label={org.name}
+                  isSelected={org.id === orgId}
+                  onSelect={() => openOrg(org.id)}
+                >
                   <Td>
-                    <Link to={`${getOrgPath(org)}/?admin`} target="_blank">
-                      <Text
-                        fontWeight="medium"
-                        color="blue.500"
-                        _hover={{ textDecoration: 'underline' }}
-                      >
-                        {org.name}
-                      </Text>
-                    </Link>
-                  </Td>
-                  <Td>
-                    <Text fontSize="sm" color="gray.600">
-                      {org.slug}
-                    </Text>
+                    <HStack spacing={3}>
+                      <Avatar name={org.name} size="sm" />
+                      <Box minW={0}>
+                        <Text fontWeight="medium" noOfLines={1}>
+                          {org.name}
+                        </Text>
+                        {org.slug && (
+                          <Text fontSize="xs" color="gray.500" noOfLines={1}>
+                            /{org.slug}
+                          </Text>
+                        )}
+                      </Box>
+                    </HStack>
                   </Td>
                   <Td>
                     <Text fontSize="sm">
@@ -116,55 +143,19 @@ export default function AdminOrgsPage() {
                     {org.members_aggregate.aggregate?.count ?? 0}
                   </Td>
                   <Td>
-                    {org.org_subscription ? (
-                      <Tag
-                        size="sm"
-                        colorScheme={
-                          org.org_subscription.status === 'active'
-                            ? 'green'
-                            : 'gray'
-                        }
-                      >
-                        {org.org_subscription.status}
-                        {org.org_subscription.type &&
-                          ` (${org.org_subscription.type})`}
-                      </Tag>
-                    ) : (
-                      <Tag size="sm" colorScheme="gray">
-                        {t('SuperAdmin.orgs.noSubscription')}
-                      </Tag>
-                    )}
+                    <AdminSubscriptionTag subscription={org.org_subscription} />
                   </Td>
-                  <Td isNumeric>
-                    <DeleteOrgButton orgId={org.id} />
-                  </Td>
-                </Tr>
+                </AdminTableRow>
               ))}
             </Tbody>
           </Table>
 
-          {totalCount > PAGE_SIZE && (
-            <HStack mt={4} spacing={4} justify="center">
-              <Button
-                size="sm"
-                isDisabled={offset === 0}
-                onClick={() => setOffset(Math.max(0, offset - PAGE_SIZE))}
-              >
-                {t('SuperAdmin.pagination.previous')}
-              </Button>
-              <Text fontSize="sm">
-                {Math.floor(offset / PAGE_SIZE) + 1} /{' '}
-                {Math.ceil(totalCount / PAGE_SIZE)}
-              </Text>
-              <Button
-                size="sm"
-                isDisabled={offset + PAGE_SIZE >= totalCount}
-                onClick={() => setOffset(offset + PAGE_SIZE)}
-              >
-                {t('SuperAdmin.pagination.next')}
-              </Button>
-            </HStack>
-          )}
+          <AdminPagination
+            offset={offset}
+            pageSize={PAGE_SIZE}
+            totalCount={totalCount}
+            onChange={setOffset}
+          />
         </>
       )}
     </>

@@ -1,0 +1,30 @@
+query AdminUser($id: uuid!) {
+  user(id: $id) {
+    id
+    displayName
+    email
+    emailVerified
+    avatarUrl
+    locale
+    createdAt
+    lastSeen
+    disabled
+    members(order_by: { createdAt: desc }) {
+      id
+      name
+      role
+      archivedAt
+      org {
+        id
+        name
+        slug
+        archivedAt
+        org_subscription {
+          id
+          status
+          type
+        }
+      }
+    }
+  }
+}

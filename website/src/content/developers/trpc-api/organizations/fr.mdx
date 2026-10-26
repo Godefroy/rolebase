@@ -120,6 +120,10 @@ Lit l’organigramme d’une organisation qui le partage publiquement. Cette pro
 
 Elle renvoie `{ circles, roles, members }`, avec `members` vide sauf si l’organisation partage aussi les informations des membres. Une organisation qui ne partage pas son organigramme répond `FORBIDDEN`.
 
+## Query `org.getDeletionPreview`
+
+Liste ce que la suppression d’une organisation supprimerait, pour l’Owner. La procédure prend `{ orgId }` et renvoie `{ org, counts, files, subscription }` : le nombre de membres, rôles, réunions, discussions, messages, tâches, décisions et entrées d’historique, le nombre de fichiers, et l’abonnement actif qui serait résilié.
+
 ## Mutation `org.archiveOrg`
 
-Archive une organisation, pour l’Owner. L’abonnement Stripe, s’il existe, est supprimé au préalable. La procédure prend `{ orgId }` et renvoie ce même identifiant.
+Archive une organisation, pour l’Owner. L’abonnement Stripe, s’il existe, est supprimé au préalable. L’organisation disparaît tout de suite pour ses membres et elle est supprimée définitivement, avec tout son contenu, 30 jours plus tard. La procédure prend `{ orgId }` et renvoie ce même identifiant.

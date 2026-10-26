@@ -69,9 +69,13 @@ A member who was never invited answers `NOT_FOUND`. It returns nothing.
 
 ## Mutation `member.archiveMember`
 
-Archives a member, unlinking it from its user account and clearing its access role and invitation. An Admin can archive any member, archiving an Owner requires Owner, and the last active Owner is protected. Members cannot archive themselves, which answers `FORBIDDEN`.
+Archives a member, unlinking it from its user account and clearing its access role and invitation. An Admin can archive any member, archiving an Owner requires Owner, and the last active Owner is protected. Members cannot archive themselves, which answers `FORBIDDEN`: they use `member.leaveOrg`.
 
 It takes `{ memberId }`, updates the subscription seat count when the member was linked to a user, and returns nothing.
+
+## Mutation `member.leaveOrg`
+
+The current user leaves an organization: their member is archived like with `member.archiveMember`, without needing an Admin role. It takes `{ orgId }`, updates the subscription seat count and returns nothing. The last active Owner cannot leave, which answers `BAD_REQUEST`.
 
 ## Mutation `member.restoreMember`
 

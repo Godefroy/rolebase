@@ -1,4 +1,5 @@
 import Homepage from '@/common/pages/Homepage'
+import AccountDeletedPage from '@/user/pages/AccountDeletedPage'
 import AuthPage from '@/user/pages/AuthPage'
 import ResetPasswordPage from '@/user/pages/ResetPasswordPage'
 import React from 'react'
@@ -11,6 +12,7 @@ export default function PublicRoute() {
       <Route path="login" element={<AuthPage />} />
       <Route path="signup" element={<Navigate to="/login" replace />} />
       <Route path="reset-password" element={<ResetPasswordPage />} />
+      <Route path="account-deleted" element={<AccountDeletedPage />} />
       <Route path="*" element={<AuthPage />} />
     </Routes>
   )

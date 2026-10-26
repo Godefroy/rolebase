@@ -1,6 +1,6 @@
 ---
 title: 'Utilisateurs'
-description: 'Procédure tRPC du routeur user : vérifier qu’un domaine d’email peut recevoir des emails avant la connexion.'
+description: 'Procédures tRPC du routeur user : vérifier qu’un domaine d’email peut recevoir des emails avant la connexion, et supprimer son propre compte.'
 order: 7.5
 ---
 
@@ -21,3 +21,11 @@ const { valid } = await trpc.user.checkEmailDomain.query({
   domain: 'example.com',
 })
 ```
+
+## Query `user.getDeletionPreview`
+
+Liste ce que la suppression du compte de l’utilisateur courant supprimerait ou détacherait : le compte, ses clés d’API et ses intégrations de calendrier, ses organisations archivées supprimées avec lui, et le contenu d’autres organisations conservé tel quel. La procédure ne prend aucun paramètre. Elle n’est pas exposée au serveur MCP.
+
+## Mutation `user.deleteAccount`
+
+Supprime définitivement le compte de l’utilisateur courant. La procédure ne prend aucun paramètre. L’appel est refusé avec `PRECONDITION_FAILED` tant que l’utilisateur est membre d’une organisation active : il la quitte ou la supprime d’abord. Ses organisations archivées dont il était le seul propriétaire, ou auxquelles personne d’autre n’a participé, sont supprimées avec le compte. Le compte est supprimé, ou anonymisé et désactivé tant que du contenu d’autres organisations y fait référence. Elle n’est pas exposée au serveur MCP.

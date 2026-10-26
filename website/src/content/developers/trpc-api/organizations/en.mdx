@@ -120,6 +120,10 @@ Reads the org chart of an organization that shares it publicly. This procedure t
 
 It returns `{ circles, roles, members }`, with `members` empty unless the organization also shares member information. An organization that does not share its org chart answers `FORBIDDEN`.
 
+## Query `org.getDeletionPreview`
+
+Lists what deleting an organization would delete, for the Owner. It takes `{ orgId }` and returns `{ org, counts, files, subscription }`: the number of members, roles, meetings, threads, messages, tasks, decisions and history entries, the number of files, and the active subscription that would be cancelled.
+
 ## Mutation `org.archiveOrg`
 
-Archives an organization, for the Owner. The Stripe subscription, if any, is deleted first. It takes `{ orgId }` and returns that same id.
+Archives an organization, for the Owner. The Stripe subscription, if any, is deleted first. The organization disappears for its members right away and is deleted for good, with all its content, 30 days later. It takes `{ orgId }` and returns that same id.

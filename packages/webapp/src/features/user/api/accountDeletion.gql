@@ -1,0 +1,18 @@
+subscription AccountDeletionMembers($userId: uuid!) {
+  member(
+    where: {
+      userId: { _eq: $userId }
+      archivedAt: { _is_null: true }
+      org: { archivedAt: { _is_null: true } }
+    }
+    order_by: { org: { name: asc } }
+  ) {
+    id
+    role
+    org {
+      id
+      name
+      slug
+    }
+  }
+}

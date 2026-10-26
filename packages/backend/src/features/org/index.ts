@@ -3,6 +3,7 @@ import archiveOrg from './archiveOrg'
 import createOrg from './createOrg'
 import exportOrg from './exportOrg'
 import exportOrgChart from './exportOrgChart'
+import getDeletionPreview from './getDeletionPreview'
 import getPublicData from './getPublicData'
 import importOrg from './importOrg'
 import isOrgSlugAvailable from './isOrgSlugAvailable'
@@ -14,6 +15,7 @@ export default router({
   createOrg,
   exportOrg,
   exportOrgChart,
+  getDeletionPreview,
   getPublicData,
   importOrg,
   isOrgSlugAvailable,

@@ -1,6 +1,5 @@
 import Loading from '@/common/atoms/Loading'
 import TextError from '@/common/atoms/TextError'
-import { useApolloClient } from '@apollo/client'
 import {
   Alert,
   AlertIcon,
@@ -24,37 +23,52 @@ import { trpc } from 'src/trpc'
 import DeletionConfirmInput from '../components/DeletionConfirmInput'
 import DeletionCounts from '../components/DeletionCounts'
 import DeletionModalHeader from '../components/DeletionModalHeader'
+import DeletionOrgLink from '../components/DeletionOrgLink'
 import DeletionSection from '../components/DeletionSection'
 import useDeletionPreview from '../hooks/useDeletionPreview'
 
 interface Props extends Omit<ModalProps, 'children'> {
   orgId: string
+  // Super admin: deletes for good right away. Otherwise the org is archived
+  // and deleted for good after 30 days.
+  immediate?: boolean
+  onDeleted(): void
 }
 
-export default function OrgDeletionModal({ orgId, ...modalProps }: Props) {
+export default function OrgDeletionModal({
+  orgId,
+  immediate,
+  onDeleted,
+  ...modalProps
+}: Props) {
   const { t } = useTranslation()
   const toast = useToast()
-  const apolloClient = useApolloClient()
   const [confirmation, setConfirmation] = useState('')
   const [isDeleting, setIsDeleting] = useState(false)
   const { preview, error } = useDeletionPreview(() =>
-    trpc.superAdmin.getOrgDeletionPreview.query({ orgId })
+    trpc.org.getDeletionPreview.query({ orgId })
   )
 
   const handleDelete = async () => {
     setIsDeleting(true)
     try {
-      const { failedFiles } = await trpc.superAdmin.deleteOrg.mutate({ orgId })
-      toast({
-        title: failedFiles
-          ? t('SuperAdmin.deletion.doneWithFailedFiles', { count: failedFiles })
-          : t('SuperAdmin.deletion.done'),
-        status: failedFiles ? 'warning' : 'success',
-        duration: 4000,
-        isClosable: true,
-      })
-      await apolloClient.refetchQueries({ include: ['AdminOrgs'] })
+      if (immediate) {
+        const { failedFiles } = await trpc.superAdmin.deleteOrg.mutate({
+          orgId,
+        })
+        toast({
+          title: failedFiles
+            ? t('Deletion.doneWithFailedFiles', { count: failedFiles })
+            : t('Deletion.done'),
+          status: failedFiles ? 'warning' : 'success',
+          duration: 4000,
+          isClosable: true,
+        })
+      } else {
+        await trpc.org.archiveOrg.mutate({ orgId })
+      }
       modalProps.onClose()
+      onDeleted()
     } catch (error: any) {
       toast({
         title: error?.message || t('common.error'),
@@ -72,8 +86,8 @@ export default function OrgDeletionModal({ orgId, ...modalProps }: Props) {
       <ModalContent>
         <ModalHeader>
           <DeletionModalHeader
-            title={t('SuperAdmin.deletion.org.heading')}
-            subtitle={preview?.org.name}
+            title={t('Deletion.org.heading')}
+            subtitle={preview && <DeletionOrgLink org={preview.org} />}
           />
         </ModalHeader>
         <ModalCloseButton />
@@ -90,13 +104,19 @@ export default function OrgDeletionModal({ orgId, ...modalProps }: Props) {
             <Stack spacing={4}>
               <Alert status="error" variant="subtle" borderRadius="md">
                 <AlertIcon />
-                {t('SuperAdmin.deletion.org.warning')}
+                {immediate
+                  ? t('Deletion.org.warning')
+                  : t('Deletion.org.warningDelayed')}
               </Alert>
 
               <DeletionSection
                 tone="delete"
                 icon={FiTrash2}
-                title={t('SuperAdmin.deletion.org.deleted')}
+                title={
+                  immediate
+                    ? t('Deletion.org.deleted')
+                    : t('Deletion.org.deletedDelayed')
+                }
               >
                 <DeletionCounts
                   counts={{ ...preview.counts, files: preview.files }}
@@ -107,20 +127,20 @@ export default function OrgDeletionModal({ orgId, ...modalProps }: Props) {
                 <DeletionSection
                   tone="anonymize"
                   icon={FiCreditCard}
-                  title={t('SuperAdmin.deletion.org.subscription', {
+                  title={t('Deletion.org.subscription', {
                     type: preview.subscription.type ?? '',
                   })}
-                  description={`${t(
-                    'SuperAdmin.deletion.org.subscriptionInfo'
-                  )} ${t('SuperAdmin.deletion.stripeKept')}`}
+                  description={`${t('Deletion.org.subscriptionInfo')} ${t(
+                    'Deletion.stripeKept'
+                  )}`}
                 />
               )}
 
               <DeletionSection
                 tone="keep"
                 icon={FiShield}
-                title={t('SuperAdmin.deletion.org.kept')}
-                description={t('SuperAdmin.deletion.org.keptInfo')}
+                title={t('Deletion.org.kept')}
+                description={t('Deletion.org.keptInfo')}
               />
 
               <DeletionConfirmInput
@@ -143,7 +163,7 @@ export default function OrgDeletionModal({ orgId, ...modalProps }: Props) {
             isDisabled={!preview || confirmation !== preview.org.name}
             onClick={handleDelete}
           >
-            {t('SuperAdmin.deletion.submit')}
+            {immediate ? t('Deletion.submit') : t('common.delete')}
           </Button>
         </ModalFooter>
       </ModalContent>

@@ -5,16 +5,18 @@ import {
   getUserDeletionPreview,
   getUserDeletionTarget,
   UserDeletionPreview,
-} from './utils/userDeletion'
+} from '../deletion/utils/userDeletion'
 
 export default adminProcedure
   .input(
     yup.object().shape({
       userId: yup.string().uuid().required(),
+      orgIds: yup.array().of(yup.string().uuid().required()).default([]),
     })
   )
   .query(async (opts): Promise<UserDeletionPreview> => {
-    const target = await getUserDeletionTarget(opts.input.userId)
+    const { userId, orgIds } = opts.input
+    const target = await getUserDeletionTarget(userId, orgIds)
     if (!target) {
       throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' })
     }

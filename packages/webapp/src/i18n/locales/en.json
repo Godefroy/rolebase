@@ -848,11 +848,6 @@
       "button": "Import"
     }
   },
-  "OrgDeleteModal": {
-    "heading": "Delete Organization",
-    "info": "Are you sure you want to delete organization <b>{{name}}</b>?",
-    "warningSubscription": "If a subscription is in progress, you will be refunded for the period not consumed"
-  },
   "OrgEditModal": {
     "heading": "Edit Organization {{org}}",
     "slug": "URL",
@@ -1234,11 +1229,42 @@
       "noSubscription": "Free",
       "columns": {
         "name": "Name",
-        "slug": "Slug",
         "created": "Created",
         "members": "Members",
         "subscription": "Subscription"
-      }
+      },
+      "open": "Open organization",
+      "roles": "Roles",
+      "plan": "Plan",
+      "status": "Status",
+      "since": "Since",
+      "stripeCustomer": "Customer",
+      "stripeSubscription": "Subscription",
+      "freePlan": "Free plan, no subscription.",
+      "noMembers": "No members.",
+      "invited": "Invited: {{email}}",
+      "archivedTag": "Archived",
+      "tabs": {
+        "active": "Active",
+        "archived": "Archived"
+      },
+      "archive": {
+        "title": "Archive organization",
+        "description": "Hides it from its members and cancels its active subscription. It can be restored."
+      },
+      "restore": {
+        "title": "Restore organization",
+        "description": "Makes it available again to its members. The subscription is not restored."
+      },
+      "delete": {
+        "title": "Delete organization",
+        "description": "Deletes it and all its content for good. Member accounts are kept."
+      },
+      "archiveConfirm": {
+        "heading": "Archive {{name}}?",
+        "info": "Its members will no longer see it and its active subscription will be cancelled in Stripe."
+      },
+      "purge": "Deleted for good on"
     },
     "users": {
       "heading": "Users",
@@ -1248,13 +1274,34 @@
       "disabled": "Disabled",
       "columns": {
         "name": "Name",
-        "email": "Email",
         "created": "Created",
         "lastSeen": "Last seen",
         "orgs": "Orgs",
         "status": "Status"
       },
-      "impersonate": "Log in as"
+      "impersonate": "Log in as",
+      "locale": "Language",
+      "emailNotVerified": "Email not verified",
+      "noOrgs": "No organizations.",
+      "memberArchived": "Left",
+      "disable": "Disable",
+      "enable": "Enable",
+      "disableConfirm": {
+        "heading": "Disable {{name}}?",
+        "info": "This person will no longer be able to sign in. Their organizations and content are kept."
+      },
+      "disableAction": {
+        "title": "Disable account",
+        "description": "Sign-in is refused. Can be enabled again."
+      },
+      "enableAction": {
+        "title": "Enable account",
+        "description": "Allows this person to sign in again."
+      },
+      "delete": {
+        "title": "Delete user",
+        "description": "Erases this person and the organizations nobody else took part in."
+      }
     },
     "impersonation": {
       "banner": "Logged in as {{name}}",
@@ -1265,78 +1312,16 @@
       "searchReindex": "Reindex search engine",
       "recomputeCache": "Recompute circle_participant_cache"
     },
-    "deletion": {
-      "nothing": "Nothing to delete",
-      "confirm": "To confirm, type <b>{{expected}}</b>",
-      "submit": "Delete for good",
-      "done": "Deleted",
-      "doneWithFailedFiles": "Deleted, but {{count}} file(s) could not be removed from storage (see backend logs)",
-      "stripeKept": "The Stripe customer and its invoices are kept (accounting obligation).",
-      "counts": {
-        "members_one": "member",
-        "members_other": "members",
-        "users_one": "member with an account",
-        "users_other": "members with an account",
-        "roles_one": "role",
-        "roles_other": "roles",
-        "circles_one": "role in the org chart",
-        "circles_other": "roles in the org chart",
-        "meetings_one": "meeting",
-        "meetings_other": "meetings",
-        "threads_one": "thread",
-        "threads_other": "threads",
-        "messages_one": "message",
-        "messages_other": "messages",
-        "reactions_one": "reaction",
-        "reactions_other": "reactions",
-        "votes_one": "vote or answer",
-        "votes_other": "votes and answers",
-        "tasks_one": "task",
-        "tasks_other": "tasks",
-        "decisions_one": "decision",
-        "decisions_other": "decisions",
-        "logs_one": "history entry",
-        "logs_other": "history entries",
-        "files_one": "file",
-        "files_other": "files",
-        "apiKeys_one": "API key",
-        "apiKeys_other": "API keys",
-        "apps_one": "calendar integration",
-        "apps_other": "calendar integrations"
-      },
-      "org": {
-        "heading": "Delete the organization",
-        "warning": "This deletion is permanent and cannot be undone.",
-        "deleted": "Deleted for good",
-        "subscription": "{{type}} subscription cancelled",
-        "subscriptionInfo": "The active subscription is cancelled in Stripe upon deletion.",
-        "kept": "Kept",
-        "keptInfo": "Member accounts stay active: they only lose access to this organization."
-      },
-      "user": {
-        "heading": "Delete the user",
-        "warning": "This deletion is permanent and erases the person's personal data (GDPR).",
-        "accountDeleted": "Account deleted",
-        "accountDeletedInfo": "The account, its sessions and its access are deleted.",
-        "accountAnonymized": "Account anonymized and disabled",
-        "accountAnonymizedInfo": "Email, name, password and sessions are erased. The account row stays because content of other organizations is linked to it.",
-        "deletedOrgs_one": "1 organization deleted",
-        "deletedOrgs_other": "{{count}} organizations deleted",
-        "deletedOrgsInfo": "Nobody else took part in these organizations: they are deleted with all their content.",
-        "cancelledSubscriptions_one": "1 active subscription cancelled in Stripe.",
-        "cancelledSubscriptions_other": "{{count}} active subscriptions cancelled in Stripe.",
-        "sharedOrgs_one": "1 organization kept",
-        "sharedOrgs_other": "{{count}} organizations kept",
-        "sharedOrgsInfo": "These organizations are left untouched. The member keeps its name and content, only its link to the account and its invitation are removed.",
-        "sharedContent": "Content linked to the account, kept as is",
-        "manual": "To do by hand",
-        "manualCrisp": "Delete the contact and its conversations in Crisp",
-        "manualBrevo": "Delete the contact in Brevo"
-      }
-    },
     "pagination": {
       "previous": "Previous",
       "next": "Next"
+    },
+    "notFound": "Not found",
+    "panel": {
+      "overview": "Overview",
+      "created": "Created",
+      "archived": "Archived",
+      "dangerZone": "Danger zone"
     }
   },
   "SuperAdminPage": {
@@ -1949,5 +1934,112 @@
       "finance": "Finance",
       "hr": "Human resources"
     }
+  },
+  "Deletion": {
+    "nothing": "Nothing to delete",
+    "confirm": "To confirm, type <b>{{expected}}</b>",
+    "submit": "Delete for good",
+    "done": "Deleted",
+    "doneWithFailedFiles": "Deleted, but {{count}} file(s) could not be removed from storage (see backend logs)",
+    "stripeKept": "The Stripe customer and its invoices are kept (accounting obligation).",
+    "counts": {
+      "members_one": "member",
+      "members_other": "members",
+      "users_one": "member with an account",
+      "users_other": "members with an account",
+      "roles_one": "role",
+      "roles_other": "roles",
+      "circles_one": "role in the org chart",
+      "circles_other": "roles in the org chart",
+      "meetings_one": "meeting",
+      "meetings_other": "meetings",
+      "threads_one": "thread",
+      "threads_other": "threads",
+      "messages_one": "message",
+      "messages_other": "messages",
+      "reactions_one": "reaction",
+      "reactions_other": "reactions",
+      "votes_one": "vote or answer",
+      "votes_other": "votes and answers",
+      "tasks_one": "task",
+      "tasks_other": "tasks",
+      "decisions_one": "decision",
+      "decisions_other": "decisions",
+      "logs_one": "history entry",
+      "logs_other": "history entries",
+      "files_one": "file",
+      "files_other": "files",
+      "apiKeys_one": "API key",
+      "apiKeys_other": "API keys",
+      "apps_one": "calendar integration",
+      "apps_other": "calendar integrations"
+    },
+    "org": {
+      "heading": "Delete the organization",
+      "warning": "This deletion is permanent and cannot be undone.",
+      "deleted": "Deleted for good",
+      "subscription": "{{type}} subscription cancelled",
+      "subscriptionInfo": "The active subscription is cancelled in Stripe upon deletion.",
+      "kept": "Kept",
+      "keptInfo": "Member accounts stay active: they only lose access to this organization.",
+      "warningDelayed": "The organization is archived right away: its members lose access and its active subscription is cancelled. It is deleted for good after 30 days.",
+      "deletedDelayed": "Deleted for good after 30 days"
+    },
+    "user": {
+      "heading": "Delete the user",
+      "warning": "This deletion is permanent and erases the person's personal data (GDPR).",
+      "accountDeleted": "Account deleted",
+      "accountDeletedInfo": "The account, its sessions and its access are deleted.",
+      "accountAnonymized": "Account anonymized and disabled",
+      "accountAnonymizedInfo": "Email, name, password and sessions are erased. The account row stays because content of other organizations is linked to it.",
+      "deletedOrgs_one": "1 organization deleted",
+      "deletedOrgs_other": "{{count}} organizations deleted",
+      "deletedOrgsInfo": "These organizations are deleted with all their content: the person owns them alone or nobody else took part in them. Co-owned organizations are deleted only if checked.",
+      "cancelledSubscriptions_one": "1 active subscription cancelled in Stripe.",
+      "cancelledSubscriptions_other": "{{count}} active subscriptions cancelled in Stripe.",
+      "sharedOrgs_one": "1 organization kept",
+      "sharedOrgs_other": "{{count}} organizations kept",
+      "sharedOrgsInfo": "These organizations are left untouched. The member keeps its name and content, only its link to the account and its invitation are removed.",
+      "sharedContent": "Content linked to the account, kept as is",
+      "manual": "To do by hand",
+      "manualCrisp": "Delete the contact and its conversations in Crisp",
+      "manualBrevo": "Delete the contact in Brevo",
+      "ownHeading": "Delete my account",
+      "ownWarning": "This deletion is permanent and erases your personal data.",
+      "ownSubmit": "Delete my account",
+      "orgForced": "Sole owner",
+      "orgCoOwned": "Co-owner",
+      "orgArchived": "Archived",
+      "ownDeletedOrgsInfo": "Your archived organizations, which you owned alone or where nobody else took part, are deleted with all their content."
+    }
+  },
+  "OrgDeletionCard": {
+    "title": "Delete the organization",
+    "description": "The organization is archived right away, then deleted for good with all its content after 30 days.",
+    "done": "Organization deleted"
+  },
+  "AccountDeletionCard": {
+    "title": "Delete my account",
+    "description": "Your account and your personal data are deleted for good.",
+    "button": "Delete my account",
+    "blocked_one": "Leave or delete this organization to delete your account:",
+    "blocked_other": "Leave or delete these {{count}} organizations to delete your account:"
+  },
+  "OrgLeaveCard": {
+    "title": "Leave the organization",
+    "description": "You lose access to this organization. An admin can invite you again.",
+    "lastOwner": "You are the only owner of this organization: give the Owner role to another member, or delete the organization.",
+    "button": "Leave",
+    "done": "You left {{name}}",
+    "confirm": {
+      "heading": "Leave {{name}}?",
+      "info": "You will lose access to this organization. An admin can invite you again."
+    }
+  },
+  "AccountDeletedPage": {
+    "heading": "Your account has been deleted",
+    "info": "Your account and your personal data have been erased. Thank you for using Rolebase.",
+    "website": "Go to rolebase.io",
+    "signup": "Create a new account"
   }
 }

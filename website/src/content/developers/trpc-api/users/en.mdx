@@ -1,6 +1,6 @@
 ---
 title: 'Users'
-description: 'tRPC procedure of the user router: check that an email domain can receive emails before signing in.'
+description: 'tRPC procedures of the user router: check that an email domain can receive emails before signing in, and delete your own account.'
 order: 7.5
 ---
 
@@ -21,3 +21,11 @@ const { valid } = await trpc.user.checkEmailDomain.query({
   domain: 'example.com',
 })
 ```
+
+## Query `user.getDeletionPreview`
+
+Lists what deleting the current user's account would delete or unlink: the account, its API keys and calendar integrations, its archived organizations that are deleted with it, and the content of other organizations kept as is. It takes no input. This procedure is not exposed to the MCP server.
+
+## Mutation `user.deleteAccount`
+
+Deletes the current user's account for good. It takes no input. The call is refused with `PRECONDITION_FAILED` while the user is still a member of an active organization: they leave it or delete it first. Their archived organizations they owned alone, or where nobody else took part, are deleted with the account. The account is deleted, or anonymized and disabled while content of other organizations still references it. This procedure is not exposed to the MCP server.

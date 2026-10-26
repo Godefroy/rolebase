@@ -19,6 +19,7 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { nhost } from 'src/nhost'
 import * as yup from 'yup'
+import AccountDeletionCard from '../components/AccountDeletionCard'
 import { useAuth } from '../hooks/useAuth'
 
 const schema = yup.object().shape({
@@ -145,6 +146,10 @@ export default function CredentialsSettingsPage() {
           </Box>
         </VStack>
       </form>
+
+      <Box maxW="xl" mt={16}>
+        <AccountDeletionCard />
+      </Box>
     </>
   )
 }

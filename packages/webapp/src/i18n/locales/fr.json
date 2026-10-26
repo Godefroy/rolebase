@@ -882,11 +882,6 @@
       "button": "Importer"
     }
   },
-  "OrgDeleteModal": {
-    "heading": "Supprimer une organisation",
-    "info": "Êtes-vous sûr(e) de vouloir supprimer l'organisation <b>{{name}}</b> ?",
-    "warningSubscription": "Si un abonnement est en cours, vous serez remboursé pour la periode non consommée"
-  },
   "OrgEditModal": {
     "heading": "Modifier l'organisation {{org}}",
     "slug": "URL",
@@ -1270,11 +1265,42 @@
       "noSubscription": "Gratuit",
       "columns": {
         "name": "Nom",
-        "slug": "Slug",
         "created": "Création",
         "members": "Membres",
         "subscription": "Abonnement"
-      }
+      },
+      "open": "Ouvrir l'organisation",
+      "roles": "Rôles",
+      "plan": "Offre",
+      "status": "Statut",
+      "since": "Depuis",
+      "stripeCustomer": "Client",
+      "stripeSubscription": "Abonnement",
+      "freePlan": "Offre gratuite, sans abonnement.",
+      "noMembers": "Aucun membre.",
+      "invited": "Invité : {{email}}",
+      "archivedTag": "Archivée",
+      "tabs": {
+        "active": "Actives",
+        "archived": "Archivées"
+      },
+      "archive": {
+        "title": "Archiver l'organisation",
+        "description": "La masque à ses membres et résilie son abonnement actif. Elle reste restaurable."
+      },
+      "restore": {
+        "title": "Restaurer l'organisation",
+        "description": "La rend de nouveau accessible à ses membres. L'abonnement reste résilié."
+      },
+      "delete": {
+        "title": "Supprimer l'organisation",
+        "description": "Supprime définitivement son contenu. Les comptes des membres sont conservés."
+      },
+      "archiveConfirm": {
+        "heading": "Archiver {{name}} ?",
+        "info": "Ses membres ne la verront plus et son abonnement actif sera résilié dans Stripe."
+      },
+      "purge": "Suppression définitive le"
     },
     "users": {
       "heading": "Utilisateurs",
@@ -1284,13 +1310,34 @@
       "disabled": "Désactivé",
       "columns": {
         "name": "Nom",
-        "email": "Email",
         "created": "Création",
         "lastSeen": "Dernière connexion",
         "orgs": "Orgs",
         "status": "Statut"
       },
-      "impersonate": "Se connecter en tant que"
+      "impersonate": "Se connecter en tant que",
+      "locale": "Langue",
+      "emailNotVerified": "Email non vérifié",
+      "noOrgs": "Aucune organisation.",
+      "memberArchived": "Parti",
+      "disable": "Désactiver",
+      "enable": "Réactiver",
+      "disableConfirm": {
+        "heading": "Désactiver {{name}} ?",
+        "info": "Cette personne ne pourra plus se connecter. Ses organisations et son contenu sont conservés."
+      },
+      "disableAction": {
+        "title": "Désactiver le compte",
+        "description": "La connexion est refusée. Réactivable à tout moment."
+      },
+      "enableAction": {
+        "title": "Réactiver le compte",
+        "description": "Permet à cette personne de se reconnecter."
+      },
+      "delete": {
+        "title": "Supprimer l'utilisateur",
+        "description": "Efface cette personne et les organisations auxquelles personne d'autre n'a participé."
+      }
     },
     "impersonation": {
       "banner": "Connecté en tant que {{name}}",
@@ -1301,78 +1348,16 @@
       "searchReindex": "Réindexer le moteur de recherche",
       "recomputeCache": "Recalculer circle_participant_cache"
     },
-    "deletion": {
-      "nothing": "Rien à supprimer",
-      "confirm": "Pour confirmer, tapez <b>{{expected}}</b>",
-      "submit": "Supprimer définitivement",
-      "done": "Suppression effectuée",
-      "doneWithFailedFiles": "Suppression effectuée, mais {{count}} fichier(s) n'ont pas pu être retirés du stockage (voir les logs du backend)",
-      "stripeKept": "Le client Stripe et ses factures sont conservés (obligation comptable).",
-      "counts": {
-        "members_one": "membre",
-        "members_other": "membres",
-        "users_one": "membre avec un compte",
-        "users_other": "membres avec un compte",
-        "roles_one": "rôle",
-        "roles_other": "rôles",
-        "circles_one": "rôle dans l'organigramme",
-        "circles_other": "rôles dans l'organigramme",
-        "meetings_one": "réunion",
-        "meetings_other": "réunions",
-        "threads_one": "discussion",
-        "threads_other": "discussions",
-        "messages_one": "message",
-        "messages_other": "messages",
-        "reactions_one": "réaction",
-        "reactions_other": "réactions",
-        "votes_one": "vote ou réponse",
-        "votes_other": "votes et réponses",
-        "tasks_one": "tâche",
-        "tasks_other": "tâches",
-        "decisions_one": "décision",
-        "decisions_other": "décisions",
-        "logs_one": "entrée d'historique",
-        "logs_other": "entrées d'historique",
-        "files_one": "fichier",
-        "files_other": "fichiers",
-        "apiKeys_one": "clé d'API",
-        "apiKeys_other": "clés d'API",
-        "apps_one": "intégration de calendrier",
-        "apps_other": "intégrations de calendrier"
-      },
-      "org": {
-        "heading": "Supprimer l'organisation",
-        "warning": "Cette suppression est définitive et ne peut pas être annulée.",
-        "deleted": "Supprimé définitivement",
-        "subscription": "Abonnement {{type}} résilié",
-        "subscriptionInfo": "L'abonnement actif est résilié dans Stripe dès la suppression.",
-        "kept": "Conservé",
-        "keptInfo": "Les comptes des membres restent actifs : ils perdent seulement l'accès à cette organisation."
-      },
-      "user": {
-        "heading": "Supprimer l'utilisateur",
-        "warning": "Cette suppression est définitive et efface les données personnelles de la personne (RGPD).",
-        "accountDeleted": "Compte supprimé",
-        "accountDeletedInfo": "Le compte, ses sessions et ses accès sont supprimés.",
-        "accountAnonymized": "Compte anonymisé et désactivé",
-        "accountAnonymizedInfo": "E-mail, nom, mot de passe et sessions sont effacés. La ligne du compte reste, car des contenus d'autres organisations y sont rattachés.",
-        "deletedOrgs_one": "1 organisation supprimée",
-        "deletedOrgs_other": "{{count}} organisations supprimées",
-        "deletedOrgsInfo": "Personne d'autre n'a participé à ces organisations : elles sont supprimées avec tout leur contenu.",
-        "cancelledSubscriptions_one": "1 abonnement actif résilié dans Stripe.",
-        "cancelledSubscriptions_other": "{{count}} abonnements actifs résiliés dans Stripe.",
-        "sharedOrgs_one": "1 organisation conservée",
-        "sharedOrgs_other": "{{count}} organisations conservées",
-        "sharedOrgsInfo": "Ces organisations ne sont pas modifiées. La fiche membre garde son nom et son contenu, seuls son lien avec le compte et son invitation sont retirés.",
-        "sharedContent": "Contenus rattachés au compte, conservés tels quels",
-        "manual": "À faire à la main",
-        "manualCrisp": "Supprimer le contact et ses conversations dans Crisp",
-        "manualBrevo": "Supprimer le contact dans Brevo"
-      }
-    },
     "pagination": {
       "previous": "Précédent",
       "next": "Suivant"
+    },
+    "notFound": "Introuvable",
+    "panel": {
+      "overview": "Aperçu",
+      "created": "Création",
+      "archived": "Archivage",
+      "dangerZone": "Zone sensible"
     }
   },
   "SuperAdminPage": {
@@ -1950,5 +1935,112 @@
       "finance": "Finance",
       "hr": "Ressources humaines"
     }
+  },
+  "Deletion": {
+    "nothing": "Rien à supprimer",
+    "confirm": "Pour confirmer, tapez <b>{{expected}}</b>",
+    "submit": "Supprimer définitivement",
+    "done": "Suppression effectuée",
+    "doneWithFailedFiles": "Suppression effectuée, mais {{count}} fichier(s) n'ont pas pu être retirés du stockage (voir les logs du backend)",
+    "stripeKept": "Le client Stripe et ses factures sont conservés (obligation comptable).",
+    "counts": {
+      "members_one": "membre",
+      "members_other": "membres",
+      "users_one": "membre avec un compte",
+      "users_other": "membres avec un compte",
+      "roles_one": "rôle",
+      "roles_other": "rôles",
+      "circles_one": "rôle dans l'organigramme",
+      "circles_other": "rôles dans l'organigramme",
+      "meetings_one": "réunion",
+      "meetings_other": "réunions",
+      "threads_one": "discussion",
+      "threads_other": "discussions",
+      "messages_one": "message",
+      "messages_other": "messages",
+      "reactions_one": "réaction",
+      "reactions_other": "réactions",
+      "votes_one": "vote ou réponse",
+      "votes_other": "votes et réponses",
+      "tasks_one": "tâche",
+      "tasks_other": "tâches",
+      "decisions_one": "décision",
+      "decisions_other": "décisions",
+      "logs_one": "entrée d'historique",
+      "logs_other": "entrées d'historique",
+      "files_one": "fichier",
+      "files_other": "fichiers",
+      "apiKeys_one": "clé d'API",
+      "apiKeys_other": "clés d'API",
+      "apps_one": "intégration de calendrier",
+      "apps_other": "intégrations de calendrier"
+    },
+    "org": {
+      "heading": "Supprimer l'organisation",
+      "warning": "Cette suppression est définitive et ne peut pas être annulée.",
+      "deleted": "Supprimé définitivement",
+      "subscription": "Abonnement {{type}} résilié",
+      "subscriptionInfo": "L'abonnement actif est résilié dans Stripe dès la suppression.",
+      "kept": "Conservé",
+      "keptInfo": "Les comptes des membres restent actifs : ils perdent seulement l'accès à cette organisation.",
+      "warningDelayed": "L'organisation est archivée tout de suite : ses membres perdent l'accès et son abonnement actif est résilié. Elle est supprimée définitivement au bout de 30 jours.",
+      "deletedDelayed": "Supprimé définitivement au bout de 30 jours"
+    },
+    "user": {
+      "heading": "Supprimer l'utilisateur",
+      "warning": "Cette suppression est définitive et efface les données personnelles de la personne (RGPD).",
+      "accountDeleted": "Compte supprimé",
+      "accountDeletedInfo": "Le compte, ses sessions et ses accès sont supprimés.",
+      "accountAnonymized": "Compte anonymisé et désactivé",
+      "accountAnonymizedInfo": "E-mail, nom, mot de passe et sessions sont effacés. La ligne du compte reste, car des contenus d'autres organisations y sont rattachés.",
+      "deletedOrgs_one": "1 organisation supprimée",
+      "deletedOrgs_other": "{{count}} organisations supprimées",
+      "deletedOrgsInfo": "Ces organisations sont supprimées avec tout leur contenu : la personne en est la seule propriétaire ou personne d'autre n'y a participé. Les organisations copossédées sont supprimées seulement si elles sont cochées.",
+      "cancelledSubscriptions_one": "1 abonnement actif résilié dans Stripe.",
+      "cancelledSubscriptions_other": "{{count}} abonnements actifs résiliés dans Stripe.",
+      "sharedOrgs_one": "1 organisation conservée",
+      "sharedOrgs_other": "{{count}} organisations conservées",
+      "sharedOrgsInfo": "Ces organisations ne sont pas modifiées. La fiche membre garde son nom et son contenu, seuls son lien avec le compte et son invitation sont retirés.",
+      "sharedContent": "Contenus rattachés au compte, conservés tels quels",
+      "manual": "À faire à la main",
+      "manualCrisp": "Supprimer le contact et ses conversations dans Crisp",
+      "manualBrevo": "Supprimer le contact dans Brevo",
+      "ownHeading": "Supprimer mon compte",
+      "ownWarning": "Cette suppression est définitive et efface vos données personnelles.",
+      "ownSubmit": "Supprimer mon compte",
+      "orgForced": "Seul propriétaire",
+      "orgCoOwned": "Copropriétaire",
+      "orgArchived": "Archivée",
+      "ownDeletedOrgsInfo": "Vos organisations archivées, dont vous étiez le seul propriétaire ou auxquelles personne d'autre n'a participé, sont supprimées avec tout leur contenu."
+    }
+  },
+  "OrgDeletionCard": {
+    "title": "Supprimer l'organisation",
+    "description": "L'organisation est archivée tout de suite, puis supprimée définitivement avec tout son contenu au bout de 30 jours.",
+    "done": "Organisation supprimée"
+  },
+  "AccountDeletionCard": {
+    "title": "Supprimer mon compte",
+    "description": "Votre compte et vos données personnelles sont supprimés définitivement.",
+    "button": "Supprimer mon compte",
+    "blocked_one": "Quittez ou supprimez cette organisation pour supprimer votre compte :",
+    "blocked_other": "Quittez ou supprimez ces {{count}} organisations pour supprimer votre compte :"
+  },
+  "OrgLeaveCard": {
+    "title": "Quitter l'organisation",
+    "description": "Vous perdez l'accès à cette organisation. Un admin pourra vous réinviter.",
+    "lastOwner": "Vous êtes le seul propriétaire de cette organisation : donnez le rôle Propriétaire à un autre membre, ou supprimez l'organisation.",
+    "button": "Quitter",
+    "done": "Vous avez quitté {{name}}",
+    "confirm": {
+      "heading": "Quitter {{name}} ?",
+      "info": "Vous perdrez l'accès à cette organisation. Un admin pourra vous réinviter."
+    }
+  },
+  "AccountDeletedPage": {
+    "heading": "Votre compte a été supprimé",
+    "info": "Votre compte et vos données personnelles ont été effacés. Merci d'avoir utilisé Rolebase.",
+    "website": "Aller sur rolebase.io",
+    "signup": "Créer un nouveau compte"
   }
 }

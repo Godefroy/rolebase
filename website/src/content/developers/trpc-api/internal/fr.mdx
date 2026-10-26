@@ -14,6 +14,7 @@ Appelées sur une planification avec le secret de webhook. Aucune ne prend d’i
 | --- | --- |
 | `cron.createNextRecurringMeetings` | Crée les prochaines occurrences des configurations de réunions récurrentes. |
 | `cron.endOldMeetings` | Clôture les réunions restées en cours après leur fin. |
+| `cron.purgeArchivedOrgs` | Supprime définitivement, avec leur contenu et leurs fichiers, les organisations archivées depuis plus de 30 jours, dans une limite de temps par passage. |
 | `cron.resendInvitations` | Envoie un rappel pour les invitations encore en attente. |
 | `cron.resolveProposals` | Résout les propositions dont l’échéance est passée. |
 | `cron.sendDigestEmails` | Envoie les emails de digest d’activité. |
@@ -39,10 +40,11 @@ Réservées à un token d’accès portant le rôle `admin`.
 | `participants.recomputeCache` | Reconstruit le cache derrière [`circle_participant`](/fr/developers/graphql-api/circle_participant). |
 | `search.reindexAll` | Vide et reconstruit tout l’index de recherche. |
 | `superAdmin.deleteOrg` | Supprime définitivement une organisation et tout son contenu, à partir de `{ orgId }` : ses fichiers sont retirés du stockage et son abonnement actif est résilié dans Stripe. Les comptes des membres sont conservés. |
-| `superAdmin.deleteUser` | Efface une personne, à partir de `{ userId }` : supprime les organisations auxquelles personne d’autre n’a participé, détache ses fiches membres des autres organisations (laissées intactes par ailleurs) et supprime le compte, ou l’anonymise et le désactive tant que des contenus d’autres organisations y sont rattachés. L’appel sur son propre compte est refusé. |
-| `superAdmin.getOrgDeletionPreview` | Liste ce que `superAdmin.deleteOrg` supprimerait, à partir de `{ orgId }`. |
-| `superAdmin.getUserDeletionPreview` | Liste ce que `superAdmin.deleteUser` supprimerait, détacherait ou conserverait, à partir de `{ userId }`. |
+| `superAdmin.deleteUser` | Efface une personne, à partir de `{ userId, orgIds }` : supprime les organisations dont elle est la seule propriétaire ou auxquelles personne d’autre n’a participé, ainsi que les organisations copossédées listées dans `orgIds`, détache ses membres des autres organisations (laissées intactes par ailleurs) et supprime le compte, ou l’anonymise et le désactive tant que du contenu d’autres organisations y fait référence. L’appel sur son propre compte est refusé. |
+| `superAdmin.getUserDeletionPreview` | Liste ce que `superAdmin.deleteUser` supprimerait, détacherait ou conserverait, à partir de `{ userId, orgIds }`, avec les organisations de la personne et, pour chacune, si elle est supprimée d’office, au choix de l’admin ou conservée. |
 | `superAdmin.impersonate` | Délivre un token d’accès personnel éphémère pour ouvrir une session en tant qu’un autre utilisateur, à partir de `{ userId }`. Un utilisateur désactivé est refusé. |
+| `superAdmin.restoreOrg` | Restaure une organisation archivée, à partir de `{ orgId }`. Son abonnement résilié le reste. L’archivage passe par [`org.archiveOrg`](/fr/developers/trpc-api/organizations), ouvert aux admins. |
+| `superAdmin.setUserDisabled` | Désactive un compte utilisateur (connexion refusée), à partir de `{ userId, disabled: true }`, ou le réactive avec `disabled: false`. L’appel sur son propre compte est refusé. |
 
 ## Health check
 

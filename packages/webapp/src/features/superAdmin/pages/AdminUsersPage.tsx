@@ -2,7 +2,8 @@ import Loading from '@/common/atoms/Loading'
 import TextError from '@/common/atoms/TextError'
 import { useAdminUsersQuery } from '@gql'
 import {
-  Button,
+  Avatar,
+  Box,
   Heading,
   HStack,
   Input,
@@ -18,13 +19,15 @@ import {
 import debounce from 'lodash.debounce'
 import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import DeleteUserButton from '../components/DeleteUserButton'
-import ImpersonateButton from '../components/ImpersonateButton'
+import AdminPagination from '../components/AdminPagination'
+import AdminTableRow from '../components/AdminTableRow'
+import useAdminSelection from '../hooks/useAdminSelection'
 
 const PAGE_SIZE = 50
 
 export default function AdminUsersPage() {
   const { t } = useTranslation()
+  const { userId, openUser } = useAdminSelection()
   const [search, setSearch] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
   const [offset, setOffset] = useState(0)
@@ -82,24 +85,36 @@ export default function AdminUsersPage() {
             <Thead>
               <Tr>
                 <Th>{t('SuperAdmin.users.columns.name')}</Th>
-                <Th>{t('SuperAdmin.users.columns.email')}</Th>
                 <Th>{t('SuperAdmin.users.columns.created')}</Th>
                 <Th>{t('SuperAdmin.users.columns.lastSeen')}</Th>
                 <Th isNumeric>{t('SuperAdmin.users.columns.orgs')}</Th>
                 <Th>{t('SuperAdmin.users.columns.status')}</Th>
-                <Th />
               </Tr>
             </Thead>
             <Tbody>
               {data.users.map((user) => (
-                <Tr key={user.id}>
+                <AdminTableRow
+                  key={user.id}
+                  label={user.displayName || user.email || user.id}
+                  isSelected={user.id === userId}
+                  onSelect={() => openUser(user.id)}
+                >
                   <Td>
-                    <Text fontWeight="medium">
-                      {user.displayName || '-'}
-                    </Text>
-                  </Td>
-                  <Td>
-                    <Text fontSize="sm">{user.email}</Text>
+                    <HStack spacing={3}>
+                      <Avatar
+                        name={user.displayName || user.email || undefined}
+                        src={user.avatarUrl || undefined}
+                        size="sm"
+                      />
+                      <Box minW={0}>
+                        <Text fontWeight="medium" noOfLines={1}>
+                          {user.displayName || '-'}
+                        </Text>
+                        <Text fontSize="xs" color="gray.500" noOfLines={1}>
+                          {user.email}
+                        </Text>
+                      </Box>
+                    </HStack>
                   </Td>
                   <Td>
                     <Text fontSize="sm">
@@ -126,44 +141,17 @@ export default function AdminUsersPage() {
                         : t('SuperAdmin.users.active')}
                     </Tag>
                   </Td>
-                  <Td isNumeric>
-                    <HStack spacing={2} justify="flex-end">
-                      {!user.disabled && (
-                        <ImpersonateButton
-                          userId={user.id}
-                          userName={user.displayName || user.email || user.id}
-                        />
-                      )}
-                      <DeleteUserButton userId={user.id} />
-                    </HStack>
-                  </Td>
-                </Tr>
+                </AdminTableRow>
               ))}
             </Tbody>
           </Table>
 
-          {totalCount > PAGE_SIZE && (
-            <HStack mt={4} spacing={4} justify="center">
-              <Button
-                size="sm"
-                isDisabled={offset === 0}
-                onClick={() => setOffset(Math.max(0, offset - PAGE_SIZE))}
-              >
-                {t('SuperAdmin.pagination.previous')}
-              </Button>
-              <Text fontSize="sm">
-                {Math.floor(offset / PAGE_SIZE) + 1} /{' '}
-                {Math.ceil(totalCount / PAGE_SIZE)}
-              </Text>
-              <Button
-                size="sm"
-                isDisabled={offset + PAGE_SIZE >= totalCount}
-                onClick={() => setOffset(offset + PAGE_SIZE)}
-              >
-                {t('SuperAdmin.pagination.next')}
-              </Button>
-            </HStack>
-          )}
+          <AdminPagination
+            offset={offset}
+            pageSize={PAGE_SIZE}
+            totalCount={totalCount}
+            onChange={setOffset}
+          />
         </>
       )}
     </>

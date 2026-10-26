@@ -4,7 +4,8 @@ import { nhost } from 'src/nhost'
 
 export default function useUserSignOut() {
   return useCallback(() => {
-    nhost.auth.signOut({})
+    const signOut = nhost.auth.signOut({})
     resetUserLocalStorage()
+    return signOut
   }, [])
 }

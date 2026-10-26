@@ -38,5 +38,5 @@ To test as a regular user, create another `@skreo.net` account the same way, wit
 
 - Seed through the admin GraphQL API with a `tsx` script outside the repo, run from `packages/backend` (`npx tsx /tmp/x/seed.ts`). Import `nhost` from `packages/backend/src/utils/nhost` and call `nhost.graphql.request({ query, variables })`. Throw if `nhost.graphql.url` does not contain `local`.
 - Only `@skreo.net` emails. Use a recognizable prefix in emails and slugs so the cleanup can find them.
-- Clean up at the end with `deleteOrgs` and `eraseUserAccount` from `packages/backend/src/features/superAdmin/utils/`, then check that nothing with the prefix remains. Keep the `browser-admin` account.
+- Clean up at the end with `deleteOrgsForGood` and `deleteUserForGood` from `packages/backend/src/features/deletion/utils/`, then check that nothing with the prefix remains. Keep the `browser-admin` account.
 - Sign-in codes and other emails: Mailhog API at `https://local.mailhog.local.nhost.run/api/v2/messages?limit=1`.

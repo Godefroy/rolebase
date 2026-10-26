@@ -24254,10 +24254,18 @@ export type AdminGrowthQueryVariables = Exact<{
 
 export type AdminGrowthQuery = { __typename?: 'query_root', org: Array<{ __typename?: 'org', createdAt: string }>, users: Array<{ __typename?: 'users', createdAt: string }>, org_aggregate: { __typename?: 'org_aggregate', aggregate?: { __typename?: 'org_aggregate_fields', count: number } | null }, usersAggregate: { __typename?: 'users_aggregate', aggregate?: { __typename?: 'users_aggregate_fields', count: number } | null } };
 
+export type AdminOrgQueryVariables = Exact<{
+  id: Scalars['uuid']['input'];
+}>;
+
+
+export type AdminOrgQuery = { __typename?: 'query_root', org_by_pk?: { __typename?: 'org', id: string, name: string, slug?: string | null, createdAt: string, archivedAt?: string | null, org_subscription?: { __typename?: 'org_subscription', id: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum, createdAt: string, stripeCustomerId: string, stripeSubscriptionId?: string | null } | null, members: Array<{ __typename?: 'member', id: string, name: string, role?: Member_Role_Enum | null, inviteEmail?: string | null, user?: { __typename?: 'users', id: string, displayName: string, email?: string | null, lastSeen?: string | null } | null }>, circles_aggregate: { __typename?: 'circle_aggregate', aggregate?: { __typename?: 'circle_aggregate_fields', count: number } | null } } | null };
+
 export type AdminOrgsQueryVariables = Exact<{
   limit: Scalars['Int']['input'];
   offset: Scalars['Int']['input'];
   search: Scalars['String']['input'];
+  active: Scalars['Boolean']['input'];
 }>;
 
 
@@ -24271,6 +24279,13 @@ export type AdminStatsQueryVariables = Exact<{
 
 export type AdminStatsQuery = { __typename?: 'query_root', org_aggregate: { __typename?: 'org_aggregate', aggregate?: { __typename?: 'org_aggregate_fields', count: number } | null }, usersAggregate: { __typename?: 'users_aggregate', aggregate?: { __typename?: 'users_aggregate_fields', count: number } | null }, dau: { __typename?: 'users_aggregate', aggregate?: { __typename?: 'users_aggregate_fields', count: number } | null }, mau: { __typename?: 'users_aggregate', aggregate?: { __typename?: 'users_aggregate_fields', count: number } | null } };
 
+export type AdminUserQueryVariables = Exact<{
+  id: Scalars['uuid']['input'];
+}>;
+
+
+export type AdminUserQuery = { __typename?: 'query_root', user?: { __typename?: 'users', id: string, displayName: string, email?: string | null, emailVerified: boolean, avatarUrl: string, locale: string, createdAt: string, lastSeen?: string | null, disabled: boolean, members: Array<{ __typename?: 'member', id: string, name: string, role?: Member_Role_Enum | null, archivedAt?: string | null, org: { __typename?: 'org', id: string, name: string, slug?: string | null, archivedAt?: string | null, org_subscription?: { __typename?: 'org_subscription', id: string, status: Subscription_Payment_Status_Enum, type: Subscription_Plan_Type_Enum } | null } }> } | null };
+
 export type AdminUsersQueryVariables = Exact<{
   limit: Scalars['Int']['input'];
   offset: Scalars['Int']['input'];
@@ -24279,7 +24294,7 @@ export type AdminUsersQueryVariables = Exact<{
 }>;
 
 
-export type AdminUsersQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'users', id: string, displayName: string, email?: string | null, createdAt: string, lastSeen?: string | null, disabled: boolean, members_aggregate: { __typename?: 'member_aggregate', aggregate?: { __typename?: 'member_aggregate_fields', count: number } | null } }>, usersAggregate: { __typename?: 'users_aggregate', aggregate?: { __typename?: 'users_aggregate_fields', count: number } | null } };
+export type AdminUsersQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'users', id: string, displayName: string, email?: string | null, avatarUrl: string, createdAt: string, lastSeen?: string | null, disabled: boolean, members_aggregate: { __typename?: 'member_aggregate', aggregate?: { __typename?: 'member_aggregate_fields', count: number } | null } }>, usersAggregate: { __typename?: 'users_aggregate', aggregate?: { __typename?: 'users_aggregate_fields', count: number } | null } };
 
 export type GetTaskQueryVariables = Exact<{
   id: Scalars['uuid']['input'];
@@ -24525,6 +24540,13 @@ export type DeleteThreadPollAnswersMutationVariables = Exact<{
 
 
 export type DeleteThreadPollAnswersMutation = { __typename?: 'mutation_root', delete_thread_poll_answer?: { __typename?: 'thread_poll_answer_mutation_response', returning: Array<{ __typename?: 'thread_poll_answer', id: string }> } | null };
+
+export type AccountDeletionMembersSubscriptionVariables = Exact<{
+  userId: Scalars['uuid']['input'];
+}>;
+
+
+export type AccountDeletionMembersSubscription = { __typename?: 'subscription_root', member: Array<{ __typename?: 'member', id: string, role?: Member_Role_Enum | null, org: { __typename?: 'org', id: string, name: string, slug?: string | null } }> };
 
 export type ChangeDisplayNameMutationVariables = Exact<{
   userId: Scalars['uuid']['input'];
@@ -28080,12 +28102,79 @@ export type AdminGrowthQueryResult = Apollo.QueryResult<AdminGrowthQuery, AdminG
 export function refetchAdminGrowthQuery(variables: AdminGrowthQueryVariables) {
       return { query: AdminGrowthDocument, variables: variables }
     }
+export const AdminOrgDocument = gql`
+    query AdminOrg($id: uuid!) {
+  org_by_pk(id: $id) {
+    id
+    name
+    slug
+    createdAt
+    archivedAt
+    org_subscription {
+      id
+      status
+      type
+      createdAt
+      stripeCustomerId
+      stripeSubscriptionId
+    }
+    members(where: {archivedAt: {_is_null: true}}, order_by: {name: asc}) {
+      id
+      name
+      role
+      inviteEmail
+      user {
+        id
+        displayName
+        email
+        lastSeen
+      }
+    }
+    circles_aggregate(where: {archivedAt: {_is_null: true}}) {
+      aggregate {
+        count
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useAdminOrgQuery__
+ *
+ * To run a query within a React component, call `useAdminOrgQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAdminOrgQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAdminOrgQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useAdminOrgQuery(baseOptions: Apollo.QueryHookOptions<AdminOrgQuery, AdminOrgQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AdminOrgQuery, AdminOrgQueryVariables>(AdminOrgDocument, options);
+      }
+export function useAdminOrgLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AdminOrgQuery, AdminOrgQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AdminOrgQuery, AdminOrgQueryVariables>(AdminOrgDocument, options);
+        }
+export type AdminOrgQueryHookResult = ReturnType<typeof useAdminOrgQuery>;
+export type AdminOrgLazyQueryHookResult = ReturnType<typeof useAdminOrgLazyQuery>;
+export type AdminOrgQueryResult = Apollo.QueryResult<AdminOrgQuery, AdminOrgQueryVariables>;
+export function refetchAdminOrgQuery(variables: AdminOrgQueryVariables) {
+      return { query: AdminOrgDocument, variables: variables }
+    }
 export const AdminOrgsDocument = gql`
-    query AdminOrgs($limit: Int!, $offset: Int!, $search: String!) {
+    query AdminOrgs($limit: Int!, $offset: Int!, $search: String!, $active: Boolean!) {
   org(
     limit: $limit
     offset: $offset
-    where: {name: {_ilike: $search}, archivedAt: {_is_null: true}}
+    where: {name: {_ilike: $search}, archivedAt: {_is_null: $active}}
     order_by: {createdAt: desc}
   ) {
     id
@@ -28104,7 +28193,7 @@ export const AdminOrgsDocument = gql`
       }
     }
   }
-  org_aggregate(where: {name: {_ilike: $search}, archivedAt: {_is_null: true}}) {
+  org_aggregate(where: {name: {_ilike: $search}, archivedAt: {_is_null: $active}}) {
     aggregate {
       count
     }
@@ -28127,6 +28216,7 @@ export const AdminOrgsDocument = gql`
  *      limit: // value for 'limit'
  *      offset: // value for 'offset'
  *      search: // value for 'search'
+ *      active: // value for 'active'
  *   },
  * });
  */
@@ -28200,6 +28290,69 @@ export type AdminStatsQueryResult = Apollo.QueryResult<AdminStatsQuery, AdminSta
 export function refetchAdminStatsQuery(variables: AdminStatsQueryVariables) {
       return { query: AdminStatsDocument, variables: variables }
     }
+export const AdminUserDocument = gql`
+    query AdminUser($id: uuid!) {
+  user(id: $id) {
+    id
+    displayName
+    email
+    emailVerified
+    avatarUrl
+    locale
+    createdAt
+    lastSeen
+    disabled
+    members(order_by: {createdAt: desc}) {
+      id
+      name
+      role
+      archivedAt
+      org {
+        id
+        name
+        slug
+        archivedAt
+        org_subscription {
+          id
+          status
+          type
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useAdminUserQuery__
+ *
+ * To run a query within a React component, call `useAdminUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAdminUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAdminUserQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useAdminUserQuery(baseOptions: Apollo.QueryHookOptions<AdminUserQuery, AdminUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AdminUserQuery, AdminUserQueryVariables>(AdminUserDocument, options);
+      }
+export function useAdminUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AdminUserQuery, AdminUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AdminUserQuery, AdminUserQueryVariables>(AdminUserDocument, options);
+        }
+export type AdminUserQueryHookResult = ReturnType<typeof useAdminUserQuery>;
+export type AdminUserLazyQueryHookResult = ReturnType<typeof useAdminUserLazyQuery>;
+export type AdminUserQueryResult = Apollo.QueryResult<AdminUserQuery, AdminUserQueryVariables>;
+export function refetchAdminUserQuery(variables: AdminUserQueryVariables) {
+      return { query: AdminUserDocument, variables: variables }
+    }
 export const AdminUsersDocument = gql`
     query AdminUsers($limit: Int!, $offset: Int!, $search: String!, $searchCitext: citext!) {
   users(
@@ -28211,6 +28364,7 @@ export const AdminUsersDocument = gql`
     id
     displayName
     email
+    avatarUrl
     createdAt
     lastSeen
     disabled
@@ -29385,6 +29539,45 @@ export function useDeleteThreadPollAnswersMutation(baseOptions?: Apollo.Mutation
 export type DeleteThreadPollAnswersMutationHookResult = ReturnType<typeof useDeleteThreadPollAnswersMutation>;
 export type DeleteThreadPollAnswersMutationResult = Apollo.MutationResult<DeleteThreadPollAnswersMutation>;
 export type DeleteThreadPollAnswersMutationOptions = Apollo.BaseMutationOptions<DeleteThreadPollAnswersMutation, DeleteThreadPollAnswersMutationVariables>;
+export const AccountDeletionMembersDocument = gql`
+    subscription AccountDeletionMembers($userId: uuid!) {
+  member(
+    where: {userId: {_eq: $userId}, archivedAt: {_is_null: true}, org: {archivedAt: {_is_null: true}}}
+    order_by: {org: {name: asc}}
+  ) {
+    id
+    role
+    org {
+      id
+      name
+      slug
+    }
+  }
+}
+    `;
+
+/**
+ * __useAccountDeletionMembersSubscription__
+ *
+ * To run a query within a React component, call `useAccountDeletionMembersSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useAccountDeletionMembersSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAccountDeletionMembersSubscription({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useAccountDeletionMembersSubscription(baseOptions: Apollo.SubscriptionHookOptions<AccountDeletionMembersSubscription, AccountDeletionMembersSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useSubscription<AccountDeletionMembersSubscription, AccountDeletionMembersSubscriptionVariables>(AccountDeletionMembersDocument, options);
+      }
+export type AccountDeletionMembersSubscriptionHookResult = ReturnType<typeof useAccountDeletionMembersSubscription>;
+export type AccountDeletionMembersSubscriptionResult = Apollo.SubscriptionResult<AccountDeletionMembersSubscription>;
 export const ChangeDisplayNameDocument = gql`
     mutation changeDisplayName($userId: uuid!, $displayName: String!) {
   updateUser(pk_columns: {id: $userId}, _set: {displayName: $displayName}) {

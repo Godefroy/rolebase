@@ -1,6 +1,5 @@
 import Loading from '@/common/atoms/Loading'
 import TextError from '@/common/atoms/TextError'
-import { useApolloClient } from '@apollo/client'
 import {
   Alert,
   AlertIcon,
@@ -35,41 +34,66 @@ import { trpc } from 'src/trpc'
 import DeletionConfirmInput from '../components/DeletionConfirmInput'
 import DeletionCounts from '../components/DeletionCounts'
 import DeletionModalHeader from '../components/DeletionModalHeader'
+import DeletionOrgCheckboxList from '../components/DeletionOrgCheckboxList'
 import DeletionOrgList from '../components/DeletionOrgList'
 import DeletionSection from '../components/DeletionSection'
 import useDeletionPreview from '../hooks/useDeletionPreview'
 
 interface Props extends Omit<ModalProps, 'children'> {
-  userId: string
+  // Super admin: deletes this user, with the selected co-owned orgs.
+  // Otherwise the current user deletes their own account.
+  userId?: string
+  onDeleted(): void
 }
 
-export default function UserDeletionModal({ userId, ...modalProps }: Props) {
+export default function UserDeletionModal({
+  userId,
+  onDeleted,
+  ...modalProps
+}: Props) {
   const { t } = useTranslation()
   const toast = useToast()
-  const apolloClient = useApolloClient()
   const [confirmation, setConfirmation] = useState('')
   const [isDeleting, setIsDeleting] = useState(false)
-  const { preview, error } = useDeletionPreview(() =>
-    trpc.superAdmin.getUserDeletionPreview.query({ userId })
+  const [orgIds, setOrgIds] = useState<string[]>([])
+  const { preview, error, loading } = useDeletionPreview(
+    () =>
+      userId
+        ? trpc.superAdmin.getUserDeletionPreview.query({ userId, orgIds })
+        : trpc.user.getDeletionPreview.query(),
+    [orgIds]
   )
   const expected = preview?.user.email || preview?.user.displayName || ''
+  const deletedOrgs = preview?.orgs.filter((org) => org.deleted) ?? []
+  const selectableOrgs =
+    preview?.orgs.filter((org) => org.choice !== 'kept') ?? []
+
+  const handleToggleOrg = (orgId: string) =>
+    setOrgIds((ids) =>
+      ids.includes(orgId) ? ids.filter((id) => id !== orgId) : [...ids, orgId]
+    )
 
   const handleDelete = async () => {
     setIsDeleting(true)
     try {
-      const { failedFiles } = await trpc.superAdmin.deleteUser.mutate({
-        userId,
-      })
-      toast({
-        title: failedFiles
-          ? t('SuperAdmin.deletion.doneWithFailedFiles', { count: failedFiles })
-          : t('SuperAdmin.deletion.done'),
-        status: failedFiles ? 'warning' : 'success',
-        duration: 4000,
-        isClosable: true,
-      })
-      await apolloClient.refetchQueries({ include: ['AdminUsers'] })
+      if (userId) {
+        const { failedFiles } = await trpc.superAdmin.deleteUser.mutate({
+          userId,
+          orgIds,
+        })
+        toast({
+          title: failedFiles
+            ? t('Deletion.doneWithFailedFiles', { count: failedFiles })
+            : t('Deletion.done'),
+          status: failedFiles ? 'warning' : 'success',
+          duration: 4000,
+          isClosable: true,
+        })
+      } else {
+        await trpc.user.deleteAccount.mutate()
+      }
       modalProps.onClose()
+      onDeleted()
     } catch (error: any) {
       toast({
         title: error?.message || t('common.error'),
@@ -87,7 +111,11 @@ export default function UserDeletionModal({ userId, ...modalProps }: Props) {
       <ModalContent>
         <ModalHeader>
           <DeletionModalHeader
-            title={t('SuperAdmin.deletion.user.heading')}
+            title={
+              userId
+                ? t('Deletion.user.heading')
+                : t('Deletion.user.ownHeading')
+            }
             subtitle={
               preview &&
               [preview.user.displayName, preview.user.email]
@@ -110,7 +138,9 @@ export default function UserDeletionModal({ userId, ...modalProps }: Props) {
             <Stack spacing={4}>
               <Alert status="error" variant="subtle" borderRadius="md">
                 <AlertIcon />
-                {t('SuperAdmin.deletion.user.warning')}
+                {userId
+                  ? t('Deletion.user.warning')
+                  : t('Deletion.user.ownWarning')}
               </Alert>
 
               <DeletionSection
@@ -118,13 +148,13 @@ export default function UserDeletionModal({ userId, ...modalProps }: Props) {
                 icon={preview.accountDeleted ? FiUserX : FiUser}
                 title={
                   preview.accountDeleted
-                    ? t('SuperAdmin.deletion.user.accountDeleted')
-                    : t('SuperAdmin.deletion.user.accountAnonymized')
+                    ? t('Deletion.user.accountDeleted')
+                    : t('Deletion.user.accountAnonymized')
                 }
                 description={
                   preview.accountDeleted
-                    ? t('SuperAdmin.deletion.user.accountDeletedInfo')
-                    : t('SuperAdmin.deletion.user.accountAnonymizedInfo')
+                    ? t('Deletion.user.accountDeletedInfo')
+                    : t('Deletion.user.accountAnonymizedInfo')
                 }
               >
                 {preview.apiKeys + preview.apps + preview.files > 0 && (
@@ -138,24 +168,37 @@ export default function UserDeletionModal({ userId, ...modalProps }: Props) {
                 )}
               </DeletionSection>
 
-              {preview.deletedOrgs.length > 0 && (
+              {(userId ? selectableOrgs : deletedOrgs).length > 0 && (
                 <DeletionSection
                   tone="delete"
                   icon={FiTrash2}
-                  title={t('SuperAdmin.deletion.user.deletedOrgs', {
-                    count: preview.deletedOrgs.length,
+                  title={t('Deletion.user.deletedOrgs', {
+                    count: deletedOrgs.length,
                   })}
-                  description={t('SuperAdmin.deletion.user.deletedOrgsInfo')}
+                  description={
+                    userId
+                      ? t('Deletion.user.deletedOrgsInfo')
+                      : t('Deletion.user.ownDeletedOrgsInfo')
+                  }
                 >
                   <Stack spacing={3}>
-                    <DeletionOrgList orgs={preview.deletedOrgs} />
-                    <DeletionCounts counts={preview.deletedOrgsCounts} />
+                    {userId ? (
+                      <DeletionOrgCheckboxList
+                        orgs={selectableOrgs}
+                        onToggle={handleToggleOrg}
+                      />
+                    ) : (
+                      <DeletionOrgList orgs={deletedOrgs} />
+                    )}
+                    {deletedOrgs.length > 0 && (
+                      <DeletionCounts counts={preview.deletedOrgsCounts} />
+                    )}
                     {preview.cancelledSubscriptions > 0 && (
                       <Text fontSize="sm" color="gray.500">
-                        {t('SuperAdmin.deletion.user.cancelledSubscriptions', {
+                        {t('Deletion.user.cancelledSubscriptions', {
                           count: preview.cancelledSubscriptions,
                         })}{' '}
-                        {t('SuperAdmin.deletion.stripeKept')}
+                        {t('Deletion.stripeKept')}
                       </Text>
                     )}
                   </Stack>
@@ -166,10 +209,10 @@ export default function UserDeletionModal({ userId, ...modalProps }: Props) {
                 <DeletionSection
                   tone="keep"
                   icon={FiLink2}
-                  title={t('SuperAdmin.deletion.user.sharedOrgs', {
+                  title={t('Deletion.user.sharedOrgs', {
                     count: preview.sharedOrgs.length,
                   })}
-                  description={t('SuperAdmin.deletion.user.sharedOrgsInfo')}
+                  description={t('Deletion.user.sharedOrgsInfo')}
                 >
                   <Stack spacing={3}>
                     {preview.sharedOrgs.length > 0 && (
@@ -177,6 +220,8 @@ export default function UserDeletionModal({ userId, ...modalProps }: Props) {
                         orgs={preview.sharedOrgs.map((org) => ({
                           id: org.id,
                           name: org.name,
+                          slug: org.slug,
+                          archived: org.archived,
                           detail: org.memberName,
                         }))}
                       />
@@ -184,7 +229,7 @@ export default function UserDeletionModal({ userId, ...modalProps }: Props) {
                     {!preview.accountDeleted && (
                       <>
                         <Text fontSize="sm" fontWeight="medium">
-                          {t('SuperAdmin.deletion.user.sharedContent')}
+                          {t('Deletion.user.sharedContent')}
                         </Text>
                         <DeletionCounts counts={preview.sharedContent} />
                       </>
@@ -193,22 +238,24 @@ export default function UserDeletionModal({ userId, ...modalProps }: Props) {
                 </DeletionSection>
               )}
 
-              <DeletionSection
-                tone="todo"
-                icon={FiCheckSquare}
-                title={t('SuperAdmin.deletion.user.manual')}
-              >
-                <List spacing={1} fontSize="sm">
-                  <ListItem>
-                    <ListIcon as={FiSquare} color="gray.400" />
-                    {t('SuperAdmin.deletion.user.manualCrisp')}
-                  </ListItem>
-                  <ListItem>
-                    <ListIcon as={FiSquare} color="gray.400" />
-                    {t('SuperAdmin.deletion.user.manualBrevo')}
-                  </ListItem>
-                </List>
-              </DeletionSection>
+              {userId && (
+                <DeletionSection
+                  tone="todo"
+                  icon={FiCheckSquare}
+                  title={t('Deletion.user.manual')}
+                >
+                  <List spacing={1} fontSize="sm">
+                    <ListItem>
+                      <ListIcon as={FiSquare} color="gray.400" />
+                      {t('Deletion.user.manualCrisp')}
+                    </ListItem>
+                    <ListItem>
+                      <ListIcon as={FiSquare} color="gray.400" />
+                      {t('Deletion.user.manualBrevo')}
+                    </ListItem>
+                  </List>
+                </DeletionSection>
+              )}
 
               <DeletionConfirmInput
                 expected={expected}
@@ -227,10 +274,10 @@ export default function UserDeletionModal({ userId, ...modalProps }: Props) {
             colorScheme="red"
             leftIcon={<FiTrash2 />}
             isLoading={isDeleting}
-            isDisabled={!preview || confirmation !== expected}
+            isDisabled={!preview || loading || confirmation !== expected}
             onClick={handleDelete}
           >
-            {t('SuperAdmin.deletion.submit')}
+            {userId ? t('Deletion.submit') : t('Deletion.user.ownSubmit')}
           </Button>
         </ModalFooter>
       </ModalContent>

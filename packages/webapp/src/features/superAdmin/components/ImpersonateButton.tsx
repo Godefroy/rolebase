@@ -1,6 +1,7 @@
 import { Button, useToast } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { FiLogIn } from 'react-icons/fi'
 import { startImpersonation } from '../utils/impersonation'
 
 interface Props {
@@ -30,7 +31,12 @@ export default function ImpersonateButton({ userId, userName }: Props) {
   }
 
   return (
-    <Button size="xs" isLoading={isLoading} onClick={handleClick}>
+    <Button
+      size="sm"
+      leftIcon={<FiLogIn />}
+      isLoading={isLoading}
+      onClick={handleClick}
+    >
       {t('SuperAdmin.users.impersonate')}
     </Button>
   )

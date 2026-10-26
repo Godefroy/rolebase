@@ -1,27 +1,59 @@
-import { gql, Member_Bool_Exp } from '../../../gql'
+import { gql, Member_Bool_Exp, Member_Role_Enum } from '../../../gql'
 import { adminRequest } from '../../../utils/adminRequest'
 import {
+  cancelOrgSubscriptions,
+  deleteFiles,
+  deleteOrgs,
   getOrgDeletionCounts,
   getOrgFileIds,
   getOrgSubscriptions,
   OrgDeletionCounts,
 } from './orgDeletion'
 
+// What happens to an org of the person: "forced" when they are its only
+// owner or nobody else took part in it, "optional" when they co-own it (the
+// admin chooses), "kept" otherwise (their member is unlinked)
+export type UserDeletionOrgChoice = 'forced' | 'optional' | 'kept'
+
+export interface UserDeletionOrg {
+  id: string
+  name: string
+  slug: string | null
+  archived: boolean
+  choice: UserDeletionOrgChoice
+}
+
 export interface UserDeletionTarget {
   user: { id: string; email: string | null; displayName: string }
-  members: { id: string; orgId: string; orgName: string; name: string }[]
-  // Orgs where nobody else ever took part: deleted with all their content
-  soloOrgIds: string[]
+  members: {
+    id: string
+    orgId: string
+    orgName: string
+    orgSlug: string | null
+    name: string
+    // Active member linked to the account, in an active org
+    active: boolean
+  }[]
+  orgs: UserDeletionOrg[]
+  // Orgs deleted with all their content: the forced ones and the optional
+  // ones selected
+  deletedOrgIds: string[]
 }
 
 export interface UserDeletionPreview {
   user: UserDeletionTarget['user']
-  deletedOrgs: { id: string; name: string }[]
+  orgs: (UserDeletionOrg & { deleted: boolean })[]
   deletedOrgsCounts: OrgDeletionCounts
   // Active subscriptions of the deleted orgs, cancelled in Stripe
   cancelledSubscriptions: number
   // Members unlinked from the account, left untouched otherwise
-  sharedOrgs: { id: string; name: string; memberName: string }[]
+  sharedOrgs: {
+    id: string
+    name: string
+    slug: string | null
+    archived: boolean
+    memberName: string
+  }[]
   // Rows of the other orgs authored by the account. Their "userId" is NOT
   // NULL and deleted in cascade, so they keep the account row alive.
   sharedContent: SharedContentCounts
@@ -39,7 +71,8 @@ interface SharedContentCounts {
 }
 
 export async function getUserDeletionTarget(
-  userId: string
+  userId: string,
+  optionalOrgIds: string[] = []
 ): Promise<UserDeletionTarget | null> {
   const { user } = await adminRequest(GET_USER, { userId })
   if (!user) return null
@@ -59,39 +92,73 @@ export async function getUserDeletionTarget(
     id: m.id,
     orgId: m.orgId,
     orgName: m.org.name,
+    orgSlug: m.org.slug ?? null,
     name: m.name,
+    active: m.userId === userId && !m.archivedAt && !m.org.archivedAt,
   }))
   const memberIds = members.map((m) => m.id)
   const orgIds = [...new Set(members.map((m) => m.orgId))]
 
-  // An org is shared as soon as someone else has an account or an invitation
-  // in it, or left a trace in its history or its threads
-  const soloOrgIds = (
-    await Promise.all(
-      orgIds.map(async (orgId) => {
-        const data = await adminRequest(GET_ORG_SHARING, {
-          orgId,
-          userId,
-          memberIds,
-        })
-        const shared =
-          (data.others.aggregate?.count ?? 0) +
-          (data.logs.aggregate?.count ?? 0) +
-          (data.messages.aggregate?.count ?? 0)
-        return shared === 0 ? orgId : null
+  const orgs = await Promise.all(
+    orgIds.map(async (orgId): Promise<UserDeletionOrg> => {
+      const orgMembers = member.filter((m) => m.orgId === orgId)
+      const data = await adminRequest(GET_ORG_SHARING, {
+        orgId,
+        userId,
+        memberIds,
       })
-    )
-  ).filter((orgId): orgId is string => !!orgId)
+      // An org is shared as soon as someone else has an account or an
+      // invitation in it, or left a trace in its history or its threads
+      const shared =
+        (data.others.aggregate?.count ?? 0) +
+        (data.logs.aggregate?.count ?? 0) +
+        (data.messages.aggregate?.count ?? 0)
+      const isOwner = orgMembers.some(
+        (m) =>
+          m.userId === userId &&
+          !m.archivedAt &&
+          m.role === Member_Role_Enum.Owner
+      )
+      const otherOwners = data.owners.aggregate?.count ?? 0
+      return {
+        id: orgId,
+        name: orgMembers[0].org.name,
+        slug: orgMembers[0].org.slug ?? null,
+        archived: !!orgMembers[0].org.archivedAt,
+        choice:
+          shared === 0 || (isOwner && otherOwners === 0)
+            ? 'forced'
+            : isOwner
+              ? 'optional'
+              : 'kept',
+      }
+    })
+  )
 
   return {
     user: { id: user.id, email, displayName: user.displayName },
     members,
-    soloOrgIds,
+    orgs,
+    deletedOrgIds: orgs
+      .filter(
+        (org) =>
+          org.choice === 'forced' ||
+          (org.choice === 'optional' && optionalOrgIds.includes(org.id))
+      )
+      .map((org) => org.id),
   }
 }
 
+// Active orgs the person is still an active member of
+export function getActiveOrgs(target: UserDeletionTarget) {
+  const orgIds = new Set(
+    target.members.filter((m) => m.active).map((m) => m.orgId)
+  )
+  return target.orgs.filter((org) => orgIds.has(org.id))
+}
+
 function getSharedMembers(target: UserDeletionTarget) {
-  return target.members.filter((m) => !target.soloOrgIds.includes(m.orgId))
+  return target.members.filter((m) => !target.deletedOrgIds.includes(m.orgId))
 }
 
 export async function getSharedContentCounts(
@@ -99,7 +166,7 @@ export async function getSharedContentCounts(
 ): Promise<SharedContentCounts> {
   const data = await adminRequest(GET_SHARED_CONTENT, {
     userId: target.user.id,
-    soloOrgIds: target.soloOrgIds,
+    deletedOrgIds: target.deletedOrgIds,
   })
   return {
     messages: data.messages.aggregate?.count ?? 0,
@@ -123,15 +190,15 @@ export async function getUserDeletionPreview(
       getSharedContentCounts(target),
       adminRequest(GET_ACCOUNT_DATA, { userId: target.user.id }),
       getUserFileIds(target),
-      getOrgDeletionCounts(target.soloOrgIds),
-      getOrgSubscriptions(target.soloOrgIds),
+      getOrgDeletionCounts(target.deletedOrgIds),
+      getOrgSubscriptions(target.deletedOrgIds),
     ])
-  const orgName = (orgId: string) =>
-    target.members.find((m) => m.orgId === orgId)?.orgName ?? orgId
-
   return {
     user: target.user,
-    deletedOrgs: target.soloOrgIds.map((id) => ({ id, name: orgName(id) })),
+    orgs: target.orgs.map((org) => ({
+      ...org,
+      deleted: target.deletedOrgIds.includes(org.id),
+    })),
     deletedOrgsCounts,
     cancelledSubscriptions: subscriptions.filter(
       (s) => s.active && s.stripeSubscriptionId
@@ -139,6 +206,8 @@ export async function getUserDeletionPreview(
     sharedOrgs: getSharedMembers(target).map((m) => ({
       id: m.orgId,
       name: m.orgName,
+      slug: m.orgSlug,
+      archived: !!target.orgs.find((org) => org.id === m.orgId)?.archived,
       memberName: m.name,
     })),
     sharedContent,
@@ -154,7 +223,7 @@ export async function getUserDeletionPreview(
 export async function getUserFileIds(
   target: UserDeletionTarget
 ): Promise<string[]> {
-  const fileIds = await getOrgFileIds(target.soloOrgIds)
+  const fileIds = await getOrgFileIds(target.deletedOrgIds)
   if (
     getSharedMembers(target).length > 0 ||
     hasSharedContent(await getSharedContentCounts(target))
@@ -164,7 +233,7 @@ export async function getUserFileIds(
 
   const { files } = await adminRequest(GET_UPLOADED_FILES, {
     userId: target.user.id,
-    soloOrgIds: target.soloOrgIds,
+    deletedOrgIds: target.deletedOrgIds,
   })
   return [...new Set([...fileIds, ...files.map((file) => file.id)])]
 }
@@ -182,6 +251,19 @@ export async function eraseUserAccount(target: UserDeletionTarget) {
   }
 }
 
+// Deletes the orgs to delete, unlinks the person from the other ones and
+// erases the account. Returns the number of files that could not be deleted.
+export async function deleteUserForGood(
+  target: UserDeletionTarget
+): Promise<number> {
+  // Files are listed before their references disappear
+  const fileIds = await getUserFileIds(target)
+  await cancelOrgSubscriptions(target.deletedOrgIds)
+  await deleteOrgs(target.deletedOrgIds)
+  await eraseUserAccount(target)
+  return deleteFiles(fileIds)
+}
+
 const GET_USER = gql(`
   query getUserForDeletion($userId: uuid!) {
     user(id: $userId) {
@@ -197,9 +279,14 @@ const GET_MEMBERS = gql(`
     member(where: $where, order_by: { org: { name: asc } }) {
       id
       orgId
+      userId
       name
+      role
+      archivedAt
       org {
         name
+        slug
+        archivedAt
       }
     }
   }
@@ -223,6 +310,16 @@ const GET_ORG_SHARING = gql(`
     ) {
       aggregate { count }
     }
+    owners: member_aggregate(
+      where: {
+        orgId: { _eq: $orgId }
+        id: { _nin: $memberIds }
+        role: { _eq: Owner }
+        archivedAt: { _is_null: true }
+      }
+    ) {
+      aggregate { count }
+    }
     logs: log_aggregate(
       where: { orgId: { _eq: $orgId }, userId: { _neq: $userId } }
     ) {
@@ -239,12 +336,12 @@ const GET_ORG_SHARING = gql(`
 const GET_SHARED_CONTENT = gql(`
   query getSharedContentForUserDeletion(
     $userId: uuid!
-    $soloOrgIds: [uuid!]!
+    $deletedOrgIds: [uuid!]!
   ) {
     messages: thread_activity_aggregate(
       where: {
         userId: { _eq: $userId }
-        thread: { orgId: { _nin: $soloOrgIds } }
+        thread: { orgId: { _nin: $deletedOrgIds } }
       }
     ) {
       aggregate { count }
@@ -252,7 +349,7 @@ const GET_SHARED_CONTENT = gql(`
     reactions: thread_activity_reaction_aggregate(
       where: {
         userId: { _eq: $userId }
-        activity: { thread: { orgId: { _nin: $soloOrgIds } } }
+        activity: { thread: { orgId: { _nin: $deletedOrgIds } } }
       }
     ) {
       aggregate { count }
@@ -260,7 +357,7 @@ const GET_SHARED_CONTENT = gql(`
     votes: thread_proposal_vote_aggregate(
       where: {
         userId: { _eq: $userId }
-        activity: { thread: { orgId: { _nin: $soloOrgIds } } }
+        activity: { thread: { orgId: { _nin: $deletedOrgIds } } }
       }
     ) {
       aggregate { count }
@@ -268,13 +365,13 @@ const GET_SHARED_CONTENT = gql(`
     pollAnswers: thread_poll_answer_aggregate(
       where: {
         userId: { _eq: $userId }
-        activity: { thread: { orgId: { _nin: $soloOrgIds } } }
+        activity: { thread: { orgId: { _nin: $deletedOrgIds } } }
       }
     ) {
       aggregate { count }
     }
     logs: log_aggregate(
-      where: { userId: { _eq: $userId }, orgId: { _nin: $soloOrgIds } }
+      where: { userId: { _eq: $userId }, orgId: { _nin: $deletedOrgIds } }
     ) {
       aggregate { count }
     }
@@ -295,15 +392,15 @@ const GET_ACCOUNT_DATA = gql(`
 const GET_UPLOADED_FILES = gql(`
   query getUploadedFilesForUserDeletion(
     $userId: uuid!
-    $soloOrgIds: [uuid!]!
+    $deletedOrgIds: [uuid!]!
   ) {
     files(
       where: {
         uploadedByUserId: { _eq: $userId }
         _not: {
           _or: [
-            { orgs: { orgId: { _nin: $soloOrgIds } } }
-            { members: { orgId: { _nin: $soloOrgIds } } }
+            { orgs: { orgId: { _nin: $deletedOrgIds } } }
+            { members: { orgId: { _nin: $deletedOrgIds } } }
           ]
         }
       }

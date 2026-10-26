@@ -4,7 +4,7 @@ import { FiTrash2 } from 'react-icons/fi'
 
 interface Props {
   title: string
-  subtitle?: string
+  subtitle?: React.ReactNode
 }
 
 export default function DeletionModalHeader({ title, subtitle }: Props) {

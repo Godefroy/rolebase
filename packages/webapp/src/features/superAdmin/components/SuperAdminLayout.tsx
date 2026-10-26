@@ -8,12 +8,9 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Outlet } from 'react-router'
 import { createApolloClient } from 'src/apolloClient'
-import {
-  ExportIcon,
-  MembersIcon,
-  NewsIcon,
-  SuperAdminIcon,
-} from 'src/icons'
+import { ExportIcon, MembersIcon, NewsIcon, SuperAdminIcon } from 'src/icons'
+import AdminOrgDrawer from './AdminOrgDrawer'
+import AdminUserDrawer from './AdminUserDrawer'
 
 const sidebarWidth = '250px'
 
@@ -59,9 +56,7 @@ export default function SuperAdminLayout() {
             }}
           >
             <VStack align="stretch" spacing={1}>
-              <SidebarGroupTitle>
-                {t('SuperAdmin.heading')}
-              </SidebarGroupTitle>
+              <SidebarGroupTitle>{t('SuperAdmin.heading')}</SidebarGroupTitle>
               <SidebarItemLink to="/admin" icon={NewsIcon}>
                 {t('SuperAdmin.sidebar.dashboard')}
               </SidebarItemLink>
@@ -82,6 +77,9 @@ export default function SuperAdminLayout() {
           </Box>
         </Flex>
       </ScrollableLayout>
+
+      <AdminOrgDrawer />
+      <AdminUserDrawer />
     </ApolloProvider>
   )
 }
