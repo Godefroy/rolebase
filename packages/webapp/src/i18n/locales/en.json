@@ -1075,7 +1075,6 @@
   },
   "SubscriptionTabs": {
     "subscription": "Subscription",
-    "mustBeOwner": "You must be an owner of this org to manage the subscription",
     "cancelSubscriptionModal": {
       "heading": "Are you sure you want to cancel your subscription?",
       "desc1": "This action will take effect at the end of the subscription period.",

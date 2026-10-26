@@ -1,9 +1,6 @@
-import Loading from '@/common/atoms/Loading'
 import { Title } from '@/common/atoms/Title'
-import useCurrentMember from '@/member/hooks/useCurrentMember'
-import useOrgOwner from '@/member/hooks/useOrgOwner'
 import { stripePromise } from '@/orgSubscription/api/stripe'
-import { Heading, Text, useDisclosure, VStack } from '@chakra-ui/react'
+import { Heading, useDisclosure, VStack } from '@chakra-ui/react'
 import { Elements } from '@stripe/react-stripe-js'
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -14,8 +11,6 @@ import SubscriptionConfirmationModal from '../modals/SubscriptionConfirmationMod
 
 export default function SubscriptionPage() {
   const { t } = useTranslation()
-  const currentMember = useCurrentMember()
-  const isOwner = useOrgOwner()
   const [searchParams] = useSearchParams()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const clientSecret = searchParams.get('payment_intent_client_secret')
@@ -35,29 +30,19 @@ export default function SubscriptionPage() {
           {t('SubscriptionPage.heading')}
         </Heading>
 
-        {!currentMember && <Loading center active />}
+        <SubscriptionProvider>
+          <SubscriptionContent />
 
-        {currentMember && !isOwner && (
-          <Text as="b" color="red.500">
-            {t('SubscriptionTabs.mustBeOwner')}
-          </Text>
-        )}
-
-        {currentMember && isOwner && (
-          <SubscriptionProvider>
-            <SubscriptionContent />
-
-            {clientSecret && (
-              <Elements stripe={stripePromise}>
-                <SubscriptionConfirmationModal
-                  isOpen={isOpen}
-                  onClose={onClose}
-                  clientSecret={clientSecret}
-                />
-              </Elements>
-            )}
-          </SubscriptionProvider>
-        )}
+          {clientSecret && (
+            <Elements stripe={stripePromise}>
+              <SubscriptionConfirmationModal
+                isOpen={isOpen}
+                onClose={onClose}
+                clientSecret={clientSecret}
+              />
+            </Elements>
+          )}
+        </SubscriptionProvider>
       </VStack>
     </>
   )

@@ -1108,7 +1108,6 @@
   },
   "SubscriptionTabs": {
     "subscription": "Abonnement",
-    "mustBeOwner": "Vous devez être propriétaire de l'organisation pour gérer l'abonnement",
     "cancelSubscriptionModal": {
       "heading": "Êtes-vous sûr de vouloir annuler votre abonnement ?",
       "desc1": "Cette action prendra effet à la fin de la periode d'abonnement.",

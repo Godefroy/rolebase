@@ -9,6 +9,7 @@ import DecisionPage from '@/decision/pages/DecisionPage '
 import SettingsLayout from '@/layout/components/SettingsLayout'
 import MeetingPage from '@/meeting/pages/MeetingPage'
 import MeetingRecurringPage from '@/meeting/pages/MeetingRecurringPage'
+import OrgRoleRoute from '@/member/components/OrgRoleRoute'
 import { useSubscribeCurrentMeeting } from '@/member/hooks/useSubscribeCurrentMeeting'
 import MembersPage from '@/member/pages/MembersPage'
 import OrgSetupTrigger from '@/onboarding/components/OrgSetupTrigger'
@@ -76,12 +77,16 @@ export default function OrgRouteContent() {
             <Route path="export-circle" element={<CircleExportPage />} />
             <Route path="settings" element={<SettingsLayout />}>
               <Route path="members" element={<MembersPage />} />
-              <Route path="org" element={<OrgSettingsPage />} />
-              <Route path="subscription" element={<SubscriptionPage />} />
-              <Route path="billing" element={<BillingPage />} />
+              <Route element={<OrgRoleRoute role="admin" />}>
+                <Route path="org" element={<OrgSettingsPage />} />
+              </Route>
+              <Route element={<OrgRoleRoute role="owner" />}>
+                <Route path="subscription" element={<SubscriptionPage />} />
+                <Route path="billing" element={<BillingPage />} />
+                <Route path="export" element={<ExportPage />} />
+              </Route>
               <Route path="apps" element={<AppsPage />} />
               <Route path="api-keys" element={<ApiPage />} />
-              <Route path="export" element={<ExportPage />} />
               <Route path="credentials" element={<CredentialsSettingsPage />} />
               <Route
                 path="notifications"
