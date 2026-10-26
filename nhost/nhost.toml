@@ -169,7 +169,7 @@ enabled = false
 issuer = 'nhost'
 
 [postgres]
-version = '14.20-20251217-1'
+version = '18.6-20260930-1'
 
 [postgres.resources]
 replicas = 1
