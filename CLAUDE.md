@@ -11,6 +11,7 @@
 - Instruction files (`CLAUDE.md`, skills) hold instructions, not history. No account of what went wrong, no commit SHAs, no "the mistake made". Write the rule, keep it short and actionable.
 - A one-off correction is not a permanent rule. Ask before turning a single request into doctrine.
 - When writing a rule (here, in a skill, in any doc): keep it minimal, actionable and non-redundant. Shortest phrasing that changes behaviour, no restating what another rule already says, no rationale unless the rule is unusable without it.
+- Deletion: when you add or change a table or column linked to an org, a member, a user or a file, update the admin deletion (`packages/backend/src/features/superAdmin/utils/orgDeletion.ts` and `userDeletion.ts`): deletion order for RESTRICT foreign keys, account cleanup, files to remove, preview counts and their translations.
 - Permissions: when you change an authorization rule, update BOTH the frontend (`OrgData.getCirclePermissions` / `CircleContext` in `packages/webapp`) and the Hasura YAML (`nhost/metadata/databases/default/tables/public_circle*.yaml`, applied via the `apply-hasura-metadata` skill), and confirm they agree. The `circle_leader` view (representatives, else direct members) is the source of truth for leaders; use the `leaders` relationship rather than re-deriving it.
 
 ## Tech stack
