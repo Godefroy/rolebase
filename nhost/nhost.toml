@@ -46,7 +46,7 @@ fqdn = ['hasura.rolebase.io']
 version = 22
 
 [auth]
-version = '0.50.0'
+version = '0.52.0'
 
 [auth.resources]
 replicas = 1
@@ -193,7 +193,7 @@ secure = true
 method = 'PLAIN'
 
 [storage]
-version = '0.13.0'
+version = '0.15.1'
 
 [storage.resources]
 replicas = 1

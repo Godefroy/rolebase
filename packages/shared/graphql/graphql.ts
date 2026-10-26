@@ -11876,6 +11876,7 @@ export type Mutation_RootUpdateUserArgs = {
   _delete_at_path?: InputMaybe<Users_Delete_At_Path_Input>;
   _delete_elem?: InputMaybe<Users_Delete_Elem_Input>;
   _delete_key?: InputMaybe<Users_Delete_Key_Input>;
+  _inc?: InputMaybe<Users_Inc_Input>;
   _prepend?: InputMaybe<Users_Prepend_Input>;
   _set?: InputMaybe<Users_Set_Input>;
   pk_columns: Users_Pk_Columns_Input;
@@ -11888,6 +11889,7 @@ export type Mutation_RootUpdateUsersArgs = {
   _delete_at_path?: InputMaybe<Users_Delete_At_Path_Input>;
   _delete_elem?: InputMaybe<Users_Delete_Elem_Input>;
   _delete_key?: InputMaybe<Users_Delete_Key_Input>;
+  _inc?: InputMaybe<Users_Inc_Input>;
   _prepend?: InputMaybe<Users_Prepend_Input>;
   _set?: InputMaybe<Users_Set_Input>;
   where: Users_Bool_Exp;
@@ -22373,6 +22375,7 @@ export type Users = {
   members_aggregate: Member_Aggregate;
   metadata: Scalars['user_metadata'];
   newEmail?: Maybe<Scalars['citext']>;
+  new_phone_number?: Maybe<Scalars['String']>;
   /** An array relationship */
   oauth2AuthRequests: Array<AuthOauth2AuthRequests>;
   /** An aggregate relationship */
@@ -22384,7 +22387,9 @@ export type Users = {
   otpHash?: Maybe<Scalars['String']>;
   otpHashExpiresAt: Scalars['timestamptz'];
   otpMethodLastUsed?: Maybe<Scalars['String']>;
+  otp_attempts: Scalars['smallint'];
   passwordHash?: Maybe<Scalars['String']>;
+  pending_sms_deanonymize_options?: Maybe<Scalars['jsonb']>;
   phoneNumber?: Maybe<Scalars['String']>;
   phoneNumberVerified: Scalars['Boolean'];
   /** An array relationship */
@@ -22493,6 +22498,12 @@ export type UsersOauth2RefreshTokens_AggregateArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   order_by?: InputMaybe<Array<AuthOauth2RefreshTokens_Order_By>>;
   where?: InputMaybe<AuthOauth2RefreshTokens_Bool_Exp>;
+};
+
+
+/** User account information. Don't modify its structure as Hasura Auth relies on it to function properly. */
+export type UsersPending_Sms_Deanonymize_OptionsArgs = {
+  path?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -22612,9 +22623,17 @@ export type Users_Aggregate_Bool_Exp_Count = {
 /** aggregate fields of "auth.users" */
 export type Users_Aggregate_Fields = {
   __typename?: 'users_aggregate_fields';
+  avg?: Maybe<Users_Avg_Fields>;
   count: Scalars['Int'];
   max?: Maybe<Users_Max_Fields>;
   min?: Maybe<Users_Min_Fields>;
+  stddev?: Maybe<Users_Stddev_Fields>;
+  stddev_pop?: Maybe<Users_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Users_Stddev_Samp_Fields>;
+  sum?: Maybe<Users_Sum_Fields>;
+  var_pop?: Maybe<Users_Var_Pop_Fields>;
+  var_samp?: Maybe<Users_Var_Samp_Fields>;
+  variance?: Maybe<Users_Variance_Fields>;
 };
 
 
@@ -22626,14 +22645,23 @@ export type Users_Aggregate_FieldsCountArgs = {
 
 /** order by aggregate values of table "auth.users" */
 export type Users_Aggregate_Order_By = {
+  avg?: InputMaybe<Users_Avg_Order_By>;
   count?: InputMaybe<Order_By>;
   max?: InputMaybe<Users_Max_Order_By>;
   min?: InputMaybe<Users_Min_Order_By>;
+  stddev?: InputMaybe<Users_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Users_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Users_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Users_Sum_Order_By>;
+  var_pop?: InputMaybe<Users_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Users_Var_Samp_Order_By>;
+  variance?: InputMaybe<Users_Variance_Order_By>;
 };
 
 /** append existing jsonb value of filtered columns with new jsonb value */
 export type Users_Append_Input = {
   metadata?: InputMaybe<Scalars['jsonb']>;
+  pending_sms_deanonymize_options?: InputMaybe<Scalars['jsonb']>;
 };
 
 /** input type for inserting array relation for remote table "auth.users" */
@@ -22641,6 +22669,17 @@ export type Users_Arr_Rel_Insert_Input = {
   data: Array<Users_Insert_Input>;
   /** upsert condition */
   on_conflict?: InputMaybe<Users_On_Conflict>;
+};
+
+/** aggregate avg on columns */
+export type Users_Avg_Fields = {
+  __typename?: 'users_avg_fields';
+  otp_attempts?: Maybe<Scalars['Float']>;
+};
+
+/** order by avg() on columns of table "auth.users" */
+export type Users_Avg_Order_By = {
+  otp_attempts?: InputMaybe<Order_By>;
 };
 
 /** Boolean expression to filter rows from the table "auth.users". All fields are combined with a logical 'AND'. */
@@ -22668,6 +22707,7 @@ export type Users_Bool_Exp = {
   members_aggregate?: InputMaybe<Member_Aggregate_Bool_Exp>;
   metadata?: InputMaybe<Jsonb_Comparison_Exp>;
   newEmail?: InputMaybe<Citext_Comparison_Exp>;
+  new_phone_number?: InputMaybe<String_Comparison_Exp>;
   oauth2AuthRequests?: InputMaybe<AuthOauth2AuthRequests_Bool_Exp>;
   oauth2AuthRequests_aggregate?: InputMaybe<AuthOauth2AuthRequests_Aggregate_Bool_Exp>;
   oauth2RefreshTokens?: InputMaybe<AuthOauth2RefreshTokens_Bool_Exp>;
@@ -22675,7 +22715,9 @@ export type Users_Bool_Exp = {
   otpHash?: InputMaybe<String_Comparison_Exp>;
   otpHashExpiresAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   otpMethodLastUsed?: InputMaybe<String_Comparison_Exp>;
+  otp_attempts?: InputMaybe<Smallint_Comparison_Exp>;
   passwordHash?: InputMaybe<String_Comparison_Exp>;
+  pending_sms_deanonymize_options?: InputMaybe<Jsonb_Comparison_Exp>;
   phoneNumber?: InputMaybe<String_Comparison_Exp>;
   phoneNumberVerified?: InputMaybe<Boolean_Comparison_Exp>;
   refreshTokens?: InputMaybe<AuthRefreshTokens_Bool_Exp>;
@@ -22705,16 +22747,24 @@ export enum Users_Constraint {
 /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
 export type Users_Delete_At_Path_Input = {
   metadata?: InputMaybe<Array<Scalars['String']>>;
+  pending_sms_deanonymize_options?: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
 export type Users_Delete_Elem_Input = {
   metadata?: InputMaybe<Scalars['Int']>;
+  pending_sms_deanonymize_options?: InputMaybe<Scalars['Int']>;
 };
 
 /** delete key/value pair or string element. key/value pairs are matched based on their key value */
 export type Users_Delete_Key_Input = {
   metadata?: InputMaybe<Scalars['String']>;
+  pending_sms_deanonymize_options?: InputMaybe<Scalars['String']>;
+};
+
+/** input type for incrementing numeric columns in table "auth.users" */
+export type Users_Inc_Input = {
+  otp_attempts?: InputMaybe<Scalars['smallint']>;
 };
 
 /** input type for inserting data into table "auth.users" */
@@ -22737,12 +22787,15 @@ export type Users_Insert_Input = {
   members?: InputMaybe<Member_Arr_Rel_Insert_Input>;
   metadata?: InputMaybe<Scalars['jsonb']>;
   newEmail?: InputMaybe<Scalars['citext']>;
+  new_phone_number?: InputMaybe<Scalars['String']>;
   oauth2AuthRequests?: InputMaybe<AuthOauth2AuthRequests_Arr_Rel_Insert_Input>;
   oauth2RefreshTokens?: InputMaybe<AuthOauth2RefreshTokens_Arr_Rel_Insert_Input>;
   otpHash?: InputMaybe<Scalars['String']>;
   otpHashExpiresAt?: InputMaybe<Scalars['timestamptz']>;
   otpMethodLastUsed?: InputMaybe<Scalars['String']>;
+  otp_attempts?: InputMaybe<Scalars['smallint']>;
   passwordHash?: InputMaybe<Scalars['String']>;
+  pending_sms_deanonymize_options?: InputMaybe<Scalars['jsonb']>;
   phoneNumber?: InputMaybe<Scalars['String']>;
   phoneNumberVerified?: InputMaybe<Scalars['Boolean']>;
   refreshTokens?: InputMaybe<AuthRefreshTokens_Arr_Rel_Insert_Input>;
@@ -22769,9 +22822,11 @@ export type Users_Max_Fields = {
   lastSeen?: Maybe<Scalars['timestamptz']>;
   locale?: Maybe<Scalars['String']>;
   newEmail?: Maybe<Scalars['citext']>;
+  new_phone_number?: Maybe<Scalars['String']>;
   otpHash?: Maybe<Scalars['String']>;
   otpHashExpiresAt?: Maybe<Scalars['timestamptz']>;
   otpMethodLastUsed?: Maybe<Scalars['String']>;
+  otp_attempts?: Maybe<Scalars['smallint']>;
   passwordHash?: Maybe<Scalars['String']>;
   phoneNumber?: Maybe<Scalars['String']>;
   ticket?: Maybe<Scalars['String']>;
@@ -22793,9 +22848,11 @@ export type Users_Max_Order_By = {
   lastSeen?: InputMaybe<Order_By>;
   locale?: InputMaybe<Order_By>;
   newEmail?: InputMaybe<Order_By>;
+  new_phone_number?: InputMaybe<Order_By>;
   otpHash?: InputMaybe<Order_By>;
   otpHashExpiresAt?: InputMaybe<Order_By>;
   otpMethodLastUsed?: InputMaybe<Order_By>;
+  otp_attempts?: InputMaybe<Order_By>;
   passwordHash?: InputMaybe<Order_By>;
   phoneNumber?: InputMaybe<Order_By>;
   ticket?: InputMaybe<Order_By>;
@@ -22818,9 +22875,11 @@ export type Users_Min_Fields = {
   lastSeen?: Maybe<Scalars['timestamptz']>;
   locale?: Maybe<Scalars['String']>;
   newEmail?: Maybe<Scalars['citext']>;
+  new_phone_number?: Maybe<Scalars['String']>;
   otpHash?: Maybe<Scalars['String']>;
   otpHashExpiresAt?: Maybe<Scalars['timestamptz']>;
   otpMethodLastUsed?: Maybe<Scalars['String']>;
+  otp_attempts?: Maybe<Scalars['smallint']>;
   passwordHash?: Maybe<Scalars['String']>;
   phoneNumber?: Maybe<Scalars['String']>;
   ticket?: Maybe<Scalars['String']>;
@@ -22842,9 +22901,11 @@ export type Users_Min_Order_By = {
   lastSeen?: InputMaybe<Order_By>;
   locale?: InputMaybe<Order_By>;
   newEmail?: InputMaybe<Order_By>;
+  new_phone_number?: InputMaybe<Order_By>;
   otpHash?: InputMaybe<Order_By>;
   otpHashExpiresAt?: InputMaybe<Order_By>;
   otpMethodLastUsed?: InputMaybe<Order_By>;
+  otp_attempts?: InputMaybe<Order_By>;
   passwordHash?: InputMaybe<Order_By>;
   phoneNumber?: InputMaybe<Order_By>;
   ticket?: InputMaybe<Order_By>;
@@ -22896,12 +22957,15 @@ export type Users_Order_By = {
   members_aggregate?: InputMaybe<Member_Aggregate_Order_By>;
   metadata?: InputMaybe<Order_By>;
   newEmail?: InputMaybe<Order_By>;
+  new_phone_number?: InputMaybe<Order_By>;
   oauth2AuthRequests_aggregate?: InputMaybe<AuthOauth2AuthRequests_Aggregate_Order_By>;
   oauth2RefreshTokens_aggregate?: InputMaybe<AuthOauth2RefreshTokens_Aggregate_Order_By>;
   otpHash?: InputMaybe<Order_By>;
   otpHashExpiresAt?: InputMaybe<Order_By>;
   otpMethodLastUsed?: InputMaybe<Order_By>;
+  otp_attempts?: InputMaybe<Order_By>;
   passwordHash?: InputMaybe<Order_By>;
+  pending_sms_deanonymize_options?: InputMaybe<Order_By>;
   phoneNumber?: InputMaybe<Order_By>;
   phoneNumberVerified?: InputMaybe<Order_By>;
   refreshTokens_aggregate?: InputMaybe<AuthRefreshTokens_Aggregate_Order_By>;
@@ -22922,6 +22986,7 @@ export type Users_Pk_Columns_Input = {
 /** prepend existing jsonb value of filtered columns with new jsonb value */
 export type Users_Prepend_Input = {
   metadata?: InputMaybe<Scalars['jsonb']>;
+  pending_sms_deanonymize_options?: InputMaybe<Scalars['jsonb']>;
 };
 
 /** select columns of table "auth.users" */
@@ -22957,13 +23022,19 @@ export enum Users_Select_Column {
   /** column name */
   NewEmail = 'newEmail',
   /** column name */
+  NewPhoneNumber = 'new_phone_number',
+  /** column name */
   OtpHash = 'otpHash',
   /** column name */
   OtpHashExpiresAt = 'otpHashExpiresAt',
   /** column name */
   OtpMethodLastUsed = 'otpMethodLastUsed',
   /** column name */
+  OtpAttempts = 'otp_attempts',
+  /** column name */
   PasswordHash = 'passwordHash',
+  /** column name */
+  PendingSmsDeanonymizeOptions = 'pending_sms_deanonymize_options',
   /** column name */
   PhoneNumber = 'phoneNumber',
   /** column name */
@@ -23019,16 +23090,52 @@ export type Users_Set_Input = {
   locale?: InputMaybe<Scalars['String']>;
   metadata?: InputMaybe<Scalars['jsonb']>;
   newEmail?: InputMaybe<Scalars['citext']>;
+  new_phone_number?: InputMaybe<Scalars['String']>;
   otpHash?: InputMaybe<Scalars['String']>;
   otpHashExpiresAt?: InputMaybe<Scalars['timestamptz']>;
   otpMethodLastUsed?: InputMaybe<Scalars['String']>;
+  otp_attempts?: InputMaybe<Scalars['smallint']>;
   passwordHash?: InputMaybe<Scalars['String']>;
+  pending_sms_deanonymize_options?: InputMaybe<Scalars['jsonb']>;
   phoneNumber?: InputMaybe<Scalars['String']>;
   phoneNumberVerified?: InputMaybe<Scalars['Boolean']>;
   ticket?: InputMaybe<Scalars['String']>;
   ticketExpiresAt?: InputMaybe<Scalars['timestamptz']>;
   totpSecret?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** aggregate stddev on columns */
+export type Users_Stddev_Fields = {
+  __typename?: 'users_stddev_fields';
+  otp_attempts?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev() on columns of table "auth.users" */
+export type Users_Stddev_Order_By = {
+  otp_attempts?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Users_Stddev_Pop_Fields = {
+  __typename?: 'users_stddev_pop_fields';
+  otp_attempts?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev_pop() on columns of table "auth.users" */
+export type Users_Stddev_Pop_Order_By = {
+  otp_attempts?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Users_Stddev_Samp_Fields = {
+  __typename?: 'users_stddev_samp_fields';
+  otp_attempts?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev_samp() on columns of table "auth.users" */
+export type Users_Stddev_Samp_Order_By = {
+  otp_attempts?: InputMaybe<Order_By>;
 };
 
 /** Streaming cursor of the table "users" */
@@ -23056,16 +23163,30 @@ export type Users_Stream_Cursor_Value_Input = {
   locale?: InputMaybe<Scalars['String']>;
   metadata?: InputMaybe<Scalars['jsonb']>;
   newEmail?: InputMaybe<Scalars['citext']>;
+  new_phone_number?: InputMaybe<Scalars['String']>;
   otpHash?: InputMaybe<Scalars['String']>;
   otpHashExpiresAt?: InputMaybe<Scalars['timestamptz']>;
   otpMethodLastUsed?: InputMaybe<Scalars['String']>;
+  otp_attempts?: InputMaybe<Scalars['smallint']>;
   passwordHash?: InputMaybe<Scalars['String']>;
+  pending_sms_deanonymize_options?: InputMaybe<Scalars['jsonb']>;
   phoneNumber?: InputMaybe<Scalars['String']>;
   phoneNumberVerified?: InputMaybe<Scalars['Boolean']>;
   ticket?: InputMaybe<Scalars['String']>;
   ticketExpiresAt?: InputMaybe<Scalars['timestamptz']>;
   totpSecret?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** aggregate sum on columns */
+export type Users_Sum_Fields = {
+  __typename?: 'users_sum_fields';
+  otp_attempts?: Maybe<Scalars['smallint']>;
+};
+
+/** order by sum() on columns of table "auth.users" */
+export type Users_Sum_Order_By = {
+  otp_attempts?: InputMaybe<Order_By>;
 };
 
 /** update columns of table "auth.users" */
@@ -23101,13 +23222,19 @@ export enum Users_Update_Column {
   /** column name */
   NewEmail = 'newEmail',
   /** column name */
+  NewPhoneNumber = 'new_phone_number',
+  /** column name */
   OtpHash = 'otpHash',
   /** column name */
   OtpHashExpiresAt = 'otpHashExpiresAt',
   /** column name */
   OtpMethodLastUsed = 'otpMethodLastUsed',
   /** column name */
+  OtpAttempts = 'otp_attempts',
+  /** column name */
   PasswordHash = 'passwordHash',
+  /** column name */
+  PendingSmsDeanonymizeOptions = 'pending_sms_deanonymize_options',
   /** column name */
   PhoneNumber = 'phoneNumber',
   /** column name */
@@ -23131,12 +23258,47 @@ export type Users_Updates = {
   _delete_elem?: InputMaybe<Users_Delete_Elem_Input>;
   /** delete key/value pair or string element. key/value pairs are matched based on their key value */
   _delete_key?: InputMaybe<Users_Delete_Key_Input>;
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Users_Inc_Input>;
   /** prepend existing jsonb value of filtered columns with new jsonb value */
   _prepend?: InputMaybe<Users_Prepend_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Users_Set_Input>;
   /** filter the rows which have to be updated */
   where: Users_Bool_Exp;
+};
+
+/** aggregate var_pop on columns */
+export type Users_Var_Pop_Fields = {
+  __typename?: 'users_var_pop_fields';
+  otp_attempts?: Maybe<Scalars['Float']>;
+};
+
+/** order by var_pop() on columns of table "auth.users" */
+export type Users_Var_Pop_Order_By = {
+  otp_attempts?: InputMaybe<Order_By>;
+};
+
+/** aggregate var_samp on columns */
+export type Users_Var_Samp_Fields = {
+  __typename?: 'users_var_samp_fields';
+  otp_attempts?: Maybe<Scalars['Float']>;
+};
+
+/** order by var_samp() on columns of table "auth.users" */
+export type Users_Var_Samp_Order_By = {
+  otp_attempts?: InputMaybe<Order_By>;
+};
+
+/** aggregate variance on columns */
+export type Users_Variance_Fields = {
+  __typename?: 'users_variance_fields';
+  otp_attempts?: Maybe<Scalars['Float']>;
+};
+
+/** order by variance() on columns of table "auth.users" */
+export type Users_Variance_Order_By = {
+  otp_attempts?: InputMaybe<Order_By>;
 };
 
 /** Boolean expression to compare columns of type "uuid". All fields are combined with logical 'AND'. */
