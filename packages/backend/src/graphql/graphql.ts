@@ -11876,6 +11876,7 @@ export type Mutation_RootUpdateUserArgs = {
   _delete_at_path?: InputMaybe<Users_Delete_At_Path_Input>;
   _delete_elem?: InputMaybe<Users_Delete_Elem_Input>;
   _delete_key?: InputMaybe<Users_Delete_Key_Input>;
+  _inc?: InputMaybe<Users_Inc_Input>;
   _prepend?: InputMaybe<Users_Prepend_Input>;
   _set?: InputMaybe<Users_Set_Input>;
   pk_columns: Users_Pk_Columns_Input;
@@ -11888,6 +11889,7 @@ export type Mutation_RootUpdateUsersArgs = {
   _delete_at_path?: InputMaybe<Users_Delete_At_Path_Input>;
   _delete_elem?: InputMaybe<Users_Delete_Elem_Input>;
   _delete_key?: InputMaybe<Users_Delete_Key_Input>;
+  _inc?: InputMaybe<Users_Inc_Input>;
   _prepend?: InputMaybe<Users_Prepend_Input>;
   _set?: InputMaybe<Users_Set_Input>;
   where: Users_Bool_Exp;
@@ -22373,6 +22375,7 @@ export type Users = {
   members_aggregate: Member_Aggregate;
   metadata: Scalars['user_metadata'];
   newEmail?: Maybe<Scalars['citext']>;
+  new_phone_number?: Maybe<Scalars['String']>;
   /** An array relationship */
   oauth2AuthRequests: Array<AuthOauth2AuthRequests>;
   /** An aggregate relationship */
@@ -22384,7 +22387,9 @@ export type Users = {
   otpHash?: Maybe<Scalars['String']>;
   otpHashExpiresAt: Scalars['timestamptz'];
   otpMethodLastUsed?: Maybe<Scalars['String']>;
+  otp_attempts: Scalars['smallint'];
   passwordHash?: Maybe<Scalars['String']>;
+  pending_sms_deanonymize_options?: Maybe<Scalars['jsonb']>;
   phoneNumber?: Maybe<Scalars['String']>;
   phoneNumberVerified: Scalars['Boolean'];
   /** An array relationship */
@@ -22493,6 +22498,12 @@ export type UsersOauth2RefreshTokens_AggregateArgs = {
   offset?: InputMaybe<Scalars['Int']>;
   order_by?: InputMaybe<Array<AuthOauth2RefreshTokens_Order_By>>;
   where?: InputMaybe<AuthOauth2RefreshTokens_Bool_Exp>;
+};
+
+
+/** User account information. Don't modify its structure as Hasura Auth relies on it to function properly. */
+export type UsersPending_Sms_Deanonymize_OptionsArgs = {
+  path?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -22612,9 +22623,17 @@ export type Users_Aggregate_Bool_Exp_Count = {
 /** aggregate fields of "auth.users" */
 export type Users_Aggregate_Fields = {
   __typename?: 'users_aggregate_fields';
+  avg?: Maybe<Users_Avg_Fields>;
   count: Scalars['Int'];
   max?: Maybe<Users_Max_Fields>;
   min?: Maybe<Users_Min_Fields>;
+  stddev?: Maybe<Users_Stddev_Fields>;
+  stddev_pop?: Maybe<Users_Stddev_Pop_Fields>;
+  stddev_samp?: Maybe<Users_Stddev_Samp_Fields>;
+  sum?: Maybe<Users_Sum_Fields>;
+  var_pop?: Maybe<Users_Var_Pop_Fields>;
+  var_samp?: Maybe<Users_Var_Samp_Fields>;
+  variance?: Maybe<Users_Variance_Fields>;
 };
 
 
@@ -22626,14 +22645,23 @@ export type Users_Aggregate_FieldsCountArgs = {
 
 /** order by aggregate values of table "auth.users" */
 export type Users_Aggregate_Order_By = {
+  avg?: InputMaybe<Users_Avg_Order_By>;
   count?: InputMaybe<Order_By>;
   max?: InputMaybe<Users_Max_Order_By>;
   min?: InputMaybe<Users_Min_Order_By>;
+  stddev?: InputMaybe<Users_Stddev_Order_By>;
+  stddev_pop?: InputMaybe<Users_Stddev_Pop_Order_By>;
+  stddev_samp?: InputMaybe<Users_Stddev_Samp_Order_By>;
+  sum?: InputMaybe<Users_Sum_Order_By>;
+  var_pop?: InputMaybe<Users_Var_Pop_Order_By>;
+  var_samp?: InputMaybe<Users_Var_Samp_Order_By>;
+  variance?: InputMaybe<Users_Variance_Order_By>;
 };
 
 /** append existing jsonb value of filtered columns with new jsonb value */
 export type Users_Append_Input = {
   metadata?: InputMaybe<Scalars['jsonb']>;
+  pending_sms_deanonymize_options?: InputMaybe<Scalars['jsonb']>;
 };
 
 /** input type for inserting array relation for remote table "auth.users" */
@@ -22641,6 +22669,17 @@ export type Users_Arr_Rel_Insert_Input = {
   data: Array<Users_Insert_Input>;
   /** upsert condition */
   on_conflict?: InputMaybe<Users_On_Conflict>;
+};
+
+/** aggregate avg on columns */
+export type Users_Avg_Fields = {
+  __typename?: 'users_avg_fields';
+  otp_attempts?: Maybe<Scalars['Float']>;
+};
+
+/** order by avg() on columns of table "auth.users" */
+export type Users_Avg_Order_By = {
+  otp_attempts?: InputMaybe<Order_By>;
 };
 
 /** Boolean expression to filter rows from the table "auth.users". All fields are combined with a logical 'AND'. */
@@ -22668,6 +22707,7 @@ export type Users_Bool_Exp = {
   members_aggregate?: InputMaybe<Member_Aggregate_Bool_Exp>;
   metadata?: InputMaybe<Jsonb_Comparison_Exp>;
   newEmail?: InputMaybe<Citext_Comparison_Exp>;
+  new_phone_number?: InputMaybe<String_Comparison_Exp>;
   oauth2AuthRequests?: InputMaybe<AuthOauth2AuthRequests_Bool_Exp>;
   oauth2AuthRequests_aggregate?: InputMaybe<AuthOauth2AuthRequests_Aggregate_Bool_Exp>;
   oauth2RefreshTokens?: InputMaybe<AuthOauth2RefreshTokens_Bool_Exp>;
@@ -22675,7 +22715,9 @@ export type Users_Bool_Exp = {
   otpHash?: InputMaybe<String_Comparison_Exp>;
   otpHashExpiresAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   otpMethodLastUsed?: InputMaybe<String_Comparison_Exp>;
+  otp_attempts?: InputMaybe<Smallint_Comparison_Exp>;
   passwordHash?: InputMaybe<String_Comparison_Exp>;
+  pending_sms_deanonymize_options?: InputMaybe<Jsonb_Comparison_Exp>;
   phoneNumber?: InputMaybe<String_Comparison_Exp>;
   phoneNumberVerified?: InputMaybe<Boolean_Comparison_Exp>;
   refreshTokens?: InputMaybe<AuthRefreshTokens_Bool_Exp>;
@@ -22705,16 +22747,24 @@ export enum Users_Constraint {
 /** delete the field or element with specified path (for JSON arrays, negative integers count from the end) */
 export type Users_Delete_At_Path_Input = {
   metadata?: InputMaybe<Array<Scalars['String']>>;
+  pending_sms_deanonymize_options?: InputMaybe<Array<Scalars['String']>>;
 };
 
 /** delete the array element with specified index (negative integers count from the end). throws an error if top level container is not an array */
 export type Users_Delete_Elem_Input = {
   metadata?: InputMaybe<Scalars['Int']>;
+  pending_sms_deanonymize_options?: InputMaybe<Scalars['Int']>;
 };
 
 /** delete key/value pair or string element. key/value pairs are matched based on their key value */
 export type Users_Delete_Key_Input = {
   metadata?: InputMaybe<Scalars['String']>;
+  pending_sms_deanonymize_options?: InputMaybe<Scalars['String']>;
+};
+
+/** input type for incrementing numeric columns in table "auth.users" */
+export type Users_Inc_Input = {
+  otp_attempts?: InputMaybe<Scalars['smallint']>;
 };
 
 /** input type for inserting data into table "auth.users" */
@@ -22737,12 +22787,15 @@ export type Users_Insert_Input = {
   members?: InputMaybe<Member_Arr_Rel_Insert_Input>;
   metadata?: InputMaybe<Scalars['jsonb']>;
   newEmail?: InputMaybe<Scalars['citext']>;
+  new_phone_number?: InputMaybe<Scalars['String']>;
   oauth2AuthRequests?: InputMaybe<AuthOauth2AuthRequests_Arr_Rel_Insert_Input>;
   oauth2RefreshTokens?: InputMaybe<AuthOauth2RefreshTokens_Arr_Rel_Insert_Input>;
   otpHash?: InputMaybe<Scalars['String']>;
   otpHashExpiresAt?: InputMaybe<Scalars['timestamptz']>;
   otpMethodLastUsed?: InputMaybe<Scalars['String']>;
+  otp_attempts?: InputMaybe<Scalars['smallint']>;
   passwordHash?: InputMaybe<Scalars['String']>;
+  pending_sms_deanonymize_options?: InputMaybe<Scalars['jsonb']>;
   phoneNumber?: InputMaybe<Scalars['String']>;
   phoneNumberVerified?: InputMaybe<Scalars['Boolean']>;
   refreshTokens?: InputMaybe<AuthRefreshTokens_Arr_Rel_Insert_Input>;
@@ -22769,9 +22822,11 @@ export type Users_Max_Fields = {
   lastSeen?: Maybe<Scalars['timestamptz']>;
   locale?: Maybe<Scalars['String']>;
   newEmail?: Maybe<Scalars['citext']>;
+  new_phone_number?: Maybe<Scalars['String']>;
   otpHash?: Maybe<Scalars['String']>;
   otpHashExpiresAt?: Maybe<Scalars['timestamptz']>;
   otpMethodLastUsed?: Maybe<Scalars['String']>;
+  otp_attempts?: Maybe<Scalars['smallint']>;
   passwordHash?: Maybe<Scalars['String']>;
   phoneNumber?: Maybe<Scalars['String']>;
   ticket?: Maybe<Scalars['String']>;
@@ -22793,9 +22848,11 @@ export type Users_Max_Order_By = {
   lastSeen?: InputMaybe<Order_By>;
   locale?: InputMaybe<Order_By>;
   newEmail?: InputMaybe<Order_By>;
+  new_phone_number?: InputMaybe<Order_By>;
   otpHash?: InputMaybe<Order_By>;
   otpHashExpiresAt?: InputMaybe<Order_By>;
   otpMethodLastUsed?: InputMaybe<Order_By>;
+  otp_attempts?: InputMaybe<Order_By>;
   passwordHash?: InputMaybe<Order_By>;
   phoneNumber?: InputMaybe<Order_By>;
   ticket?: InputMaybe<Order_By>;
@@ -22818,9 +22875,11 @@ export type Users_Min_Fields = {
   lastSeen?: Maybe<Scalars['timestamptz']>;
   locale?: Maybe<Scalars['String']>;
   newEmail?: Maybe<Scalars['citext']>;
+  new_phone_number?: Maybe<Scalars['String']>;
   otpHash?: Maybe<Scalars['String']>;
   otpHashExpiresAt?: Maybe<Scalars['timestamptz']>;
   otpMethodLastUsed?: Maybe<Scalars['String']>;
+  otp_attempts?: Maybe<Scalars['smallint']>;
   passwordHash?: Maybe<Scalars['String']>;
   phoneNumber?: Maybe<Scalars['String']>;
   ticket?: Maybe<Scalars['String']>;
@@ -22842,9 +22901,11 @@ export type Users_Min_Order_By = {
   lastSeen?: InputMaybe<Order_By>;
   locale?: InputMaybe<Order_By>;
   newEmail?: InputMaybe<Order_By>;
+  new_phone_number?: InputMaybe<Order_By>;
   otpHash?: InputMaybe<Order_By>;
   otpHashExpiresAt?: InputMaybe<Order_By>;
   otpMethodLastUsed?: InputMaybe<Order_By>;
+  otp_attempts?: InputMaybe<Order_By>;
   passwordHash?: InputMaybe<Order_By>;
   phoneNumber?: InputMaybe<Order_By>;
   ticket?: InputMaybe<Order_By>;
@@ -22896,12 +22957,15 @@ export type Users_Order_By = {
   members_aggregate?: InputMaybe<Member_Aggregate_Order_By>;
   metadata?: InputMaybe<Order_By>;
   newEmail?: InputMaybe<Order_By>;
+  new_phone_number?: InputMaybe<Order_By>;
   oauth2AuthRequests_aggregate?: InputMaybe<AuthOauth2AuthRequests_Aggregate_Order_By>;
   oauth2RefreshTokens_aggregate?: InputMaybe<AuthOauth2RefreshTokens_Aggregate_Order_By>;
   otpHash?: InputMaybe<Order_By>;
   otpHashExpiresAt?: InputMaybe<Order_By>;
   otpMethodLastUsed?: InputMaybe<Order_By>;
+  otp_attempts?: InputMaybe<Order_By>;
   passwordHash?: InputMaybe<Order_By>;
+  pending_sms_deanonymize_options?: InputMaybe<Order_By>;
   phoneNumber?: InputMaybe<Order_By>;
   phoneNumberVerified?: InputMaybe<Order_By>;
   refreshTokens_aggregate?: InputMaybe<AuthRefreshTokens_Aggregate_Order_By>;
@@ -22922,6 +22986,7 @@ export type Users_Pk_Columns_Input = {
 /** prepend existing jsonb value of filtered columns with new jsonb value */
 export type Users_Prepend_Input = {
   metadata?: InputMaybe<Scalars['jsonb']>;
+  pending_sms_deanonymize_options?: InputMaybe<Scalars['jsonb']>;
 };
 
 /** select columns of table "auth.users" */
@@ -22957,13 +23022,19 @@ export enum Users_Select_Column {
   /** column name */
   NewEmail = 'newEmail',
   /** column name */
+  NewPhoneNumber = 'new_phone_number',
+  /** column name */
   OtpHash = 'otpHash',
   /** column name */
   OtpHashExpiresAt = 'otpHashExpiresAt',
   /** column name */
   OtpMethodLastUsed = 'otpMethodLastUsed',
   /** column name */
+  OtpAttempts = 'otp_attempts',
+  /** column name */
   PasswordHash = 'passwordHash',
+  /** column name */
+  PendingSmsDeanonymizeOptions = 'pending_sms_deanonymize_options',
   /** column name */
   PhoneNumber = 'phoneNumber',
   /** column name */
@@ -23019,16 +23090,52 @@ export type Users_Set_Input = {
   locale?: InputMaybe<Scalars['String']>;
   metadata?: InputMaybe<Scalars['jsonb']>;
   newEmail?: InputMaybe<Scalars['citext']>;
+  new_phone_number?: InputMaybe<Scalars['String']>;
   otpHash?: InputMaybe<Scalars['String']>;
   otpHashExpiresAt?: InputMaybe<Scalars['timestamptz']>;
   otpMethodLastUsed?: InputMaybe<Scalars['String']>;
+  otp_attempts?: InputMaybe<Scalars['smallint']>;
   passwordHash?: InputMaybe<Scalars['String']>;
+  pending_sms_deanonymize_options?: InputMaybe<Scalars['jsonb']>;
   phoneNumber?: InputMaybe<Scalars['String']>;
   phoneNumberVerified?: InputMaybe<Scalars['Boolean']>;
   ticket?: InputMaybe<Scalars['String']>;
   ticketExpiresAt?: InputMaybe<Scalars['timestamptz']>;
   totpSecret?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** aggregate stddev on columns */
+export type Users_Stddev_Fields = {
+  __typename?: 'users_stddev_fields';
+  otp_attempts?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev() on columns of table "auth.users" */
+export type Users_Stddev_Order_By = {
+  otp_attempts?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_pop on columns */
+export type Users_Stddev_Pop_Fields = {
+  __typename?: 'users_stddev_pop_fields';
+  otp_attempts?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev_pop() on columns of table "auth.users" */
+export type Users_Stddev_Pop_Order_By = {
+  otp_attempts?: InputMaybe<Order_By>;
+};
+
+/** aggregate stddev_samp on columns */
+export type Users_Stddev_Samp_Fields = {
+  __typename?: 'users_stddev_samp_fields';
+  otp_attempts?: Maybe<Scalars['Float']>;
+};
+
+/** order by stddev_samp() on columns of table "auth.users" */
+export type Users_Stddev_Samp_Order_By = {
+  otp_attempts?: InputMaybe<Order_By>;
 };
 
 /** Streaming cursor of the table "users" */
@@ -23056,16 +23163,30 @@ export type Users_Stream_Cursor_Value_Input = {
   locale?: InputMaybe<Scalars['String']>;
   metadata?: InputMaybe<Scalars['jsonb']>;
   newEmail?: InputMaybe<Scalars['citext']>;
+  new_phone_number?: InputMaybe<Scalars['String']>;
   otpHash?: InputMaybe<Scalars['String']>;
   otpHashExpiresAt?: InputMaybe<Scalars['timestamptz']>;
   otpMethodLastUsed?: InputMaybe<Scalars['String']>;
+  otp_attempts?: InputMaybe<Scalars['smallint']>;
   passwordHash?: InputMaybe<Scalars['String']>;
+  pending_sms_deanonymize_options?: InputMaybe<Scalars['jsonb']>;
   phoneNumber?: InputMaybe<Scalars['String']>;
   phoneNumberVerified?: InputMaybe<Scalars['Boolean']>;
   ticket?: InputMaybe<Scalars['String']>;
   ticketExpiresAt?: InputMaybe<Scalars['timestamptz']>;
   totpSecret?: InputMaybe<Scalars['String']>;
   updatedAt?: InputMaybe<Scalars['timestamptz']>;
+};
+
+/** aggregate sum on columns */
+export type Users_Sum_Fields = {
+  __typename?: 'users_sum_fields';
+  otp_attempts?: Maybe<Scalars['smallint']>;
+};
+
+/** order by sum() on columns of table "auth.users" */
+export type Users_Sum_Order_By = {
+  otp_attempts?: InputMaybe<Order_By>;
 };
 
 /** update columns of table "auth.users" */
@@ -23101,13 +23222,19 @@ export enum Users_Update_Column {
   /** column name */
   NewEmail = 'newEmail',
   /** column name */
+  NewPhoneNumber = 'new_phone_number',
+  /** column name */
   OtpHash = 'otpHash',
   /** column name */
   OtpHashExpiresAt = 'otpHashExpiresAt',
   /** column name */
   OtpMethodLastUsed = 'otpMethodLastUsed',
   /** column name */
+  OtpAttempts = 'otp_attempts',
+  /** column name */
   PasswordHash = 'passwordHash',
+  /** column name */
+  PendingSmsDeanonymizeOptions = 'pending_sms_deanonymize_options',
   /** column name */
   PhoneNumber = 'phoneNumber',
   /** column name */
@@ -23131,12 +23258,47 @@ export type Users_Updates = {
   _delete_elem?: InputMaybe<Users_Delete_Elem_Input>;
   /** delete key/value pair or string element. key/value pairs are matched based on their key value */
   _delete_key?: InputMaybe<Users_Delete_Key_Input>;
+  /** increments the numeric columns with given value of the filtered values */
+  _inc?: InputMaybe<Users_Inc_Input>;
   /** prepend existing jsonb value of filtered columns with new jsonb value */
   _prepend?: InputMaybe<Users_Prepend_Input>;
   /** sets the columns of the filtered rows to the given values */
   _set?: InputMaybe<Users_Set_Input>;
   /** filter the rows which have to be updated */
   where: Users_Bool_Exp;
+};
+
+/** aggregate var_pop on columns */
+export type Users_Var_Pop_Fields = {
+  __typename?: 'users_var_pop_fields';
+  otp_attempts?: Maybe<Scalars['Float']>;
+};
+
+/** order by var_pop() on columns of table "auth.users" */
+export type Users_Var_Pop_Order_By = {
+  otp_attempts?: InputMaybe<Order_By>;
+};
+
+/** aggregate var_samp on columns */
+export type Users_Var_Samp_Fields = {
+  __typename?: 'users_var_samp_fields';
+  otp_attempts?: Maybe<Scalars['Float']>;
+};
+
+/** order by var_samp() on columns of table "auth.users" */
+export type Users_Var_Samp_Order_By = {
+  otp_attempts?: InputMaybe<Order_By>;
+};
+
+/** aggregate variance on columns */
+export type Users_Variance_Fields = {
+  __typename?: 'users_variance_fields';
+  otp_attempts?: Maybe<Scalars['Float']>;
+};
+
+/** order by variance() on columns of table "auth.users" */
+export type Users_Variance_Order_By = {
+  otp_attempts?: InputMaybe<Order_By>;
 };
 
 /** Boolean expression to compare columns of type "uuid". All fields are combined with logical 'AND'. */
@@ -24121,6 +24283,13 @@ export type UpdateResolutionCircleLinkMutationVariables = Exact<{
 
 export type UpdateResolutionCircleLinkMutation = { __typename?: 'mutation_root', update_circle_link_by_pk?: { __typename?: 'circle_link', id: string } | null };
 
+export type GetOrgForDeletionQueryVariables = Exact<{
+  orgId: Scalars['uuid'];
+}>;
+
+
+export type GetOrgForDeletionQuery = { __typename?: 'query_root', org_by_pk?: { __typename?: 'org', id: string, name: string } | null };
+
 export type GetUserForImpersonationQueryVariables = Exact<{
   id: Scalars['uuid'];
 }>;
@@ -24137,6 +24306,103 @@ export type CreateImpersonationPatMutationVariables = Exact<{
 
 
 export type CreateImpersonationPatMutation = { __typename?: 'mutation_root', insertAuthRefreshToken?: { __typename?: 'authRefreshTokens', id: string } | null };
+
+export type GetOrgsDeletionCountsQueryVariables = Exact<{
+  orgIds: Array<Scalars['uuid']> | Scalars['uuid'];
+}>;
+
+
+export type GetOrgsDeletionCountsQuery = { __typename?: 'query_root', members: { __typename?: 'member_aggregate', aggregate?: { __typename?: 'member_aggregate_fields', count: number } | null }, users: { __typename?: 'member_aggregate', aggregate?: { __typename?: 'member_aggregate_fields', count: number } | null }, roles: { __typename?: 'role_aggregate', aggregate?: { __typename?: 'role_aggregate_fields', count: number } | null }, circles: { __typename?: 'circle_aggregate', aggregate?: { __typename?: 'circle_aggregate_fields', count: number } | null }, meetings: { __typename?: 'meeting_aggregate', aggregate?: { __typename?: 'meeting_aggregate_fields', count: number } | null }, threads: { __typename?: 'thread_aggregate', aggregate?: { __typename?: 'thread_aggregate_fields', count: number } | null }, messages: { __typename?: 'thread_activity_aggregate', aggregate?: { __typename?: 'thread_activity_aggregate_fields', count: number } | null }, tasks: { __typename?: 'task_aggregate', aggregate?: { __typename?: 'task_aggregate_fields', count: number } | null }, decisions: { __typename?: 'decision_aggregate', aggregate?: { __typename?: 'decision_aggregate_fields', count: number } | null }, logs: { __typename?: 'log_aggregate', aggregate?: { __typename?: 'log_aggregate_fields', count: number } | null } };
+
+export type GetOrgsSubscriptionsForDeletionQueryVariables = Exact<{
+  orgIds: Array<Scalars['uuid']> | Scalars['uuid'];
+}>;
+
+
+export type GetOrgsSubscriptionsForDeletionQuery = { __typename?: 'query_root', org_subscription: Array<{ __typename?: 'org_subscription', orgId: string, type: Subscription_Plan_Type_Enum, status: Subscription_Payment_Status_Enum, stripeSubscriptionId?: string | null }> };
+
+export type GetOrgsFilesForDeletionQueryVariables = Exact<{
+  orgIds: Array<Scalars['uuid']> | Scalars['uuid'];
+}>;
+
+
+export type GetOrgsFilesForDeletionQuery = { __typename?: 'query_root', org: Array<{ __typename?: 'org', iconFileId?: string | null, homeNote?: string | null }>, member: Array<{ __typename?: 'member', pictureFileId?: string | null, description: string }>, org_file: Array<{ __typename?: 'org_file', fileId: string }>, thread_activity: Array<{ __typename?: 'thread_activity', data: any }>, meeting_step: Array<{ __typename?: 'meeting_step', notes: string }>, meeting: Array<{ __typename?: 'meeting', summary: string }>, task: Array<{ __typename?: 'task', description: string }>, decision: Array<{ __typename?: 'decision', description: string }>, role: Array<{ __typename?: 'role', purpose: string, domain: string, accountabilities: string, checklist: string, indicators: string, notes: string }> };
+
+export type GetUnsharedFilesForDeletionQueryVariables = Exact<{
+  orgIds: Array<Scalars['uuid']> | Scalars['uuid'];
+  fileIds: Array<Scalars['uuid']> | Scalars['uuid'];
+}>;
+
+
+export type GetUnsharedFilesForDeletionQuery = { __typename?: 'query_root', files: Array<{ __typename?: 'files', id: string }> };
+
+export type DeleteOrgsMutationVariables = Exact<{
+  orgIds: Array<Scalars['uuid']> | Scalars['uuid'];
+}>;
+
+
+export type DeleteOrgsMutation = { __typename?: 'mutation_root', delete_thread_activity?: { __typename?: 'thread_activity_mutation_response', affected_rows: number } | null, delete_task?: { __typename?: 'task_mutation_response', affected_rows: number } | null, delete_decision?: { __typename?: 'decision_mutation_response', affected_rows: number } | null, delete_org_file?: { __typename?: 'org_file_mutation_response', affected_rows: number } | null, delete_org_subscription?: { __typename?: 'org_subscription_mutation_response', affected_rows: number } | null, delete_org?: { __typename?: 'org_mutation_response', affected_rows: number } | null };
+
+export type GetUserForDeletionQueryVariables = Exact<{
+  userId: Scalars['uuid'];
+}>;
+
+
+export type GetUserForDeletionQuery = { __typename?: 'query_root', user?: { __typename?: 'users', id: string, email?: string | null, displayName: string } | null };
+
+export type GetMembersForUserDeletionQueryVariables = Exact<{
+  where: Member_Bool_Exp;
+}>;
+
+
+export type GetMembersForUserDeletionQuery = { __typename?: 'query_root', member: Array<{ __typename?: 'member', id: string, orgId: string, name: string, org: { __typename?: 'org', name: string } }> };
+
+export type GetOrgSharingForUserDeletionQueryVariables = Exact<{
+  orgId: Scalars['uuid'];
+  userId: Scalars['uuid'];
+  memberIds: Array<Scalars['uuid']> | Scalars['uuid'];
+}>;
+
+
+export type GetOrgSharingForUserDeletionQuery = { __typename?: 'query_root', others: { __typename?: 'member_aggregate', aggregate?: { __typename?: 'member_aggregate_fields', count: number } | null }, logs: { __typename?: 'log_aggregate', aggregate?: { __typename?: 'log_aggregate_fields', count: number } | null }, messages: { __typename?: 'thread_activity_aggregate', aggregate?: { __typename?: 'thread_activity_aggregate_fields', count: number } | null } };
+
+export type GetSharedContentForUserDeletionQueryVariables = Exact<{
+  userId: Scalars['uuid'];
+  soloOrgIds: Array<Scalars['uuid']> | Scalars['uuid'];
+}>;
+
+
+export type GetSharedContentForUserDeletionQuery = { __typename?: 'query_root', messages: { __typename?: 'thread_activity_aggregate', aggregate?: { __typename?: 'thread_activity_aggregate_fields', count: number } | null }, reactions: { __typename?: 'thread_activity_reaction_aggregate', aggregate?: { __typename?: 'thread_activity_reaction_aggregate_fields', count: number } | null }, votes: { __typename?: 'thread_proposal_vote_aggregate', aggregate?: { __typename?: 'thread_proposal_vote_aggregate_fields', count: number } | null }, pollAnswers: { __typename?: 'thread_poll_answer_aggregate', aggregate?: { __typename?: 'thread_poll_answer_aggregate_fields', count: number } | null }, logs: { __typename?: 'log_aggregate', aggregate?: { __typename?: 'log_aggregate_fields', count: number } | null } };
+
+export type GetAccountDataForUserDeletionQueryVariables = Exact<{
+  userId: Scalars['uuid'];
+}>;
+
+
+export type GetAccountDataForUserDeletionQuery = { __typename?: 'query_root', apiKeys: { __typename?: 'api_key_aggregate', aggregate?: { __typename?: 'api_key_aggregate_fields', count: number } | null }, apps: { __typename?: 'user_app_aggregate', aggregate?: { __typename?: 'user_app_aggregate_fields', count: number } | null } };
+
+export type GetUploadedFilesForUserDeletionQueryVariables = Exact<{
+  userId: Scalars['uuid'];
+  soloOrgIds: Array<Scalars['uuid']> | Scalars['uuid'];
+}>;
+
+
+export type GetUploadedFilesForUserDeletionQuery = { __typename?: 'query_root', files: Array<{ __typename?: 'files', id: string }> };
+
+export type EraseAccountForUserDeletionMutationVariables = Exact<{
+  userId: Scalars['uuid'];
+  sharedMemberIds: Array<Scalars['uuid']> | Scalars['uuid'];
+}>;
+
+
+export type EraseAccountForUserDeletionMutation = { __typename?: 'mutation_root', update_member?: { __typename?: 'member_mutation_response', affected_rows: number } | null, delete_user_app?: { __typename?: 'user_app_mutation_response', affected_rows: number } | null, delete_api_key?: { __typename?: 'api_key_mutation_response', affected_rows: number } | null, deleteAuthRefreshTokens?: { __typename?: 'authRefreshTokens_mutation_response', affected_rows: number } | null, deleteAuthUserProviders?: { __typename?: 'authUserProviders_mutation_response', affected_rows: number } | null, deleteAuthUserSecurityKeys?: { __typename?: 'authUserSecurityKeys_mutation_response', affected_rows: number } | null, deleteAuthOauth2AuthRequests?: { __typename?: 'authOauth2AuthRequests_mutation_response', affected_rows: number } | null, deleteAuthOauth2RefreshTokens?: { __typename?: 'authOauth2RefreshTokens_mutation_response', affected_rows: number } | null, updateFiles?: { __typename?: 'files_mutation_response', affected_rows: number } | null, updateUser?: { __typename?: 'users', id: string } | null };
+
+export type DeleteUserForUserDeletionMutationVariables = Exact<{
+  userId: Scalars['uuid'];
+}>;
+
+
+export type DeleteUserForUserDeletionMutation = { __typename?: 'mutation_root', deleteUser?: { __typename?: 'users', id: string } | null };
 
 export type CircleSearchFragment = { __typename?: 'circle', id: string, orgId: string, role: { __typename?: 'role', name: string } };
 
@@ -24509,8 +24775,22 @@ export const UpdateResolutionCircleMemberDocument = {"kind":"Document","definiti
 export const GetResolutionCircleLinkDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getResolutionCircleLink"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"circle_link_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<GetResolutionCircleLinkQuery, GetResolutionCircleLinkQueryVariables>;
 export const InsertResolutionCircleLinkDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"insertResolutionCircleLink"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"object"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"circle_link_insert_input"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insert_circle_link_one"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"object"},"value":{"kind":"Variable","name":{"kind":"Name","value":"object"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<InsertResolutionCircleLinkMutation, InsertResolutionCircleLinkMutationVariables>;
 export const UpdateResolutionCircleLinkDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateResolutionCircleLink"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"values"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"circle_link_set_input"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_circle_link_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"Variable","name":{"kind":"Name","value":"values"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<UpdateResolutionCircleLinkMutation, UpdateResolutionCircleLinkMutationVariables>;
+export const GetOrgForDeletionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getOrgForDeletion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orgId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"org_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<GetOrgForDeletionQuery, GetOrgForDeletionQueryVariables>;
 export const GetUserForImpersonationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getUserForImpersonation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"disabled"}}]}}]}}]} as unknown as DocumentNode<GetUserForImpersonationQuery, GetUserForImpersonationQueryVariables>;
 export const CreateImpersonationPatDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createImpersonationPat"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"refreshTokenHash"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"expiresAt"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"timestamptz"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"metadata"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"jsonb"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"insertAuthRefreshToken"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"object"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"userId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"type"},"value":{"kind":"EnumValue","value":"pat"}},{"kind":"ObjectField","name":{"kind":"Name","value":"refreshTokenHash"},"value":{"kind":"Variable","name":{"kind":"Name","value":"refreshTokenHash"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"expiresAt"},"value":{"kind":"Variable","name":{"kind":"Name","value":"expiresAt"}}},{"kind":"ObjectField","name":{"kind":"Name","value":"metadata"},"value":{"kind":"Variable","name":{"kind":"Name","value":"metadata"}}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<CreateImpersonationPatMutation, CreateImpersonationPatMutationVariables>;
+export const GetOrgsDeletionCountsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getOrgsDeletionCounts"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"members"},"name":{"kind":"Name","value":"member_aggregate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"users"},"name":{"kind":"Name","value":"member_aggregate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"userId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_is_null"},"value":{"kind":"BooleanValue","value":false}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"roles"},"name":{"kind":"Name","value":"role_aggregate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"circles"},"name":{"kind":"Name","value":"circle_aggregate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"meetings"},"name":{"kind":"Name","value":"meeting_aggregate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"threads"},"name":{"kind":"Name","value":"thread_aggregate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"messages"},"name":{"kind":"Name","value":"thread_activity_aggregate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"thread"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}}}]}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"tasks"},"name":{"kind":"Name","value":"task_aggregate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"decisions"},"name":{"kind":"Name","value":"decision_aggregate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"logs"},"name":{"kind":"Name","value":"log_aggregate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}}]} as unknown as DocumentNode<GetOrgsDeletionCountsQuery, GetOrgsDeletionCountsQueryVariables>;
+export const GetOrgsSubscriptionsForDeletionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getOrgsSubscriptionsForDeletion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"org_subscription"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"status"}},{"kind":"Field","name":{"kind":"Name","value":"stripeSubscriptionId"}}]}}]}}]} as unknown as DocumentNode<GetOrgsSubscriptionsForDeletionQuery, GetOrgsSubscriptionsForDeletionQueryVariables>;
+export const GetOrgsFilesForDeletionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getOrgsFilesForDeletion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"org"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"iconFileId"}},{"kind":"Field","name":{"kind":"Name","value":"homeNote"}}]}},{"kind":"Field","name":{"kind":"Name","value":"member"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"pictureFileId"}},{"kind":"Field","name":{"kind":"Name","value":"description"}}]}},{"kind":"Field","name":{"kind":"Name","value":"org_file"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"fileId"}}]}},{"kind":"Field","name":{"kind":"Name","value":"thread_activity"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"thread"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}}}]}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"data"}}]}},{"kind":"Field","name":{"kind":"Name","value":"meeting_step"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"meeting"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}}}]}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"notes"}}]}},{"kind":"Field","name":{"kind":"Name","value":"meeting"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"summary"}}]}},{"kind":"Field","name":{"kind":"Name","value":"task"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"description"}}]}},{"kind":"Field","name":{"kind":"Name","value":"decision"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"description"}}]}},{"kind":"Field","name":{"kind":"Name","value":"role"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"purpose"}},{"kind":"Field","name":{"kind":"Name","value":"domain"}},{"kind":"Field","name":{"kind":"Name","value":"accountabilities"}},{"kind":"Field","name":{"kind":"Name","value":"checklist"}},{"kind":"Field","name":{"kind":"Name","value":"indicators"}},{"kind":"Field","name":{"kind":"Name","value":"notes"}}]}}]}}]} as unknown as DocumentNode<GetOrgsFilesForDeletionQuery, GetOrgsFilesForDeletionQueryVariables>;
+export const GetUnsharedFilesForDeletionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getUnsharedFilesForDeletion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"fileIds"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"files"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"fileIds"}}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"_not"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_or"},"value":{"kind":"ListValue","values":[{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgs"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_nin"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}}}]}}]}}]},{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"members"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_nin"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}}}]}}]}}]}]}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<GetUnsharedFilesForDeletionQuery, GetUnsharedFilesForDeletionQueryVariables>;
+export const DeleteOrgsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"deleteOrgs"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"delete_thread_activity"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"thread"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}}}]}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"affected_rows"}}]}},{"kind":"Field","name":{"kind":"Name","value":"delete_task"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"affected_rows"}}]}},{"kind":"Field","name":{"kind":"Name","value":"delete_decision"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"affected_rows"}}]}},{"kind":"Field","name":{"kind":"Name","value":"delete_org_file"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"affected_rows"}}]}},{"kind":"Field","name":{"kind":"Name","value":"delete_org_subscription"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"affected_rows"}}]}},{"kind":"Field","name":{"kind":"Name","value":"delete_org"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgIds"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"affected_rows"}}]}}]}}]} as unknown as DocumentNode<DeleteOrgsMutation, DeleteOrgsMutationVariables>;
+export const GetUserForDeletionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getUserForDeletion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}},{"kind":"Field","name":{"kind":"Name","value":"displayName"}}]}}]}}]} as unknown as DocumentNode<GetUserForDeletionQuery, GetUserForDeletionQueryVariables>;
+export const GetMembersForUserDeletionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getMembersForUserDeletion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"where"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"member_bool_exp"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"member"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"Variable","name":{"kind":"Name","value":"where"}}},{"kind":"Argument","name":{"kind":"Name","value":"order_by"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"org"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"name"},"value":{"kind":"EnumValue","value":"asc"}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"org"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]}}]} as unknown as DocumentNode<GetMembersForUserDeletionQuery, GetMembersForUserDeletionQueryVariables>;
+export const GetOrgSharingForUserDeletionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getOrgSharingForUserDeletion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"orgId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"memberIds"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"others"},"name":{"kind":"Name","value":"member_aggregate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgId"}}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_nin"},"value":{"kind":"Variable","name":{"kind":"Name","value":"memberIds"}}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"_or"},"value":{"kind":"ListValue","values":[{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"userId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_is_null"},"value":{"kind":"BooleanValue","value":false}}]}}]},{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"inviteEmail"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_is_null"},"value":{"kind":"BooleanValue","value":false}}]}}]}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"logs"},"name":{"kind":"Name","value":"log_aggregate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgId"}}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"userId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_neq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"messages"},"name":{"kind":"Name","value":"thread_activity_aggregate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"thread"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"orgId"}}}]}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"userId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_neq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}}]} as unknown as DocumentNode<GetOrgSharingForUserDeletionQuery, GetOrgSharingForUserDeletionQueryVariables>;
+export const GetSharedContentForUserDeletionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getSharedContentForUserDeletion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"soloOrgIds"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"messages"},"name":{"kind":"Name","value":"thread_activity_aggregate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"userId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"thread"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_nin"},"value":{"kind":"Variable","name":{"kind":"Name","value":"soloOrgIds"}}}]}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"reactions"},"name":{"kind":"Name","value":"thread_activity_reaction_aggregate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"userId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"activity"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"thread"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_nin"},"value":{"kind":"Variable","name":{"kind":"Name","value":"soloOrgIds"}}}]}}]}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"votes"},"name":{"kind":"Name","value":"thread_proposal_vote_aggregate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"userId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"activity"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"thread"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_nin"},"value":{"kind":"Variable","name":{"kind":"Name","value":"soloOrgIds"}}}]}}]}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"pollAnswers"},"name":{"kind":"Name","value":"thread_poll_answer_aggregate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"userId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"activity"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"thread"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_nin"},"value":{"kind":"Variable","name":{"kind":"Name","value":"soloOrgIds"}}}]}}]}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"logs"},"name":{"kind":"Name","value":"log_aggregate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"userId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_nin"},"value":{"kind":"Variable","name":{"kind":"Name","value":"soloOrgIds"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}}]} as unknown as DocumentNode<GetSharedContentForUserDeletionQuery, GetSharedContentForUserDeletionQueryVariables>;
+export const GetAccountDataForUserDeletionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getAccountDataForUserDeletion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","alias":{"kind":"Name","value":"apiKeys"},"name":{"kind":"Name","value":"api_key_aggregate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"userId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}},{"kind":"Field","alias":{"kind":"Name","value":"apps"},"name":{"kind":"Name","value":"user_app_aggregate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"userId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"aggregate"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"count"}}]}}]}}]}}]} as unknown as DocumentNode<GetAccountDataForUserDeletionQuery, GetAccountDataForUserDeletionQueryVariables>;
+export const GetUploadedFilesForUserDeletionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getUploadedFilesForUserDeletion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"soloOrgIds"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"files"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"uploadedByUserId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}]}},{"kind":"ObjectField","name":{"kind":"Name","value":"_not"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_or"},"value":{"kind":"ListValue","values":[{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgs"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_nin"},"value":{"kind":"Variable","name":{"kind":"Name","value":"soloOrgIds"}}}]}}]}}]},{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"members"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"orgId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_nin"},"value":{"kind":"Variable","name":{"kind":"Name","value":"soloOrgIds"}}}]}}]}}]}]}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<GetUploadedFilesForUserDeletionQuery, GetUploadedFilesForUserDeletionQueryVariables>;
+export const EraseAccountForUserDeletionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"eraseAccountForUserDeletion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"sharedMemberIds"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"update_member"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_in"},"value":{"kind":"Variable","name":{"kind":"Name","value":"sharedMemberIds"}}}]}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"userId"},"value":{"kind":"NullValue"}},{"kind":"ObjectField","name":{"kind":"Name","value":"inviteEmail"},"value":{"kind":"NullValue"}},{"kind":"ObjectField","name":{"kind":"Name","value":"inviteDate"},"value":{"kind":"NullValue"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"affected_rows"}}]}},{"kind":"Field","name":{"kind":"Name","value":"delete_user_app"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"userId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"affected_rows"}}]}},{"kind":"Field","name":{"kind":"Name","value":"delete_api_key"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"userId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"affected_rows"}}]}},{"kind":"Field","name":{"kind":"Name","value":"deleteAuthRefreshTokens"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"userId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"affected_rows"}}]}},{"kind":"Field","name":{"kind":"Name","value":"deleteAuthUserProviders"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"userId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"affected_rows"}}]}},{"kind":"Field","name":{"kind":"Name","value":"deleteAuthUserSecurityKeys"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"userId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"affected_rows"}}]}},{"kind":"Field","name":{"kind":"Name","value":"deleteAuthOauth2AuthRequests"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"userId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"affected_rows"}}]}},{"kind":"Field","name":{"kind":"Name","value":"deleteAuthOauth2RefreshTokens"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"userId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"affected_rows"}}]}},{"kind":"Field","name":{"kind":"Name","value":"updateFiles"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"uploadedByUserId"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_eq"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}]}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"uploadedByUserId"},"value":{"kind":"NullValue"}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"affected_rows"}}]}},{"kind":"Field","name":{"kind":"Name","value":"updateUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"pk_columns"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}]}},{"kind":"Argument","name":{"kind":"Name","value":"_set"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"email"},"value":{"kind":"NullValue"}},{"kind":"ObjectField","name":{"kind":"Name","value":"newEmail"},"value":{"kind":"NullValue"}},{"kind":"ObjectField","name":{"kind":"Name","value":"phoneNumber"},"value":{"kind":"NullValue"}},{"kind":"ObjectField","name":{"kind":"Name","value":"displayName"},"value":{"kind":"StringValue","value":"Deleted user","block":false}},{"kind":"ObjectField","name":{"kind":"Name","value":"avatarUrl"},"value":{"kind":"StringValue","value":"","block":false}},{"kind":"ObjectField","name":{"kind":"Name","value":"passwordHash"},"value":{"kind":"NullValue"}},{"kind":"ObjectField","name":{"kind":"Name","value":"otpHash"},"value":{"kind":"NullValue"}},{"kind":"ObjectField","name":{"kind":"Name","value":"totpSecret"},"value":{"kind":"NullValue"}},{"kind":"ObjectField","name":{"kind":"Name","value":"activeMfaType"},"value":{"kind":"NullValue"}},{"kind":"ObjectField","name":{"kind":"Name","value":"ticket"},"value":{"kind":"NullValue"}},{"kind":"ObjectField","name":{"kind":"Name","value":"currentChallenge"},"value":{"kind":"NullValue"}},{"kind":"ObjectField","name":{"kind":"Name","value":"metadata"},"value":{"kind":"NullValue"}},{"kind":"ObjectField","name":{"kind":"Name","value":"lastSeen"},"value":{"kind":"NullValue"}},{"kind":"ObjectField","name":{"kind":"Name","value":"emailVerified"},"value":{"kind":"BooleanValue","value":false}},{"kind":"ObjectField","name":{"kind":"Name","value":"phoneNumberVerified"},"value":{"kind":"BooleanValue","value":false}},{"kind":"ObjectField","name":{"kind":"Name","value":"disabled"},"value":{"kind":"BooleanValue","value":true}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<EraseAccountForUserDeletionMutation, EraseAccountForUserDeletionMutationVariables>;
+export const DeleteUserForUserDeletionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"deleteUserForUserDeletion"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<DeleteUserForUserDeletionMutation, DeleteUserForUserDeletionMutationVariables>;
 export const GetCircleForSearchDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCircleForSearch"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"circle_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CircleSearch"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CircleSearch"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"role"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<GetCircleForSearchQuery, GetCircleForSearchQueryVariables>;
 export const GetCirclesForSearchDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetCirclesForSearch"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"circle"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"where"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"archivedAt"},"value":{"kind":"ObjectValue","fields":[{"kind":"ObjectField","name":{"kind":"Name","value":"_is_null"},"value":{"kind":"BooleanValue","value":true}}]}}]}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"CircleSearch"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"CircleSearch"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"circle"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"role"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}}]}}]}}]} as unknown as DocumentNode<GetCirclesForSearchQuery, GetCirclesForSearchQueryVariables>;
 export const GetDecisionForSearchDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"GetDecisionForSearch"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"uuid"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"decision_by_pk"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"DecisionSearch"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"DecisionSearch"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"decision"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"orgId"}},{"kind":"Field","name":{"kind":"Name","value":"title"}},{"kind":"Field","name":{"kind":"Name","value":"createdAt"}}]}}]} as unknown as DocumentNode<GetDecisionForSearchQuery, GetDecisionForSearchQueryVariables>;
@@ -25231,6 +25511,13 @@ if (UpdateResolutionCircleLinkDocument) {
   });
 }
 
+// Add query source to GetOrgForDeletionDocument
+if (GetOrgForDeletionDocument) {
+  Object.assign(GetOrgForDeletionDocument, {
+    loc: { source: { body: print(GetOrgForDeletionDocument) } }
+  });
+}
+
 // Add query source to GetUserForImpersonationDocument
 if (GetUserForImpersonationDocument) {
   Object.assign(GetUserForImpersonationDocument, {
@@ -25242,6 +25529,97 @@ if (GetUserForImpersonationDocument) {
 if (CreateImpersonationPatDocument) {
   Object.assign(CreateImpersonationPatDocument, {
     loc: { source: { body: print(CreateImpersonationPatDocument) } }
+  });
+}
+
+// Add query source to GetOrgsDeletionCountsDocument
+if (GetOrgsDeletionCountsDocument) {
+  Object.assign(GetOrgsDeletionCountsDocument, {
+    loc: { source: { body: print(GetOrgsDeletionCountsDocument) } }
+  });
+}
+
+// Add query source to GetOrgsSubscriptionsForDeletionDocument
+if (GetOrgsSubscriptionsForDeletionDocument) {
+  Object.assign(GetOrgsSubscriptionsForDeletionDocument, {
+    loc: { source: { body: print(GetOrgsSubscriptionsForDeletionDocument) } }
+  });
+}
+
+// Add query source to GetOrgsFilesForDeletionDocument
+if (GetOrgsFilesForDeletionDocument) {
+  Object.assign(GetOrgsFilesForDeletionDocument, {
+    loc: { source: { body: print(GetOrgsFilesForDeletionDocument) } }
+  });
+}
+
+// Add query source to GetUnsharedFilesForDeletionDocument
+if (GetUnsharedFilesForDeletionDocument) {
+  Object.assign(GetUnsharedFilesForDeletionDocument, {
+    loc: { source: { body: print(GetUnsharedFilesForDeletionDocument) } }
+  });
+}
+
+// Add query source to DeleteOrgsDocument
+if (DeleteOrgsDocument) {
+  Object.assign(DeleteOrgsDocument, {
+    loc: { source: { body: print(DeleteOrgsDocument) } }
+  });
+}
+
+// Add query source to GetUserForDeletionDocument
+if (GetUserForDeletionDocument) {
+  Object.assign(GetUserForDeletionDocument, {
+    loc: { source: { body: print(GetUserForDeletionDocument) } }
+  });
+}
+
+// Add query source to GetMembersForUserDeletionDocument
+if (GetMembersForUserDeletionDocument) {
+  Object.assign(GetMembersForUserDeletionDocument, {
+    loc: { source: { body: print(GetMembersForUserDeletionDocument) } }
+  });
+}
+
+// Add query source to GetOrgSharingForUserDeletionDocument
+if (GetOrgSharingForUserDeletionDocument) {
+  Object.assign(GetOrgSharingForUserDeletionDocument, {
+    loc: { source: { body: print(GetOrgSharingForUserDeletionDocument) } }
+  });
+}
+
+// Add query source to GetSharedContentForUserDeletionDocument
+if (GetSharedContentForUserDeletionDocument) {
+  Object.assign(GetSharedContentForUserDeletionDocument, {
+    loc: { source: { body: print(GetSharedContentForUserDeletionDocument) } }
+  });
+}
+
+// Add query source to GetAccountDataForUserDeletionDocument
+if (GetAccountDataForUserDeletionDocument) {
+  Object.assign(GetAccountDataForUserDeletionDocument, {
+    loc: { source: { body: print(GetAccountDataForUserDeletionDocument) } }
+  });
+}
+
+// Add query source to GetUploadedFilesForUserDeletionDocument
+if (GetUploadedFilesForUserDeletionDocument) {
+  Object.assign(GetUploadedFilesForUserDeletionDocument, {
+    loc: { source: { body: print(GetUploadedFilesForUserDeletionDocument) } }
+  });
+}
+
+// Add query source to EraseAccountForUserDeletionDocument
+if (EraseAccountForUserDeletionDocument) {
+  Object.assign(EraseAccountForUserDeletionDocument, {
+    loc: { source: { body: print(EraseAccountForUserDeletionDocument) } }
+  });
+}
+
+// Add query source to DeleteUserForUserDeletionDocument
+if (DeleteUserForUserDeletionDocument) {
+  Object.assign(DeleteUserForUserDeletionDocument, {
+    loc: { source: { body: print(DeleteUserForUserDeletionDocument) } }
   });
 }
 

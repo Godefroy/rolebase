@@ -18,6 +18,7 @@ import {
 import debounce from 'lodash.debounce'
 import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import DeleteUserButton from '../components/DeleteUserButton'
 import ImpersonateButton from '../components/ImpersonateButton'
 
 const PAGE_SIZE = 50
@@ -126,12 +127,15 @@ export default function AdminUsersPage() {
                     </Tag>
                   </Td>
                   <Td isNumeric>
-                    {!user.disabled && (
-                      <ImpersonateButton
-                        userId={user.id}
-                        userName={user.displayName || user.email || user.id}
-                      />
-                    )}
+                    <HStack spacing={2} justify="flex-end">
+                      {!user.disabled && (
+                        <ImpersonateButton
+                          userId={user.id}
+                          userName={user.displayName || user.email || user.id}
+                        />
+                      )}
+                      <DeleteUserButton userId={user.id} />
+                    </HStack>
                   </Td>
                 </Tr>
               ))}

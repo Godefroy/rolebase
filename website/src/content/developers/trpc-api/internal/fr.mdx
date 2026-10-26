@@ -38,6 +38,10 @@ Réservées à un token d’accès portant le rôle `admin`.
 | --- | --- |
 | `participants.recomputeCache` | Reconstruit le cache derrière [`circle_participant`](/fr/developers/graphql-api/circle_participant). |
 | `search.reindexAll` | Vide et reconstruit tout l’index de recherche. |
+| `superAdmin.deleteOrg` | Supprime définitivement une organisation et tout son contenu, à partir de `{ orgId }` : ses fichiers sont retirés du stockage et son abonnement actif est résilié dans Stripe. Les comptes des membres sont conservés. |
+| `superAdmin.deleteUser` | Efface une personne, à partir de `{ userId }` : supprime les organisations auxquelles personne d’autre n’a participé, détache ses fiches membres des autres organisations (laissées intactes par ailleurs) et supprime le compte, ou l’anonymise et le désactive tant que des contenus d’autres organisations y sont rattachés. L’appel sur son propre compte est refusé. |
+| `superAdmin.getOrgDeletionPreview` | Liste ce que `superAdmin.deleteOrg` supprimerait, à partir de `{ orgId }`. |
+| `superAdmin.getUserDeletionPreview` | Liste ce que `superAdmin.deleteUser` supprimerait, détacherait ou conserverait, à partir de `{ userId }`. |
 | `superAdmin.impersonate` | Délivre un token d’accès personnel éphémère pour ouvrir une session en tant qu’un autre utilisateur, à partir de `{ userId }`. Un utilisateur désactivé est refusé. |
 
 ## Health check

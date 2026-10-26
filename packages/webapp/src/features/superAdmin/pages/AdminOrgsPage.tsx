@@ -20,6 +20,7 @@ import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getOrgPath } from '@rolebase/shared/helpers/getOrgPath'
 import { Link } from 'react-router'
+import DeleteOrgButton from '../components/DeleteOrgButton'
 
 const PAGE_SIZE = 50
 
@@ -84,6 +85,7 @@ export default function AdminOrgsPage() {
                 <Th>{t('SuperAdmin.orgs.columns.created')}</Th>
                 <Th isNumeric>{t('SuperAdmin.orgs.columns.members')}</Th>
                 <Th>{t('SuperAdmin.orgs.columns.subscription')}</Th>
+                <Th />
               </Tr>
             </Thead>
             <Tbody>
@@ -132,6 +134,9 @@ export default function AdminOrgsPage() {
                         {t('SuperAdmin.orgs.noSubscription')}
                       </Tag>
                     )}
+                  </Td>
+                  <Td isNumeric>
+                    <DeleteOrgButton orgId={org.id} />
                   </Td>
                 </Tr>
               ))}
