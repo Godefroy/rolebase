@@ -1,5 +1,5 @@
 import { zonedTimeToUtc } from 'date-fns-tz'
-import { calendar_v3 } from 'googleapis'
+import { calendar_v3 } from '@googleapis/calendar'
 
 export function dateTimeToDate(
   dateTime: calendar_v3.Schema$EventDateTime | null | undefined

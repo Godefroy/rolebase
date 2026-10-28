@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "start": "tsx src/index.ts",
+    "start": "node --import tsx src/index.ts",
     "dev": "npm run codegen & NODE_ENV=development nodemon -w 'src/**' -w '../shared/**' -w '../emails/**' -w '../editor/**' -w '../graph/**' --ext 'ts,tsx,json' --ignore 'src/**/*.spec.ts' --exec 'tsx src/index.ts'",
     "codegen": "graphql-codegen --config src/codegen.ts",
     "build": "tsgo",
@@ -17,6 +17,7 @@
     "nhost:config:deploy": "cd ../.. && nhost run config-deploy --config packages/backend/nhost-service.toml --service-id 94212868-126b-47d0-bc96-4a9ac670c2ea"
   },
   "dependencies": {
+    "@googleapis/calendar": "^9.8.0",
     "@jrmdayn/googleapis-batcher": "^0.5.0",
     "@microsoft/microsoft-graph-types-beta": "^0.40.0-preview",
     "@modelcontextprotocol/sdk": "^1.32.1",
@@ -24,7 +25,6 @@
     "@rolebase/editor": "*",
     "@rolebase/graph": "*",
     "@sentry/node": "^10.38.0",
-    "@sentry/profiling-node": "^10.38.0",
     "@trpc/server": "^11.7.2",
     "algoliasearch": "^4.14.2",
     "axios": "^1.5.1",
@@ -32,7 +32,6 @@
     "date-fns-tz": "^2.0.1",
     "dotenv": "^16.0.3",
     "fastify": "^4.26.1",
-    "googleapis": "^128.0.0",
     "graphql": "^16.6.0",
     "i18next": "^21.6.16",
     "ical-generator": "^3.6.1",
@@ -62,10 +61,5 @@
     "tsx": "^4.7.1",
     "typescript": "^5.2.2",
     "vitest": "^0.34.6"
-  },
-  "overrides": {
-    "@jrmdayn/googleapis-batcher": {
-      "googleapis": "$googleapis"
-    }
   }
 }

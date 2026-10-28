@@ -1,5 +1,5 @@
 name = 'backend'
-command = ['npm', 'start']
+command = ['/sbin/tini', '--', 'node', '--import', 'tsx', 'src/index.ts']
 
 [image]
 image = 'registry.eu-central-1.nhost.run/94212868-126b-47d0-bc96-4a9ac670c2ea:edbd7938d19bdda5436bfc016240ed66fc4d76de'

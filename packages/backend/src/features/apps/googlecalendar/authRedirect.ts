@@ -2,7 +2,7 @@ import {
   AppCalendarConfig,
   GoogleCalendarSecretConfig,
 } from '@rolebase/shared/model/user_app'
-import { google } from 'googleapis'
+import { auth } from '@googleapis/calendar'
 import * as yup from 'yup'
 import { CREATE_USER_APP } from '..'
 import { App_Type_Enum } from '../../../gql'
@@ -19,7 +19,7 @@ export const authRedirect = authedProcedure
   .mutation(async (opts) => {
     const redirectUrl = `${settings.url}/apps/googlecalendar-auth-redirect`
 
-    const oAuth2Client = new google.auth.OAuth2(
+    const oAuth2Client = new auth.OAuth2(
       settings.apps.googlecalendar.clientId,
       settings.apps.googlecalendar.clientSecret,
       redirectUrl

@@ -1,6 +1,6 @@
 import { fitGraphTitles } from '@rolebase/graph/server'
 import fs from 'fs'
-import puppeteer, { Browser } from 'puppeteer-core'
+import puppeteer, { Browser, Page } from 'puppeteer-core'
 
 // Common Chromium/Chrome paths (Docker image installs Chromium via apk)
 const chromiumPaths = [
@@ -24,7 +24,27 @@ function getChromiumPath(): string {
   return path
 }
 
+// Close Chromium when idle to free its memory between exports
+const browserIdleTimeout = 60 * 1000
+
 let browserPromise: Promise<Browser> | undefined
+let activeScreenshots = 0
+let idleTimer: NodeJS.Timeout | undefined
+
+function scheduleBrowserClose() {
+  clearTimeout(idleTimer)
+  idleTimer = setTimeout(async () => {
+    if (activeScreenshots > 0 || !browserPromise) return
+    const promise = browserPromise
+    browserPromise = undefined
+    try {
+      const browser = await promise
+      await browser.close()
+    } catch (error) {
+      console.error('Failed to close Chromium', error)
+    }
+  }, browserIdleTimeout)
+}
 
 async function getBrowser(): Promise<Browser> {
   if (!browserPromise) {
@@ -52,42 +72,57 @@ export async function screenshotHtml(
   width: number,
   height: number
 ): Promise<Buffer> {
-  const browser = await getBrowser()
-  const page = await browser.newPage()
-
+  clearTimeout(idleTimer)
+  activeScreenshots++
   try {
-    await page.setViewport({ width, height })
-    await page.setContent(html, { waitUntil: 'load', timeout: 30000 })
-    // Wait for fonts and avatar images to load.
-    // Avatars are rendered as <img> elements (member-image / circle-leader-image),
-    // so wait for each to finish loading before screenshotting.
-    await page.evaluate(async () => {
-      await document.fonts.ready
-      const images = Array.from(
-        document.querySelectorAll<HTMLImageElement>(
-          '.member-image, .circle-leader-image'
-        )
-      )
-      await Promise.all(
-        images.map((img) =>
-          img.complete
-            ? Promise.resolve()
-            : new Promise((resolve) => {
-                img.onload = img.onerror = () => resolve(undefined)
-              })
-        )
-      )
-    })
-    // Fit circles titles (needs DOM measures)
-    await page.evaluate(fitGraphTitles)
-
-    const screenshot = await page.screenshot({
-      type: 'png',
-      omitBackground: true,
-      clip: { x: 0, y: 0, width, height },
-    })
-    return Buffer.from(screenshot)
+    const browser = await getBrowser()
+    const page = await browser.newPage()
+    try {
+      return await renderScreenshot(page, html, width, height)
+    } finally {
+      await page.close()
+    }
   } finally {
-    await page.close()
+    activeScreenshots--
+    if (activeScreenshots === 0) scheduleBrowserClose()
   }
+}
+
+async function renderScreenshot(
+  page: Page,
+  html: string,
+  width: number,
+  height: number
+): Promise<Buffer> {
+  await page.setViewport({ width, height })
+  await page.setContent(html, { waitUntil: 'load', timeout: 30000 })
+  // Wait for fonts and avatar images to load.
+  // Avatars are rendered as <img> elements (member-image / circle-leader-image),
+  // so wait for each to finish loading before screenshotting.
+  await page.evaluate(async () => {
+    await document.fonts.ready
+    const images = Array.from(
+      document.querySelectorAll<HTMLImageElement>(
+        '.member-image, .circle-leader-image'
+      )
+    )
+    await Promise.all(
+      images.map((img) =>
+        img.complete
+          ? Promise.resolve()
+          : new Promise((resolve) => {
+              img.onload = img.onerror = () => resolve(undefined)
+            })
+      )
+    )
+  })
+  // Fit circles titles (needs DOM measures)
+  await page.evaluate(fitGraphTitles)
+
+  const screenshot = await page.screenshot({
+    type: 'png',
+    omitBackground: true,
+    clip: { x: 0, y: 0, width, height },
+  })
+  return Buffer.from(screenshot)
 }

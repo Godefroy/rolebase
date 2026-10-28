@@ -8,7 +8,7 @@ import {
   OrgCalendarConfig,
 } from '@rolebase/shared/model/user_app'
 import { randomUUID } from 'crypto'
-import { Auth, calendar_v3, google } from 'googleapis'
+import { calendar, calendar_v3, auth as googleAuth } from '@googleapis/calendar'
 import { Meeting_Set_Input, UserAppFullFragment } from '../../../gql'
 import settings from '../../../settings'
 import { sha1 } from '../../../utils/sha1'
@@ -35,7 +35,7 @@ export default class GoogleCalendarApp
   extends AbstractCalendarApp<GoogleCalendarSecretConfig>
   implements CalendarApp
 {
-  private auth: Auth.OAuth2Client
+  private auth: InstanceType<typeof googleAuth.OAuth2>
   private calendar: calendar_v3.Calendar
   private calendarBatch: calendar_v3.Calendar
   // Persist promise of the latest token rotation, so refreshToken() can wait for
@@ -46,7 +46,7 @@ export default class GoogleCalendarApp
     super(userApp)
 
     // Setup Google Auth
-    this.auth = new google.auth.OAuth2({
+    this.auth = new googleAuth.OAuth2({
       clientId: settings.apps.googlecalendar.clientId,
       clientSecret: settings.apps.googlecalendar.clientSecret,
       credentials: {
@@ -78,11 +78,11 @@ export default class GoogleCalendarApp
     })
 
     // Instanciate Google Calendar API
-    this.calendar = google.calendar({
+    this.calendar = calendar({
       version: 'v3',
       auth: this.auth,
     })
-    this.calendarBatch = google.calendar({
+    this.calendarBatch = calendar({
       version: 'v3',
       auth: this.auth,
       fetchImplementation: batchFetchImplementation(),
@@ -134,14 +134,12 @@ export default class GoogleCalendarApp
       throw new Error('No calendars found')
     }
 
-    return calendars.items.map(
-      (cal): Calendar => ({
-        id: cal.id ?? 'No Id',
-        name: cal.summary ?? 'No calendar name',
-        isDefault: cal.primary ?? false,
-        canEdit: cal.accessRole === 'owner' || cal.accessRole === 'writer',
-      })
-    )
+    return calendars.items.map((cal): Calendar => ({
+      id: cal.id ?? 'No Id',
+      name: cal.summary ?? 'No calendar name',
+      isDefault: cal.primary ?? false,
+      canEdit: cal.accessRole === 'owner' || cal.accessRole === 'writer',
+    }))
   }
 
   // Update/create a meeting (for Hasura trigger event)
