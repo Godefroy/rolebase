@@ -2,7 +2,8 @@ import BrandModal from '@/common/atoms/BrandModal'
 import OnboardingProgress from '@/onboarding/components/OnboardingProgress'
 import useSubscriptionData from '@/orgSubscription/hooks/useSubscriptionData'
 import { useOrgContext } from '@/org/contexts/OrgContext'
-import { Button, Flex, Link, Spacer, useToast } from '@chakra-ui/react'
+import { useNavigateOrg } from '@/org/hooks/useNavigateOrg'
+import { Button, Flex, Spacer, useToast } from '@chakra-ui/react'
 import { Member_Role_Enum, useUpdateOrgMutation } from '@gql'
 import { nanoid } from 'nanoid'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
@@ -14,12 +15,13 @@ import useCreateMember from '@/member/hooks/useCreateMember'
 import useCurrentMember from '@/member/hooks/useCurrentMember'
 import { getNameFromEmail } from '@utils/getNameFromEmail'
 import { getValidInvites, isNewInvite } from '../getValidInvites'
+import useOrgChartTourStatus from '../hooks/useOrgChartTourStatus'
 import useSeedOrg from '../hooks/useSeedOrg'
-import { getRepresentativeRole, OrgType } from '../orgTypes'
+import { OrgType } from '../orgTypes'
 import OrgSetupStepInvite from './OrgSetupStepInvite'
+import OrgSetupStepMembers from './OrgSetupStepMembers'
 import OrgSetupStepModel from './OrgSetupStepModel'
-import OrgSetupStepRoles from './OrgSetupStepRoles'
-import { RoleDraft } from './orgSetupTypes'
+import { MemberDraft } from './orgSetupTypes'
 
 interface Props {
   onClose(): void
@@ -27,17 +29,24 @@ interface Props {
 
 enum SetupStep {
   Model = 'Model',
-  Roles = 'Roles',
+  Members = 'Members',
   Invite = 'Invite',
 }
 
-const stepOrder = [SetupStep.Model, SetupStep.Roles, SetupStep.Invite]
+const stepOrder = [SetupStep.Model, SetupStep.Members, SetupStep.Invite]
+
+// People asked for besides the person setting up: an org chart of one shows
+// nothing of what Rolebase is for
+const MIN_OTHER_MEMBERS = 1
 
 // Org-setup steps shown right after an org is created: pick the organizational
-// model, define the main roles (with their leader and participants), then
-// invite the members typed along the way. The chart and meeting templates are
-// seeded on finish. The setup is mandatory: there is no close control, and the
-// modal comes back until it is finished (see OrgSetupTrigger).
+// model, list the people of the organization (members, not invitations), then
+// invite them if wanted. The org is seeded with the model's base roles and
+// meeting templates once the members are validated, so leaving at the invite
+// step loses nothing. Roles are then placed in the org chart itself, guided by
+// the org chart tour started on finish. The setup is mandatory: there is no
+// close control, and the modal comes back until the org is seeded (see
+// OrgSetupTrigger).
 export default function OrgSetupModal({ onClose }: Props) {
   const { t } = useTranslation()
   const toast = useToast()
@@ -45,7 +54,10 @@ export default function OrgSetupModal({ onClose }: Props) {
   const [updateOrg] = useUpdateOrgMutation()
   const seedOrg = useSeedOrg()
   const createMember = useCreateMember()
+  const currentMember = useCurrentMember()
+  const navigateOrg = useNavigateOrg()
   const { availableSeats } = useSubscriptionData()
+  const { setStatus: setTourStatus } = useOrgChartTourStatus()
 
   useEffect(() => {
     track('org_setup_started')
@@ -53,52 +65,24 @@ export default function OrgSetupModal({ onClose }: Props) {
 
   const [step, setStep] = useState<SetupStep>(SetupStep.Model)
   const [orgType, setOrgType] = useState<OrgType>(OrgType.Classic)
-  const [roles, setRoles] = useState<RoleDraft[]>([])
+  // Two empty fields: one person is required, a second suggests a team
+  const [drafts, setDrafts] = useState<MemberDraft[]>(() => [
+    { id: nanoid(8), name: '' },
+    { id: nanoid(8), name: '' },
+  ])
   const [emails, setEmails] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(false)
-
-  // Start the roles step with a first role held by the person setting up, so
-  // it shows what a filled role looks like and can be continued right away:
-  // a "Direction" role for a classic org, the model's leader base role in the
-  // root circle otherwise. Replaced when the model changes, until edited.
-  const currentMember = useCurrentMember()
-  const prefilledRole = useRef<RoleDraft>()
-  const prefillRoles = () => {
-    const isClassic = orgType === OrgType.Classic
-    const leaderName = t(
-      `Onboarding.roles.${getRepresentativeRole(orgType).nameKey}.name`
-    )
-    const untouched =
-      roles.length === 0 ||
-      (roles.length === 1 && roles[0] === prefilledRole.current)
-    if (!untouched || !currentMember?.userId) {
-      // Keep the leader base role named after the current model
-      setRoles((rs) =>
-        rs.map((r) => (r.isLeaderBaseRole ? { ...r, name: leaderName } : r))
-      )
-      return
-    }
-    const role: RoleDraft = {
-      id: nanoid(8),
-      name: isClassic ? t('Onboarding.roleExamples.direction') : leaderName,
-      isLeaderBaseRole: !isClassic,
-      responsibleId: currentMember.id,
-      participantIds: [],
-    }
-    prefilledRole.current = role
-    setRoles([role])
-  }
 
   const rootCircle = useMemo(
     () => orgData?.circles.find((c) => !c.parentId),
     [orgData]
   )
 
-  // Each main role needs a name. Its responsible is optional: a vacant role is
-  // a legitimate state, and the org chart shows it.
-  const canSeed = roles.length > 0 && roles.every((r) => r.name.trim())
-
   const members = orgData?.members ?? []
+  const typedNames = drafts.map((d) => d.name.trim()).filter(Boolean)
+  const otherMembersCount =
+    members.filter((m) => m.id !== currentMember?.id).length + typedNames.length
+  const canSeed = otherMembersCount >= MIN_OTHER_MEMBERS
   const membersToInvite = members.filter((m) => !m.userId && !m.inviteEmail)
   const invites = getValidInvites(emails)
 
@@ -112,14 +96,13 @@ export default function OrgSetupModal({ onClose }: Props) {
     return () => window.removeEventListener('pagehide', handlePageHide)
   }, [])
 
-  const addRole = (name: string) =>
-    setRoles((rs) => [...rs, { id: nanoid(8), name, participantIds: [] }])
-
-  const updateRole = (id: string, patch: Partial<RoleDraft>) =>
-    setRoles((rs) => rs.map((r) => (r.id === id ? { ...r, ...patch } : r)))
-
-  const removeRole = (id: string) =>
-    setRoles((rs) => rs.filter((r) => r.id !== id))
+  const showError = (error: any) =>
+    toast({
+      title: error?.message || t('common.error'),
+      status: 'error',
+      duration: 4000,
+      isClosable: true,
+    })
 
   // Send the invitations one by one: a failure on one address does not stop
   // the others. People typed by their address alone become members first,
@@ -156,27 +139,44 @@ export default function OrgSetupModal({ onClose }: Props) {
     return sent
   }
 
-  // Finish: persist the model, seed the chart + meetings, send the
-  // invitations if asked, then close. Members already exist (created while
-  // assigning roles), so seeding happens only here.
-  const finish = async (withInvites: boolean) => {
+  const handleNextFromModel = () => {
+    track('org_setup_model_done', { orgType })
+    setStep(SetupStep.Members)
+  }
+
+  // Create the typed members, then seed the org: from here on the setup is
+  // saved, and only the optional invitations remain. A draft is dropped as
+  // soon as its member exists, so a retry after an error creates no duplicate.
+  const handleNextFromMembers = async () => {
     if (!orgId || !rootCircle) return
     setLoading(true)
     try {
+      for (const draft of drafts) {
+        const name = draft.name.trim()
+        if (name) await createMember(name)
+        setDrafts((ds) => ds.filter((d) => d.id !== draft.id))
+      }
       await updateOrg({
         variables: { id: orgId, values: { onboardingOrgType: orgType } },
       })
-      await seedOrg({
+      await seedOrg({ orgType })
+      track('org_setup_members_done', {
         orgType,
-        rootCircleId: rootCircle.id,
-        roles: roles.map((r) => ({
-          name: r.name.trim(),
-          isLeaderBaseRole: r.isLeaderBaseRole,
-          responsibleId: r.responsibleId,
-          participantIds: r.participantIds,
-        })),
+        membersCount: otherMembersCount + 1,
       })
+      setStep(SetupStep.Invite)
+    } catch (error: any) {
+      track('org_setup_failed', { reason: error?.message })
+      showError(error)
+    }
+    setLoading(false)
+  }
 
+  // Finish: send the invitations if asked, then land on the org chart, where
+  // the tour shows how to give roles to the members
+  const finish = async (withInvites: boolean) => {
+    setLoading(true)
+    try {
       // Also sent for a solo org, whose invite step shows empty email fields
       if (!withInvites) {
         track('invite_step_skipped', { membersCount: membersToInvite.length })
@@ -185,47 +185,23 @@ export default function OrgSetupModal({ onClose }: Props) {
 
       track('org_setup_completed', {
         orgType,
-        rolesCount: roles.length,
         membersCount: members.length,
         invitedCount,
       })
-      toast({
-        title: t('OrgSetupModal.ready'),
-        status: 'success',
-        duration: 4000,
-        isClosable: true,
-      })
+      track('org_tour_started')
+      await setTourStatus('started')
+      navigateOrg('roles')
       onClose()
     } catch (error: any) {
       track('org_setup_failed', { reason: error?.message })
-      toast({
-        title: error?.message || t('common.error'),
-        status: 'error',
-        duration: 4000,
-        isClosable: true,
-      })
+      showError(error)
       setLoading(false)
     }
   }
 
-  const handleNextFromModel = () => {
-    track('org_setup_model_done', { orgType })
-    prefillRoles()
-    setStep(SetupStep.Roles)
-  }
-
-  const handleNextFromRoles = () => {
-    track('org_setup_roles_done', {
-      orgType,
-      rolesCount: roles.length,
-      membersCount: members.length,
-    })
-    setStep(SetupStep.Invite)
-  }
-
   return (
     <BrandModal
-      size={step === SetupStep.Roles ? '6xl' : '2xl'}
+      size="2xl"
       bodyProps={{ mx: 10 }}
       backButton={false}
       isOpen
@@ -241,25 +217,20 @@ export default function OrgSetupModal({ onClose }: Props) {
       {step === SetupStep.Model && (
         <OrgSetupStepModel orgType={orgType} onChange={setOrgType} />
       )}
-      {step === SetupStep.Roles && (
-        <OrgSetupStepRoles
-          orgType={orgType}
-          roles={roles}
-          onAdd={addRole}
-          onChange={updateRole}
-          onRemove={removeRole}
-        />
+      {step === SetupStep.Members && (
+        <OrgSetupStepMembers drafts={drafts} onChange={setDrafts} />
       )}
       {step === SetupStep.Invite && (
         <OrgSetupStepInvite emails={emails} onChange={setEmails} />
       )}
 
-      <Flex mt={8} align="center" gap={5}>
-        {stepOrder.indexOf(step) > 0 && (
+      <Flex mt={8} align="center" gap={3}>
+        {/* Once seeded, the model and the members are saved: no way back */}
+        {step === SetupStep.Members && (
           <Button
             variant="ghost"
             leftIcon={<ChevronLeftIcon size="1em" />}
-            onClick={() => setStep(stepOrder[stepOrder.indexOf(step) - 1])}
+            onClick={() => setStep(SetupStep.Model)}
             isDisabled={loading}
           >
             {t('common.back')}
@@ -276,30 +247,26 @@ export default function OrgSetupModal({ onClose }: Props) {
             {t('common.next')}
           </Button>
         )}
-        {step === SetupStep.Roles && (
+        {step === SetupStep.Members && (
           <Button
             colorScheme="blue"
             rightIcon={<ChevronRightIcon size="1em" />}
-            onClick={handleNextFromRoles}
+            onClick={handleNextFromMembers}
+            isLoading={loading}
             isDisabled={!canSeed}
           >
             {t('common.continue')}
           </Button>
         )}
-        {/* Inviting is the main action, waiting for a first address:
-            organizations almost never invite once the setup is over */}
         {step === SetupStep.Invite && (
           <>
-            <Link
-              as="button"
-              type="button"
-              textDecoration="underline"
+            <Button
+              variant="outline"
               onClick={() => finish(false)}
-              pointerEvents={loading ? 'none' : undefined}
-              opacity={loading ? 0.5 : 1}
+              isDisabled={loading}
             >
               {t('OrgSetupModal.invite.later')}
-            </Link>
+            </Button>
             <Button
               colorScheme="blue"
               leftIcon={<EmailIcon size="1em" />}

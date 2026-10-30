@@ -160,12 +160,14 @@ export default function CircleRoleSubCircles() {
       </Heading>
       <VStack spacing={2} align="start">
         {subCircles?.map((subCircle, i) => (
-          <CircleWithLeaderItem
-            key={subCircle.id}
-            circle={subCircle}
-            parentCircle={circle}
-            participants={participants}
-          />
+          // Anchor of the org chart tour
+          <Box key={subCircle.id} data-tour={`role-${subCircle.id}`}>
+            <CircleWithLeaderItem
+              circle={subCircle}
+              parentCircle={circle}
+              participants={participants}
+            />
+          </Box>
         ))}
 
         {invitedCircles?.map((invitedCircle, i) => (
@@ -207,29 +209,32 @@ export default function CircleRoleSubCircles() {
 
         <HStack>
           {(canEditSubCircles || canEditSubCirclesParentLinks) && (
-            <BaseRoleSearchButton
-              excludeIds={subRolesIds}
-              size="sm"
-              variant={highlightButton ? 'solid' : 'outline'}
-              colorScheme={highlightButton ? 'blue' : undefined}
-              borderRadius="full"
-              parentLink={
-                onlyParentLink
-                  ? true
-                  : !canEditSubCirclesParentLinks && canEditSubCircles
-                  ? false
-                  : undefined
-              }
-              leftIcon={<CreateIcon size={20} />}
-              onSelect={handleAddRole}
-              onCreate={canEditSubCircles ? handleCreateCircle : undefined}
-            >
-              {t(
-                onlyParentLink
-                  ? 'CircleRoleSubCircles.addRepresentative'
-                  : 'CircleRoleSubCircles.addRole'
-              )}
-            </BaseRoleSearchButton>
+            // Anchor of the org chart tour
+            <Box data-tour="add-role">
+              <BaseRoleSearchButton
+                excludeIds={subRolesIds}
+                size="sm"
+                variant={highlightButton ? 'solid' : 'outline'}
+                colorScheme={highlightButton ? 'blue' : undefined}
+                borderRadius="full"
+                parentLink={
+                  onlyParentLink
+                    ? true
+                    : !canEditSubCirclesParentLinks && canEditSubCircles
+                      ? false
+                      : undefined
+                }
+                leftIcon={<CreateIcon size={20} />}
+                onSelect={handleAddRole}
+                onCreate={canEditSubCircles ? handleCreateCircle : undefined}
+              >
+                {t(
+                  onlyParentLink
+                    ? 'CircleRoleSubCircles.addRepresentative'
+                    : 'CircleRoleSubCircles.addRole'
+                )}
+              </BaseRoleSearchButton>
+            </Box>
           )}
 
           {canEditSubCircles && (

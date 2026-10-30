@@ -128,7 +128,8 @@ export default function CircleContent({
             <CircleBreadcrumb circleId={circle.id} mt={2} />
             <Spacer />
 
-            <Box mr={1}>
+            {/* Anchor of the org chart tour */}
+            <Box mr={1} data-tour="participants">
               <ParticipantsNumber participants={participants} />
             </Box>
 

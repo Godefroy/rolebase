@@ -1764,17 +1764,18 @@
         "HolacracyV4": "Nous pratiquons l'Holacratie, constitution v4"
       }
     },
-    "roles": {
-      "heading": "Quels sont les principaux rôles et équipes ?",
-      "help": "Dans Rolebase, un rôle est une unité d'organisation qui peut être occupée par une personne ou par une équipe. Ajoutez les principaux rôles et équipes de {{orgName}}, et leurs responsables si vous les connaissez. Vous pourrez tout modifier ensuite.",
-      "addHeading": "Ajouter un rôle",
-      "customPlaceholder": "Ou tapez le nom d'un rôle..."
+    "members": {
+      "heading": "Qui fait partie de {{orgName}} ?",
+      "help": "Ajoutez les personnes de votre organisation, au moins une en plus de vous. Vous leur donnerez ensuite des rôles dans l'organigramme.",
+      "notInvitation": "Ce n'est pas une invitation : personne ne reçoit d'email. Ces personnes apparaissent comme membres dans l'organigramme. Vous pourrez les inviter ensuite, si vous le souhaitez.",
+      "you": "{{name}} (vous)",
+      "nameLabel": "Nom de la personne",
+      "namePlaceholder": "Prénom Nom",
+      "add": "Ajouter une personne"
     },
-    "participants": "Autres participants",
-    "holder": "Occupé par",
     "invite": {
-      "heading": "Invitez votre équipe",
-      "help": "Chaque personne invitée reçoit un email pour rejoindre l'organisation, retrouver ses rôles et préparer les réunions avec vous.",
+      "heading": "Invitez votre équipe (facultatif)",
+      "help": "Chaque personne invitée reçoit un email pour rejoindre l'organisation, retrouver ses rôles et préparer les réunions avec vous. Vous pouvez aussi le faire plus tard.",
       "emailLabel": "Email de {{name}}",
       "newEmailLabel": "Email de la personne à inviter",
       "add": "Ajouter une personne",
@@ -1787,8 +1788,65 @@
       "sendNone": "Envoyer les invitations",
       "partialError_one": "{{count}} invitation n'a pas pu être envoyée. Réessayez depuis la prise en main.",
       "partialError_other": "{{count}} invitations n'ont pas pu être envoyées. Réessayez depuis la prise en main."
+    }
+  },
+  "OrgChartTour": {
+    "skip": "Passer le guide",
+    "finish": "Terminer",
+    "steps": {
+      "openOrg": {
+        "title": "Voici votre organigramme",
+        "text": "Cliquez dessus pour l'ouvrir : c'est là que vous ajoutez ses rôles."
+      },
+      "addRole": {
+        "title": "Créez un premier rôle",
+        "text": "Un rôle peut être tenu par une personne ou par une équipe.",
+        "actions": "Cliquez sur « {{button}} »\nTapez son nom (Communication, Commercial, Direction…)\nValidez avec Entrée"
+      },
+      "openRole": {
+        "title": "Ouvrez votre rôle",
+        "text": "« {{role}} » est créé. Cliquez dessus pour l'ouvrir."
+      },
+      "assignMember": {
+        "title": "Qui tient ce rôle ?",
+        "text": "Choisissez la personne qui tient « {{role}} », par exemple {{name}}."
+      },
+      "placeEveryone": {
+        "title": "Votre premier rôle est en place",
+        "text_one": "Il reste {{count}} membre sans rôle : {{names}}.",
+        "text_other": "Il reste {{count}} membres sans rôle : {{names}}.",
+        "actions_one": "Donnez-lui un rôle de la même façon\nOu ajoutez-le à un rôle existant",
+        "actions_other": "Donnez-leur un rôle de la même façon\nOu ajoutez-les à un rôle existant",
+        "allPlaced": {
+          "title": "Toute l'équipe a un rôle",
+          "text": "Votre organigramme est en place. Vous pourrez le compléter à tout moment."
+        }
+      }
     },
-    "ready": "Votre organigramme est prêt"
+    "more": {
+      "leader": {
+        "title": "Le rôle « {{leader}} »",
+        "text": "Une équipe peut avoir un « {{leader}} », un rôle prévu par le modèle que vous avez choisi. La personne qui l'occupe dirige l'équipe et la représente dans le rôle parent.",
+        "actions": "Cliquez sur « {{button}} »\nChoisissez « {{leader}} »",
+        "actionsOpenTeam": "Ouvrez une équipe\nCliquez sur « {{button}} »\nChoisissez « {{leader}} »"
+      },
+      "representative": {
+        "title": "Le rôle « {{representative}} »",
+        "text": "Si vous le souhaitez, l'équipe peut aussi avoir un « {{representative}} ». Il porte la voix de l'équipe dans le rôle parent, aux côtés du « {{leader}} ». Il s'ajoute de la même façon."
+      },
+      "participants": {
+        "title": "Les participants",
+        "text": "Les participants d'un rôle sont ses membres, ainsi que le « {{leader}} » et le « {{representative}} » de chacun de ses sous-rôles (à défaut, leurs membres). Ce sont eux qui sont invités à ses réunions. Leur nombre s'affiche en haut du panneau de chaque rôle."
+      }
+    },
+    "illustration": {
+      "team": "Équipe",
+      "members": "Membres",
+      "participants": "Participants"
+    }
+  },
+  "OnboardingProgress": {
+    "step": "Étape {{current}} sur {{total}}"
   },
   "OnboardingTodo": {
     "title": "Prise en main",
@@ -1921,18 +1979,6 @@
         "event": "Événement ou conférence",
         "other": "Autre"
       }
-    },
-    "roleExamples": {
-      "direction": "Direction",
-      "tech": "Technique",
-      "production": "Production",
-      "product": "Produit",
-      "business": "Business",
-      "marketing": "Marketing",
-      "sales": "Ventes",
-      "admin": "Administration",
-      "finance": "Finance",
-      "hr": "Ressources humaines"
     }
   },
   "Deletion": {

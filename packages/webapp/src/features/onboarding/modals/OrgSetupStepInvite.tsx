@@ -12,7 +12,7 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { nanoid } from 'nanoid'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { AddIcon, DeleteIcon } from 'src/icons'
 import { isNewInvite, NEW_INVITE_PREFIX } from '../getValidInvites'
@@ -24,7 +24,7 @@ interface Props {
   onChange(emails: Record<string, string>): void
 }
 
-// Invite the members typed at the roles step by email, and anyone else by
+// Invite the members typed at the members step by email, and anyone else by
 // their address alone. Optional: members without an account are a normal use
 // of the product.
 // The plan's seats cap the invitations. Upgrading is left for after the setup:
@@ -49,11 +49,6 @@ export default function OrgSetupStepInvite({ emails, onChange }: Props) {
     onChange(
       Object.fromEntries(Object.entries(emails).filter(([key]) => key !== id))
     )
-
-  // Nobody typed at the roles step: offer a first field right away
-  useEffect(() => {
-    if (members.length === 0 && newIds.length === 0) handleAdd()
-  }, [])
 
   const renderInput = (id: string, label: string) => (
     <Input

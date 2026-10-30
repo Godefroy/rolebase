@@ -6,42 +6,30 @@ import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { OrgType, orgTypePresets } from '../orgTypes'
 
-export interface SeedRoleInput {
-  name: string
-  // Seeded as the model's leader base role in the root circle
-  isLeaderBaseRole?: boolean
-  responsibleId?: string
-  participantIds: string[]
-}
-
 export interface SeedOrgInput {
   orgType: OrgType
-  rootCircleId: string
-  roles: SeedRoleInput[]
 }
 
-// Build the initial org chart client-side from the onboarding answers:
-// the model's base governance roles (created once), one circle per main role
-// under the root with members assigned, plus the model's meeting templates.
+// Build the initial org chart client-side from the chosen model: its base
+// governance roles and its meeting templates. Placing roles and members in the
+// org chart is left to the person, guided by the org chart tour.
 // No recurring meeting is scheduled here: planning one is a line of the
 // onboarding todo, once the team is there.
 // Must run within the new org's OrgContext.
 export default function useSeedOrg() {
   const { t } = useTranslation()
   const { orgId } = useOrgContext()
-  const { createCircle, createRole, addCircleMember } = useOrgEditActions()
+  const { createRole } = useOrgEditActions()
   const [createMeetingTemplate] = useCreateMeetingTemplateMutation()
 
   return useCallback(
-    async ({ orgType, rootCircleId, roles }: SeedOrgInput): Promise<void> => {
+    async ({ orgType }: SeedOrgInput): Promise<void> => {
       if (!orgId) return
       const preset = orgTypePresets[orgType]
 
-      // Create the model's base governance roles once (shared across circles).
-      // Keep the first parent-linking role as each circle's representation role.
-      let leaderRole
+      // Create the model's base governance roles (shared across circles)
       for (const baseRole of preset.baseRoles) {
-        const role = await createRole({
+        await createRole({
           name: t(`Onboarding.roles.${baseRole.nameKey}.name`),
           base: true,
           singleMember: true,
@@ -53,43 +41,6 @@ export default function useSeedOrg() {
             `Onboarding.roles.${baseRole.nameKey}.accountabilities`
           ),
         })
-        if (role && baseRole.parentLink && !leaderRole) {
-          leaderRole = role
-        }
-      }
-
-      // One circle per main role under the root
-      for (const role of roles) {
-        if (role.isLeaderBaseRole) {
-          if (!leaderRole || !role.responsibleId) continue
-          const leadCircleId = await createCircle(rootCircleId, leaderRole)
-          if (leadCircleId) {
-            await addCircleMember(leadCircleId, role.responsibleId)
-          }
-          continue
-        }
-
-        const circleId = await createCircle(rootCircleId, role.name)
-        if (!circleId) continue
-
-        if (role.participantIds.length === 0) {
-          // No one else: the person responsible occupies the role directly
-          if (role.responsibleId) {
-            await addCircleMember(circleId, role.responsibleId)
-          }
-        } else {
-          // The person responsible leads the circle via the model's leader role
-          // (a parent-linking sub-circle); the others are direct members.
-          if (role.responsibleId && leaderRole) {
-            const leadCircleId = await createCircle(circleId, leaderRole)
-            if (leadCircleId) {
-              await addCircleMember(leadCircleId, role.responsibleId)
-            }
-          }
-          for (const participantId of role.participantIds) {
-            await addCircleMember(circleId, participantId)
-          }
-        }
       }
 
       // Meeting templates
@@ -111,6 +62,6 @@ export default function useSeedOrg() {
         })
       }
     },
-    [orgId, t, createCircle, createRole, addCircleMember, createMeetingTemplate]
+    [orgId, t, createRole, createMeetingTemplate]
   )
 }

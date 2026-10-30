@@ -24,6 +24,7 @@ import useOnboardingTodo from '../hooks/useOnboardingTodo'
 import { BOOK_DEMO_URL } from '../onboardingTodo'
 import OnboardingTodoInviteItem from './OnboardingTodoInviteItem'
 import OnboardingTodoItem from './OnboardingTodoItem'
+import OnboardingTodoOrgChartItem from './OnboardingTodoOrgChartItem'
 import OnboardingTodoRecurringItem from './OnboardingTodoRecurringItem'
 
 // "Getting started" group at the top of the sidebar: what the mandatory setup
@@ -122,11 +123,7 @@ export default function OnboardingTodo() {
 
       <Collapse in={!collapsed} animateOpacity>
         <VStack spacing={0} align="stretch" mt={2}>
-          <OnboardingTodoItem
-            done={items.orgChart}
-            label={t('OnboardingTodo.items.orgChart')}
-            to={`${rootPath}roles`}
-          />
+          <OnboardingTodoOrgChartItem done={items.orgChart} />
           <OnboardingTodoInviteItem done={items.invite} />
           <OnboardingTodoRecurringItem done={items.recurringMeeting} />
           <OnboardingTodoItem

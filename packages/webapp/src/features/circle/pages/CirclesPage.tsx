@@ -11,6 +11,7 @@ import useGraphEvents from '@/graph/hooks/useGraphEvents'
 import useGraphView from '@/graph/hooks/useGraphView'
 import { SidebarContext } from '@/layout/contexts/SidebarContext'
 import MemberContent from '@/member/components/MemberContent'
+import OrgChartTour from '@/onboarding/components/OrgChartTour'
 import { useOrgContext } from '@/org/contexts/OrgContext'
 import { Box, useColorMode } from '@chakra-ui/react'
 import { GraphView } from '@rolebase/shared/model/graph'
@@ -195,6 +196,12 @@ export default function CirclesPage() {
       </Box>
 
       {contextMenu}
+
+      {ready && (
+        <OrgChartTour
+          circleId={panel === Panels.Circle ? circleId : undefined}
+        />
+      )}
 
       {panel === Panels.Circle && circleId && (
         <ModalPanel isOpen onClose={handleClosePanel}>

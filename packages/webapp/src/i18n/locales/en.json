@@ -1763,17 +1763,18 @@
         "HolacracyV4": "We practice Holacracy, constitution v4"
       }
     },
-    "roles": {
-      "heading": "What are the main roles and teams?",
-      "help": "In Rolebase, a role is an organizational unit that can be filled by a person or a team. Add the main roles and teams of {{orgName}}, and who leads them if you know. You can change everything later.",
-      "addHeading": "Add a role",
-      "customPlaceholder": "Or type a role name..."
+    "members": {
+      "heading": "Who is part of {{orgName}}?",
+      "help": "Add the people of your organization, at least one besides you. You will then give them roles in the org chart.",
+      "notInvitation": "This is not an invitation: nobody receives an email. These people show up as members in the org chart. You can invite them afterwards, if you wish.",
+      "you": "{{name}} (you)",
+      "nameLabel": "Name of the person",
+      "namePlaceholder": "First Last",
+      "add": "Add someone"
     },
-    "participants": "Other participants",
-    "holder": "Held by",
     "invite": {
-      "heading": "Invite your team",
-      "help": "Each invited person receives an email to join the organization, find their roles and prepare meetings with you.",
+      "heading": "Invite your team (optional)",
+      "help": "Each invited person receives an email to join the organization, find their roles and prepare meetings with you. You can also do it later.",
       "emailLabel": "Email of {{name}}",
       "newEmailLabel": "Email of the person to invite",
       "add": "Add someone",
@@ -1786,8 +1787,65 @@
       "sendNone": "Send the invitations",
       "partialError_one": "{{count}} invitation couldn't be sent. Try again from Getting started.",
       "partialError_other": "{{count}} invitations couldn't be sent. Try again from Getting started."
+    }
+  },
+  "OrgChartTour": {
+    "skip": "Skip the guide",
+    "finish": "Finish",
+    "steps": {
+      "openOrg": {
+        "title": "Here is your org chart",
+        "text": "Click it to open it: this is where you add its roles."
+      },
+      "addRole": {
+        "title": "Create a first role",
+        "text": "A role can be held by a person or by a team.",
+        "actions": "Click “{{button}}”\nType its name (Communication, Sales, Management…)\nPress Enter"
+      },
+      "openRole": {
+        "title": "Open your role",
+        "text": "“{{role}}” is created. Click it to open it."
+      },
+      "assignMember": {
+        "title": "Who holds this role?",
+        "text": "Choose the person who holds “{{role}}”, for example {{name}}."
+      },
+      "placeEveryone": {
+        "title": "Your first role is in place",
+        "text_one": "{{count}} member still has no role: {{names}}.",
+        "text_other": "{{count}} members still have no role: {{names}}.",
+        "actions_one": "Give them a role the same way\nOr add them to an existing role",
+        "actions_other": "Give them a role the same way\nOr add them to an existing role",
+        "allPlaced": {
+          "title": "Your whole team has a role",
+          "text": "Your org chart is in place. You can complete it at any time."
+        }
+      }
     },
-    "ready": "Your org chart is ready"
+    "more": {
+      "leader": {
+        "title": "The “{{leader}}” role",
+        "text": "A team can have a “{{leader}}”, a role that comes with the model you chose. The person holding it leads the team and represents it in the parent role.",
+        "actions": "Click “{{button}}”\nChoose “{{leader}}”",
+        "actionsOpenTeam": "Open a team\nClick “{{button}}”\nChoose “{{leader}}”"
+      },
+      "representative": {
+        "title": "The “{{representative}}” role",
+        "text": "If you wish, the team can also have a “{{representative}}”. They carry the team's voice in the parent role, alongside the “{{leader}}”. It is added the same way."
+      },
+      "participants": {
+        "title": "Participants",
+        "text": "The participants of a role are its members, plus the “{{leader}}” and the “{{representative}}” of each of its sub-roles (or, failing that, their members). They are the ones invited to its meetings. Their number shows at the top of each role's panel."
+      }
+    },
+    "illustration": {
+      "team": "Team",
+      "members": "Members",
+      "participants": "Participants"
+    }
+  },
+  "OnboardingProgress": {
+    "step": "Step {{current}} of {{total}}"
   },
   "OnboardingTodo": {
     "title": "Getting started",
@@ -1920,18 +1978,6 @@
         "event": "Event or conference",
         "other": "Other"
       }
-    },
-    "roleExamples": {
-      "direction": "Management",
-      "tech": "Engineering",
-      "production": "Production",
-      "product": "Product",
-      "business": "Business",
-      "marketing": "Marketing",
-      "sales": "Sales",
-      "admin": "Administration",
-      "finance": "Finance",
-      "hr": "Human resources"
     }
   },
   "Deletion": {

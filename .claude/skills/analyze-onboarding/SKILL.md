@@ -30,7 +30,8 @@ It prints weekly cohorts, one line per self-serve signup of the window, invitees
 | Sign-in code, name | `user/components/OtpForm.tsx`, `user/pages/UserNamePage.tsx` | `auth_otp_*`, `user_name_*`. The account exists from the code request: `email_verified = false` means the code was never entered |
 | Join instead of create | `org/pages/OrgsPage.tsx`, `member/hooks/usePendingInvitations.ts` | invitations matched on the email |
 | Wizard (org name, role, objective, source), org created at the end | `onboarding/wizard/` | `onboarding_*`, `metadata.onboardingStartedAt`, `onboardingRole/Objective/Source` |
-| Setup (Model, Roles, Invite), seeded on finish | `onboarding/modals/OrgSetupModal.tsx` | `org_setup_*`, `invite_step_skipped`. An org with no `role.base` never finished its setup |
+| Setup (Model, Members, Invite), seeded when the members are validated | `onboarding/modals/OrgSetupModal.tsx` | `org_setup_*`, `invite_step_skipped`. An org with no `role.base` never validated its members |
+| Org chart tour (open the org, create a role, open it, give it a member, place everyone), then optionally leader, representative, participants | `onboarding/hooks/useOrgChartTour.ts` | `org_tour_*` (`org_tour_more_started` for the optional chapter), `metadata.orgChartTours[orgId]`: `started`, `more`, `completed`, `skipped` |
 | Getting started todo | `onboarding/hooks/useOnboardingTodo.ts` | `org.onboardingTodo`: null = open, `completed`, `dismissed` |
 | Reminder emails | `packages/backend/src/features/cron/sendOnboardingReminders.ts` | `metadata.onboardingReminders.{noOrg,noSetup,noInvite}` |
 | Return, activation | `org/hooks/useOrgLifecycleTracking.ts` | `org_returned`, `activation_reached`: within 7 days, 2 accounts and a held meeting, thread or decision |

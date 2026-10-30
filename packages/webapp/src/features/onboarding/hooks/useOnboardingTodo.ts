@@ -6,6 +6,7 @@ import { track } from 'src/analytics'
 import { isOrgFresh } from '../isOrgFresh'
 import { OnboardingTodoStatus } from '../onboardingTodo'
 import useOnboardingActivity from './useOnboardingActivity'
+import useOrgChartTourStatus from './useOrgChartTourStatus'
 
 // Members with a photo needed to check the photos line
 const PHOTOS_TO_CHECK = 2
@@ -29,11 +30,16 @@ export default function useOnboardingTodo() {
   const visible = isAdmin && isOpen
 
   const activity = useOnboardingActivity(!visible)
+  const { status: tourStatus } = useOrgChartTourStatus()
   const members = orgData?.members ?? []
 
   const items: Record<OnboardingTodoItemKey, boolean> = {
-    // Pre-checked: the setup just built it
-    orgChart: true,
+    // The tour completed, or a member already holds a role (orgs set up
+    // before the tour, or that skipped it)
+    orgChart:
+      tourStatus === 'completed' ||
+      (tourStatus !== 'started' &&
+        !!orgData?.circles.some((c) => orgData.membersOf(c.id).length > 0)),
     invite:
       members.some((m) => !!m.inviteEmail) ||
       members.filter((m) => !!m.userId).length >= 2,

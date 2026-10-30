@@ -11,6 +11,7 @@ import {
   GraphLayoutKind,
   GraphParams,
   NodeData,
+  NodeShape,
   Position,
   RootElement,
   TreeLink,
@@ -655,6 +656,34 @@ export abstract class Graph<
   ) {
     this.once('nodesData', () => this.focusNodeId(nodeId, adaptScale, instant))
   }
+
+  // Box of a node in the viewport, at the current zoom, to anchor UI on it
+  // (e.g. the org chart tour). Undefined when the layout has no such node.
+  getNodeClientRect(nodeId: string): NodeClientRect | undefined {
+    const node = this.nodes.find((n) => n.data.id === nodeId)
+    if (!node) return
+    const { x, y, k } = this.zoomTransform
+    const bounds = this.element.getBoundingClientRect()
+    const isRect = node.shape === NodeShape.Rect
+    const width = (isRect ? node.w : node.r * 2) * k
+    const height = (isRect ? node.h : node.r * 2) * k
+    return {
+      left: bounds.left + x + node.x * k - width / 2,
+      top: bounds.top + y + node.y * k - height / 2,
+      width,
+      height,
+      round: !isRect,
+    }
+  }
+}
+
+export interface NodeClientRect {
+  left: number
+  top: number
+  width: number
+  height: number
+  // Circle node: the box frames a disc
+  round: boolean
 }
 
 const getFocusOffsetX = (width: number, focusCrop: Position) =>

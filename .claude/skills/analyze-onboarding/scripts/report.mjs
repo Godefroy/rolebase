@@ -166,7 +166,7 @@ async function events(start, end) {
   return all
 }
 const FUNNEL =
-  /^(auth_|user_name|onboarding_|org_setup|invite_step|member_invit|org_archived|org_returned|activation_reached|book_demo)/
+  /^(auth_|user_name|onboarding_|org_setup|invite_step|member_invit|org_archived|org_returned|org_tour_|activation_reached|book_demo)/
 const uniqueSessions = (evs) => {
   const sets = {}
   for (const e of evs)
@@ -189,6 +189,8 @@ for (const [event, prop] of [
   ['onboarding_abandoned', 'step'],
   ['onboarding_slug_conflict', 'step'],
   ['org_setup_abandoned', 'step'],
+  ['org_tour_step_done', 'step'],
+  ['org_tour_skipped', 'step'],
   ['org_setup_completed', 'orgType'],
   ['org_setup_failed', 'reason'],
   ['org_archived', 'ageMinutes'],
@@ -212,7 +214,7 @@ for (const e of cur
   .sort((a, b) => a.createdAt.localeCompare(b.createdAt)))
   (bySession[e.sessionId] ||= []).push(e)
 const obSessions = Object.entries(bySession).filter(([, evs]) =>
-  evs.some((e) => /^(onboarding_|org_setup)/.test(e.eventName))
+  evs.some((e) => /^(onboarding_|org_setup|org_tour_)/.test(e.eventName))
 )
 // The account behind each session: AuthProvider identifies it with the user
 // id. A session is per device and day, so it holds the last account signed in.
@@ -241,9 +243,16 @@ console.log(
 for (const [session, evs] of obSessions) {
   const seq = []
   for (const e of evs) {
-    const n = e.eventName
-      .replace(/^onboarding_/, 'ob:')
-      .replace(/^org_setup_/, 'setup:')
+    // Where the person left or skipped, from the event's own data
+    const step = /_(abandoned|skipped)$/.test(e.eventName)
+      ? (await umami(`/websites/${WEBSITE}/event-data/${e.id}`).catch(() => []))
+          .find((d) => d.dataKey === 'step')?.stringValue
+      : undefined
+    const n =
+      e.eventName
+        .replace(/^onboarding_/, 'ob:')
+        .replace(/^org_setup_/, 'setup:')
+        .replace(/^org_tour_/, 'tour:') + (step ? `(${step})` : '')
     if (seq.at(-1)?.n === n) seq.at(-1).c++
     else seq.push({ n, c: 1 })
   }

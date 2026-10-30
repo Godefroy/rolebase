@@ -1,7 +1,7 @@
 // Core
 export { CirclesGraph } from './core/CirclesGraph'
 export { Graph } from './core/Graph'
-export type { GraphEmitterEvents } from './core/Graph'
+export type { GraphEmitterEvents, NodeClientRect } from './core/Graph'
 export { computeVisibleNodes } from './core/culling'
 export { computeLayout } from './core/layout'
 export { computePackLayout } from './core/layouts/pack'

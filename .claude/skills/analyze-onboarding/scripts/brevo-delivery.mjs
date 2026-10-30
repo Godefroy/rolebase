@@ -56,6 +56,9 @@ for (let offset = 0; ; offset += 2500) {
   requests.push(...events)
   if (events.length < 2500) break
 }
+// Brevo keeps a few days of logs: an account created before the first
+// event kept can't be checked
+const logStart = requests.length ? Date.parse(requests[0].date) : Infinity
 const codeTimes = {}
 const confirmTimes = {}
 for (const e of requests) {
@@ -81,9 +84,10 @@ for (const [email, createdMs, verified, password] of users) {
     .sort()[0]
   const delay =
     first === undefined ? undefined : Math.round((first - created) / 60000)
-  if (delay === undefined || delay > 5) late++
+  const beforeLogs = delay === undefined && created < logStart
+  if (!beforeLogs && (delay === undefined || delay > 5)) late++
   console.log(
-    `${new Date(created).toISOString().slice(5, 16)} ${email.split('@')[1]} verified=${verified}${isPassword ? ' password' : ''} ${delay === undefined ? (isPassword ? 'NO CONFIRMATION EMAIL' : 'NO CODE EMAIL') : delay + ' min'}`
+    `${new Date(created).toISOString().slice(5, 16)} ${email.split('@')[1]} verified=${verified}${isPassword ? ' password' : ''} ${beforeLogs ? 'before the Brevo logs' : delay === undefined ? (isPassword ? 'NO CONFIRMATION EMAIL' : 'NO CODE EMAIL') : delay + ' min'}`
   )
 }
 console.log(

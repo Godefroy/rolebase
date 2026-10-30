@@ -20,9 +20,7 @@ export default function CircleRoleMembers() {
   // Direct circle members ids
   const membersIds = useMemo(
     () =>
-      orgData
-        ? orgData.membersOf(circle.id).map((cm) => cm.member.id)
-        : [],
+      orgData ? orgData.membersOf(circle.id).map((cm) => cm.member.id) : [],
     [orgData, circle]
   )
 
@@ -63,19 +61,22 @@ export default function CircleRoleMembers() {
       </Heading>
 
       {circle && membersIds && (
-        <MembersMultiSelect
-          circleId={circle.id}
-          membersIds={membersIds}
-          max={role?.singleMember ? 1 : undefined}
-          allowCreate
-          buttonProps={
-            highlightButton
-              ? { variant: 'solid', colorScheme: 'blue' }
-              : undefined
-          }
-          onAdd={canEditMembers ? handleAddMember : undefined}
-          onRemove={canEditMembers ? handleRemoveMember : undefined}
-        />
+        // Anchor of the org chart tour
+        <Box data-tour="add-member" w="fit-content">
+          <MembersMultiSelect
+            circleId={circle.id}
+            membersIds={membersIds}
+            max={role?.singleMember ? 1 : undefined}
+            allowCreate
+            buttonProps={
+              highlightButton
+                ? { variant: 'solid', colorScheme: 'blue' }
+                : undefined
+            }
+            onAdd={canEditMembers ? handleAddMember : undefined}
+            onRemove={canEditMembers ? handleRemoveMember : undefined}
+          />
+        </Box>
       )}
       {isDeleteOpen && memberId && (
         <CircleMemberDeleteModal

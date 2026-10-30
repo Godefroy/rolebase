@@ -137,11 +137,4 @@ export const orgTypePresets: Record<OrgType, OrgTypePreset> = {
   },
 }
 
-// The leader role of a model (the role the person responsible for a circle
-// occupies): the first parent-linking base role.
-export function getRepresentativeRole(orgType: OrgType): SeedBaseRole {
-  const preset = orgTypePresets[orgType]
-  return preset.baseRoles.find((r) => r.parentLink) ?? preset.baseRoles[0]
-}
-
 export const orgTypes = Object.values(OrgType)
