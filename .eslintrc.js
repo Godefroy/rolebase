@@ -39,5 +39,10 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': ['error', { args: 'none' }],
     '@typescript-eslint/explicit-function-return-type': 'off',
   },
-  ignorePatterns: ['**/*generated.ts'],
+  ignorePatterns: [
+    '**/*generated.ts',
+    '**/graphql/graphql.ts',
+    '**/dist/**',
+    '**/storybook-static/**',
+  ],
 }
