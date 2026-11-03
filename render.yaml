@@ -45,7 +45,7 @@ services:
     startCommand: npx y-websocket
     envVars:
       - key: NODE_VERSION
-        value: 18
+        value: 24
       - key: HOST
         value: 0.0.0.0
       - key: PORT

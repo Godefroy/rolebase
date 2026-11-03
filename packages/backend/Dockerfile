@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM node:20-alpine
+FROM node:24-alpine
 
 # Chromium for org chart PNG export (puppeteer-core)
 RUN apk add --no-cache chromium nss freetype harfbuzz ca-certificates ttf-freefont tini
