@@ -22,3 +22,7 @@ updates:
       default-days: 7
     commit-message:
       prefix: "chore"
+    ignore:
+      - dependency-name: node
+        update-types:
+          - version-update:semver-major
