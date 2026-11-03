@@ -50,7 +50,11 @@ async function getBrowser(): Promise<Browser> {
   if (!browserPromise) {
     browserPromise = puppeteer.launch({
       executablePath: getChromiumPath(),
-      args: ['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
+      args: [
+        ...(process.platform === 'linux' ? ['--no-sandbox'] : []),
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+      ],
     })
     // Reset on launch failure so next call retries
     browserPromise.catch(() => {

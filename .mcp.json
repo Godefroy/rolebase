@@ -2,11 +2,11 @@
   "mcpServers": {
     "playwright": {
       "command": "npx",
-      "args": ["@playwright/mcp@latest"]
+      "args": ["@playwright/mcp@0.0.84"]
     },
     "web-inspector": {
       "command": "npx",
-      "args": ["-y", "mcp-web-inspector"]
+      "args": ["-y", "mcp-web-inspector@0.14.0"]
     },
     "tailwindcss": {
       "command": "npx",

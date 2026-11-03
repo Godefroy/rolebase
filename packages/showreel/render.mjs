@@ -22,7 +22,10 @@ fs.rmSync(outDir, { recursive: true, force: true })
 fs.mkdirSync(outDir, { recursive: true })
 
 const WORKERS = times ? 1 : 8
-const browser = await chromium.launch({ args: ['--allow-file-access-from-files'] })
+const browser = await chromium.launch({
+  args: ['--allow-file-access-from-files'],
+  chromiumSandbox: process.platform !== 'linux',
+})
 const t0 = Date.now()
 async function worker(w) {
   const page = await browser.newPage({ viewport: { width: 1920, height: 1080 } })
