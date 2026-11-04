@@ -32,7 +32,7 @@ export default function RRuleRepeat({ options, onChange }: FormPartProps) {
           {freqs.map((freq) => (
             <option key={freq} value={freq}>
               {t(`RRuleEditor.freqs.${Frequency[freq]}` as any, {
-                count: options.interval,
+                count: options.interval ?? 1,
               })}
             </option>
           ))}

@@ -12,14 +12,6 @@ export const resources = {
   },
 }
 
-// Full typing
-// https://www.i18next.com/overview/typescript#custom-type-options
-declare module 'i18next' {
-  interface CustomTypeOptions {
-    resources: (typeof resources)['fr']
-  }
-}
-
 i18next.init({
   lng: defaultLang,
   resources,
@@ -28,5 +20,11 @@ i18next.init({
   },
 })
 
-export default i18next
+// The webapp compiles this file through the tRPC types and declares its own
+// keys on the 'i18next' module, so keys stay free-form here
+type Translate = (key: string, options?: Record<string, unknown>) => string
+
+export default i18next as unknown as Omit<typeof i18next, 't'> & {
+  t: Translate
+}
 export const locales = resources

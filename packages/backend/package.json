@@ -34,7 +34,7 @@
     "dotenv": "^16.0.3",
     "fastify": "^4.26.1",
     "graphql": "^16.6.0",
-    "i18next": "^21.6.16",
+    "i18next": "^26.7.1",
     "ical-generator": "^3.6.1",
     "jsonwebtoken": "^9.0.2",
     "lodash.isequal": "^4.5.0",

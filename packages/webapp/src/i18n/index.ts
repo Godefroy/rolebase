@@ -20,8 +20,8 @@ const resources = {
 }
 
 // Full typing for useTranslation
-// https://react.i18next.com/latest/typescript
-declare module 'react-i18next' {
+// https://www.i18next.com/overview/typescript
+declare module 'i18next' {
   interface CustomTypeOptions {
     defaultNS: typeof defaultNS
     resources: (typeof resources)['fr']
