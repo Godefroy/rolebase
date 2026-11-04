@@ -27,6 +27,13 @@ export default webhookProcedure.mutation(async () => {
     const adminMember = org.members[0]
     if (!adminMember?.user) continue
 
+    // This email already joined the org with another member: it can't accept
+    const inviteEmail = member.inviteEmail!.toLowerCase()
+    const alreadyJoined = org.joinedMembers.some(
+      (joinedMember) => joinedMember.user?.email?.toLowerCase() === inviteEmail
+    )
+    if (alreadyJoined) continue
+
     const token = generateInviteToken(member.id, inviteDate)
     const invitationUrl = `${settings.url}/orgs/${org.id}/invitation?memberId=${member.id}&token=${token}`
 
@@ -86,6 +93,16 @@ const GET_PENDING_INVITATIONS = gql(`
           picture
           user {
             locale
+          }
+        }
+        joinedMembers: members(
+          where: {
+            userId: { _is_null: false }
+            archivedAt: { _is_null: true }
+          }
+        ) {
+          user {
+            email
           }
         }
       }
