@@ -19,7 +19,7 @@
     "@tailwindcss/postcss": "^4.2.2",
     "astro": "^6.4.2",
     "astro-expressive-code": "^0.44.1",
-    "astrocms": "^0.1.1",
+    "astrocms": "^0.1.5",
     "d3": "^7.8.5",
     "d3-hierarchy": "^3.1.2",
     "eventemitter3": "^5.0.1",
