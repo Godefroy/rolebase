@@ -31,10 +31,15 @@ function charWidth(char: string): number {
   return 0.53
 }
 
-function textWidth(text: string): number {
+// Estimated width of a text, for a font size of 1
+export function textWidthEm(text: string): number {
   let width = 0
   for (const char of text) width += charWidth(char)
-  return width * t.titleFontSize * t.titleWidthSafety
+  return width * t.titleWidthSafety
+}
+
+function textWidth(text: string): number {
+  return textWidthEm(text) * t.titleFontSize
 }
 
 // Lines a wrapped title takes, capped so one pathological name cannot stretch
@@ -258,9 +263,9 @@ export function computeTreeLayout(data: Data): Layout {
         // culling pass would drop it (and its members) before they are tested
         const rowsHeight = membersHeight(members.length)
         node.x = card?.x ?? 0
-        node.y = rowsHeight > 0 ? top + rowsHeight / 2 : card?.y ?? 0
+        node.y = rowsHeight > 0 ? top + rowsHeight / 2 : (card?.y ?? 0)
         node.w = card?.w ?? 0
-        node.h = rowsHeight > 0 ? rowsHeight : card?.h ?? 0
+        node.h = rowsHeight > 0 ? rowsHeight : (card?.h ?? 0)
         node.r = Math.hypot(node.w, node.h) / 2
         node.shape = NodeShape.Circle
         return

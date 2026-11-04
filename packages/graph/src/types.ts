@@ -199,6 +199,8 @@ export interface TitleVisibility {
   center: boolean
   // Small label above the circle, shown when it is big enough on screen
   top: boolean
+  // On-screen distance the label moves down to clear the label of its parent
+  topShift: number
 }
 
 // Result of the culling pass: nodes and titles to mount in the DOM

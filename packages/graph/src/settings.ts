@@ -139,5 +139,10 @@ export default {
     rate: 100,
     threshold: 2 / 3,
     topThreshold: 2 / 3,
+    // Top label: font size before scaling, distance from the top of the circle
+    // in layout units, and on-screen gap kept with the label of the parent
+    topFontSize: 36,
+    topOffset: 10,
+    topGap: 2,
   },
 }

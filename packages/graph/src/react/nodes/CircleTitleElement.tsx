@@ -15,7 +15,7 @@ interface Props {
   hidden?: boolean
 }
 
-const { baseSize, centerCoverage } = settings.titles
+const { baseSize, centerCoverage, topOffset } = settings.titles
 
 // Memoized: a culling pass only re-renders changed elements
 export default memo(function CircleTitleElement({
@@ -106,7 +106,11 @@ export default memo(function CircleTitleElement({
         className="circle-title-top"
         style={{
           bottom: `${baseSize}px`,
-          translate: `0px ${10 / baseSizeRatio}px`,
+          // topShift is on screen, the title is scaled with its node and the zoom
+          translate: `0px ${
+            (topOffset + (visibility?.topShift ?? 0) / cullScale) /
+            baseSizeRatio
+          }px`,
           // Roughly constant on-screen size (see topScale above)
           scale: topScale.toString(),
           // Shown when the circle is big enough on screen, as a discrete step

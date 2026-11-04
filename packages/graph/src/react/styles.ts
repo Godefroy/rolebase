@@ -10,7 +10,7 @@ const linkFade = `opacity ${moveTransition}`
 // Should be low enough to not glitch when scaling
 export const nodeSize = 200
 
-const { baseSize } = settings.titles
+const { baseSize, topFontSize } = settings.titles
 const {
   cardRadius,
   cardBorder,
@@ -382,7 +382,7 @@ export const graphStyles = `
   position: absolute;
   transform-origin: bottom center;
   /* Acceptable font size for a one-member role at zoom-scale 3 and scale 1 */
-  font-size: 36px;
+  font-size: ${topFontSize}px;
   max-height: 2em;
   min-width: 130%;
   word-wrap: normal;

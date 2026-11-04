@@ -7,6 +7,7 @@ import {
   TreeLink,
   VisibleNodes,
 } from '../types'
+import { textWidthEm } from './layouts/tree'
 
 export interface CullingParams {
   root: NodeData
@@ -270,7 +271,7 @@ function computeTitleVisibility(
   k: number,
   graphMinSize: number
 ): TitleVisibility {
-  const { threshold, topThreshold, gap, rate } = settings.titles
+  const { threshold, gap } = settings.titles
   const size = node.r * 2
   const parent = node.parent
   const isRootChild = !parent || parent.data.id === 'root'
@@ -285,10 +286,63 @@ function computeTitleVisibility(
     onScreen < threshold &&
     (isRootChild || parentOnScreen > threshold)
 
-  // Top title: zoom scale at/above 1, or circle big enough on screen
-  const top = k >= 1 - 1 / rate || onScreen >= topThreshold
+  return {
+    center,
+    top: isTopLabelShown(node, k, graphMinSize),
+    topShift: topLabelShift(node, k, graphMinSize),
+  }
+}
 
-  return { center, top }
+// Top title: zoom scale at/above 1, or circle big enough on screen
+function isTopLabelShown(node: NodeData, k: number, graphMinSize: number) {
+  const { topThreshold, rate } = settings.titles
+  return k >= 1 - 1 / rate || (k * node.r * 2) / graphMinSize >= topThreshold
+}
+
+// On-screen font size of a top label. Its scale compensates for the zoom scale
+// (see topScale in CircleTitleElement).
+function topLabelFontSize(node: NodeData, k: number) {
+  const { baseSize, topFontSize } = settings.titles
+  const baseSizeRatio = (node.r * 2) / baseSize
+  return topFontSize * 0.2 * (1 + baseSizeRatio / 10) * (1 + k / 2)
+}
+
+// A sub-role touching the top of its parent would draw its label over the one
+// of its parent: it moves down just enough to clear it. Parents are resolved
+// first, since a label that moved can push the one of its own sub-role.
+function topLabelShift(
+  node: NodeData,
+  k: number,
+  graphMinSize: number
+): number {
+  const { topOffset, topGap } = settings.titles
+  const parent = node.parent
+  if (
+    !parent ||
+    parent.data.id === 'root' ||
+    parent.data.type !== NodeType.Circle ||
+    !isTopLabelShown(parent, k, graphMinSize)
+  ) {
+    return 0
+  }
+
+  const fontSize = topLabelFontSize(node, k)
+  const parentFontSize = topLabelFontSize(parent, k)
+
+  // Labels are centered above their circle
+  const distanceX = Math.abs(node.x - parent.x) * k
+  const halfWidths =
+    (textWidthEm(node.data.name ?? '') * fontSize +
+      textWidthEm(parent.data.name ?? '') * parentFontSize) /
+    2
+  if (distanceX >= halfWidths) return 0
+
+  // Labels hang from their bottom edge
+  const bottom = (node.y - node.r + topOffset) * k
+  const parentBottom =
+    (parent.y - parent.r + topOffset) * k +
+    topLabelShift(parent, k, graphMinSize)
+  return Math.max(0, parentBottom + topGap + fontSize - bottom)
 }
 
 // Conservative test of a circle title visibility, derived from the CSS

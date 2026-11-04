@@ -1137,3 +1137,53 @@ describe('minimap nodes', () => {
     expect(minimapNodes(layout.nodes, 0)).toHaveLength(1)
   })
 })
+
+describe('top label of a sub-role', () => {
+  const node = (
+    id: string,
+    name: string,
+    x: number,
+    y: number,
+    r: number,
+    parent?: any
+  ): any => ({
+    data: { id, name, type: NodeType.Circle },
+    parent,
+    x,
+    y,
+    r,
+    w: r * 2,
+    h: r * 2,
+    shape: NodeShape.Circle,
+    bounds: { x0: x - r, y0: y - r, x1: x + r, y1: y + r },
+  })
+
+  // The parent spans the whole chart, its only child is `r` wide at `x`, `y`
+  const shiftOf = (childX: number, childY: number, childR: number) => {
+    const root = node('root', 'root', 0, 0, 1000)
+    const parent = node('parent', 'Product', 0, 0, 500, root)
+    const child = node('child', 'Engineering', childX, childY, childR, parent)
+    root.children = [parent]
+    parent.children = [child]
+    const { titleVisibility } = computeVisibleNodes({
+      root,
+      transform: { x: 500, y: 500, k: 1 },
+      width: 1000,
+      height: 1000,
+      graphMinSize: 1000,
+    })
+    return titleVisibility.get('child')?.topShift
+  }
+
+  it('moves down to clear the label of a parent it touches', () => {
+    expect(shiftOf(0, -200, 300)).toBeGreaterThan(0)
+  })
+
+  it('stays in place when the parent label is far above', () => {
+    expect(shiftOf(0, 0, 200)).toBe(0)
+  })
+
+  it('stays in place when the labels are side by side', () => {
+    expect(shiftOf(350, -130, 370)).toBe(0)
+  })
+})
