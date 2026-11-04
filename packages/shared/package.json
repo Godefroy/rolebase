@@ -9,6 +9,7 @@
     "test": "vitest"
   },
   "dependencies": {
+    "date-fns-tz": "^3.2.0",
     "lodash.isequal": "^4.5.0",
     "rrule": "^2.8.1",
     "slugify": "^1.6.9",

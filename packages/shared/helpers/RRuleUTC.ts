@@ -1,6 +1,6 @@
 // RRule.js needs some special transformations to dates
 
-import { utcToZonedTime } from 'date-fns-tz'
+import { toZonedTime } from 'date-fns-tz'
 import { Options, RRule, RRuleSet } from 'rrule'
 
 export class RRuleUTC {
@@ -71,7 +71,7 @@ export class RRuleUTC {
       if (rrule.origOptions.dtstart) {
         this.rrule._rrule[i] = new RRule({
           ...rrule.origOptions,
-          dtstart: getUTCDateFromDate(utcToZonedTime(date, this.timezone)),
+          dtstart: getUTCDateFromDate(toZonedTime(date, this.timezone)),
         })
         return
       }
@@ -83,7 +83,7 @@ export class RRuleUTC {
     for (const dateStr of dates) {
       if (!dateStr) continue
       const date = dateStr instanceof Date ? dateStr : new Date(dateStr)
-      this.rrule.exdate(getUTCDateFromDate(utcToZonedTime(date, this.timezone)))
+      this.rrule.exdate(getUTCDateFromDate(toZonedTime(date, this.timezone)))
     }
   }
 }

@@ -8,8 +8,8 @@
     "tsc": "tsgo"
   },
   "dependencies": {
-    "date-fns": "^2.29.3",
-    "date-fns-tz": "^2.0.1",
+    "date-fns": "^4.4.0",
+    "date-fns-tz": "^3.2.0",
     "dotenv": "^16.0.3",
     "i18next": "^21.6.16",
     "node-mailjet": "^5.1.1",
