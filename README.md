@@ -20,10 +20,10 @@ Rolebase's backend is built with [Nhost](https://nhost.io). Follow these steps t
 
 1.  Create an account on nhost.io : https://app.nhost.io.
 
-2.  Install Nhost CLI (https://docs.nhost.io/platform/overview/get-started-with-nhost-cli)
+2.  Install Nhost CLI (https://docs.nhost.io/platform/cli/local-development)
 
 ```
-sudo curl -L https://raw.githubusercontent.com/nhost/cli/main/get.sh | bash
+curl -sSL https://raw.githubusercontent.com/nhost/nhost/main/cli/get.sh | bash
 ```
 
 3.  If you don't have them already, install [Docker](https://www.docker.com/get-started) and [Git](https://git-scm.com/downloads)
@@ -60,7 +60,7 @@ nhost up
 npm run dev
 ```
 
-3.  Open in browser: http://localhost:3000
+3.  Open in browser: http://localhost:5175
 
 ### Storybook
 
@@ -113,7 +113,7 @@ It'll should output your [Stripe webhook endpoint secret](https://dashboard.stri
 
 ### Secrets
 
-Write Nhost secrets in the file `.secrets`:
+Write Nhost secrets in the file `.secrets`, starting from `.secrets.template`:
 
 ```conf
 # Nhost config
@@ -124,8 +124,8 @@ GRAFANA_ADMIN_PASSWORD = # Generate a password
 MAILJET_SMTP_PASSWORD = # MailJet private key
 
 # Env variables injected in nhost.toml
-BACKEND_URL = # URL of your nhost instance, with the path to call the functions
-WEBAPP_URL = # URL of your webapp
+BACKEND_URL = # URL of your nhost instance, with the path to call the functions. Required by Hasura event triggers. Locally: http://host.docker.internal:8888
+WEBAPP_URL = # URL of your webapp. Locally: http://localhost:5175
 MAILJET_PUBIC_KEY = # MailJet public key. You can find it here: https://app.mailjet.com/account/api_keys
 MAILJET_PRIVATE_KEY = # MailJet private key
 SECURITY_INVITATION_TOKEN = # Secret token used to validate invitations. You can generate a token with Lastpass for example
@@ -202,7 +202,7 @@ Then open `http://localhost:8090/`
 
 Email templates for Nhost are defined in `nhost/emails` folder.
 
-Check the [documentation](https://docs.nhost.io/authentication/email-templates) to learn more about it.
+Check the [documentation](https://docs.nhost.io/products/auth/email-templates) to learn more about it.
 
 We generate them with the template `packages/emails/components/templates/NhostLinkEmail.tsx`
 
