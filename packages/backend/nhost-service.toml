@@ -92,8 +92,8 @@ fqdn = ['api.rolebase.io']
 replicas = 1
 
 [resources.compute]
-cpu = 312
-memory = 640
+cpu = 500
+memory = 1024
 
 [healthCheck]
 port = 8888
