@@ -1,291 +1,150 @@
-# Rolebase.io
+<p align="center">
+  <a href="https://rolebase.io">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset=".github/assets/readme/logo-dark.svg" />
+      <source media="(prefers-color-scheme: light)" srcset=".github/assets/readme/logo-light.svg" />
+      <img src=".github/assets/readme/logo-light.svg" alt="Rolebase" width="280" />
+    </picture>
+  </a>
+</p>
 
-**[Rolebase](https://rolebase.io)** is the online headquarter for [liberated companies](https://en.wikipedia.org/wiki/Liberated_company).
+<h3 align="center">Clarify who does what and give your teams real autonomy</h3>
 
-It's an open source SaaS that helps various organizations implement Holacracy, Sociocracy and other forms of governance.
+<p align="center">
+  The open source platform to map your roles, run better meetings and let every team self-organize.
+</p>
 
-## Install
+<p align="center">
+  <a href="https://rolebase.io"><b>Website</b></a> ·
+  <a href="https://rolebase.io/en/docs"><b>Documentation</b></a> ·
+  <a href="https://rolebase.io/en/guides"><b>Guides</b></a> ·
+  <a href="https://rolebase.io/en/developers"><b>Developers</b></a> ·
+  <a href="https://rolebase.io/en/pricing"><b>Pricing</b></a>
+</p>
 
-### NPM dependencies
+<p align="center">
+  <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-a855f7" alt="MIT license" /></a>
+  <a href="https://github.com/Godefroy/rolebase/stargazers"><img src="https://img.shields.io/github/stars/Godefroy/rolebase?style=flat&color=facc15" alt="GitHub stars" /></a>
+  <a href="https://github.com/Godefroy/rolebase/commits/main"><img src="https://img.shields.io/github/last-commit/Godefroy/rolebase?color=fb923c" alt="Last commit" /></a>
+  <a href="./CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-34d399" alt="Pull requests welcome" /></a>
+</p>
 
-Install npm dependencies in all packages:
+<p align="center">
+  <a href="https://rolebase.io/signup"><b>Create your organization for free →</b></a>
+</p>
+
+<br />
+
+<a href="https://rolebase.io">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset=".github/assets/readme/orgchart-dark.webp" />
+    <source media="(prefers-color-scheme: light)" srcset=".github/assets/readme/orgchart-light.webp" />
+    <img src=".github/assets/readme/orgchart-light.webp" alt="The Rolebase org chart, with roles nested as circles and the details of a role in a side panel" />
+  </picture>
+</a>
+
+## Why Rolebase
+
+Teams lose time when nobody knows who decides, when meetings end without a decision and when information lives in five different tools. Rolebase brings it all together around one living org chart, so everyone sees their place and knows who to turn to.
+
+- **All-in-one.** Roles, meetings, discussions, tasks and decisions attach to the role they belong to.
+- **Flexible.** From Free to Strict mode, you choose how much structure to enforce. Rolebase suits Holacracy, Sociocracy, [liberated companies](https://en.wikipedia.org/wiki/Liberated_company) and more classic organizations alike.
+- **Open source and sovereign.** MIT-licensed code, self-hostable, with hosted data stored in Europe.
+
+## Features
+
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <b>Meetings that decide</b><br />
+      Structured steps, attendance, shared notes, recurring meetings and templates.
+      <br /><br />
+      <img src=".github/assets/readme/meeting.webp" alt="A meeting in progress with attendance and numbered steps" />
+    </td>
+    <td width="50%" valign="top">
+      <b>Discussions in the right place</b><br />
+      Each discussion belongs to a role, and can lead to a proposal, a poll, a decision or a task.
+      <br /><br />
+      <img src=".github/assets/readme/thread.webp" alt="A discussion between team members about pricing" />
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <b>Tasks everyone can see</b><br />
+      A shared kanban or list, filtered by role or by member.
+      <br /><br />
+      <img src=".github/assets/readme/tasks.webp" alt="A kanban board of tasks grouped by status" />
+    </td>
+    <td width="50%" valign="top">
+      <b>News at a glance</b><br />
+      The latest decisions, discussions and meetings next to your own roles.
+      <br /><br />
+      <img src=".github/assets/readme/news.webp" alt="The dashboard with the news feed, the org chart and the roles of the current member" />
+    </td>
+  </tr>
+</table>
+
+And also:
+
+- **Org chart views** as nested circles, a hierarchical tree or by member, with PNG export
+- **Real-time editing** for workshops and meetings, in person or remote
+- **Calendar sync** with Google Calendar, Outlook and any iCal-compatible calendar
+- **Global search** across members, roles, discussions, tasks and decisions
+- **Import and export**, with Holaspirit import and XLSX or JSON export
+- **Notifications and digests**, daily or weekly
+- **Activity log** with the full history of changes
+
+## Works with your AI assistant
+
+Ask your assistant who holds a role, prepare the agenda of the next meeting or create a task, in plain language.
+
+- **[MCP connector](https://rolebase.io/en/docs/mcp)** for Claude, ChatGPT and Mistral Vibe, also available to [coding agents](https://rolebase.io/en/developers/mcp)
+- **[Rolebase skill](https://rolebase.io/en/developers/skill)** for Claude Code, Codex, Cursor and VS Code
 
 ```
-npm i
+/plugin marketplace add Godefroy/rolebase
+/plugin install rolebase@rolebase
 ```
 
-### Nhost
+## Get started
 
-Rolebase's backend is built with [Nhost](https://nhost.io). Follow these steps to set it up (MacOS, Linux):
+| | |
+| --- | --- |
+| **Cloud** | [Create an organization](https://rolebase.io/signup) in minutes. The [Small plan](https://rolebase.io/en/pricing) is free forever. |
+| **Self-hosting** | Follow the [install and self-host guide](https://rolebase.io/en/developers/install-self-host) to keep control of your data and infrastructure. |
+| **API** | Read and update your data with the [GraphQL API](https://rolebase.io/en/developers/graphql-api) and an API key that carries your permissions. |
 
-1.  Create an account on nhost.io : https://app.nhost.io.
+### Run it locally
 
-2.  Install Nhost CLI (https://docs.nhost.io/platform/cli/local-development)
-
-```
-curl -sSL https://raw.githubusercontent.com/nhost/nhost/main/cli/get.sh | bash
-```
-
-3.  If you don't have them already, install [Docker](https://www.docker.com/get-started) and [Git](https://git-scm.com/downloads)
-
-4.  Log in to Nhost
-
-Set up for Windows users :
-
-1.  Download Ubuntu from Microsoft store or anywhere else where you can find it.
-
-2.  Upgrade for WSL 2.
-
-3.  On Ubuntu install git, nvm, npm and node (https://learn.microsoft.com/en-us/windows/dev-environment/javascript/nodejs-on-wsl).
-
-4.  Clone project on Ubuntu environment and open project from Ubuntu terminal to VSCode.
-
-5.  If Docker permissions got denied, follow this step to add new user : https://stackoverflow.com/questions/47854463/docker-got-permission-denied-while-trying-to-connect-to-the-docker-daemon-socke , also verify in docker desktop > settings > resources > WSL integration > Enable Ubuntu for wsl distro and apply.
-
-```
-nhost login
-```
-
-## Start dev environment
-
-1.  Launch Nhost:
-
-```
-nhost up
-```
-
-2.  Run webapp + backend with watch:
-
-```
-npm run dev
-```
-
-3.  Open in browser: http://localhost:5175
-
-### Storybook
-
-You can preview and test some components in Storybook.
-
-```
-cd packages/webapp
-npm run storybook
-```
-
-## External services
-
-### Mailjet
-
-Rolebase uses [Mailjet](https://www.mailjet.com/) to send some of its mail.
-
-1. Create a Mailjet account : https://app.mailjet.com/signup
-2. Add your account API keys in your environment variables
-
-   - `MAILJET_PUBIC_KEY` : API Key displayed by Mailjet upon account creation or when resetting secret tokens
-   - `MAILJET_PRIVATE_KEY` : Secret Key displayed by Mailjet upon account creation or when resetting secret tokens
-
-### Algolia
-
-To use the search engine across an organization, you need to configure an [Algolia](https://www.algolia.com/) index.
-
-1. Create an Algolia application
-
-2. Create an index and import config:
-
-   - Click "Manage index"
-   - Click "Import Configuration"
-   - Use `algolia-docs.json` present in this repo
-   - Set env variables (see below)
-
-### Stripe
-
-Rolebase also uses [Stripe](https://stripe.com/) for it's subscription feature.
-You'll need to [install the cli](https://stripe.com/docs/stripe-cli#install) first.
-
-Once done, run the following command:
+You need Node.js, Docker and the [Nhost CLI](https://docs.nhost.io/platform/cli/local-development).
 
 ```bash
-stripe listen --forward-to http://localhost:8888/orgSubscription/stripeWebhook
+git clone https://github.com/Godefroy/rolebase.git
+cd rolebase
+npm install
+cp .secrets.template .secrets   # Then fill in the values
+nhost login
+nhost up                         # PostgreSQL, Hasura, Auth and Storage
+npm run dev                      # Webapp and backend, on http://localhost:5175
 ```
 
-It'll should output your [Stripe webhook endpoint secret](https://dashboard.stripe.com/test/webhooks).
+[`CONTRIBUTING.md`](./CONTRIBUTING.md) covers configuration, external services, emails and the project structure.
 
-## Configuration
+## Built with
 
-### Secrets
+| Layer | Stack |
+| --- | --- |
+| **Frontend** | [React](https://react.dev), [Chakra UI](https://chakra-ui.com), [Apollo Client](https://www.apollographql.com/docs/react), [Tiptap](https://tiptap.dev) |
+| **Backend** | [Nhost](https://nhost.io), [Hasura](https://hasura.io), [PostgreSQL](https://www.postgresql.org), [tRPC](https://trpc.io) |
+| **Website** | [Astro](https://astro.build), [MDX](https://mdxjs.com), [Tailwind CSS](https://tailwindcss.com) |
 
-Write Nhost secrets in the file `.secrets`, starting from `.secrets.template`:
+## Contributing
 
-```conf
-# Nhost config
-NHOST_WEBHOOK_SECRET = nhost-admin-secret
-HASURA_GRAPHQL_ADMIN_SECRET = nhost-admin-secret
-HASURA_GRAPHQL_JWT_SECRET = # Generate a password
-GRAFANA_ADMIN_PASSWORD = # Generate a password
-MAILJET_SMTP_PASSWORD = # MailJet private key
+Pull requests are welcome. Read [`CONTRIBUTING.md`](./CONTRIBUTING.md) to get set up and to see what we check before merging.
 
-# Env variables injected in nhost.toml
-BACKEND_URL = # URL of your nhost instance, with the path to call the functions. Required by Hasura event triggers. Locally: http://host.docker.internal:8888
-WEBAPP_URL = # URL of your webapp. Locally: http://localhost:5175
-MAILJET_PUBIC_KEY = # MailJet public key. You can find it here: https://app.mailjet.com/account/api_keys
-MAILJET_PRIVATE_KEY = # MailJet private key
-SECURITY_INVITATION_TOKEN = # Secret token used to validate invitations. You can generate a token with Lastpass for example
-ALGOLIA_APP_ID = # Algolia application ID
-ALGOLIA_SEARCH_API_KEY = # Algolia search API key
-ALGOLIA_ADMIN_API_KEY = # Algolia admin API key
-STRIPE_STARTUP_PLAN_PRICE_ID = # Price id of the startup plan inside stripe
-STRIPE_ENDPOINT_SECRET = # Stripe webhook endpoint secret: https://dashboard.stripe.com/test/webhooks
-STRIPE_PRIVATE_KEY = # Stripe API private key: https://stripe.com/docs/keys#obtain-api-keys
-OPENAI_API_KEY = # OpenAI API key
-APPS_OFFICE365_CLIENT_ID = # Office 365 client ID
-APPS_OFFICE365_CLIENT_SECRET = # Office 365 client secret
-APPS_GOOGLECALENDAR_CLIENT_ID = # Google Calendar client ID
-APPS_GOOGLECALENDAR_CLIENT_SECRET = # Google Calendar client secret
-```
+## Help
 
-### Webapp config
-
-Webapp configuration can be written in `settings.ts`:
-
-- url: URL on which the webapp will be served
-- websiteUrl: URL to redirect user to if they are not logged in
-- nhost.subdomain: Subdomain of your nhost server
-- nhost.region: Region of your nhost server
-- functionsUrl: URL of your nhost instance, with the path to call the functions
-- memberPicture.maxSize: Size (in px) in which your team's members icons will be displayed
-- stripe.publicKey: [Stripe API public key](https://stripe.com/docs/keys#obtain-api-keys)
-
-**Note:** This file also specifies configuration for local environment. You should not edit those (unless you know what you're doing).
-
-### Server config
-
-The server config is localized in `packages/backend/src/settings.ts`. You can edit in it:
-
-- url: URL of the webapp
-- mail.sender: Name and address to use in send mail
-
-**Note:** Like previous configuration, do avoid editing values for local environment. You should also not edit configurations using environment variables those are to be configured in `.env`).
-
-## Test webhooks by exposing backend port
-
-You can forward the port with VSCode or ngrok.
-
-With VSCode:
-
-- Open "Port" panel (next to "Terminal")
-- Add 8888 port
-- Click right, "Port visibility" > "Public"
-
-Set resulting URL in `.secrets` (only locally):
-
-```
-BACKEND_URL = 'https://XXXXX.devtunnels.ms'
-```
-
-Finally, restart local server (`yarn dev`).
-
-## Email templates
-
-### Preview
-
-All email templates are React components using `react-emails` in the folder `packages/emails`
-
-To preview emails:
-
-```
-cd packages/emails
-npm run dev
-```
-
-Then open `http://localhost:8090/`
-
-### Nhost emails
-
-Email templates for Nhost are defined in `nhost/emails` folder.
-
-Check the [documentation](https://docs.nhost.io/products/auth/email-templates) to learn more about it.
-
-We generate them with the template `packages/emails/components/templates/NhostLinkEmail.tsx`
-
-Translations are in `packages/emails/i18n/locales`
-
-To build `body.html` and `subject.txt` files, run:
-
-```
-cd packages/emails
-npm run build
-```
-
-### Fonts
-
-Fonts used in emails are included here as static files to be loaded in emails by `packages/emails/components/common/Layout.tsx`
-
-### Icons
-
-Icons we're using in emails are compiled in PNG at build time by `packages/webapp/src/buildEmailsIcons.js` script.
-
-This script contains the list of icons to include.
-
-To test in dev mode, you can update icons with:
-
-```
-cd packages/webapp
-npm run build-emails-icons
-```
-
-## Production env
-
-[Render.com](https://render.com)
-
-- Front (static)
-- Storybook (static)
-- Collab (Node + y-websocket)
-
-[Nhost.io](https://nhost.io)
-
-- Auth
-- Database
-- GraphQL API
-- Storage
-- Run: @rolebase/backend (docker)
-
-## Upgrade Nhost
-
-1.  First, stop Nhost:
-
-```
-nhost down
-```
-
-2.  Upgrade Nhost CLI:
-
-```
-sudo nhost sw upgrade
-```
-
-3.  Upgrade package `@nhost/nhost-js`.
-
-## Contributions
-
-Any pull request is welcome to be submitted on this Github project!
-
-Before committing, please:
-
-- Check diff to avoid superfluous changes: `git diff`
-- Check typing: `npm run tsc`
-- Check linting: `npm run lint`
-- Check Migrations:
-  - Keep migrations simple and safe, always test them
-  - Squash migrations: https://hasura.io/docs/latest/hasura-cli/commands/hasura_migrate_squash/
-  - Don't edit a commited migration
-
-Before sending your pull request, please:
-
-- Rebase: `git fetch origin main:main && git rebase main`
-- Explain what you're doing and why
-
-## Help & issues
-
-If you're having an issue with Rolebase, feel free to [contact us](https://rolebase.io/contact) or to open an issue on this Github project.
+[Contact us](https://rolebase.io/en/contact) or [open an issue](https://github.com/Godefroy/rolebase/issues) on this repository.
 
 ## License
 
