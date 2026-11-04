@@ -11,7 +11,7 @@ export default function useUserMetadata() {
   // Get user metadata
   const { user } = useAuth()
   const userId = user?.id
-  const metadata: UserMetadata | undefined = user?.metadata
+  const metadata = user?.metadata as UserMetadata | undefined
 
   // Cache metadata for optimistic UI
   const [cachedMetadata, setCachedMetadata] = useState(metadata)
