@@ -1,7 +1,6 @@
 import { getSeedRoles } from '@rolebase/shared/seeds/roles'
 import { TRPCError } from '@trpc/server'
 import { NodeHtmlMarkdown } from 'node-html-markdown'
-import xlsx from 'xlsx'
 import {
   Circle_Insert_Input,
   Circle_Member_Insert_Input,
@@ -47,7 +46,8 @@ export class HolaspiritImporter extends Importer {
     const data: Partial<HolaspiritSheets> = {}
 
     try {
-      // Read Excel file
+      // Read Excel file (loaded on demand, as few requests need it)
+      const xlsx = await import('xlsx')
       const workbook = xlsx.read(fileData, {
         cellDates: true,
       })

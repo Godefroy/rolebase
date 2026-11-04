@@ -1,6 +1,6 @@
 import { fitGraphTitles } from '@rolebase/graph/server'
 import fs from 'fs'
-import puppeteer, { Browser, Page } from 'puppeteer-core'
+import type { Browser, Page } from 'puppeteer-core'
 
 // Common Chromium/Chrome paths (Docker image installs Chromium via apk)
 const chromiumPaths = [
@@ -24,8 +24,8 @@ function getChromiumPath(): string {
   return path
 }
 
-// Close Chromium when idle to free its memory between exports
-const browserIdleTimeout = 60 * 1000
+// Close Chromium soon after the last export to free its memory
+const browserIdleTimeout = 10 * 1000
 
 let browserPromise: Promise<Browser> | undefined
 let activeScreenshots = 0
@@ -46,16 +46,23 @@ function scheduleBrowserClose() {
   }, browserIdleTimeout)
 }
 
+async function launchBrowser(): Promise<Browser> {
+  // Loaded on demand, as few requests need it
+  const { default: puppeteer } = await import('puppeteer-core')
+  return puppeteer.launch({
+    executablePath: getChromiumPath(),
+    args: [
+      ...(process.platform === 'linux' ? ['--no-sandbox'] : []),
+      '--disable-dev-shm-usage',
+      '--disable-gpu',
+      '--renderer-process-limit=1',
+    ],
+  })
+}
+
 async function getBrowser(): Promise<Browser> {
   if (!browserPromise) {
-    browserPromise = puppeteer.launch({
-      executablePath: getChromiumPath(),
-      args: [
-        ...(process.platform === 'linux' ? ['--no-sandbox'] : []),
-        '--disable-dev-shm-usage',
-        '--disable-gpu',
-      ],
-    })
+    browserPromise = launchBrowser()
     // Reset on launch failure so next call retries
     browserPromise.catch(() => {
       browserPromise = undefined

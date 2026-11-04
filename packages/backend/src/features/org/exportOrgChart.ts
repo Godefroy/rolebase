@@ -5,6 +5,7 @@ import * as yup from 'yup'
 import { Member_Role_Enum } from '../../gql'
 import { guardOrg } from '../../guards/guardOrg'
 import { authedProcedure } from '../../trpc/authedProcedure'
+import { runExclusive } from '../../utils/runExclusive'
 import { screenshotHtml } from '../../utils/screenshotHtml'
 import { loadOrgFlatData } from './loadOrgData'
 
@@ -68,7 +69,7 @@ export default authedProcedure
       colorMode: colorMode || 'light',
       showMembers,
     })
-    const png = await screenshotHtml(html, width, height)
+    const png = await runExclusive(() => screenshotHtml(html, width, height))
 
     return {
       data: png.toString('base64'),

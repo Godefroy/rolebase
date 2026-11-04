@@ -22,12 +22,18 @@ RUN --mount=type=cache,target=/root/.npm \
 
 COPY ../.. .
 
+# Precompile the backend (tsx would keep an esbuild service and sources in memory)
+RUN node packages/backend/scripts/bundle.mjs
+
+# Production builds of dependencies (React) use less memory
+ENV NODE_ENV=production
+
 # Keep the heap well below the container memory limit (Chromium runs outside of it)
 ENV NODE_OPTIONS=--max-old-space-size=384
 
 EXPOSE 8888
 
 WORKDIR /app/packages/backend
-# Run node directly (npm and the tsx CLI would each add a process),
-# under tini to reap Chromium's orphan processes and forward signals
-CMD ["/sbin/tini", "--", "node", "--import", "tsx", "src/index.ts"]
+# Run node directly (npm would add a process), under tini to reap Chromium's
+# orphan processes and forward signals
+CMD ["/sbin/tini", "--", "node", "--enable-source-maps", "dist/server.js"]
