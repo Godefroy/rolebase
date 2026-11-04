@@ -1,7 +1,7 @@
 import { RRuleUTC } from '@rolebase/shared/helpers/RRuleUTC'
 import getMeetingVideoConfUrl from '@rolebase/shared/helpers/getMeetingVideoConfUrl'
 import { getOrgPath } from '@rolebase/shared/helpers/getOrgPath'
-import { utcToZonedTime } from 'date-fns-tz'
+import { toZonedTime } from 'date-fns-tz'
 import { ICalCalendar } from 'ical-generator'
 import * as yup from 'yup'
 import { gql } from '../../gql'
@@ -140,7 +140,7 @@ function formatDate(date: Date, timezone: string) {
   // return new Date(
   //   formatInTimeZone(date, timezone, "yyyyMMdd'T'HHmmss")
   // ).toISOString()
-  return utcToZonedTime(date, timezone)
+  return toZonedTime(date, timezone)
   //return getUTCDateFromDate(date)
 }
 
