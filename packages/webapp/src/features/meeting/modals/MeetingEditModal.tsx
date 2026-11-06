@@ -176,6 +176,9 @@ export default function MeetingEditModal({
   const handleTemplateSelect = (template: MeetingTemplateFragment) => {
     setValue('title', template.title)
     setValue('stepsConfig', template.stepsConfig)
+    if (template.circleId && orgData?.getCircle(template.circleId)) {
+      setValue('circleId', template.circleId)
+    }
   }
 
   // Submit

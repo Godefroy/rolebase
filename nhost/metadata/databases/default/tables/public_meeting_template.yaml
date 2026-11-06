@@ -2,6 +2,9 @@ table:
   name: meeting_template
   schema: public
 object_relationships:
+  - name: circle
+    using:
+      foreign_key_constraint_on: circleId
   - name: org
     using:
       foreign_key_constraint_on: orgId
@@ -22,6 +25,7 @@ insert_permissions:
                   - role:
                       _eq: Owner
       columns:
+        - circleId
         - orgId
         - stepsConfig
         - title
@@ -30,6 +34,7 @@ select_permissions:
     permission:
       columns:
         - archivedAt
+        - circleId
         - createdAt
         - stepsConfig
         - title
@@ -46,6 +51,7 @@ update_permissions:
     permission:
       columns:
         - archivedAt
+        - circleId
         - stepsConfig
         - title
       filter:

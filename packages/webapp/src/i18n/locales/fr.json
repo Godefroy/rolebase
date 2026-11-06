@@ -673,6 +673,8 @@
     "headingCreate": "Nouveau modèle de réunion",
     "title": "Titre",
     "titlePlaceholder": "Titre...",
+    "circle": "Rôle par défaut",
+    "circleHelper": "Facultatif. Sélectionné automatiquement quand ce modèle est utilisé.",
     "steps": "Déroulé",
     "toastCreated": "Réunion récurrente créée !",
     "toastUpdated": "Réunion récurrente mise à jour !"

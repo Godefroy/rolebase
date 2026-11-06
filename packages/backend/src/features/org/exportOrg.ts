@@ -293,6 +293,7 @@ const GET_ORG_EXPORT_DATA = gql(`
       }
       meeting_templates(order_by: {title: asc}) {
         id
+        circleId
         title
         stepsConfig
       }

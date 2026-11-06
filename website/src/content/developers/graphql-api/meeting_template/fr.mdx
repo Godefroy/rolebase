@@ -10,6 +10,7 @@ category: 'meetings'
 | --- | --- | --- |
 | `id` | `uuid` | Identifiant unique du modèle |
 | `orgId` | `uuid` | Référence à l'organisation |
+| `circleId` | `uuid` | Rôle par défaut facultatif, sélectionné quand le modèle est appliqué ; null si aucun |
 | `title` | `String` | Titre du modèle |
 | `stepsConfig` | `[meeting_step_config]` | Tableau de configurations d'étapes définissant la structure de la réunion |
 | `createdAt` | `Timestamp` | Date de création du modèle |
@@ -20,6 +21,7 @@ category: 'meetings'
 **Relations objet :**
 
 - `org` — L'organisation à laquelle ce modèle appartient
+- `circle` — Le rôle par défaut du modèle, s'il y en a un
 
 ## Configuration des étapes
 
@@ -41,6 +43,7 @@ query meetingTemplates($orgId: uuid!) {
   ) {
     id
     orgId
+    circleId
     title
     stepsConfig
   }
@@ -56,6 +59,7 @@ mutation createMeetingTemplate {
   insert_meeting_template_one(
     object: {
       orgId: "org-id"
+      circleId: "circle-id"
       title: "Weekly Team Sync"
       stepsConfig: [
         { id: "step-1", type: Tour, title: "Notes" }

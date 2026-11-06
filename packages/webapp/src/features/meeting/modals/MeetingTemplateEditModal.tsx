@@ -1,7 +1,9 @@
 import { useOrgContext } from '@/org/contexts/OrgContext'
+import CircleSearchInput from '@/search/components/CircleSearchInput'
 import {
   Button,
   FormControl,
+  FormHelperText,
   FormLabel,
   Input,
   Modal,
@@ -24,7 +26,7 @@ import {
 import { yupResolver } from '@hookform/resolvers/yup'
 import { nameSchema, stepsConfigSchema } from '@rolebase/shared/schemas'
 import React from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import * as yup from 'yup'
 import MeetingStepsConfigController, {
@@ -39,6 +41,7 @@ interface Props extends UseModalProps {
 
 interface Values extends StepsValues {
   title: string
+  circleId: string | null
 }
 
 const resolver = yupResolver(
@@ -69,10 +72,12 @@ export default function MeetingTemplateEditModal({
     defaultValues: meetingTemplate
       ? {
           title: meetingTemplate.title,
+          circleId: meetingTemplate.circleId ?? null,
           stepsConfig: meetingTemplate.stepsConfig,
         }
       : {
           title: '',
+          circleId: null,
           stepsConfig: [],
         },
   })
@@ -143,6 +148,24 @@ export default function MeetingTemplateEditModal({
                   placeholder={t('MeetingTemplateEditModal.titlePlaceholder')}
                   autoFocus
                 />
+              </FormControl>
+
+              <FormControl>
+                <FormLabel>{t('MeetingTemplateEditModal.circle')}</FormLabel>
+                <Controller
+                  name="circleId"
+                  control={control}
+                  render={({ field }) => (
+                    <CircleSearchInput
+                      value={field.value ?? undefined}
+                      onChange={field.onChange}
+                      onClear={() => field.onChange(null)}
+                    />
+                  )}
+                />
+                <FormHelperText>
+                  {t('MeetingTemplateEditModal.circleHelper')}
+                </FormHelperText>
               </FormControl>
 
               <FormControl>

@@ -639,6 +639,8 @@
     "headingCreate": "New meeting template",
     "title": "Title",
     "titlePlaceholder": "Title...",
+    "circle": "Default role",
+    "circleHelper": "Optional. Selected automatically when this template is used.",
     "steps": "Steps",
     "toastCreated": "Meeting template created!",
     "toastUpdated": "Meeting template updated!"

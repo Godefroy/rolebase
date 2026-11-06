@@ -39,7 +39,7 @@ export default function MeetingTemplateMenuList({
 
   return (
     <>
-      <MenuList>
+      <MenuList shadow="lg" zIndex={2000} maxH="390px" overflow="auto">
         {meetingTemplates?.map((template) => (
           <MenuItem
             key={template.id}

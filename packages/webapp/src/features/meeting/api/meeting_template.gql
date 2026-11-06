@@ -1,6 +1,7 @@
 fragment MeetingTemplate on meeting_template {
   id
   orgId
+  circleId
   title
   stepsConfig
 }

@@ -9,7 +9,10 @@ import {
   Menu,
   useMenuButton,
 } from '@chakra-ui/react'
-import { useMeetingTemplatesSubscription } from '@gql'
+import {
+  MeetingTemplateFragment,
+  useMeetingTemplatesSubscription,
+} from '@gql'
 import React from 'react'
 import { Controller, useFormContext } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
@@ -18,9 +21,10 @@ import MeetingTemplateMenuList from './MeetingTemplateMenuList'
 
 export default function MeetingTemplateIdFormControl() {
   const { t } = useTranslation()
-  const { orgId } = useOrgContext()
+  const { orgId, orgData } = useOrgContext()
   const {
     control,
+    setValue,
     formState: { errors },
   } = useFormContext()
 
@@ -34,6 +38,17 @@ export default function MeetingTemplateIdFormControl() {
     variables: { orgId: orgId! },
   })
   const meetingTemplates = data?.meeting_template
+
+  // Select the template's default role, if any
+  const handleSelect = (
+    template: MeetingTemplateFragment,
+    onChange: (value: string) => void
+  ) => {
+    onChange(template.id)
+    if (template.circleId && orgData?.getCircle(template.circleId)) {
+      setValue('circleId', template.circleId)
+    }
+  }
 
   return (
     <FormControl isInvalid={!!errors.templateId}>
@@ -54,7 +69,7 @@ export default function MeetingTemplateIdFormControl() {
             </MenuButton>
             <MeetingTemplateMenuList
               meetingTemplates={meetingTemplates}
-              onSelect={(template) => field.onChange(template.id)}
+              onSelect={(template) => handleSelect(template, field.onChange)}
             />
           </Menu>
         )}

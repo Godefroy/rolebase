@@ -8640,6 +8640,9 @@ export type Meeting_Stream_Cursor_Value_Input = {
 export type Meeting_Template = {
   __typename?: 'meeting_template';
   archivedAt?: Maybe<Scalars['timestamptz']['output']>;
+  /** An object relationship */
+  circle?: Maybe<Circle>;
+  circleId?: Maybe<Scalars['uuid']['output']>;
   createdAt: Scalars['timestamptz']['output'];
   id: Scalars['uuid']['output'];
   /** An object relationship */
@@ -8708,6 +8711,8 @@ export type Meeting_Template_Bool_Exp = {
   _not?: InputMaybe<Meeting_Template_Bool_Exp>;
   _or?: InputMaybe<Array<Meeting_Template_Bool_Exp>>;
   archivedAt?: InputMaybe<Timestamptz_Comparison_Exp>;
+  circle?: InputMaybe<Circle_Bool_Exp>;
+  circleId?: InputMaybe<Uuid_Comparison_Exp>;
   createdAt?: InputMaybe<Timestamptz_Comparison_Exp>;
   id?: InputMaybe<Uuid_Comparison_Exp>;
   org?: InputMaybe<Org_Bool_Exp>;
@@ -8725,6 +8730,8 @@ export enum Meeting_Template_Constraint {
 /** input type for inserting data into table "meeting_template" */
 export type Meeting_Template_Insert_Input = {
   archivedAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  circle?: InputMaybe<Circle_Obj_Rel_Insert_Input>;
+  circleId?: InputMaybe<Scalars['uuid']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   org?: InputMaybe<Org_Obj_Rel_Insert_Input>;
@@ -8737,6 +8744,7 @@ export type Meeting_Template_Insert_Input = {
 export type Meeting_Template_Max_Fields = {
   __typename?: 'meeting_template_max_fields';
   archivedAt?: Maybe<Scalars['timestamptz']['output']>;
+  circleId?: Maybe<Scalars['uuid']['output']>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   orgId?: Maybe<Scalars['uuid']['output']>;
@@ -8746,6 +8754,7 @@ export type Meeting_Template_Max_Fields = {
 /** order by max() on columns of table "meeting_template" */
 export type Meeting_Template_Max_Order_By = {
   archivedAt?: InputMaybe<Order_By>;
+  circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   orgId?: InputMaybe<Order_By>;
@@ -8756,6 +8765,7 @@ export type Meeting_Template_Max_Order_By = {
 export type Meeting_Template_Min_Fields = {
   __typename?: 'meeting_template_min_fields';
   archivedAt?: Maybe<Scalars['timestamptz']['output']>;
+  circleId?: Maybe<Scalars['uuid']['output']>;
   createdAt?: Maybe<Scalars['timestamptz']['output']>;
   id?: Maybe<Scalars['uuid']['output']>;
   orgId?: Maybe<Scalars['uuid']['output']>;
@@ -8765,6 +8775,7 @@ export type Meeting_Template_Min_Fields = {
 /** order by min() on columns of table "meeting_template" */
 export type Meeting_Template_Min_Order_By = {
   archivedAt?: InputMaybe<Order_By>;
+  circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   orgId?: InputMaybe<Order_By>;
@@ -8797,6 +8808,8 @@ export type Meeting_Template_On_Conflict = {
 /** Ordering options when selecting data from "meeting_template". */
 export type Meeting_Template_Order_By = {
   archivedAt?: InputMaybe<Order_By>;
+  circle?: InputMaybe<Circle_Order_By>;
+  circleId?: InputMaybe<Order_By>;
   createdAt?: InputMaybe<Order_By>;
   id?: InputMaybe<Order_By>;
   org?: InputMaybe<Org_Order_By>;
@@ -8815,6 +8828,8 @@ export enum Meeting_Template_Select_Column {
   /** column name */
   ArchivedAt = 'archivedAt',
   /** column name */
+  CircleId = 'circleId',
+  /** column name */
   CreatedAt = 'createdAt',
   /** column name */
   Id = 'id',
@@ -8829,6 +8844,7 @@ export enum Meeting_Template_Select_Column {
 /** input type for updating data in table "meeting_template" */
 export type Meeting_Template_Set_Input = {
   archivedAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  circleId?: InputMaybe<Scalars['uuid']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   orgId?: InputMaybe<Scalars['uuid']['input']>;
@@ -8847,6 +8863,7 @@ export type Meeting_Template_Stream_Cursor_Input = {
 /** Initial value of the column from where the streaming should start */
 export type Meeting_Template_Stream_Cursor_Value_Input = {
   archivedAt?: InputMaybe<Scalars['timestamptz']['input']>;
+  circleId?: InputMaybe<Scalars['uuid']['input']>;
   createdAt?: InputMaybe<Scalars['timestamptz']['input']>;
   id?: InputMaybe<Scalars['uuid']['input']>;
   orgId?: InputMaybe<Scalars['uuid']['input']>;
@@ -8858,6 +8875,8 @@ export type Meeting_Template_Stream_Cursor_Value_Input = {
 export enum Meeting_Template_Update_Column {
   /** column name */
   ArchivedAt = 'archivedAt',
+  /** column name */
+  CircleId = 'circleId',
   /** column name */
   CreatedAt = 'createdAt',
   /** column name */
@@ -24037,21 +24056,21 @@ export type DeleteMeetingStepMutationVariables = Exact<{
 
 export type DeleteMeetingStepMutation = { __typename?: 'mutation_root', delete_meeting_step_by_pk?: { __typename?: 'meeting_step', id: string } | null };
 
-export type MeetingTemplateFragment = { __typename?: 'meeting_template', id: string, orgId: string, title: string, stepsConfig: Array<MeetingStepConfig> };
+export type MeetingTemplateFragment = { __typename?: 'meeting_template', id: string, orgId: string, circleId?: string | null, title: string, stepsConfig: Array<MeetingStepConfig> };
 
 export type MeetingTemplatesSubscriptionVariables = Exact<{
   orgId: Scalars['uuid']['input'];
 }>;
 
 
-export type MeetingTemplatesSubscription = { __typename?: 'subscription_root', meeting_template: Array<{ __typename?: 'meeting_template', id: string, orgId: string, title: string, stepsConfig: Array<MeetingStepConfig> }> };
+export type MeetingTemplatesSubscription = { __typename?: 'subscription_root', meeting_template: Array<{ __typename?: 'meeting_template', id: string, orgId: string, circleId?: string | null, title: string, stepsConfig: Array<MeetingStepConfig> }> };
 
 export type CreateMeetingTemplateMutationVariables = Exact<{
   values: Meeting_Template_Insert_Input;
 }>;
 
 
-export type CreateMeetingTemplateMutation = { __typename?: 'mutation_root', insert_meeting_template_one?: { __typename?: 'meeting_template', id: string, orgId: string, title: string, stepsConfig: Array<MeetingStepConfig> } | null };
+export type CreateMeetingTemplateMutation = { __typename?: 'mutation_root', insert_meeting_template_one?: { __typename?: 'meeting_template', id: string, orgId: string, circleId?: string | null, title: string, stepsConfig: Array<MeetingStepConfig> } | null };
 
 export type UpdateMeetingTemplateMutationVariables = Exact<{
   id: Scalars['uuid']['input'];
@@ -24059,7 +24078,7 @@ export type UpdateMeetingTemplateMutationVariables = Exact<{
 }>;
 
 
-export type UpdateMeetingTemplateMutation = { __typename?: 'mutation_root', update_meeting_template_by_pk?: { __typename?: 'meeting_template', id: string, orgId: string, title: string, stepsConfig: Array<MeetingStepConfig> } | null };
+export type UpdateMeetingTemplateMutation = { __typename?: 'mutation_root', update_meeting_template_by_pk?: { __typename?: 'meeting_template', id: string, orgId: string, circleId?: string | null, title: string, stepsConfig: Array<MeetingStepConfig> } | null };
 
 export type ArchiveMeetingTemplateMutationVariables = Exact<{
   id: Scalars['uuid']['input'];
@@ -24994,6 +25013,7 @@ export const MeetingTemplateFragmentDoc = gql`
     fragment MeetingTemplate on meeting_template {
   id
   orgId
+  circleId
   title
   stepsConfig
 }
