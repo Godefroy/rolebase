@@ -1774,7 +1774,7 @@
       "add": "Ajouter une personne"
     },
     "invite": {
-      "heading": "Invitez votre équipe (facultatif)",
+      "heading": "Invitez votre équipe",
       "help": "Chaque personne invitée reçoit un email pour rejoindre l'organisation, retrouver ses rôles et préparer les réunions avec vous. Vous pouvez aussi le faire plus tard.",
       "emailLabel": "Email de {{name}}",
       "newEmailLabel": "Email de la personne à inviter",

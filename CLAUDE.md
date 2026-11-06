@@ -9,6 +9,7 @@
 - Test accounts, even local, only use `@skreo.net` addresses, never a real domain we don't own.
 - Never use Claude's user/project memory. When asked to remember something, add a minimal instruction here in `CLAUDE.md` (or in the relevant skill under `.claude/skills/`).
 - Instruction files (`CLAUDE.md`, skills) hold instructions, not history. No account of what went wrong, no commit SHAs, no "the mistake made". Write the rule, keep it short and actionable.
+- Ask questions and propose choices with `AskUserQuestion`, not in plain text.
 - A one-off correction is not a permanent rule. Ask before turning a single request into doctrine.
 - When writing a rule (here, in a skill, in any doc): keep it minimal, actionable and non-redundant. Shortest phrasing that changes behaviour, no restating what another rule already says, no rationale unless the rule is unusable without it.
 - Deletion: when you add or change a table or column linked to an org, a member, a user or a file, update the deletion (`packages/backend/src/features/deletion/utils/orgDeletion.ts` and `userDeletion.ts`): deletion order for RESTRICT foreign keys, account cleanup, files to remove, preview counts and their translations.

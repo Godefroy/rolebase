@@ -54,6 +54,8 @@ export default function OrgChartTour({ circleId }: Props) {
     goToMore,
     next,
     complete,
+    replaying,
+    endReplay,
     skip,
   } = useOrgChartTour(circleId)
 
@@ -79,8 +81,28 @@ export default function OrgChartTour({ circleId }: Props) {
   // and spotlight come back: the org chart keeps its state, and the next
   // action, or the current segment, returns to the actual step.
   const [reviewIndex, setReviewIndex] = useState<number>()
-  useEffect(() => setReviewIndex(undefined), [step])
   const stepIndex = step ? orgChartTourSteps.indexOf(step) : 0
+  useEffect(() => {
+    if (!replaying) setReviewIndex(undefined)
+  }, [step])
+
+  // A replay goes through the steps already reached, from the first one, the
+  // same way, then ends on the real step
+  useEffect(() => {
+    if (!replaying || !step) return
+    if (stepIndex === 0) endReplay()
+    else setReviewIndex(0)
+  }, [replaying, !step])
+
+  const handleReplayNext = () => {
+    const nextIndex = (reviewIndex ?? 0) + 1
+    if (nextIndex >= stepIndex) {
+      setReviewIndex(undefined)
+      endReplay()
+    } else {
+      setReviewIndex(nextIndex)
+    }
+  }
   const shownStep: OrgChartTourStep =
     reviewIndex !== undefined && reviewIndex < stepIndex
       ? orgChartTourSteps[reviewIndex]
@@ -252,6 +274,11 @@ export default function OrgChartTour({ circleId }: Props) {
           )
         )}
         <Spacer />
+        {replaying && !moreStep && shownStep !== step && (
+          <Button size="sm" colorScheme="blue" onClick={handleReplayNext}>
+            {t('common.next')}
+          </Button>
+        )}
         {/* The end leads on to leaders and participants, when the model has
             them: skipping stays one click away */}
         {isEnd && (

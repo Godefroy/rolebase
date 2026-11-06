@@ -23,6 +23,7 @@ export default function OnboardingTodoInviteItem({ done }: Props) {
   return (
     <>
       <OnboardingTodoItem
+        item="invite"
         done={done}
         label={
           !done && withoutAccess > 0

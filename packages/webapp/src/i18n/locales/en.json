@@ -1773,7 +1773,7 @@
       "add": "Add someone"
     },
     "invite": {
-      "heading": "Invite your team (optional)",
+      "heading": "Invite your team",
       "help": "Each invited person receives an email to join the organization, find their roles and prepare meetings with you. You can also do it later.",
       "emailLabel": "Email of {{name}}",
       "newEmailLabel": "Email of the person to invite",

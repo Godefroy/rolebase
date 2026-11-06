@@ -95,6 +95,9 @@ export default function useOrgChartTour(selectedCircleId?: string) {
     return setStatus('completed')
   }
 
+  // End of the replay: back to the step matching the org's real state
+  const endReplay = () => setStatus('started')
+
   const skip = () => {
     track('org_tour_skipped', { step: state?.step })
     return setStatus('skipped')
@@ -118,7 +121,12 @@ export default function useOrgChartTour(selectedCircleId?: string) {
   }
 
   return {
-    active: (status === 'started' || status === 'more') && !!state,
+    active:
+      (status === 'started' || status === 'replay' || status === 'more') &&
+      !!state,
+    // Replayed from the first step, each step shown as an explanation until
+    // the real one
+    replaying: status === 'replay',
     // The optional chapter needs the model's leader and representative roles
     canGoFurther: !!state?.leaderRole && !!state?.representativeRole,
     moreStep: status === 'more' ? orgChartTourMoreSteps[moreIndex] : undefined,
@@ -129,6 +137,7 @@ export default function useOrgChartTour(selectedCircleId?: string) {
     goToMore,
     next,
     complete,
+    endReplay,
     skip,
   }
 }

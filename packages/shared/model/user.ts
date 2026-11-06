@@ -13,7 +13,8 @@ export interface UserMetadata {
   // First display of the onboarding wizard, so its start is tracked once
   onboardingStartedAt?: string
   // Guided tour of the org chart, by org id: started at the end of the org
-  // setup, optionally continued with leaders and participants ("more"), then
+  // setup, or replayed from the start from the onboarding todo ("replay"),
+  // optionally continued with leaders and participants ("more"), then
   // completed or skipped
   orgChartTours?: Record<string, OrgChartTourStatus>
   // Onboarding reminder emails already sent (ISO dates)
@@ -24,4 +25,5 @@ export interface UserMetadata {
   }
 }
 
-export type OrgChartTourStatus = 'started' | 'more' | 'completed' | 'skipped'
+export type OrgChartTourStatus =
+  'started' | 'replay' | 'more' | 'completed' | 'skipped'

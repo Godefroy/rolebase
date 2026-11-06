@@ -1,9 +1,12 @@
 import { Flex, Text } from '@chakra-ui/react'
 import React from 'react'
 import { Link as RouterLink } from 'react-router'
+import { track } from 'src/analytics'
 import { CheckIcon } from 'src/icons'
+import { OnboardingTodoItemKey } from '../hooks/useOnboardingTodo'
 
 interface Props {
+  item: OnboardingTodoItemKey
   done: boolean
   label: string
   // Where the action happens: a page, or a handler opening a modal
@@ -14,15 +17,22 @@ interface Props {
 // One line of the onboarding todo. Done lines stay visible, checked, so the
 // progress shows what was already achieved.
 export default function OnboardingTodoItem({
+  item,
   done,
   label,
   to,
   onClick,
 }: Props) {
+  const handleClick = () => {
+    track('onboarding_todo_item_clicked', { item, done })
+    onClick?.()
+  }
+
   return (
     <Flex
       as={to ? RouterLink : 'button'}
-      {...(to ? { to } : { type: 'button', onClick })}
+      {...(to ? { to } : { type: 'button' })}
+      onClick={handleClick}
       align="center"
       gap={2.5}
       w="100%"

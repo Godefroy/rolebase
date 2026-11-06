@@ -14,6 +14,7 @@ import { trpc } from 'src/trpc'
 import useCreateMember from '@/member/hooks/useCreateMember'
 import useCurrentMember from '@/member/hooks/useCurrentMember'
 import { getNameFromEmail } from '@utils/getNameFromEmail'
+import { UserLocalStorageKeys } from '@utils/localStorage'
 import { getValidInvites, isNewInvite } from '../getValidInvites'
 import useOrgChartTourStatus from '../hooks/useOrgChartTourStatus'
 import useSeedOrg from '../hooks/useSeedOrg'
@@ -59,11 +60,33 @@ export default function OrgSetupModal({ onClose }: Props) {
   const { availableSeats } = useSubscriptionData()
   const { setStatus: setTourStatus } = useOrgChartTourStatus()
 
-  useEffect(() => {
-    track('org_setup_started')
-  }, [])
-
   const [step, setStep] = useState<SetupStep>(SetupStep.Model)
+
+  // The setup restarts at the first step after a reload: the step reached is
+  // remembered in this browser, so a reload sends org_setup_resumed with it
+  // instead of a second org_setup_started
+  const stepKey = UserLocalStorageKeys.OrgSetupStep.replace('{id}', orgId ?? '')
+  useEffect(() => {
+    let previousStep: string | null = null
+    try {
+      previousStep = localStorage.getItem(stepKey)
+    } catch {
+      // Storage unavailable: counted as a start
+    }
+    if (previousStep) {
+      track('org_setup_resumed', { step: previousStep })
+    } else {
+      track('org_setup_started')
+    }
+  }, [])
+  useEffect(() => {
+    try {
+      localStorage.setItem(stepKey, step)
+    } catch {
+      // Storage unavailable: a reload counts as a new start
+    }
+  }, [step])
+
   const [orgType, setOrgType] = useState<OrgType>(OrgType.Classic)
   // Two empty fields: one person is required, a second suggests a team
   const [drafts, setDrafts] = useState<MemberDraft[]>(() => [

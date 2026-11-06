@@ -5,6 +5,7 @@ export enum UserLocalStorageKeys {
   DefaultOrgId = 'default-org-id',
   OnboardingTodoCollapsed = 'onboarding-todo-collapsed-{id}',
   OrgLifecycleTracked = 'org-lifecycle-{id}',
+  OrgSetupStep = 'org-setup-step-{id}',
 }
 
 export function resetUserLocalStorage() {

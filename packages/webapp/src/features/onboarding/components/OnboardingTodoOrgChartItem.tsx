@@ -9,22 +9,24 @@ interface Props {
   done: boolean
 }
 
-// Todo line (re)starting the org chart tour on the org chart
+// Todo line starting the org chart tour on the org chart. Once checked, it
+// replays the tour from its first step
 export default function OnboardingTodoOrgChartItem({ done }: Props) {
   const { t } = useTranslation()
   const navigateOrg = useNavigateOrg()
   const { status, setStatus } = useOrgChartTourStatus()
 
   const handleClick = () => {
-    if (!done && status !== 'started') {
-      track('org_tour_started', { source: 'todo' })
-      setStatus('started')
+    if (status !== 'started' && status !== 'replay' && status !== 'more') {
+      track('org_tour_started', { source: 'todo', replay: done })
+      setStatus(done ? 'replay' : 'started')
     }
     navigateOrg('roles')
   }
 
   return (
     <OnboardingTodoItem
+      item="orgChart"
       done={done}
       label={t('OnboardingTodo.items.orgChart')}
       onClick={handleClick}

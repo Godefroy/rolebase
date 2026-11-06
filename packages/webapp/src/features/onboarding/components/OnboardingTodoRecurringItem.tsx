@@ -20,6 +20,7 @@ export default function OnboardingTodoRecurringItem({ done }: Props) {
   return (
     <>
       <OnboardingTodoItem
+        item="recurringMeeting"
         done={done}
         label={t('OnboardingTodo.items.recurringMeeting')}
         onClick={recurringModal.onOpen}

@@ -52,6 +52,7 @@ export default function OnboardingTodo() {
 
   const handleToggle = () => {
     const next = !collapsed
+    track('onboarding_todo_toggled', { expanded: !next })
     setCollapsed(next)
     try {
       localStorage.setItem(collapsedKey, next ? '1' : '0')
@@ -127,16 +128,19 @@ export default function OnboardingTodo() {
           <OnboardingTodoInviteItem done={items.invite} />
           <OnboardingTodoRecurringItem done={items.recurringMeeting} />
           <OnboardingTodoItem
+            item="meeting"
             done={items.meeting}
             label={t('OnboardingTodo.items.meeting')}
             to={`${rootPath}meetings`}
           />
           <OnboardingTodoItem
+            item="thread"
             done={items.thread}
             label={t('OnboardingTodo.items.thread')}
             to={`${rootPath}threads`}
           />
           <OnboardingTodoItem
+            item="photos"
             done={items.photos}
             label={t('OnboardingTodo.items.photos')}
             to={`${rootPath}settings/members`}

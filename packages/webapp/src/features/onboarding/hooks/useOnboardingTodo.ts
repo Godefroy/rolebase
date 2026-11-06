@@ -39,6 +39,7 @@ export default function useOnboardingTodo() {
     orgChart:
       tourStatus === 'completed' ||
       (tourStatus !== 'started' &&
+        tourStatus !== 'replay' &&
         !!orgData?.circles.some((c) => orgData.membersOf(c.id).length > 0)),
     invite:
       members.some((m) => !!m.inviteEmail) ||
