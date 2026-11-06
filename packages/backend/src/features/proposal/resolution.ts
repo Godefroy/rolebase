@@ -269,6 +269,8 @@ export async function applyResolution(loaded: LoadedProposal): Promise<void> {
       userId: loaded.authorUserId,
       memberId: author?.id,
       type: Thread_Activity_Type_Enum.ProposalEvent,
+      // Links the thread to the decision (listed on the decision page)
+      refDecisionId: decisionId,
       data: {
         proposalActivityId: loaded.activityId,
         event: 'resolution',

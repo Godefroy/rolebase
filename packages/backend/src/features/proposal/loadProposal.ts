@@ -103,6 +103,7 @@ export async function loadProposal(
     voterUserIds: [...voterUserIds],
     leaderUserIds: [...leaderUserIds],
     author: author ? { id: author.id, name: author.name } : null,
-    votes,
+    // Ignore votes from users who are no longer voters
+    votes: votes.filter((v) => voterUserIds.has(v.userId)),
   }
 }

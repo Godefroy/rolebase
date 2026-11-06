@@ -30,6 +30,24 @@ insert_permissions:
           - member:
               userId:
                 _eq: X-Hasura-User-Id
+          - _or:
+              - activity:
+                  thread:
+                    circle:
+                      participants:
+                        member:
+                          userId:
+                            _eq: X-Hasura-User-Id
+              - activity:
+                  _and:
+                    - data:
+                        _contains:
+                          votersScope: thread
+                    - thread:
+                        extra_members:
+                          member:
+                            userId:
+                              _eq: X-Hasura-User-Id
       set:
         userId: x-hasura-User-Id
       columns:
