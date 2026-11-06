@@ -1,7 +1,7 @@
 {
   "name": "@rolebase/backend",
   "version": "1.0.0",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "scripts": {
     "start": "node --enable-source-maps dist/server.js",
     "bundle": "node scripts/bundle.mjs",

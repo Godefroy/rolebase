@@ -1,7 +1,7 @@
 {
   "name": "@rolebase/emails",
   "version": "1.0.0",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "scripts": {
     "dev": "email dev --dir ./components/templates --port 8090",
     "build": "tsx ./build.ts",

@@ -10,7 +10,7 @@ similarPosts:
   - 'dynamic-org-chart'
   - 'horizontal-tools'
 takeaways:
-  - "Licences vérifiées en juillet 2026 : draw.io en Apache 2.0, LibreOffice Draw en MPL 2.0, PlantUML en GPL, d3-org-chart en MIT, Dia en GPL v2 ou ultérieure, Rolebase en MIT."
+  - "Licences vérifiées en juillet 2026 : draw.io en Apache 2.0, LibreOffice Draw en MPL 2.0, PlantUML en GPL, d3-org-chart en MIT, Dia en GPL v2 ou ultérieure, Rolebase en AGPL-3.0."
   - "Dia revient dans presque toutes les listes alors que sa dernière archive publiée, dia-0.97.3, date du 5 septembre 2014 sur download.gnome.org."
   - "OrgChart JS de BALKAN est souvent classé open source. Son EULA dit « The Software is licensed, not sold » et ses licences perpétuelles vont de 399 $ à 4 999 $."
   - "Un éditeur de diagrammes produit une image que quelqu'un redessine à chaque changement. Une application de gouvernance produit des données que les équipes tiennent elles-mêmes."
@@ -29,7 +29,7 @@ J'ai repris cette liste et vérifié trois choses pour chaque outil, en juillet 
 | PlantUML | GPL, avec des variantes LGPL, MIT, Apache et EPL | Diagrammes générés depuis un texte | Versionner l'organigramme dans un dépôt Git et le relire en pull request | Réservé aux équipes techniques, la mise en page se pilote difficilement |
 | d3-org-chart | MIT | Bibliothèque JavaScript basée sur D3 | Afficher un organigramme dans votre propre application ou intranet | Il faut un développeur, et la dernière version npm date de septembre 2023 |
 | Dia | GPL v2 ou ultérieure | Éditeur de diagrammes de bureau | Rouvrir d'anciens fichiers `.dia` | Dernière version stable en septembre 2014 |
-| Rolebase | MIT | Application de gouvernance : rôles, réunions, décisions | Un organigramme que chaque équipe tient à jour elle-même | Aucun dessin libre, la structure suit un modèle de rôles |
+| Rolebase | AGPL-3.0 | Application de gouvernance : rôles, réunions, décisions | Un organigramme que chaque équipe tient à jour elle-même | Aucun dessin libre, la structure suit un modèle de rôles |
 
 ## L'open source apporte plus que la gratuité
 
@@ -105,7 +105,7 @@ Ce modèle est parfaitement légitime. Le problème vient des listes qui classen
 
 <OrgChartView demo="demo" height="440px" showAllNodes={false} />
 
-Rolebase est publié sous licence MIT et prend le problème par l'autre bout. Au lieu de dessiner des cases, vous décrivez des rôles avec une raison d'être, un domaine de décision, des redevabilités et des indicateurs. Les rôles s'imbriquent pour former les équipes, une personne en porte plusieurs, et l'organigramme se dessine à partir de ces données. Le modèle est détaillé dans la [documentation de l'organigramme](/fr/docs/org-chart).
+Rolebase est publié sous licence AGPL-3.0 et prend le problème par l'autre bout. Au lieu de dessiner des cases, vous décrivez des rôles avec une raison d'être, un domaine de décision, des redevabilités et des indicateurs. Les rôles s'imbriquent pour former les équipes, une personne en porte plusieurs, et l'organigramme se dessine à partir de ces données. Le modèle est détaillé dans la [documentation de l'organigramme](/fr/docs/org-chart).
 
 Le reste de la plateforme sert à faire vivre cette structure. Les réunions ont un ordre du jour partagé, des modèles réutilisables et des comptes rendus. Les décisions de gouvernance restent tracées avec leur date et leur auteur. Les tâches et les discussions se rattachent au rôle concerné plutôt qu'à une messagerie. L'édition est simultanée, la recherche couvre membres, rôles, décisions et réunions, et les modifications de structure se réservent aux responsables désignés.
 
@@ -167,7 +167,7 @@ Rolebase reste gratuit jusqu'à 5 membres actifs, ce qui laisse le temps de vér
 
 Pour produire vite un organigramme propre, draw.io sous licence Apache 2.0 est le choix le plus sûr en 2026. Il s'ouvre dans le navigateur sans compte, importe les fichiers Visio et Lucidchart, exporte en PNG, SVG et PDF, et le projet publie plusieurs versions par semaine.
 
-Pour un organigramme que les équipes maintiennent elles-mêmes, la question change de nature et un éditeur de diagrammes atteint sa limite. Rolebase, sous licence MIT, décrit des rôles et génère l'organigramme à partir de ces données.
+Pour un organigramme que les équipes maintiennent elles-mêmes, la question change de nature et un éditeur de diagrammes atteint sa limite. Rolebase, sous licence AGPL-3.0, décrit des rôles et génère l'organigramme à partir de ces données.
 
 </FaqItem>
 
@@ -189,7 +189,7 @@ Oui, avec des niveaux d'effort très différents. LibreOffice Draw et l'applicat
 
 Les deux notions se recoupent souvent sans se confondre. La licence dit ce que vous avez le droit de faire du code, le prix dit ce que vous payez pour un service.
 
-Un outil peut être libre et coûter de l'argent en hébergement ou en support, comme Rolebase dont le code est en MIT et le service payant au-delà de 5 membres actifs. Un outil peut aussi se présenter comme gratuit tout en restant propriétaire, comme OrgChart JS et ses licences perpétuelles à partir de 399 $. Ouvrez le fichier de licence avant de choisir.
+Un outil peut être libre et coûter de l'argent en hébergement ou en support, comme Rolebase dont le code est sous AGPL-3.0 et le service payant au-delà de 5 membres actifs. Un outil peut aussi se présenter comme gratuit tout en restant propriétaire, comme OrgChart JS et ses licences perpétuelles à partir de 399 $. Ouvrez le fichier de licence avant de choisir.
 
 </FaqItem>
 

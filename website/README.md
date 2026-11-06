@@ -28,4 +28,4 @@ Configuration lives in [`astrocms.json`](./astrocms.json). See the [astrocms REA
 
 ## License
 
-This directory is proprietary. Unlike the rest of the repository (MIT), the source here is publicly visible but not licensed for reuse. See [`LICENSE`](./LICENSE) for the full terms.
+This directory is proprietary. Unlike the rest of the repository (AGPL-3.0), the source here is publicly visible but not licensed for reuse. See [`LICENSE`](./LICENSE) for the full terms.

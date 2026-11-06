@@ -1,7 +1,7 @@
 {
   "name": "@rolebase/webapp",
   "version": "1.0.0",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "scripts": {
     "dev": "npm run codegen & vite --force",
     "build": "vite build",

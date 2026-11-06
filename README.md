@@ -23,7 +23,7 @@
 </p>
 
 <p align="center">
-  <a href="./LICENSE"><img src="https://img.shields.io/badge/license-MIT-a855f7" alt="MIT license" /></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0-a855f7" alt="AGPL-3.0 license" /></a>
   <a href="https://github.com/Godefroy/rolebase/stargazers"><img src="https://img.shields.io/github/stars/Godefroy/rolebase?style=flat&color=facc15" alt="GitHub stars" /></a>
   <a href="https://github.com/Godefroy/rolebase/commits/main"><img src="https://img.shields.io/github/last-commit/Godefroy/rolebase?color=fb923c" alt="Last commit" /></a>
   <a href="./CONTRIBUTING.md"><img src="https://img.shields.io/badge/PRs-welcome-34d399" alt="Pull requests welcome" /></a>
@@ -49,7 +49,7 @@ Teams lose time when nobody knows who decides, when meetings end without a decis
 
 - **All-in-one.** Roles, meetings, discussions, tasks and decisions attach to the role they belong to.
 - **Flexible.** From Free to Strict mode, you choose how much structure to enforce. Rolebase suits Holacracy, Sociocracy, [liberated companies](https://en.wikipedia.org/wiki/Liberated_company) and more classic organizations alike.
-- **Open source and sovereign.** MIT-licensed code, self-hostable, with hosted data stored in Europe.
+- **Open source and sovereign.** AGPL-licensed code, self-hostable, with hosted data stored in Europe.
 
 ## Features
 
@@ -150,5 +150,9 @@ Pull requests are welcome. Read [`CONTRIBUTING.md`](./CONTRIBUTING.md) to get se
 
 This repository uses two licenses:
 
-- The Rolebase application (everything outside `website/`) is licensed under the [MIT License](./LICENSE).
+- The Rolebase application (everything outside `website/`) is licensed under the [GNU Affero General Public License v3.0](./LICENSE). You can use, modify and self-host it freely. If you run a modified version as a service for other people, you must publish your changes under the same license.
 - The `website/` directory is proprietary and governed by [`website/LICENSE`](./website/LICENSE). Its source is publicly visible but not licensed for reuse.
+
+Versions published before the switch to AGPL were released under the MIT License and remain available under it.
+
+The Rolebase name and logo are trademarks. A fork you distribute or host for others needs its own name and logo. Read the [trademark policy](https://rolebase.io/en/trademark).

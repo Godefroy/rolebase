@@ -1,7 +1,7 @@
 {
   "name": "@rolebase/editor",
   "version": "1.0.0",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "main": "src/index.ts",
   "scripts": {
     "build": "echo 'No build step needed'",

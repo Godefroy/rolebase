@@ -1,7 +1,7 @@
 {
   "name": "@rolebase/shared",
   "version": "1.0.0",
-  "license": "MIT",
+  "license": "AGPL-3.0-only",
   "scripts": {
     "dev": "npm run codegen",
     "codegen": "graphql-codegen --config codegen.ts",

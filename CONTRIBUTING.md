@@ -21,6 +21,10 @@ Before sending your pull request, please:
 - Rebase: `git fetch origin main:main && git rebase main`
 - Explain what you're doing and why
 
+## License of your contributions
+
+Rolebase is licensed under the [AGPL-3.0](./LICENSE). By submitting a pull request, you confirm that you wrote the code or have the right to submit it, and you agree that it is published under the AGPL-3.0. You also grant GDFR, the company that runs Rolebase, a perpetual, worldwide, royalty-free license to use, modify and relicense your contribution, so the project can change its license in the future without tracking down every contributor. You keep the copyright on your code.
+
 ## Project structure
 
 | Path                 | Content                                                 |
