@@ -20,7 +20,7 @@
     "@graphql-codegen/cli": "^7.4.6",
     "@graphql-codegen/gql-tag-operations-preset": "^2.1.0",
     "@graphql-codegen/introspection": "^4.0.0",
-    "@graphql-codegen/typescript": "^4.0.1",
+    "@graphql-codegen/typescript": "^6.1.2",
     "@graphql-codegen/typescript-operations": "^4.0.1",
     "@graphql-codegen/typescript-react-apollo": "^3.3.7",
     "@typescript-eslint/eslint-plugin": "^6.7.0",
