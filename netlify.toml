@@ -1,3 +1,6 @@
 [build]
   command = "npm ci && npx turbo build && cd website && npm install && npm run build && cd .. && mkdir -p dist && cp -r packages/webapp/dist/* dist/ && cp -r website/dist/* dist/ && printf '\\n/en/*  /404.html  404\\n/fr/*  /404.html  404\\n' >> dist/_redirects && cat packages/webapp/dist/_redirects >> dist/_redirects && echo >> dist/_headers && cat packages/webapp/dist/_headers >> dist/_headers"
   publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "24"

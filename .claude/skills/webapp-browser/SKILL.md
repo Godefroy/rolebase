@@ -24,6 +24,8 @@ async () => {
 }
 ```
 
+Unless the test is about onboarding, use the org already configured for `browser-admin`: its slug and ids are in `.claude/skills/webapp-browser/test-org.local` (gitignored). Open `/{orgSlug}/roles` after signing in. If the file or the org is missing, create the org once through the onboarding and write the file.
+
 To test as a regular user, create another `@skreo.net` account the same way, without the admin role. "Log in as" in `/admin/users` also works.
 
 ## Save tokens
@@ -38,5 +40,5 @@ To test as a regular user, create another `@skreo.net` account the same way, wit
 
 - Seed through the admin GraphQL API with a `tsx` script outside the repo, run from `packages/backend` (`npx tsx /tmp/x/seed.ts`). Import `nhost` from `packages/backend/src/utils/nhost` and call `nhost.graphql.request({ query, variables })`. Throw if `nhost.graphql.url` does not contain `local`.
 - Only `@skreo.net` emails. Use a recognizable prefix in emails and slugs so the cleanup can find them.
-- Clean up at the end with `deleteOrgsForGood` and `deleteUserForGood` from `packages/backend/src/features/deletion/utils/`, then check that nothing with the prefix remains. Keep the `browser-admin` account.
+- Clean up at the end with `deleteOrgsForGood` and `deleteUserForGood` from `packages/backend/src/features/deletion/utils/`, then check that nothing with the prefix remains. Keep the `browser-admin` account and its `test-org.local` org.
 - Sign-in codes and other emails: Mailhog API at `https://local.mailhog.local.nhost.run/api/v2/messages?limit=1`.
