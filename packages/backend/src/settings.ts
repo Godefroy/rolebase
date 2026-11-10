@@ -69,11 +69,6 @@ export default {
     dsn: 'https://20336fa427da0be7bc9da97586db14e4@sentry.lonestone.io/4',
   },
 
-  mailjet: {
-    public: process.env.MAILJET_PUBIC_KEY || '',
-    private: process.env.MAILJET_PRIVATE_KEY || '',
-  },
-
   security: {
     invitation_token: process.env.SECURITY_INVITATION_TOKEN || '',
   },

@@ -1,4 +1,4 @@
-import { sendBrevoEmail } from './sendBrevoEmail'
+import { sendSmtpEmail } from './sendSmtpEmail'
 
 export interface EmailAddress {
   Email: string
@@ -14,5 +14,5 @@ export interface EmailMessage {
 }
 
 export async function sendEmail(...messages: EmailMessage[]) {
-  await sendBrevoEmail(...messages)
+  await sendSmtpEmail(...messages)
 }

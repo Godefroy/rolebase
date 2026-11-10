@@ -25,12 +25,20 @@ name = 'NHOST_WEBHOOK_SECRET'
 value = '{{ secrets.NHOST_WEBHOOK_SECRET }}'
 
 [[environment]]
-name = 'MAILJET_PUBIC_KEY'
-value = '{{ secrets.MAILJET_PUBIC_KEY }}'
+name = 'SMTP_HOST'
+value = '{{ secrets.SMTP_HOST }}'
 
 [[environment]]
-name = 'MAILJET_PRIVATE_KEY'
-value = '{{ secrets.MAILJET_PRIVATE_KEY }}'
+name = 'SMTP_PORT'
+value = '{{ secrets.SMTP_PORT }}'
+
+[[environment]]
+name = 'SMTP_USER'
+value = '{{ secrets.SMTP_USER }}'
+
+[[environment]]
+name = 'SMTP_PASSWORD'
+value = '{{ secrets.SMTP_PASSWORD }}'
 
 [[environment]]
 name = 'SECURITY_INVITATION_TOKEN'

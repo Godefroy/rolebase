@@ -109,15 +109,11 @@ npm run storybook
 
 ## External services
 
-### Mailjet
+### SMTP
 
-Rolebase uses [Mailjet](https://www.mailjet.com/) to send some of its mail.
+Rolebase sends its emails (authentication and notifications) through an SMTP server, for example [Brevo](https://www.brevo.com/).
 
-1. Create a Mailjet account : https://app.mailjet.com/signup
-2. Add your account API keys in your environment variables
-
-   - `MAILJET_PUBIC_KEY` : API Key displayed by Mailjet upon account creation or when resetting secret tokens
-   - `MAILJET_PRIVATE_KEY` : Secret Key displayed by Mailjet upon account creation or when resetting secret tokens
+Set the SMTP server and credentials in your secrets (see below): `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER` and `SMTP_PASSWORD`.
 
 ### Algolia
 
@@ -157,13 +153,14 @@ NHOST_WEBHOOK_SECRET = nhost-admin-secret
 HASURA_GRAPHQL_ADMIN_SECRET = nhost-admin-secret
 HASURA_GRAPHQL_JWT_SECRET = # Generate a password
 GRAFANA_ADMIN_PASSWORD = # Generate a password
-MAILJET_SMTP_PASSWORD = # MailJet private key
 
 # Env variables injected in nhost.toml
 BACKEND_URL = # URL of your nhost instance, with the path to call the functions. Required by Hasura event triggers. Locally: http://host.docker.internal:8888
 WEBAPP_URL = # URL of your webapp. Locally: http://localhost:5175
-MAILJET_PUBIC_KEY = # MailJet public key. You can find it here: https://app.mailjet.com/account/api_keys
-MAILJET_PRIVATE_KEY = # MailJet private key
+SMTP_HOST = # SMTP server host, e.g. smtp-relay.brevo.com
+SMTP_PORT = # SMTP server port, e.g. 587
+SMTP_USER = # SMTP login
+SMTP_PASSWORD = # SMTP password
 SECURITY_INVITATION_TOKEN = # Secret token used to validate invitations. You can generate a token with Lastpass for example
 ALGOLIA_APP_ID = # Algolia application ID
 ALGOLIA_SEARCH_API_KEY = # Algolia search API key

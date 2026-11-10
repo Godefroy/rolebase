@@ -2,14 +2,14 @@ import { createTransport } from 'nodemailer'
 import settings from '../settings'
 import { EmailMessage } from './sendEmail'
 
-export async function sendBrevoEmail(...messages: EmailMessage[]) {
+export async function sendSmtpEmail(...messages: EmailMessage[]) {
   const transporter = createTransport({
-    host: 'smtp-relay.brevo.com',
-    port: 587,
-    secure: false,
+    host: settings.smtp.host,
+    port: settings.smtp.port,
+    secure: settings.smtp.port === 465,
     auth: {
-      user: settings.mailjet.public,
-      pass: settings.mailjet.private,
+      user: settings.smtp.user,
+      pass: settings.smtp.password,
     },
   })
 

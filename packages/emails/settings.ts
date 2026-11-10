@@ -7,8 +7,10 @@ export default {
     email: 'noreply@rolebase.io',
   },
 
-  mailjet: {
-    public: process.env.MAILJET_PUBIC_KEY || '',
-    private: process.env.MAILJET_PRIVATE_KEY || '',
+  smtp: {
+    host: process.env.SMTP_HOST || '',
+    port: Number(process.env.SMTP_PORT) || 587,
+    user: process.env.SMTP_USER || '',
+    password: process.env.SMTP_PASSWORD || '',
   },
 }
