@@ -10,7 +10,7 @@ export function redirectToBackend(path: string) {
     const url = new URL(
       path +
         // Query string
-        req.url.replace(/[^\?]*(?=\?|$)/, ''),
+        req.url.replace(/[^?]*(?=\?|$)/, ''),
       process.env.BACKEND_URL
     ).toString()
 

@@ -37,7 +37,9 @@ export function searchEmojis(query: string, limit = 8): EmojiItem[] {
       score = 1
     } else if (item.id.includes(lowerQuery)) {
       score = 2
-    } else if (item.keywords.some((keyword) => keyword.startsWith(lowerQuery))) {
+    } else if (
+      item.keywords.some((keyword) => keyword.startsWith(lowerQuery))
+    ) {
       score = 3
     } else if (item.keywords.some((keyword) => keyword.includes(lowerQuery))) {
       score = 4

@@ -57,8 +57,8 @@ export default function ObjectDiff({
                 ? hasValue && !hasCompareValue
                   ? 'added'
                   : !hasValue && hasCompareValue
-                  ? 'removed'
-                  : undefined
+                    ? 'removed'
+                    : undefined
                 : undefined
             }
           >

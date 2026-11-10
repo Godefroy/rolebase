@@ -56,8 +56,7 @@ export interface ThreadActivityDataMeetingNote {
   notes: string
 }
 
-export interface ThreadActivityMeetingNoteFragment
-  extends ThreadActivityFragment {
+export interface ThreadActivityMeetingNoteFragment extends ThreadActivityFragment {
   type: Thread_Activity_Type_Enum.MeetingNote
   data: ThreadActivityDataMeetingNote
 }
@@ -79,8 +78,7 @@ export interface ThreadActivityProposalFragment extends ThreadActivityFragment {
 }
 
 // Proposal event (resolution, edit, cancellation, vote reminder, ...)
-export interface ThreadActivityProposalEventFragment
-  extends ThreadActivityFragment {
+export interface ThreadActivityProposalEventFragment extends ThreadActivityFragment {
   type: Thread_Activity_Type_Enum.ProposalEvent
   data: ThreadActivityDataProposalEvent
 }

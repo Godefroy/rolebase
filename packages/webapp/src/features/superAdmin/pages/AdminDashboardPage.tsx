@@ -61,11 +61,17 @@ function buildCumulativeData(
     const bucketEnd = start + msPerBucket * i
     const bucketDate = new Date(bucketEnd)
 
-    while (orgIdx < orgs.length && new Date(orgs[orgIdx].createdAt).getTime() <= bucketEnd) {
+    while (
+      orgIdx < orgs.length &&
+      new Date(orgs[orgIdx].createdAt).getTime() <= bucketEnd
+    ) {
       cumulOrgs++
       orgIdx++
     }
-    while (userIdx < users.length && new Date(users[userIdx].createdAt).getTime() <= bucketEnd) {
+    while (
+      userIdx < users.length &&
+      new Date(users[userIdx].createdAt).getTime() <= bucketEnd
+    ) {
       cumulUsers++
       userIdx++
     }
@@ -95,12 +101,18 @@ export default function AdminDashboardPage() {
     return { dauSince, mauSince }
   }, [])
 
-  const { data: statsData, loading: statsLoading, error: statsError } =
-    useAdminStatsQuery({ variables: statsVariables })
+  const {
+    data: statsData,
+    loading: statsLoading,
+    error: statsError,
+  } = useAdminStatsQuery({ variables: statsVariables })
 
   const since = useMemo(() => getSinceDate(period), [period])
-  const { data: growthData, loading: growthLoading, error: growthError } =
-    useAdminGrowthQuery({ variables: { since } })
+  const {
+    data: growthData,
+    loading: growthLoading,
+    error: growthError,
+  } = useAdminGrowthQuery({ variables: { since } })
 
   const chartData = useMemo(() => {
     if (!growthData) return []
@@ -161,9 +173,7 @@ export default function AdminDashboardPage() {
             _dark={{ borderColor: 'gray.600' }}
           >
             <StatLabel>{t('SuperAdmin.dashboard.dau')}</StatLabel>
-            <StatNumber>
-              {statsData.dau.aggregate?.count ?? 0}
-            </StatNumber>
+            <StatNumber>{statsData.dau.aggregate?.count ?? 0}</StatNumber>
           </Stat>
 
           <Stat
@@ -173,9 +183,7 @@ export default function AdminDashboardPage() {
             _dark={{ borderColor: 'gray.600' }}
           >
             <StatLabel>{t('SuperAdmin.dashboard.mau')}</StatLabel>
-            <StatNumber>
-              {statsData.mau.aggregate?.count ?? 0}
-            </StatNumber>
+            <StatNumber>{statsData.mau.aggregate?.count ?? 0}</StatNumber>
           </Stat>
         </SimpleGrid>
       )}

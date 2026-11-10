@@ -148,10 +148,7 @@ export default function RoleEditModal({
           <ModalCloseButton />
 
           <ModalBody>
-            <VStack
-              spacing={6}
-              pointerEvents={readOnly ? 'none' : undefined}
-            >
+            <VStack spacing={6} pointerEvents={readOnly ? 'none' : undefined}>
               {role.base ? (
                 <Alert status="warning">
                   <AlertIcon />

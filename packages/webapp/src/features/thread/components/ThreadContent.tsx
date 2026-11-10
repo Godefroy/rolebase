@@ -75,7 +75,10 @@ export default function ThreadContent({
 
   // Archive / unarchive
   const handleArchive = useCallback(
-    () => updateThread({ variables: { id, values: { archivedAt: new Date().toISOString() } } }),
+    () =>
+      updateThread({
+        variables: { id, values: { archivedAt: new Date().toISOString() } },
+      }),
     [id]
   )
   const handleUnarchive = useCallback(

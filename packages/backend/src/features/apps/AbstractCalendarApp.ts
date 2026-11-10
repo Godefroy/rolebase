@@ -63,7 +63,10 @@ export default abstract class AbstractCalendarApp<
   // even though it looks unexpired: it then refreshes unless a concurrent sync
   // already swapped the token for a different one.
   protected async ensureValidAccessToken(force = false): Promise<void> {
-    if (!force && this.secretConfig.expiryDate > Date.now() + TOKEN_EXPIRY_MARGIN_MS) {
+    if (
+      !force &&
+      this.secretConfig.expiryDate > Date.now() + TOKEN_EXPIRY_MARGIN_MS
+    ) {
       return
     }
     const previousAccessToken = this.secretConfig.accessToken

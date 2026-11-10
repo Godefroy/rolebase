@@ -190,9 +190,10 @@ export class OrgData {
     return this.childrenOf(circleId)
       .filter((c) => this.isParentLink(c))
       .flatMap((c) =>
-        this.membersOf(c.id).map(
-          ({ member }): Participant => ({ circleId: c.id, member })
-        )
+        this.membersOf(c.id).map(({ member }): Participant => ({
+          circleId: c.id,
+          member,
+        }))
       )
   }
 
@@ -305,9 +306,10 @@ export class OrgData {
     let result =
       leaders.length !== 0
         ? leaders
-        : this.membersOf(circleId).map(
-            ({ member }): Participant => ({ circleId, member })
-          )
+        : this.membersOf(circleId).map(({ member }): Participant => ({
+            circleId,
+            member,
+          }))
 
     // Acting leader (proposal editor): current member acts as a leader here
     const acting = this.actingLeader
@@ -354,13 +356,11 @@ export class OrgData {
       if (this.isParentLink(c)) {
         const cMembers = this.membersOf(c.id)
         if (cMembers.length > 0) hasLeader = true
-        return cMembers.map(
-          ({ member }): Participant => ({
-            circleId: c.id,
-            member,
-            leader: true,
-          })
-        )
+        return cMembers.map(({ member }): Participant => ({
+          circleId: c.id,
+          member,
+          leader: true,
+        }))
       } else {
         return this.getLeaders(c.id).map((p) => ({ ...p, circleId: c.id }))
       }
@@ -492,8 +492,7 @@ export class OrgData {
     const isOwner = this.isCircleOwner(circle, memberId)
     // Sub-circles can only be added under a real circle (not a single-member or
     // parent-link role).
-    const subCircles =
-      role.singleMember === false && role.parentLink === false
+    const subCircles = role.singleMember === false && role.parentLink === false
 
     // Structural edits: owner always, otherwise the relevant lead, and never
     // directly under strict governance (changes go through proposals).

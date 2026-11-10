@@ -40,7 +40,12 @@ export default function ProposalCard() {
 
       <Card mt={2} variant="activity">
         <CardBody>
-          <Flex direction={{ base: 'column', lg: 'row' }} gap={5} mb={3} align="stretch">
+          <Flex
+            direction={{ base: 'column', lg: 'row' }}
+            gap={5}
+            mb={3}
+            align="stretch"
+          >
             <VStack spacing={4} align="stretch" flex="1" minW={0}>
               <Flex align="center" gap={2}>
                 <Heading size="sm" lineHeight="short" flex="1">

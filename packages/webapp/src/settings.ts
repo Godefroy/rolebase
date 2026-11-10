@@ -9,8 +9,8 @@ export default {
   url: isLocal
     ? 'http://localhost:5175'
     : isStaging
-    ? 'https://staging--rolebase.netlify.app'
-    : 'https://rolebase.io',
+      ? 'https://staging--rolebase.netlify.app'
+      : 'https://rolebase.io',
 
   // Website url
   websiteUrl: 'https://rolebase.io',
@@ -20,8 +20,8 @@ export default {
     subdomain: isLocal
       ? 'local'
       : isStaging
-      ? 'jjvdhpoooerochuiusam'
-      : 'fsudktxishllphxeibqs',
+        ? 'jjvdhpoooerochuiusam'
+        : 'fsudktxishllphxeibqs',
     region: isLocal ? undefined : 'eu-central-1',
     // Disable auto signin on share app
     autoSignIn: !isShareApp,
@@ -32,8 +32,8 @@ export default {
   functionsUrl: isLocal
     ? 'https://local.functions.nhost.run/v1/'
     : isStaging
-    ? 'https://jjvdhpoooerochuiusam.functions.eu-central-1.nhost.run/v1/'
-    : 'https://fsudktxishllphxeibqs.functions.eu-central-1.nhost.run/v1/',
+      ? 'https://jjvdhpoooerochuiusam.functions.eu-central-1.nhost.run/v1/'
+      : 'https://fsudktxishllphxeibqs.functions.eu-central-1.nhost.run/v1/',
 
   backendUrl: isLocal ? 'http://localhost:8888' : 'https://api.rolebase.io',
 

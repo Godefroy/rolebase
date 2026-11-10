@@ -1,4 +1,8 @@
-import { CircleFragment, CircleMemberFragment, Governance_Mode_Enum } from '../gql'
+import {
+  CircleFragment,
+  CircleMemberFragment,
+  Governance_Mode_Enum,
+} from '../gql'
 import { OrgData } from '../model/OrgData'
 import { members } from './members'
 import { roles } from './roles'
@@ -96,4 +100,11 @@ export const circleMembers: CircleMemberFragment[] = circles.flatMap((circle) =>
   }))
 )
 
-export const orgData = new OrgData({ circles, circleMembers, circleLinks: [], roles, members, governanceMode: Governance_Mode_Enum.Free })
+export const orgData = new OrgData({
+  circles,
+  circleMembers,
+  circleLinks: [],
+  roles,
+  members,
+  governanceMode: Governance_Mode_Enum.Free,
+})

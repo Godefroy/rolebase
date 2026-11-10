@@ -17,5 +17,5 @@ export default function useProposalVoters(
   )
   return votersScope === 'circle'
     ? circleParticipants
-    : threadContext?.participants ?? []
+    : (threadContext?.participants ?? [])
 }

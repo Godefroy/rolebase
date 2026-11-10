@@ -16,7 +16,9 @@ export enum ScrollPosition {
 export type Scrollable = ReturnType<typeof useScrollable>
 
 // Provided by ScrollableLayout so its children can drive the scroll
-export const ScrollableContext = createContext<Scrollable | undefined>(undefined)
+export const ScrollableContext = createContext<Scrollable | undefined>(
+  undefined
+)
 
 export default function useScrollable() {
   // Scroll state
@@ -67,7 +69,8 @@ export default function useScrollable() {
     if (!container) return
     setPosition(ScrollPosition.Bottom)
     forceBottomRef.current = true
-    if (forceBottomTimeoutRef.current) clearTimeout(forceBottomTimeoutRef.current)
+    if (forceBottomTimeoutRef.current)
+      clearTimeout(forceBottomTimeoutRef.current)
     forceBottomTimeoutRef.current = setTimeout(() => {
       forceBottomRef.current = false
     }, 700)

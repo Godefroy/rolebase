@@ -83,12 +83,11 @@ export default function AppCard({ type, userApp }: Props) {
           await trpc.apps.selectCalendars.mutate({
             id: userApp?.id,
             // Filter calendars that are not available anymore
-            availabilityCalendars: availabilityCalendars.filter(
-              (id) => calendars?.find((calendar) => calendar.id === id)
+            availabilityCalendars: availabilityCalendars.filter((id) =>
+              calendars?.find((calendar) => calendar.id === id)
             ),
-            orgsCalendars: orgsCalendars.filter(
-              ({ calendarId }) =>
-                calendars?.find((calendar) => calendar.id === calendarId)
+            orgsCalendars: orgsCalendars.filter(({ calendarId }) =>
+              calendars?.find((calendar) => calendar.id === calendarId)
             ),
           })
         },

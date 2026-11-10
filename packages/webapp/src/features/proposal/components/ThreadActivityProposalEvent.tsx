@@ -53,8 +53,7 @@ export default function ThreadActivityProposalEvent({ activity }: Props) {
   // Linked proposal (to scroll + highlight it, and recreate it)
   const proposalActivity = activities?.find((a) => a.id === proposalActivityId)
   const proposalData = proposalActivity?.data as
-    | ThreadActivityDataProposal
-    | undefined
+    ThreadActivityDataProposal | undefined
   const proposalTitle = proposalData?.title
 
   // Non-resolution events (reminder, edit, cancellation): a single muted line
@@ -188,11 +187,7 @@ export default function ThreadActivityProposalEvent({ activity }: Props) {
       )}
 
       {decisionModal.isOpen && decisionId && (
-        <DecisionModal
-          id={decisionId}
-          isOpen
-          onClose={decisionModal.onClose}
-        />
+        <DecisionModal id={decisionId} isOpen onClose={decisionModal.onClose} />
       )}
     </ThreadActivityLayout>
   )

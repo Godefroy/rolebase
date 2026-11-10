@@ -79,7 +79,6 @@ const GET_USERS = gql(`
   }
 `)
 
-
 // Send a digest to a user
 async function sendDigest(
   userId: string,

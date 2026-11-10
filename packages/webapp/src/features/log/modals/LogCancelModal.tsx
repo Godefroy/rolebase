@@ -126,17 +126,16 @@ export default function LogCancelModal({
             </Button>
             <Collapse in={showDetails} animateOpacity>
               <VStack spacing={3} align="stretch" wordBreak="break-word">
-                {Object.keys(log.changes).flatMap(
-                  (entityType) =>
-                    log.changes[entityType as keyof EntitiesChanges]?.map(
-                      (entityChange) => (
-                        <LogEntityChanges
-                          key={entityChange.id}
-                          type={entityType}
-                          entityChange={entityChange as EntityChange<any>}
-                        />
-                      )
+                {Object.keys(log.changes).flatMap((entityType) =>
+                  log.changes[entityType as keyof EntitiesChanges]?.map(
+                    (entityChange) => (
+                      <LogEntityChanges
+                        key={entityChange.id}
+                        type={entityType}
+                        entityChange={entityChange as EntityChange<any>}
+                      />
                     )
+                  )
                 )}
               </VStack>
             </Collapse>

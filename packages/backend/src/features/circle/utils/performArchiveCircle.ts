@@ -116,8 +116,7 @@ export async function performArchiveCircle(opts: {
   // "...+00:00", not the "...Z" of toISOString), so the logged archivedAt
   // matches what later reads return and "data changed since" stays accurate.
   const archivedAt = result.update_circle?.returning[0]?.archivedAt as
-    | string
-    | undefined
+    string | undefined
   if (!archivedAt) {
     throw new Error(`Circle archive affected no circle: ${circleId}`)
   }

@@ -32,24 +32,21 @@ export function getSlashItems(
       label: labels.heading1,
       icon: <span className="editor-menu-icon-text">H1</span>,
       keywords: ['heading', 'title', 'h1'],
-      run: (editor) =>
-        editor.chain().focus().toggleHeading({ level: 1 }).run(),
+      run: (editor) => editor.chain().focus().toggleHeading({ level: 1 }).run(),
     },
     {
       key: 'h2',
       label: labels.heading2,
       icon: <span className="editor-menu-icon-text">H2</span>,
       keywords: ['heading', 'subtitle', 'h2'],
-      run: (editor) =>
-        editor.chain().focus().toggleHeading({ level: 2 }).run(),
+      run: (editor) => editor.chain().focus().toggleHeading({ level: 2 }).run(),
     },
     {
       key: 'h3',
       label: labels.heading3,
       icon: <span className="editor-menu-icon-text">H3</span>,
       keywords: ['heading', 'h3'],
-      run: (editor) =>
-        editor.chain().focus().toggleHeading({ level: 3 }).run(),
+      run: (editor) => editor.chain().focus().toggleHeading({ level: 3 }).run(),
     },
     {
       key: 'bulletList',

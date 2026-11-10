@@ -69,7 +69,11 @@ export default function PendingInvitationsModal({
       )}
 
       <Box mt={8} textAlign="center">
-        <Button variant="ghost" isDisabled={!!acceptingId} onClick={onCreateOrg}>
+        <Button
+          variant="ghost"
+          isDisabled={!!acceptingId}
+          onClick={onCreateOrg}
+        >
           {t('PendingInvitationsModal.createOrg')}
         </Button>
       </Box>

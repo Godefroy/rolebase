@@ -24,8 +24,8 @@ export default function LogEntityChanges<Entity extends {}>({
               entityChange.type === EntityChangeType.Create
                 ? 'green'
                 : entityChange.type === EntityChangeType.Update
-                ? 'blue'
-                : 'red'
+                  ? 'blue'
+                  : 'red'
             }
           >
             {entityChange.type}

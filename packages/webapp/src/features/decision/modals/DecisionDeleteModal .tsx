@@ -13,8 +13,10 @@ import { DecisionFragment, useArchiveDecisionMutation } from '@gql'
 import React, { useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
-interface Props
-  extends Omit<AlertDialogProps, 'children' | 'leastDestructiveRef'> {
+interface Props extends Omit<
+  AlertDialogProps,
+  'children' | 'leastDestructiveRef'
+> {
   decision: DecisionFragment
   onDelete?(): void
 }
@@ -29,7 +31,9 @@ export default function DecisionDeleteModal({
   const cancelRef = useRef<HTMLButtonElement>(null)
 
   const handleDelete = async () => {
-    await archiveDecision({ variables: { id: decision.id, archivedAt: new Date().toISOString() } })
+    await archiveDecision({
+      variables: { id: decision.id, archivedAt: new Date().toISOString() },
+    })
     onDelete?.()
     alertProps.onClose()
   }

@@ -45,7 +45,10 @@ export default function MeetingAlertNotStarted({ onEdit, ...boxProps }: Props) {
   const handleArchive = () => {
     if (!meeting) return
     updateMeeting({
-      variables: { id: meeting.id, values: { archivedAt: new Date().toISOString() } },
+      variables: {
+        id: meeting.id,
+        values: { archivedAt: new Date().toISOString() },
+      },
     })
   }
 

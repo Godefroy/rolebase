@@ -8,7 +8,11 @@ import fs from 'fs'
 import path from 'path'
 import { screenshotHtml } from '../src/utils/screenshotHtml'
 
-function buildOrg(breadth: number, depth: number, membersPerCircle: number): OrgData {
+function buildOrg(
+  breadth: number,
+  depth: number,
+  membersPerCircle: number
+): OrgData {
   const circles: any[] = []
   const roles: any[] = []
   const members: any[] = []
@@ -29,7 +33,13 @@ function buildOrg(breadth: number, depth: number, membersPerCircle: number): Org
     })
     for (let k = 0; k < membersPerCircle; k++) {
       const mid = `m${memberIndex++}`
-      members.push({ id: mid, orgId: 'org1', archived: false, name: `Member ${mid} Lastname`, description: '' })
+      members.push({
+        id: mid,
+        orgId: 'org1',
+        archived: false,
+        name: `Member ${mid} Lastname`,
+        description: '',
+      })
       circleMembers.push({
         id: `cm-${id}-${mid}`,
         orgId: 'org1',
@@ -47,7 +57,14 @@ function buildOrg(breadth: number, depth: number, membersPerCircle: number): Org
   }
 
   makeCircle(null, 0, 0)
-  return new OrgData({ circles, circleMembers, circleLinks: [], roles, members, governanceMode: Governance_Mode_Enum.Strict })
+  return new OrgData({
+    circles,
+    circleMembers,
+    circleLinks: [],
+    roles,
+    members,
+    governanceMode: Governance_Mode_Enum.Strict,
+  })
 }
 
 async function main() {

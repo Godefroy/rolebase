@@ -14,8 +14,10 @@ import React, { useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useOrgContext, useOrgEditActions } from '@/org/contexts/OrgContext'
 
-interface Props
-  extends Omit<AlertDialogProps, 'children' | 'leastDestructiveRef'> {
+interface Props extends Omit<
+  AlertDialogProps,
+  'children' | 'leastDestructiveRef'
+> {
   id: string
   onDelete?(): void
 }

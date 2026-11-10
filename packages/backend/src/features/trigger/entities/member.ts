@@ -1,9 +1,10 @@
 import { SearchDoc, SearchTypes } from '@rolebase/shared/model/search'
-import { DocumentType, MemberFragment, gql } from '../../../gql'
+import { MemberFragment, MemberSearchFragment, gql } from '../../../gql'
 import { adminRequest } from '../../../utils/adminRequest'
 import { IndexEntity } from './IndexEntity'
 
-const Fragment = gql(`
+// Declares the fragment for codegen
+gql(`
   fragment MemberSearch on member {
     id
     orgId
@@ -13,7 +14,7 @@ const Fragment = gql(`
   }
 `)
 
-const transform = (fragment: DocumentType<typeof Fragment>): SearchDoc => ({
+const transform = (fragment: MemberSearchFragment): SearchDoc => ({
   objectID: fragment.id,
   orgId: fragment.orgId,
   type: SearchTypes.Member,

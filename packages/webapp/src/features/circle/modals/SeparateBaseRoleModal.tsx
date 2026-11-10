@@ -23,8 +23,10 @@ import React, { useRef, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import useSeparateFromBaseRole from '../hooks/useSeparateFromBaseRole'
 
-interface Props
-  extends Omit<AlertDialogProps, 'children' | 'leastDestructiveRef'> {
+interface Props extends Omit<
+  AlertDialogProps,
+  'children' | 'leastDestructiveRef'
+> {
   circleId: string
   role: RoleSummaryFragment
 }

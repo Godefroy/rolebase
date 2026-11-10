@@ -17,11 +17,7 @@ export type ProposalDecisionMode =
   | 'simpleMajority' // approve > object (votes cast)
   | 'absoluteMajority' // approve > half of participants
 
-export type ProposalStatus =
-  | 'inProgress'
-  | 'approved'
-  | 'refused'
-  | 'canceled'
+export type ProposalStatus = 'inProgress' | 'approved' | 'refused' | 'canceled'
 
 // Who can vote on the proposal. 'circle' = the circle's participants (shown as
 // "role" in the UI, but the data model attaches participants to a circle).

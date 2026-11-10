@@ -54,8 +54,13 @@ export default function CircleRole({ skipFetchRole }: Props) {
   // Get circle context
   const circleContext = useContext(CircleContext)
   if (!circleContext) return null
-  const { circle, parentCircle, canEditCircle, canEditRole, role: baseRole } =
-    circleContext
+  const {
+    circle,
+    parentCircle,
+    canEditCircle,
+    canEditRole,
+    role: baseRole,
+  } = circleContext
 
   // In proposal draft mode, overlay the draft's pending role edits on top of
   // the DB role (still fetched via subscription, as on the org page).

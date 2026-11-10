@@ -32,7 +32,7 @@ export default memo(function CircleElement({
   // Pass parentId if this is an invited circle (id contains underscore)
   const parentId =
     node.data.id.indexOf('_') !== -1
-      ? node.data.parentId ?? undefined
+      ? (node.data.parentId ?? undefined)
       : undefined
 
   return (

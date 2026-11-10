@@ -18,8 +18,10 @@ import { SearchItem } from '../searchTypes'
 import SearchResultButton from './SearchResultButton'
 import SearchResultsList from './SearchResultsList'
 
-export interface SearchInputProps
-  extends Omit<InputProps, 'value' | 'onChange'> {
+export interface SearchInputProps extends Omit<
+  InputProps,
+  'value' | 'onChange'
+> {
   value?: string // Item id
   items: SearchItem[]
   additionalTopItems?: SearchItem[]

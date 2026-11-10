@@ -114,7 +114,7 @@ const formatSubscription = (
     billingDetails: extendedCustomer && {
       address: extendedCustomer?.deleted
         ? null
-        : extendedCustomer?.address ?? null,
+        : (extendedCustomer?.address ?? null),
       email: extendedCustomer?.deleted ? '' : extendedCustomer?.email,
       name: extendedCustomer?.deleted ? '' : extendedCustomer?.name,
     },

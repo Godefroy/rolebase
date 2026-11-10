@@ -7,13 +7,7 @@ import { CirclePick, CopyIcon, MoveIcon, PanIcon, SearchIcon } from 'src/icons'
 type IconComponent = React.ComponentType<{ size?: number | string }>
 
 export type ShortcutKey =
-  | 'zoom'
-  | 'pan'
-  | 'open'
-  | 'moveRole'
-  | 'copyRole'
-  | 'moveMember'
-  | 'addMember'
+  'zoom' | 'pan' | 'open' | 'moveRole' | 'copyRole' | 'moveMember' | 'addMember'
 
 // The graph event a shortcut relies on. Pan and zoom depend on the panzoom
 // behaviour instead, so they have no handler.

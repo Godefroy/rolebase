@@ -250,8 +250,8 @@ function ThreadActivityPollVote({ activity, answers, onVote }: Props) {
                 }
               )
             : data.endWhenAllVoted
-            ? t('ThreadActivityPollVote.revealAllVoted')
-            : t('ThreadActivityPollVote.revealLater')}
+              ? t('ThreadActivityPollVote.revealAllVoted')
+              : t('ThreadActivityPollVote.revealLater')}
         </Text>
       )}
     </>

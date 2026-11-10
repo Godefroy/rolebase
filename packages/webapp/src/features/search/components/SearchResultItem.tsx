@@ -2,7 +2,10 @@ import { Box, BoxProps } from '@chakra-ui/react'
 import React, { useMemo } from 'react'
 import { SearchItem } from '../searchTypes'
 import SearchResultContent from './SearchResultContent'
-import { getSearchResultTitle, searchItemTitleSeparator } from './searchResultUtils'
+import {
+  getSearchResultTitle,
+  searchItemTitleSeparator,
+} from './searchResultUtils'
 
 export { searchItemTitleSeparator }
 

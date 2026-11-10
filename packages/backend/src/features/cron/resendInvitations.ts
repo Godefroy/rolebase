@@ -55,10 +55,7 @@ export default webhookProcedure.mutation(async () => {
         ctaUrl: invitationUrl,
       })
     } catch (e) {
-      console.error(
-        `Error resending invitation to member ${member.id}:`,
-        e
-      )
+      console.error(`Error resending invitation to member ${member.id}:`, e)
     }
   }
 })

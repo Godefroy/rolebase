@@ -28,11 +28,7 @@ export default function SearchResultContent({ item, size, title }: Props) {
       <Spacer />
 
       {item.date && (
-        <Text
-          fontSize="xs"
-          color="gray.500"
-          _dark={{ color: 'gray.300' }}
-        >
+        <Text fontSize="xs" color="gray.500" _dark={{ color: 'gray.300' }}>
           {capitalizeFirstLetter(
             format(new Date(item.date), 'PPPP', {
               locale: dateLocale,

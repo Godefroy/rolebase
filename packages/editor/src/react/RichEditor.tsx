@@ -44,11 +44,10 @@ export interface CollaborationConfig {
   onStatusChange?(online: boolean): void
 }
 
-export interface RichEditorProps
-  extends Omit<
-    HTMLAttributes<HTMLDivElement>,
-    'onFocus' | 'onBlur' | 'onSubmit' | 'onChange'
-  > {
+export interface RichEditorProps extends Omit<
+  HTMLAttributes<HTMLDivElement>,
+  'onFocus' | 'onBlur' | 'onSubmit' | 'onChange'
+> {
   value?: string
   placeholder?: string
   emptyParagraphPlaceholder?: string
@@ -154,9 +153,7 @@ export default forwardRef<EditorHandle, RichEditorProps>(function RichEditor(
               items: ({ query }) =>
                 (mentionablesRef.current ?? [])
                   .filter((mentionable) =>
-                    mentionable.name
-                      .toLowerCase()
-                      .includes(query.toLowerCase())
+                    mentionable.name.toLowerCase().includes(query.toLowerCase())
                   )
                   .slice(0, 8),
               render: createSuggestionRender(
@@ -200,10 +197,7 @@ export default forwardRef<EditorHandle, RichEditorProps>(function RichEditor(
       SlashCommand.configure({
         suggestion: {
           items: ({ query }) =>
-            filterSlashItems(
-              getSlashItems(labelsRef.current, upload),
-              query
-            ),
+            filterSlashItems(getSlashItems(labelsRef.current, upload), query),
           render: createSuggestionRender(SlashMenu, () => editorRef.current),
         },
       }),

@@ -1,7 +1,7 @@
 import sendMeetingEmail from '@rolebase/emails/helpers/sendMeetingEmail'
 import { getOrgPath } from '@rolebase/shared/helpers/getOrgPath'
 import { SearchDoc, SearchTypes } from '@rolebase/shared/model/search'
-import { DocumentType, MeetingFragment, gql } from '../../../gql'
+import { MeetingFragment, MeetingSearchFragment, gql } from '../../../gql'
 import settings from '../../../settings'
 import { adminRequest } from '../../../utils/adminRequest'
 import { HasuraEvent } from '../../../utils/nhost'
@@ -10,7 +10,8 @@ import { appFactory } from '../../apps'
 import { handleAppSyncError } from '../../apps/AppDisconnectedError'
 import { IndexEntity } from './IndexEntity'
 
-const Fragment = gql(`
+// Declares the fragment for codegen
+gql(`
   fragment MeetingSearch on meeting {
     id
     orgId
@@ -29,7 +30,7 @@ const Fragment = gql(`
   }
 `)
 
-const transform = (fragment: DocumentType<typeof Fragment>): SearchDoc => ({
+const transform = (fragment: MeetingSearchFragment): SearchDoc => ({
   objectID: fragment.id,
   orgId: fragment.orgId,
   type: SearchTypes.Meeting,

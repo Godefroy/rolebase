@@ -74,8 +74,8 @@ export default function ProposalVotersModal({
     vote === 'approve'
       ? t('ProposalVotersModal.tab_approve')
       : vote === 'abstain'
-      ? t('ProposalVotersModal.tab_abstain')
-      : t('ProposalVotersModal.tab_object')
+        ? t('ProposalVotersModal.tab_abstain')
+        : t('ProposalVotersModal.tab_object')
 
   return (
     <Modal isCentered size="md" {...modalProps}>

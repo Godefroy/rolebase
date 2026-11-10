@@ -4,8 +4,10 @@ import { CirclesGraph } from '../../core/CirclesGraph'
 import { CirclesGraphViews, GraphParams, RootElement } from '../../types'
 import useGraph, { GraphProps } from './useGraph'
 
-export interface CirclesGraphProps
-  extends Omit<GraphProps<OrgData, CirclesGraph>, 'data' | 'init'> {
+export interface CirclesGraphProps extends Omit<
+  GraphProps<OrgData, CirclesGraph>,
+  'data' | 'init'
+> {
   view: CirclesGraphViews
   // Fold the view around the selected circle
   folded?: boolean

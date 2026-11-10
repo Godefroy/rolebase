@@ -43,7 +43,9 @@ export default function ProposalLogItem({ log, readOnly }: Props) {
       return (
         <Trans
           i18nKey={`${i18nPrefix}.${display.type}`}
-          components={{ circle: <CircleLink id={display.id} name={display.name} /> }}
+          components={{
+            circle: <CircleLink id={display.id} name={display.name} />,
+          }}
         />
       )
 
@@ -91,7 +93,10 @@ export default function ProposalLogItem({ log, readOnly }: Props) {
           />
         )
       return (
-        <Trans i18nKey={`${i18nPrefix}.${display.type}`} components={{ role }} />
+        <Trans
+          i18nKey={`${i18nPrefix}.${display.type}`}
+          components={{ role }}
+        />
       )
     }
 

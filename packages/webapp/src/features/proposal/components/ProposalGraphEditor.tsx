@@ -226,7 +226,11 @@ export default function ProposalGraphEditor({
                   selectedCircleId={selectedCircleId}
                 />
               )}
-              <GraphShortcutsModalButton position="absolute" top={2} right={2} />
+              <GraphShortcutsModalButton
+                position="absolute"
+                top={2}
+                right={2}
+              />
               {contextMenu}
             </Box>
 

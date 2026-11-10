@@ -13,8 +13,10 @@ import { TaskFragment, useArchiveTaskMutation } from '@gql'
 import React, { useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
-interface Props
-  extends Omit<AlertDialogProps, 'children' | 'leastDestructiveRef'> {
+interface Props extends Omit<
+  AlertDialogProps,
+  'children' | 'leastDestructiveRef'
+> {
   task: TaskFragment
   onDelete?(): void
 }
@@ -29,7 +31,9 @@ export default function TaskDeleteModal({
   const [archiveTask] = useArchiveTaskMutation()
 
   const handleDelete = async () => {
-    await archiveTask({ variables: { id: task.id, archivedAt: new Date().toISOString() } })
+    await archiveTask({
+      variables: { id: task.id, archivedAt: new Date().toISOString() },
+    })
     onDelete?.()
     alertProps.onClose()
   }

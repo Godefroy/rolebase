@@ -83,7 +83,9 @@ describe('OrgData filters', () => {
       expect(orgData.filterScopedEntities([withChildren], MEMBER)).toEqual([
         withChildren,
       ])
-      expect(orgData.filterScopedEntities([withoutChildren], MEMBER)).toEqual([])
+      expect(orgData.filterScopedEntities([withoutChildren], MEMBER)).toEqual(
+        []
+      )
     })
 
     it('excludes the member when listed in excludeMembers', () => {

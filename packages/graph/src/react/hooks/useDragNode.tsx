@@ -296,8 +296,7 @@ function getTitleElement(node: NodeData) {
 
 function getLinkElement(node: NodeData) {
   return (document.getElementById(`link-${node.data.id}`) ?? undefined) as
-    | SVGPathElement
-    | undefined
+    SVGPathElement | undefined
 }
 
 function getTargetNodeData(

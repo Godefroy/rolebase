@@ -34,7 +34,10 @@ export default authedProcedure
       id: circleId,
     })
     if (!ref) {
-      throw new TRPCError({ code: 'NOT_FOUND', message: 'Circle does not exist' })
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'Circle does not exist',
+      })
     }
     if (ref.archivedAt) {
       throw new TRPCError({
@@ -54,7 +57,10 @@ export default authedProcedure
     const circle = orgData.getCircle(circleId)
     const role = circle && orgData.getRole(circle.roleId)
     if (!circle || !role) {
-      throw new TRPCError({ code: 'NOT_FOUND', message: 'Circle does not exist' })
+      throw new TRPCError({
+        code: 'NOT_FOUND',
+        message: 'Circle does not exist',
+      })
     }
     const member = orgData.members.find((m) => m.userId === userId)
     const perms = orgData.getCirclePermissions(

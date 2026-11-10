@@ -1,8 +1,8 @@
 import { SearchDoc, SearchTypes } from '@rolebase/shared/model/search'
 import {
-  DocumentType,
   ThreadActivityFragment,
   ThreadFragment,
+  ThreadSearchFragment,
   gql,
 } from '../../../gql'
 import { adminRequest } from '../../../utils/adminRequest'
@@ -10,7 +10,8 @@ import getActivitiesEditorTextByType from '../../../utils/getActivitiesEditorTex
 import { HasuraEvent } from '../../../utils/nhost'
 import { IndexEntity } from './IndexEntity'
 
-const Fragment = gql(`
+// Declares the fragment for codegen
+gql(`
   fragment ThreadSearch on thread {
     id
     orgId
@@ -23,7 +24,7 @@ const Fragment = gql(`
   }
 `)
 
-const transform = (fragment: DocumentType<typeof Fragment>): SearchDoc => ({
+const transform = (fragment: ThreadSearchFragment): SearchDoc => ({
   objectID: fragment.id,
   orgId: fragment.orgId,
   type: SearchTypes.Thread,

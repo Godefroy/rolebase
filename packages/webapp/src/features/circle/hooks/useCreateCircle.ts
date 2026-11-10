@@ -9,7 +9,11 @@ import {
   useCreateCircleMutation,
   useCreateRoleMutation,
 } from '@gql'
-import { EntitiesChanges, EntityChangeType, LogType } from '@rolebase/shared/model/log'
+import {
+  EntitiesChanges,
+  EntityChangeType,
+  LogType,
+} from '@rolebase/shared/model/log'
 import { omit } from '@utils/omit'
 import { useCallback } from 'react'
 import { track } from 'src/analytics'

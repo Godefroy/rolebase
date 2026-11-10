@@ -59,8 +59,7 @@ export default function MeetingStepContentThreadItem({
     ? (thread.activities[0] as ThreadActivityFragment | undefined)
     : undefined
   const activityData = activity?.data as
-    | ThreadActivityDataMeetingNote
-    | undefined
+    ThreadActivityDataMeetingNote | undefined
   const hasNotes = !!activityData?.notes
 
   // Participants

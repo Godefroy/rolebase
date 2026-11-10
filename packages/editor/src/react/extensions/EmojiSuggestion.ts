@@ -19,11 +19,7 @@ export const EmojiSuggestion = Extension.create<EmojiSuggestionOptions>({
         editor: this.editor,
         char: ':',
         command: ({ editor, range, props }) => {
-          editor
-            .chain()
-            .focus()
-            .insertContentAt(range, `${props.emoji} `)
-            .run()
+          editor.chain().focus().insertContentAt(range, `${props.emoji} `).run()
         },
         ...this.options.suggestion,
       }),

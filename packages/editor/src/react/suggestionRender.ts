@@ -19,10 +19,10 @@ function positionPopup(popup: HTMLElement, rect: DOMRect | null | undefined) {
 
 // Build the `render` function of a Tiptap Suggestion plugin from a
 // React component (which must expose onKeyDown through its ref)
-export function createSuggestionRender<Item, Props extends SuggestionProps<Item>>(
-  component: React.ComponentType<any>,
-  editor: () => Editor | null
-) {
+export function createSuggestionRender<
+  Item,
+  Props extends SuggestionProps<Item>,
+>(component: React.ComponentType<any>, editor: () => Editor | null) {
   return () => {
     let renderer: ReactRenderer<SuggestionMenuHandle> | undefined
     let popup: HTMLDivElement | undefined

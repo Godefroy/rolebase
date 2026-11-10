@@ -25,7 +25,8 @@ export default function SubscriptionPaymentModal({
   const { t } = useTranslation()
 
   useEffect(() => {
-    if (modalProps.isOpen) track('subscription_plan_selected', { plan: planType })
+    if (modalProps.isOpen)
+      track('subscription_plan_selected', { plan: planType })
   }, [modalProps.isOpen, planType])
 
   return (

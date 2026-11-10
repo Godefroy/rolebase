@@ -23,7 +23,9 @@ export function useCircleSearchItems(
 
           // Get roles and ancestors
           const circleFull = orgData?.andParentsOf(circle.id) ?? []
-          const role = orgData?.getRole(circleFull[circleFull.length - 1]?.roleId)
+          const role = orgData?.getRole(
+            circleFull[circleFull.length - 1]?.roleId
+          )
 
           // Exclude by singleMember property
           if (

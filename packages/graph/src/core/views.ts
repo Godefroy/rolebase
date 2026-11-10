@@ -83,18 +83,17 @@ const foldedCircles: ViewStrategy = {
       // Add circle children
       const children = org.circles.filter((c) => c.parentId === circle?.id)
       result.push(
-        ...children.map(
-          (c): CircleData =>
-            c.id === prevCircleId
-              ? fullCircle(c.id, c.roleId, c.parentId ?? null)
-              : {
-                  id: c.id,
-                  roleId: c.roleId,
-                  parentId: c.parentId ?? null,
-                  showMembers: false,
-                  showLinks: false,
-                  participants: org.getParticipants(c.id),
-                }
+        ...children.map((c): CircleData =>
+          c.id === prevCircleId
+            ? fullCircle(c.id, c.roleId, c.parentId ?? null)
+            : {
+                id: c.id,
+                roleId: c.roleId,
+                parentId: c.parentId ?? null,
+                showMembers: false,
+                showLinks: false,
+                participants: org.getParticipants(c.id),
+              }
         )
       )
 

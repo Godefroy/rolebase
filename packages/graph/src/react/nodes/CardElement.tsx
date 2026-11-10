@@ -30,7 +30,7 @@ export default memo(function CardElement({ node, selected, hidden }: Props) {
 
   // The ellipsis stands for the card, so it answers to the pointer like it
   const { entityId } = node.data
-  const parentId = isLink ? node.data.parentId ?? undefined : undefined
+  const parentId = isLink ? (node.data.parentId ?? undefined) : undefined
 
   const handleClick =
     onCircleClick && entityId

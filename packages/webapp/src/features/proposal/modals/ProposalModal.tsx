@@ -143,7 +143,8 @@ export default function ProposalModal({
       description: values.description,
       decisionMode: values.decisionMode,
       votersScope: values.votersScope,
-      allowAbstain: values.decisionMode === 'consent' ? false : values.allowAbstain,
+      allowAbstain:
+        values.decisionMode === 'consent' ? false : values.allowAbstain,
       showVoters: values.showVoters,
       earlyResolution: values.earlyResolution,
       resolutionDate:
@@ -214,7 +215,11 @@ export default function ProposalModal({
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>
-          {t(activity ? 'ProposalModal.headingEdit' : 'ProposalModal.headingCreate')}
+          {t(
+            activity
+              ? 'ProposalModal.headingEdit'
+              : 'ProposalModal.headingCreate'
+          )}
         </ModalHeader>
         <ModalCloseButton />
 
@@ -222,122 +227,118 @@ export default function ProposalModal({
           <FormProvider {...form}>
             <form onSubmit={onSubmit}>
               <VStack spacing={5} align="stretch">
-              <FormControl isInvalid={!!errors.title}>
-                <FormLabel>{t('ProposalModal.title')}</FormLabel>
-                <Input
-                  {...register('title')}
-                  placeholder={t('ProposalModal.titlePlaceholder')}
-                  autoFocus
-                />
-              </FormControl>
+                <FormControl isInvalid={!!errors.title}>
+                  <FormLabel>{t('ProposalModal.title')}</FormLabel>
+                  <Input
+                    {...register('title')}
+                    placeholder={t('ProposalModal.titlePlaceholder')}
+                    autoFocus
+                  />
+                </FormControl>
 
-              {needsThread && <CircleFormController />}
+                {needsThread && <CircleFormController />}
 
-              <FormControl>
-                <FormLabel>{t('ProposalModal.description')}</FormLabel>
-                <EditorController name="description" control={control} />
-              </FormControl>
+                <FormControl>
+                  <FormLabel>{t('ProposalModal.description')}</FormLabel>
+                  <EditorController name="description" control={control} />
+                </FormControl>
 
-              <Box>
-                <Flex align="center" mb={2}>
-                  <Heading size="sm">{t('ProposalModal.orgChart')}</Heading>
-                  <Box flex="1" />
-                  <Button
-                    leftIcon={<OrgChartIcon size={20} />}
-                    onClick={editor.onOpen}
+                <Box>
+                  <Flex align="center" mb={2}>
+                    <Heading size="sm">{t('ProposalModal.orgChart')}</Heading>
+                    <Box flex="1" />
+                    <Button
+                      leftIcon={<OrgChartIcon size={20} />}
+                      onClick={editor.onOpen}
+                    >
+                      {t('ProposalModal.editOrgChart')}
+                    </Button>
+                  </Flex>
+                  <Box
+                    borderWidth="1px"
+                    borderRadius="md"
+                    px={2}
+                    py={1}
+                    bg="white"
+                    _dark={{ bg: 'blackAlpha.300' }}
                   >
-                    {t('ProposalModal.editOrgChart')}
-                  </Button>
-                </Flex>
-                <Box
-                  borderWidth="1px"
-                  borderRadius="md"
-                  px={2}
-                  py={1}
-                  bg="white"
-                  _dark={{ bg: 'blackAlpha.300' }}
-                >
-                  <ProposalLogsPreview logs={logs} />
+                    <ProposalLogsPreview logs={logs} />
+                  </Box>
                 </Box>
-              </Box>
 
-              <FormControl>
-                <FormLabel>{t('ProposalModal.decisionMode')}</FormLabel>
-                <Select {...register('decisionMode')}>
-                  <option value="consent">
-                    {t('ProposalModal.decisionMode_consent')}
-                  </option>
-                  <option value="unanimity">
-                    {t('ProposalModal.decisionMode_unanimity')}
-                  </option>
-                  <option value="simpleMajority">
-                    {t('ProposalModal.decisionMode_simpleMajority')}
-                  </option>
-                  <option value="absoluteMajority">
-                    {t('ProposalModal.decisionMode_absoluteMajority')}
-                  </option>
-                </Select>
-                {decisionMode !== 'consent' && (
+                <FormControl>
+                  <FormLabel>{t('ProposalModal.decisionMode')}</FormLabel>
+                  <Select {...register('decisionMode')}>
+                    <option value="consent">
+                      {t('ProposalModal.decisionMode_consent')}
+                    </option>
+                    <option value="unanimity">
+                      {t('ProposalModal.decisionMode_unanimity')}
+                    </option>
+                    <option value="simpleMajority">
+                      {t('ProposalModal.decisionMode_simpleMajority')}
+                    </option>
+                    <option value="absoluteMajority">
+                      {t('ProposalModal.decisionMode_absoluteMajority')}
+                    </option>
+                  </Select>
+                  {decisionMode !== 'consent' && (
+                    <SwitchController
+                      name="allowAbstain"
+                      control={control}
+                      mt={3}
+                    >
+                      {t('ProposalModal.allowAbstain')}
+                    </SwitchController>
+                  )}
+                </FormControl>
+
+                <FormControl>
+                  <FormLabel>{t('ProposalModal.voters')}</FormLabel>
+                  <Flex align="center">
+                    <Select {...register('votersScope')} maxW="280px">
+                      <option value="thread">
+                        {t('ProposalModal.voters_thread')}
+                      </option>
+                      <option value="circle">
+                        {t('ProposalModal.voters_circle')}
+                      </option>
+                    </Select>
+                    <ParticipantsNumber participants={voters} ml={3} />
+                  </Flex>
+                  <SwitchController name="showVoters" control={control} mt={3}>
+                    {t('ProposalModal.showVoters')}
+                  </SwitchController>
+                </FormControl>
+
+                <FormControl>
+                  <FormLabel>{t('ProposalModal.resolution')}</FormLabel>
+                  <SwitchController name="earlyResolution" control={control}>
+                    {t('ProposalModal.earlyResolution')}
+                  </SwitchController>
                   <SwitchController
-                    name="allowAbstain"
+                    name="hasResolutionDate"
                     control={control}
                     mt={3}
                   >
-                    {t('ProposalModal.allowAbstain')}
+                    {t('ProposalModal.hasResolutionDate')}
                   </SwitchController>
-                )}
-              </FormControl>
+                  {hasResolutionDate && (
+                    <Input
+                      {...register('resolutionDate')}
+                      type="datetime-local"
+                      mt={2}
+                      maxW="250px"
+                    />
+                  )}
+                </FormControl>
 
-              <FormControl>
-                <FormLabel>{t('ProposalModal.voters')}</FormLabel>
-                <Flex align="center">
-                  <Select {...register('votersScope')} maxW="280px">
-                    <option value="thread">
-                      {t('ProposalModal.voters_thread')}
-                    </option>
-                    <option value="circle">
-                      {t('ProposalModal.voters_circle')}
-                    </option>
-                  </Select>
-                  <ParticipantsNumber participants={voters} ml={3} />
-                </Flex>
-                <SwitchController
-                  name="showVoters"
-                  control={control}
-                  mt={3}
-                >
-                  {t('ProposalModal.showVoters')}
-                </SwitchController>
-              </FormControl>
-
-              <FormControl>
-                <FormLabel>{t('ProposalModal.resolution')}</FormLabel>
-                <SwitchController name="earlyResolution" control={control}>
-                  {t('ProposalModal.earlyResolution')}
-                </SwitchController>
-                <SwitchController
-                  name="hasResolutionDate"
-                  control={control}
-                  mt={3}
-                >
-                  {t('ProposalModal.hasResolutionDate')}
-                </SwitchController>
-                {hasResolutionDate && (
-                  <Input
-                    {...register('resolutionDate')}
-                    type="datetime-local"
-                    mt={2}
-                    maxW="250px"
-                  />
-                )}
-              </FormControl>
-
-              <Box textAlign="right">
-                <Button colorScheme="blue" type="submit">
-                  {t(activity ? 'common.save' : 'common.create')}
-                </Button>
-              </Box>
-            </VStack>
+                <Box textAlign="right">
+                  <Button colorScheme="blue" type="submit">
+                    {t(activity ? 'common.save' : 'common.create')}
+                  </Button>
+                </Box>
+              </VStack>
             </form>
           </FormProvider>
         </ModalBody>

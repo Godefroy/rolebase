@@ -9,7 +9,8 @@ export default function useFilterScopedEntitiesByMember<
 
   // Filter entries
   return useMemo(
-    () => data && (orgData ? orgData.filterScopedEntities(data, memberId) : data),
+    () =>
+      data && (orgData ? orgData.filterScopedEntities(data, memberId) : data),
     [data, memberId, orgData]
   )
 }

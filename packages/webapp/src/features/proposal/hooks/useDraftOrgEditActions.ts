@@ -59,7 +59,8 @@ export default function useDraftOrgEditActions(
       // New role if not a base role
       let roleId = circle.roleId
       if (!isBaseRole(circle)) {
-        const fullRole = draft.getData()
+        const fullRole = draft
+          .getData()
           ?.roles.find((r) => r.id === circle.roleId)
         const newRoleId = generateId()
         // Clone the role summary; text columns default to '' in the database
@@ -76,7 +77,13 @@ export default function useDraftOrgEditActions(
       changes.circles.push({
         type: EntityChangeType.Create,
         id: newCircleId,
-        data: { id: newCircleId, orgId, roleId, parentId: newParentId, archivedAt: null },
+        data: {
+          id: newCircleId,
+          orgId,
+          roleId,
+          parentId: newParentId,
+          archivedAt: null,
+        },
       })
 
       // Members
@@ -189,11 +196,13 @@ export default function useDraftOrgEditActions(
               (c) => c.type === EntityChangeType.Create && created.has(c.id)
             ) ||
             log.changes.roles?.some(
-              (c) => c.type === EntityChangeType.Create && createdRoles.has(c.id)
+              (c) =>
+                c.type === EntityChangeType.Create && createdRoles.has(c.id)
             ) ||
             log.changes.circlesMembers?.some(
               (c) =>
-                c.type === EntityChangeType.Create && created.has(c.data.circleId)
+                c.type === EntityChangeType.Create &&
+                created.has(c.data.circleId)
             ) ||
             log.changes.circlesLinks?.some(
               (c) =>
@@ -208,7 +217,11 @@ export default function useDraftOrgEditActions(
         const archiveRoleIds = rolesIds.filter((id) => !createdRoles.has(id))
         if (archiveCircleIds.length || archiveRoleIds.length) {
           await draft.applyLog(
-            { type: LogType.CircleArchive, id: circleId, name: roleName(circle) },
+            {
+              type: LogType.CircleArchive,
+              id: circleId,
+              name: roleName(circle),
+            },
             {
               circles: archiveCircleIds.map((id) => ({
                 type: EntityChangeType.Update,
@@ -263,7 +276,13 @@ export default function useDraftOrgEditActions(
           {
             type: EntityChangeType.Create,
             id: newCircleId,
-            data: { id: newCircleId, orgId, roleId: role.id, parentId, archivedAt: null },
+            data: {
+              id: newCircleId,
+              orgId,
+              roleId: role.id,
+              parentId,
+              archivedAt: null,
+            },
           },
         ]
 
@@ -288,7 +307,10 @@ export default function useDraftOrgEditActions(
 
       async updateRole(role, values) {
         let { prevData, newData } = getEntityChanges(role, values)
-        if (Object.keys(prevData).length === 0 && Object.keys(newData).length === 0) {
+        if (
+          Object.keys(prevData).length === 0 &&
+          Object.keys(newData).length === 0
+        ) {
           return
         }
 
@@ -315,7 +337,8 @@ export default function useDraftOrgEditActions(
         // Otherwise keep a single RoleUpdate log: merge with an existing one
         // (original prevData, latest newData) and move it to the end.
         const updateLog = logs.find(
-          (l) => l.display.type === LogType.RoleUpdate && l.display.id === role.id
+          (l) =>
+            l.display.type === LogType.RoleUpdate && l.display.id === role.id
         )
         if (updateLog) {
           const existing = updateLog.changes.roles?.find(
@@ -407,11 +430,14 @@ export default function useDraftOrgEditActions(
         if (!circle || !member || !circleMember) return
 
         // Added within this proposal: drop the log that created it
-        const createLog = draft.getLogs().find((log) =>
-          log.changes.circlesMembers?.some(
-            (c) => c.type === EntityChangeType.Create && c.id === circleMember.id
+        const createLog = draft
+          .getLogs()
+          .find((log) =>
+            log.changes.circlesMembers?.some(
+              (c) =>
+                c.type === EntityChangeType.Create && c.id === circleMember.id
+            )
           )
-        )
         if (createLog) {
           await draft.removeLog(createLog.id)
           return
@@ -473,7 +499,8 @@ export default function useDraftOrgEditActions(
       async removeCircleLink(parentId, circleId) {
         const parentCircle = findCircle(parentId)
         const invitedCircle = findCircle(circleId)
-        const link = draft.getData()
+        const link = draft
+          .getData()
           ?.circleLinks.find(
             (cl) =>
               cl.parentId === parentId &&
@@ -483,11 +510,13 @@ export default function useDraftOrgEditActions(
         if (!parentCircle || !invitedCircle || !link) return
 
         // Added within this proposal: drop the log that created it
-        const createLog = draft.getLogs().find((log) =>
-          log.changes.circlesLinks?.some(
-            (c) => c.type === EntityChangeType.Create && c.id === link.id
+        const createLog = draft
+          .getLogs()
+          .find((log) =>
+            log.changes.circlesLinks?.some(
+              (c) => c.type === EntityChangeType.Create && c.id === link.id
+            )
           )
-        )
         if (createLog) {
           await draft.removeLog(createLog.id)
           return

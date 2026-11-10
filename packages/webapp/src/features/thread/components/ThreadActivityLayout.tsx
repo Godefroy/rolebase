@@ -134,15 +134,15 @@ export default function ThreadActivityLayout({
 
           <ActionsMenu variant="ghost">
             <EditMenuItem onClick={onEdit} />
-            <MarkUnreadMenuItem
-              onClick={() => handleMarkUnread(activity.id)}
-            />
+            <MarkUnreadMenuItem onClick={() => handleMarkUnread(activity.id)} />
             {canDelete && <DeleteMenuItem onClick={onDeleteOpen} />}
           </ActionsMenu>
         </HStack>
 
         <Text>
-          {activity.member && <MemberLink id={activity.member.id} name={activity.member.name} />}
+          {activity.member && (
+            <MemberLink id={activity.member.id} name={activity.member.name} />
+          )}
           {activity.member?.archivedAt && (
             <Tag size="sm" colorScheme="gray" ml={2}>
               {t('common.memberDisabled')}

@@ -28,7 +28,12 @@ export default function useProposalState(
 
   // Result preview from the current votes
   const result = useMemo(
-    () => resolveProposal(activity.data.decisionMode, votes || [], participants.length),
+    () =>
+      resolveProposal(
+        activity.data.decisionMode,
+        votes || [],
+        participants.length
+      ),
     [activity.data.decisionMode, votes, participants.length]
   )
 

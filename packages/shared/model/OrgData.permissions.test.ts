@@ -20,7 +20,14 @@ const { Free, Agile, Strict } = Governance_Mode_Enum
 // but NOT a leader (the circle is led through its representative).
 
 const data = (mode: Governance_Mode_Enum) =>
-  new OrgData({ circles, circleMembers, circleLinks: [], roles, members, governanceMode: mode })
+  new OrgData({
+    circles,
+    circleMembers,
+    circleLinks: [],
+    roles,
+    members,
+    governanceMode: mode,
+  })
 
 const perms = (
   circleId: string,
@@ -32,7 +39,13 @@ const perms = (
   const org = data(mode)
   const circle = org.getCircle(circleId)!
   const role = org.getRole(circle.roleId)!
-  return org.getCirclePermissions(circle, role, memberId, isOrgMember, isOrgOwner)
+  return org.getCirclePermissions(
+    circle,
+    role,
+    memberId,
+    isOrgMember,
+    isOrgOwner
+  )
 }
 
 const canCancel = (
@@ -55,7 +68,9 @@ describe('OrgData permission helpers', () => {
     expect(orgData.isCircleLeader('circle-agence-dev', 'member-alice')).toBe(
       true
     )
-    expect(orgData.isCircleLeader('circle-agence-dev', 'member-pam')).toBe(false)
+    expect(orgData.isCircleLeader('circle-agence-dev', 'member-pam')).toBe(
+      false
+    )
     expect(orgData.isCircleLeader('circle-agence-dev', undefined)).toBe(false)
   })
 
@@ -123,7 +138,8 @@ describe('OrgData.getCirclePermissions', () => {
         .canEditMembers
     ).toBe(true)
     expect(
-      perms('circle-agence-dev-facilitator', 'member-pam', Strict).canEditMembers
+      perms('circle-agence-dev-facilitator', 'member-pam', Strict)
+        .canEditMembers
     ).toBe(false)
   })
 
@@ -209,7 +225,9 @@ describe('OrgData.canEditSomeCircle', () => {
   const { Free, Agile, Strict } = Governance_Mode_Enum
 
   it('Agile: true for a lead, false for a plain member', () => {
-    expect(data(Agile).canEditSomeCircle('member-alice', true, false)).toBe(true)
+    expect(data(Agile).canEditSomeCircle('member-alice', true, false)).toBe(
+      true
+    )
     expect(data(Agile).canEditSomeCircle('member-pam', true, false)).toBe(false)
   })
 
@@ -219,11 +237,17 @@ describe('OrgData.canEditSomeCircle', () => {
   })
 
   it('Strict: a lead keeps member assignment', () => {
-    expect(data(Strict).canEditSomeCircle('member-alice', true, false)).toBe(true)
-    expect(data(Strict).canEditSomeCircle('member-pam', true, false)).toBe(false)
+    expect(data(Strict).canEditSomeCircle('member-alice', true, false)).toBe(
+      true
+    )
+    expect(data(Strict).canEditSomeCircle('member-pam', true, false)).toBe(
+      false
+    )
   })
 
   it('denies non org-members', () => {
-    expect(data(Free).canEditSomeCircle('member-alice', false, false)).toBe(false)
+    expect(data(Free).canEditSomeCircle('member-alice', false, false)).toBe(
+      false
+    )
   })
 })

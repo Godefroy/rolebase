@@ -2,8 +2,10 @@ import React from 'react'
 import { Control, Controller, FieldValues, Path } from 'react-hook-form'
 import RRuleEditor, { RRuleEditorProps } from './RRuleEditor'
 
-interface Props<Values extends FieldValues>
-  extends Omit<RRuleEditorProps, 'value' | 'onChange'> {
+interface Props<Values extends FieldValues> extends Omit<
+  RRuleEditorProps,
+  'value' | 'onChange'
+> {
   name: Path<Values>
   control: Control<Values>
 }

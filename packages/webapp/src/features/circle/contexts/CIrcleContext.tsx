@@ -52,7 +52,8 @@ export function CircleProvider({ circleId, children }: Props) {
     variables: { id: circleId },
   })
   const fetchedCircle = fetched?.circle_by_pk
-  const circle: CircleFragment | undefined = orgCircle ?? fetchedCircle ?? undefined
+  const circle: CircleFragment | undefined =
+    orgCircle ?? fetchedCircle ?? undefined
   const role = orgData?.getRole(circle?.roleId) ?? fetchedCircle?.role
 
   // Participants

@@ -160,10 +160,10 @@ export default function MeetingRecurringEditModal({
               url: videoConfUrl,
             }
           : videoConfType
-          ? {
-              type: videoConfType,
-            }
-          : null
+            ? {
+                type: videoConfType,
+              }
+            : null
 
       const meetingUpdate = {
         ...data,

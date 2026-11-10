@@ -26,8 +26,7 @@ export default function TasksKanban({
     (result: DropResult) => {
       const taskId = result.draggableId
       const status = result.destination?.droppableId as
-        | Task_Status_Enum
-        | undefined
+        Task_Status_Enum | undefined
       const indexInStatus = result.destination?.index
       const task = tasks.find((t) => t.id === taskId)
       if (!task || !status || indexInStatus === undefined) return

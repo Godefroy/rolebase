@@ -14,8 +14,10 @@ import React, { useContext, useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useOrgContext, useOrgEditActions } from '@/org/contexts/OrgContext'
 
-interface Props
-  extends Omit<AlertDialogProps, 'children' | 'leastDestructiveRef'> {
+interface Props extends Omit<
+  AlertDialogProps,
+  'children' | 'leastDestructiveRef'
+> {
   circleId: string
   memberId: string
   onDelete?(): void
@@ -57,7 +59,10 @@ export default function CircleMemberDeleteModal({
             <Text>
               <Trans
                 i18nKey="CircleMemberDeleteModal.info"
-                values={{ role: orgData?.getRole(circle?.roleId)?.name, member: member?.name }}
+                values={{
+                  role: orgData?.getRole(circle?.roleId)?.name,
+                  member: member?.name,
+                }}
                 components={{ b: <strong /> }}
               />
             </Text>

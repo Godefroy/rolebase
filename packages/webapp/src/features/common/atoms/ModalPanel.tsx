@@ -1,10 +1,5 @@
 import useIsSidePanel from '@/common/hooks/useIsSidePanel'
-import {
-  Box,
-  Modal,
-  ModalContextProvider,
-  ModalProps,
-} from '@chakra-ui/react'
+import { Box, Modal, ModalContextProvider, ModalProps } from '@chakra-ui/react'
 import React, { useMemo } from 'react'
 
 export const modalPanelWidth = 450

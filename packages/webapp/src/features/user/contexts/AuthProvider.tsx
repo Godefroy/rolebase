@@ -53,8 +53,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       emailVerified: user.emailVerified,
       onboardingRole: user.metadata?.onboardingRole as string | undefined,
       onboardingObjective: user.metadata?.onboardingObjective as
-        | string
-        | undefined,
+        string | undefined,
       onboardingSource: user.metadata?.onboardingSource as string | undefined,
     })
   }, [user?.id, user?.emailVerified, user?.metadata])

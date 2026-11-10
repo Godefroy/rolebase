@@ -1,9 +1,16 @@
 import { describe, expect, it } from 'vitest'
-import { CircleFragment, CircleLinkFragment, Governance_Mode_Enum } from '../gql'
+import {
+  CircleFragment,
+  CircleLinkFragment,
+  Governance_Mode_Enum,
+} from '../gql'
 import { orgData } from '../mocks/circles'
 import { OrgData } from './OrgData'
 
-const circle = (id: string, parentId: string | null = null): CircleFragment => ({
+const circle = (
+  id: string,
+  parentId: string | null = null
+): CircleFragment => ({
   id,
   orgId: 'org-1',
   roleId: 'role',
@@ -11,7 +18,11 @@ const circle = (id: string, parentId: string | null = null): CircleFragment => (
   archivedAt: null,
 })
 
-const link = (id: string, parentId: string, circleId: string): CircleLinkFragment => ({
+const link = (
+  id: string,
+  parentId: string,
+  circleId: string
+): CircleLinkFragment => ({
   id,
   orgId: 'org-1',
   parentId,
@@ -23,10 +34,9 @@ const link = (id: string, parentId: string, circleId: string): CircleLinkFragmen
 describe('OrgData relations', () => {
   describe('membersOf', () => {
     it('returns the joined members of a circle', () => {
-      expect(orgData.membersOf('circle-agence-dev').map((m) => m.member.id)).toEqual([
-        'member-jean-kevin',
-        'member-pam',
-      ])
+      expect(
+        orgData.membersOf('circle-agence-dev').map((m) => m.member.id)
+      ).toEqual(['member-jean-kevin', 'member-pam'])
     })
 
     it('returns an empty array for a circle without members', () => {
@@ -79,11 +89,9 @@ describe('OrgData relations', () => {
 
   describe('andParentsOf', () => {
     it('appends the circle itself to its ancestors', () => {
-      expect(orgData.andParentsOf('circle-agence-dev').map((c) => c.id)).toEqual([
-        'circle-super',
-        'circle-agence',
-        'circle-agence-dev',
-      ])
+      expect(
+        orgData.andParentsOf('circle-agence-dev').map((c) => c.id)
+      ).toEqual(['circle-super', 'circle-agence', 'circle-agence-dev'])
     })
 
     it('returns an empty array for an unknown circle', () => {
@@ -92,7 +100,14 @@ describe('OrgData relations', () => {
   })
 
   describe('links', () => {
-    const data = new OrgData({ circles: [circle('host'), circle('target')], circleMembers: [], circleLinks: [link('link-1', 'host', 'target')], roles: [], members: [], governanceMode: Governance_Mode_Enum.Free })
+    const data = new OrgData({
+      circles: [circle('host'), circle('target')],
+      circleMembers: [],
+      circleLinks: [link('link-1', 'host', 'target')],
+      roles: [],
+      members: [],
+      governanceMode: Governance_Mode_Enum.Free,
+    })
 
     it('linksOf returns links hosted by a circle', () => {
       expect(data.linksOf('host').map((l) => l.circleId)).toEqual(['target'])
@@ -104,7 +119,9 @@ describe('OrgData relations', () => {
     })
 
     it('invitingCirclesOf returns the hosting circles', () => {
-      expect(data.invitingCirclesOf('target').map((c) => c.id)).toEqual(['host'])
+      expect(data.invitingCirclesOf('target').map((c) => c.id)).toEqual([
+        'host',
+      ])
     })
 
     it('ignores links pointing to unknown circles', () => {

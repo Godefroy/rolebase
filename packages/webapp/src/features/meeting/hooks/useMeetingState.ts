@@ -154,7 +154,8 @@ export default function useMeetingState(meetingId: string): MeetingState {
   const [forceEdit, setForceEdit] = useState(false)
 
   // Edit mode? (steps)
-  const editable = canEditSteps && (!isEnded || forceEdit) && !meeting?.archivedAt
+  const editable =
+    canEditSteps && (!isEnded || forceEdit) && !meeting?.archivedAt
 
   // Reset forced edition when meeting is not ended anymore
   useEffect(() => {

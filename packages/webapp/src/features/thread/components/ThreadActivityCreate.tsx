@@ -23,7 +23,6 @@ import {
   Thread_Activity_Type_Enum,
   useCreateThreadActivityMutation,
 } from '@gql'
-import { cmdOrCtrlKey } from '@utils/env'
 import { UserLocalStorageKeys } from '@utils/localStorage'
 import React, {
   MouseEvent,
@@ -36,7 +35,6 @@ import { useTranslation } from 'react-i18next'
 import useCanEditDecisions from '@/decision/hooks/useCanEditDecisions'
 import ProposalModal from '@/proposal/modals/ProposalModal'
 import {
-  CreateIcon,
   DecisionIcon,
   MeetingIcon,
   OrgChartIcon,

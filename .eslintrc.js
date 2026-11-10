@@ -42,10 +42,18 @@ module.exports = {
     ],
     '@typescript-eslint/explicit-function-return-type': 'off',
   },
+  overrides: [
+    {
+      // TypeScript already checks undefined identifiers
+      files: ['*.ts', '*.tsx'],
+      rules: { 'no-undef': 'off' },
+    },
+  ],
   ignorePatterns: [
     '**/*generated.ts',
     '**/graphql/graphql.ts',
     '**/dist/**',
     '**/storybook-static/**',
+    'packages/showreel/data.js',
   ],
 }

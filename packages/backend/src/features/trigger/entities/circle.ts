@@ -1,9 +1,10 @@
 import { SearchDoc, SearchTypes } from '@rolebase/shared/model/search'
-import { CircleFragment, DocumentType, gql } from '../../../gql'
+import { CircleFragment, CircleSearchFragment, gql } from '../../../gql'
 import { adminRequest } from '../../../utils/adminRequest'
 import { IndexEntity } from './IndexEntity'
 
-const Fragment = gql(`
+// Declares the fragment for codegen
+gql(`
   fragment CircleSearch on circle {
     id
     orgId
@@ -13,9 +14,7 @@ const Fragment = gql(`
   }
 `)
 
-export const transform = (
-  fragment: DocumentType<typeof Fragment>
-): SearchDoc => ({
+export const transform = (fragment: CircleSearchFragment): SearchDoc => ({
   objectID: fragment.id,
   orgId: fragment.orgId,
   type: SearchTypes.Circle,

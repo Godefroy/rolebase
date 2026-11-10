@@ -10,7 +10,8 @@ export default function useFilterThreadsByMember<Entity extends ThreadFragment>(
 
   // Filter entries
   return useMemo(
-    () => threads && (orgData ? orgData.filterThreads(threads, memberId) : threads),
+    () =>
+      threads && (orgData ? orgData.filterThreads(threads, memberId) : threads),
     [threads, memberId, orgData]
   )
 }

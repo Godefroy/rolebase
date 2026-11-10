@@ -133,7 +133,12 @@ export default function BubbleToolbar({ editor, labels }: Props) {
                 aria-label={labels.unlink}
                 onMouseDown={(event) => {
                   event.preventDefault()
-                  editor.chain().focus().extendMarkRange('link').unsetLink().run()
+                  editor
+                    .chain()
+                    .focus()
+                    .extendMarkRange('link')
+                    .unsetLink()
+                    .run()
                   setLinkEditing(false)
                 }}
               >

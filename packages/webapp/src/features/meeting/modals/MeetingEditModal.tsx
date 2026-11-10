@@ -194,10 +194,10 @@ export default function MeetingEditModal({
               url: videoConfUrl,
             }
           : videoConfType
-          ? {
-              type: videoConfType,
-            }
-          : null
+            ? {
+                type: videoConfType,
+              }
+            : null
 
       const meetingUpdate: Meeting_Set_Input = {
         ...data,

@@ -31,15 +31,15 @@ export default function ProposalLogDiffModal({ log, ...modalProps }: Props) {
         <ModalBody pb={6}>
           <VStack spacing={3} align="stretch" wordBreak="break-word">
             {Object.keys(log.changes).flatMap((entityType) =>
-              (
-                log.changes[entityType as keyof EntitiesChanges] || []
-              ).map((entityChange) => (
-                <LogEntityChanges
-                  key={entityChange.id}
-                  type={entityType}
-                  entityChange={entityChange as EntityChange<any>}
-                />
-              ))
+              (log.changes[entityType as keyof EntitiesChanges] || []).map(
+                (entityChange) => (
+                  <LogEntityChanges
+                    key={entityChange.id}
+                    type={entityType}
+                    entityChange={entityChange as EntityChange<any>}
+                  />
+                )
+              )
             )}
           </VStack>
         </ModalBody>

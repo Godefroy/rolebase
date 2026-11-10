@@ -152,13 +152,15 @@ export default function useProposalDraft(
     return () => {
       canceled = true
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orgReady])
 
   const applyLog = useCallback(
     async (display: LogDisplay, changes: EntitiesChanges) => {
       if (!workingRef.current) return
-      await rebuild([...logsRef.current, { id: generateId(), display, changes }])
+      await rebuild([
+        ...logsRef.current,
+        { id: generateId(), display, changes },
+      ])
     },
     [rebuild]
   )
@@ -201,7 +203,6 @@ export default function useProposalDraft(
   // new reference on every change so consumers re-render.
   const orgData = useMemo<OrgData | undefined>(
     () => orgDataRef.current,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [version]
   )
 
@@ -210,7 +211,6 @@ export default function useProposalDraft(
     if (!workingRef.current) return
     indexOrgData()
     setVersion((v) => v + 1)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [actingLeader])
 
   const hasError = useMemo(() => logs.some((l) => l.error), [logs])

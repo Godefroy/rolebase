@@ -15,8 +15,10 @@ import { EntityChangeType, LogType } from '@rolebase/shared/model/log'
 import React, { useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
-interface Props
-  extends Omit<AlertDialogProps, 'children' | 'leastDestructiveRef'> {
+interface Props extends Omit<
+  AlertDialogProps,
+  'children' | 'leastDestructiveRef'
+> {
   role: RoleSummaryFragment
   onDelete?(): void
 }

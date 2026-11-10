@@ -12,8 +12,10 @@ import { SearchFilterType } from '../searchTypes'
 import { searchIcons } from './SearchResultIcon'
 import SearchTypeMenuItem from './SearchTypeMenuItem'
 
-interface Props<T extends SearchFilterType>
-  extends Omit<ButtonProps, 'value' | 'onChange'> {
+interface Props<T extends SearchFilterType> extends Omit<
+  ButtonProps,
+  'value' | 'onChange'
+> {
   types: readonly T[]
   value?: NoInfer<T>
   placeholder?: string

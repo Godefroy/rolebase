@@ -35,9 +35,7 @@ export default function MemberRoleItem({
   const circleMember = useMemo(
     () =>
       orgData
-        ? orgData
-            .membersOf(circle.id)
-            .find((m) => m.member.id === memberId)
+        ? orgData.membersOf(circle.id).find((m) => m.member.id === memberId)
         : undefined,
     [memberId, circle, orgData]
   )

@@ -69,8 +69,8 @@ export default function RRuleEnd({ options, onChange }: FormPartProps) {
             options.count
               ? EndTypes.COUNT
               : options.until
-              ? EndTypes.UNTIL
-              : EndTypes.NEVER
+                ? EndTypes.UNTIL
+                : EndTypes.NEVER
           }
           onChange={toggleEnd}
         >

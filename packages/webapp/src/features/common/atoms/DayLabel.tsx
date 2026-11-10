@@ -38,12 +38,12 @@ export default function DayLabel({
       {isToday(date)
         ? t('common.dates.today')
         : isTomorrow(date)
-        ? t('common.dates.tomorrow')
-        : format(
-            date,
-            date.getFullYear() !== currentYear ? 'eeee P' : 'eeee dd/MM',
-            { locale: dateLocale }
-          )}
+          ? t('common.dates.tomorrow')
+          : format(
+              date,
+              date.getFullYear() !== currentYear ? 'eeee P' : 'eeee dd/MM',
+              { locale: dateLocale }
+            )}
     </Text>
   )
 }

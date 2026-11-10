@@ -21,8 +21,8 @@ export function isRecurrenceEqual(
     (pattern1.dayOfMonth || 0) === (pattern2.dayOfMonth || 0) &&
     // Days of week
     (pattern1.daysOfWeek || []).length === (pattern2.daysOfWeek || []).length &&
-    (pattern1.daysOfWeek || [])?.every(
-      (day) => pattern2.daysOfWeek?.includes(day)
+    (pattern1.daysOfWeek || [])?.every((day) =>
+      pattern2.daysOfWeek?.includes(day)
     ) &&
     // First day of week
     (pattern1.firstDayOfWeek || 'sunday') ===

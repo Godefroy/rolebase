@@ -11,8 +11,10 @@ import {
 import React, { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
-interface Props
-  extends Omit<AlertDialogProps, 'children' | 'leastDestructiveRef'> {
+interface Props extends Omit<
+  AlertDialogProps,
+  'children' | 'leastDestructiveRef'
+> {
   duplicate: boolean
   onConfirm(): void
 }

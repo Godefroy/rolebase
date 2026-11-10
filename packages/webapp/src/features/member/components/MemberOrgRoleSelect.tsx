@@ -27,8 +27,10 @@ import MemberInvitationModal from './MemberInvitationModal'
 import MemberInviteModal from './MemberInviteModal'
 import MemberRemoveAccessModal from './MemberRemoveAccessModal'
 
-interface MemberOrgRoleSelectProps
-  extends Omit<ButtonProps, 'onClick' | 'isLoading'> {
+interface MemberOrgRoleSelectProps extends Omit<
+  ButtonProps,
+  'onClick' | 'isLoading'
+> {
   member: MemberFragment
 }
 

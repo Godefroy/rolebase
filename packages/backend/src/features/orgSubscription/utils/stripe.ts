@@ -16,8 +16,7 @@ type StripeSubscriptionCreation = Stripe.Subscription & {
 }
 
 export type ExtendedStripeCustomer = (
-  | Stripe.Customer
-  | Stripe.DeletedCustomer
+  Stripe.Customer | Stripe.DeletedCustomer
 ) & {
   subscriptions: {
     data: Stripe.Subscription[]

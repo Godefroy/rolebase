@@ -15,6 +15,8 @@ export default function useCircleParticipants(
     if (!id || !orgData) return []
 
     // Compute participants and group by member
-    return groupParticipantsByMember(orgData.getParticipants(id, includeChildren))
+    return groupParticipantsByMember(
+      orgData.getParticipants(id, includeChildren)
+    )
   }, [circleOrId, orgData, includeChildren])
 }

@@ -5,12 +5,7 @@ import {
   CircleMemberContextValue,
 } from '@/circle/contexts/CircleMemberContext'
 import ReadonlyOrgProvider from '@/org/contexts/ReadonlyOrgProvider'
-import {
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalOverlay,
-} from '@chakra-ui/react'
+import { Modal, ModalBody, ModalContent, ModalOverlay } from '@chakra-ui/react'
 import { ProposalLog } from '@rolebase/shared/model/proposal'
 import React, { useMemo, useState } from 'react'
 import useProposalDraft from '../hooks/useProposalDraft'
@@ -53,7 +48,7 @@ export default function ProposalLogsPreview({ logs }: Props) {
             onClose={() => setSelectedCircleId(undefined)}
           >
             <ModalOverlay />
-            <ModalContent maxH="90vh"  borderRadius="lg" overflow="hidden">
+            <ModalContent maxH="90vh" borderRadius="lg" overflow="hidden">
               <ModalBody p={0} overflowY="auto">
                 <CircleProvider circleId={selectedCircleId}>
                   <CircleContent

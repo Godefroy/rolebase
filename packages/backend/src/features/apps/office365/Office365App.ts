@@ -94,14 +94,12 @@ export default class Office365App
       '/me/calendars?$select=id,name,isDefaultCalendar,canEdit'
     )
 
-    return officeCalendars.map(
-      (cal): Calendar => ({
-        id: cal.id ?? 'No Id',
-        name: cal.name ?? 'No calendar name',
-        isDefault: cal.isDefaultCalendar ?? false,
-        canEdit: cal.canEdit ?? false,
-      })
-    )
+    return officeCalendars.map((cal): Calendar => ({
+      id: cal.id ?? 'No Id',
+      name: cal.name ?? 'No calendar name',
+      isDefault: cal.isDefaultCalendar ?? false,
+      canEdit: cal.canEdit ?? false,
+    }))
   }
 
   // Update/create a meeting (for Hasura trigger event)

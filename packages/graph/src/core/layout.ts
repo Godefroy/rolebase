@@ -114,12 +114,12 @@ function prepareDataInternal(
       const memberEntries = options.hideMembers
         ? []
         : circle.memberEntries
-        ? circle.memberEntries
-        : circle.showMembers
-        ? org.membersOf(circle.id)
-        : layout === GraphLayoutKind.Tree && circle.participants
-        ? leaderEntries(circle.participants)
-        : []
+          ? circle.memberEntries
+          : circle.showMembers
+            ? org.membersOf(circle.id)
+            : layout === GraphLayoutKind.Tree && circle.participants
+              ? leaderEntries(circle.participants)
+              : []
 
       // A role with a representative role stacked under it lists its members
       // in a nameless card of its own, placed first among its sub-roles: kept

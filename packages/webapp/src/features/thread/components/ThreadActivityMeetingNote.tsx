@@ -1,5 +1,4 @@
 import Markdown from '@/common/atoms/Markdown'
-import { useAuth } from '@/user/hooks/useAuth'
 import CollabEditor from '@/editor/components/CollabEditor'
 import MeetingItem from '@/meeting/components/MeetingItem'
 import { MeetingContext } from '@/meeting/contexts/MeetingContext'

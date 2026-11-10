@@ -18,8 +18,10 @@ import { RoleFragment, RoleSummaryFragment } from '@gql'
 import React, { useRef, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 
-interface Props
-  extends Omit<AlertDialogProps, 'children' | 'leastDestructiveRef'> {
+interface Props extends Omit<
+  AlertDialogProps,
+  'children' | 'leastDestructiveRef'
+> {
   role: RoleSummaryFragment
 }
 
