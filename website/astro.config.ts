@@ -1,12 +1,13 @@
 import { defineConfig } from 'astro/config'
 import { fileURLToPath } from 'node:url'
 import { unified } from '@astrojs/markdown-remark'
-import mdx, { type MdxOptions } from '@astrojs/mdx'
+import mdx from '@astrojs/mdx'
 import netlify from '@astrojs/netlify'
 import react from '@astrojs/react'
 import sitemap from '@astrojs/sitemap'
 import expressiveCode from 'astro-expressive-code'
 import svgr from 'vite-plugin-svgr'
+import tailwindcss from '@tailwindcss/vite'
 import rehypeExternalLinks from 'rehype-external-links'
 import rehypeMermaid from 'rehype-mermaid'
 import { redirects } from './src/redirects'
@@ -31,7 +32,7 @@ const webappSrc = fileURLToPath(
 
 const { site, langs, defaultLang } = config
 
-// Drives `.md` files. `pre-mermaid` leaves a `<pre class="mermaid">` rendered
+// Drives `.md` and `.mdx` files. `pre-mermaid` leaves a `<pre class="mermaid">` rendered
 // client-side by `src/scripts/mermaid.ts`, so no Playwright is needed at build
 // time. It runs before `rehypeMdClass` so the diagram `<pre>` also gets `.md`,
 // and before Expressive Code, which then finds no `<code>` left to highlight.
@@ -65,19 +66,9 @@ export default defineConfig({
   integrations: [
     // Renders every code block, from the options in ec.config.mjs.
     expressiveCode(),
-    // mdx@5 reads only its own options, so the pipeline is repeated here for
-    // `.mdx` files. Reading it back off the processor is what matters: `unified()`
-    // copies the arrays it receives and integrations append to those copies
-    // during `astro:config:setup`, which is how Expressive Code lands on MDX
-    // pages. `gfm` is explicit for the same reason, a custom processor hides the
-    // default Astro would otherwise pass on (dropping remark-gfm breaks tables).
-    mdx({
-      remarkPlugins: processor.options
-        .remarkPlugins as MdxOptions['remarkPlugins'],
-      rehypePlugins: processor.options
-        .rehypePlugins as MdxOptions['rehypePlugins'],
-      gfm: true,
-    }),
+    // Inherits `markdown.processor` (mdx@8), so `.mdx` files get the same
+    // pipeline, Expressive Code included.
+    mdx(),
     react(),
     sitemap({
       // Date of the last commit on each page's source, so a crawler (and an agent
@@ -97,15 +88,15 @@ export default defineConfig({
   ],
   vite: {
     plugins: [
+      tailwindcss(),
       // A few webapp components import SVGs as React components. Scope the
       // transform to webapp source so the website's own `.svg` asset imports
-      // keep returning URLs/ImageMetadata.
-      // Cast to any: vite-plugin-svgr is typed against a different Vite copy
-      // than the one Astro bundles, so their PluginOption types diverge.
+      // keep returning URLs/ImageMetadata. Matching plain `.svg` ids (rather
+      // than the plugin's default `*.svg?react`) makes the component the
+      // default export, as the webapp sources expect.
       svgr({
-        exportAsDefault: true,
         include: '**/packages/webapp/**/*.svg',
-      }) as any,
+      }),
     ],
     resolve: {
       // Single instances across the island and the bundled workspace/webapp
