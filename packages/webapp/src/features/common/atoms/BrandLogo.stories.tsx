@@ -1,5 +1,5 @@
 import { VStack } from '@chakra-ui/react'
-import { Meta, StoryObj } from '@storybook/react'
+import { Meta, StoryObj } from '@storybook/react-vite'
 import React from 'react'
 import { decorators } from '../../../stories'
 import BrandLogo from './BrandLogo'

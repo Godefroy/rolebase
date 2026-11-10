@@ -1,5 +1,6 @@
-import { Meta, StoryObj } from '@storybook/react'
+import { Meta, StoryObj } from '@storybook/react-vite'
 import React, { useEffect, useState } from 'react'
+import { fn } from 'storybook/test'
 import { decorators } from '../../../stories'
 import RRuleEditor from './RRuleEditor'
 
@@ -29,6 +30,7 @@ export const Example: StoryObj<typeof RRuleEditor> = {
     )
   },
   args: {
+    onChange: fn(),
     value:
       'DTSTART:20221118T230000Z\nRRULE:FREQ=WEEKLY;INTERVAL=1;BYDAY=MO,WE;COUNT=42',
   },

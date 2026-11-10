@@ -10,7 +10,7 @@ import {
 import React, { ChangeEventHandler, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { DeleteIcon, UploadIcon } from 'src/icons'
-import BrandIcon from 'src/images/icon.svg'
+import BrandIcon from 'src/images/icon.svg?react'
 
 interface Props {
   src?: string

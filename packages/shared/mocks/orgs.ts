@@ -12,4 +12,8 @@ export const org: OrgFragment = {
   defaultGraphView: CirclesGraphViews.Circles,
   defaultGraphFolded: false,
   defaultGraphMembers: true,
+  slug: null,
+  icon: null,
+  homeNote: null,
+  onboardingTodo: null,
 }

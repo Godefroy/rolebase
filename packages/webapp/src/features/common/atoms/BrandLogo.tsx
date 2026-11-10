@@ -1,5 +1,5 @@
 import React from 'react'
-import Logo from 'src/images/logo.svg'
+import Logo from 'src/images/logo.svg?react'
 
 const logoWidth = 334 // 430
 const logoHeight = 56 // 79

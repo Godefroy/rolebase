@@ -1,36 +1,31 @@
-const { mergeConfig } = require('vite')
-const { default: tsconfigPaths } = require('vite-tsconfig-paths')
-const path = require('path')
+import type { StorybookConfig } from '@storybook/react-vite'
+import path from 'path'
+import { fileURLToPath } from 'url'
+import { mergeConfig } from 'vite'
 
-module.exports = {
-  stories: ['../src/**/*.stories.mdx', '../src/**/*.stories.@(js|jsx|ts|tsx)'],
+const dirname = path.dirname(fileURLToPath(import.meta.url))
 
-  addons: [
-    '@storybook/addon-links',
-    '@storybook/addon-essentials',
-    '@storybook/addon-interactions',
-  ],
+const config: StorybookConfig = {
+  stories: ['../src/**/*.stories.@(js|jsx|ts|tsx)'],
+
+  addons: ['@storybook/addon-links', '@storybook/addon-docs'],
 
   framework: {
     name: '@storybook/react-vite',
     options: {},
   },
 
-  features: {
-    storyStoreV7: true,
-  },
-
   async viteFinal(config) {
     return mergeConfig(config, {
-      plugins: [tsconfigPaths()],
       resolve: {
+        tsconfigPaths: true,
         alias: [
           {
             // Prevent yjs from being imported twice (from its CommonJS and ECMAScript version), by forcing an alias on it
             // More info: https://github.com/yjs/yjs/issues/438
             find: 'yjs',
             replacement: path.resolve(
-              __dirname,
+              dirname,
               '../../../node_modules/yjs/dist/yjs.mjs'
             ),
           },
@@ -39,3 +34,5 @@ module.exports = {
     })
   },
 }
+
+export default config

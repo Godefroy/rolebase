@@ -25,10 +25,10 @@
     "@types/lodash.debounce": "^4.0.9",
     "@types/lodash.throttle": "^4.1.9",
     "@types/lodash.uniqby": "^4.7.6",
-    "@types/react": "^18.2.21",
+    "@types/react": "^18.3.31",
     "@types/react-dom": "^18.2.7",
     "@typescript/native-preview": "^7.0.0-dev.20260707.2",
     "typescript": "^5.2.2",
-    "vitest": "^0.34.6"
+    "vitest": "^5.1.0"
   }
 }

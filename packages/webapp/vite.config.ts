@@ -5,18 +5,13 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import { defineConfig, PluginOption } from 'vite'
 import svgr from 'vite-plugin-svgr'
-import tsconfigPaths from 'vite-tsconfig-paths'
 import umamiAppRoots from './vite/umamiAppRoots'
 
 const plugins: PluginOption[] = [
-  svgr({ exportAsDefault: true }),
+  // SVG files imported with `?react` become React components
+  svgr(),
   react(),
   umamiAppRoots(),
-  // Scope the tsconfig scan to the webapp's own tsconfig. Without `root`,
-  // vite-tsconfig-paths crawls the whole workspace and chokes on
-  // website/tsconfig.json (its `extends: "astro/tsconfigs/strict"` resolves
-  // via astro's exports map, which the bundled tsconfck fails to follow).
-  tsconfigPaths({ root: __dirname }),
   // visualizer({
   //   template: 'treemap',
   // }),
@@ -60,8 +55,7 @@ export default defineConfig({
   },
   build: {
     sourcemap: true,
-    minify: 'esbuild',
-    rollupOptions: {
+    rolldownOptions: {
       // Multiple entry points: https://stackoverflow.com/questions/70522494/multiple-entry-points-in-vite
       input: {
         main: fileURLToPath(new URL('./index.html', import.meta.url)),
@@ -77,6 +71,8 @@ export default defineConfig({
     host: process.env.VITE_HOST || undefined,
   },
   resolve: {
+    // Path aliases from tsconfig.json (@/*, @gql, src/…)
+    tsconfigPaths: true,
     alias: [
       {
         // Prevent yjs from being imported twice (from its CommonJS and ECMAScript version), by forcing an alias on it

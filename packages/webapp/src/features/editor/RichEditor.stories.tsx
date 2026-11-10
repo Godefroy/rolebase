@@ -6,7 +6,7 @@ import {
   Mentionable,
   RichEditor,
 } from '@rolebase/editor/react'
-import { Meta, StoryObj } from '@storybook/react'
+import { Meta, StoryObj } from '@storybook/react-vite'
 import React, { useRef, useState } from 'react'
 import { decorators } from 'src/stories'
 import '../editor/editorTheme.css'

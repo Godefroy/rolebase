@@ -1,4 +1,4 @@
-import { Meta, StoryObj } from '@storybook/react'
+import { Meta, StoryObj } from '@storybook/react-vite'
 import React from 'react'
 import { decorators } from '../../../stories'
 import BounceAnimation from './BounceAnimation'

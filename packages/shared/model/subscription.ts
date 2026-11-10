@@ -1,6 +1,5 @@
 import Stripe from 'stripe'
 import {
-  Org_Subscription,
   OrgSubscriptionFragment,
   Subscription_Payment_Status_Enum,
   Subscription_Plan_Type_Enum,
@@ -63,7 +62,10 @@ export type Subscription = {
   upcomingInvoice: UpcomingInvoice | null
   expiresAt: string | null
   billingDetails: CustomerBillingDetails | null
-} & Pick<Org_Subscription, 'status' | 'orgId' | 'type'>
+  status: Subscription_Payment_Status_Enum
+  orgId: string
+  type: Subscription_Plan_Type_Enum
+}
 
 export type PromotionCode = {
   id: string

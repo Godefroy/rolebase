@@ -70,6 +70,12 @@ export default function OrgPage() {
     if (!data) return undefined
 
     const members = data.members.map((m) => ({
+      pictureFileId: null,
+      userId: null,
+      inviteEmail: null,
+      inviteDate: null,
+      role: null,
+      archivedAt: null,
       ...m,
       archived: false,
       description: '',
@@ -79,6 +85,7 @@ export default function OrgPage() {
       orgId,
       roleId: c.roleId,
       parentId: c.parentId,
+      archivedAt: null,
       archived: false,
     }))
     const circleMembers = data.circles.flatMap((c) =>
@@ -88,6 +95,7 @@ export default function OrgPage() {
         circleId: c.id,
         memberId: m.memberId,
         createdAt: '',
+        archivedAt: null,
         archived: false,
       }))
     )
@@ -98,6 +106,7 @@ export default function OrgPage() {
         parentId: c.id,
         circleId: l.invitedCircle.id,
         createdAt: '',
+        archivedAt: null,
         archived: false,
       }))
     )

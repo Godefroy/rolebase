@@ -16,12 +16,11 @@
     "lint:format": "prettier --loglevel warn --write \"./{packages,functions}/**/*.{js,jsx,ts,tsx,css,md,json}\" "
   },
   "devDependencies": {
-    "@graphql-codegen/add": "^5.0.0",
-    "@graphql-codegen/cli": "^7.4.6",
-    "@graphql-codegen/gql-tag-operations-preset": "^2.1.0",
-    "@graphql-codegen/typescript": "^4.0.1",
-    "@graphql-codegen/typescript-operations": "^4.0.1",
-    "@graphql-codegen/typescript-react-apollo": "^3.3.7",
+    "@graphql-codegen/add": "^8.0.0",
+    "@graphql-codegen/cli": "^8.0.0",
+    "@graphql-codegen/client-preset": "^7.0.0",
+    "@graphql-codegen/typescript-operations": "^7.0.1",
+    "@graphql-codegen/typescript-react-apollo": "6.0.0-alpha-20261110130114-66e7e67a38e78ab7516629f6d800b650e2fba942",
     "@typescript-eslint/eslint-plugin": "^8.72.2",
     "@typescript-eslint/parser": "^8.72.2",
     "eslint": "^8.57.1",
@@ -32,5 +31,24 @@
     "patch-package": "^8.0.0",
     "prettier": "^3.9.10",
     "turbo": "^2.11.10"
+  },
+  "overrides": {
+    "@joshwooding/vite-plugin-react-docgen-typescript": "^0.9.1",
+    "@typescript-eslint/typescript-estree": {
+      "minimatch": "^11.0.6"
+    },
+    "gaxios": {
+      "uuid": "^11.1.1"
+    },
+    "googleapis-common": {
+      "uuid": "^11.1.1"
+    },
+    "graphql-config": {
+      "minimatch": "^11.0.6"
+    },
+    "nodemon": {
+      "minimatch": "^11.0.6"
+    },
+    "qs": "^6.17.1"
   }
 }

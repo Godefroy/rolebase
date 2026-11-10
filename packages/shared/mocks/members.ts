@@ -3,6 +3,12 @@ import { MemberFragment } from '../gql'
 const memberBase = {
   description: '',
   archivedAt: null,
+  pictureFileId: null,
+  picture: null,
+  userId: null,
+  inviteEmail: null,
+  inviteDate: null,
+  role: null,
 }
 
 export const members: MemberFragment[] = [

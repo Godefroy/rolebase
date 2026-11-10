@@ -22,7 +22,11 @@ const config: CodegenConfig = {
   documents: [fragmentsPath, 'src/**/*.ts', '!src/graphql/**/*'],
   generates: {
     'src/graphql/': {
-      preset: 'gql-tag-operations-preset',
+      preset: 'client',
+      presetConfig: {
+        gqlTagName: 'gql',
+        fragmentMasking: false,
+      },
       plugins: [
         getAddPlugin(),
         {

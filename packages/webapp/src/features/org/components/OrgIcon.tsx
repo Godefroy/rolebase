@@ -1,7 +1,7 @@
 import { getResizedImageUrl } from '@rolebase/shared/helpers/getResizedImageUrl'
 import { Box, Image } from '@chakra-ui/react'
 import React from 'react'
-import BrandIcon from 'src/images/icon.svg'
+import BrandIcon from 'src/images/icon.svg?react'
 
 interface Props {
   icon?: string | null

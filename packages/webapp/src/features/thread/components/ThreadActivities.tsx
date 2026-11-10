@@ -13,13 +13,7 @@ import { ThreadActivityMeetingNoteFragment } from '@rolebase/shared/model/thread
 import useCurrentMember from '@/member/hooks/useCurrentMember'
 import { ScrollableContext } from '@/common/hooks/useScrollable'
 import { isSameDay } from 'date-fns'
-import React, {
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ThreadIcon } from 'src/icons'
 import ProposalScrollButton from '@/proposal/components/ProposalScrollButton'
@@ -105,6 +99,9 @@ export default forwardRef(function ThreadActivities(
       createdAt: new Date().toISOString(),
       type: Thread_Activity_Type_Enum.MeetingNote,
       refMeeting: meetingState.meeting,
+      refThread: null,
+      refTask: null,
+      refDecision: null,
       reactions: [],
       member: null,
       data: {
@@ -153,48 +150,48 @@ export default forwardRef(function ThreadActivities(
     <>
       <ProposalScrollButton />
       <VStack spacing={0} mb={2} align="stretch" ref={ref} {...styleProps}>
-      {activities &&
-        activities.map((activity, i) => (
-          <React.Fragment key={`activity_${activity.id}`}>
-            {(i === 0 ||
-              !isSameDay(
-                new Date(activity.createdAt),
-                new Date(activities[i - 1].createdAt)
-              )) && <ThreadDaySeparator date={activity.createdAt} />}
+        {activities &&
+          activities.map((activity, i) => (
+            <React.Fragment key={`activity_${activity.id}`}>
+              {(i === 0 ||
+                !isSameDay(
+                  new Date(activity.createdAt),
+                  new Date(activities[i - 1].createdAt)
+                )) && <ThreadDaySeparator date={activity.createdAt} />}
 
-            <ThreadActivity activity={activity} />
+              <ThreadActivity activity={activity} />
 
-            {lastReadActivityId === activity.id && (
-              <Box h="3px" w="100%" bg="red.200" _dark={{ bg: 'red.800' }} />
-            )}
-          </React.Fragment>
-        ))}
+              {lastReadActivityId === activity.id && (
+                <Box h="3px" w="100%" bg="red.200" _dark={{ bg: 'red.800' }} />
+              )}
+            </React.Fragment>
+          ))}
 
-      {activities?.length === 0 &&
-        !tmpMeetingNoteActivity &&
-        !thread?.archivedAt && (
-          <Alert
-            status="success"
-            variant="subtle"
-            flexDirection="column"
-            alignItems="center"
-            justifyContent="center"
-            textAlign="center"
-            height="200px"
-          >
-            <ThreadIcon size={40} />
-            <AlertTitle mt={4} mb={1} fontSize="lg">
-              {t('ThreadActivities.emptyTitle')}
-            </AlertTitle>
-            <AlertDescription maxWidth="sm">
-              {t('ThreadActivities.emptyDescription')}
-            </AlertDescription>
-          </Alert>
+        {activities?.length === 0 &&
+          !tmpMeetingNoteActivity &&
+          !thread?.archivedAt && (
+            <Alert
+              status="success"
+              variant="subtle"
+              flexDirection="column"
+              alignItems="center"
+              justifyContent="center"
+              textAlign="center"
+              height="200px"
+            >
+              <ThreadIcon size={40} />
+              <AlertTitle mt={4} mb={1} fontSize="lg">
+                {t('ThreadActivities.emptyTitle')}
+              </AlertTitle>
+              <AlertDescription maxWidth="sm">
+                {t('ThreadActivities.emptyDescription')}
+              </AlertDescription>
+            </Alert>
+          )}
+
+        {tmpMeetingNoteActivity && (
+          <ThreadActivity activity={tmpMeetingNoteActivity} />
         )}
-
-      {tmpMeetingNoteActivity && (
-        <ThreadActivity activity={tmpMeetingNoteActivity} />
-      )}
       </VStack>
     </>
   )

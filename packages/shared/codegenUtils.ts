@@ -21,6 +21,9 @@ export function getConfig() {
     // Required for merge-and-override of schemas
     //ignoreFieldConflicts: true,
     onFieldTypeConflict: (left: any) => left,
+    // Keep native TS enums and "any" for unmapped scalars (defaults changed in codegen v6+)
+    enumType: 'native',
+    defaultScalarType: 'any',
     // Set scalars to avoid "any" type
     scalars: {
       uuid: 'string',

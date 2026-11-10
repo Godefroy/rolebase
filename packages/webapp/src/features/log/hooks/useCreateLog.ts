@@ -31,7 +31,11 @@ export default function useCreateLog() {
           | 'createdAt'
           | 'canceled'
         >,
-        'meetingId'
+        | 'meetingId'
+        | 'cancelLogId'
+        | 'cancelMemberId'
+        | 'cancelMemberName'
+        | 'decisionId'
       >
     ) => {
       const { orgId, currentMember, currentMeetingId } = ref.current

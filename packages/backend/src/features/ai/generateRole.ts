@@ -1,15 +1,9 @@
 import { nameSchema } from '@rolebase/shared/schemas'
-import { Configuration, OpenAIApi } from 'openai'
 import * as yup from 'yup'
 import { RoleAiFragment, gql } from '../../gql'
-import settings from '../../settings'
 import { authedProcedure } from '../../trpc/authedProcedure'
 import { adminRequest } from '../../utils/adminRequest'
-
-const configuration = new Configuration({
-  apiKey: settings.openai.apiKey,
-})
-const openai = new OpenAIApi(configuration)
+import { getOpenai } from './openai'
 
 const schema = {
   type: 'object',
@@ -80,7 +74,7 @@ export default authedProcedure
       return existingRole
     }
 
-    const response = await openai.createChatCompletion({
+    const response = await getOpenai().chat.completions.create({
       model: 'gpt-4o',
       messages: [
         {
@@ -99,7 +93,7 @@ export default authedProcedure
     })
 
     const roleProperties = JSON.parse(
-      response.data.choices[0]?.message?.function_call?.arguments || ''
+      response.choices[0]?.message?.function_call?.arguments || ''
     )
 
     // Flatten arrays

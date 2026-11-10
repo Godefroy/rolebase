@@ -12,8 +12,7 @@
     "date-fns-tz": "^3.2.0",
     "dotenv": "^16.0.3",
     "i18next": "^26.7.1",
-    "node-mailjet": "^5.1.1",
-    "nodemailer": "^8.0.1",
+    "nodemailer": "^10.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-email": "^6.11.3"
@@ -21,9 +20,9 @@
   "devDependencies": {
     "@react-email/ui": "^6.11.3",
     "@types/dotenv": "^8.2.0",
-    "@types/node": "^18.8.3",
-    "@types/nodemailer": "^7.0.11",
-    "@types/react": "^18.2.21",
+    "@types/node": "^22.13.4",
+    "@types/nodemailer": "^8.0.2",
+    "@types/react": "^18.3.31",
     "@types/react-dom": "^18.2.0",
     "@typescript/native-preview": "^7.0.0-dev.20260707.2",
     "tsx": "^4.23.15",

@@ -2,8 +2,8 @@ import { App_Type_Enum } from '@gql'
 import React from 'react'
 import settings from 'src/settings'
 import { trpc } from 'src/trpc'
-import GoogleCalendarIcon from './images/googlecalendar.svg'
-import Office365Icon from './images/office365.svg'
+import GoogleCalendarIcon from './images/googlecalendar.svg?react'
+import Office365Icon from './images/office365.svg?react'
 
 const appsUrl = `${settings.url}/apps`
 

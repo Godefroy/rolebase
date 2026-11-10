@@ -1,5 +1,5 @@
 import { ChakraProvider, ColorModeScript } from '@chakra-ui/react'
-import { Decorator } from '@storybook/react'
+import { Decorator } from '@storybook/react-vite'
 import React from 'react'
 import { I18nextProvider } from 'react-i18next'
 import i18n from 'src/i18n'

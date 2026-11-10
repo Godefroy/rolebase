@@ -25,6 +25,12 @@ export default function useCurrentMember(): MemberFragment | undefined {
         orgId: orgId,
         description: '',
         archivedAt: null,
+        pictureFileId: null,
+        picture: null,
+        userId: null,
+        inviteEmail: null,
+        inviteDate: null,
+        role: null,
       } satisfies MemberFragment
     }
   }, [user?.id, members, isSuperAdmin, orgId])

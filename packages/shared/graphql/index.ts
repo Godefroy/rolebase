@@ -1,1 +1,2 @@
-export * from "./gql"
+/* eslint-disable */
+export * from "./gql";

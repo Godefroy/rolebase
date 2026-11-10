@@ -18,9 +18,9 @@
   },
   "devDependencies": {
     "@types/lodash.isequal": "^4.5.8",
-    "@types/node": "^18.8.3",
+    "@types/node": "^22.13.4",
     "@typescript/native-preview": "^7.0.0-dev.20260707.2",
     "typescript": "^5.2.2",
-    "vitest": "^0.34.6"
+    "vitest": "^5.1.0"
   }
 }
