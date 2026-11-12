@@ -3,6 +3,7 @@ import { getTranslations, getLangFromUrl, langPath } from '../utils/i18n'
 import TopNavShell from './TopNavShell.astro'
 import NavLink from './NavLink.astro'
 import Button from './Button.astro'
+import DocsTabs from './DocsTabs.astro'
 
 const lang = getLangFromUrl(Astro.url)
 const t = await getTranslations(lang)
@@ -10,9 +11,11 @@ const lp = (path: string) => langPath(lang, path)
 
 interface Props {
   staticHeader?: boolean
+  /** Shows the user / developer documentation tabs under the top row. */
+  docsTabs?: boolean
 }
 
-const { staticHeader = false } = Astro.props
+const { staticHeader = false, docsTabs = false } = Astro.props
 ---
 
 <TopNavShell staticHeader={staticHeader}>
@@ -26,4 +29,5 @@ const { staticHeader = false } = Astro.props
     <Button href={lp('/contact')} variant="outline-primary" size="sm" label={t.bookDemo} trackPlacement="topnav" />
     <Button href="/login" variant="primary" size="sm" label={t.login} trackPlacement="topnav" />
   </Fragment>
+  {docsTabs && <DocsTabs slot="subnav" />}
 </TopNavShell>

@@ -14,7 +14,7 @@ export function initTocActive(): void {
   function updateActive() {
     let activeSlug = slugs[0]
     for (const heading of headings) {
-      if (heading.getBoundingClientRect().top <= 100) {
+      if (heading.getBoundingClientRect().top <= 120) {
         activeSlug = heading.id
       }
     }

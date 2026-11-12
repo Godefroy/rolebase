@@ -1,0 +1,27 @@
+---
+import { getLangFromUrl, getTranslations, langPath } from '../utils/i18n'
+import { isDeveloperDocs } from '../utils/docs'
+
+const lang = getLangFromUrl(Astro.url)
+const t = await getTranslations(lang)
+const isDeveloper = isDeveloperDocs(Astro.url, lang)
+
+const tabs = [
+  { label: t.docsTabs.user, path: '/docs', active: !isDeveloper },
+  { label: t.docsTabs.developer, path: '/developers', active: isDeveloper },
+]
+---
+
+<nav class="flex gap-6 px-6 h-11 border-t border-border" data-docs-tabs>
+  {tabs.map((tab) => (
+    <a
+      href={langPath(lang, tab.path)}
+      class:list={[
+        'flex items-center border-b-2 text-sm font-medium whitespace-nowrap no-underline hover:no-underline',
+        tab.active
+          ? 'border-primary text-text-main'
+          : 'border-transparent text-text-secondary hover:text-text-main',
+      ]}
+    >{tab.label}</a>
+  ))}
+</nav>

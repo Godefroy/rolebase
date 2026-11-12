@@ -84,16 +84,16 @@ body {
 
 /* Markdown styles (applied to elements with .md class, added by rehype plugin) */
 h1.md {
-  @apply mt-10 mb-5 text-4xl font-bold scroll-mt-24;
+  @apply mt-10 mb-5 text-4xl font-bold scroll-mt-28;
 }
 h2.md {
-  @apply mt-10 mb-4 text-3xl font-medium scroll-mt-24;
+  @apply mt-10 mb-4 text-3xl font-medium scroll-mt-28;
 }
 h3.md {
-  @apply mt-10 mb-3 text-2xl font-medium scroll-mt-24;
+  @apply mt-10 mb-3 text-2xl font-medium scroll-mt-28;
 }
 h4.md {
-  @apply mt-8 mb-3 text-xl font-medium scroll-mt-24;
+  @apply mt-8 mb-3 text-xl font-medium scroll-mt-28;
 }
 p.md {
   @apply mb-5 leading-relaxed;

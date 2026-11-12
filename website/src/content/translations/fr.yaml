@@ -1,6 +1,9 @@
 documentation: Documentation
 guides: Guides
 developers: Développeurs
+docsTabs:
+  user: Documentation utilisateur
+  developer: Documentation développeur
 toc: Sur cette page
 terms: Mentions légales
 languageName: Français

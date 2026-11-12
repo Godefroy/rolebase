@@ -8,6 +8,7 @@ import {
   getNestedSlugFromId,
   langPath,
 } from '../utils/i18n'
+import { isDeveloperDocs } from '../utils/docs'
 import NavLink from './NavLink.astro'
 
 const lang = getLangFromUrl(Astro.url)
@@ -110,14 +111,17 @@ const developerItems: SidebarItem[] = sortEntries(devs.filter((e) => !isNested(e
     }
   })
 
-const sections: SidebarSection[] = [
-  { title: t.documentation, items: entriesToItems(docs, '/docs') },
-  { title: t.guides, items: entriesToItems(guides, '/guides') },
-  { title: t.developers, items: developerItems },
-]
+// The user tab (see DocsTabs) lists the documentation and the guides, the
+// developer tab the developer pages.
+const sections: SidebarSection[] = isDeveloperDocs(Astro.url, lang)
+  ? [{ title: t.developers, items: developerItems }]
+  : [
+      { title: t.documentation, items: entriesToItems(docs, '/docs') },
+      { title: t.guides, items: entriesToItems(guides, '/guides') },
+    ]
 ---
 
-<aside class="hidden md:block w-65 min-w-65 border-r border-border py-6 px-3 bg-bg-secondary h-[calc(100vh-56px)] overflow-y-auto sticky top-14" data-sidebar>
+<aside class="hidden md:block w-65 min-w-65 border-r border-border py-6 px-3 bg-bg-secondary h-[calc(100vh-100px)] overflow-y-auto sticky top-25" data-sidebar>
   <nav>
     {sections.map((s) => (
       <div class="mb-6">

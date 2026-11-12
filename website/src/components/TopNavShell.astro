@@ -45,6 +45,8 @@ const { staticHeader = false } = Astro.props
     </button>
   </div>
 
+  <slot name="subnav" />
+
   <!-- Mobile menu panel (populated from desktop nav + sidebar via JS) -->
   <div class="hidden md:hidden h-[calc(100dvh-57px)] overflow-y-auto border-t border-border bg-white" data-mobile-menu></div>
 </header>
@@ -87,6 +89,8 @@ const { staticHeader = false } = Astro.props
     iconClose.classList.toggle("hidden", isOpen)
     iconClose.classList.toggle("block", !isOpen)
     burger.setAttribute("aria-expanded", String(!isOpen))
+    // The menu fills the screen under the top row, so hide the sub navigation.
+    header.querySelector("[data-docs-tabs]")?.classList.toggle("hidden", !isOpen)
   }
 
   burger.addEventListener("click", toggle)

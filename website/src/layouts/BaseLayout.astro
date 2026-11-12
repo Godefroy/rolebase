@@ -26,6 +26,8 @@ interface Props {
   /** Appends ` | <brand>` to the document title. */
   titleBrand?: boolean
   staticHeader?: boolean
+  /** Shows the user / developer documentation tabs in the header. */
+  docsTabs?: boolean
   image?: ImageMetadata
 }
 
@@ -36,6 +38,7 @@ const {
   ogType = 'website',
   titleBrand = true,
   staticHeader = false,
+  docsTabs = false,
   image,
 } = Astro.props
 // Index pages carry very short titles ("Blog", "Introduction"), so the ancestor
@@ -116,7 +119,7 @@ const siteWebsite = {
     </script>
   </head>
   <body class="min-h-dvh flex flex-col">
-    <TopNav staticHeader={staticHeader} />
+    <TopNav staticHeader={staticHeader} docsTabs={docsTabs} />
     <div class="flex-1 flex flex-col">
       <slot />
     </div>

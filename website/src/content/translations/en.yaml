@@ -1,6 +1,9 @@
 documentation: Documentation
 guides: Guides
 developers: Developers
+docsTabs:
+  user: User documentation
+  developer: Developer documentation
 toc: On this page
 terms: Legal Notice
 languageName: English
