@@ -78,6 +78,10 @@
     "apiInfo": "Looking for the GraphQL API and your API keys?",
     "apiLink": "Go to the API page"
   },
+  "AuthProvider": {
+    "emailVerified": "Your email address is verified, thank you!",
+    "emailChanged": "Your new email address is confirmed"
+  },
   "BaseRoleCreateModal": {
     "heading": "Create a basic role"
   },
@@ -86,6 +90,12 @@
     "info": "Basic roles are predefined roles that can be used in several places in the org chart.",
     "empty": "No basic roles",
     "create": "Create a basic role"
+  },
+  "ChangeEmailModal": {
+    "heading": "Edit email address",
+    "email": "New email address",
+    "description": "A confirmation link will be sent to this address. It will replace the current one as soon as you click on it.",
+    "toastSuccess": "Confirmation link sent to {{email}}"
   },
   "CircleAndMemberFilters": {
     "circle": "Role",
@@ -1606,8 +1616,13 @@
   },
   "VerifyEmailModal": {
     "heading": "Verify your email address",
-    "text": "You should have received an email (check your spam). Click on the link in the email to verify your address 🙏",
-    "resend": "Receive a new link by email"
+    "sentTo": "A verification link was sent to this address:",
+    "notVerified": "Your email address could not be verified:",
+    "text": "Click on this link to verify your address (check your spam) 🙏",
+    "resend": "Receive a new link by email",
+    "send": "Receive a verification link by email",
+    "sent": "Email sent, it should arrive in a few moments",
+    "editEmail": "Edit email address"
   },
   "VideoConfFormControl": {
     "enable": "Video conferencing",

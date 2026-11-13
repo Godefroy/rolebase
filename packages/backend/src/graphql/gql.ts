@@ -158,7 +158,8 @@ type Documents = {
     "\n  fragment ThreadSearch on thread {\n    id\n    orgId\n    title\n    createdAt\n    activities {\n      type\n      data\n    }\n  }\n": typeof types.ThreadSearchFragmentDoc,
     "\n        query GetThreadForSearch($id: uuid!) {\n          thread_by_pk(id: $id) {\n            ...ThreadSearch\n          }\n        }\n      ": typeof types.GetThreadForSearchDocument,
     "\n        query GetThreadsForSearch {\n          thread(where: { archivedAt: { _is_null: true } }) {\n            ...ThreadSearch\n          }\n        }\n      ": typeof types.GetThreadsForSearchDocument,
-    "\n  query getBouncedAccount($email: citext!, $createdAfter: timestamptz!) {\n    users(\n      where: {\n        email: { _eq: $email }\n        emailVerified: { _eq: false }\n        lastSeen: { _is_null: true }\n        createdAt: { _gt: $createdAfter }\n      }\n    ) {\n      id\n    }\n  }\n": typeof types.GetBouncedAccountDocument,
+    "\n  query getBouncedUsers($email: citext!) {\n    users(where: { email: { _eq: $email } }) {\n      id\n      emailVerified\n      lastSeen\n      createdAt\n    }\n  }\n": typeof types.GetBouncedUsersDocument,
+    "\n  mutation unverifyUserEmail($userId: uuid!) {\n    updateUser(pk_columns: { id: $userId }, _set: { emailVerified: false }) {\n      id\n    }\n  }\n": typeof types.UnverifyUserEmailDocument,
     "\n  mutation updateUserMetadata($userId: uuid!, $metadata: jsonb!) {\n    updateUser(pk_columns: { id: $userId }, _set: { metadata: $metadata }) {\n      id\n    }\n  }\n": typeof types.UpdateUserMetadataDocument,
     "\n  query getOrgMembers($orgId: uuid!) {\n    org_by_pk(id: $orgId) {\n    id\n    members(where: {role: {_eq: Owner}}) {\n      id\n    }\n  }\n}": typeof types.GetOrgMembersDocument,
     "\n  query getUserRoleInOrg($orgId: uuid!, $userId: uuid!) {\n    org_by_pk(id: $orgId) {\n      members(where: {userId: {_eq: $userId}}) {\n        role\n      }\n    }\n  }": typeof types.GetUserRoleInOrgDocument,
@@ -332,7 +333,8 @@ const documents: Documents = {
     "\n  fragment ThreadSearch on thread {\n    id\n    orgId\n    title\n    createdAt\n    activities {\n      type\n      data\n    }\n  }\n": types.ThreadSearchFragmentDoc,
     "\n        query GetThreadForSearch($id: uuid!) {\n          thread_by_pk(id: $id) {\n            ...ThreadSearch\n          }\n        }\n      ": types.GetThreadForSearchDocument,
     "\n        query GetThreadsForSearch {\n          thread(where: { archivedAt: { _is_null: true } }) {\n            ...ThreadSearch\n          }\n        }\n      ": types.GetThreadsForSearchDocument,
-    "\n  query getBouncedAccount($email: citext!, $createdAfter: timestamptz!) {\n    users(\n      where: {\n        email: { _eq: $email }\n        emailVerified: { _eq: false }\n        lastSeen: { _is_null: true }\n        createdAt: { _gt: $createdAfter }\n      }\n    ) {\n      id\n    }\n  }\n": types.GetBouncedAccountDocument,
+    "\n  query getBouncedUsers($email: citext!) {\n    users(where: { email: { _eq: $email } }) {\n      id\n      emailVerified\n      lastSeen\n      createdAt\n    }\n  }\n": types.GetBouncedUsersDocument,
+    "\n  mutation unverifyUserEmail($userId: uuid!) {\n    updateUser(pk_columns: { id: $userId }, _set: { emailVerified: false }) {\n      id\n    }\n  }\n": types.UnverifyUserEmailDocument,
     "\n  mutation updateUserMetadata($userId: uuid!, $metadata: jsonb!) {\n    updateUser(pk_columns: { id: $userId }, _set: { metadata: $metadata }) {\n      id\n    }\n  }\n": types.UpdateUserMetadataDocument,
     "\n  query getOrgMembers($orgId: uuid!) {\n    org_by_pk(id: $orgId) {\n    id\n    members(where: {role: {_eq: Owner}}) {\n      id\n    }\n  }\n}": types.GetOrgMembersDocument,
     "\n  query getUserRoleInOrg($orgId: uuid!, $userId: uuid!) {\n    org_by_pk(id: $orgId) {\n      members(where: {userId: {_eq: $userId}}) {\n        role\n      }\n    }\n  }": types.GetUserRoleInOrgDocument,
@@ -955,7 +957,11 @@ export function gql(source: "\n        query GetThreadsForSearch {\n          th
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query getBouncedAccount($email: citext!, $createdAfter: timestamptz!) {\n    users(\n      where: {\n        email: { _eq: $email }\n        emailVerified: { _eq: false }\n        lastSeen: { _is_null: true }\n        createdAt: { _gt: $createdAfter }\n      }\n    ) {\n      id\n    }\n  }\n"): (typeof documents)["\n  query getBouncedAccount($email: citext!, $createdAfter: timestamptz!) {\n    users(\n      where: {\n        email: { _eq: $email }\n        emailVerified: { _eq: false }\n        lastSeen: { _is_null: true }\n        createdAt: { _gt: $createdAfter }\n      }\n    ) {\n      id\n    }\n  }\n"];
+export function gql(source: "\n  query getBouncedUsers($email: citext!) {\n    users(where: { email: { _eq: $email } }) {\n      id\n      emailVerified\n      lastSeen\n      createdAt\n    }\n  }\n"): (typeof documents)["\n  query getBouncedUsers($email: citext!) {\n    users(where: { email: { _eq: $email } }) {\n      id\n      emailVerified\n      lastSeen\n      createdAt\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation unverifyUserEmail($userId: uuid!) {\n    updateUser(pk_columns: { id: $userId }, _set: { emailVerified: false }) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation unverifyUserEmail($userId: uuid!) {\n    updateUser(pk_columns: { id: $userId }, _set: { emailVerified: false }) {\n      id\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

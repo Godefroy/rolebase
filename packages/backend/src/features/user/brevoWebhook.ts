@@ -1,7 +1,7 @@
 import { RestError, route } from '../../rest/route'
 import settings from '../../settings'
 import { captureError } from '../../utils/sentry'
-import { deleteBouncedAccount } from './utils/deleteBouncedAccount'
+import { handleBouncedEmail } from './utils/handleBouncedEmail'
 import { recordBounce } from './utils/emailBounces'
 
 // Brevo transactional events meaning the address can't receive emails:
@@ -36,7 +36,7 @@ export default route((context) => {
     // date the bounce before the code was sent
     recordBounce(email)
     // Answered right away: Brevo doesn't wait for the cleanup
-    deleteBouncedAccount(email).catch(captureError)
+    handleBouncedEmail(email).catch(captureError)
   }
   return 'OK'
 })

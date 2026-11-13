@@ -78,6 +78,10 @@
     "apiInfo": "Vous cherchez l'API GraphQL et vos clés API ?",
     "apiLink": "Accéder à la page API"
   },
+  "AuthProvider": {
+    "emailVerified": "Votre adresse email est vérifiée, merci !",
+    "emailChanged": "Votre nouvelle adresse email est confirmée"
+  },
   "BaseRoleCreateModal": {
     "heading": "Créer un rôle de base"
   },
@@ -86,6 +90,12 @@
     "info": "Les rôles de base sont des rôles prédéfinis qui peuvent être utilisés à plusieurs endroits dans l'organigramme.",
     "empty": "Aucun rôle de base",
     "create": "Créer un rôle de base"
+  },
+  "ChangeEmailModal": {
+    "heading": "Modifier l'adresse email",
+    "email": "Nouvelle adresse email",
+    "description": "Un lien de confirmation sera envoyé à cette adresse. Elle remplacera l'actuelle dès que vous aurez cliqué dessus.",
+    "toastSuccess": "Lien de confirmation envoyé à {{email}}"
   },
   "CircleAndMemberFilters": {
     "circle": "Rôle",
@@ -1639,8 +1649,13 @@
   },
   "VerifyEmailModal": {
     "heading": "Vérifiez votre adresse email",
-    "text": "Vous avez du recevoir un email (pensez à consulter vos courriers indésirables). Cliquez sur le lien dans l'email pour vérifier votre adresse 🙏",
-    "resend": "Recevoir un nouveau lien par email"
+    "sentTo": "Un lien de vérification vous a été envoyé à cette adresse :",
+    "notVerified": "Votre adresse email n'a pas pu être vérifiée :",
+    "text": "Cliquez sur ce lien pour vérifier votre adresse (pensez à consulter vos courriers indésirables) 🙏",
+    "resend": "Recevoir un nouveau lien par email",
+    "send": "Recevoir un lien de vérification par email",
+    "sent": "Email envoyé, il devrait arriver dans quelques instants",
+    "editEmail": "Modifier l'adresse email"
   },
   "VideoConfFormControl": {
     "enable": "Vidéo-conférence",
