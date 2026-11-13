@@ -11,7 +11,6 @@ const UNDELIVERABLE_EVENTS = ['hard_bounce', 'blocked', 'invalid_email']
 interface BrevoEvent {
   event?: string
   email?: string
-  ts_event?: number
 }
 
 // Webhook called by Brevo on transactional email events, authenticated with
@@ -31,9 +30,11 @@ export default route((context) => {
 
   const body = context.req.body as BrevoEvent | BrevoEvent[] | undefined
   const events = Array.isArray(body) ? body : body ? [body] : []
-  for (const { event, email, ts_event } of events) {
+  for (const { event, email } of events) {
     if (!email || !event || !UNDELIVERABLE_EVENTS.includes(event)) continue
-    recordBounce(email, ts_event ? ts_event * 1000 : Date.now())
+    // Dated on receipt: Brevo's `ts_event` can be hours off UTC, which would
+    // date the bounce before the code was sent
+    recordBounce(email)
     // Answered right away: Brevo doesn't wait for the cleanup
     deleteBouncedAccount(email).catch(captureError)
   }
