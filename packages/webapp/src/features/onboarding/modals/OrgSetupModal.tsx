@@ -46,8 +46,8 @@ const MIN_OTHER_MEMBERS = 1
 // meeting templates once the members are validated, so leaving at the invite
 // step loses nothing. Roles are then placed in the org chart itself, guided by
 // the org chart tour started on finish. The setup is mandatory: there is no
-// close control, and the modal comes back until the org is seeded (see
-// OrgSetupTrigger).
+// close control, and the modal comes back until the members step is validated
+// (see OrgSetupTrigger), never after.
 export default function OrgSetupModal({ onClose }: Props) {
   const { t } = useTranslation()
   const toast = useToast()

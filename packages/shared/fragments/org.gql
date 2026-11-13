@@ -12,6 +12,7 @@ fragment Org on org {
   defaultGraphMembers
   icon
   homeNote
+  onboardingOrgType
   onboardingTodo
 }
 

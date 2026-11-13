@@ -12,6 +12,7 @@ import MeetingRecurringPage from '@/meeting/pages/MeetingRecurringPage'
 import OrgRoleRoute from '@/member/components/OrgRoleRoute'
 import { useSubscribeCurrentMeeting } from '@/member/hooks/useSubscribeCurrentMeeting'
 import MembersPage from '@/member/pages/MembersPage'
+import OrgChartTourTrigger from '@/onboarding/components/OrgChartTourTrigger'
 import OrgSetupTrigger from '@/onboarding/components/OrgSetupTrigger'
 import NavigateInOrg from '@/org/components/NavigateInOrg'
 import { useOrgContext } from '@/org/contexts/OrgContext'
@@ -59,6 +60,7 @@ export default function OrgRouteContent() {
       ) : (
         <>
           <OrgSetupTrigger />
+          <OrgChartTourTrigger />
           <Routes>
             <Route index element={<Navigate to="news" replace />} />
             <Route path="roles" element={<CirclesPage />} />

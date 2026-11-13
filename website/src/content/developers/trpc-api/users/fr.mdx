@@ -1,6 +1,6 @@
 ---
 title: 'Utilisateurs'
-description: 'Procédures tRPC du routeur user : vérifier qu’un domaine d’email peut recevoir des emails avant la connexion, et supprimer son propre compte.'
+description: 'Procédures tRPC du routeur user : vérifier qu’une adresse peut recevoir le code de connexion, et supprimer son propre compte.'
 order: 7.5
 ---
 
@@ -19,6 +19,24 @@ Elle renvoie `{ valid }`. `valid` vaut `false` quand le domaine est mal formé, 
 ```typescript
 const { valid } = await trpc.user.checkEmailDomain.query({
   domain: 'example.com',
+})
+```
+
+## Requête `user.checkEmailDelivery`
+
+Indique si le code de connexion envoyé à une adresse n’a pas pu être distribué : boîte ou domaine inconnu, adresse invalide, ou adresse bloquée par le fournisseur d’emails. L’application l’interroge pendant deux minutes après l’envoi d’un code, pour signaler tout de suite une adresse qui semble erronée. Le fournisseur d’emails transmet les rejets au backend, qui les garde en mémoire pendant une heure. Cette procédure est publique, car elle sert avant toute connexion.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `email` | `String` | Adresse à laquelle le code a été envoyé. Requis. |
+| `since` | `Number` | Horodatage en millisecondes : seuls les rejets à partir de ce moment comptent. Requis. |
+
+Elle renvoie `{ bounced }`.
+
+```typescript
+const { bounced } = await trpc.user.checkEmailDelivery.query({
+  email: 'jane@example.com',
+  since: Date.now() - 60_000,
 })
 ```
 

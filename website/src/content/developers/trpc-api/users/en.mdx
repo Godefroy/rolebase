@@ -1,6 +1,6 @@
 ---
 title: 'Users'
-description: 'tRPC procedures of the user router: check that an email domain can receive emails before signing in, and delete your own account.'
+description: 'tRPC procedures of the user router: check that an email address can receive the sign-in code, and delete your own account.'
 order: 7.5
 ---
 
@@ -19,6 +19,24 @@ It returns `{ valid }`. `valid` is `false` when the domain is malformed, unknown
 ```typescript
 const { valid } = await trpc.user.checkEmailDomain.query({
   domain: 'example.com',
+})
+```
+
+## Query `user.checkEmailDelivery`
+
+Tells whether the sign-in code sent to an address couldn't be delivered: unknown mailbox or domain, invalid address, or an address the email provider blocks. The app polls it for two minutes after sending a code, to show right away that the address seems wrong. Bounces are reported to the backend by the email provider and kept in memory for an hour. This procedure is public because it is used before signing in.
+
+| Input | Type | Description |
+| --- | --- | --- |
+| `email` | `String` | Address the code was sent to. Required. |
+| `since` | `Number` | Timestamp in milliseconds: only bounces from this moment count. Required. |
+
+It returns `{ bounced }`.
+
+```typescript
+const { bounced } = await trpc.user.checkEmailDelivery.query({
+  email: 'jane@example.com',
+  since: Date.now() - 60_000,
 })
 ```
 

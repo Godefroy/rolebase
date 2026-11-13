@@ -465,6 +465,7 @@
     "resent": "New code sent to {{email}}. It replaces the previous one.",
     "changeEmail": "Change address",
     "invalidDomain": "This domain doesn't receive emails. Check the address.",
+    "bounced": "We couldn't deliver the code to {{email}}. Check the address or use another one.",
     "invalidCode": "Incorrect or expired code. Check the latest email you received, or ask for a new code."
   },
   "AuthPage": {

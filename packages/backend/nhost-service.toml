@@ -25,6 +25,10 @@ name = 'NHOST_WEBHOOK_SECRET'
 value = '{{ secrets.NHOST_WEBHOOK_SECRET }}'
 
 [[environment]]
+name = 'BREVO_WEBHOOK_TOKEN'
+value = '{{ secrets.BREVO_WEBHOOK_TOKEN }}'
+
+[[environment]]
 name = 'SMTP_HOST'
 value = '{{ secrets.SMTP_HOST }}'
 

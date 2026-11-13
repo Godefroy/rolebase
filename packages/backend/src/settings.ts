@@ -57,6 +57,9 @@ export default {
 
   webhookSecret: process.env.NHOST_WEBHOOK_SECRET,
 
+  // Bearer token of the Brevo transactional webhook (email bounces)
+  brevoWebhookToken: process.env.BREVO_WEBHOOK_TOKEN,
+
   mail: {
     sender: {
       name: 'Rolebase.io',

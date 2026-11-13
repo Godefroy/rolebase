@@ -3,14 +3,14 @@ import React, { useEffect, useState } from 'react'
 import { isOrgFresh } from '../isOrgFresh'
 import OrgSetupModal from '../modals/OrgSetupModal'
 
-// Opens the org-setup step for a freshly created org: one that still has only
-// its root circle and no base role yet (i.e. it hasn't been seeded). Derived
-// from the already-subscribed org data, so it needs no extra query and survives
-// reloads. Once opened it stays open until the user finishes (seeding adds base
-// roles, which would otherwise flip the condition mid-flow).
+// Opens the org-setup step while its steps are still to do (see isOrgFresh),
+// at every visit: the setup is mandatory. Derived from the already-subscribed
+// org data, so it needs no extra query and survives reloads. Once opened it
+// stays open until the user finishes (the members step stores the model, which
+// would otherwise flip the condition mid-flow).
 export default function OrgSetupTrigger() {
-  const { orgData } = useOrgContext()
-  const isFresh = isOrgFresh(orgData)
+  const { org, orgData } = useOrgContext()
+  const isFresh = isOrgFresh(org, orgData)
 
   const [open, setOpen] = useState(false)
   useEffect(() => {

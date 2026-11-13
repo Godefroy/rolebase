@@ -135,6 +135,7 @@ select_permissions:
         - iconFileId
         - id
         - name
+        - onboardingOrgType
         - onboardingTodo
         - shareMembers
         - shareOrg

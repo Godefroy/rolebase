@@ -499,6 +499,7 @@
     "resent": "Nouveau code envoyé à {{email}}. Il remplace le précédent.",
     "changeEmail": "Modifier l'adresse",
     "invalidDomain": "Ce domaine ne reçoit pas d'emails. Vérifiez l'adresse.",
+    "bounced": "Le code n'a pas pu être distribué à {{email}}. Vérifiez l'adresse ou utilisez-en une autre.",
     "invalidCode": "Code incorrect ou expiré. Vérifiez le dernier email reçu, ou demandez un nouveau code."
   },
   "AuthPage": {

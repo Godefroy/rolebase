@@ -216,26 +216,30 @@ for (const e of cur
 const obSessions = Object.entries(bySession).filter(([, evs]) =>
   evs.some((e) => /^(onboarding_|org_setup|org_tour_)/.test(e.eventName))
 )
-// The account behind each session: AuthProvider identifies it with the user
-// id. A session is per device and day, so it holds the last account signed in.
-const sessionUser = {}
+// The org behind each session: useAnalyticsIdentity attaches its orgId (the
+// user id is never sent, see the privacy policy). A session is per device and
+// day, so it holds the last org opened. Sessions that never opened an org
+// (stopped before the wizard's end) stay unnamed.
+const sessionOrg = {}
 for (const [session] of obSessions) {
   const props = await umami(
     `/websites/${WEBSITE}/sessions/${session}/properties`
   ).catch(() => [])
-  const userId = props.find((p) => p.dataKey === 'userId')?.stringValue
-  if (/^[0-9a-f-]{36}$/.test(userId || '')) sessionUser[session] = userId
+  const orgId = props.find((p) => p.dataKey === 'orgId')?.stringValue
+  if (/^[0-9a-f-]{36}$/.test(orgId || '')) sessionOrg[session] = orgId
 }
 const accounts = {}
-const userIds = Object.values(sessionUser)
-if (userIds.length)
-  for (const [id, domain, created, orgs] of (
+const orgIds = [...new Set(Object.values(sessionOrg))]
+if (orgIds.length)
+  for (const [id, name, domain, created] of (
     await sql(`
-select u.id, split_part(u.email,'@',2), to_char(u.created_at,'YYYY-MM-DD'),
-  (select count(*) from member m where m."userId"=u.id)
-from auth.users u where u.id in (${userIds.map((id) => `'${id}'`).join(',')})`)
+select o.id, o.name, split_part(u.email,'@',2), to_char(u.created_at,'YYYY-MM-DD')
+from org o
+left join lateral (select m."userId" from member m where m."orgId"=o.id and m.role='Owner' order by m."createdAt" limit 1) ow on true
+left join auth.users u on u.id=ow."userId"
+where o.id in (${orgIds.map((id) => `'${id}'`).join(',')})`)
   ).slice(1))
-    accounts[id] = `${domain} (account ${created}, ${orgs} orgs now)`
+    accounts[id] = `org «${name}», owner ${domain} (account ${created})`
 
 console.log(
   '\n== Umami: sessions of the window touching onboarding (ob = onboarding_, setup = org_setup_)'
@@ -245,8 +249,9 @@ for (const [session, evs] of obSessions) {
   for (const e of evs) {
     // Where the person left or skipped, from the event's own data
     const step = /_(abandoned|skipped)$/.test(e.eventName)
-      ? (await umami(`/websites/${WEBSITE}/event-data/${e.id}`).catch(() => []))
-          .find((d) => d.dataKey === 'step')?.stringValue
+      ? (
+          await umami(`/websites/${WEBSITE}/event-data/${e.id}`).catch(() => [])
+        ).find((d) => d.dataKey === 'step')?.stringValue
       : undefined
     const n =
       e.eventName
@@ -260,7 +265,7 @@ for (const [session, evs] of obSessions) {
     evs[0].createdAt.slice(5, 16),
     session.slice(0, 6),
     evs[0].country || '',
-    accounts[sessionUser[session]] || '?',
+    accounts[sessionOrg[session]] || '?',
     seq.map((x) => (x.c > 1 ? `${x.n}x${x.c}` : x.n)).join(' > ')
   )
 }

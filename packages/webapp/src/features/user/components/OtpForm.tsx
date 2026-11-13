@@ -1,5 +1,8 @@
 import { Title } from '@/common/atoms/Title'
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
   Button,
   FormControl,
   FormErrorMessage,
@@ -25,6 +28,7 @@ import { nhost } from 'src/nhost'
 import { trpc } from 'src/trpc'
 import * as yup from 'yup'
 import { clearOtpSession, readOtpSession, writeOtpSession } from '../otpSession'
+import useEmailBounce from '../hooks/useEmailBounce'
 import { AuthStep } from '../pages/AuthPage'
 import OtpResendLink from './OtpResendLink'
 
@@ -63,6 +67,7 @@ export default function OtpForm({ defaultEmail, onStepChange }: Props) {
   const [email, setEmail] = useState(savedSession?.email ?? '')
   const [sentAt, setSentAt] = useState(savedSession?.sentAt ?? 0)
   const [otp, setOtp] = useState('')
+  const bounced = useEmailBounce(step === 'code' ? email : '', sentAt)
 
   const {
     handleSubmit: handleEmailSubmit,
@@ -202,6 +207,24 @@ export default function OtpForm({ defaultEmail, onStepChange }: Props) {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  // The code can't arrive: only the way back to the address is left
+  if (step === 'code' && bounced) {
+    return (
+      <VStack spacing={5}>
+        <Title>{t('OtpForm.heading')}</Title>
+
+        <Alert status="error" borderRadius="md">
+          <AlertIcon />
+          <AlertDescription>{t('OtpForm.bounced', { email })}</AlertDescription>
+        </Alert>
+
+        <Button colorScheme="blue" onClick={handleChangeEmail}>
+          {t('common.back')}
+        </Button>
+      </VStack>
+    )
   }
 
   if (step === 'code') {

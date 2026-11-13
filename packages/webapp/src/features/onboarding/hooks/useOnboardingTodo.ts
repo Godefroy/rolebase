@@ -26,7 +26,10 @@ export default function useOnboardingTodo() {
   const isAdmin =
     role === Member_Role_Enum.Owner || role === Member_Role_Enum.Admin
   const isOpen =
-    !!org && org.onboardingTodo == null && !!orgData && !isOrgFresh(orgData)
+    !!org &&
+    org.onboardingTodo == null &&
+    !!orgData &&
+    !isOrgFresh(org, orgData)
   const visible = isAdmin && isOpen
 
   const activity = useOnboardingActivity(!visible)

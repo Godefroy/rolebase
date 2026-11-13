@@ -27,11 +27,11 @@ It prints weekly cohorts, one line per self-serve signup of the window, invitees
 
 | Step | Code (`packages/webapp/src/features/`) | Data |
 |---|---|---|
-| Sign-in code, name | `user/components/OtpForm.tsx`, `user/pages/UserNamePage.tsx` | `auth_otp_*`, `user_name_*`. The account exists from the code request: `email_verified = false` means the code was never entered |
+| Sign-in code, name | `user/components/OtpForm.tsx`, `user/pages/UserNamePage.tsx` | `auth_otp_*` (`auth_otp_bounced`: the code bounced, shown on the code step), `user_name_*`. The account exists from the code request: `email_verified = false` means the code was never entered; the account is deleted when its code bounces (`user/brevoWebhook.ts`) |
 | Join instead of create | `org/pages/OrgsPage.tsx`, `member/hooks/usePendingInvitations.ts` | invitations matched on the email |
 | Wizard (org name, role, objective, source), org created at the end | `onboarding/wizard/` | `onboarding_*`, `metadata.onboardingStartedAt`, `onboardingRole/Objective/Source` |
 | Setup (Model, Members, Invite), seeded when the members are validated | `onboarding/modals/OrgSetupModal.tsx` | `org_setup_*` (`org_setup_resumed` = reload, with the step reached), `invite_step_skipped`. An org with no `role.base` never validated its members |
-| Org chart tour (open the org, create a role, open it, give it a member, place everyone), then optionally leader, representative, participants | `onboarding/hooks/useOrgChartTour.ts` | `org_tour_*` (`org_tour_more_started` for the optional chapter), `metadata.orgChartTours[orgId]`: `started`, `replay` (replayed from the todo), `more`, `completed`, `skipped` |
+| Org chart tour (open the org, create a role, open it, give it a member, place everyone), then optionally leader, representative, participants. Restarted at each opening while the org chart is empty | `onboarding/hooks/useOrgChartTour.ts`, `onboarding/components/OrgChartTourTrigger.tsx` | `org_tour_*` (`org_tour_more_started` for the optional chapter, `org_tour_started` with `relaunched` when an empty org chart restarts it on opening), `metadata.orgChartTours[orgId]`: `started`, `replay` (replayed from the todo), `more`, `completed`, `skipped` |
 | Getting started todo | `onboarding/hooks/useOnboardingTodo.ts` | `onboarding_todo_item_clicked` (`item`, `done`), `onboarding_todo_toggled`, `org.onboardingTodo`: null = open, `completed`, `dismissed` |
 | Reminder emails | `packages/backend/src/features/cron/sendOnboardingReminders.ts` | `metadata.onboardingReminders.{noOrg,noSetup,noInvite}` |
 | Return, activation | `org/hooks/useOrgLifecycleTracking.ts` | `org_returned`, `activation_reached`: within 7 days, 2 accounts and a held meeting, thread or decision |
@@ -40,7 +40,7 @@ It prints weekly cohorts, one line per self-serve signup of the window, invitees
 
 - Give counts next to percentages. Below about 10 people per group, describe a trend to watch, never a conclusion. Compare with the 4 previous weeks.
 - The last week's 7-day metrics are still incomplete.
-- Umami: count unique sessions. A session is per device and per day, so one person can span several. Abandonment events fire on `pagehide` (close or reload), once per browser and step. A later `onboarding_resumed` in the same browser means a reload or a return, not a loss. Each session line names the account signed in (identified by user id), the last one of the day on that device.
+- Umami: count unique sessions. A session is per device and per day, so one person can span several. Abandonment events fire on `pagehide` (close or reload), once per browser and step. A later `onboarding_resumed` in the same browser means a reload or a return, not a loss. Each session line names the org opened (Umami gets its `orgId`, never the user id) and its owner, the last org of the day on that device; a session that opened no org stays `?`.
 - Self-serve = signups minus `joined_team` (invitees).
 - Leave out internal accounts (lonestone domains) and obvious tests.
 - Low invitation and activation rates are expected: most people test the product alone before inviting anyone. The invite step mainly shows that Rolebase is collaborative; don't push to make it more prominent.
