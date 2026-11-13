@@ -55,4 +55,4 @@ It prints weekly cohorts, one line per self-serve signup of the window, invitees
 
 - Change no code and contact nobody without the user's go.
 - Ask decisions and propose options with `AskUserQuestion`.
-- Offer to draft emails to the prospects. Drafts go in the mailbox through a paseo agent in `../perso`.
+- Offer to draft emails to the prospects. Drafts go in the mailbox through a paseo agent in `../perso`. Keep them unintrusive: never cite what the person did or skipped in the app (steps, tour, meetings, visits), only offer help.
