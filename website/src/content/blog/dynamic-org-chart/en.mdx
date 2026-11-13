@@ -3,7 +3,7 @@ title: 'The dynamic org chart, or the org chart of the future'
 h1: 'The dynamic organisational chart, or the org chart of the future'
 summary: 'A 21st century business needs an org chart that is proactive, decentralised, still connected to the whole organisation, and that makes every member a leader.'
 date: 2026-01-23
-update: 2026-10-14
+update: 2026-11-13
 image: './thumbnail.jpg'
 author: 'Sandhya Domah'
 similarPosts:
@@ -12,7 +12,7 @@ similarPosts:
   - 'create-org-chart'
 ---
 
-A dynamic org chart is one that the teams update themselves as their roles change, so it stays accurate without anyone redrawing it. Companies keep an org chart current in one of three ways: they redraw it by hand in a diagram tool, generate it from an HR system that tracks job titles and reporting lines, or let each team maintain its own roles in a tool like Rolebase. An HR system tracks contracts and managers. When teams maintain their own roles, the chart also tracks who does what, which changes far more often.
+A dynamic org chart is one that the teams update themselves as their roles change, so it stays accurate without anyone redrawing it. Companies keep an org chart current in one of three ways: they redraw it by hand in a diagram tool, generate it from an HR system that tracks job titles and reporting lines, or let each team maintain its own roles in a tool like Rolebase. A tool synced with an HR system updates the chart when HR records a hire, a departure or a new manager. Rolebase stays separate from the HR system. The teams keep their roles and responsibilities current in it, and those change far more often than job titles do.
 
 Self-organised businesses run on this kind of org chart. First, here is what you, as a founder or business owner, want in a high performing organisation:
 
@@ -73,13 +73,13 @@ An org chart stays up to date when the people whose work changes can edit it the
 
 | Approach | Example tools | What stays current | What it misses |
 | --- | --- | --- | --- |
-| Drawn in a diagram tool | Lucidchart, Miro, Visio | The last version someone drew or imported | Every change made since then |
-| Generated from an HR system or a directory | ChartHop, Pingboard, Organimi | Names, job titles and reporting lines, as soon as HR records the change | Responsibilities, decision rights, people working across several teams |
-| Maintained by the teams, role by role | Rolebase | Roles, their accountabilities and decision rights, and the people holding each role | HR data, since Rolebase connects to no HR system or directory |
+| Drawn or imported in a diagram tool | Lucidchart, Miro, Creately | The last version someone drew, or the last spreadsheet someone imported | Every change made since then |
+| Synced from an HR system or a directory | ChartHop, Pingboard, Organimi, OrgChart, Functionly, Ingentis | People, job titles and reporting lines, from the first sync after HR records the change | Responsibilities, decision rights and cross-team work, which someone has to enter by hand in the tool |
+| Maintained by the teams, role by role | Rolebase | Roles, their accountabilities and decision rights, and the people holding each role, as soon as a team saves a change | Hires, departures, job titles and reporting lines, since Rolebase takes nothing from an HR system or directory |
 
-A diagram tool works well for a one-off chart, such as a reorganisation plan or a board presentation. The chart goes stale as soon as the person who drew it moves on to other work.
+A diagram tool works well for a one-off chart, such as a reorganisation plan or a board presentation. The chart goes stale as soon as the person who drew it moves on to other work. Lucidchart and Miro can also build a chart from a spreadsheet exported from the HR system. In Lucidchart, someone clicks a button to [refresh the chart from that file](https://help.lucid.co/hc/en-us/articles/16463330693268-Create-an-org-chart), while Miro needs the file imported again. Either way, the chart is only as recent as the last export.
 
-An HR-generated chart updates itself when HR records a hire, a departure or a new manager. That is what most tools mean by an automatic org chart. It follows the employment contract, though, which changes less often than the work itself. A product manager who takes over the onboarding flow or a developer who joins the security working group changes no field in the HR system, so the chart never shows it.
+An HR-generated chart updates itself when HR records a hire, a departure or a new manager. That is what most tools mean by an automatic org chart. ChartHop [syncs once a day](https://docs.charthop.com/sync-payroll-system) from the payroll or HR system. [OrgChart](https://theorgchart.com) (theorgchart.com) runs its sync daily, weekly or on demand. The chart still follows the employment contract, though, which changes less often than the work itself. A product manager who takes over the onboarding flow or a developer who joins the security working group changes no field in the HR system, so the sync never brings that change in. Functionly [refreshes its HR data every 24 hours](https://www.functionly.com/orginometry/integrations-keep-your-current-org-charts-up-to-date) and also stores roles and responsibilities next to positions. Someone edits those roles by hand in Functionly, since the HR system holds none of them.
 
 In Rolebase, the teams maintain their own roles. Each role lists its purpose, its accountabilities, its domain (the decisions that belong to it alone) and the members who hold it. The [governance mode](/en/docs/governance-modes) decides who edits a role: any member in Free mode, the role's lead in Agile mode. In Strict mode, every change to a role goes through a proposal. Everyone sees a change as soon as it is saved, in every view of the org chart. The [history](/en/docs/history) records who made it and when, with a way to undo it. Rolebase has no HR, SCIM or directory connector. A developer can script changes through the [GraphQL API](/en/developers/graphql-api) if your HR data needs to flow in.
 
@@ -110,13 +110,13 @@ Let us know if you have any questions! You can go ahead and try Rolebase right a
 
 <FaqItem question="How can I keep our company org chart up to date automatically as people change roles?">
 
-Let the people whose roles change update the org chart themselves. Tools such as ChartHop, Pingboard or Organimi redraw reporting lines on their own when HR records a new manager or a new job title in the HR system or the employee directory. Responsibilities and decision rights change more often and never reach the HR system. In Rolebase, each team edits its own roles. The [governance mode](/en/docs/governance-modes) decides who may change what.
+Let the people whose roles change update the org chart themselves. Tools such as ChartHop, Pingboard or Organimi redraw reporting lines on their own when HR records a new manager or a new job title in the HR system or the employee directory. Responsibilities and decision rights change more often and never reach the HR system. In Rolebase, each team edits its own roles. The [governance mode](/en/docs/governance-modes) decides who may change what. You can keep your HR system for contracts and reporting lines and Rolebase for who does what. The two tools stay separate.
 
 </FaqItem>
 
 <FaqItem question="How do I create a dynamic org chart that updates itself when the team changes?">
 
-Build it from roles rather than from a drawing. Create one role per team and sub-team, invite the members, and pick a governance mode that lets each team edit its own roles, such as Agile mode. From then on, the people in each team update their roles. Every view of the org chart shows the change right away. Rolebase is free for up to 5 active members, so you can try it on one team first.
+Build it from roles rather than from a drawing. Create one role per team and sub-team, invite the members, and pick a governance mode that lets each team edit its own roles, such as Agile mode. From then on, the people in each team update their roles. Every view of the org chart shows the change right away. For hires, departures and manager changes to reach the chart on their own, you need a tool synced with your HR system, such as ChartHop or OrgChart. Rolebase takes nothing from an HR system. It is free for up to 5 active members, so you can try it on one team first.
 
 </FaqItem>
 
