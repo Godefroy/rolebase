@@ -8,7 +8,7 @@ name = 'BACKEND_URL'
 value = '{{ secrets.BACKEND_URL }}'
 
 [hasura]
-version = 'v2.48.10-ce'
+version = 'v2.50.3-ce'
 adminSecret = '{{ secrets.HASURA_GRAPHQL_ADMIN_SECRET }}'
 webhookSecret = '{{ secrets.NHOST_WEBHOOK_SECRET }}'
 
