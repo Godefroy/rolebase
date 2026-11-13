@@ -192,3 +192,10 @@ event_triggers:
     headers:
       - name: x-nhost-webhook-secret
         value_from_env: NHOST_WEBHOOK_SECRET
+    cleanup_config:
+      batch_size: 10000
+      clean_invocation_logs: true
+      clear_older_than: 168
+      paused: false
+      schedule: 0 0 * * *
+      timeout: 60
