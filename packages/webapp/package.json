@@ -22,7 +22,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@fontsource/montserrat": "^4.5.10",
-    "@fontsource/nunito": "^4.5.8",
+    "@fontsource/nunito": "^5.3.0",
     "@fullcalendar/core": "^6.1.5",
     "@fullcalendar/daygrid": "^6.1.22",
     "@fullcalendar/interaction": "^6.1.22",
