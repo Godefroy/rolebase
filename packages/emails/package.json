@@ -18,7 +18,7 @@
     "react-email": "^6.11.3"
   },
   "devDependencies": {
-    "@react-email/ui": "^6.11.3",
+    "@react-email/ui": "^6.11.11",
     "@types/dotenv": "^8.2.0",
     "@types/node": "^22.13.4",
     "@types/nodemailer": "^8.0.2",
