@@ -33,7 +33,13 @@ select_permissions:
         - key
         - orgId
         - tasksIds
-      filter: {}
+      filter:
+        org:
+          archivedAt:
+            _is_null: true
+          members:
+            userId:
+              _eq: X-Hasura-User-Id
 update_permissions:
   - role: user
     permission:

@@ -51,8 +51,14 @@ insert_permissions:
                           _neq: Strict
                     - leaders:
                         member:
-                          userId:
-                            _eq: X-Hasura-User-Id
+                          _and:
+                            - userId:
+                                _eq: X-Hasura-User-Id
+                            - role:
+                                _in:
+                                  - Member
+                                  - Admin
+                                  - Owner
       columns:
         - circleId
         - id
@@ -69,7 +75,14 @@ select_permissions:
         - id
         - orgId
         - parentId
-      filter: {}
+      filter:
+        hostCircle:
+          org:
+            archivedAt:
+              _is_null: true
+            members:
+              userId:
+                _eq: X-Hasura-User-Id
     comment: ""
 update_permissions:
   - role: user
@@ -105,8 +118,14 @@ update_permissions:
                       _neq: Strict
                 - leaders:
                     member:
-                      userId:
-                        _eq: X-Hasura-User-Id
+                      _and:
+                        - userId:
+                            _eq: X-Hasura-User-Id
+                        - role:
+                            _in:
+                              - Member
+                              - Admin
+                              - Owner
       check: null
     comment: ""
 event_triggers:

@@ -133,8 +133,14 @@ update_permissions:
                           parent:
                             leaders:
                               member:
-                                userId:
-                                  _eq: X-Hasura-User-Id
+                                _and:
+                                  - userId:
+                                      _eq: X-Hasura-User-Id
+                                  - role:
+                                      _in:
+                                        - Member
+                                        - Admin
+                                        - Owner
                   - _and:
                       - org:
                           governanceMode:
@@ -146,8 +152,14 @@ update_permissions:
                             parent:
                               leaders:
                                 member:
-                                  userId:
-                                    _eq: X-Hasura-User-Id
+                                  _and:
+                                    - userId:
+                                        _eq: X-Hasura-User-Id
+                                    - role:
+                                        _in:
+                                          - Member
+                                          - Admin
+                                          - Owner
       check:
         _or:
           - org:
@@ -184,8 +196,14 @@ update_permissions:
                           parent:
                             leaders:
                               member:
-                                userId:
-                                  _eq: X-Hasura-User-Id
+                                _and:
+                                  - userId:
+                                      _eq: X-Hasura-User-Id
+                                  - role:
+                                      _in:
+                                        - Member
+                                        - Admin
+                                        - Owner
                   - _and:
                       - org:
                           governanceMode:
@@ -197,8 +215,14 @@ update_permissions:
                             parent:
                               leaders:
                                 member:
-                                  userId:
-                                    _eq: X-Hasura-User-Id
+                                  _and:
+                                    - userId:
+                                        _eq: X-Hasura-User-Id
+                                    - role:
+                                        _in:
+                                          - Member
+                                          - Admin
+                                          - Owner
 event_triggers:
   - name: index-role
     definition:

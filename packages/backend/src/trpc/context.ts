@@ -1,8 +1,7 @@
 import { CreateFastifyContextOptions } from '@trpc/server/adapters/fastify'
 import { FastifyReply, FastifyRequest } from 'fastify'
-import jwt from 'jsonwebtoken'
-import settings from '../settings'
 import { authenticateApiKey } from '../utils/authenticateApiKey'
+import { verifyAccessToken } from '../utils/verifyAccessToken'
 
 export type Context = {
   req: FastifyRequest
@@ -59,13 +58,9 @@ export const getUserClaims = (
       return undefined
     }
 
-    if (!settings.jwtSecret) {
-      throw new Error('NHOST_JWT_SECRET env var is not set')
-    }
-
-    const jwtSecret = JSON.parse(settings.jwtSecret)
-    const decodedToken = jwt.verify(accessToken, jwtSecret.key) as any
-    return decodedToken['https://hasura.io/jwt/claims'] as UserHasuraClaims
+    return verifyAccessToken(accessToken)[
+      'https://hasura.io/jwt/claims'
+    ] as UserHasuraClaims
   } catch (error) {
     return undefined
   }

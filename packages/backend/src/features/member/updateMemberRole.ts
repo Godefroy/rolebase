@@ -24,9 +24,19 @@ export default authedProcedure
     // Get member
     const memberToUpdate = await getMemberById(memberId)
 
+    // Same rule as the webapp (MemberOrgRoleSelect): nobody changes their own
+    // role, and only owners change an owner or appoint one.
+    if (!opts.ctx.isAdmin && memberToUpdate.userId === opts.ctx.userId) {
+      throw new TRPCError({
+        code: 'FORBIDDEN',
+        message: 'You cannot change your own role',
+      })
+    }
+
     await guardOrg(
       memberToUpdate.orgId,
-      memberToUpdate.role === Member_Role_Enum.Owner
+      memberToUpdate.role === Member_Role_Enum.Owner ||
+        role === Member_Role_Enum.Owner
         ? Member_Role_Enum.Owner
         : Member_Role_Enum.Admin,
       opts.ctx

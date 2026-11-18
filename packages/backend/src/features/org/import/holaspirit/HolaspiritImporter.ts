@@ -25,6 +25,7 @@ import {
 } from '../utils/graphql'
 import { importFileUpload } from '../utils/importFileUpload'
 import { importFilesFromText } from '../utils/importFilesFromText'
+import { isAllowedImportFileUrl } from '../utils/loadFileBuffer'
 import {
   HolaspiritCirclesRole,
   HolaspiritSheets,
@@ -132,12 +133,16 @@ export class HolaspiritImporter extends Importer {
               ? Member_Role_Enum.Member
               : Member_Role_Enum.Readonly
 
+      // Avatars are only fetched from Holaspirit uploads (see loadFileBuffer)
+      const avatarUrl =
+        member.Avatar && isAllowedImportFileUrl(member.Avatar)
+          ? member.Avatar
+          : undefined
       const picture =
         // Try to import avatar file
-        (member.Avatar &&
-          (await importFileUpload(member.Avatar, this.orgId))?.url) ||
+        (avatarUrl && (await importFileUpload(avatarUrl, this.orgId))?.url) ||
         // If import fails, use origin URL
-        member.Avatar
+        avatarUrl
 
       const newMember: Member_Insert_Input = {
         orgId: this.orgId,

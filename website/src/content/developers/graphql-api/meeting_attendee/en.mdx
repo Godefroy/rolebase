@@ -95,6 +95,7 @@ mutation DeleteMeetingAttendee($id: uuid!) {
 - **Circle participants:** Can add/remove attendees and update attendance status in their circle's meetings
 - **Meeting attendees:** Can view other attendees and update their own status (unless read-only)
 - **Organization members:** Can view attendees in non-private meetings
+- An attendee must be a member of the meeting's organization
 
 <Callout type="info" title="Notes">
   Each member can only appear once per meeting (enforced by unique constraint).

@@ -18,6 +18,17 @@ The API is powered by [Hasura](https://hasura.io/docs/2.0/index/), so you can re
 
 Try queries live in the [GraphQL Playground](/en/developers/graphql-api/playground). For backend procedures that go beyond CRUD, see the [tRPC API](/en/developers/trpc-api).
 
+### Query limits
+
+Each request carries a single operation: batches (a JSON array of operations) are rejected. A query is rejected with a 400 status when it exceeds one of these limits:
+
+- 50,000 characters and 10,000 tokens.
+- A depth of 10 nested fields (`org { circles { id } }` has a depth of 3).
+- 1,000 fields, counting aliases and the fields of each fragment use.
+- The same field 3 times on one path, for instance `children { parent { children { parent { children { id } } } } }`.
+
+Introspection fields (`__schema`, `__type`) are not counted. The same limits apply to the `graphql` tool of the [MCP server](/en/developers/mcp).
+
 ## Quick Start
 
 ### Using curl

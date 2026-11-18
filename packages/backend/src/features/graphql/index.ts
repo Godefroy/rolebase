@@ -2,6 +2,7 @@ import * as yup from 'yup'
 import { registerRestRoutes } from '../../rest/registerRestRoutes'
 import { authenticateApiKey } from '../../utils/authenticateApiKey'
 import { userGraphqlRequest } from '../../utils/userGraphqlRequest'
+import { validateGraphqlQuery } from '../../utils/validateGraphqlQuery'
 
 // Public GraphQL API
 // Keys are stored in api_key table
@@ -31,8 +32,14 @@ registerRestRoutes(async (app) => {
       }
 
       try {
+        // One operation per request, batches are not forwarded
+        if (Array.isArray(req.body)) {
+          throw new Error('Batched requests are not supported')
+        }
         const { query, variables, operationName } =
           await payloadSchema.validate(req.body)
+        // Depth, size and nesting limits (see validateGraphqlQuery)
+        validateGraphqlQuery(query)
         const result = await userGraphqlRequest(userId, {
           query,
           variables,

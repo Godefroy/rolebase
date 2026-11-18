@@ -86,6 +86,29 @@ describe('mdToJson / jsonToMd', () => {
     expect(expectStable(md)).toBe(md)
   })
 
+  it('drops javascript: URLs from files', () => {
+    const md =
+      '[Open report](javascript:alert%28document.domain%29 "file:application/pdf:1000")'
+    const json = mdToJson(md)
+    const files = findNodes(json, 'file')
+    expect(files).toHaveLength(1)
+    expect(files[0].attrs.url).toBe('')
+    const result = expectStable(md)
+    expect(result).not.toContain('javascript:')
+    expect(result).toContain('Open report')
+    const html = mdToHtml(md)
+    expect(html).not.toContain('javascript:')
+    expect(html).not.toContain('href')
+  })
+
+  it('drops non-http file URLs from HTML', () => {
+    const json = mdToJson(
+      '[a](data:text/html,x "file:text/html:1") [b](mailto:a@skreo.net "file:text/plain:1")'
+    )
+    const files = findNodes(json, 'file')
+    expect(files.map((f) => f.attrs.url)).toEqual(['', 'mailto:a@skreo.net'])
+  })
+
   it('parses bare YouTube URLs as embeds', () => {
     const md = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
     const json = mdToJson(md)

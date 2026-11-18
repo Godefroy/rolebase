@@ -12,37 +12,45 @@ insert_permissions:
   - role: user
     permission:
       check:
-        meeting:
-          _or:
-            - circle:
-                participants:
-                  member:
-                    userId:
-                      _eq: X-Hasura-User-Id
-            - _and:
-                - invitedReadonly:
-                    _eq: false
-                - meeting_attendees:
-                    member:
-                      userId:
-                        _eq: X-Hasura-User-Id
-            - _and:
-                - private:
-                    _eq: false
-                - invitedReadonly:
-                    _eq: false
-                - org:
-                    members:
-                      _and:
-                        - userId:
+        _and:
+          - meeting:
+              _or:
+                - circle:
+                    participants:
+                      member:
+                        userId:
+                          _eq: X-Hasura-User-Id
+                - _and:
+                    - invitedReadonly:
+                        _eq: false
+                    - meeting_attendees:
+                        member:
+                          userId:
                             _eq: X-Hasura-User-Id
-                        - _or:
-                            - role:
-                                _eq: Member
-                            - role:
-                                _eq: Admin
-                            - role:
-                                _eq: Owner
+                - _and:
+                    - private:
+                        _eq: false
+                    - invitedReadonly:
+                        _eq: false
+                    - org:
+                        members:
+                          _and:
+                            - userId:
+                                _eq: X-Hasura-User-Id
+                            - _or:
+                                - role:
+                                    _eq: Member
+                                - role:
+                                    _eq: Admin
+                                - role:
+                                    _eq: Owner
+          - member:
+              org:
+                meetings:
+                  id:
+                    _ceq:
+                      - $
+                      - meetingId
       columns:
         - meetingId
         - memberId

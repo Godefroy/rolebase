@@ -6,6 +6,7 @@ export enum UserLocalStorageKeys {
   OnboardingTodoCollapsed = 'onboarding-todo-collapsed-{id}',
   OrgLifecycleTracked = 'org-lifecycle-{id}',
   OrgSetupStep = 'org-setup-step-{id}',
+  OAuthFlow = 'oauth-flow-{id}',
 }
 
 export function resetUserLocalStorage() {

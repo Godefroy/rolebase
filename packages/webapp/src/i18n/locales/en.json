@@ -1728,6 +1728,11 @@
   "useCreateTask": {
     "toast": "Task created!"
   },
+  "useRefreshTokenFromUrl": {
+    "heading": "Switch account?",
+    "info": "This link signs you in as {{newEmail}}. You are currently signed in as {{currentEmail}}. Only continue if you opened a link you requested yourself.",
+    "confirm": "Sign in as this account"
+  },
   "useSearch": {
     "create": "Create \"{{name}}\""
   },

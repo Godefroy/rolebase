@@ -199,18 +199,20 @@ export default abstract class AbstractCalendarApp<
     return events
   }
 
-  // Get all meetings of an organization
+  // Get a meeting synced by this app: the user must attend it, as in
+  // getOrgMeetings, so its title can be written into their calendar.
   protected async getMeetingById(
     meetingId: string,
     orgId: string
   ): Promise<MeetingEvent | undefined> {
-    const orgResult = await adminRequest(GET_MEETING, {
+    const result = await adminRequest(GET_MEETING, {
       meetingId,
+      orgId,
       userId: this.userApp.userId,
     })
 
-    const meeting = orgResult.meeting_by_pk
-    if (!meeting || meeting.orgId !== orgId || meeting.archivedAt) return
+    const meeting = result.meeting[0]
+    if (!meeting) return
     const member = meeting.org.members[0]
     if (!member) return
 
@@ -225,20 +227,27 @@ export default abstract class AbstractCalendarApp<
     )
   }
 
-  // Get all recurring meetings of an organization
+  // Get a recurring meeting synced by this app: the user must be able to read
+  // it and be in its scope, as in getOrgMeetings.
   protected async getMeetingRecurringById(
     meetingId: string,
     orgId: string
   ): Promise<MeetingEvent | undefined> {
-    const orgResult = await adminRequest(GET_MEETING_RECURRING, {
+    const result = await adminRequest(GET_MEETING_RECURRING, {
       meetingId,
+      orgId,
       userId: this.userApp.userId,
     })
 
-    const meeting = orgResult.meeting_recurring_by_pk
-    if (!meeting || meeting.orgId !== orgId) return
+    const meeting = result.meeting_recurring[0]
+    if (!meeting) return
     const member = meeting.org.members[0]
     if (!member) return
+
+    const orgData = await loadOrgData(orgId)
+    if (orgData.filterScopedEntities([meeting], member.id).length === 0) {
+      return
+    }
 
     const orgUrl = `${settings.url}${getOrgPath(meeting.org)}`
 
@@ -259,15 +268,19 @@ export default abstract class AbstractCalendarApp<
     })
   }
 
-  // Update a meeting
+  // Update a meeting, only if the user is allowed to update it
+  // (same rule as the Hasura meeting update permission).
+  // Returns false when the meeting has not been updated.
   protected async updateMeeting(
     meetingId: string,
     values: Partial<Meeting_Set_Input>
-  ): Promise<void> {
-    await adminRequest(UPDATE_MEETING, {
+  ): Promise<boolean> {
+    const result = await adminRequest(UPDATE_MEETING, {
       meetingId,
+      userId: this.userApp.userId,
       values: { ...values, lastUpdateSource: this.userApp.id },
     })
+    return (result.update_meeting?.affected_rows ?? 0) > 0
   }
 
   // Delete a meeting
@@ -398,7 +411,15 @@ const GET_MEETINGS = gql(`
           }
         }
       }
-      meetings_recurring(where: { archivedAt: { _is_null: true } }) {
+      meetings_recurring(
+        where: {
+          archivedAt: { _is_null: true }
+          _or: [
+            { private: { _eq: false } }
+            { circle: { participants: { member: { userId: { _eq: $userId } } } } }
+          ]
+        }
+      ) {
         ...MeetingRecurring
         meetings {
           recurringDate
@@ -406,12 +427,27 @@ const GET_MEETINGS = gql(`
       }
     }
   }
-
 `)
 
 const GET_MEETING = gql(`
-  query getMeetingForCalendarApp($meetingId: uuid!, $userId: uuid!) {
-    meeting_by_pk(id: $meetingId) {
+  query getMeetingForCalendarApp(
+    $meetingId: uuid!
+    $orgId: uuid!
+    $userId: uuid!
+  ) {
+    meeting(
+      where: {
+        id: { _eq: $meetingId }
+        orgId: { _eq: $orgId }
+        archivedAt: { _is_null: true }
+        meeting_attendees: {
+          member: {
+            userId: { _eq: $userId }
+            archivedAt: { _is_null: true }
+          }
+        }
+      }
+    ) {
       ...Meeting
       circle {
         role {
@@ -435,8 +471,22 @@ const GET_MEETING = gql(`
 `)
 
 const GET_MEETING_RECURRING = gql(`
-  query getMeetingRecurringForCalendarApp($meetingId: uuid!, $userId: uuid!) {
-    meeting_recurring_by_pk(id: $meetingId) {
+  query getMeetingRecurringForCalendarApp(
+    $meetingId: uuid!
+    $orgId: uuid!
+    $userId: uuid!
+  ) {
+    meeting_recurring(
+      where: {
+        id: { _eq: $meetingId }
+        orgId: { _eq: $orgId }
+        archivedAt: { _is_null: true }
+        _or: [
+          { private: { _eq: false } }
+          { circle: { participants: { member: { userId: { _eq: $userId } } } } }
+        ]
+      }
+    ) {
       ...MeetingRecurring
       meetings {
         recurringDate
@@ -452,9 +502,6 @@ const GET_MEETING_RECURRING = gql(`
           id
           name
         }
-        meetings {
-          recurringDate
-        }
       }
     }
   }
@@ -468,10 +515,39 @@ const CREATE_MEETING = gql(`
   }
 `)
 
+// The where clause mirrors the Hasura meeting update permission of role user
 const UPDATE_MEETING = gql(`
-  mutation updateMeetingForCalendarApp($meetingId: uuid!, $values: meeting_set_input!) {
-    update_meeting_by_pk(pk_columns: { id: $meetingId }, _set: $values) {
-      id
+  mutation updateMeetingForCalendarApp(
+    $meetingId: uuid!
+    $userId: uuid!
+    $values: meeting_set_input!
+  ) {
+    update_meeting(
+      where: {
+        id: { _eq: $meetingId }
+        archivedAt: { _is_null: true }
+        org: { archivedAt: { _is_null: true } }
+        _or: [
+          { circle: { participants: { member: { userId: { _eq: $userId } } } } }
+          {
+            invitedReadonly: { _eq: false }
+            meeting_attendees: { member: { userId: { _eq: $userId } } }
+          }
+          {
+            private: { _eq: false }
+            invitedReadonly: { _eq: false }
+            org: {
+              members: {
+                userId: { _eq: $userId }
+                role: { _in: [Member, Admin, Owner] }
+              }
+            }
+          }
+        ]
+      }
+      _set: $values
+    ) {
+      affected_rows
     }
   }
 `)

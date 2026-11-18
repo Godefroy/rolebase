@@ -85,8 +85,14 @@ export default function MeetingRecurringModal({
   const nextDates = useMemo(() => {
     if (!meetingRecurring) return
 
-    // Exclude meetings from rrule
-    const rrule = new RRuleUTC(meetingRecurring.rrule)
+    // Exclude meetings from rrule (invalid or unsafe rules are rejected)
+    let rrule: RRuleUTC
+    try {
+      rrule = new RRuleUTC(meetingRecurring.rrule)
+    } catch (error) {
+      console.error(error)
+      return []
+    }
     rrule.excludeDates(meetingRecurring.meetings.map((m) => m.recurringDate))
 
     // After and before dates

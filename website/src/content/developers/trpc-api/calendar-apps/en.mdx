@@ -42,6 +42,6 @@ Disconnects a calendar app, which stops the sync and removes the stored credenti
 
 ## Connecting an app
 
-Installing an app goes through the provider OAuth flow, which the app finishes by handing the authorization code to `apps.googlecalendar.authRedirect` or `apps.office365.authRedirect`. Both take `{ code }` and create the `user_app` row from the returned tokens. The redirect URL is fixed on the backend side, so the flow is meant to be started from the Rolebase interface rather than from an integration.
+Installing an app goes through the provider OAuth flow, which the app finishes by handing the authorization code to `apps.googlecalendar.authRedirect` or `apps.office365.authRedirect`. Both take `{ code, codeVerifier }` and create the `user_app` row from the returned tokens. `codeVerifier` is the PKCE verifier whose S256 challenge was sent in the authorization URL, along with a random `state` that the app checks on the callback page, so a code obtained in another browser cannot be redeemed. The redirect URL is fixed on the backend side, so the flow is meant to be started from the Rolebase interface rather than from an integration.
 
 Each provider also has a webhook the calendar service calls when an event changes, `POST /apps/googlecalendar/notify` and `POST /apps/office365/notify`. They authenticate with the provider channel data, not with an API key.

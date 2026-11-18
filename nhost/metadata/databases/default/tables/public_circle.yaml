@@ -157,8 +157,14 @@ insert_permissions:
                   - parent:
                       leaders:
                         member:
-                          userId:
-                            _eq: X-Hasura-User-Id
+                          _and:
+                            - userId:
+                                _eq: X-Hasura-User-Id
+                            - role:
+                                _in:
+                                  - Member
+                                  - Admin
+                                  - Owner
               - _and:
                   - org:
                       governanceMode:
@@ -170,8 +176,14 @@ insert_permissions:
                       parent:
                         leaders:
                           member:
-                            userId:
-                              _eq: X-Hasura-User-Id
+                            _and:
+                              - userId:
+                                  _eq: X-Hasura-User-Id
+                              - role:
+                                  _in:
+                                    - Member
+                                    - Admin
+                                    - Owner
       columns:
         - id
         - orgId
@@ -187,7 +199,13 @@ select_permissions:
         - orgId
         - parentId
         - roleId
-      filter: {}
+      filter:
+        org:
+          archivedAt:
+            _is_null: true
+          members:
+            userId:
+              _eq: X-Hasura-User-Id
       allow_aggregations: true
 update_permissions:
   - role: user
@@ -227,8 +245,14 @@ update_permissions:
               - parent:
                   leaders:
                     member:
-                      userId:
-                        _eq: X-Hasura-User-Id
+                      _and:
+                        - userId:
+                            _eq: X-Hasura-User-Id
+                        - role:
+                            _in:
+                              - Member
+                              - Admin
+                              - Owner
           - _and:
               - org:
                   governanceMode:
@@ -240,8 +264,14 @@ update_permissions:
                   parent:
                     leaders:
                       member:
-                        userId:
-                          _eq: X-Hasura-User-Id
+                        _and:
+                          - userId:
+                              _eq: X-Hasura-User-Id
+                          - role:
+                              _in:
+                                - Member
+                                - Admin
+                                - Owner
       check:
         _and:
           - _or:
@@ -303,8 +333,14 @@ update_permissions:
                   - parent:
                       leaders:
                         member:
-                          userId:
-                            _eq: X-Hasura-User-Id
+                          _and:
+                            - userId:
+                                _eq: X-Hasura-User-Id
+                            - role:
+                                _in:
+                                  - Member
+                                  - Admin
+                                  - Owner
               - _and:
                   - org:
                       governanceMode:
@@ -316,8 +352,14 @@ update_permissions:
                       parent:
                         leaders:
                           member:
-                            userId:
-                              _eq: X-Hasura-User-Id
+                            _and:
+                              - userId:
+                                  _eq: X-Hasura-User-Id
+                              - role:
+                                  _in:
+                                    - Member
+                                    - Admin
+                                    - Owner
 event_triggers:
   - name: index-circle
     definition:

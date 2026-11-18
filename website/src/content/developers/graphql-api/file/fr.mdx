@@ -60,10 +60,8 @@ query GetFile($id: uuid!) {
 
 ## Permissions
 
-L'accès aux fichiers est ouvert à tous les utilisateurs authentifiés et aux requêtes publiques :
-
-- **Consultation** — Tous les utilisateurs authentifiés et les requêtes publiques peuvent consulter les métadonnées des fichiers (limité à 1 résultat)
-- **Création** — Tous les utilisateurs authentifiés peuvent téléverser des fichiers
+- Les utilisateurs authentifiés et les requêtes publiques lisent les métadonnées d'un fichier par son `id` avec la requête `file`. La requête de liste `files` et son agrégat ne sont pas exposés
+- Tous les utilisateurs authentifiés peuvent téléverser des fichiers
 
 <Callout type="info">
   Les fichiers sont stockés de manière sécurisée dans des buckets de stockage

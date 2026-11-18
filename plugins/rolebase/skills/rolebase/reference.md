@@ -16,6 +16,7 @@ Rolebase is an org chart and governance tool for self-managed organizations (Hol
 
 - Tables are queried as `task(where: ..., order_by: ..., limit: ...)` and `task_by_pk(id: ...)`.
 - Mutations: `insert_task_one(object: ...)`, `update_task_by_pk(pk_columns: { id: ... }, _set: ...)`.
+- One operation per request, at most 10 levels of nested fields, 1,000 fields and the same field 3 times on one path (e.g. `children { parent { children ... } }`). Split bigger reads into several queries.
 - Rows are archived, never deleted: set `archivedAt` to the current timestamp, and filter lists with `archivedAt: { _is_null: true }`.
 
 ## Data model

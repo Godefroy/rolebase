@@ -8,13 +8,13 @@ Les réunions se lisent et s’écrivent en GraphQL sur [`meeting`](/fr/develope
 
 ## Requête `meeting.getMeetingsToken`
 
-Renvoie le token d’une organisation, pour tout membre y compris Readonly.
+Renvoie le token du flux iCal du membre de l’appelant dans une organisation, pour tout membre y compris Readonly.
 
 | Input | Type | Description |
 | --- | --- | --- |
 | `orgId` | `uuid` | Organisation visée. Requis. |
 
-Le token ne dépend que de l’organisation : il reste valide aussi longtemps qu’elle existe, et quiconque le détient peut lire le flux iCal ci-dessous. Traitez-le comme un secret partagé.
+Le token est lié à l’organisation et au membre de l’appelant : il ouvre seulement le flux de ce membre, et cesse de fonctionner quand le membre quitte l’organisation. Traitez-le comme un secret.
 
 ```typescript
 const token = await trpc.meeting.getMeetingsToken.query({ orgId })
@@ -28,4 +28,4 @@ Le backend expose aussi les réunions d’un membre sous forme de calendrier iCa
 GET https://api.rolebase.io/meeting/ical?orgId=<uuid>&memberId=<uuid>&token=<token>&lang=<en|fr>
 ```
 
-Les quatre paramètres sont requis, et `token` est celui renvoyé par `getMeetingsToken`. Le flux répond 401 sur un token invalide et 404 quand l’organisation n’existe plus, pour qu’un client qui interroge une organisation supprimée s’arrête au lieu de réessayer indéfiniment.
+Les quatre paramètres sont requis. `token` est celui renvoyé par `getMeetingsToken` et `memberId` est l’identifiant du membre de l’appelant dans cette organisation. Le flux répond 401 sur un token invalide, sur un token émis pour un autre membre ou quand le membre n’est plus actif, et 404 quand l’organisation n’existe plus, pour qu’un client qui interroge une organisation supprimée s’arrête au lieu de réessayer indéfiniment.

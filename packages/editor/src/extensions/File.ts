@@ -1,4 +1,5 @@
 import { Node } from '@tiptap/core'
+import { sanitizeFileUrl } from './isSafeFileUrl'
 
 export interface FileAttributes {
   url: string
@@ -31,7 +32,7 @@ export const File = Node.create({
       {
         tag: 'a[data-file-name]',
         getAttrs: (element) => ({
-          url: element.getAttribute('href') ?? '',
+          url: sanitizeFileUrl(element.getAttribute('href')),
           name: element.getAttribute('data-file-name') ?? '',
           size: parseInt(element.getAttribute('data-file-size') ?? '0', 10),
           mime: element.getAttribute('data-file-mime') ?? '',
@@ -45,7 +46,7 @@ export const File = Node.create({
     return [
       'a',
       {
-        href: url,
+        href: sanitizeFileUrl(url) || null,
         'data-file-name': name,
         'data-file-size': size,
         'data-file-mime': mime,
@@ -80,7 +81,7 @@ export const File = Node.create({
 
   parseMarkdown(token, helpers) {
     return helpers.createNode('file', {
-      url: token.url,
+      url: sanitizeFileUrl(token.url),
       name: token.name,
       size: token.size,
       mime: token.mime,
@@ -89,6 +90,10 @@ export const File = Node.create({
 
   renderMarkdown(node) {
     const { url, name, size, mime } = node.attrs ?? {}
-    return `[${name}](${url} "file:${mime}:${size}")`
+    // A file without a safe URL can't be expressed in the file syntax:
+    // keep its name as plain text
+    const safeUrl = sanitizeFileUrl(url)
+    if (!safeUrl) return name ?? ''
+    return `[${name}](${safeUrl} "file:${mime}:${size}")`
   },
 })

@@ -40,9 +40,18 @@ export interface CollaborationConfig {
   docId: string
   username?: string
   cursorColor?: string
+  // Returns a valid access token, refreshed if it expires soon.
+  // Sent to the server when connecting and when it changes.
+  getToken?(): Promise<string | undefined>
   // Called when the connection + sync status changes
   onStatusChange?(online: boolean): void
 }
+
+// Custom message carrying a refreshed access token
+// (packages/backend/src/features/collab)
+const messageRefreshToken = 100
+// Interval to check if the access token has been refreshed
+const tokenCheckInterval = 30_000
 
 export interface RichEditorProps extends Omit<
   HTMLAttributes<HTMLDivElement>,
@@ -117,20 +126,38 @@ export default forwardRef<EditorHandle, RichEditorProps>(function RichEditor(
   const upload = (file: globalThis.File) =>
     onUploadRef.current?.(file) ?? Promise.resolve('')
 
+  const collaborationRef = useRef(collaboration)
+  collaborationRef.current = collaboration
+
+  // Read-only users can't seed an empty room: the server drops their updates.
+  // They see the stored value without collaboration instead.
+  const readOnlyRef = useRef(readOnly)
+  readOnlyRef.current = readOnly
+  const [unseededRoom, setUnseededRoom] = useState(false)
+  const showStaticValue = !!readOnly && unseededRoom
+
+  useEffect(() => {
+    // Back to collaboration when becoming editable, to seed the room
+    if (!readOnly) setUnseededRoom(false)
+  }, [readOnly])
+
+  useEffect(() => {
+    if (showStaticValue) collaborationRef.current?.onStatusChange?.(true)
+  }, [showStaticValue])
+
   // Collaboration: Yjs document and provider, recreated when docId changes
   const collabDocId = collaboration?.docId
   const collab = useMemo(() => {
-    if (!collaboration || !collabDocId) return undefined
+    if (!collaboration || !collabDocId || showStaticValue) return undefined
     const doc = new Doc()
     const provider = new WebsocketProvider(
       collaboration.url,
-      // Fresh rooms, separate from the legacy Lexical-based documents
-      `${collabDocId}-v2`,
+      collabDocId,
       doc,
       { connect: false }
     )
-    return { doc, provider }
-  }, [collabDocId])
+    return { doc, provider, url: provider.url }
+  }, [collabDocId, showStaticValue])
 
   const [synced, setSynced] = useState(!collab)
 
@@ -268,6 +295,27 @@ export default forwardRef<EditorHandle, RichEditorProps>(function RichEditor(
     const { provider, doc } = collab
     let connected = false
     let isSynced = false
+    let destroyed = false
+    let token: string | undefined
+
+    // Pass the access token in the URL used by the next (re)connection,
+    // and send it to the server when it changes on an open connection
+    const updateToken = async () => {
+      const newToken = await collaborationRef.current
+        ?.getToken?.()
+        .catch(() => undefined)
+      if (destroyed || !newToken || newToken === token) return
+      const isRefresh = token !== undefined
+      token = newToken
+      provider.url = `${collab.url}?token=${encodeURIComponent(newToken)}`
+      if (isRefresh && provider.wsconnected) {
+        const tokenBytes = new TextEncoder().encode(newToken)
+        const message = new Uint8Array(tokenBytes.length + 1)
+        message[0] = messageRefreshToken
+        message.set(tokenBytes, 1)
+        provider.ws?.send(message)
+      }
+    }
 
     const reportStatus = () => {
       collaboration?.onStatusChange?.(connected && isSynced)
@@ -279,6 +327,10 @@ export default forwardRef<EditorHandle, RichEditorProps>(function RichEditor(
         const fragment = doc.getXmlFragment('default')
         const meta = doc.getMap('meta')
         if (fragment.length === 0 && meta.get('seeded') !== true) {
+          if (readOnlyRef.current) {
+            setUnseededRoom(true)
+            return
+          }
           doc.transact(() => meta.set('seeded', true))
           if (value) {
             editor.commands.setContent(value, { contentType: 'markdown' })
@@ -296,11 +348,22 @@ export default forwardRef<EditorHandle, RichEditorProps>(function RichEditor(
 
     provider.on('synced', handleSynced)
     provider.on('status', handleStatus)
-    provider.connect()
+    provider.on('connection-close', updateToken)
+    const tokenInterval = setInterval(updateToken, tokenCheckInterval)
+    if (collaborationRef.current?.getToken) {
+      updateToken().finally(() => {
+        if (!destroyed) provider.connect()
+      })
+    } else {
+      provider.connect()
+    }
 
     return () => {
+      destroyed = true
+      clearInterval(tokenInterval)
       provider.off('synced', handleSynced)
       provider.off('status', handleStatus)
+      provider.off('connection-close', updateToken)
       provider.destroy()
       doc.destroy()
     }

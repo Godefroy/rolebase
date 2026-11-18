@@ -24,8 +24,12 @@ export default function MemberActivity({
     org: 'OrgaTest',
   },
 }: Props) {
-  const t = (key: string) =>
-    i18n.t(`emails:MemberActivity.${type}.${key}`, { lng: lang, replace })
+  const t = (key: string, escapeValue = false) =>
+    i18n.t(`emails:MemberActivity.${type}.${key}`, {
+      lng: lang,
+      replace,
+      interpolation: { escapeValue },
+    })
 
   return (
     <Layout preview={t('preview')}>
@@ -41,7 +45,10 @@ export default function MemberActivity({
               />
             </Column>
             <Column>
-              <Text dangerouslySetInnerHTML={{ __html: t('activity') }} />
+              {/* Rendered as HTML for its <b> markup: escape the names */}
+              <Text
+                dangerouslySetInnerHTML={{ __html: t('activity', true) }}
+              />
             </Column>
           </Row>
         </Section>

@@ -24,6 +24,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { trpc } from 'src/trpc'
 import appsParams from '../appsParams'
+import { createOAuthFlow, getCodeChallenge } from '../oauthFlow'
 import AppCalendarOrgSelect from './AppCalendarOrgSelect'
 
 interface Props {
@@ -49,9 +50,17 @@ export default function AppCard({ type, userApp }: Props) {
   )
 
   // Install app
-  const handleInstall = () => {
-    // Open auth page in a new tab
-    window.open(appParams.authUrl, '_blank')
+  const handleInstall = async () => {
+    // Open the tab synchronously so it's not blocked as a popup
+    const authWindow = window.open('about:blank', '_blank')
+    const { state, codeVerifier } = createOAuthFlow(type)
+    const codeChallenge = await getCodeChallenge(codeVerifier)
+    const authUrl = appParams.getAuthUrl(state, codeChallenge)
+    if (authWindow) {
+      authWindow.location.href = authUrl
+    } else {
+      window.location.href = authUrl
+    }
   }
 
   // Uninstall app

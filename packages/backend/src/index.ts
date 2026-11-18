@@ -1,4 +1,5 @@
 import fastify from 'fastify'
+import { registerCollab } from './features/collab/registerCollab'
 import { registerRest } from './rest/registerRest'
 import settings from './settings'
 import { registerTrpc } from './trpc/registerTrpc'
@@ -26,6 +27,9 @@ registerTrpc(server)
 
 // Register REST routes
 registerRest(server)
+
+// Register collaborative editing (WebSocket)
+registerCollab(server)
 
 // Start server
 server

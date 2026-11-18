@@ -10,6 +10,7 @@ import {
 } from 'graphql'
 import { z } from 'zod'
 import { userGraphqlRequest } from '../../../utils/userGraphqlRequest'
+import { validateGraphqlQuery } from '../../../utils/validateGraphqlQuery'
 import { textResult } from '../utils/textResult'
 
 export function registerGraphqlTools(server: McpServer, userId: string) {
@@ -27,9 +28,12 @@ export function registerGraphqlTools(server: McpServer, userId: string) {
           .describe('Variables of the operation'),
       },
     },
-    async ({ query, variables }) =>
+    async ({ query, variables }) => {
+      // Depth, size and nesting limits (see validateGraphqlQuery)
+      validateGraphqlQuery(query)
       // GraphQL errors are thrown, and returned as tool errors by the SDK
-      textResult(await userGraphqlRequest(userId, { query, variables }))
+      return textResult(await userGraphqlRequest(userId, { query, variables }))
+    }
   )
 
   server.registerTool(

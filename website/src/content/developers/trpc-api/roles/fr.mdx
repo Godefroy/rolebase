@@ -8,7 +8,7 @@ Un rôle placé dans l’organigramme est une ligne [`circle`](/fr/developers/gr
 
 ## Mutation `circle.archiveCircle`
 
-Archive un rôle ainsi que tous ses descendants imbriqués, pour un utilisateur authentifié ayant la permission de modifier le rôle.
+Archive un rôle ainsi que tous ses descendants imbriqués, pour un Member, Admin ou Owner ayant la permission de modifier le rôle.
 
 | Input | Type | Description |
 | --- | --- | --- |
@@ -27,7 +27,7 @@ const { archivedAt, circlesIds, rolesIds } = await trpc.circle.archiveCircle.mut
 
 ## Mutation `circle.restoreCircle`
 
-Restaure un rôle archivé et les descendants archivés avec lui, pour un utilisateur authentifié ayant la permission de modifier le rôle.
+Restaure un rôle archivé et les descendants archivés avec lui, pour un Member, Admin ou Owner ayant la permission de modifier le rôle.
 
 | Input | Type | Description |
 | --- | --- | --- |
@@ -50,7 +50,7 @@ Résout une proposition en cours et applique son issue. Autorisé pour l’auteu
 | --- | --- | --- |
 | `activityId` | `uuid` | La [`thread_activity`](/fr/developers/graphql-api/thread_activity) de type `Proposal`. Requis. |
 
-La résolution s’exécute côté serveur avec des droits admin, car un votant peut ne pas avoir les permissions que l’issue demande. Une proposition déjà résolue reste inchangée : l’appel peut donc être répété sans risque. La procédure ne renvoie rien.
+La résolution s’exécute côté serveur avec des droits admin, car un votant peut ne pas avoir les permissions que l’issue demande. Avant toute application, chaque changement de la proposition est vérifié : il doit viser des entités de l’organisation de la proposition et ne porter que les champs qu’une proposition peut modifier. Une proposition approuvée est refusée à la place quand un changement échoue à cette vérification ou quand son auteur n’est plus membre actif de l’organisation. Une proposition déjà résolue reste inchangée : l’appel peut donc être répété sans risque. La procédure ne renvoie rien.
 
 ```typescript
 await trpc.proposal.resolve.mutate({ activityId: 'VOTRE_ACTIVITY_ID' })

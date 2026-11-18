@@ -89,6 +89,12 @@ insert_permissions:
           - member:
               userId:
                 _eq: X-Hasura-User-Id
+              org:
+                threads:
+                  id:
+                    _ceq:
+                      - $
+                      - threadId
       set:
         userId: x-hasura-User-Id
       columns:
@@ -143,39 +149,55 @@ update_permissions:
         - archivedAt
         - data
       filter:
-        _or:
-          - userId:
-              _eq: X-Hasura-User-Id
-          - _and:
+        _and:
+          - _or:
               - type:
-                  _eq: MeetingNote
-              - thread:
-                  _or:
-                    - circle:
-                        participants:
-                          member:
-                            userId:
-                              _eq: X-Hasura-User-Id
-                    - extra_members:
-                        member:
-                          userId:
-                            _eq: X-Hasura-User-Id
-                    - _and:
-                        - private:
-                            _eq: false
-                        - org:
-                            members:
-                              _and:
-                                - userId:
-                                    _eq: X-Hasura-User-Id
-                                - _or:
-                                    - role:
-                                        _eq: Member
-                                    - role:
-                                        _eq: Admin
-                                    - role:
-                                        _eq: Owner
-      check: {}
+                  _neq: Proposal
+              - data:
+                  _contains:
+                    status: inProgress
+          - _or:
+              - userId:
+                  _eq: X-Hasura-User-Id
+              - _and:
+                  - type:
+                      _eq: MeetingNote
+                  - thread:
+                      _or:
+                        - circle:
+                            participants:
+                              member:
+                                userId:
+                                  _eq: X-Hasura-User-Id
+                        - extra_members:
+                            member:
+                              userId:
+                                _eq: X-Hasura-User-Id
+                        - _and:
+                            - private:
+                                _eq: false
+                            - org:
+                                members:
+                                  _and:
+                                    - userId:
+                                        _eq: X-Hasura-User-Id
+                                    - _or:
+                                        - role:
+                                            _eq: Member
+                                        - role:
+                                            _eq: Admin
+                                        - role:
+                                            _eq: Owner
+      check:
+        _or:
+          - type:
+              _neq: Proposal
+          - data:
+              _contains:
+                status: inProgress
+          - data:
+              _contains:
+                status: canceled
 delete_permissions:
   - role: user
     permission:

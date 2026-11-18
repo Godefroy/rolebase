@@ -70,9 +70,9 @@ mutation DeleteActivityReaction {
 
 L'accès aux réactions est contrôlé en fonction de l'appartenance à l'organisation :
 
-- **Consultation** — Tous les utilisateurs authentifiés peuvent consulter les réactions
-- **Création** — Les membres de l'organisation (avec le rôle Member, Admin ou Owner) peuvent ajouter des réactions. Le `userId` est automatiquement défini sur l'utilisateur authentifié
-- **Suppression** — Les utilisateurs ne peuvent supprimer que leurs propres réactions
+- **Consultation** : les membres de l'organisation peuvent consulter les réactions de ses discussions
+- **Création** : les membres de l'organisation (avec le rôle Member, Admin ou Owner) peuvent ajouter des réactions. Le `userId` est automatiquement défini sur l'utilisateur authentifié
+- **Suppression** : les utilisateurs ne peuvent supprimer que leurs propres réactions
 
 <Callout type="info">
   Chaque membre peut ajouter plusieurs réactions emoji différentes à une

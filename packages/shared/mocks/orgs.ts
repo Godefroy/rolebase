@@ -15,5 +15,6 @@ export const org: OrgFragment = {
   slug: null,
   icon: null,
   homeNote: null,
+  onboardingOrgType: null,
   onboardingTodo: null,
 }

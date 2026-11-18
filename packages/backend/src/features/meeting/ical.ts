@@ -11,7 +11,7 @@ import { RestError, route } from '../../rest/route'
 import settings from '../../settings'
 import { adminRequest } from '../../utils/adminRequest'
 import { loadOrgData } from '../org/loadOrgData'
-import { generateMeetingToken } from './generateMeetingToken'
+import { isMeetingTokenValid } from './generateMeetingToken'
 
 const yupSchema = yup.object().shape({
   orgId: yup.string().required(),
@@ -23,8 +23,8 @@ const yupSchema = yup.object().shape({
 export default route(async (context) => {
   const { orgId, token, memberId, lang } = guardQueryParams(context, yupSchema)
 
-  // Validate token
-  if (token !== generateMeetingToken(orgId)) {
+  // Validate token, bound to the org and the member
+  if (!isMeetingTokenValid(token, orgId, memberId)) {
     throw new RestError(401, 'Invalid token')
   }
 
@@ -34,8 +34,14 @@ export default route(async (context) => {
 
   // Calendar clients keep polling the subscription URL of a deleted org, so
   // answer 404 rather than reporting each poll as a server error.
-  if (!org) {
+  if (!org || org.archivedAt) {
     throw new RestError(404, 'Org not found')
+  }
+
+  // The feed stops once the member leaves the org or loses their account link
+  const member = org.members[0]
+  if (!member || !member.userId || !member.role) {
+    throw new RestError(401, 'Invalid token')
   }
 
   // Load indexed org data for scope resolution
@@ -95,8 +101,16 @@ export default route(async (context) => {
   for (const recurringMeeting of recurringMeetings) {
     const url = `${orgUrl}/meetings-recurring/${recurringMeeting.id}`
 
-    const rrule = new RRuleUTC(recurringMeeting.rrule)
-    const nextDate = rrule.after(new Date())
+    // Skip rules rejected by RRuleUTC validation instead of failing the feed
+    let rrule: RRuleUTC
+    let nextDate: Date | null
+    try {
+      rrule = new RRuleUTC(recurringMeeting.rrule)
+      nextDate = rrule.after(new Date())
+    } catch (e) {
+      console.error(`Invalid rrule for ${recurringMeeting.id}:`, e)
+      continue
+    }
     if (!nextDate) continue
 
     // Exclude dates of meetings from the serie
@@ -145,11 +159,17 @@ function formatDate(date: Date, timezone: string) {
 }
 
 const GET_MEETINGS = gql(`
-  query getOrgMeetingsForIcal($orgId: uuid!, $memberId: uuid) {
+  query getOrgMeetingsForIcal($orgId: uuid!, $memberId: uuid!) {
     org_by_pk(id: $orgId) {
       id
       name
       slug
+      archivedAt
+      members(where: { id: { _eq: $memberId }, archivedAt: { _is_null: true } }) {
+        id
+        userId
+        role
+      }
       meetings(
         where: {
           archivedAt: { _is_null: true }

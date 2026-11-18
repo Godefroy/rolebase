@@ -1,3 +1,4 @@
+import { isRoleSufficient } from '@rolebase/shared/helpers/isRoleSufficient'
 import { TRPCError } from '@trpc/server'
 import * as yup from 'yup'
 import { Member_Role_Enum, gql } from '../../gql'
@@ -140,7 +141,8 @@ export default authedProcedure
       circle,
       role,
       member?.id,
-      !!member,
+      // Readonly members have no edit rights (same as webapp useOrgMember)
+      isRoleSufficient(member?.role, Member_Role_Enum.Member),
       member?.role === Member_Role_Enum.Owner
     )
     if (!perms.canEditCircle) {

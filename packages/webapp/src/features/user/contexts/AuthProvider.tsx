@@ -10,6 +10,7 @@ import React, {
 import { useTranslation } from 'react-i18next'
 import { identify, track } from 'src/analytics'
 import { nhost } from 'src/nhost'
+import useRefreshTokenFromUrl from '../hooks/useRefreshTokenFromUrl'
 
 export interface AuthContextType {
   user: Session['user'] | null
@@ -100,15 +101,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     })
   }, [user?.id, user?.emailVerified])
 
-  // Refresh token when receiving query param "refreshToken" (reset password)
-  useEffect(() => {
-    const refreshToken = new URLSearchParams(window.location.search).get(
-      'refreshToken'
-    )
-    if (refreshToken) {
-      nhost.auth.refreshToken({ refreshToken })
-    }
-  }, [])
+  // Sign in from the "refreshToken" query param of email links
+  const switchAccountConfirmElement = useRefreshTokenFromUrl()
 
   const value: AuthContextType = {
     user,
@@ -117,5 +111,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     isLoading,
   }
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+      {switchAccountConfirmElement}
+    </AuthContext.Provider>
+  )
 }

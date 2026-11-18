@@ -175,7 +175,14 @@ export default function MeetingsPage() {
         .concat(
           (meetingsRecurring || [])
             .map((mr): EventInput | undefined => {
-              const rrule = new RRuleUTC(mr.rrule)
+              // Invalid or unsafe rules are rejected by RRuleUTC
+              let rrule: RRuleUTC
+              try {
+                rrule = new RRuleUTC(mr.rrule)
+              } catch (error) {
+                console.error(error)
+                return undefined
+              }
               const nextDate = rrule.after(new Date())
               if (!nextDate) return undefined
 

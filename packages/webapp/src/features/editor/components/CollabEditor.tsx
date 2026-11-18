@@ -17,6 +17,7 @@ import React, {
   useState,
 } from 'react'
 import { useTranslation } from 'react-i18next'
+import { nhost } from 'src/nhost'
 import settings from 'src/settings'
 import useEditorLabels from '../hooks/useEditorLabels'
 import useFileUpload from '../hooks/useFileUpload'
@@ -25,6 +26,12 @@ import { CollabOfflineOverlay } from './CollabOfflineOverlay'
 import EditorContainer from './EditorContainer'
 
 // Collaborative Markdown editor
+
+// Access token required by the collab server, refreshed if it expires soon
+async function getCollabToken() {
+  const session = await nhost.refreshSession(60).catch(() => null)
+  return (session ?? nhost.getUserSession())?.accessToken
+}
 
 interface Props extends FormControlOptions {
   docId: string
@@ -74,6 +81,7 @@ const CollabEditor = forwardRef<EditorHandle, Props>(
         docId,
         username: currentMember?.name,
         cursorColor: randomColor({ string: currentMember?.name || '' }),
+        getToken: getCollabToken,
         onStatusChange: setOnline,
       }),
       [docId, currentMember?.name]

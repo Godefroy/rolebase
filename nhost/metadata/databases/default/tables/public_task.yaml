@@ -15,30 +15,47 @@ insert_permissions:
   - role: user
     permission:
       check:
-        _or:
+        _and:
           - circle:
-              participants:
-                member:
+              orgId:
+                _ceq:
+                  - $
+                  - orgId
+          - _or:
+              - memberId:
+                  _is_null: true
+              - member:
+                  orgId:
+                    _ceq:
+                      - $
+                      - orgId
+          - org:
+              archivedAt:
+                _is_null: true
+          - _or:
+              - circle:
+                  participants:
+                    member:
+                      userId:
+                        _eq: X-Hasura-User-Id
+              - member:
                   userId:
                     _eq: X-Hasura-User-Id
-          - member:
-              userId:
-                _eq: X-Hasura-User-Id
-          - _and:
-              - private:
-                  _eq: false
-              - org:
-                  members:
-                    _and:
-                      - userId:
-                          _eq: X-Hasura-User-Id
-                      - _or:
-                          - role:
-                              _eq: Member
-                          - role:
-                              _eq: Admin
-                          - role:
-                              _eq: Owner
+              - _and:
+                  - private:
+                      _eq: false
+                  - org:
+                      members:
+                        _and:
+                          - userId:
+                              _eq: X-Hasura-User-Id
+                          - _or:
+                              - role:
+                                  _eq: Member
+                              - role:
+                                  _eq: Admin
+                              - role:
+                                  _eq: Owner
       columns:
         - archivedAt
         - circleId
@@ -120,30 +137,47 @@ update_permissions:
                           - role:
                               _eq: Owner
       check:
-        _or:
+        _and:
           - circle:
-              participants:
-                member:
+              orgId:
+                _ceq:
+                  - $
+                  - orgId
+          - _or:
+              - memberId:
+                  _is_null: true
+              - member:
+                  orgId:
+                    _ceq:
+                      - $
+                      - orgId
+          - org:
+              archivedAt:
+                _is_null: true
+          - _or:
+              - circle:
+                  participants:
+                    member:
+                      userId:
+                        _eq: X-Hasura-User-Id
+              - member:
                   userId:
                     _eq: X-Hasura-User-Id
-          - member:
-              userId:
-                _eq: X-Hasura-User-Id
-          - _and:
-              - private:
-                  _eq: false
-              - org:
-                  members:
-                    _and:
-                      - userId:
-                          _eq: X-Hasura-User-Id
-                      - _or:
-                          - role:
-                              _eq: Member
-                          - role:
-                              _eq: Admin
-                          - role:
-                              _eq: Owner
+              - _and:
+                  - private:
+                      _eq: false
+                  - org:
+                      members:
+                        _and:
+                          - userId:
+                              _eq: X-Hasura-User-Id
+                          - _or:
+                              - role:
+                                  _eq: Member
+                              - role:
+                                  _eq: Admin
+                              - role:
+                                  _eq: Owner
 event_triggers:
   - name: index-task
     definition:

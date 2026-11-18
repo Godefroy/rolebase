@@ -30,4 +30,5 @@ export interface AlgoliaConfig {
   appId: string
   apiKey: string
   indexName: string
+  validUntil: number // Unix timestamp (seconds) when apiKey expires
 }

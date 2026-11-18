@@ -30,11 +30,10 @@ Rolebase is licensed under the [AGPL-3.0](./LICENSE). By submitting a pull reque
 | Path                 | Content                                                 |
 | -------------------- | ------------------------------------------------------- |
 | `packages/webapp`    | React web application                                   |
-| `packages/backend`   | tRPC API, webhooks and MCP server                       |
+| `packages/backend`   | tRPC API, webhooks, MCP server and collaboration (Yjs)  |
 | `packages/shared`    | Code and GraphQL types shared across packages           |
 | `packages/graph`     | Org chart rendering                                     |
 | `packages/editor`    | Tiptap markdown editor                                  |
-| `packages/collab`    | Real-time collaboration server (y-websocket)            |
 | `packages/emails`    | Email templates                                         |
 | `nhost`              | Hasura metadata, database migrations and Nhost config   |
 | `plugins/rolebase`   | Rolebase skill for coding agents                        |
@@ -267,11 +266,9 @@ npm run build-emails-icons
 
 ## Production env
 
-[Render.com](https://render.com)
+[Netlify](https://www.netlify.com)
 
-- Front (static)
-- Storybook (static)
-- Collab (Node + y-websocket)
+- Front: webapp and website (static)
 
 [Nhost.io](https://nhost.io)
 

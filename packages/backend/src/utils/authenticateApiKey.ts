@@ -3,7 +3,8 @@ import { adminRequest } from './adminRequest'
 
 // Resolve an API key to the user it belongs to.
 // Used by the public GraphQL endpoint and by the tRPC context.
-// Returns undefined if the key is unknown or archived.
+// Returns undefined if the key is unknown or archived, or if its user is
+// disabled (a disabled account must lose every access, API keys included).
 export async function authenticateApiKey(
   apiKey: string
 ): Promise<string | undefined> {
@@ -25,7 +26,11 @@ export async function authenticateApiKey(
 const GET_USER_ID = gql(`
   query getApiKeyUserId($value: String!) {
     api_key(
-      where: { value: { _eq: $value }, archivedAt: { _is_null: true } }
+      where: {
+        value: { _eq: $value }
+        archivedAt: { _is_null: true }
+        user: { disabled: { _eq: false } }
+      }
     ) {
       id
       userId

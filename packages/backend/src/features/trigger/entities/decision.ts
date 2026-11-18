@@ -8,6 +8,7 @@ gql(`
   fragment DecisionSearch on decision {
     id
     orgId
+    private
     title
     createdAt
   }
@@ -36,15 +37,18 @@ export class IndexDecision extends IndexEntity<DecisionFragment> {
       `),
       { id }
     )
-    if (!decision) return undefined
-    return decision && transform(decision)
+    // Private content is not indexed: search keys are scoped by org only
+    if (!decision || decision.private) return undefined
+    return transform(decision)
   }
 
   async getAll() {
     const { decision } = await adminRequest(
       gql(`
         query GetDecisionsForSearch {
-          decision(where: { archivedAt: { _is_null: true } }) {
+          decision(
+            where: { archivedAt: { _is_null: true }, private: { _eq: false } }
+          ) {
             ...DecisionSearch
           }
         }

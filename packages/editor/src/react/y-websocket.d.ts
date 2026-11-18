@@ -13,6 +13,10 @@ declare module 'y-websocket' {
     )
     awareness: unknown
     synced: boolean
+    // URL of the next (re)connection, including query params
+    url: string
+    ws: WebSocket | null
+    wsconnected: boolean
     connect(): void
     disconnect(): void
     destroy(): void

@@ -1761,6 +1761,11 @@
   "useCreateTask": {
     "toast": "Tâche créée !"
   },
+  "useRefreshTokenFromUrl": {
+    "heading": "Changer de compte ?",
+    "info": "Ce lien vous connecte en tant que {{newEmail}}. Vous êtes actuellement connecté en tant que {{currentEmail}}. Continuez uniquement si vous avez ouvert un lien que vous avez vous-même demandé.",
+    "confirm": "Me connecter avec ce compte"
+  },
   "useSearch": {
     "create": "Créer \"{{name}}\""
   },

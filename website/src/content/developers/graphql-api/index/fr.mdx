@@ -18,6 +18,17 @@ L'API est propulsée par [Hasura](https://hasura.io/docs/2.0/index/), vous pouve
 
 Testez des requêtes en direct dans le [Playground GraphQL](/fr/developers/graphql-api/playground). Pour les procédures backend qui vont au-delà du CRUD, consultez l'[API tRPC](/fr/developers/trpc-api).
 
+### Limites des requêtes
+
+Chaque requête porte une seule opération : les lots (un tableau JSON d'opérations) sont refusés. Une requête est refusée avec un statut 400 quand elle dépasse l'une de ces limites :
+
+- 50 000 caractères et 10 000 tokens.
+- Une profondeur de 10 champs imbriqués (`org { circles { id } }` a une profondeur de 3).
+- 1 000 champs, en comptant les alias et les champs de chaque utilisation de fragment.
+- Le même champ 3 fois sur un même chemin, par exemple `children { parent { children { parent { children { id } } } } }`.
+
+Les champs d'introspection (`__schema`, `__type`) ne sont pas comptés. Les mêmes limites s'appliquent à l'outil `graphql` du [serveur MCP](/fr/developers/mcp).
+
 ## Démarrage rapide
 
 ### Avec curl

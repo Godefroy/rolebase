@@ -5,12 +5,17 @@ import {
   LogDisplay,
   LogType,
 } from '@rolebase/shared/model/log'
-import { ProposalVoteValue } from '@rolebase/shared/model/proposal'
+import {
+  ProposalLog,
+  ProposalVoteValue,
+} from '@rolebase/shared/model/proposal'
 import { gql, Thread_Activity_Type_Enum } from '../../gql'
 import { adminRequest } from '../../utils/adminRequest'
 import { loadOrgData } from '../org/loadOrgData'
 import { performArchiveCircle } from '../circle/utils/performArchiveCircle'
 import { LoadedProposal } from './loadProposal'
+import { ProposalValidationError } from './utils/sanitizeProposalLogs'
+import { validateProposalLogs } from './utils/validateProposalLogs'
 
 const INSERT_DECISION = gql(`
   mutation insertProposalDecision($values: decision_insert_input!) {
@@ -24,6 +29,23 @@ const INSERT_LOG = gql(`
   mutation insertProposalLog($values: log_insert_input!) {
     insert_log_one(object: $values) {
       id
+    }
+  }
+`)
+
+// Claims the resolution: only succeeds if the proposal data is still the one
+// that was loaded and validated (not resolved meanwhile, nor edited)
+const CLAIM_RESOLUTION = gql(`
+  mutation claimProposalResolution(
+    $id: uuid!
+    $prevData: jsonb!
+    $data: jsonb!
+  ) {
+    update_thread_activity(
+      where: { id: { _eq: $id }, data: { _eq: $prevData } }
+      _set: { data: $data }
+    ) {
+      affected_rows
     }
   }
 `)
@@ -181,87 +203,75 @@ const dbMethods: EntitiesApplyMethods = {
 // Resolve a proposal: compute the outcome, apply the org chart changes and
 // create the decision when approved, then record the result on the thread.
 // Runs server-side because a voter may lack the rights to apply the changes.
+// The logs are written by the author through Hasura, so they are validated
+// against the proposal's org before being applied with admin rights. An
+// approved proposal is refused when its author is no longer an active member
+// of the org or when its logs are invalid.
 export async function applyResolution(loaded: LoadedProposal): Promise<void> {
   const { data, votes, author } = loaded
   if (data.status !== 'inProgress') return
 
-  const { approved } = resolveProposal(
+  let { approved } = resolveProposal(
     data.decisionMode,
     votes,
     loaded.voterUserIds.length
   )
 
-  let decisionId: string | null = null
-
+  let logs: ProposalLog[] = []
   if (approved) {
-    // Create the decision first so the applied logs can reference it
-    const decision = await adminRequest(INSERT_DECISION, {
-      values: {
-        orgId: loaded.orgId,
-        memberId: author?.id,
-        circleId: loaded.circleId,
-        title: data.title,
-        description: data.description,
-      },
-    })
-    decisionId = decision.insert_decision_one?.id ?? null
-
-    // Load the org data once (not per log) when the proposal archives a circle,
-    // since the archive cascade needs it and loading is intensive.
-    const archivesCircle = data.logs.some(
-      (log) => (log.display as LogDisplay).type === LogType.CircleArchive
-    )
-    const orgData =
-      archivesCircle && author ? await loadOrgData(loaded.orgId) : undefined
-
-    // Apply each prepared change and record a real log linked to the decision
-    for (const log of data.logs) {
-      const display = log.display as LogDisplay
-
-      // Archiving a circle must run the full nested cascade (members, links,
-      // meetings, recurring, threads, tasks, decisions), not just replay the
-      // logged circle/role updates, so route it through the shared archive path.
-      if (display.type === LogType.CircleArchive && author && orgData) {
-        await performArchiveCircle({
-          orgData,
-          orgId: loaded.orgId,
-          circleId: display.id,
-          author: {
-            userId: loaded.authorUserId,
-            memberId: author.id,
-            memberName: author.name,
-          },
-          decisionId,
-        })
-        continue
+    if (!author) {
+      console.warn(
+        `[Proposal] ${loaded.activityId} refused: author is no longer an active member`
+      )
+      approved = false
+    } else {
+      try {
+        logs = await validateProposalLogs(data.logs, loaded.orgId)
+      } catch (error) {
+        if (!(error instanceof ProposalValidationError)) throw error
+        console.warn(
+          `[Proposal] ${loaded.activityId} refused: ${error.message}`
+        )
+        approved = false
       }
-
-      await applyEntitiesChanges(log.changes, dbMethods)
-      await adminRequest(INSERT_LOG, {
-        values: {
-          orgId: loaded.orgId,
-          userId: loaded.authorUserId,
-          memberId: author?.id,
-          memberName: author?.name,
-          display: log.display as any,
-          changes: log.changes as any,
-          decisionId,
-        },
-      })
     }
   }
 
   const status = approved ? 'approved' : 'refused'
+  const resolvedData = {
+    ...data,
+    status,
+    resolvedAt: new Date().toISOString(),
+    appliedDecisionId: null as string | null,
+  }
 
-  await adminRequest(UPDATE_ACTIVITY, {
+  // Claim the resolution first, so concurrent resolutions (vote trigger, cron,
+  // manual) apply it only once and an edit made since loading is not applied
+  const claim = await adminRequest(CLAIM_RESOLUTION, {
     id: loaded.activityId,
-    data: {
-      ...data,
-      status,
-      resolvedAt: new Date().toISOString(),
-      appliedDecisionId: decisionId,
-    },
+    prevData: data,
+    data: resolvedData,
   })
+  if (!claim.update_thread_activity?.affected_rows) return
+
+  let decisionId: string | null = null
+
+  if (approved && author) {
+    try {
+      decisionId = await applyApprovedProposal(loaded, author, logs)
+      await adminRequest(UPDATE_ACTIVITY, {
+        id: loaded.activityId,
+        data: { ...resolvedData, appliedDecisionId: decisionId },
+      })
+    } catch (error) {
+      // Put the proposal back in progress so the failure can be fixed
+      await adminRequest(UPDATE_ACTIVITY, {
+        id: loaded.activityId,
+        data: data as any,
+      }).catch((e) => console.error(e))
+      throw error
+    }
+  }
 
   await adminRequest(INSERT_ACTIVITY, {
     values: {
@@ -286,4 +296,71 @@ export async function applyResolution(loaded: LoadedProposal): Promise<void> {
       },
     },
   })
+}
+
+// Create the decision and apply the validated logs. Returns the decision id.
+async function applyApprovedProposal(
+  loaded: LoadedProposal,
+  author: NonNullable<LoadedProposal['author']>,
+  logs: ProposalLog[]
+): Promise<string | null> {
+  const { data } = loaded
+
+  // Create the decision first so the applied logs can reference it
+  const decision = await adminRequest(INSERT_DECISION, {
+    values: {
+      orgId: loaded.orgId,
+      memberId: author.id,
+      circleId: loaded.circleId,
+      title: data.title,
+      description: data.description,
+    },
+  })
+  const decisionId = decision.insert_decision_one?.id ?? null
+
+  // Load the org data once (not per log) when the proposal archives a circle,
+  // since the archive cascade needs it and loading is intensive.
+  const archivesCircle = logs.some(
+    (log) => (log.display as LogDisplay).type === LogType.CircleArchive
+  )
+  const orgData = archivesCircle ? await loadOrgData(loaded.orgId) : undefined
+
+  // Apply each prepared change and record a real log linked to the decision
+  for (const log of logs) {
+    const display = log.display as LogDisplay
+
+    // Archiving a circle must run the full nested cascade (members, links,
+    // meetings, recurring, threads, tasks, decisions), not just replay the
+    // logged circle/role updates, so route it through the shared archive path.
+    // The circle was checked to belong to the org (validateProposalLogs).
+    if (display.type === LogType.CircleArchive && orgData) {
+      await performArchiveCircle({
+        orgData,
+        orgId: loaded.orgId,
+        circleId: display.id,
+        author: {
+          userId: loaded.authorUserId,
+          memberId: author.id,
+          memberName: author.name,
+        },
+        decisionId,
+      })
+      continue
+    }
+
+    await applyEntitiesChanges(log.changes, dbMethods)
+    await adminRequest(INSERT_LOG, {
+      values: {
+        orgId: loaded.orgId,
+        userId: loaded.authorUserId,
+        memberId: author.id,
+        memberName: author.name,
+        display: log.display as any,
+        changes: log.changes as any,
+        decisionId,
+      },
+    })
+  }
+
+  return decisionId
 }

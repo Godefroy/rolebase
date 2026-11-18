@@ -105,7 +105,7 @@ Row-level permissions on each table carry the rules for the `user` role:
 - `nhost/metadata/databases/default/tables/public_circle_link.yaml`
 - `nhost/metadata/databases/default/tables/public_circle_member.yaml`
 
-Each `_or` of permission clauses follows the same shape: an unconditional `Owner` clause, a `Free` clause for `Admin`/`Member`, and leader clauses built on the `leaders` relationship (gated to non-strict for structure, ungated for `circle_member`). After editing a YAML file, apply it so the running instance matches the source of truth.
+Each `_or` of permission clauses follows the same shape: an unconditional `Owner` clause, a `Free` clause for `Admin`/`Member`, and leader clauses built on the `leaders` relationship (gated to non-strict for structure, ungated for `circle_member`). Leader clauses also require the leader's org role to be `Member`, `Admin` or `Owner`, like the `isOrgMember` gate of `OrgData`: a `Readonly` member who leads a circle gets no edit right. After editing a YAML file, apply it so the running instance matches the source of truth.
 
 ### Client (app)
 

@@ -105,7 +105,7 @@ Les permissions au niveau ligne de chaque table portent les règles du rôle `us
 - `nhost/metadata/databases/default/tables/public_circle_link.yaml`
 - `nhost/metadata/databases/default/tables/public_circle_member.yaml`
 
-Chaque `_or` de clauses suit la même forme : une clause `Owner` inconditionnelle, une clause `Free` pour `Admin`/`Member`, et des clauses de leader construites sur la relation `leaders` (réservées au non-strict pour la structure, sans restriction pour `circle_member`). Après modification d'un fichier YAML, appliquez-le pour que l'instance en cours corresponde à la source de vérité.
+Chaque `_or` de clauses suit la même forme : une clause `Owner` inconditionnelle, une clause `Free` pour `Admin`/`Member`, et des clauses de leader construites sur la relation `leaders` (réservées au non-strict pour la structure, sans restriction pour `circle_member`). Les clauses de leader exigent aussi que le rôle du leader dans l'organisation soit `Member`, `Admin` ou `Owner`, comme le contrôle `isOrgMember` de `OrgData` : un membre `Readonly` qui mène un cercle n'a aucun droit de modification. Après modification d'un fichier YAML, appliquez-le pour que l'instance en cours corresponde à la source de vérité.
 
 ### Client (application)
 

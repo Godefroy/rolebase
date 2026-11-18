@@ -466,7 +466,12 @@ export default class GoogleCalendarApp
 
       // Update meeting in database
       if (Object.keys(meetingChanges).length > 0) {
-        await this.updateMeeting(meetingId, meetingChanges)
+        const updated = await this.updateMeeting(meetingId, meetingChanges)
+        if (!updated) {
+          // User can't update this meeting: reset event dates
+          resetChanges.start = meetingEvent.start
+          resetChanges.end = meetingEvent.end
+        }
       }
     }
 

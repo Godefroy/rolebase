@@ -15,6 +15,7 @@ gql(`
   fragment MeetingSearch on meeting {
     id
     orgId
+    private
     title
     summary
     circle {
@@ -64,15 +65,18 @@ export class IndexMeeting extends IndexEntity<MeetingFragment> {
       `),
       { id }
     )
-    if (!meeting) return undefined
-    return meeting && transform(meeting)
+    // Private content is not indexed: search keys are scoped by org only
+    if (!meeting || meeting.private) return undefined
+    return transform(meeting)
   }
 
   async getAll() {
     const { meeting } = await adminRequest(
       gql(`
         query GetMeetingsForSearch {
-          meeting(where: { archivedAt: { _is_null: true } }) {
+          meeting(
+            where: { archivedAt: { _is_null: true }, private: { _eq: false } }
+          ) {
             ...MeetingSearch
           }
         }

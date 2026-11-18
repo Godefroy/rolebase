@@ -126,4 +126,4 @@ Liste ce que la suppression d’une organisation supprimerait, pour l’Owner. L
 
 ## Mutation `org.archiveOrg`
 
-Archive une organisation, pour l’Owner. L’abonnement Stripe, s’il existe, est supprimé au préalable. L’organisation disparaît tout de suite pour ses membres et elle est supprimée définitivement, avec tout son contenu, 30 jours plus tard. La procédure prend `{ orgId }` et renvoie ce même identifiant.
+Archive une organisation, pour l’Owner. L’abonnement Stripe, s’il existe, est supprimé au préalable. L’organisation disparaît tout de suite pour ses membres : les procédures qui la concernent répondent alors `FORBIDDEN`. Elle est supprimée définitivement, avec tout son contenu, 30 jours plus tard. La procédure prend `{ orgId }` et renvoie ce même identifiant.

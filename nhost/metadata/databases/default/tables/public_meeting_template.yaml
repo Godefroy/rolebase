@@ -12,18 +12,29 @@ insert_permissions:
   - role: user
     permission:
       check:
-        org:
-          members:
-            _and:
-              - userId:
-                  _eq: X-Hasura-User-Id
-              - _or:
-                  - role:
-                      _eq: Member
-                  - role:
-                      _eq: Admin
-                  - role:
-                      _eq: Owner
+        _and:
+          - org:
+              archivedAt:
+                _is_null: true
+              members:
+                _and:
+                  - userId:
+                      _eq: X-Hasura-User-Id
+                  - _or:
+                      - role:
+                          _eq: Member
+                      - role:
+                          _eq: Admin
+                      - role:
+                          _eq: Owner
+          - _or:
+              - circleId:
+                  _is_null: true
+              - circle:
+                  orgId:
+                    _ceq:
+                      - $
+                      - orgId
       columns:
         - circleId
         - orgId
@@ -67,7 +78,19 @@ update_permissions:
                       _eq: Admin
                   - role:
                       _eq: Owner
-      check: {}
+      check:
+        _and:
+          - org:
+              archivedAt:
+                _is_null: true
+          - _or:
+              - circleId:
+                  _is_null: true
+              - circle:
+                  orgId:
+                    _ceq:
+                      - $
+                      - orgId
 delete_permissions:
   - role: user
     permission:

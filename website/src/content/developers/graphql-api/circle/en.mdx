@@ -129,7 +129,7 @@ mutation MoveCircle {
 
 ## Permissions
 
-Circle access follows the organization's [`governanceMode`](/en/docs/governance-modes). In `Free` mode any member can modify the org chart. In `Agile` mode a circle's leaders modify it directly. In `Strict` mode structural changes go through proposals, while organization owners can always edit.
+Circle access follows the organization's [`governanceMode`](/en/docs/governance-modes). In `Free` mode any member can modify the org chart. In `Agile` mode a circle's leaders modify it directly. In `Strict` mode structural changes go through proposals, while organization owners can always edit. Leaders need the `Member`, `Admin` or `Owner` org role to edit. Members of the organization can view its circles.
 
 <Callout type="info" title="Notes">
   Circles form a hierarchical tree through the `parentId` relationship. Each

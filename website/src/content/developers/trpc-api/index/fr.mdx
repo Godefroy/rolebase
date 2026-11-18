@@ -33,7 +33,7 @@ Les procédures tRPC s’authentifient avec une **clé API**, la même que celle
 x-api-key: <votre-cle-api>
 ```
 
-Les procédures s’exécutent avec les permissions de l’utilisateur propriétaire de la clé. Quelques procédures sont publiques (lire une invitation ou une organisation partagée), et les procédures internes utilisent plutôt un secret de webhook.
+Les procédures s’exécutent avec les permissions de l’utilisateur propriétaire de la clé. Les clés d’un compte désactivé sont refusées. Quelques procédures sont publiques (lire une invitation ou une organisation partagée), et les procédures internes utilisent plutôt un secret de webhook.
 
 <Callout type="info" title="Tokens d’accès">
   L’application web s’authentifie avec le token d’accès Nhost de l’utilisateur
@@ -95,7 +95,7 @@ Un appel en échec répond `{ "error": { "message": ..., "data": { "code": ..., 
 | Code | Statut | Signification |
 | --- | --- | --- |
 | `UNAUTHORIZED` | 401 | Clé API absente ou invalide, ou procédure réservée à un utilisateur connecté. |
-| `FORBIDDEN` | 403 | Le porteur de la clé n’a pas le rôle ou la permission requise sur cette entité. |
+| `FORBIDDEN` | 403 | Le porteur de la clé n’a pas le rôle ou la permission requise sur cette entité, ou l’organisation est archivée. |
 | `NOT_FOUND` | 404 | L’identifiant n’existe pas, ou n’est pas visible par le porteur de la clé. |
 | `BAD_REQUEST` | 400 | Input refusé par le schéma de la procédure, ou état qui interdit l’action. |
 | `INTERNAL_SERVER_ERROR` | 500 | Échec inattendu, y compris un appel refusé par un service externe. |

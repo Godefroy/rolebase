@@ -8,7 +8,7 @@ A role placed in the org chart is a [`circle`](/en/developers/graphql-api/circle
 
 ## Mutation `circle.archiveCircle`
 
-Archives a role together with all its nested descendants, for an authenticated user with permission to edit the role.
+Archives a role together with all its nested descendants, for a Member, Admin or Owner with permission to edit the role.
 
 | Input | Type | Description |
 | --- | --- | --- |
@@ -27,7 +27,7 @@ const { archivedAt, circlesIds, rolesIds } = await trpc.circle.archiveCircle.mut
 
 ## Mutation `circle.restoreCircle`
 
-Restores an archived role and the descendants archived with it, for an authenticated user with permission to edit the role.
+Restores an archived role and the descendants archived with it, for a Member, Admin or Owner with permission to edit the role.
 
 | Input | Type | Description |
 | --- | --- | --- |
@@ -50,7 +50,7 @@ Resolves an in-progress proposal and applies its outcome. Allowed for the propos
 | --- | --- | --- |
 | `activityId` | `uuid` | The [`thread_activity`](/en/developers/graphql-api/thread_activity) of type `Proposal`. Required. |
 
-The resolution runs server-side with admin rights, since a voter may lack the permissions the outcome requires. A proposal already resolved is left untouched, so the call is safe to repeat. It returns nothing.
+The resolution runs server-side with admin rights, since a voter may lack the permissions the outcome requires. Before anything is applied, every change of the proposal is checked: it must target entities of the proposal's organization and only carry the fields a proposal can change. An approved proposal is refused instead when a change fails this check or when its author is no longer an active member of the organization. A proposal already resolved is left untouched, so the call is safe to repeat. It returns nothing.
 
 ```typescript
 await trpc.proposal.resolve.mutate({ activityId: 'YOUR_ACTIVITY_ID' })

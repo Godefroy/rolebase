@@ -93,11 +93,12 @@ mutation ArchiveCircleLink {
 
 - **Organization owners:** Full access
 - **Organization admins/members:** Can create links if governance is not protected
-- **Circle leaders of the host circle:** Can create and manage links
-- **Public:** Limited to viewing links in organizations with shared member information
+- **Circle leaders of the host circle (Member, Admin or Owner role):** Can create and manage links
+- **Organization members:** Can view the links of their organization
 
 <Callout type="info" title="Notes">
   The combination of `parentId` and `circleId` must be unique. Circle links
   affect participant inheritance and permission structures. Leaders of linked
-  circles gain certain permissions in the host circle.
+  circles gain certain permissions in the host circle, until the link is
+  archived.
 </Callout>

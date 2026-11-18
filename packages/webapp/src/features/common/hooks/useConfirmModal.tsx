@@ -17,6 +17,7 @@ export interface ConfirmModalProps {
   buttonColor?: ButtonProps['colorScheme']
   buttonLabel?: string
   onConfirm(): void
+  onCancel?(): void
 }
 
 export default function useConfirmModal() {
@@ -26,10 +27,11 @@ export default function useConfirmModal() {
 
   const handleConfirm = () => {
     props?.onConfirm()
-    handleClose()
+    setProps(undefined)
   }
 
   const handleClose = () => {
+    props?.onCancel?.()
     setProps(undefined)
   }
 

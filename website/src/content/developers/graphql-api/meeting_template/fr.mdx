@@ -112,7 +112,7 @@ mutation archiveMeetingTemplate($id: uuid!) {
 
 ## Permissions
 
-Les membres de l'organisation peuvent consulter, créer, mettre à jour et archiver des modèles au sein de leur organisation. Les modèles sont des ressources à l'échelle de l'organisation, accessibles à tous les membres.
+Les membres de l'organisation peuvent consulter, créer, mettre à jour et archiver des modèles au sein de leur organisation. Les modèles sont des ressources à l'échelle de l'organisation, accessibles à tous les membres. Le `circleId` facultatif d'un modèle doit désigner un cercle de la même organisation.
 
 <Callout type="info" title="Notes">
   Les modèles peuvent être utilisés pour des réunions ponctuelles et

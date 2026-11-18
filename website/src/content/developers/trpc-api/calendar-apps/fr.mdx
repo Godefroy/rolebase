@@ -42,6 +42,6 @@ Déconnecte une application de calendrier, ce qui arrête la synchronisation et 
 
 ## Connecter une application
 
-L’installation passe par le parcours OAuth du fournisseur, que l’application termine en transmettant le code d’autorisation à `apps.googlecalendar.authRedirect` ou `apps.office365.authRedirect`. Les deux prennent `{ code }` et créent la ligne `user_app` à partir des tokens obtenus. L’URL de redirection est fixée côté backend : le parcours est donc conçu pour démarrer depuis l’interface Rolebase plutôt que depuis une intégration.
+L’installation passe par le parcours OAuth du fournisseur, que l’application termine en transmettant le code d’autorisation à `apps.googlecalendar.authRedirect` ou `apps.office365.authRedirect`. Les deux prennent `{ code, codeVerifier }` et créent la ligne `user_app` à partir des tokens obtenus. `codeVerifier` est le vérificateur PKCE dont le challenge S256 a été envoyé dans l’URL d’autorisation, avec un `state` aléatoire que l’application vérifie sur la page de retour : un code obtenu dans un autre navigateur ne peut donc pas être utilisé. L’URL de redirection est fixée côté backend : le parcours est donc conçu pour démarrer depuis l’interface Rolebase plutôt que depuis une intégration.
 
 Chaque fournisseur a aussi un webhook que le service de calendrier appelle quand un événement change, `POST /apps/googlecalendar/notify` et `POST /apps/office365/notify`. Ils s’authentifient avec les données de canal du fournisseur, pas avec une clé API.

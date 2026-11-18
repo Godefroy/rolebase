@@ -4,6 +4,8 @@ export const isLocal = location.hostname === 'localhost'
 export const isStaging = location.hostname === 'staging--rolebase.netlify.app'
 export const isShareApp = /^\/share(\/|$)/.test(location.pathname)
 
+const backendUrl = isLocal ? 'http://localhost:8888' : 'https://api.rolebase.io'
+
 export default {
   // Webapp url
   url: isLocal
@@ -35,10 +37,12 @@ export default {
       ? 'https://jjvdhpoooerochuiusam.functions.eu-central-1.nhost.run/v1/'
       : 'https://fsudktxishllphxeibqs.functions.eu-central-1.nhost.run/v1/',
 
-  backendUrl: isLocal ? 'http://localhost:8888' : 'https://api.rolebase.io',
+  backendUrl,
 
+  // Collaborative editing, served by the backend.
+  // y-websocket appends the room name as a path segment.
   yjsCollab: {
-    url: isLocal ? 'ws://localhost:1234' : 'wss://collab.rolebase.io',
+    url: `${backendUrl.replace(/^http/, 'ws')}/collab`,
   },
 
   // Files

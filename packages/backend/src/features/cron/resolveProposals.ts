@@ -5,8 +5,9 @@ import { adminRequest } from '../../utils/adminRequest'
 import { loadProposal } from '../proposal/loadProposal'
 import { applyResolution } from '../proposal/resolution'
 
-// Only in-progress proposals (a date deadline can't be compared server-side on
-// a jsonb subfield, so the date is checked in memory over this small set).
+// Only in-progress, non-archived proposals of active orgs (a date deadline
+// can't be compared server-side on a jsonb subfield, so the date is checked
+// in memory over this small set).
 const GET_PROPOSALS = gql(`
   query getProposalsForCron($type: thread_activity_type_enum!) {
     thread_activity(
@@ -14,6 +15,7 @@ const GET_PROPOSALS = gql(`
         type: { _eq: $type }
         data: { _contains: { status: "inProgress" } }
         archivedAt: { _is_null: true }
+        thread: { org: { archivedAt: { _is_null: true } } }
       }
     ) {
       id
@@ -36,10 +38,15 @@ export default webhookProcedure.mutation(async () => {
     )
   })
 
+  // Each proposal is isolated: a failing resolution must not stop the others
   for (const activity of due) {
-    const loaded = await loadProposal(activity.id)
-    if (loaded && loaded.data.status === 'inProgress') {
-      await applyResolution(loaded)
+    try {
+      const loaded = await loadProposal(activity.id)
+      if (loaded && loaded.data.status === 'inProgress') {
+        await applyResolution(loaded)
+      }
+    } catch (e) {
+      console.error(`Error resolving proposal ${activity.id}:`, e)
     }
   }
 })

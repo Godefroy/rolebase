@@ -141,6 +141,8 @@ select_permissions:
         - shareOrg
         - slug
       filter:
+        archivedAt:
+          _is_null: true
         members:
           userId:
             _eq: X-Hasura-User-Id

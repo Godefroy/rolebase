@@ -126,4 +126,4 @@ Lists what deleting an organization would delete, for the Owner. It takes `{ org
 
 ## Mutation `org.archiveOrg`
 
-Archives an organization, for the Owner. The Stripe subscription, if any, is deleted first. The organization disappears for its members right away and is deleted for good, with all its content, 30 days later. It takes `{ orgId }` and returns that same id.
+Archives an organization, for the Owner. The Stripe subscription, if any, is deleted first. The organization disappears for its members right away: the procedures scoped to it answer `FORBIDDEN` from then on. It is deleted for good, with all its content, 30 days later. It takes `{ orgId }` and returns that same id.

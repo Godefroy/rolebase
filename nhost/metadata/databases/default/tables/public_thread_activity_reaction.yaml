@@ -42,7 +42,15 @@ select_permissions:
         - memberId
         - shortcode
         - userId
-      filter: {}
+      filter:
+        activity:
+          thread:
+            org:
+              archivedAt:
+                _is_null: true
+              members:
+                userId:
+                  _eq: X-Hasura-User-Id
       allow_aggregations: true
     comment: ""
 delete_permissions:

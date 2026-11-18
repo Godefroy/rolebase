@@ -78,15 +78,22 @@ export async function getUserDeletionTarget(
   if (!user) return null
   const email = user.email ?? null
 
-  const where: Member_Bool_Exp = email
-    ? {
-        _or: [
-          { userId: { _eq: userId } },
-          // Escape LIKE wildcards: only a case-insensitive equality is wanted
-          { inviteEmail: { _ilike: email.replace(/[\\%_]/g, '\\$&') } },
-        ],
-      }
-    : { userId: { _eq: userId } }
+  // Pending invitations (members not linked to an account) sent to the
+  // person's email are theirs too, but only when they proved they own that
+  // address: an unverified email may belong to someone else.
+  const where: Member_Bool_Exp =
+    email && user.emailVerified
+      ? {
+          _or: [
+            { userId: { _eq: userId } },
+            {
+              userId: { _is_null: true },
+              // Escape LIKE wildcards: only a case-insensitive equality is wanted
+              inviteEmail: { _ilike: email.replace(/[\\%_]/g, '\\$&') },
+            },
+          ],
+        }
+      : { userId: { _eq: userId } }
   const { member } = await adminRequest(GET_MEMBERS, { where })
   const members = member.map((m) => ({
     id: m.id,
@@ -270,6 +277,7 @@ const GET_USER = gql(`
       id
       email
       displayName
+      emailVerified
     }
   }
 `)

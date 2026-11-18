@@ -2015,6 +2015,10 @@ export type Jsonb_Comparison_Exp = {
   _has_keys_any?: Array<string> | null | undefined;
   _in?: Array<any> | null | undefined;
   _is_null?: boolean | null | undefined;
+  /** does the jsonpath return any item for the specified JSON value */
+  _jsonb_path_exists?: string | null | undefined;
+  /** does the jsonpath predicate check return true for the specified JSON value */
+  _jsonb_path_match?: string | null | undefined;
   _lt?: any;
   _lte?: any;
   _neq?: any;

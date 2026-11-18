@@ -130,7 +130,7 @@ mutation MoveCircle {
 
 ## Permissions
 
-L'accès aux cercles suit le [`governanceMode`](/fr/docs/governance-modes) de l'organisation. En mode `Free`, tout membre peut modifier l'organigramme. En mode `Agile`, les leaders d'un cercle le modifient directement. En mode `Strict`, les changements de structure passent par des propositions, tandis que les propriétaires de l'organisation peuvent toujours modifier.
+L'accès aux cercles suit le [`governanceMode`](/fr/docs/governance-modes) de l'organisation. En mode `Free`, tout membre peut modifier l'organigramme. En mode `Agile`, les leaders d'un cercle le modifient directement. En mode `Strict`, les changements de structure passent par des propositions, tandis que les propriétaires de l'organisation peuvent toujours modifier. Les leaders ont besoin du rôle `Member`, `Admin` ou `Owner` dans l'organisation pour modifier. Les membres de l'organisation peuvent consulter ses cercles.
 
 <Callout type="info" title="Notes">
   Les cercles forment un arbre hiérarchique via la relation `parentId`. Chaque

@@ -30,36 +30,45 @@ insert_permissions:
   - role: user
     permission:
       check:
-        _or:
+        _and:
           - circle:
-              participants:
-                member:
-                  userId:
-                    _eq: X-Hasura-User-Id
-          - _and:
-              - invitedReadonly:
-                  _eq: false
-              - meeting_attendees:
-                  member:
-                    userId:
-                      _eq: X-Hasura-User-Id
-          - _and:
-              - private:
-                  _eq: false
-              - invitedReadonly:
-                  _eq: false
-              - org:
-                  members:
-                    _and:
-                      - userId:
+              orgId:
+                _ceq:
+                  - $
+                  - orgId
+          - org:
+              archivedAt:
+                _is_null: true
+          - _or:
+              - circle:
+                  participants:
+                    member:
+                      userId:
+                        _eq: X-Hasura-User-Id
+              - _and:
+                  - invitedReadonly:
+                      _eq: false
+                  - meeting_attendees:
+                      member:
+                        userId:
                           _eq: X-Hasura-User-Id
-                      - _or:
-                          - role:
-                              _eq: Member
-                          - role:
-                              _eq: Admin
-                          - role:
-                              _eq: Owner
+              - _and:
+                  - private:
+                      _eq: false
+                  - invitedReadonly:
+                      _eq: false
+                  - org:
+                      members:
+                        _and:
+                          - userId:
+                              _eq: X-Hasura-User-Id
+                          - _or:
+                              - role:
+                                  _eq: Member
+                              - role:
+                                  _eq: Admin
+                              - role:
+                                  _eq: Owner
       columns:
         - circleId
         - endDate
@@ -160,36 +169,45 @@ update_permissions:
                           - role:
                               _eq: Owner
       check:
-        _or:
+        _and:
           - circle:
-              participants:
-                member:
-                  userId:
-                    _eq: X-Hasura-User-Id
-          - _and:
-              - invitedReadonly:
-                  _eq: false
-              - meeting_attendees:
-                  member:
-                    userId:
-                      _eq: X-Hasura-User-Id
-          - _and:
-              - private:
-                  _eq: false
-              - invitedReadonly:
-                  _eq: false
-              - org:
-                  members:
-                    _and:
-                      - userId:
+              orgId:
+                _ceq:
+                  - $
+                  - orgId
+          - org:
+              archivedAt:
+                _is_null: true
+          - _or:
+              - circle:
+                  participants:
+                    member:
+                      userId:
+                        _eq: X-Hasura-User-Id
+              - _and:
+                  - invitedReadonly:
+                      _eq: false
+                  - meeting_attendees:
+                      member:
+                        userId:
                           _eq: X-Hasura-User-Id
-                      - _or:
-                          - role:
-                              _eq: Member
-                          - role:
-                              _eq: Admin
-                          - role:
-                              _eq: Owner
+              - _and:
+                  - private:
+                      _eq: false
+                  - invitedReadonly:
+                      _eq: false
+                  - org:
+                      members:
+                        _and:
+                          - userId:
+                              _eq: X-Hasura-User-Id
+                          - _or:
+                              - role:
+                                  _eq: Member
+                              - role:
+                                  _eq: Admin
+                              - role:
+                                  _eq: Owner
 event_triggers:
   - name: index-meeting
     definition:
@@ -214,6 +232,7 @@ event_triggers:
           - recurringDate
           - title
           - summary
+          - private
     retry_conf:
       interval_sec: 10
       num_retries: 3

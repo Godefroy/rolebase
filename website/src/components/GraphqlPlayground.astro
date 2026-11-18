@@ -34,7 +34,18 @@ const defaultHeaders = JSON.stringify(
 )
 ---
 
-<link rel="stylesheet" href="https://unpkg.com/graphiql@3/dist/style.css" />
+<!--
+  Exact versions with Subresource Integrity: this page shares its origin with
+  the webapp, so the CDN can't swap in another script. To upgrade, change the
+  version and recompute each hash from the npm tarball:
+  openssl dgst -sha384 -binary FILE | openssl base64 -A
+-->
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/graphiql@3.9.0/dist/style.css"
+  integrity="sha384-QMux00XgRtwRLSYIY3kw2rj1ovk5AuuliAchk+HSQbqdbGFnz9GYuqIlOqxhwCE2"
+  crossorigin="anonymous"
+/>
 
 <div
   id="graphiql"
@@ -44,13 +55,19 @@ const defaultHeaders = JSON.stringify(
 
 <script
   is:inline
-  src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"
+  integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z"
+  crossorigin="anonymous"></script>
 <script
   is:inline
-  src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"
+  integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1"
+  crossorigin="anonymous"></script>
 <script
   is:inline
-  src="https://unpkg.com/graphiql@3/dist/index.umd.js"></script>
+  src="https://unpkg.com/graphiql@3.9.0/dist/index.umd.js"
+  integrity="sha384-8NGfVj4CVlqHajlZj+bPJT4thxPMHMJYn7DWK2CvtopLd02E7qsPHazniBYvVjOO"
+  crossorigin="anonymous"></script>
 
 <script is:inline define:vars={{ endpoint, defaultQuery, defaultHeaders }}>
   // Force the light theme so the playground matches the site. GraphiQL applies

@@ -8,13 +8,13 @@ Meetings themselves are read and written with GraphQL on [`meeting`](/en/develop
 
 ## Query `meeting.getMeetingsToken`
 
-Returns the token of an organization, for any member including Readonly.
+Returns the iCal feed token of the caller's own member in an organization, for any member including Readonly.
 
 | Input | Type | Description |
 | --- | --- | --- |
 | `orgId` | `uuid` | Target organization. Required. |
 
-The token depends on the organization only, so it stays valid as long as the org exists and anyone holding it can read the iCal feed below. Treat it as a shared secret.
+The token is bound to the organization and to the caller's member: it only unlocks that member's feed, and stops working once the member leaves the organization. Treat it as a secret.
 
 ```typescript
 const token = await trpc.meeting.getMeetingsToken.query({ orgId })
@@ -28,4 +28,4 @@ The backend also serves the meetings of a member as an iCal calendar, on a plain
 GET https://api.rolebase.io/meeting/ical?orgId=<uuid>&memberId=<uuid>&token=<token>&lang=<en|fr>
 ```
 
-All four query parameters are required, and `token` is the one returned by `getMeetingsToken`. The feed answers 401 on an invalid token and 404 once the organization is gone, so a client polling a deleted org stops rather than retrying forever.
+All four query parameters are required. `token` is the one returned by `getMeetingsToken` and `memberId` is the caller's own member id in that organization. The feed answers 401 on an invalid token, on a token issued for another member, or when the member is no longer active, and 404 once the organization is gone, so a client polling a deleted org stops rather than retrying forever.

@@ -6,6 +6,7 @@ import { Meeting_Step_Type_Enum, Member_Role_Enum, gql } from '../../gql'
 import { guardOrg } from '../../guards/guardOrg'
 import { authedProcedure } from '../../trpc/authedProcedure'
 import { adminRequest } from '../../utils/adminRequest'
+import { userGraphqlRequest } from '../../utils/userGraphqlRequest'
 import getActivitiesEditorTextByType from '../../utils/getActivitiesEditorTextByType'
 import getEditorText from '../../utils/getEditorText'
 import { getOpenai } from './openai'
@@ -39,6 +40,18 @@ export default authedProcedure
 
     await guardOrg(meeting.orgId, Member_Role_Enum.Member, opts.ctx)
 
+    // The meeting is read with the admin secret, so check that the caller
+    // can read it with their own permissions (private meetings).
+    if (!opts.ctx.isAdmin) {
+      const canRead = await userGraphqlRequest(opts.ctx.userId!, {
+        query: CHECK_MEETING_ACCESS,
+        variables: { meetingId },
+      })
+      if (!(canRead.data as any)?.meeting_by_pk?.id) {
+        throw new TRPCError({ code: 'FORBIDDEN' })
+      }
+    }
+
     // Prepare meeting content with an array that will be joined by \n\n
     // starting with title
     const contents = [
@@ -55,10 +68,21 @@ export default authedProcedure
 
       // Add meeting notes of thread if they exist
       if (step.type === Meeting_Step_Type_Enum.Threads) {
-        const { threadsIds } = step.data as MeetingStepDataThreads
-        const threads = (
-          await adminRequest(GET_THREADS, { meetingId, threadsIds })
-        ).thread
+        const threadsIds = await getReadableThreadsIds(
+          (step.data as MeetingStepDataThreads | null)?.threadsIds,
+          meeting.orgId,
+          opts.ctx
+        )
+        const threads =
+          threadsIds.length === 0
+            ? []
+            : (
+                await adminRequest(GET_THREADS, {
+                  meetingId,
+                  orgId: meeting.orgId,
+                  threadsIds,
+                })
+              ).thread
         for (const thread of threads) {
           stepContents.push(`### ${thread.title}`)
           for (const activity of thread.activities) {
@@ -108,6 +132,48 @@ ${content}`,
     return summary || ''
   })
 
+// Keep only threads of the meeting's org that the caller can read,
+// since step data is writable by meeting participants.
+async function getReadableThreadsIds(
+  threadsIds: unknown,
+  orgId: string,
+  ctx: { userId?: string; isAdmin: boolean }
+): Promise<string[]> {
+  if (!Array.isArray(threadsIds)) return []
+  const ids = threadsIds.filter(
+    (id): id is string => typeof id === 'string' && uuidRegex.test(id)
+  )
+  if (ids.length === 0) return []
+  if (ctx.isAdmin) return ids
+
+  const result = await userGraphqlRequest(ctx.userId!, {
+    query: CHECK_THREADS_ACCESS,
+    variables: { orgId, threadsIds: ids },
+  })
+  const threads = ((result.data as any)?.thread || []) as Array<{
+    id: string
+  }>
+  return threads.map((thread) => thread.id)
+}
+
+const uuidRegex =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+// Run with the caller's Hasura permissions (userGraphqlRequest)
+const CHECK_MEETING_ACCESS = `
+  query checkMeetingAccessForSummary($meetingId: uuid!) {
+    meeting_by_pk(id: $meetingId) {
+      id
+    }
+  }`
+
+const CHECK_THREADS_ACCESS = `
+  query checkThreadsAccessForSummary($orgId: uuid!, $threadsIds: [uuid!]!) {
+    thread(where: { id: { _in: $threadsIds }, orgId: { _eq: $orgId } }) {
+      id
+    }
+  }`
+
 const GET_MEETING_CONTENT = gql(`
   query getMeetingContent($meetingId: uuid!) {
     meeting_by_pk(id: $meetingId) {
@@ -129,8 +195,12 @@ const GET_MEETING_CONTENT = gql(`
   }`)
 
 const GET_THREADS = gql(`
-  query getThreadsWithMeetingNotes($meetingId: uuid!, $threadsIds: [uuid!]!) {
-    thread(where:{id: {_in: $threadsIds}}) {
+  query getThreadsWithMeetingNotes(
+    $meetingId: uuid!
+    $orgId: uuid!
+    $threadsIds: [uuid!]!
+  ) {
+    thread(where: { id: { _in: $threadsIds }, orgId: { _eq: $orgId } }) {
       title
       activities(
         where: {

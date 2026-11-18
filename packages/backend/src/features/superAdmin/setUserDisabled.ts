@@ -4,7 +4,8 @@ import { gql } from '../../gql'
 import { adminProcedure } from '../../trpc/adminProcedure'
 import { adminRequest } from '../../utils/adminRequest'
 
-// Disables a user account (sign-in refused) or enables it again
+// Disables a user account (sign-in refused, API keys rejected by
+// authenticateApiKey) or enables it again
 export default adminProcedure
   .input(
     yup.object().shape({

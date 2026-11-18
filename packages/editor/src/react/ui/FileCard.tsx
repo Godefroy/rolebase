@@ -1,6 +1,7 @@
 import { NodeViewProps, NodeViewWrapper } from '@tiptap/react'
 import React from 'react'
 import { FiDownload, FiFile, FiFileText, FiFilm, FiMusic } from 'react-icons/fi'
+import { sanitizeFileUrl } from '../../extensions/isSafeFileUrl'
 
 function formatSize(size: number): string {
   if (!size) return ''
@@ -20,11 +21,12 @@ function FileIcon({ mime }: { mime: string }) {
 
 export default function FileCard({ node }: NodeViewProps) {
   const { url, name, size, mime } = node.attrs
+  const safeUrl = sanitizeFileUrl(url) || undefined
 
   return (
     <NodeViewWrapper as="span" className="editor-file-card" data-drag-handle>
       <a
-        href={url}
+        href={safeUrl}
         target="_blank"
         rel="noopener noreferrer"
         contentEditable={false}

@@ -33,7 +33,7 @@ tRPC procedures are authenticated with an **API key**, the same key the [GraphQL
 x-api-key: <your-api-key>
 ```
 
-The procedures run with the permissions of the user the key belongs to. A few procedures are public (such as reading an invitation or a shared org), and the internal procedures use a webhook secret instead.
+The procedures run with the permissions of the user the key belongs to. The keys of a disabled account are rejected. A few procedures are public (such as reading an invitation or a shared org), and the internal procedures use a webhook secret instead.
 
 <Callout type="info" title="Access tokens">
   The web app authenticates with the Nhost access token of the signed-in user
@@ -94,7 +94,7 @@ A failed call answers with `{ "error": { "message": ..., "data": { "code": ..., 
 | Code | Status | Meaning |
 | --- | --- | --- |
 | `UNAUTHORIZED` | 401 | Missing or invalid API key, or a procedure that needs a signed-in user. |
-| `FORBIDDEN` | 403 | The key holder lacks the required role or permission on that entity. |
+| `FORBIDDEN` | 403 | The key holder lacks the required role or permission on that entity, or the organization is archived. |
 | `NOT_FOUND` | 404 | The id does not exist, or is not visible to the key holder. |
 | `BAD_REQUEST` | 400 | Input rejected by the procedure schema, or a state that forbids the action. |
 | `INTERNAL_SERVER_ERROR` | 500 | Unexpected failure, including a rejected call to an external service. |

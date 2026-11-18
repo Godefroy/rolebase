@@ -324,7 +324,12 @@ export default class Office365App
             .slice(-10),
         })
 
-        await this.updateMeeting(meetingId, meetingChanges)
+        const updated = await this.updateMeeting(meetingId, meetingChanges)
+        if (!updated) {
+          // User can't update this meeting: reset event dates
+          resetChanges.start = meetingEvent.start
+          resetChanges.end = meetingEvent.end
+        }
       }
     }
 

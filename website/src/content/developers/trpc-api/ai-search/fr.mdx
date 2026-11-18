@@ -12,10 +12,10 @@ Génère un brouillon de rôle à partir de son nom, pour un utilisateur authent
 
 | Input | Type | Description |
 | --- | --- | --- |
-| `name` | `String` | Nom du rôle à partir duquel le brouillon est rédigé. Requis. |
-| `lang` | `String` | Langue de rédaction, sous forme de code de langue. Requis. |
+| `name` | `String` | Nom du rôle à partir duquel le brouillon est rédigé, 100 caractères au maximum. Requis. |
+| `lang` | `String` | Langue de rédaction, sous forme de code de langue comme `fr` ou `fr-FR`. Les langues prises en charge sont `en` et `fr` ; tout autre code rédige le brouillon en anglais. Requis. |
 
-La procédure renvoie un enregistrement `role_ai` avec `name`, `purpose`, `domain`, `accountabilities`, `checklist`, `indicators` et `notes`, prêt à être recopié dans un [`role`](/fr/developers/graphql-api/role). Les brouillons sont mis en cache par nom et par langue : le même couple répond depuis le stockage au lieu de rappeler le modèle.
+La procédure renvoie un enregistrement `role_ai` avec `name`, `purpose`, `domain`, `accountabilities`, `checklist`, `indicators` et `notes`, prêt à être recopié dans un [`role`](/fr/developers/graphql-api/role). Les brouillons sont mis en cache par nom et par langue : le même couple répond depuis le stockage au lieu de rappeler le modèle. Chaque utilisateur peut déclencher 20 appels au modèle par heure (les brouillons servis depuis le cache ne comptent pas) ; au-delà, la procédure répond `TOO_MANY_REQUESTS`.
 
 ```typescript
 const draft = await trpc.ai.generateRole.query({ name: 'Product Owner', lang: 'fr' })
@@ -30,7 +30,7 @@ Résume une réunion à partir de ses étapes, notes et fils de discussion, pour
 | `meetingId` | `uuid` | Réunion à résumer. Requis. |
 | `lang` | `String` | Langue de rédaction, sous forme de code de langue. Requis. |
 
-Elle renvoie le résumé en markdown. Une réunion inconnue répond `NOT_FOUND`.
+Elle renvoie le résumé en markdown. Une réunion inconnue répond `NOT_FOUND`, et une réunion que l’appelant ne peut pas lire (réunion privée dont il n’est ni participant ni invité) répond `FORBIDDEN`. Les discussions d’une étape Discussions sont incluses seulement si elles appartiennent à l’organisation de la réunion et que l’appelant peut les lire.
 
 ## Requête `search.getAlgoliaConfig`
 
@@ -40,4 +40,4 @@ Renvoie les identifiants de recherche d’une organisation, pour tout membre y c
 | --- | --- | --- |
 | `orgId` | `uuid` | Organisation visée. Requis. |
 
-Elle renvoie `{ appId, apiKey, indexName }`, où `apiKey` est une clé Algolia sécurisée filtrée sur cette organisation : elle ne peut donc pas en lire une autre. La reconstruction complète de l’index est une [procédure interne](/fr/developers/trpc-api/internal).
+Elle renvoie `{ appId, apiKey, indexName, validUntil }`, où `apiKey` est une clé Algolia sécurisée filtrée sur cette organisation : elle ne peut donc pas en lire une autre. La clé expire au bout d’une heure, au timestamp Unix `validUntil` (en secondes) : rappelez la procédure pour en obtenir une nouvelle. Les réunions, discussions, tâches et décisions privées ne sont pas indexées et n’apparaissent donc jamais dans les résultats de recherche. La reconstruction complète de l’index est une [procédure interne](/fr/developers/trpc-api/internal).

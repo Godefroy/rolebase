@@ -12,10 +12,10 @@ Generates a role draft from its name, for an authenticated user.
 
 | Input | Type | Description |
 | --- | --- | --- |
-| `name` | `String` | Role name the draft is written from. Required. |
-| `lang` | `String` | Language the draft is written in, as a language code. Required. |
+| `name` | `String` | Role name the draft is written from, 100 characters at most. Required. |
+| `lang` | `String` | Language the draft is written in, as a language code such as `fr` or `fr-FR`. Supported languages are `en` and `fr`; any other code writes the draft in English. Required. |
 
-It returns a `role_ai` record with `name`, `purpose`, `domain`, `accountabilities`, `checklist`, `indicators` and `notes`, ready to copy into a [`role`](/en/developers/graphql-api/role). Drafts are cached per name and language, so the same pair answers from storage instead of calling the model again.
+It returns a `role_ai` record with `name`, `purpose`, `domain`, `accountabilities`, `checklist`, `indicators` and `notes`, ready to copy into a [`role`](/en/developers/graphql-api/role). Drafts are cached per name and language, so the same pair answers from storage instead of calling the model again. Each user can trigger 20 model calls per hour (drafts answered from the cache are not counted); beyond that, the procedure answers `TOO_MANY_REQUESTS`.
 
 ```typescript
 const draft = await trpc.ai.generateRole.query({ name: 'Product Owner', lang: 'en' })
@@ -30,7 +30,7 @@ Summarizes a meeting from its steps, notes and threads, for a Member of the orga
 | `meetingId` | `uuid` | Meeting to summarize. Required. |
 | `lang` | `String` | Language the summary is written in, as a language code. Required. |
 
-It returns the summary as markdown. An unknown meeting answers `NOT_FOUND`.
+It returns the summary as markdown. An unknown meeting answers `NOT_FOUND`, and a meeting the caller cannot read (a private meeting they neither take part in nor attend) answers `FORBIDDEN`. Threads of a Threads step are included only when they belong to the meeting's organization and the caller can read them.
 
 ## Query `search.getAlgoliaConfig`
 
@@ -40,4 +40,4 @@ Returns the search credentials of an organization, for any member including Read
 | --- | --- | --- |
 | `orgId` | `uuid` | Target organization. Required. |
 
-It returns `{ appId, apiKey, indexName }`, where `apiKey` is a secured Algolia key filtered on that organization, so it cannot read another one. Reindexing the whole index is an [internal procedure](/en/developers/trpc-api/internal).
+It returns `{ appId, apiKey, indexName, validUntil }`, where `apiKey` is a secured Algolia key filtered on that organization, so it cannot read another one. The key expires after one hour, at the `validUntil` Unix timestamp (in seconds): call the procedure again to get a new one. Private meetings, threads, tasks and decisions are not indexed, so they never appear in search results. Reindexing the whole index is an [internal procedure](/en/developers/trpc-api/internal).

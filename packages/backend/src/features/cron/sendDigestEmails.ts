@@ -1,10 +1,10 @@
 import { OrgDigest } from '@rolebase/emails/components/templates/Digest'
 import sendDigestEmail from '@rolebase/emails/helpers/sendDigestEmail'
+import { parseSafeRRule } from '@rolebase/shared/helpers/RRuleUTC'
 import { defaultCircleColorHue } from '@rolebase/shared/helpers/circleColor'
 import { getOrgPath } from '@rolebase/shared/helpers/getOrgPath'
 import { getDefaultDigestRRule } from '@rolebase/shared/model/notifications'
 import { UserMetadata } from '@rolebase/shared/model/user'
-import { RRule } from 'rrule'
 import { ThreadActivityFragment, ThreadFragment, gql } from '../../gql'
 import settings from '../../settings'
 import { webhookProcedure } from '../../trpc/webhookProcedure'
@@ -21,32 +21,35 @@ export default webhookProcedure.mutation(async () => {
       continue
     }
 
-    const nowDate = new Date()
-
-    // Get config and state from metadata
-    const metadata: UserMetadata = user.metadata
-    const { digestRrule, digestLastDate } = metadata
-
-    // Digest is disabled
-    if (digestRrule === false) continue
-
-    const rrule = digestRrule
-      ? RRule.fromString(digestRrule)
-      : getDefaultDigestRRule(user.createdAt)
-
-    // Previous planned occurrence
-    const occurrenceDate = rrule.before(nowDate)
-    if (!occurrenceDate) continue
-
-    // Last sent digest date
-    const lastDate = digestLastDate ? new Date(digestLastDate) : occurrenceDate
-
-    // Skip if not due yet
-    if (occurrenceDate < lastDate) {
-      continue
-    }
-
+    // Each user is isolated: a failure (e.g. an invalid RRULE written by
+    // the user in their metadata) must not stop the digest of other users
     try {
+      const nowDate = new Date()
+
+      // Get config and state from metadata
+      const metadata: UserMetadata = user.metadata
+      const { digestRrule, digestLastDate } = metadata
+
+      // Digest is disabled
+      if (digestRrule === false) continue
+
+      // User-provided rule is validated to bound its evaluation
+      const rrule = digestRrule
+        ? parseSafeRRule(digestRrule)
+        : getDefaultDigestRRule(user.createdAt)
+
+      // Previous planned occurrence
+      const occurrenceDate = rrule.before(nowDate)
+      if (!occurrenceDate) continue
+
+      // Last sent digest date
+      const lastDate = digestLastDate ? new Date(digestLastDate) : occurrenceDate
+
+      // Skip if not due yet
+      if (occurrenceDate < lastDate) {
+        continue
+      }
+
       await sendDigest(
         user.id,
         user.displayName,

@@ -78,6 +78,14 @@ npm run dev
 
 Then open your browser at `http://localhost:5175`.
 
+## Collaborative Editing
+
+Real-time editing of notes and descriptions (Yjs) is served by the backend (`packages/backend`), on the WebSocket path `/collab/<room>` of its own port (8888 in local development). `npm run dev` starts it with the rest of the backend, and the webapp connects to it through its backend URL.
+
+To host it, deploy the backend as usual: collaboration uses the same Nhost secrets. Make sure your reverse proxy or ingress forwards WebSocket upgrades on `/collab/`.
+
+Every connection must carry the user's access token. The backend checks with Hasura that the user can read the note's entity, and drops the changes of users who can only read it.
+
 ## Project Structure
 
 The repository is an npm workspace monorepo. See the [Architecture overview](/en/developers) for the full package breakdown.

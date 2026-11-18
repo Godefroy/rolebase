@@ -184,4 +184,4 @@ Before creating any commit, review the staged product changes (`packages/`, `nho
 
 Content is stored as markdown (`packages/editor`, Tiptap). Grammar contract, locked by the round-trip tests in `packages/editor`: mentions `[@Name](rolebase://member/uuid)`, files `[name](url "file:mime:size")`, collapsibles as `<details>` HTML (parsed and serialized, absent from the slash menu), YouTube as a bare URL, single-line table cells (GFM).
 
-Collab uses yjs rooms suffixed `-v2`.
+Collab is served by the backend on `/collab/<docId>`. A new collaborative docId needs its pattern and access check in `packages/backend/src/features/collab/`.

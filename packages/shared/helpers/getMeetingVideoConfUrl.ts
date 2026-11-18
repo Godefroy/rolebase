@@ -2,6 +2,18 @@ import { MeetingFragment } from '../gql'
 import { VideoConfTypes } from '../model/meeting'
 import generateJitsiUrl from './generateJitsiUrl'
 
+// The URL is stored as is in a jsonb column, so it's only used as a link
+// when it's an absolute http(s) URL (no javascript: or data: href)
+export function isHttpUrl(url: unknown): url is string {
+  if (typeof url !== 'string' || !url) return false
+  try {
+    const { protocol } = new URL(url)
+    return protocol === 'http:' || protocol === 'https:'
+  } catch {
+    return false
+  }
+}
+
 export default function getMeetingVideoConfUrl(
   meeting?: MeetingFragment,
   roleName?: string,
@@ -12,6 +24,7 @@ export default function getMeetingVideoConfUrl(
     return generateJitsiUrl(meeting, roleName, displayName)
   }
   if (meeting.videoConf.type === VideoConfTypes.Url) {
-    return meeting.videoConf.url
+    const { url } = meeting.videoConf
+    return isHttpUrl(url) ? url : undefined
   }
 }

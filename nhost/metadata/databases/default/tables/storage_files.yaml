@@ -100,6 +100,9 @@ select_permissions:
         - uploaded_by_user_id
       filter: {}
       limit: 1
+      query_root_fields:
+        - select_by_pk
+      subscription_root_fields: []
   - role: user
     permission:
       columns:
@@ -116,3 +119,6 @@ select_permissions:
         - uploaded_by_user_id
       filter: {}
       limit: 1
+      query_root_fields:
+        - select_by_pk
+      subscription_root_fields: []

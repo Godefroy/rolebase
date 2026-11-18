@@ -10,7 +10,7 @@ An access role is `Readonly`, `Member`, `Admin` or `Owner`, and see [Permissions
 
 ## Mutation `member.inviteMember`
 
-Sends an invitation email to an existing member, for an Admin or Owner. Calling it again on an already invited member resends the email with a fresh token.
+Sends an invitation email to an existing member, for an Admin or Owner. Inviting with the `Owner` role, or resending an `Owner` invitation, requires Owner. Calling it again on an already invited member resends the email with a fresh token.
 
 | Input | Type | Description |
 | --- | --- | --- |
@@ -58,7 +58,7 @@ The invitation is consumed, and the Stripe subscription seat count is updated wh
 
 ## Mutation `member.updateMemberRole`
 
-Changes or removes the access role of a member. An Admin can act on any member, while changing the role of an Owner requires Owner, and the last active Owner cannot be demoted.
+Changes or removes the access role of a member. An Admin can act on any member, while changing the role of an Owner or granting the `Owner` role requires Owner, and the last active Owner cannot be demoted. Members cannot change their own role, which answers `FORBIDDEN`.
 
 | Input | Type | Description |
 | --- | --- | --- |

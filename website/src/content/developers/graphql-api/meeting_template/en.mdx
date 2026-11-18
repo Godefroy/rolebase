@@ -112,7 +112,7 @@ mutation archiveMeetingTemplate($id: uuid!) {
 
 ## Permissions
 
-Organization members can view, create, update, and delete templates within their organization. Templates are organization-wide resources accessible to all members.
+Organization members can view, create, update, and delete templates within their organization. Templates are organization-wide resources accessible to all members. A template's optional `circleId` must reference a circle of the same organization.
 
 <Callout type="info" title="Notes">
   Templates can be used for both one-time and recurring meetings. The order of

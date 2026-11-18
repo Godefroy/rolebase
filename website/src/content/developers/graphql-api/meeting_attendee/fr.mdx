@@ -95,6 +95,7 @@ mutation DeleteMeetingAttendee($id: uuid!) {
 - **Participants du cercle :** Peuvent ajouter/retirer des participants et mettre à jour le statut de présence dans les réunions de leur cercle
 - **Participants de la réunion :** Peuvent consulter les autres participants et mettre à jour leur propre statut (sauf en lecture seule)
 - **Membres de l'organisation :** Peuvent consulter les participants des réunions non privées
+- Un participant doit être membre de l'organisation de la réunion
 
 <Callout type="info" title="Notes">
   Chaque membre ne peut apparaître qu'une seule fois par réunion (imposé par la

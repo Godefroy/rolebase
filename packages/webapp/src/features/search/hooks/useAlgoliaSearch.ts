@@ -7,19 +7,36 @@ import {
   SearchTypes,
 } from '@rolebase/shared/model/search'
 import { UserLocalStorageKeys } from '@utils/localStorage'
-import algoliasearch from 'algoliasearch'
+import algoliasearch, { SearchIndex } from 'algoliasearch'
 import debounce from 'lodash.debounce'
 import { useMemo, useState } from 'react'
 import { trpc } from 'src/trpc'
 import { SearchItem } from '../searchTypes'
 
+// Refresh the secured key a bit before it expires
+const KEY_EXPIRY_MARGIN_SECONDS = 5 * 60
+
+function isConfigValid(config: Partial<AlgoliaConfig> | null | undefined) {
+  return (
+    !!config?.apiKey &&
+    typeof config.validUntil === 'number' &&
+    config.validUntil - KEY_EXPIRY_MARGIN_SECONDS > Date.now() / 1000
+  )
+}
+
 async function getConfig(orgId: string): Promise<AlgoliaConfig> {
   const key = UserLocalStorageKeys.AlgoliaConfig.replace('{id}', orgId)
 
-  // Use config from localStorage
+  // Use config from localStorage while its key is still valid
   const localConfig = localStorage.getItem(key)
   if (localConfig) {
-    return JSON.parse(localConfig)
+    try {
+      const config = JSON.parse(localConfig)
+      if (isConfigValid(config)) return config
+    } catch {
+      // Ignore invalid cache
+    }
+    localStorage.removeItem(key)
   }
 
   // Query function to get Algolia config
@@ -28,21 +45,28 @@ async function getConfig(orgId: string): Promise<AlgoliaConfig> {
   return config
 }
 
+// Keep one index client per org, renewed when its key expires
+let cachedIndex:
+  | { orgId: string; config: AlgoliaConfig; index: SearchIndex }
+  | undefined
+
+async function getIndex(orgId: string): Promise<SearchIndex> {
+  if (cachedIndex?.orgId === orgId && isConfigValid(cachedIndex.config)) {
+    return cachedIndex.index
+  }
+  const config = await getConfig(orgId)
+  const index = algoliasearch(config.appId, config.apiKey).initIndex(
+    config.indexName
+  )
+  cachedIndex = { orgId, config, index }
+  return index
+}
+
 export function useAlgoliaSearch() {
   const { orgId } = useOrgContext()
   const [getSearchResults] = useGetSearchResultsLazyQuery()
   const [loading, setLoading] = useState(false)
   const [items, setItems] = useState<SearchItem[]>([])
-
-  // Get Algolia config
-  const indexPromise = useMemo(() => {
-    if (!orgId) return
-    return getConfig(orgId)
-      .then((config) =>
-        algoliasearch(config.appId, config.apiKey).initIndex(config.indexName)
-      )
-      .catch(console.error)
-  }, [orgId])
 
   const search = useMemo(() => {
     return debounce(async (value: string, type?: SearchTypes) => {
@@ -51,16 +75,13 @@ export function useAlgoliaSearch() {
         return
       }
 
-      // Wait for index to be ready
-      const index = await indexPromise
-      if (!index) {
-        // Retry
-        search(value, type)
-        return
-      }
+      if (!orgId) return
 
       try {
         setLoading(true)
+
+        // Get index with a valid key
+        const index = await getIndex(orgId)
 
         // Search query
         const { hits } = await index.search<SearchDoc>(
@@ -96,7 +117,7 @@ export function useAlgoliaSearch() {
         setLoading(false)
       }
     }, 200)
-  }, [indexPromise])
+  }, [orgId])
 
   return {
     loading,

@@ -10,7 +10,7 @@ Un rôle d’accès vaut `Readonly`, `Member`, `Admin` ou `Owner` ; voir [Permis
 
 ## Mutation `member.inviteMember`
 
-Envoie un email d’invitation à un membre existant, pour un Admin ou un Owner. Un nouvel appel sur un membre déjà invité renvoie l’email avec un token frais.
+Envoie un email d’invitation à un membre existant, pour un Admin ou un Owner. Inviter avec le rôle `Owner`, ou renvoyer une invitation `Owner`, demande le rôle Owner. Un nouvel appel sur un membre déjà invité renvoie l’email avec un token frais.
 
 | Input | Type | Description |
 | --- | --- | --- |
@@ -58,7 +58,7 @@ L’invitation est consommée, et le nombre de sièges de l’abonnement Stripe 
 
 ## Mutation `member.updateMemberRole`
 
-Change ou retire le rôle d’accès d’un membre. Un Admin agit sur n’importe quel membre, changer le rôle d’un Owner demande le rôle Owner, et le dernier Owner actif ne peut pas être rétrogradé.
+Change ou retire le rôle d’accès d’un membre. Un Admin agit sur n’importe quel membre, changer le rôle d’un Owner ou attribuer le rôle `Owner` demande le rôle Owner, et le dernier Owner actif ne peut pas être rétrogradé. Un membre ne peut pas changer son propre rôle, ce qui répond `FORBIDDEN`.
 
 | Input | Type | Description |
 | --- | --- | --- |

@@ -60,10 +60,8 @@ query GetFile($id: uuid!) {
 
 ## Permissions
 
-File access is open to all authenticated users and public requests:
-
-- **View** — All authenticated users and public requests can view file metadata (limited to 1 result)
-- **Create** — All authenticated users can upload files
+- Authenticated users and public requests read a file's metadata by its `id` with the `file` query. The `files` list query and its aggregate are not exposed
+- All authenticated users can upload files
 
 <Callout type="info">
   Files are stored securely in configurable storage buckets. Presigned URLs

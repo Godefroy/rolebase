@@ -15,6 +15,7 @@ gql(`
   fragment ThreadSearch on thread {
     id
     orgId
+    private
     title
     createdAt
     activities {
@@ -51,15 +52,18 @@ export class IndexThread extends IndexEntity<ThreadFragment> {
       `),
       { id }
     )
-    if (!thread) return undefined
-    return thread && transform(thread)
+    // Private content is not indexed: search keys are scoped by org only
+    if (!thread || thread.private) return undefined
+    return transform(thread)
   }
 
   async getAll() {
     const { thread } = await adminRequest(
       gql(`
         query GetThreadsForSearch {
-          thread(where: { archivedAt: { _is_null: true } }) {
+          thread(
+            where: { archivedAt: { _is_null: true }, private: { _eq: false } }
+          ) {
             ...ThreadSearch
           }
         }

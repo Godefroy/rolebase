@@ -38,8 +38,15 @@ export default authedProcedure
       })
     }
 
-    // Check and get org
-    await guardOrg(member.orgId, Member_Role_Enum.Admin, opts.ctx)
+    // Check and get org. Only owners invite an owner (or resend an owner
+    // invitation), as in the webapp.
+    await guardOrg(
+      member.orgId,
+      role === Member_Role_Enum.Owner || member.role === Member_Role_Enum.Owner
+        ? Member_Role_Enum.Owner
+        : Member_Role_Enum.Admin,
+      opts.ctx
+    )
 
     // Get inviter member
     const orgAndMemberResult = await adminRequest(GET_ORG_AND_MEMBER, {

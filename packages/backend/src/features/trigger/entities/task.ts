@@ -8,6 +8,7 @@ gql(`
   fragment TaskSearch on task {
     id
     orgId
+    private
     title
     createdAt
   }
@@ -36,15 +37,18 @@ export class IndexTask extends IndexEntity<TaskFragment> {
       `),
       { id }
     )
-    if (!task) return undefined
-    return task && transform(task)
+    // Private content is not indexed: search keys are scoped by org only
+    if (!task || task.private) return undefined
+    return transform(task)
   }
 
   async getAll() {
     const { task } = await adminRequest(
       gql(`
         query GetTasksForSearch {
-          task(where: { archivedAt: { _is_null: true } }) {
+          task(
+            where: { archivedAt: { _is_null: true }, private: { _eq: false } }
+          ) {
             ...TaskSearch
           }
         }

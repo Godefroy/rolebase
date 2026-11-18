@@ -1,9 +1,21 @@
-import { nameSchema } from '@rolebase/shared/schemas'
 import * as yup from 'yup'
 import { RoleAiFragment, gql } from '../../gql'
+import { guardAuth } from '../../guards/guardAuth'
 import { authedProcedure } from '../../trpc/authedProcedure'
 import { adminRequest } from '../../utils/adminRequest'
+import { createRateLimiter } from '../../utils/rateLimit'
 import { getOpenai } from './openai'
+
+// Languages a draft can be written in, with the name given to the model
+const languages: Record<string, string> = {
+  en: 'English',
+  fr: 'French',
+}
+const defaultLang = 'en'
+const maxNameLength = 100
+
+// Model calls per user (cached drafts are not counted)
+const rateLimit = createRateLimiter({ max: 20, windowMs: 60 * 60 * 1000 })
 
 const schema = {
   type: 'object',
@@ -61,12 +73,21 @@ const prefixes: Partial<RoleAiFragment> = {
 export default authedProcedure
   .input(
     yup.object().shape({
-      name: nameSchema.required(),
-      lang: yup.string().required(),
+      name: yup.string().trim().min(1).max(maxNameLength).required(),
+      // Language code, possibly with a region (e.g. fr-FR)
+      lang: yup
+        .string()
+        .required()
+        .matches(/^[a-zA-Z]{2,3}(-[a-zA-Z0-9]{2,8})?$/),
     })
   )
   .query(async (opts): Promise<RoleAiFragment> => {
-    const { name, lang } = opts.input
+    const userId = guardAuth(opts.ctx)
+    const { name } = opts.input
+
+    // Unsupported languages fall back to the default one
+    const baseLang = opts.input.lang.split('-')[0].toLowerCase()
+    const lang = Object.hasOwn(languages, baseLang) ? baseLang : defaultLang
 
     const existingRole = (await adminRequest(GET_ROLE_AI, { name, lang }))
       .role_ai[0]
@@ -74,13 +95,15 @@ export default authedProcedure
       return existingRole
     }
 
+    rateLimit(userId)
+
     const response = await getOpenai().chat.completions.create({
       model: 'gpt-4o',
       messages: [
         {
           role: 'system',
           content: `You are an expert in management, holacracy and sociocracy.
-          Answer in this language only: ${lang}`,
+          Answer in this language only: ${languages[lang]}`,
         },
         {
           role: 'user',

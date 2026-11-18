@@ -93,12 +93,12 @@ mutation ArchiveCircleLink {
 
 - **Propriétaires de l'organisation :** Accès complet
 - **Administrateurs/Membres de l'organisation :** Peuvent créer des liens si la gouvernance n'est pas protégée
-- **Leaders du cercle hôte :** Peuvent créer et gérer les liens
-- **Public :** Limité à la consultation des liens dans les organisations avec des informations de membres partagées
+- **Leaders du cercle hôte (rôle Member, Admin ou Owner) :** Peuvent créer et gérer les liens
+- **Membres de l'organisation :** Peuvent consulter les liens de leur organisation
 
 <Callout type="info" title="Notes">
   La combinaison de `parentId` et `circleId` doit être unique. Les liens de
   cercle affectent l'héritage des participants et les structures de permissions.
   Les leaders des cercles liés obtiennent certaines permissions dans le cercle
-  hôte.
+  hôte, jusqu'à l'archivage du lien.
 </Callout>

@@ -70,6 +70,8 @@ select_permissions:
         - userId
       filter:
         org:
+          archivedAt:
+            _is_null: true
           members:
             userId:
               _eq: X-Hasura-User-Id

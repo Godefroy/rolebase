@@ -3,12 +3,12 @@ import { TRPCError } from '@trpc/server'
 import { FastifyInstance, FastifyRequest } from 'fastify'
 import Stripe from 'stripe'
 import {
-  Member_Role_Enum,
   Subscription_Payment_Status_Enum,
   gql,
 } from '../../gql'
 import settings from '../../settings'
 import { adminRequest } from '../../utils/adminRequest'
+import { getMembersOverSeatLimit } from './utils/getMembersOverSeatLimit'
 import { stripe } from './utils/stripe'
 
 export default async (app: FastifyInstance) => {
@@ -105,21 +105,17 @@ const deleteSubscription = async (subscriptionId: string) => {
   const org = orgRequestResult?.org[0]
 
   if (org) {
-    const owners = org.members.filter(
-      (mem) => mem.role === Member_Role_Enum.Owner
+    // Keep the free plan seats, oldest Owners first, and unlink the others
+    const memberIdsToUpdate = getMembersOverSeatLimit(
+      org.members,
+      SubscriptionLimits.free
     )
-    const admin = org.members.filter(
-      (mem) => mem.role === Member_Role_Enum.Admin
-    )
-    const orgAdmins = owners.concat(admin)
 
-    const memberIdsToUpdate = orgAdmins
-      .splice(SubscriptionLimits['free'] || 1, orgAdmins.length)
-      .map((m) => m.id)
-
-    await adminRequest(UPDATE_ACTIVE_MEMBER_TO_REGULAR, {
-      ids: memberIdsToUpdate,
-    })
+    if (memberIdsToUpdate.length > 0) {
+      await adminRequest(UNLINK_MEMBERS_OVER_LIMIT, {
+        ids: memberIdsToUpdate,
+      })
+    }
   }
   // Not deleting it from the database as it would prevent us from retrieving past invoices
   return adminRequest(UPDATE_ORG_SUBSCRIPTION_STATUS, {
@@ -144,9 +140,9 @@ const UPDATE_ORG_SUBSCRIPTION_STATUS = gql(`
     }
   }`)
 
-const UPDATE_ACTIVE_MEMBER_TO_REGULAR = gql(`
-  mutation updateActiveMembersToMembers ($ids: [uuid!]){
-    update_member_many(updates: {where: {id: {_in: $ids}}, _set: {userId: null}}) {
+const UNLINK_MEMBERS_OVER_LIMIT = gql(`
+  mutation unlinkMembersOverSeatLimit($ids: [uuid!]) {
+    update_member_many(updates: {where: {id: {_in: $ids}}, _set: {userId: null, inviteDate: null}}) {
       returning {
         id
       }
@@ -158,10 +154,10 @@ const GET_ORG_MEMBERS = gql(`
   query getOrgMembersWithRolesFromSubscriptionId($subscriptionId: String!) {
     org(where: {org_subscription: {stripeSubscriptionId: {_eq: $subscriptionId}}}) {
       id
-      members {
+      members(where: {archivedAt: {_is_null: true}, userId: {_is_null: false}}) {
         id
-        userId
         role
+        createdAt
       }
     }
   }
