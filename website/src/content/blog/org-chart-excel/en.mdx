@@ -15,15 +15,17 @@ takeaways:
   - 'Google Sheets draws an org chart straight from two columns, the role and the role it reports to, with Insert, then Chart, then Organizational chart.'
 ---
 
-You make an org chart in Excel with SmartArt: open the **Insert** tab, click **SmartArt**, pick the **Hierarchy** category, then the **Organization Chart** layout. You paste your list of roles into the text pane and set the levels with Tab. Every method starts from a table of roles, even SmartArt, which reads nothing from your cells. This page starts with that table, then covers SmartArt, the tools that build the chart from the table, Google Sheets, and the limits of an org chart kept in a spreadsheet.
+To make an org chart in Excel, insert a SmartArt graphic from the **Hierarchy** category and paste your list of roles into it. It takes five steps in the Excel desktop app.
 
 1. Open the **Insert** tab, then click **SmartArt** in the Illustrations group.
 2. Select **Hierarchy** on the left, then **Organization Chart**, and click OK.
-3. Copy the Role column of your table and paste it into the text pane beside the graphic.
+3. Paste your list of roles into the text pane beside the graphic, or type them one per line.
 4. Press Tab to push a line one level down, Shift+Tab to pull it back up.
 5. Adjust the look from the **SmartArt Design** tab with **Layout**, **Change Colors** and the style gallery.
 
 SmartArt needs the Excel desktop app on Windows or Mac. Excel for the web has no SmartArt button, so open the workbook in the app to draw the chart.
+
+A SmartArt chart reads nothing from your cells, so every change is made twice. The rest of this page starts with the role table every method uses, then covers SmartArt in detail, the tools that draw the chart from the table (Visio and Google Sheets), and the limits of an org chart kept in a spreadsheet.
 
 {/* IMAGE regen: api.py image, infographic, 1600x1200. Scene: "a vertical five-step infographic titled "Org chart in Excel: 5 steps" in a modern clean bold sans-serif. Five numbered cards stacked top to bottom, linked by a thin line, each with a small flat icon and one label: 1. "Insert > SmartArt" 2. "Hierarchy > Organization Chart" 3. "Paste the Role column into the text pane" 4. "Tab = one level down, Shift+Tab = one level up" 5. "SmartArt Design > Layout, Change Colors". Under the cards, a small note in grey: "Start from a table: one role per row, and the role it reports to." Purple numbers, orange accent on step 3. Portrait-friendly layout at 1600x1200, lots of cream space." */}
 ![The five steps to build an org chart in Excel with SmartArt](./steps-en.jpg)
@@ -89,7 +91,7 @@ The same SmartArt graphic exists in Word and PowerPoint. If the chart ends up in
 
 With SmartArt, you paste your list once. When a role changes, you fix the cell and then the box. Other tools read the table instead and draw the chart from it.
 
-Excel had one of those tools until this year. Microsoft retired the Visio Data Visualizer add-in, which drew an org chart inside the workbook from a table of employees. Its diagrams stopped loading on 2 March 2026. The data in the tables stays intact, but the charts are gone.
+Excel had one of those tools until 2026. Microsoft retired the Visio Data Visualizer add-in, which drew an org chart inside the workbook from a table of employees. Its diagrams stopped loading on 2 March 2026. The data in the tables stays intact, but the charts are gone.
 
 Microsoft still offers the **Organization Chart Wizard** in the Visio desktop app, sold separately from Microsoft 365. Microsoft points former Data Visualizer users to Visio Plan 2. In Visio, open **File**, then **New**, pick the **Organization Chart** category and click **Create**. The wizard asks for the file and three columns: a name, a unique identifier, and a Reports to column left empty for the top of the chart. The role table works as it is, with the role name as both name and identifier.
 
