@@ -50,6 +50,9 @@ export interface CollaborationConfig {
 // Custom message carrying a refreshed access token
 // (packages/backend/src/features/collab)
 const messageRefreshToken = 100
+// Close code sent when the room has been reloaded on the server since the
+// last sync: the local document must be replaced by a fresh one
+const closeRoomReloaded = 4409
 // Interval to check if the access token has been refreshed
 const tokenCheckInterval = 30_000
 
@@ -57,6 +60,7 @@ export interface RichEditorProps extends Omit<
   HTMLAttributes<HTMLDivElement>,
   'onFocus' | 'onBlur' | 'onSubmit' | 'onChange'
 > {
+  // Initial value, ignored with collaboration (the server loads the room)
   value?: string
   placeholder?: string
   emptyParagraphPlaceholder?: string
@@ -74,7 +78,25 @@ export interface RichEditorProps extends Omit<
   onSubmit?(): void
 }
 
-export default forwardRef<EditorHandle, RichEditorProps>(function RichEditor(
+// Remounted with a fresh document when the collab room has been reloaded
+export default forwardRef<EditorHandle, RichEditorProps>(
+  function RichEditor(props, ref) {
+    const [session, setSession] = useState(0)
+    return (
+      <RichEditorSession
+        key={session}
+        ref={ref}
+        {...props}
+        onRoomReloaded={() => setSession((value) => value + 1)}
+      />
+    )
+  }
+)
+
+const RichEditorSession = forwardRef<
+  EditorHandle,
+  RichEditorProps & { onRoomReloaded(): void }
+>(function RichEditorSession(
   {
     value,
     placeholder,
@@ -91,6 +113,7 @@ export default forwardRef<EditorHandle, RichEditorProps>(function RichEditor(
     onFocus,
     onBlur,
     onSubmit,
+    onRoomReloaded,
     className,
     style,
     ...divProps
@@ -126,29 +149,15 @@ export default forwardRef<EditorHandle, RichEditorProps>(function RichEditor(
   const upload = (file: globalThis.File) =>
     onUploadRef.current?.(file) ?? Promise.resolve('')
 
+  const onRoomReloadedRef = useRef(onRoomReloaded)
+  onRoomReloadedRef.current = onRoomReloaded
   const collaborationRef = useRef(collaboration)
   collaborationRef.current = collaboration
-
-  // Read-only users can't seed an empty room: the server drops their updates.
-  // They see the stored value without collaboration instead.
-  const readOnlyRef = useRef(readOnly)
-  readOnlyRef.current = readOnly
-  const [unseededRoom, setUnseededRoom] = useState(false)
-  const showStaticValue = !!readOnly && unseededRoom
-
-  useEffect(() => {
-    // Back to collaboration when becoming editable, to seed the room
-    if (!readOnly) setUnseededRoom(false)
-  }, [readOnly])
-
-  useEffect(() => {
-    if (showStaticValue) collaborationRef.current?.onStatusChange?.(true)
-  }, [showStaticValue])
 
   // Collaboration: Yjs document and provider, recreated when docId changes
   const collabDocId = collaboration?.docId
   const collab = useMemo(() => {
-    if (!collaboration || !collabDocId || showStaticValue) return undefined
+    if (!collaboration || !collabDocId) return undefined
     const doc = new Doc()
     const provider = new WebsocketProvider(
       collaboration.url,
@@ -157,9 +166,10 @@ export default forwardRef<EditorHandle, RichEditorProps>(function RichEditor(
       { connect: false }
     )
     return { doc, provider, url: provider.url }
-  }, [collabDocId, showStaticValue])
+  }, [collabDocId])
 
   const [synced, setSynced] = useState(!collab)
+  const [online, setOnline] = useState(!collab)
 
   const editorRef = useRef<Editor | null>(null)
 
@@ -289,14 +299,26 @@ export default forwardRef<EditorHandle, RichEditorProps>(function RichEditor(
 
   editorRef.current = editor
 
-  // Connect collaboration provider, seed initial content once
+  // Connect collaboration provider
   useEffect(() => {
-    if (!collab || !editor) return
+    if (!collab) return
     const { provider, doc } = collab
     let connected = false
     let isSynced = false
     let destroyed = false
     let token: string | undefined
+    // Instance of the room on the server, sent when reconnecting
+    let instance: string | undefined
+    setSynced(false)
+    setOnline(false)
+
+    const updateUrl = () => {
+      const params = new URLSearchParams()
+      if (token) params.set('token', token)
+      if (instance) params.set('instance', instance)
+      const query = params.toString()
+      provider.url = query ? `${collab.url}?${query}` : collab.url
+    }
 
     // Pass the access token in the URL used by the next (re)connection,
     // and send it to the server when it changes on an open connection
@@ -307,7 +329,7 @@ export default forwardRef<EditorHandle, RichEditorProps>(function RichEditor(
       if (destroyed || !newToken || newToken === token) return
       const isRefresh = token !== undefined
       token = newToken
-      provider.url = `${collab.url}?token=${encodeURIComponent(newToken)}`
+      updateUrl()
       if (isRefresh && provider.wsconnected) {
         const tokenBytes = new TextEncoder().encode(newToken)
         const message = new Uint8Array(tokenBytes.length + 1)
@@ -318,27 +340,30 @@ export default forwardRef<EditorHandle, RichEditorProps>(function RichEditor(
     }
 
     const reportStatus = () => {
-      collaboration?.onStatusChange?.(connected && isSynced)
+      const isOnline = connected && isSynced
+      setOnline(isOnline)
+      collaborationRef.current?.onStatusChange?.(isOnline)
     }
 
-    const handleSynced = () => {
-      if (!isSynced) {
-        isSynced = true
-        const fragment = doc.getXmlFragment('default')
-        const meta = doc.getMap('meta')
-        if (fragment.length === 0 && meta.get('seeded') !== true) {
-          if (readOnlyRef.current) {
-            setUnseededRoom(true)
-            return
-          }
-          doc.transact(() => meta.set('seeded', true))
-          if (value) {
-            editor.commands.setContent(value, { contentType: 'markdown' })
-          }
-        }
-        setSynced(true)
+    const handleSynced = (state: boolean) => {
+      isSynced = state
+      if (!state) return reportStatus()
+      setSynced(true)
+      const roomInstance = doc.getMap('meta').get('instance')
+      if (typeof roomInstance === 'string' && roomInstance !== instance) {
+        instance = roomInstance
+        updateUrl()
       }
       reportStatus()
+    }
+
+    const handleConnectionClose = (event: CloseEvent | null) => {
+      if (event?.code === closeRoomReloaded) {
+        provider.disconnect()
+        onRoomReloadedRef.current?.()
+        return
+      }
+      updateToken()
     }
 
     const handleStatus = ({ status }: { status: string }) => {
@@ -348,7 +373,7 @@ export default forwardRef<EditorHandle, RichEditorProps>(function RichEditor(
 
     provider.on('synced', handleSynced)
     provider.on('status', handleStatus)
-    provider.on('connection-close', updateToken)
+    provider.on('connection-close', handleConnectionClose)
     const tokenInterval = setInterval(updateToken, tokenCheckInterval)
     if (collaborationRef.current?.getToken) {
       updateToken().finally(() => {
@@ -363,11 +388,11 @@ export default forwardRef<EditorHandle, RichEditorProps>(function RichEditor(
       clearInterval(tokenInterval)
       provider.off('synced', handleSynced)
       provider.off('status', handleStatus)
-      provider.off('connection-close', updateToken)
+      provider.off('connection-close', handleConnectionClose)
       provider.destroy()
       doc.destroy()
     }
-  }, [collab, editor])
+  }, [collab])
 
   // Update collaboration user info (member name can load after mount)
   useEffect(() => {
@@ -378,14 +403,15 @@ export default forwardRef<EditorHandle, RichEditorProps>(function RichEditor(
     })
   }, [editor, collab, collaboration?.username, collaboration?.cursorColor])
 
-  // Reflect readOnly and collaboration sync state on editability
+  // Reflect readOnly and collaboration state on editability. Offline changes
+  // would be lost if the room is reloaded on the server meanwhile.
   useEffect(() => {
     if (!editor) return
-    const editable = !readOnly && (!collab || synced)
+    const editable = !readOnly && (!collab || online)
     if (editor.isEditable !== editable) {
       editor.setEditable(editable)
     }
-  }, [editor, readOnly, collab, synced])
+  }, [editor, readOnly, collab, online])
 
   // Focus once collaboration is ready
   useEffect(() => {

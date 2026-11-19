@@ -1,9 +1,5 @@
 import { Button } from '@chakra-ui/react'
-import {
-  MeetingStepFragment,
-  Meeting_Step_Type_Enum,
-  useUpdateMeetingStepMutation,
-} from '@gql'
+import { MeetingStepFragment, Meeting_Step_Type_Enum } from '@gql'
 import React, {
   useCallback,
   useContext,
@@ -28,7 +24,6 @@ export default function MeetingStepContent({ step }: Props) {
   const { t } = useTranslation()
   const editorRef = useRef<EditorHandle>(null)
   const [forceEdit, setForceEdit] = useState(false)
-  const [updateMeetingStep] = useUpdateMeetingStepMutation()
 
   // Disable force edit after having saved some notes
   useEffect(() => {
@@ -43,19 +38,6 @@ export default function MeetingStepContent({ step }: Props) {
       setForceEdit(false)
     }
   }, [])
-
-  // Update notes
-  const handleNotesChange = useCallback(
-    (notes: string) => {
-      updateMeetingStep({
-        variables: {
-          id: step.id,
-          values: { notes },
-        },
-      })
-    },
-    [forceEdit]
-  )
 
   if (!meeting) return null
 
@@ -73,12 +55,9 @@ export default function MeetingStepContent({ step }: Props) {
         <CollabEditor
           ref={editorRef}
           docId={`meeting-step-${step.id}`}
-          value={step.notes}
           placeholder={t('MeetingStepContent.notesPlaceholder')}
           readOnly={!editable}
           autoFocus={forceEdit}
-          saveEvery={10000}
-          onSave={handleNotesChange}
           onBlur={handleNotesBlur}
         />
       ) : (

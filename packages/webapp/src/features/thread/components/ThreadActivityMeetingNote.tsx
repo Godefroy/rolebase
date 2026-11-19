@@ -3,12 +3,9 @@ import CollabEditor from '@/editor/components/CollabEditor'
 import MeetingItem from '@/meeting/components/MeetingItem'
 import { MeetingContext } from '@/meeting/contexts/MeetingContext'
 import { Card, CardBody, CardHeader, Heading, Text } from '@chakra-ui/react'
-import { useUpdateThreadActivityMutation } from '@gql'
 import { ThreadActivityMeetingNoteFragment } from '@rolebase/shared/model/thread_activity'
-import React, { useCallback, useContext } from 'react'
+import React, { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
-import useCreateThreadMeetingNote from '../hooks/useCreateThreadMeetingNote'
-import { activityMeetingNoteTmpId } from './ThreadActivities'
 import ThreadActivityAnchor from './ThreadActivityAnchor'
 
 interface Props {
@@ -22,30 +19,9 @@ export default function ThreadActivityMeetingNote({ activity }: Props) {
   const meetingState = useContext(MeetingContext)
   const meeting = activity.refMeeting
 
-  const createThreadMeetingNote = useCreateThreadMeetingNote()
-  const [updateThreadActivity] = useUpdateThreadActivityMutation()
-
   const isEditable =
     meetingState?.editable &&
     meetingState.meeting?.id === activity.refMeeting?.id
-
-  // Update notes
-  const handleNotesChange = useCallback(
-    async (notes: string) => {
-      if (!meeting) return
-      if (activity.id === activityMeetingNoteTmpId) {
-        createThreadMeetingNote(activity.threadId, meeting.id, notes)
-      } else {
-        updateThreadActivity({
-          variables: {
-            id: activity.id,
-            values: { data: { notes } },
-          },
-        })
-      }
-    },
-    [activity, meeting]
-  )
 
   if (!isEditable && !activity.data.notes) {
     return <ThreadActivityAnchor activityId={activity.id} />
@@ -76,11 +52,8 @@ export default function ThreadActivityMeetingNote({ activity }: Props) {
             {isEditable ? (
               <CollabEditor
                 docId={`thread-${activity.threadId}-meeting-${meeting.id}`}
-                value={activity.data.notes}
                 placeholder={t('MeetingStepContent.notesPlaceholder')}
                 minH="80px"
-                saveEvery={10000}
-                onSave={handleNotesChange}
               />
             ) : (
               <Markdown>{activity.data.notes}</Markdown>

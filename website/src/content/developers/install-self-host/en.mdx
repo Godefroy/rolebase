@@ -80,7 +80,7 @@ Then open your browser at `http://localhost:5175`.
 
 ## Collaborative Editing
 
-Real-time editing of notes and descriptions (Yjs) is served by the backend (`packages/backend`), on the WebSocket path `/collab/<room>` of its own port (8888 in local development). `npm run dev` starts it with the rest of the backend, and the webapp connects to it through its backend URL.
+Real-time editing of notes and descriptions (Yjs) is served by the backend (`packages/backend`), on the WebSocket path `/collab/<room>` of its own port (8888 in local development). `npm run dev` starts it with the rest of the backend, and the webapp connects to it through its backend URL. The backend loads each document from the database and saves the changes itself, so run a single backend instance.
 
 To host it, deploy the backend as usual: collaboration uses the same Nhost secrets. Make sure your reverse proxy or ingress forwards WebSocket upgrades on `/collab/`.
 

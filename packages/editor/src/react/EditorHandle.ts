@@ -1,4 +1,5 @@
-import { Editor, JSONContent } from '@tiptap/core'
+import { Editor } from '@tiptap/core'
+import { isEmptyJson } from '../markdown/isEmptyJson'
 
 export interface EditorHandle {
   editor: Editor | null
@@ -15,13 +16,5 @@ export interface EditorHandle {
 
 // Return true if the document is empty or contains only empty paragraphs
 export function isEmptyDoc(editor: Editor): boolean {
-  if (editor.isEmpty) return true
-  const json = editor.getJSON() as JSONContent
-  return (json.content ?? []).every(
-    (node) =>
-      node.type === 'paragraph' &&
-      !(node.content ?? []).some(
-        (child) => child.type !== 'text' || (child.text ?? '').trim() !== ''
-      )
-  )
+  return editor.isEmpty || isEmptyJson(editor.getJSON())
 }

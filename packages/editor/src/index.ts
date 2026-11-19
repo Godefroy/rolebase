@@ -1,3 +1,4 @@
+export { getYDocMarkdown, setYDocMarkdown } from './collab/yDoc'
 export { Details, DetailsContent, DetailsSummary } from './extensions/Details'
 export { File } from './extensions/File'
 export type { FileAttributes } from './extensions/File'

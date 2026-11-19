@@ -169,9 +169,10 @@ export default function TaskContent({
       dueDate: dueDate ? new Date(dueDate).toISOString() : null,
     }
     if (id) {
-      // Update task
+      // Update task. The description is saved by the collab server.
+      const { description, ...values } = taskUpdate
       await updateTask({
-        variables: { id, values: taskUpdate },
+        variables: { id, values },
       })
       allowClose()
     } else {
@@ -230,14 +231,6 @@ export default function TaskContent({
       updateTaskStatus(task, status)
     },
     [task, updateTaskStatus]
-  )
-
-  // Change description
-  const handleDescriptionChange = useCallback(
-    async (description: string) => {
-      setValue('description', description, { shouldDirty: true })
-    },
-    [task]
   )
 
   // Task deletion modal
@@ -316,12 +309,9 @@ export default function TaskContent({
           {task ? (
             <CollabEditor
               docId={`task-${id}-description`}
-              value={task.description}
               placeholder={t('TaskContent.notes')}
               minH="80px"
-              saveEvery={10000}
               readOnly={!isMember}
-              onSave={handleDescriptionChange}
             />
           ) : (
             <EditorController

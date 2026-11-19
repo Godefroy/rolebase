@@ -2,9 +2,16 @@ import { FastifyInstance } from 'fastify'
 import type { IncomingMessage } from 'node:http'
 import type { Duplex } from 'node:stream'
 import { WebSocketServer, type RawData, type WebSocket } from 'ws'
-import { docs, setupWSConnection } from 'y-websocket/bin/utils'
+import { setupWSConnection } from 'y-websocket/bin/utils'
 import { captureError } from '../../utils/sentry'
 import { getRoomAccess } from './getRoomAccess'
+import {
+  acquireRoom,
+  attachConnection,
+  releaseRoom,
+  saveAllRooms,
+  type RoomState,
+} from './roomStore'
 import { parseRoom, type ParsedRoom } from './rooms'
 import { verifyCollabToken } from './verifyCollabToken'
 
@@ -12,7 +19,8 @@ import { verifyCollabToken } from './verifyCollabToken'
 // on /collab/<room>. Every connection must carry a Nhost access token
 // (`token` query param) and target a known room the user can read. Users who
 // can't update the entity behind the room get a read-only connection: their
-// document updates are dropped.
+// document updates are dropped. Rooms are loaded from and saved to their
+// entity by the server (see roomStore).
 
 const pathPrefix = '/collab/'
 
@@ -26,9 +34,14 @@ const messageRefreshToken = 100
 // WebSocket close codes
 const closeTokenExpired = 4401
 const closeForbidden = 4403
+// The client was synced with a previous instance of the room
+// (`instance` query param): it must reconnect with a fresh document
+const closeRoomReloaded = 4409
 
 // Tolerated clock skew when closing connections at token expiration
 const expirationGraceMs = 10_000
+
+const shutdownSaveTimeoutMs = 10_000
 
 interface ConnectionState {
   room: ParsedRoom
@@ -42,6 +55,15 @@ export function registerCollab(server: FastifyInstance) {
   server.server.on('upgrade', (request, socket, head) =>
     handleUpgrade(wss, request, socket, head)
   )
+  // Save rooms before stopping, within a limited time
+  for (const signal of ['SIGTERM', 'SIGINT'] as const) {
+    process.once(signal, () => {
+      const timeout = new Promise((resolve) =>
+        setTimeout(resolve, shutdownSaveTimeoutMs)
+      )
+      Promise.race([saveAllRooms(), timeout]).finally(() => process.exit(0))
+    })
+  }
 }
 
 async function handleUpgrade(
@@ -82,16 +104,34 @@ async function handleUpgrade(
     return rejectUpgrade(socket, 500, 'Internal Server Error')
   }
 
-  if (socket.destroyed) return
+  let roomState: RoomState
+  try {
+    roomState = await acquireRoom(room)
+  } catch (error) {
+    console.error('[collab] Room loading failed', error)
+    captureError(error as Error, { room: room.name })
+    return rejectUpgrade(socket, 500, 'Internal Server Error')
+  }
+
+  if (socket.destroyed) return releaseRoom(room.name)
+  // ws may reject the upgrade without calling back
+  let upgraded = false
+  socket.once('close', () => {
+    if (!upgraded) releaseRoom(room.name)
+  })
   wss.handleUpgrade(request, socket, head, (conn) => {
+    upgraded = true
+    const instance = url.searchParams.get('instance')
+    if (instance && instance !== roomState.instance) {
+      conn.close(closeRoomReloaded, 'Room reloaded')
+      return releaseRoom(room.name)
+    }
     const state: ConnectionState = { room, userId: tokenInfo.userId, readOnly }
     scheduleExpiration(conn, state, tokenInfo.expiresAt)
     conn.on('close', () => clearTimeout(state.expirationTimer))
     filterMessages(conn, state)
     setupWSConnection(conn, request, { docName: room.name })
-    // Registered after y-websocket's own close listener, which removes the
-    // connection from the room
-    conn.on('close', () => freeRoom(room.name))
+    attachConnection(roomState, conn, tokenInfo.userId)
   })
 }
 
@@ -107,16 +147,6 @@ function rejectUpgrade(socket: Duplex, status: number, message: string) {
   socket.end(
     `HTTP/1.1 ${status} ${message}\r\nConnection: close\r\nContent-Length: 0\r\n\r\n`
   )
-}
-
-// y-websocket keeps rooms in memory forever: destroy the doc (and its
-// awareness, destroyed with it) once its last connection is closed.
-// Documents are persisted by the webapp, which saves the editor content.
-function freeRoom(name: string) {
-  const doc = docs.get(name)
-  if (!doc || doc.conns.size > 0) return
-  docs.delete(name)
-  doc.destroy()
 }
 
 // Close the connection when the token expires, unless the client sends a

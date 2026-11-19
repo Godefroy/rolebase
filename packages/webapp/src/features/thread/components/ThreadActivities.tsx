@@ -26,7 +26,7 @@ import {
 import ThreadActivity from './ThreadActivity'
 import ThreadDaySeparator from './ThreadDaySeparator'
 
-export const activityMeetingNoteTmpId = 'tmp'
+const activityMeetingNoteTmpId = 'tmp'
 
 export default forwardRef(function ThreadActivities(
   styleProps: StyleProps,

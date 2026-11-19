@@ -4,7 +4,6 @@ import CollabEditor from '@/editor/components/CollabEditor'
 import useCircleParticipants from '@/participants/hooks/useCircleParticipants'
 import useExtraParticipants from '@/participants/hooks/useExtraParticipants'
 import ThreadStatusIcon from '@/thread/components/ThreadStatusIcon'
-import useCreateThreadMeetingNote from '@/thread/hooks/useCreateThreadMeetingNote'
 import { CloseIcon } from '@chakra-ui/icons'
 import {
   Alert,
@@ -18,11 +17,10 @@ import {
   ThreadActivityFragment,
   Thread_Status_Enum,
   ThreadsWithMeetingNoteSubscription,
-  useUpdateThreadActivityMutation,
 } from '@gql'
 import { Draggable } from '@hello-pangea/dnd'
 import { ThreadActivityDataMeetingNote } from '@rolebase/shared/model/thread_activity'
-import React, { useCallback, useContext, useMemo, useRef } from 'react'
+import React, { useContext, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import ThreadItem from '../../thread/components/ThreadItem'
 import { MeetingContext } from '../contexts/MeetingContext'
@@ -47,9 +45,6 @@ export default function MeetingStepContentThreadItem({
   const editorRef = useRef<EditorHandle>(null)
   const meetingState = useContext(MeetingContext)!
   const { meeting, editable, participants } = meetingState
-
-  const createThreadMeetingNote = useCreateThreadMeetingNote()
-  const [updateThreadActivity] = useUpdateThreadActivityMutation()
 
   // Privacy
   const isAllowed = !('notAllowed' in thread)
@@ -79,23 +74,6 @@ export default function MeetingStepContentThreadItem({
   )
 
   // Update notes
-  const handleNotesChange = useCallback(
-    (notes: string) => {
-      if (!meeting) return
-      if (!activity) {
-        createThreadMeetingNote(thread.id, meeting.id, notes)
-      } else {
-        updateThreadActivity({
-          variables: {
-            id: activity.id,
-            values: { data: { notes } },
-          },
-        })
-      }
-    },
-    [activity, meeting]
-  )
-
   if (!meeting) return null
 
   return (
@@ -161,11 +139,8 @@ export default function MeetingStepContentThreadItem({
                 <CollabEditor
                   ref={editorRef}
                   docId={`thread-${thread.id}-meeting-${meeting.id}`}
-                  value={activityData?.notes || ''}
                   placeholder={t('MeetingStepContent.notesPlaceholder')}
                   readOnly={!editable}
-                  saveEvery={10000}
-                  onSave={handleNotesChange}
                 />
               )}
             </>

@@ -14,7 +14,6 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react'
-import { useUpdateMeetingMutation } from '@gql'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ChevronDownIcon, ChevronUpIcon, MagicIcon } from 'src/icons'
@@ -32,26 +31,9 @@ export default function MeetingPanelEnded() {
 
   const { meeting, canEdit, isEnded } = useContext(MeetingContext)!
 
-  const [updateMeeting] = useUpdateMeetingMutation()
   const [editing, setEditing] = useState(false)
-  const [saving, setSaving] = useState(false)
   const [generating, setGenerating] = useState(false)
   const [generatedSummary, setGeneratedSummary] = useState<string | undefined>()
-
-  const handleSave = async () => {
-    if (!editorRef.current) return
-
-    const value = editorRef.current.getValue()
-    if (meeting?.summary === value) return
-    setSaving(true)
-
-    await updateMeeting({
-      variables: {
-        id: meeting!.id,
-        values: { summary: value },
-      },
-    })
-  }
 
   const handleGenerate = () => {
     if (!meeting) return
@@ -81,10 +63,11 @@ export default function MeetingPanelEnded() {
       .finally(() => setGenerating(false))
   }
 
+  // The summary is saved by the collab server while editing:
+  // start editing only when opening a meeting without summary
   useEffect(() => {
     setEditing(canEdit && !meeting?.summary)
-    setSaving(false)
-  }, [meeting, canEdit])
+  }, [meeting?.id, canEdit])
 
   if (!meeting || !isEnded || (!canEdit && !meeting.summary)) {
     return null
@@ -141,24 +124,13 @@ export default function MeetingPanelEnded() {
               <CollabEditor
                 ref={editorRef}
                 docId={`meeting-${meeting.id}-summary`}
-                value={meeting.summary}
                 autoFocus
                 minH="6em"
               />
 
               <HStack justifyContent="end">
-                {meeting.summary && (
-                  <Button
-                    variant="ghost"
-                    isDisabled={saving || generating}
-                    onClick={() => setEditing(false)}
-                  >
-                    {t('common.cancel')}
-                  </Button>
-                )}
                 <Button
                   leftIcon={<MagicIcon />}
-                  isDisabled={saving}
                   isLoading={generating}
                   onClick={handleGenerate}
                 >
@@ -166,11 +138,10 @@ export default function MeetingPanelEnded() {
                 </Button>
                 <Button
                   colorScheme="blue"
-                  isLoading={saving}
                   isDisabled={generating}
-                  onClick={handleSave}
+                  onClick={() => setEditing(false)}
                 >
-                  {t('common.save')}
+                  {t('common.close')}
                 </Button>
               </HStack>
             </>

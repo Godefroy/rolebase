@@ -15,6 +15,9 @@ declare module 'y-websocket/bin/utils' {
   // Rooms in memory, by name
   export const docs: Map<string, WSSharedDoc>
 
+  // Get a room, created if needed
+  export function getYDoc(name: string, gc?: boolean): WSSharedDoc
+
   export function setupWSConnection(
     conn: WebSocket,
     req: IncomingMessage,
