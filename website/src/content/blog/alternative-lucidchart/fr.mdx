@@ -2,6 +2,7 @@
 title: 'Alternative à Lucidchart pour un organigramme vivant'
 summary: "Rolebase remplace l'organigramme redessiné à la main plutôt que l'éditeur de schémas. Comparaison des fonctionnalités, des prix et de la migration."
 date: 2026-08-01
+update: 2026-11-19
 image: './lucidchart-homepage.png'
 similarPosts:
   - 'open-source-org-chart-tools'
@@ -14,7 +15,9 @@ takeaways:
   - "Rolebase est gratuit jusqu'à 5 membres actifs, avec un nombre illimité de membres inactifs dans l'organigramme, puis 5 € par utilisateur et par mois avec toutes les fonctionnalités."
 ---
 
-Réglons tout de suite le point évident. Si vous cherchez une alternative à Lucidchart pour dessiner des logigrammes, des schémas de base de données, des architectures réseau ou des parcours utilisateurs, Rolebase est une mauvaise réponse. Il n'a pas de canevas de dessin, et c'est un choix assumé plutôt qu'une case vide dans une roadmap.
+La bonne alternative gratuite à Lucidchart pour l'organigramme d'une entreprise dépend de ce qui se passe après le premier jet. Pour le dessiner gratuitement, draw.io (aussi appelé diagrams.net) ne demande aucun compte et ne limite rien. Pour le tenir à jour au fil des arrivées, des départs et des changements de rôle, Rolebase laisse chaque équipe entretenir ses propres rôles. Il est gratuit avec toutes les fonctionnalités jusqu'à 5 membres actifs, avec un nombre illimité de membres inactifs dans l'organigramme, et open source sous licence AGPL-3.0. Cet article donne aussi les limites des plans gratuits de Google Sheets, Canva, Miro, Creately et OrgPlease.
+
+Si vous cherchez une alternative à Lucidchart pour dessiner des logigrammes, des schémas de base de données, des architectures réseau ou des parcours utilisateurs, Rolebase est une mauvaise réponse. Il n'a pas de canevas de dessin, et c'est un choix assumé plutôt qu'une case vide dans une roadmap.
 
 Ce que Rolebase remplace est plus étroit et bien plus agaçant : l'organigramme que quelqu'un a dessiné à la main, que tout le monde a trouvé formidable pendant une semaine, et qui a vieilli dès la réorganisation suivante. Si c'est ce document qui vous pousse à chercher ailleurs, la suite est pour vous.
 
@@ -66,13 +69,21 @@ Quelqu'un pose une question à laquelle l'organigramme devrait répondre. Qui pe
 
 Nous avons développé ce basculement dans [l'organigramme dynamique](/fr/blog/dynamic-org-chart) et dans [comment créer l'organigramme de votre entreprise](/fr/blog/create-org-chart).
 
+## Comment tenir un organigramme à jour
+
+Un organigramme dessiné vieillit parce que chaque arrivée, chaque départ et chaque changement de rôle attend la seule personne qui détient le fichier. Le conseil habituel consiste à tenir la liste des salariés dans Google Sheets et à confier la mise à jour du dessin à un responsable après chaque changement. Ça fonctionne tant que les changements restent rares. Pendant une réorganisation, le responsable prend du retard, donc l'organigramme montre l'entreprise du trimestre précédent.
+
+Dans Rolebase, les personnes qui voient le changement font elles-mêmes la mise à jour. Chaque membre modifie ses propres rôles, chaque équipe fait évoluer sa partie de l'organigramme, et tout le monde voit les changements en temps réel, ce qui compte surtout pendant un atelier où la structure se remodèle en direct. Le propriétaire de l'organisation [choisit qui peut modifier l'organigramme](/fr/docs/governance-modes) parmi trois modes :
+
+- Libre laisse chaque membre modifier tout l'organigramme, ce qui convient à une première phase de conception.
+- Agile laisse le responsable de chaque rôle le modifier et y affecter des membres.
+- Strict fait passer chaque changement de structure par une proposition, que les personnes concernées votent avant qu'elle s'applique.
+
+L'historique enregistre chaque modification avec son auteur et sa date. Vous pouvez y annuler n'importe laquelle.
+
+La Scop EVEA fonctionne ainsi depuis qu'elle a quitté son PowerPoint. Son organigramme montre 140 personnes avec leurs compétences et leurs engagements. Ses équipes [tiennent l'organigramme de la coopérative à jour](/fr/client-cases/scop-evea) au fil de leur travail.
+
 ## Comment Rolebase aborde l'organigramme
-
-### Ce sont les équipes qui le tiennent à jour
-
-Dans Rolebase, chaque membre met à jour ses propres rôles, et chaque équipe fait évoluer sa propre structure. L'organigramme colle à la réalité parce que ceux qui connaissent la réalité sont ceux qui l'éditent. Les changements apparaissent en temps réel pour tout le monde, ce qui compte surtout pendant un atelier où la structure se remodèle en direct.
-
-La gouvernance protégée existe pour les organisations qui veulent un garde-fou, et elle réserve les modifications de structure aux responsables de cercle.
 
 ![Page d'accueil de Rolebase, la plateforme des équipes autonomes](../../../assets/screenshots/rolebase-homepage.png)
 
@@ -152,6 +163,18 @@ Ne recommander que nous-mêmes serait pratique et assez peu utile.
 
 **draw.io, aussi appelé diagrams.net**, est la réponse à « quel logiciel gratuit pour faire des schémas ». Il est publié sous licence Apache 2.0, s'ouvre sans compte, fonctionne hors ligne en application de bureau, et importe les fichiers Visio, Gliffy et Lucidchart, ce qui rend la migration presque gratuite. Il construit un schéma depuis un fichier CSV et propose des mises en page automatiques. Il produit un dessin, avec le même problème de vieillissement, et il ne coûte rien. Nous l'avons comparé à cinq autres options dans [notre sélection d'outils d'organigramme open source](/fr/blog/open-source-org-chart-tools).
 
+Nous avons vérifié les plans gratuits de Google Sheets, Canva, Miro, Creately et OrgPlease le 19 novembre 2026.
+
+**Google Sheets** dessine un organigramme à partir de deux colonnes, le rôle et son rattachement, avec Insertion, puis Graphique, puis Organigramme. Il est gratuit avec un compte Google. Le graphique se met à jour quand vous modifiez les cellules. Chaque case affiche seulement le nom du rôle. Ça convient à une petite équipe qui tient déjà sa liste dans un tableur. Vous pouvez [construire l'organigramme dans Google Sheets à partir d'un tableau de rôles](/fr/blog/org-chart-excel) en quelques minutes.
+
+**Canva** propose des modèles d'organigramme dans son plan gratuit. Vous les remplissez case par case. Le résultat rend bien sur une slide ou dans un livret d'accueil, mais chaque changement d'équipe oblige à reprendre le visuel.
+
+**Miro** a un widget d'organigramme sur tous ses plans, gratuit compris, qui construit le graphique depuis un fichier CSV. Le plan gratuit ne garde modifiables que vos trois tableaux les plus récents. Pour en garder davantage, le plan Starter coûte 8 $ par membre et par mois en facturation annuelle.
+
+**Creately** stocke des données RH derrière chaque forme et importe des fichiers CSV. Son plan gratuit plafonne chaque schéma à 45 formes, ce qui le réserve à une petite équipe.
+
+**OrgPlease** est un constructeur d'organigrammes dédié. Son plan gratuit couvre un administrateur et jusqu'à 25 salariés, avec import depuis un fichier CSV, Excel ou PowerPoint. Au-delà, Starter coûte 19 $ par mois pour 3 utilisateurs et 50 salariés.
+
 **Organimi** est un constructeur d'organigrammes dédié, orienté RH. Son tarif suit le nombre de personnes cartographiées plutôt que le nombre de sièges, à 13 $ par mois pour le plan Basic et 25 $ pour Premium à 150 personnes cartographiées, en facturation annuelle. Il importe du CSV et de l'Excel, se connecte à Active Directory, Google et Salesforce sur le plan Premium, et gère les organigrammes matriciels et de redevabilités. C'est un bon choix pour une hiérarchie classique alimentée par un SIRH.
 
 **Microsoft Visio** est l'équivalent Microsoft de Lucidchart, et il se défend pour les organisations déjà équipées chez Microsoft. C'est aussi un éditeur de schémas, donc le problème de vieillissement vous suit.
@@ -171,7 +194,7 @@ Si votre organisation pratique la gouvernance partagée et que vous comparez des
 Personne ne reconstruit une structure de 140 personnes en une soirée, et personne ne devrait essayer.
 
 1. Exportez ce que vous avez. Si votre organigramme Lucidchart a été construit depuis un import de données, le fichier CSV ou Excel d'origine reste le meilleur point de départ, alors repartez de lui plutôt que du dessin.
-2. Créez votre organisation dans Rolebase et commencez par les équipes, avant les personnes. Cinq à dix cercles suffisent en général pour un premier passage.
+2. Créez votre organisation dans Rolebase et commencez par les équipes, avant les personnes. Cinq à dix équipes suffisent en général pour un premier passage.
 3. Ajoutez les rôles qui existent déjà en pratique, avec une raison d'être et deux ou trois redevabilités chacun. Résistez à l'envie d'être exhaustif dès le premier jour.
 4. Invitez les personnes qui entretiennent la structure. Toutes les autres peuvent figurer en membres inactifs, gratuitement, jusqu'à ce qu'elles aient besoin d'un compte.
 5. Animez une réunion dans l'outil. C'est l'étape qui décide si l'organigramme reste vivant, parce qu'une structure dont personne ne se sert en réunion redevient un dessin.
@@ -179,6 +202,28 @@ Personne ne reconstruit une structure de 140 personnes en une soirée, et person
 Rolebase importe automatiquement les organisations venant de Holaspirit. Pour toute autre source, déposez votre fichier et notre équipe le récupère comme une demande plutôt que de vous laisser tout ressaisir.
 
 Le plan gratuit n'ayant pas de limite de durée, faire tourner les deux outils en parallèle pendant la transition ne coûte rien.
+
+## Questions fréquentes
+
+<FaqList>
+
+<FaqItem question="Existe-t-il une version gratuite de Lucidchart ?">
+
+Oui. Le plan gratuit de Lucidchart n'a pas de limite de durée et donne 3 documents modifiables, 75 formes par document et 100 modèles. L'organigramme d'une entreprise de 40 personnes consomme à lui seul le budget de formes.
+
+draw.io est un éditeur gratuit sans plafond, qui s'ouvre dans le navigateur sans compte. Rolebase, où les équipes tiennent elles-mêmes l'organigramme à jour, est gratuit avec toutes les fonctionnalités jusqu'à 5 membres actifs.
+
+</FaqItem>
+
+<FaqItem question="Quel est le meilleur logiciel d'organigramme gratuit ?">
+
+Tout dépend de la fréquence à laquelle votre organisation change. Si vous dessinez l'organigramme une fois, draw.io est gratuit et sans limite. Google Sheets en construit un à partir d'une liste de rôles pour une petite équipe. OrgPlease est gratuit jusqu'à 25 salariés pour une hiérarchie classique.
+
+Si l'organigramme doit rester juste après chaque changement, Rolebase est gratuit avec toutes les fonctionnalités pour 5 membres actifs. Les personnes qui n'ont pas besoin de compte figurent dans l'organigramme sans surcoût. Pour une vue complète, nous avons comparé [les plans gratuits de onze logiciels d'organigramme](/fr/blog/best-org-chart-software).
+
+</FaqItem>
+
+</FaqList>
 
 ## Conclusion
 

@@ -2,6 +2,7 @@
 title: 'Lucidchart Alternative for a Living Org Chart'
 summary: 'Rolebase replaces the org chart you redraw by hand rather than the diagram editor. Here is how it compares to Lucidchart on features, price and migration.'
 date: 2026-08-01
+update: 2026-11-19
 image: './lucidchart-homepage.png'
 similarPosts:
   - 'open-source-org-chart-tools'
@@ -14,7 +15,9 @@ takeaways:
   - 'Rolebase is free up to 5 active members, with unlimited inactive members in the org chart, then €5 per user per month with every feature included.'
 ---
 
-Let us settle the obvious point first. If you are looking for an alternative to Lucidchart to draw flowcharts, database schemas, network diagrams or user journeys, Rolebase is the wrong answer. It has no drawing canvas, and that is a deliberate choice rather than an empty box on a roadmap.
+The right free alternative to Lucidchart for a company org chart depends on what happens after the first draft. To draw the chart for free, draw.io (also called diagrams.net) asks for no account and caps nothing. To keep it current as people join, leave and change roles, Rolebase lets each team maintain its own roles. It is free with every feature up to 5 active members, with unlimited inactive members in the org chart, and open source under the AGPL-3.0 license. This article also gives the limits of the free plans from Google Sheets, Canva, Miro, Creately and OrgPlease.
+
+If you are looking for an alternative to Lucidchart to draw flowcharts, database schemas, network diagrams or user journeys, Rolebase is the wrong answer. It has no drawing canvas, and that is a deliberate choice rather than an empty box on a roadmap.
 
 What Rolebase replaces is narrower and far more annoying: the org chart someone drew by hand, that everyone praised for a week, and that went stale at the next reorganization. If that document is the reason you are shopping around, the rest of this article is for you.
 
@@ -66,13 +69,21 @@ Someone asks a question the chart should answer. Who can approve this expense? W
 
 We wrote more about this shift in [the dynamic org chart](/en/blog/dynamic-org-chart) and in [how to create an org chart for your company](/en/blog/create-org-chart).
 
+## How to keep an org chart up to date
+
+A drawn org chart goes stale because every arrival, departure and change of role waits for the one person who owns the file. The usual advice is to keep the employee list in Google Sheets and have one manager update the drawing after each change. That works while changes are rare. During a reorganization the manager falls behind, so the chart shows the company as it was last quarter.
+
+In Rolebase, the people who see the change make the update themselves. Each member edits their own roles, each team edits its own part of the org chart, and everyone sees the changes in real time, which matters most during a workshop where the structure is being reshaped live. The organization owner [chooses who can change the org chart](/en/docs/governance-modes) with one of three modes:
+
+- Free lets any member edit the whole org chart, which suits a first design phase.
+- Agile puts the lead of each role in charge of editing it and assigning its members.
+- Strict sends every structural change through a proposal, which the people involved vote on before it applies.
+
+The history panel records every change with its author and its date. You can undo any of them from there.
+
+Scop EVEA has worked this way since it left its PowerPoint. Its org chart shows 140 people with their skills and commitments. Its teams [keep the cooperative's org chart accurate](/en/client-cases/scop-evea) as their work changes.
+
 ## How Rolebase approaches the org chart
-
-### Every team maintains its own part
-
-In Rolebase, each member updates their own roles, and each team updates its own structure. The org chart reflects reality because the people who know the reality are the ones editing it. Changes appear in real time for everyone, which matters most during a workshop where the structure is being reshaped live.
-
-Protected governance is there for organizations that want a guardrail, and it restricts structural changes to circle leaders.
 
 ![Rolebase homepage showing the platform for autonomous teams](../../../assets/screenshots/rolebase-homepage.png)
 
@@ -152,6 +163,18 @@ Recommending only ourselves would be convenient and not very useful.
 
 **draw.io, also known as diagrams.net**, is the answer to "is there a free alternative to Lucidchart". It runs under the Apache 2.0 license, opens with no account, works offline as a desktop app, and imports Visio, Gliffy and Lucidchart files, which makes the migration nearly free. It builds a diagram from a CSV file and offers automatic layouts. It produces a drawing, with the same ageing problem, and it costs nothing. We compared it with five other options in [our roundup of open source org chart tools](/en/blog/open-source-org-chart-tools).
 
+We checked the free plans of Google Sheets, Canva, Miro, Creately and OrgPlease on 19 November 2026.
+
+**Google Sheets** draws an org chart from two columns, the role and the role it reports to, through Insert, then Chart, then Organizational chart. It is free with a Google account. The chart updates when you edit the cells. Each box shows the role name only. That suits a small team that already keeps its list in a spreadsheet. You can [build the chart in Google Sheets from a role table](/en/blog/org-chart-excel) in a few minutes.
+
+**Canva** includes org chart templates in its free plan. You fill them in box by box. The result looks polished on a slide or in an onboarding booklet, but every change of team means editing the design again.
+
+**Miro** has an org chart widget on every plan, free included, which builds the chart from a CSV file. The free plan keeps only your three most recent boards editable. To keep more boards editable, the Starter plan costs $8 per member per month, billed annually.
+
+**Creately** stores employee data behind each shape and imports CSV files. Its free plan caps each diagram at 45 shapes, which limits it to a small team.
+
+**OrgPlease** is a dedicated org chart builder. Its free plan covers one admin and up to 25 employees, with import from CSV, Excel or PowerPoint. Above that, Starter costs $19 per month for 3 users and 50 employees.
+
 **Organimi** is a dedicated org chart builder aimed at HR teams. Pricing scales with the number of people charted rather than with seats, at $13 per month for the Basic plan and $25 for Premium at 150 people charted, billed annually. It imports CSV and Excel, connects to Active Directory, Google and Salesforce on the Premium plan, and handles matrix and accountability charts. It is a good fit for a classic hierarchy fed by an HR system.
 
 **Microsoft Visio** is the answer to "what is the Microsoft equivalent of Lucidchart", and it makes sense for organizations already deep in the Microsoft stack. It is a diagram editor too, so the ageing problem follows you there.
@@ -171,7 +194,7 @@ If your organization practices shared governance and you are comparing tools in 
 Nobody rebuilds a 140-person structure in an evening, and nobody should try.
 
 1. Export what you have. A Lucidchart org chart built from a data import means the source CSV or Excel file is still the cleanest starting point, so go back to it rather than to the drawing.
-2. Create your organization in Rolebase and start with the teams, before the people. Five to ten circles is usually enough for a first pass.
+2. Create your organization in Rolebase and start with the teams, before the people. Five to ten teams are usually enough for a first pass.
 3. Add the roles that already exist in practice, with a purpose and two or three accountabilities each. Resist the urge to be exhaustive on day one.
 4. Invite the people who maintain the structure. Everyone else can appear as an inactive member, at no cost, until they need an account.
 5. Run one meeting inside the tool. This is the step that decides whether the org chart stays alive, because a structure nobody uses in a meeting goes back to being a drawing.
@@ -179,6 +202,28 @@ Nobody rebuilds a 140-person structure in an evening, and nobody should try.
 Rolebase imports organizations from Holaspirit automatically. For any other source, upload your file and our team picks it up as a request rather than leaving you to retype everything.
 
 Since the free plan has no time limit, running both tools side by side during the transition costs nothing.
+
+## Frequently asked questions
+
+<FaqList>
+
+<FaqItem question="Is there a free version of Lucidchart?">
+
+Yes. The free plan of Lucidchart has no time limit and gives you 3 editable documents, 75 shapes per document and 100 templates. An org chart for a 40-person company uses up the shape budget on its own.
+
+draw.io is a free editor with no cap that opens in a browser without an account. Rolebase, where the teams keep the org chart current themselves, is free with every feature up to 5 active members.
+
+</FaqItem>
+
+<FaqItem question="What is the best free org chart software?">
+
+It depends on how often your organization changes. If you draw the chart once, draw.io is free and uncapped. Google Sheets builds one from a role list for a small team. OrgPlease is free up to 25 employees for a classic hierarchy.
+
+If the chart has to stay true after every change, Rolebase is free with every feature for 5 active members. People who need no account appear in the chart at no cost. For the full picture, we compared [the free tiers of eleven org chart tools](/en/blog/best-org-chart-software).
+
+</FaqItem>
+
+</FaqList>
 
 ## Conclusion
 
