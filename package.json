@@ -20,7 +20,7 @@
     "@graphql-codegen/cli": "^8.0.0",
     "@graphql-codegen/client-preset": "^7.0.0",
     "@graphql-codegen/typescript-operations": "^7.0.1",
-    "@graphql-codegen/typescript-react-apollo": "6.0.0-alpha-20261110130114-66e7e67a38e78ab7516629f6d800b650e2fba942",
+    "@graphql-codegen/typescript-react-apollo": "6.0.1",
     "@typescript-eslint/eslint-plugin": "^8.72.2",
     "@typescript-eslint/parser": "^8.72.2",
     "eslint": "^8.57.1",
@@ -29,8 +29,8 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-storybook": "^0.6.13",
     "patch-package": "^8.0.0",
-    "prettier": "^3.9.10",
-    "turbo": "^2.11.10"
+    "prettier": "^3.10.1",
+    "turbo": "^2.11.11"
   },
   "overrides": {
     "@joshwooding/vite-plugin-react-docgen-typescript": "^0.9.1",
