@@ -25,7 +25,7 @@ import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { track } from 'src/analytics'
 import { nhost } from 'src/nhost'
-import { trpc } from 'src/trpc'
+import useCheckEmailDomain from '../hooks/useCheckEmailDomain'
 import * as yup from 'yup'
 import { clearOtpSession, readOtpSession, writeOtpSession } from '../otpSession'
 import useEmailBounce from '../hooks/useEmailBounce'
@@ -51,6 +51,7 @@ export default function OtpForm({ defaultEmail, onStepChange }: Props) {
     i18n: { language },
   } = useTranslation()
   const toast = useToast()
+  const checkEmailDomain = useCheckEmailDomain('auth_otp')
 
   // Resume the code step after a reload or in another tab, unless another
   // address is expected (invitation link)
@@ -118,17 +119,9 @@ export default function OtpForm({ defaultEmail, onStepChange }: Props) {
     try {
       setIsLoading(true)
 
-      // Catch addresses whose domain cannot receive emails before the code is
-      // lost in a bounce. The check never blocks sign-in: if it fails (backend
-      // unreachable or not deployed yet), the code is sent anyway.
-      // Only the domain leaves the browser for this check
-      const valid = await trpc.user.checkEmailDomain
-        .query({ domain: address.split('@')[1] ?? '' })
-        .then((result) => result.valid)
-        .catch(() => true)
-      if (!valid) {
-        track('auth_otp_domain_invalid')
-        setError('email', { message: t('OtpForm.invalidDomain') })
+      const domainError = await checkEmailDomain(address)
+      if (domainError) {
+        setError('email', { message: domainError })
         return
       }
 

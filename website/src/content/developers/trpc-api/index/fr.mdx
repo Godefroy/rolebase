@@ -92,29 +92,29 @@ La réponse est encapsulée sous la forme `{ "result": { "data": <valeur> } }`.
 
 Un appel en échec répond `{ "error": { "message": ..., "data": { "code": ..., "httpStatus": ... } } }`, et un client typé lève une `TRPCClientError` portant le même code. Ces codes sont identiques pour toutes les procédures : les pages de référence ne signalent donc que ce qui est propre à une procédure.
 
-| Code | Statut | Signification |
-| --- | --- | --- |
-| `UNAUTHORIZED` | 401 | Clé API absente ou invalide, ou procédure réservée à un utilisateur connecté. |
-| `FORBIDDEN` | 403 | Le porteur de la clé n’a pas le rôle ou la permission requise sur cette entité, ou l’organisation est archivée. |
-| `NOT_FOUND` | 404 | L’identifiant n’existe pas, ou n’est pas visible par le porteur de la clé. |
-| `BAD_REQUEST` | 400 | Input refusé par le schéma de la procédure, ou état qui interdit l’action. |
-| `INTERNAL_SERVER_ERROR` | 500 | Échec inattendu, y compris un appel refusé par un service externe. |
+| Code                    | Statut | Signification                                                                                                   |
+| ----------------------- | ------ | --------------------------------------------------------------------------------------------------------------- |
+| `UNAUTHORIZED`          | 401    | Clé API absente ou invalide, ou procédure réservée à un utilisateur connecté.                                   |
+| `FORBIDDEN`             | 403    | Le porteur de la clé n’a pas le rôle ou la permission requise sur cette entité, ou l’organisation est archivée. |
+| `NOT_FOUND`             | 404    | L’identifiant n’existe pas, ou n’est pas visible par le porteur de la clé.                                      |
+| `BAD_REQUEST`           | 400    | Input refusé par le schéma de la procédure, ou état qui interdit l’action.                                      |
+| `INTERNAL_SERVER_ERROR` | 500    | Échec inattendu, y compris un appel refusé par un service externe.                                              |
 
 ## Procédures
 
 Les procédures sont regroupées en routeurs, et un appel combine le nom du routeur et celui de la procédure : `org.createOrg`, `circle.archiveCircle`.
 
-| Routeur                                                                     | Procédures                                                        |
-| --------------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| [Organisations](/fr/developers/trpc-api/organizations) (`org`)               | Créer, exporter, importer, partager et archiver une organisation   |
-| [Membres](/fr/developers/trpc-api/members) (`member`)                       | Invitations, rôles d’accès, archivage et restauration             |
-| [Rôles](/fr/developers/trpc-api/roles) (`circle`, `proposal`)                | Archiver un rôle avec ses descendants, résoudre une proposition    |
-| [Réunions](/fr/developers/trpc-api/meetings) (`meeting`)                    | Token d’accès aux réunions vidéo                                  |
-| [IA et recherche](/fr/developers/trpc-api/ai-search) (`ai`, `search`)        | Brouillons de rôle, résumés de réunion, clé de recherche restreinte |
-| [Applications de calendrier](/fr/developers/trpc-api/calendar-apps) (`apps`) | Lister et choisir les calendriers, déconnecter une application     |
-| [Abonnements](/fr/developers/trpc-api/subscriptions) (`orgSubscription`)     | Facturation Stripe, factures et moyens de paiement                |
-| [Utilisateurs](/fr/developers/trpc-api/users) (`user`)                      | Vérifier qu’une adresse reçoit le code de connexion, supprimer son compte |
-| [Internes](/fr/developers/trpc-api/internal) (`cron`, `trigger`, ...)        | Tâches planifiées et webhooks, listés pour référence               |
+| Routeur                                                                      | Procédures                                                                |
+| ---------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| [Organisations](/fr/developers/trpc-api/organizations) (`org`)               | Créer, exporter, importer, partager et archiver une organisation          |
+| [Membres](/fr/developers/trpc-api/members) (`member`)                        | Invitations, demandes d’accès, rôles d’accès, archivage et restauration   |
+| [Rôles](/fr/developers/trpc-api/roles) (`circle`, `proposal`)                | Archiver un rôle avec ses descendants, résoudre une proposition           |
+| [Réunions](/fr/developers/trpc-api/meetings) (`meeting`)                     | Token d’accès aux réunions vidéo                                          |
+| [IA et recherche](/fr/developers/trpc-api/ai-search) (`ai`, `search`)        | Brouillons de rôle, résumés de réunion, clé de recherche restreinte       |
+| [Applications de calendrier](/fr/developers/trpc-api/calendar-apps) (`apps`) | Lister et choisir les calendriers, déconnecter une application            |
+| [Abonnements](/fr/developers/trpc-api/subscriptions) (`orgSubscription`)     | Facturation Stripe, factures et moyens de paiement                        |
+| [Utilisateurs](/fr/developers/trpc-api/users) (`user`)                       | Vérifier qu’une adresse reçoit le code de connexion, supprimer son compte |
+| [Internes](/fr/developers/trpc-api/internal) (`cron`, `trigger`, ...)        | Tâches planifiées et webhooks, listés pour référence                      |
 
 ## Étapes suivantes
 

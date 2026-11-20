@@ -91,29 +91,29 @@ The response is wrapped as `{ "result": { "data": <value> } }`.
 
 A failed call answers with `{ "error": { "message": ..., "data": { "code": ..., "httpStatus": ... } } }`, and a typed client throws a `TRPCClientError` carrying the same code. The codes are the same across every procedure, so the reference pages only mention what is specific to a procedure.
 
-| Code | Status | Meaning |
-| --- | --- | --- |
-| `UNAUTHORIZED` | 401 | Missing or invalid API key, or a procedure that needs a signed-in user. |
-| `FORBIDDEN` | 403 | The key holder lacks the required role or permission on that entity, or the organization is archived. |
-| `NOT_FOUND` | 404 | The id does not exist, or is not visible to the key holder. |
-| `BAD_REQUEST` | 400 | Input rejected by the procedure schema, or a state that forbids the action. |
-| `INTERNAL_SERVER_ERROR` | 500 | Unexpected failure, including a rejected call to an external service. |
+| Code                    | Status | Meaning                                                                                               |
+| ----------------------- | ------ | ----------------------------------------------------------------------------------------------------- |
+| `UNAUTHORIZED`          | 401    | Missing or invalid API key, or a procedure that needs a signed-in user.                               |
+| `FORBIDDEN`             | 403    | The key holder lacks the required role or permission on that entity, or the organization is archived. |
+| `NOT_FOUND`             | 404    | The id does not exist, or is not visible to the key holder.                                           |
+| `BAD_REQUEST`           | 400    | Input rejected by the procedure schema, or a state that forbids the action.                           |
+| `INTERNAL_SERVER_ERROR` | 500    | Unexpected failure, including a rejected call to an external service.                                 |
 
 ## Procedures
 
 Procedures are grouped in routers, and a call combines the router name and the procedure name: `org.createOrg`, `circle.archiveCircle`.
 
-| Router                                                              | Procedures                                                       |
-| ------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| [Organizations](/en/developers/trpc-api/organizations) (`org`)       | Create, export, import, share and archive an organization        |
-| [Members](/en/developers/trpc-api/members) (`member`)                | Invitations, access roles, archive and restore                   |
-| [Roles](/en/developers/trpc-api/roles) (`circle`, `proposal`)         | Archive a role with its descendants, resolve a proposal          |
-| [Meetings](/en/developers/trpc-api/meetings) (`meeting`)              | Video meeting access token                                      |
-| [AI and search](/en/developers/trpc-api/ai-search) (`ai`, `search`)   | Role drafts, meeting summaries, scoped search key                |
-| [Calendar apps](/en/developers/trpc-api/calendar-apps) (`apps`)       | List and select calendars, disconnect an app                     |
-| [Subscriptions](/en/developers/trpc-api/subscriptions) (`orgSubscription`) | Stripe billing, invoices and payment methods               |
-| [Users](/en/developers/trpc-api/users) (`user`)                              | Check that an email address receives the sign-in code, delete your account |
-| [Internal](/en/developers/trpc-api/internal) (`cron`, `trigger`, ...) | Scheduled jobs and webhooks, listed for reference                |
+| Router                                                                     | Procedures                                                                 |
+| -------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| [Organizations](/en/developers/trpc-api/organizations) (`org`)             | Create, export, import, share and archive an organization                  |
+| [Members](/en/developers/trpc-api/members) (`member`)                      | Invitations, access requests, access roles, archive and restore            |
+| [Roles](/en/developers/trpc-api/roles) (`circle`, `proposal`)              | Archive a role with its descendants, resolve a proposal                    |
+| [Meetings](/en/developers/trpc-api/meetings) (`meeting`)                   | Video meeting access token                                                 |
+| [AI and search](/en/developers/trpc-api/ai-search) (`ai`, `search`)        | Role drafts, meeting summaries, scoped search key                          |
+| [Calendar apps](/en/developers/trpc-api/calendar-apps) (`apps`)            | List and select calendars, disconnect an app                               |
+| [Subscriptions](/en/developers/trpc-api/subscriptions) (`orgSubscription`) | Stripe billing, invoices and payment methods                               |
+| [Users](/en/developers/trpc-api/users) (`user`)                            | Check that an email address receives the sign-in code, delete your account |
+| [Internal](/en/developers/trpc-api/internal) (`cron`, `trigger`, ...)      | Scheduled jobs and webhooks, listed for reference                          |
 
 ## Next steps
 

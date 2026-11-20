@@ -1,3 +1,4 @@
+import { isDisposableEmailDomain } from 'disposable-email-domains-js'
 import { Resolver } from 'node:dns/promises'
 import * as yup from 'yup'
 import { publicProcedure } from '../../trpc'
@@ -34,12 +35,15 @@ async function lookupDomain(domain: string): Promise<boolean> {
 }
 
 // Tells whether an email domain can receive emails, before sending a sign-in
-// code to it
+// code to it. Disposable inboxes are refused: `disposable` tells them apart.
 export default publicProcedure
   .input(yup.object().shape({ domain: yup.string().max(253).required() }))
-  .query(async (opts): Promise<{ valid: boolean }> => {
+  .query(async (opts): Promise<{ valid: boolean; disposable?: boolean }> => {
     const domain = opts.input.domain.trim().toLowerCase()
     if (!DOMAIN_REGEX.test(domain)) return { valid: false }
+    if (isDisposableEmailDomain(domain)) {
+      return { valid: false, disposable: true }
+    }
 
     const cached = cache.get(domain)
     if (cached && cached.expiresAt > Date.now()) return { valid: cached.valid }

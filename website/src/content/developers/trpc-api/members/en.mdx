@@ -1,6 +1,6 @@
 ---
 title: 'Members'
-description: 'tRPC procedures of the member router: invite a member, accept an invitation, change an access role, archive and restore.'
+description: 'tRPC procedures of the member router: invite a member, accept an invitation, request access to an organization, change an access role, archive and restore.'
 order: 2
 ---
 
@@ -12,11 +12,11 @@ An access role is `Readonly`, `Member`, `Admin` or `Owner`, and see [Permissions
 
 Sends an invitation email to an existing member, for an Admin or Owner. Inviting with the `Owner` role, or resending an `Owner` invitation, requires Owner. Calling it again on an already invited member resends the email with a fresh token.
 
-| Input | Type | Description |
-| --- | --- | --- |
-| `memberId` | `uuid` | Member to invite, not yet linked to a user. Required. |
-| `email` | `String` | Address the invitation is sent to. Required. |
-| `role` | `String` | Access role granted on acceptance. Required. |
+| Input      | Type     | Description                                           |
+| ---------- | -------- | ----------------------------------------------------- |
+| `memberId` | `uuid`   | Member to invite, not yet linked to a user. Required. |
+| `email`    | `String` | Address the invitation is sent to. Required.          |
+| `role`     | `String` | Access role granted on acceptance. Required.          |
 
 The member row keeps the invitation email and date, from which the invitation token is derived. A member already linked to a user answers `CONFLICT`, and the call is refused when the subscription has no seat left for one more member. It returns nothing.
 
@@ -32,10 +32,10 @@ await trpc.member.inviteMember.mutate({
 
 Reads what an invitation link needs to show before the recipient signs in, so this procedure takes no authentication.
 
-| Input | Type | Description |
-| --- | --- | --- |
-| `memberId` | `uuid` | Invited member. Required. |
-| `token` | `String` | Token carried by the invitation link. Required. |
+| Input      | Type     | Description                                     |
+| ---------- | -------- | ----------------------------------------------- |
+| `memberId` | `uuid`   | Invited member. Required.                       |
+| `token`    | `String` | Token carried by the invitation link. Required. |
 
 It returns `{ orgName, email }`. A member with no pending invitation answers `NOT_FOUND`, and a token that does not match answers `UNAUTHORIZED`.
 
@@ -45,14 +45,51 @@ Lists the invitations waiting for the signed-in user, matched on their email add
 
 It returns an array of `{ memberId, token, orgId, orgName }`, ready to pass to `member.acceptMemberInvitation`. An unverified email address returns an empty array, since sign-up alone proves nothing about who owns the address.
 
+## Query `member.getColleagueOrgs`
+
+Lists the active organizations where accounts with the same company email domain as the signed-in user are members, and the user is not. It takes no input and lets the onboarding offer to request access to the team's organization instead of creating a new one.
+
+It returns an array of at most 3 `{ orgId, orgName, requestStatus }`, the organizations with the most members first. `requestStatus` is the status of the user's last access request to the organization (`Pending`, `Accepted` or `Refused`), or `null`. An unverified email address or a shared domain returns an empty array: free mailbox, alias or disposable inbox (Gmail, Firefox Relay, Yopmail and the other domains of the disposable-email-domains list...), student subdomain, French education academy (`ac-*.fr`) or `.edu` domain.
+
+## Mutation `member.requestOrgAccess`
+
+Asks to join one of the organizations returned by `member.getColleagueOrgs`. Its Admins and Owners are notified by email.
+
+| Input   | Type   | Description                     |
+| ------- | ------ | ------------------------------- |
+| `orgId` | `uuid` | Organization to join. Required. |
+
+An organization that is not a colleagues' organization of the user answers `FORBIDDEN`, and a request already pending answers `CONFLICT`. It returns nothing.
+
+## Query `member.getOrgAccessRequests`
+
+Lists the pending access requests of an organization, for its Admins and Owners.
+
+| Input   | Type   | Description                    |
+| ------- | ------ | ------------------------------ |
+| `orgId` | `uuid` | Target organization. Required. |
+
+It returns an array of `{ id, createdAt, name, email, avatarUrl }`, the oldest first.
+
+## Mutation `member.decideOrgAccessRequest`
+
+Accepts or refuses an access request, for an Admin or Owner of the organization. The requester is told by email either way.
+
+| Input       | Type      | Description                                    |
+| ----------- | --------- | ---------------------------------------------- |
+| `requestId` | `uuid`    | Access request. Required.                      |
+| `accept`    | `Boolean` | `true` to accept, `false` to refuse. Required. |
+
+Accepting adds the requester as a member right away, with the `Member` access role, and updates the Stripe subscription seat count when the organization has an active subscription. A subscription without a free seat blocks the call. A request already decided answers `NOT_FOUND`, or `CONFLICT` when another admin decided it at the same time. It returns nothing.
+
 ## Mutation `member.acceptMemberInvitation`
 
 Links the invited member to the signed-in user and applies the invited access role.
 
-| Input | Type | Description |
-| --- | --- | --- |
-| `memberId` | `uuid` | Invited member. Required. |
-| `token` | `String` | Token carried by the invitation link. Required. |
+| Input      | Type     | Description                                     |
+| ---------- | -------- | ----------------------------------------------- |
+| `memberId` | `uuid`   | Invited member. Required.                       |
+| `token`    | `String` | Token carried by the invitation link. Required. |
 
 The invitation is consumed, and the Stripe subscription seat count is updated when the organization has an active subscription. When this is the first organization of the user, `invitation` is recorded as their onboarding source. A user who already belongs to the organization answers `CONFLICT`, and a subscription without a free seat blocks the call. It returns nothing.
 
@@ -60,10 +97,10 @@ The invitation is consumed, and the Stripe subscription seat count is updated wh
 
 Changes or removes the access role of a member. An Admin can act on any member, while changing the role of an Owner or granting the `Owner` role requires Owner, and the last active Owner cannot be demoted. Members cannot change their own role, which answers `FORBIDDEN`.
 
-| Input | Type | Description |
-| --- | --- | --- |
-| `memberId` | `uuid` | Target member. Required. |
-| `role` | `String` | New access role, or an empty value to revoke the access while keeping the member in the org chart. Required. |
+| Input      | Type     | Description                                                                                                  |
+| ---------- | -------- | ------------------------------------------------------------------------------------------------------------ |
+| `memberId` | `uuid`   | Target member. Required.                                                                                     |
+| `role`     | `String` | New access role, or an empty value to revoke the access while keeping the member in the org chart. Required. |
 
 A member who was never invited answers `NOT_FOUND`. It returns nothing.
 

@@ -1,0 +1,13 @@
+table:
+  name: org_access_request
+  schema: public
+object_relationships:
+  - name: decidedByMember
+    using:
+      foreign_key_constraint_on: decidedByMemberId
+  - name: org
+    using:
+      foreign_key_constraint_on: orgId
+  - name: user
+    using:
+      foreign_key_constraint_on: userId

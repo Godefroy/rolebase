@@ -61,7 +61,7 @@ function resolveChoices(choices: string[], other: string): string | undefined {
 // choices. On finish it creates the org (with profile stats) and redirects
 // into it, triggering the org-setup step (model + seeding). The display name
 // is collected before, by UserNamePage (AppRoute).
-export default function useOnboardingForm() {
+export default function useOnboardingForm(prefillFromDomain = true) {
   const { t } = useTranslation()
   const { user } = useAuth()
   const navigate = useNavigate()
@@ -79,11 +79,12 @@ export default function useOnboardingForm() {
   const needsSource = needs.source
 
   // Prefill the org name from a company email's domain, else from the first
-  // name, so the first step can be passed in one click
+  // name, so the first step can be passed in one click. The domain is skipped
+  // when colleagues already have an org: it would suggest a duplicate.
   const [defaultOrgName] = useState(() => {
     const firstName = user?.displayName?.trim().split(' ')[0]
     return (
-      getNameFromEmailDomain(user?.email) ||
+      (prefillFromDomain && getNameFromEmailDomain(user?.email)) ||
       (firstName
         ? t('Onboarding.orgName.defaultName', { name: firstName })
         : '')

@@ -435,6 +435,9 @@ const ERASE_ACCOUNT = gql(`
     delete_api_key(where: { userId: { _eq: $userId } }) {
       affected_rows
     }
+    delete_org_access_request(where: { userId: { _eq: $userId } }) {
+      affected_rows
+    }
     deleteAuthRefreshTokens(where: { userId: { _eq: $userId } }) {
       affected_rows
     }

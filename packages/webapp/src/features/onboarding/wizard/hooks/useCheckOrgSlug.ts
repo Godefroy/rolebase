@@ -38,7 +38,7 @@ export default function useCheckOrgSlug(
         if (!(await isAvailable(variant))) continue
         if (formMethods.getValues('slug') !== slug) return true
         formMethods.setValue('slug', variant)
-        track('onboarding_slug_conflict', { step: 'prefill' })
+        track('onboarding_slug_suggested')
         return true
       }
     }

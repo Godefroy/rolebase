@@ -509,6 +509,7 @@
     "resent": "Nouveau code envoyé à {{email}}. Il remplace le précédent.",
     "changeEmail": "Modifier l'adresse",
     "invalidDomain": "Ce domaine ne reçoit pas d'emails. Vérifiez l'adresse.",
+    "disposableDomain": "Les adresses email temporaires ne sont pas acceptées. Utilisez votre adresse professionnelle ou personnelle.",
     "bounced": "Le code n'a pas pu être distribué à {{email}}. Vérifiez l'adresse ou utilisez-en une autre.",
     "invalidCode": "Code incorrect ou expiré. Vérifiez le dernier email reçu, ou demandez un nouveau code."
   },
@@ -2002,6 +2003,16 @@
         "event": "Événement ou conférence",
         "other": "Autre"
       }
+    },
+    "join": {
+      "heading": "Vos collègues utilisent déjà Rolebase",
+      "description": "Des personnes avec une adresse @{{domain}} sont membres de ces organisations. Demandez à rejoindre l'une d'elles : ses administrateurs reçoivent votre demande et peuvent l'accepter.",
+      "request": "Demander à rejoindre",
+      "pending": "Demande envoyée",
+      "refused": "Demande non acceptée",
+      "pendingHelp": "Vous recevrez un email dès qu'un administrateur aura répondu, et vous retrouverez alors l'organisation ici.",
+      "createHelp": "Votre équipe n'est pas dans cette liste ?",
+      "create": "Créer une nouvelle organisation"
     }
   },
   "Deletion": {
@@ -2110,5 +2121,13 @@
     "info": "Votre compte et vos données personnelles ont été effacés. Merci d'avoir utilisé Rolebase.",
     "website": "Aller sur rolebase.io",
     "signup": "Créer un nouveau compte"
+  },
+  "OrgAccessRequests": {
+    "heading": "Demandes d'accès",
+    "accept": "Accepter",
+    "refuse": "Refuser",
+    "toastAccepted": "{{name}} a rejoint l'organisation",
+    "toastRefused": "Demande de {{name}} refusée",
+    "seatsLimit": "Votre abonnement n'a plus de siège disponible pour un nouveau membre."
   }
 }

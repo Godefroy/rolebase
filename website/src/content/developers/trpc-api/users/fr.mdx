@@ -14,7 +14,7 @@ Indique si un domaine peut recevoir des emails, en cherchant ses enregistrements
 | --- | --- | --- |
 | `domain` | `String` | Domaine à vérifier, par exemple `example.com`. Requis. |
 
-Elle renvoie `{ valid }`. `valid` vaut `false` quand le domaine est mal formé, inconnu, sans enregistrement MX, ou quand il déclare n’accepter aucun email. Une autre erreur DNS, comme une recherche qui dépasse deux secondes, ne met pas le domaine en cause : la réponse vaut alors `true`, pour que la connexion reste toujours possible. Le backend garde chaque réponse en mémoire pendant une heure.
+Elle renvoie `{ valid, disposable }`. `valid` vaut `false` quand le domaine est mal formé, inconnu, sans enregistrement MX, quand il déclare n’accepter aucun email, ou quand c’est une boîte jetable (Yopmail, Mailinator...) : `disposable` vaut alors `true` et l’application refuse l’adresse. Une autre erreur DNS, comme une recherche qui dépasse deux secondes, ne met pas le domaine en cause : la réponse vaut alors `true`, pour que la connexion reste toujours possible. Le backend garde chaque réponse en mémoire pendant une heure.
 
 ```typescript
 const { valid } = await trpc.user.checkEmailDomain.query({

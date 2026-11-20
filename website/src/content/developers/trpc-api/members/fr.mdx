@@ -1,6 +1,6 @@
 ---
 title: 'Membres'
-description: 'Procédures tRPC du routeur member : inviter un membre, accepter une invitation, changer un rôle d’accès, archiver et restaurer.'
+description: 'Procédures tRPC du routeur member : inviter un membre, accepter une invitation, demander l’accès à une organisation, changer un rôle d’accès, archiver et restaurer.'
 order: 2
 ---
 
@@ -12,11 +12,11 @@ Un rôle d’accès vaut `Readonly`, `Member`, `Admin` ou `Owner` ; voir [Permis
 
 Envoie un email d’invitation à un membre existant, pour un Admin ou un Owner. Inviter avec le rôle `Owner`, ou renvoyer une invitation `Owner`, demande le rôle Owner. Un nouvel appel sur un membre déjà invité renvoie l’email avec un token frais.
 
-| Input | Type | Description |
-| --- | --- | --- |
-| `memberId` | `uuid` | Membre à inviter, pas encore rattaché à un utilisateur. Requis. |
-| `email` | `String` | Adresse à laquelle l’invitation est envoyée. Requis. |
-| `role` | `String` | Rôle d’accès accordé à l’acceptation. Requis. |
+| Input      | Type     | Description                                                     |
+| ---------- | -------- | --------------------------------------------------------------- |
+| `memberId` | `uuid`   | Membre à inviter, pas encore rattaché à un utilisateur. Requis. |
+| `email`    | `String` | Adresse à laquelle l’invitation est envoyée. Requis.            |
+| `role`     | `String` | Rôle d’accès accordé à l’acceptation. Requis.                   |
 
 La ligne membre conserve l’email et la date d’invitation, dont le token d’invitation est dérivé. Un membre déjà rattaché à un utilisateur répond `CONFLICT`, et l’appel est refusé quand l’abonnement n’a plus de siège disponible pour un membre de plus. La procédure ne renvoie rien.
 
@@ -32,10 +32,10 @@ await trpc.member.inviteMember.mutate({
 
 Lit ce qu’un lien d’invitation doit afficher avant que le destinataire se connecte : cette procédure ne demande donc aucune authentification.
 
-| Input | Type | Description |
-| --- | --- | --- |
-| `memberId` | `uuid` | Membre invité. Requis. |
-| `token` | `String` | Token porté par le lien d’invitation. Requis. |
+| Input      | Type     | Description                                   |
+| ---------- | -------- | --------------------------------------------- |
+| `memberId` | `uuid`   | Membre invité. Requis.                        |
+| `token`    | `String` | Token porté par le lien d’invitation. Requis. |
 
 Elle renvoie `{ orgName, email }`. Un membre sans invitation en attente répond `NOT_FOUND`, et un token qui ne correspond pas répond `UNAUTHORIZED`.
 
@@ -45,14 +45,51 @@ Liste les invitations en attente pour l’utilisateur connecté, rapprochées de
 
 Elle renvoie un tableau de `{ memberId, token, orgId, orgName }`, prêt à passer à `member.acceptMemberInvitation`. Une adresse email non vérifiée renvoie un tableau vide, l’inscription seule ne prouvant rien sur le propriétaire de l’adresse.
 
+## Requête `member.getColleagueOrgs`
+
+Liste les organisations actives dont des comptes ayant le même domaine email professionnel que l’utilisateur connecté sont membres, sans qu’il le soit lui-même. Elle ne prend aucun input et permet à l’onboarding de proposer une demande d’accès à l’organisation de l’équipe plutôt que d’en créer une nouvelle.
+
+Elle renvoie un tableau d’au plus 3 `{ orgId, orgName, requestStatus }`, les organisations comptant le plus de membres en premier. `requestStatus` donne le statut de la dernière demande d’accès de l’utilisateur à l’organisation (`Pending`, `Accepted` ou `Refused`), ou `null`. Une adresse email non vérifiée ou un domaine partagé renvoie un tableau vide : messagerie gratuite, alias ou boîte jetable (Gmail, Firefox Relay, Yopmail et les autres domaines de la liste disposable-email-domains...), sous-domaine étudiant, académie (`ac-*.fr`) ou domaine `.edu`.
+
+## Mutation `member.requestOrgAccess`
+
+Demande à rejoindre l’une des organisations renvoyées par `member.getColleagueOrgs`. Ses Admins et Owners sont prévenus par email.
+
+| Input   | Type   | Description                       |
+| ------- | ------ | --------------------------------- |
+| `orgId` | `uuid` | Organisation à rejoindre. Requis. |
+
+Une organisation qui n’est pas une organisation de collègues de l’utilisateur répond `FORBIDDEN`, et une demande déjà en attente répond `CONFLICT`. La procédure ne renvoie rien.
+
+## Requête `member.getOrgAccessRequests`
+
+Liste les demandes d’accès en attente d’une organisation, pour ses Admins et Owners.
+
+| Input   | Type   | Description                 |
+| ------- | ------ | --------------------------- |
+| `orgId` | `uuid` | Organisation cible. Requis. |
+
+Elle renvoie un tableau de `{ id, createdAt, name, email, avatarUrl }`, les plus anciennes en premier.
+
+## Mutation `member.decideOrgAccessRequest`
+
+Accepte ou refuse une demande d’accès, pour un Admin ou Owner de l’organisation. Le demandeur est prévenu par email dans les deux cas.
+
+| Input       | Type      | Description                                         |
+| ----------- | --------- | --------------------------------------------------- |
+| `requestId` | `uuid`    | Demande d’accès. Requis.                            |
+| `accept`    | `Boolean` | `true` pour accepter, `false` pour refuser. Requis. |
+
+Accepter ajoute tout de suite le demandeur comme membre, avec le rôle d’accès `Member`, et met à jour le nombre de sièges de l’abonnement Stripe quand l’organisation a un abonnement actif. Un abonnement sans siège libre bloque l’appel. Une demande déjà traitée répond `NOT_FOUND`, ou `CONFLICT` quand un autre admin l’a traitée au même moment. La procédure ne renvoie rien.
+
 ## Mutation `member.acceptMemberInvitation`
 
 Rattache le membre invité à l’utilisateur connecté et applique le rôle d’accès prévu.
 
-| Input | Type | Description |
-| --- | --- | --- |
-| `memberId` | `uuid` | Membre invité. Requis. |
-| `token` | `String` | Token porté par le lien d’invitation. Requis. |
+| Input      | Type     | Description                                   |
+| ---------- | -------- | --------------------------------------------- |
+| `memberId` | `uuid`   | Membre invité. Requis.                        |
+| `token`    | `String` | Token porté par le lien d’invitation. Requis. |
 
 L’invitation est consommée, et le nombre de sièges de l’abonnement Stripe est mis à jour quand l’organisation a un abonnement actif. Quand il s’agit de la première organisation de l’utilisateur, `invitation` est enregistré comme source d’onboarding. Un utilisateur déjà membre de l’organisation répond `CONFLICT`, et un abonnement sans siège libre bloque l’appel. La procédure ne renvoie rien.
 
@@ -60,10 +97,10 @@ L’invitation est consommée, et le nombre de sièges de l’abonnement Stripe 
 
 Change ou retire le rôle d’accès d’un membre. Un Admin agit sur n’importe quel membre, changer le rôle d’un Owner ou attribuer le rôle `Owner` demande le rôle Owner, et le dernier Owner actif ne peut pas être rétrogradé. Un membre ne peut pas changer son propre rôle, ce qui répond `FORBIDDEN`.
 
-| Input | Type | Description |
-| --- | --- | --- |
-| `memberId` | `uuid` | Membre visé. Requis. |
-| `role` | `String` | Nouveau rôle d’accès, ou valeur vide pour révoquer l’accès en gardant le membre dans l’organigramme. Requis. |
+| Input      | Type     | Description                                                                                                  |
+| ---------- | -------- | ------------------------------------------------------------------------------------------------------------ |
+| `memberId` | `uuid`   | Membre visé. Requis.                                                                                         |
+| `role`     | `String` | Nouveau rôle d’accès, ou valeur vide pour révoquer l’accès en gardant le membre dans l’organigramme. Requis. |
 
 Un membre jamais invité répond `NOT_FOUND`. La procédure ne renvoie rien.
 

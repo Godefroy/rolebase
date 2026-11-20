@@ -4,6 +4,7 @@ import {
   Button,
   Checkbox,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   Heading,
   Input,
@@ -27,6 +28,7 @@ import { track } from 'src/analytics'
 import { nhost } from 'src/nhost'
 
 import * as yup from 'yup'
+import useCheckEmailDomain from '../hooks/useCheckEmailDomain'
 import { AuthStep } from '../pages/AuthPage'
 
 interface Props {
@@ -50,6 +52,7 @@ export default function SignupForm({ defaultEmail, onStepChange }: Props) {
   const navigate = useNavigate()
   const location = useLocation()
   const toast = useToast()
+  const checkEmailDomain = useCheckEmailDomain('auth_signup')
 
   const [isLoading, setIsLoading] = useState(false)
   const isInvitation = location.pathname.includes('/invitation')
@@ -62,6 +65,11 @@ export default function SignupForm({ defaultEmail, onStepChange }: Props) {
     // Sign up
     try {
       setIsLoading(true)
+      const domainError = await checkEmailDomain(email)
+      if (domainError) {
+        setError('email', { message: domainError })
+        return
+      }
       track('auth_signup_submitted', { invitation: isInvitation })
       const { body } = await nhost.auth.signUpEmailPassword({
         email,
@@ -113,6 +121,7 @@ export default function SignupForm({ defaultEmail, onStepChange }: Props) {
     handleSubmit,
     register,
     setValue,
+    setError,
     formState: { errors },
   } = useForm<Values>({
     resolver: yupResolver(schema),
@@ -150,6 +159,9 @@ export default function SignupForm({ defaultEmail, onStepChange }: Props) {
             required
             autoComplete="email"
           />
+          {errors.email?.message && (
+            <FormErrorMessage>{errors.email.message}</FormErrorMessage>
+          )}
         </FormControl>
 
         <FormControl isInvalid={!!errors['new-password']}>

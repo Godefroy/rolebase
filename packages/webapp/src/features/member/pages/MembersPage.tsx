@@ -37,6 +37,7 @@ import { Link as RouterLink } from 'react-router'
 import { EmailIcon } from 'src/icons'
 import MemberLinkOverlay from '../components/MemberLinkOverlay'
 import MemberOrgRoleSelect from '../components/MemberOrgRoleSelect'
+import OrgAccessRequests from '../components/OrgAccessRequests'
 import useOrgAdmin from '../hooks/useOrgAdmin'
 import useOrgOwner from '../hooks/useOrgOwner'
 import MembersInviteModal from '../modals/MembersInviteModal'
@@ -155,6 +156,8 @@ export default function MembersPage() {
             </Button>
           )}
         </Flex>
+
+        <OrgAccessRequests />
 
         <Box>
           {/* Member List */}

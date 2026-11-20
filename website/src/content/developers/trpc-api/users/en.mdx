@@ -14,7 +14,7 @@ Tells whether a domain can receive emails, by looking up its MX records. The app
 | --- | --- | --- |
 | `domain` | `String` | Domain to check, for example `example.com`. Required. |
 
-It returns `{ valid }`. `valid` is `false` when the domain is malformed, unknown, has no MX record, or declares that it accepts no email. Any other DNS error, such as a lookup taking more than two seconds, does not blame the domain: the answer is then `true`, so signing in always stays possible. The backend keeps each answer in memory for an hour.
+It returns `{ valid, disposable }`. `valid` is `false` when the domain is malformed, unknown, has no MX record, declares that it accepts no email, or is a disposable inbox (Yopmail, Mailinator...), in which case `disposable` is `true` and the app refuses the address. Any other DNS error, such as a lookup taking more than two seconds, does not blame the domain: the answer is then `true`, so signing in always stays possible. The backend keeps each answer in memory for an hour.
 
 ```typescript
 const { valid } = await trpc.user.checkEmailDomain.query({

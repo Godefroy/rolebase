@@ -45,6 +45,27 @@
       "preview": "{{member}} invites you to join {{org}} on Rolebase.",
       "activity": "<b>{{member}}</b> invites you to join <b>{{org}}</b> on Rolebase.",
       "cta": "Accept the invitation"
+    },
+    "OrgAccessRequest": {
+      "subject": "{{member}} asks to join {{org}}",
+      "title": "Request to join {{org}}",
+      "preview": "{{member}} ({{email}}) asks to join {{org}} on Rolebase.",
+      "activity": "<b>{{member}}</b> ({{email}}) asks to join <b>{{org}}</b> on Rolebase.",
+      "cta": "Review the request"
+    },
+    "OrgAccessAccepted": {
+      "subject": "You joined {{org}}",
+      "title": "Welcome to {{org}}",
+      "preview": "{{member}} accepted your request to join {{org}} on Rolebase.",
+      "activity": "<b>{{member}}</b> accepted your request to join <b>{{org}}</b> on Rolebase.",
+      "cta": "Open {{org}}"
+    },
+    "OrgAccessRefused": {
+      "subject": "Your request to join {{org}}",
+      "title": "Your request to join {{org}}",
+      "preview": "Your request to join {{org}} on Rolebase was not accepted.",
+      "activity": "Your request to join <b>{{org}}</b> on Rolebase was not accepted. You can contact its admins, or create your own organization.",
+      "cta": "Open Rolebase"
     }
   },
   "Digest": {

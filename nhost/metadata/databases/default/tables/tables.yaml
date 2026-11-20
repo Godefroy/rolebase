@@ -34,6 +34,7 @@
 - "!include public_news.yaml"
 - "!include public_old_id.yaml"
 - "!include public_org.yaml"
+- "!include public_org_access_request.yaml"
 - "!include public_org_file.yaml"
 - "!include public_org_subscription.yaml"
 - "!include public_role.yaml"
