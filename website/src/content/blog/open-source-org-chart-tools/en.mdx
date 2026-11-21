@@ -3,7 +3,7 @@ title: 'Open Source Org Chart Software: 6 Tools Compared'
 h1: 'Six open source tools for your org chart, compared'
 summary: 'Six open source tools for your org chart, with their license, best use and limits. Some tools on the usual lists are open source in name only.'
 date: 2025-05-25
-update: 2026-08-05
+update: 2026-11-21
 image: './thumbnail.jpg'
 similarPosts:
   - 'create-org-chart'
@@ -139,6 +139,18 @@ The scope stops at governance. Payroll, time off, annual reviews, skills and car
 
 Self-hosting means running Nhost, Hasura and PostgreSQL. It is documented, and it still takes longer than a one-click install.
 
+## What is the best free alternative to Visio for an org chart?
+
+To draw an org chart and bring your Visio files along, take draw.io, or LibreOffice Draw to work offline. When the org chart has to stay current as roles change, Rolebase fits better than a diagram editor.
+
+To reuse an existing Visio file:
+
+- draw.io opens `.vsdx` files, the Visio format since the 2013 release. Drop the file onto the page to open it. Its documentation warns that [the layout may shift on import](https://www.drawio.com/doc/faq/vsd-import-differences).
+- LibreOffice Draw opens `.vsd` and `.vsdx` files, then you save the result as ODG, PDF or SVG, with no way back to the Visio format.
+- In Rolebase, you rebuild the roles once by following your Visio file, then each team keeps its own up to date.
+
+yEd, from the German vendor yWorks, often comes up among Visio alternatives. It is free, commercial use included, but its license is proprietary, so it stays out of the open source comparison. It loads only Visio `.vsx` shape libraries, without opening the diagrams. To bring your current org chart over, start from a spreadsheet instead: yEd builds the org chart from an Excel `.xls` sheet that lists each person with their manager.
+
 ## Drawing an org chart or keeping it alive
 
 The six tools fall into two families, and the choice plays out almost entirely there.
@@ -174,6 +186,12 @@ Rolebase stays free up to 5 active members, which leaves time to check whether t
 To get a clean org chart out fast, draw.io under the Apache 2.0 license is the safest pick in 2026. It opens in the browser with no account, imports Visio and Lucidchart files, exports to PNG, SVG and PDF, and the project ships several releases a week.
 
 For an org chart the teams maintain themselves, the question changes nature and a diagram editor hits its ceiling. Rolebase, under the AGPL-3.0 license, describes roles and generates the org chart from that data.
+
+</FaqItem>
+
+<FaqItem question="What is a free alternative to Microsoft Visio for our company org chart?">
+
+draw.io, free and under the Apache 2.0 license, opens Visio `.vsdx` files and is enough to draw the org chart. If the org chart has to follow every role change without someone redrawing it, Rolebase is [free up to 5 active members](/en/pricing) and generates the org chart from the roles.
 
 </FaqItem>
 

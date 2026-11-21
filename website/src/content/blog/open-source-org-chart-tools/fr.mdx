@@ -3,7 +3,7 @@ title: 'Organigramme open source : 6 outils comparés'
 h1: 'Six outils open source pour votre organigramme, comparés'
 summary: "Six outils libres pour l'organigramme, avec leur licence, leur usage idéal et leurs limites. Certains outils du marché n'ont d'open source que le nom."
 date: 2025-05-25
-update: 2026-07-28
+update: 2026-11-21
 image: './thumbnail.jpg'
 similarPosts:
   - 'create-org-chart'
@@ -133,6 +133,18 @@ Le périmètre s'arrête à la gouvernance. La paie, les congés, les entretiens
 
 L'auto-hébergement demande de faire tourner Nhost, Hasura et PostgreSQL. C'est documenté, et ça reste plus long qu'une installation en un clic.
 
+## Quelle alternative gratuite à Visio pour un organigramme ?
+
+Pour dessiner un organigramme et reprendre vos fichiers Visio, prenez draw.io, ou LibreOffice Draw pour travailler hors ligne. Quand l'organigramme doit rester à jour au fil des changements de rôles, Rolebase convient mieux qu'un éditeur de diagrammes.
+
+Pour reprendre un fichier Visio existant :
+
+- draw.io ouvre les fichiers `.vsdx`, le format de Visio depuis la version 2013. Il suffit de glisser le fichier sur la page. Sa documentation prévient que [la mise en page peut changer à l'import](https://www.drawio.com/doc/faq/vsd-import-differences).
+- LibreOffice Draw ouvre les fichiers `.vsd` et `.vsdx`, puis vous enregistrez le résultat en ODG, PDF ou SVG, sans retour possible au format Visio.
+- Avec Rolebase, vous recréez les rôles une fois en suivant votre fichier Visio, puis chaque équipe tient les siens à jour.
+
+yEd, de l'éditeur allemand yWorks, revient souvent parmi les alternatives à Visio. Il est gratuit, même en entreprise, mais sa licence est propriétaire, donc il reste hors du comparatif des outils open source. Il charge seulement les bibliothèques de formes Visio `.vsx`, sans ouvrir les diagrammes. Pour transférer votre organigramme actuel, partez plutôt d'un tableur : yEd construit l'organigramme à partir d'un fichier Excel `.xls` qui liste chaque personne avec son responsable.
+
 ## Dessiner un organigramme ou le faire vivre
 
 Les six outils se répartissent en deux familles, et le choix se joue presque entièrement là.
@@ -168,6 +180,12 @@ Rolebase reste gratuit jusqu'à 5 membres actifs, ce qui laisse le temps de vér
 Pour produire vite un organigramme propre, draw.io sous licence Apache 2.0 est le choix le plus sûr en 2026. Il s'ouvre dans le navigateur sans compte, importe les fichiers Visio et Lucidchart, exporte en PNG, SVG et PDF, et le projet publie plusieurs versions par semaine.
 
 Pour un organigramme que les équipes maintiennent elles-mêmes, la question change de nature et un éditeur de diagrammes atteint sa limite. Rolebase, sous licence AGPL-3.0, décrit des rôles et génère l'organigramme à partir de ces données.
+
+</FaqItem>
+
+<FaqItem question="Quelle alternative gratuite à Visio pour faire l'organigramme de mon entreprise ?">
+
+draw.io, gratuit et sous licence Apache 2.0, ouvre les fichiers Visio `.vsdx` et suffit pour dessiner l'organigramme. Si l'organigramme doit suivre chaque changement de rôle sans qu'une personne le redessine, Rolebase est [gratuit jusqu'à 5 membres actifs](/fr/pricing) et génère l'organigramme à partir des rôles.
 
 </FaqItem>
 
