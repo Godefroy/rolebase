@@ -1,6 +1,6 @@
-# Redirect root to browser language (forced to override webapp's index.html)
-/  /fr  302!  Language=fr
-/  /en  302!
+# Wildcard redirects, read by Cloudflare after the exact redirects of
+# src/redirects.ts (src/integrations/cloudflare-redirects.ts). The root language
+# redirect is done by the Worker (worker/index.ts at the repository root).
 
 # Glossary
 /glossaire-rbm/:slug  /fr/glossary/:slug  301

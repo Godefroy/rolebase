@@ -1,0 +1,29 @@
+# Deploys en.rolebase.io, which only redirects to rolebase.io/en
+# (website/en.rolebase.io). Needs the CLOUDFLARE_API_TOKEN and
+# CLOUDFLARE_ACCOUNT_ID secrets.
+name: Deploy en.rolebase.io redirects
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - website/en.rolebase.io/**
+      - .github/workflows/deploy-en-redirects.yml
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: website/en.rolebase.io
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npx wrangler@4 deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

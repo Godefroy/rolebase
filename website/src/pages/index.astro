@@ -1,5 +1,5 @@
 ---
-// Fallback redirect for dev/non-Netlify environments.
-// In production, Netlify redirects `/` based on browser language (see netlify.toml).
+// Fallback redirect for dev. In production the Worker redirects `/` based on
+// the browser language (worker/index.ts at the repository root).
 return Astro.redirect('/en')
 ---

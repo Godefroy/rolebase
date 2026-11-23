@@ -69,7 +69,7 @@ Prioritize by `events`/`userCount` and `lastSeen`. Verify a fix actually targets
 
 ## Frontend sourcemaps
 
-Already wired: `@sentry/vite-plugin` (v4, Debug IDs) in `packages/webapp/vite.config.ts`, `build.sourcemap: true`. Uploads happen during the **Netlify** build only when `SENTRY_AUTH_TOKEN`, `SENTRY_URL=https://sentry.lonestone.io`, `SENTRY_ORG=lonestone`, `SENTRY_PROJECT=rolebase-webapp` are set in the Netlify build env. If front-end stacks are still minified, those env vars are missing on the failing release.
+Already wired: `@sentry/vite-plugin` (v4, Debug IDs) in `packages/webapp/vite.config.ts`, `build.sourcemap: true`. Uploads happen during the deploy build (`.github/workflows/deploy-site.yml`) only when the `SENTRY_AUTH_TOKEN` secret and the `SENTRY_URL=https://sentry.lonestone.io`, `SENTRY_ORG=lonestone`, `SENTRY_PROJECT=rolebase-webapp` repository variables are set. If front-end stacks are still minified, those env vars are missing on the failing release.
 
 ## Don'ts
 

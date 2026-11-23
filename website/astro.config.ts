@@ -2,7 +2,6 @@ import { defineConfig } from 'astro/config'
 import { fileURLToPath } from 'node:url'
 import { unified } from '@astrojs/markdown-remark'
 import mdx from '@astrojs/mdx'
-import netlify from '@astrojs/netlify'
 import react from '@astrojs/react'
 import sitemap from '@astrojs/sitemap'
 import expressiveCode from 'astro-expressive-code'
@@ -15,6 +14,7 @@ import { contentLastmod } from './src/utils/content-lastmod'
 import rehypeMdClass from './src/utils/rehype-md-class'
 import { getExternalLinkRel } from './src/utils/external-links'
 import enrichMd from './src/integrations/enrich-md'
+import cloudflareRedirects from './src/integrations/cloudflare-redirects'
 import config from './website.config'
 
 // The website is built in isolation (its own node_modules), so the reused
@@ -47,13 +47,8 @@ const processor = unified({
 
 export default defineConfig({
   site,
-  adapter: netlify({
-    // Netlify's on-demand image service only exists on their production
-    // runtime — `npm run dev` would get broken image URLs. Enable it only
-    // when building for production.
-    imageCDN: process.env.NODE_ENV === 'production',
-    edgeMiddleware: false,
-  }),
+  // Served by Cloudflare with the webapp (wrangler.jsonc at the repository
+  // root), images are optimized by sharp at build time.
   output: 'static',
   trailingSlash: 'never',
   build: { format: 'file' },
@@ -85,6 +80,7 @@ export default defineConfig({
       },
     }),
     enrichMd(),
+    cloudflareRedirects(),
   ],
   vite: {
     plugins: [

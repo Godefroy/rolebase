@@ -266,9 +266,9 @@ npm run build-emails-icons
 
 ## Production env
 
-[Netlify](https://www.netlify.com)
+[Cloudflare](https://www.cloudflare.com)
 
-- Front: webapp and website (static)
+- Front: webapp and website (static), see `wrangler.jsonc`
 
 [Nhost.io](https://nhost.io)
 

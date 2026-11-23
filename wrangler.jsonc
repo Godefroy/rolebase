@@ -1,0 +1,21 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "rolebase",
+  // Godefroy account, so a deploy never lands on another account.
+  "account_id": "95951ec04e3eb15e1a6902bf93b0e14e",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    // The webapp and the website merged by scripts/build-site.sh.
+    "directory": "./dist",
+    "binding": "ASSETS",
+    // The Worker runs for the root language redirect, the website pages (to
+    // keep their 404) and the oEmbed of the share page.
+    "run_worker_first": ["/", "/en/*", "/fr/*", "/share", "/share/*"],
+    // `build.format: "file"` emits `page.html`, served at `/page`.
+    "html_handling": "auto-trailing-slash",
+    // Any other navigation without a file is the webapp (index.html).
+    "not_found_handling": "single-page-application"
+  },
+  "observability": { "enabled": true }
+}

@@ -147,21 +147,41 @@ export default function enrichMd(): AstroIntegration {
           mdPages.push({ urlPath, mdUrlPath })
         }
 
-        // Write Netlify _headers: Link headers advertising the .md alternate
-        // (RFC 8288) for each page, plus explicit Content-Type for .md files
-        // served directly.
-        const sections: string[] = [
-          '/*.md\n  Content-Type: text/markdown; charset=utf-8',
-        ]
-        for (const { urlPath, mdUrlPath } of mdPages) {
-          sections.push(
-            `${urlPath}\n  Link: <${mdUrlPath}>; rel="alternate"; type="text/markdown"`
-          )
+        // _headers: advertise the .md alternate for each HTML page and serve
+        // .md files with the correct content type. Cloudflare reads at most 100
+        // rules, so the pages of a folder share one splat rule (every page there
+        // has its .md, only redirect stubs don't and they never render).
+        // `public/_headers` is copied into dist before this runs, and the write
+        // below replaces it, so its rules are carried over first.
+        let staticHeaders = ''
+        try {
+          staticHeaders = `${readFileSync(join(distDir, '_headers'), 'utf-8').trim()}\n\n`
+        } catch {
+          // No static _headers, nothing to carry over.
         }
-        writeFileSync(join(distDir, '_headers'), sections.join('\n\n') + '\n')
+        const alternate = (path: string) =>
+          `  Link: <${path}>; rel="alternate"; type="text/markdown"`
+        const sections: string[] = []
+        const folders = new Set<string>()
+        for (const { urlPath, mdUrlPath } of mdPages) {
+          const folder = urlPath.match(/^\/([^/]+)\/./)?.[1]
+          if (folder) folders.add(folder)
+          else sections.push(`${urlPath}\n${alternate(mdUrlPath)}`)
+        }
+        for (const folder of [...folders].sort()) {
+          sections.push(`/${folder}/*\n${alternate(`/${folder}/:splat.md`)}`)
+        }
+        // Last, so it also strips the Link a folder rule gives its .md files.
+        sections.push(
+          '/*.md\n  ! Link\n  Content-Type: text/markdown; charset=utf-8'
+        )
+        writeFileSync(
+          join(distDir, '_headers'),
+          `${staticHeaders}${sections.join('\n\n')}\n`
+        )
 
         console.log(
-          `Generated ${generated} .md files and _headers with ${mdPages.length} entries`
+          `Generated ${generated} .md files and _headers with ${sections.length} rules`
         )
       },
     },

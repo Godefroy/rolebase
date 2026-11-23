@@ -1,0 +1,9 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  // en.rolebase.io only redirects, to the localized pages of rolebase.io
+  // (public/_redirects). No Worker code, no page.
+  "name": "rolebase-en",
+  "account_id": "95951ec04e3eb15e1a6902bf93b0e14e",
+  "compatibility_date": "2026-11-01",
+  "assets": { "directory": "./public" }
+}

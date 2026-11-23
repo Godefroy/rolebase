@@ -4,6 +4,23 @@ on:
   push:
     branches:
       - 'main'
+    # Only what the backend image is built from (packages/backend/Dockerfile,
+    # .dockerignore): a website or webapp change deploys on Cloudflare alone
+    # (deploy-site.yml).
+    paths:
+      - 'packages/backend/**'
+      - 'packages/shared/**'
+      - 'packages/emails/**'
+      - 'packages/editor/**'
+      - 'packages/graph/**'
+      - 'patches/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.dockerignore'
+      - '.github/workflows/release_production.yaml'
+      - '.github/workflows/test_and_release.yaml'
+      - '.github/workflows/build-and-release-nhost-run.yaml'
+  workflow_dispatch:
 
 jobs:
   test-and-deploy:

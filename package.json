@@ -16,6 +16,7 @@
     "lint:format": "prettier --loglevel warn --write \"./{packages,functions}/**/*.{js,jsx,ts,tsx,css,md,json}\" "
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261122.2",
     "@graphql-codegen/add": "^8.0.0",
     "@graphql-codegen/cli": "^8.0.0",
     "@graphql-codegen/client-preset": "^7.0.0",
@@ -30,7 +31,8 @@
     "eslint-plugin-storybook": "^0.6.13",
     "patch-package": "^8.0.0",
     "prettier": "^3.10.1",
-    "turbo": "^2.11.11"
+    "turbo": "^2.11.11",
+    "wrangler": "^4.166.0"
   },
   "overrides": {
     "@joshwooding/vite-plugin-react-docgen-typescript": "^0.9.1",
@@ -50,5 +52,8 @@
       "minimatch": "^11.0.6"
     },
     "qs": "^6.17.1"
+  },
+  "allowScripts": {
+    "workerd@1.20261119.1": true
   }
 }

@@ -76,7 +76,7 @@ The website is built with Astro + MDX + Tailwind CSS with i18n support (English 
 - `src/styles/global.css` — Tailwind import, theme tokens, and markdown styles targeting `.md` class
 - `src/utils/rehype-md-class.ts` — Rehype plugin that adds `md` class to all markdown-generated elements
 - `src/redirects.ts` — Static redirects (imported in `astro.config.ts`)
-- `netlify.toml` — Build config and wildcard/language redirects
+- `public/_redirects` — Wildcard redirects (the root language redirect is in `worker/index.ts` at the repository root)
 
 ### Content collections and i18n
 
@@ -153,10 +153,10 @@ Before creating any commit, review the staged product changes (`packages/`, `nho
 ### Development
 
 - The astro dev server normally already runs on the port set in `astro.config.ts` (`server.port`). Use that port only. If nothing responds there, start it; if it responds but is broken, kill it and restart it. Never start it on another port.
-- The `website/` package builds **standalone**, not as a root npm `workspaces` member (Netlify: `npm ci && turbo build && cd website && npm install && npm run build`). Adding it to the root workspaces hoists legacy/CJS deps (`@rolebase/emails`, `@rolebase/backend`, Storybook) over the website's MDX/Astro stack and breaks the build; the root `package-lock.json` also can't be regenerated. To reuse `@rolebase/graph` / `@rolebase/shared`, add Vite `resolve.alias` to their TS source in `website/astro.config.ts` and declare their runtime deps directly in `website/package.json`. Avoid the webapp's Chakra/Apollo chain; reimplement thin glue against `@rolebase/shared` (see `website/src/components/islands/` and `website/src/demo/`).
+- The `website/` package builds **standalone**, not as a root npm `workspaces` member (`scripts/build-site.sh`: `npm ci && turbo build`, then `cd website && npm ci && npm run build`, then both `dist/` merged). Adding it to the root workspaces hoists legacy/CJS deps (`@rolebase/emails`, `@rolebase/backend`, Storybook) over the website's MDX/Astro stack and breaks the build; the root `package-lock.json` also can't be regenerated. To reuse `@rolebase/graph` / `@rolebase/shared`, add Vite `resolve.alias` to their TS source in `website/astro.config.ts` and declare their runtime deps directly in `website/package.json`. Avoid the webapp's Chakra/Apollo chain; reimplement thin glue against `@rolebase/shared` (see `website/src/components/islands/` and `website/src/demo/`).
 - When you remove an import, check if the file is still needed in the project. Delete it if not. Check imports of the deleted file.
 - When you remove or rename a page, add a redirect.
-- Static redirects are in `src/redirects.ts` (imported in `astro.config.ts`). Wildcard/splat redirects are in `netlify.toml`.
+- Static redirects are in `src/redirects.ts` (imported in `astro.config.ts`). Wildcard/splat redirects are in `public/_redirects`. Both ship as 301 in `dist/_redirects`.
 - Markdown styles target the `.md` class (defined in `global.css`), which is automatically added to all markdown-generated elements by the `rehype-md-class` plugin. Component markup is unaffected.
 
 ### Guidelines
@@ -188,3 +188,9 @@ Before creating any commit, review the staged product changes (`packages/`, `nho
 Content is stored as markdown (`packages/editor`, Tiptap). Grammar contract, locked by the round-trip tests in `packages/editor`: mentions `[@Name](rolebase://member/uuid)`, files `[name](url "file:mime:size")`, collapsibles as `<details>` HTML (parsed and serialized, absent from the slash menu), YouTube as a bare URL, single-line table cells (GFM).
 
 Collab is served by the backend on `/collab/<docId>`. The backend loads and saves the content. A new collaborative docId needs its pattern, access check and load/save (`roomContent.ts`) in `packages/backend/src/features/collab/`.
+
+## Deployment
+
+- rolebase.io is a Cloudflare Worker (`wrangler.jsonc`) deployed by `.github/workflows/deploy-site.yml`. `scripts/build-site.sh` builds the webapp and the website and merges them in `dist/`: website pages are files, any other navigation serves the webapp (`not_found_handling: single-page-application`), since its routes start with an organization slug.
+- `worker/index.ts` only runs for `/` (language redirect), `/en/*` and `/fr/*` (a missing website page answers the website's 404 instead of the webapp) and `/share` (oEmbed).
+- en.rolebase.io only redirects (`website/en.rolebase.io/public/_redirects`), deployed by `.github/workflows/deploy-en-redirects.yml`.

@@ -2,7 +2,7 @@ import type { AstroUserConfig } from 'astro'
 
 type Redirects = NonNullable<AstroUserConfig['redirects']>
 
-// Static redirections only, wildcards in netlify.toml
+// Exact paths, shipped as 301 at the top of dist/_redirects; wildcards in public/_redirects
 export const redirects: Redirects = {
   '/sitemap.xml': '/sitemap-index.xml',
   '/demande-demo': '/fr/contact',
@@ -11,7 +11,7 @@ export const redirects: Redirects = {
   '/pricing': '/en/pricing',
 
   // The API reference moved under the Developers section: the `/:lang/api/*`
-  // splat lives in `public/_redirects`, which Netlify reads before this list.
+  // splat lives in `public/_redirects`.
 
   // Renamed developer pages
   '/en/developers/getting-started': '/en/developers/install-self-host',

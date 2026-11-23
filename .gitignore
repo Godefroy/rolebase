@@ -21,6 +21,11 @@ stats.html
 # Local Netlify folder
 .netlify
 
+# Local Wrangler state, and the page list written by scripts/build-site.sh
+worker/website-paths.generated.json
+.wrangler
+.dev.vars
+
 # Sentry Config File
 .env.sentry-build-plugin
 .sentryclirc

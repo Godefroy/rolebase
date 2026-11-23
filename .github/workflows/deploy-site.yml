@@ -1,0 +1,70 @@
+# Builds the webapp and the website, merges them (scripts/build-site.sh) and
+# deploys rolebase.io to Cloudflare (wrangler.jsonc).
+# Needs the CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID and SENTRY_AUTH_TOKEN
+# secrets, and the SENTRY_* repository variables (webapp sourcemaps).
+name: Deploy site
+
+on:
+  push:
+    branches: [main]
+    # Only what the webapp and the website are built from: a backend change
+    # deploys the backend alone (release_production.yaml).
+    paths:
+      - packages/webapp/**
+      - packages/shared/**
+      - packages/graph/**
+      - packages/editor/**
+      - website/**
+      - '!website/en.rolebase.io/**'
+      - patches/**
+      - worker/**
+      - wrangler.jsonc
+      - scripts/build-site.sh
+      - package.json
+      - package-lock.json
+      - turbo.json
+      - .github/workflows/deploy-site.yml
+  workflow_dispatch:
+
+# A newer push replaces a deploy still running.
+concurrency:
+  group: deploy-site
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The sitemap reads each page's last commit date.
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            website/package-lock.json
+
+      # Images optimized by sharp, reused from the previous build. A cache entry
+      # can't be overwritten, so each run saves a new one and restores the latest.
+      - uses: actions/cache@v4
+        with:
+          path: website/node_modules/.astro
+          key: astro-${{ github.run_id }}
+          restore-keys: astro-
+
+      - run: scripts/build-site.sh
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_URL: ${{ vars.SENTRY_URL }}
+          SENTRY_ORG: ${{ vars.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ vars.SENTRY_PROJECT }}
+
+      - run: npx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

@@ -3,28 +3,29 @@
 //
 // The share page is a static file while an oEmbed discovery link carries the
 // address of the page it describes, query included. It is therefore added here,
-// per request, and the endpoint it points to is served here as well.
+// per request, and the endpoint it points to is served here as well. Routed by
+// worker/index.ts.
 // https://oembed.com
 
-interface Context {
-  next: () => Promise<Response>
-}
-
 const sharePath = /^\/share\/?$/
-const oembedPath = '/share/oembed'
+export const oembedPath = '/share/oembed'
 
 // Size of the iframe when the consumer sets no limit
 const defaultWidth = 1200
 const defaultHeight = 800
 
-export default async function share(request: Request, context: Context) {
+export async function share(request: Request, assets: Fetcher) {
   const url = new URL(request.url)
 
   if (url.pathname === oembedPath) {
     return getOembed(url)
   }
 
-  const response = await context.next()
+  // The page is share/index.html, served at `/share/` (asking for `/share`
+  // would get a redirect to it).
+  const page = new URL('/share/', url)
+  page.search = url.search
+  const response = await assets.fetch(new Request(page, request))
   const isHtml = response.headers.get('content-type')?.includes('text/html')
   if (
     !sharePath.test(url.pathname) ||
@@ -107,8 +108,4 @@ function escapeHtml(value: string) {
     .replace(/"/g, '&quot;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
-}
-
-export const config = {
-  path: ['/share', '/share/', oembedPath],
 }
