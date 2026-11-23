@@ -87,14 +87,14 @@ insert_permissions:
                                 - role:
                                     _eq: Owner
           - member:
-              userId:
-                _eq: X-Hasura-User-Id
               org:
                 threads:
                   id:
                     _ceq:
                       - $
                       - threadId
+              userId:
+                _eq: X-Hasura-User-Id
       set:
         userId: x-hasura-User-Id
       columns:
