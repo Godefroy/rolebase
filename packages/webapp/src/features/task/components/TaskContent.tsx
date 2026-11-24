@@ -1,8 +1,6 @@
 import CircleByIdButton from '@/circle/components/CircleByIdButton'
 import CircleMemberLink from '@/circle/components/CircleMemberLink'
 import ActionsMenu from '@/common/atoms/actionsMenu/ActionsMenu'
-import CopyLinkMenuItem from '@/common/atoms/actionsMenu/CopyLinkMenuItem'
-import DeleteMenuItem from '@/common/atoms/actionsMenu/DeleteMenuItem'
 import Loading from '@/common/atoms/Loading'
 import Switch from '@/common/atoms/Switch'
 import SwitchController from '@/common/atoms/SwitchController'
@@ -16,7 +14,6 @@ import MemberByIdButton from '@/member/components/MemberByIdButton'
 import useCurrentMember from '@/member/hooks/useCurrentMember'
 import useOrgMember from '@/member/hooks/useOrgMember'
 import { useOrgContext } from '@/org/contexts/OrgContext'
-import { usePathInOrg } from '@/org/hooks/usePathInOrg'
 import ParticipantsNumber from '@/participants/components/ParticipantsNumber'
 import useCircleParticipants from '@/participants/hooks/useCircleParticipants'
 import useExtraParticipants from '@/participants/hooks/useExtraParticipants'
@@ -42,7 +39,6 @@ import {
   Tag,
   Text,
   Tooltip,
-  useDisclosure,
   VStack,
 } from '@chakra-ui/react'
 import {
@@ -61,11 +57,10 @@ import React, { useCallback, useEffect, useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { PrivacyIcon } from 'src/icons'
-import settings from 'src/settings'
 import * as yup from 'yup'
 import useCreateTask from '../hooks/useCreateTask'
+import useTaskActions from '../hooks/useTaskActions'
 import useUpdateTaskStatus from '../hooks/useUpdateTaskStatus'
-import TaskDeleteModal from '../modals/TaskDeleteModal'
 import TaskStatusInput from './TaskStatusInput'
 import TaskStatusTag from './TaskStatusTag'
 
@@ -120,8 +115,7 @@ export default function TaskContent({
       id: id!,
     },
   })
-  const task = data?.task_by_pk
-  const path = usePathInOrg(`tasks/${id}`)
+  const task = data?.task_by_pk || undefined
 
   // Threads that reference this task (in a thread activity)
   const { data: threadsData } = useTaskThreadsQuery({
@@ -237,8 +231,8 @@ export default function TaskContent({
     [task, updateTaskStatus]
   )
 
-  // Task deletion modal
-  const deleteModal = useDisclosure()
+  // Actions menu, shared with the task cards
+  const actions = useTaskActions(task, { onDelete: onClose })
 
   if (error || (id && !task && !loading)) {
     console.error(error || new Error('Task not found'))
@@ -286,11 +280,8 @@ export default function TaskContent({
         )}
 
         <Flex mr={headerIcons ? -3 : 0}>
-          {id && isMember && (
-            <ActionsMenu ml={3}>
-              <CopyLinkMenuItem url={`${settings.url}${path}`} />
-              <DeleteMenuItem onClick={deleteModal.onOpen} />
-            </ActionsMenu>
+          {id && actions.hasItems && (
+            <ActionsMenu ml={3}>{actions.items}</ActionsMenu>
           )}
 
           {headerIcons}
@@ -472,14 +463,7 @@ export default function TaskContent({
         )}
       </VStack>
 
-      {deleteModal.isOpen && task && (
-        <TaskDeleteModal
-          task={task}
-          isOpen
-          onClose={deleteModal.onClose}
-          onDelete={onClose}
-        />
-      )}
+      {actions.modals}
     </Box>
   )
 }

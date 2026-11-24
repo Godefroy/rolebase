@@ -1,7 +1,7 @@
 import CircleButton from '@/circle/components/CircleButton'
+import ActionsMenu from '@/common/atoms/actionsMenu/ActionsMenu'
 import TitleLink from '@/common/atoms/TitleLink'
 import { useNormalClickHandler } from '@/common/hooks/useNormalClickHandler'
-import useOrgMember from '@/member/hooks/useOrgMember'
 import { useOrgContext } from '@/org/contexts/OrgContext'
 import ParticipantsNumber from '@/participants/components/ParticipantsNumber'
 import {
@@ -14,15 +14,14 @@ import {
   Spacer,
   Tag,
   Tooltip,
-  useDisclosure,
   Wrap,
 } from '@chakra-ui/react'
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MeetingIcon, PrivacyIcon } from 'src/icons'
 import { MeetingContext } from '../contexts/MeetingContext'
-import MeetingEditModal from '../modals/MeetingEditModal'
-import MeetingActionsMenu from './MeetingActionsMenu'
+import useMeetingActions from '../hooks/useMeetingActions'
+import MeetingSessionMenuItems from './MeetingSessionMenuItems'
 import MeetingDate from './MeetingDate'
 
 interface Props {
@@ -31,28 +30,16 @@ interface Props {
 
 export default function MeetingHeader({ headerIcons }: Props) {
   const { t } = useTranslation()
-  const isMember = useOrgMember()
   const { orgData } = useOrgContext()
 
   const { meeting, circle, participants, isStarted, path } =
     useContext(MeetingContext)!
 
-  // Meeting edition modal
-  const [duplicateInModal, setDuplicateInModal] = useState(false)
-
-  const editModal = useDisclosure()
-
-  const handleEdit = useNormalClickHandler(() => {
-    if (!isMember) return
-    setDuplicateInModal(false)
-    editModal.onOpen()
+  // Actions menu, shared with the meeting cards
+  const actions = useMeetingActions(meeting, {
+    sessionItems: <MeetingSessionMenuItems />,
   })
-
-  const handleDuplicate = () => {
-    if (!isMember) return
-    setDuplicateInModal(true)
-    editModal.onOpen()
-  }
+  const handleEdit = useNormalClickHandler(actions.openEdit)
 
   return (
     <Box w="100%" ml={3}>
@@ -94,11 +81,9 @@ export default function MeetingHeader({ headerIcons }: Props) {
         </Wrap>
 
         <Flex mr={headerIcons ? -2 : 0}>
-          <MeetingActionsMenu
-            ml={2}
-            onEdit={handleEdit}
-            onDuplicate={handleDuplicate}
-          />
+          {actions.hasItems && (
+            <ActionsMenu ml={2}>{actions.items}</ActionsMenu>
+          )}
 
           {headerIcons}
         </Flex>
@@ -122,14 +107,7 @@ export default function MeetingHeader({ headerIcons }: Props) {
         </Wrap>
       )}
 
-      {editModal.isOpen && (
-        <MeetingEditModal
-          meeting={meeting}
-          duplicate={duplicateInModal}
-          isOpen
-          onClose={editModal.onClose}
-        />
-      )}
+      {actions.modals}
     </Box>
   )
 }

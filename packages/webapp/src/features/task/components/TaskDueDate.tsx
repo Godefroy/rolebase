@@ -18,13 +18,13 @@ export default function TaskDueDate({ dueDate, status, ...stackProps }: Props) {
   return (
     <HStack
       spacing={1}
-      fontSize="sm"
+      fontSize="xs"
       whiteSpace="nowrap"
       color={isOverdue ? 'red.500' : 'gray.500'}
       _dark={{ color: isOverdue ? 'red.300' : 'gray.400' }}
       {...stackProps}
     >
-      <DueDateIcon size={14} />
+      <DueDateIcon size={12} />
       <Text as="span">
         {formatRelative(date, new Date(), { locale: dateLocale })}
       </Text>

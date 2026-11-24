@@ -27,6 +27,7 @@ import { Link as ReachLink, useLocation } from 'react-router'
 import { PinnedIcon, PrivacyIcon } from 'src/icons'
 import useThreadStatus from '../hooks/useThreadStatus'
 import ThreadModal from '../modals/ThreadModal'
+import ThreadItemActions from './ThreadItemActions'
 import ThreadStatusIcon from './ThreadStatusIcon'
 
 interface Props extends LinkBoxProps {
@@ -146,7 +147,7 @@ const ThreadItem = forwardRef<Props, 'div'>(
               )
             }
             corner={
-              (thread?.pinned || thread?.private) && (
+              (thread?.pinned || thread?.private || isStacked) && (
                 <HStack spacing={1.5}>
                   {thread?.pinned && (
                     <Box color="yellow.500">
@@ -154,6 +155,7 @@ const ThreadItem = forwardRef<Props, 'div'>(
                     </Box>
                   )}
                   {thread?.private && <PrivacyIcon size={16} />}
+                  {isStacked && <ThreadItemActions thread={thread} />}
                 </HStack>
               )
             }

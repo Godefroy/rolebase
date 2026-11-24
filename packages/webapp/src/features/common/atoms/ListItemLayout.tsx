@@ -41,6 +41,7 @@ export default function ListItemLayout({
             </Box>
             {corner && (
               <Center
+                className="item-corner"
                 flexShrink={0}
                 h={5}
                 color="gray.500"

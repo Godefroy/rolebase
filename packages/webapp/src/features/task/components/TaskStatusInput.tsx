@@ -4,6 +4,7 @@ import {
   MenuItemOption,
   MenuList,
   MenuOptionGroup,
+  Portal,
   Tag,
   TagProps,
 } from '@chakra-ui/react'
@@ -45,19 +46,22 @@ export default function TaskStatusInput({
         {t(`common.taskStatus.${value}`)}
       </MenuButton>
 
-      <MenuList zIndex={2000}>
-        <MenuOptionGroup type="radio" value={value}>
-          {taskStatusList.map((status) => (
-            <MenuItemOption
-              key={status}
-              value={status}
-              onClick={() => onChange(status)}
-            >
-              {t(`common.taskStatus.${status}`)}
-            </MenuItemOption>
-          ))}
-        </MenuOptionGroup>
-      </MenuList>
+      {/* Portal: cards create their own stacking context */}
+      <Portal>
+        <MenuList zIndex={2000}>
+          <MenuOptionGroup type="radio" value={value}>
+            {taskStatusList.map((status) => (
+              <MenuItemOption
+                key={status}
+                value={status}
+                onClick={() => onChange(status)}
+              >
+                {t(`common.taskStatus.${status}`)}
+              </MenuItemOption>
+            ))}
+          </MenuOptionGroup>
+        </MenuList>
+      </Portal>
     </Menu>
   )
 }

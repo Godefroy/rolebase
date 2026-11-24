@@ -9,6 +9,7 @@ import { usePathInOrg } from '@/org/hooks/usePathInOrg'
 import {
   Button,
   forwardRef,
+  HStack,
   LinkBox,
   LinkBoxProps,
   LinkOverlay,
@@ -22,6 +23,7 @@ import { useTranslation } from 'react-i18next'
 import { Link as ReachLink } from 'react-router'
 import { DecisionIcon, PrivacyIcon } from 'src/icons'
 import DecisionModal from '../modals/DecisionModal'
+import DecisionItemActions from './DecisionItemActions'
 
 interface Props extends LinkBoxProps {
   decision: DecisionFragment
@@ -71,7 +73,14 @@ const DecisionItem = forwardRef<Props, 'div'>(
           <ListItemLayout
             stacked={card}
             icon={showIcon && <DecisionIcon />}
-            corner={decision?.private && <PrivacyIcon size={16} />}
+            corner={
+              (decision?.private || card) && (
+                <HStack spacing={1.5}>
+                  {decision?.private && <PrivacyIcon size={16} />}
+                  {card && <DecisionItemActions decision={decision} />}
+                </HStack>
+              )
+            }
             title={
               openButton ? (
                 <Text {...titleProps}>{decision.title}</Text>
@@ -88,7 +97,7 @@ const DecisionItem = forwardRef<Props, 'div'>(
             }
             metaStart={
               card && (
-                <Text as="span" whiteSpace="nowrap">
+                <Text as="span" whiteSpace="nowrap" fontSize="xs">
                   {format(new Date(decision.createdAt), 'PPP', {
                     locale: dateLocale,
                   })}

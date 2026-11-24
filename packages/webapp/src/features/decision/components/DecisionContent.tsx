@@ -1,13 +1,10 @@
 import CircleByIdButton from '@/circle/components/CircleByIdButton'
 import ActionsMenu from '@/common/atoms/actionsMenu/ActionsMenu'
-import DeleteMenuItem from '@/common/atoms/actionsMenu/DeleteMenuItem'
-import EditMenuItem from '@/common/atoms/actionsMenu/EditMenuItem'
 import Loading from '@/common/atoms/Loading'
 import Markdown from '@/common/atoms/Markdown'
 import { Title } from '@/common/atoms/Title'
 import useDateLocale from '@/common/hooks/useDateLocale'
 import Page404 from '@/common/pages/Page404'
-import useOrgMember from '@/member/hooks/useOrgMember'
 import { useOrgContext } from '@/org/contexts/OrgContext'
 import LogText from '@/log/components/LogText'
 import {
@@ -21,7 +18,6 @@ import {
   Text,
   Tooltip,
   VStack,
-  useDisclosure,
 } from '@chakra-ui/react'
 import ThreadItem from '@/thread/components/ThreadItem'
 import {
@@ -34,9 +30,7 @@ import { format } from 'date-fns'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { PrivacyIcon } from 'src/icons'
-import useCanEditDecisions from '../hooks/useCanEditDecisions'
-import DecisionDeleteModal from '../modals/DecisionDeleteModal '
-import DecisionEditModal from '../modals/DecisionEditModal'
+import useDecisionActions from '../hooks/useDecisionActions'
 
 interface Props extends BoxProps {
   id: string
@@ -54,9 +48,6 @@ export default function DecisionContent({
 }: Props) {
   const { t } = useTranslation()
   const dateLocale = useDateLocale()
-  const isMember = useOrgMember()
-  const editModal = useDisclosure()
-  const deleteModal = useDisclosure()
   const { orgData } = useOrgContext()
 
   // Subscribe decision
@@ -66,7 +57,8 @@ export default function DecisionContent({
   const decision = data?.decision_by_pk || undefined
 
   const circle = orgData?.getCircle(decision?.circleId)
-  const canEdit = useCanEditDecisions(decision?.circleId)
+  // Actions menu, shared with the decision cards
+  const actions = useDecisionActions(decision, { onDelete: onClose })
 
   // Org chart changes applied by this decision (when it came from a proposal)
   const { data: logsData } = useDecisionLogsSubscription({
@@ -115,15 +107,12 @@ export default function DecisionContent({
           </Tooltip>
         )}
 
-        {isMember && (
-          <Flex mr={headerIcons ? -3 : 0}>
-            <ActionsMenu ml={3}>
-              {canEdit && <EditMenuItem onClick={editModal.onOpen} />}
-              {canEdit && <DeleteMenuItem onClick={deleteModal.onOpen} />}
-            </ActionsMenu>
-            {headerIcons}
-          </Flex>
-        )}
+        <Flex mr={headerIcons ? -3 : 0}>
+          {actions.hasItems && (
+            <ActionsMenu ml={3}>{actions.items}</ActionsMenu>
+          )}
+          {headerIcons}
+        </Flex>
       </Flex>
 
       {id && loading && <Loading active size="md" />}
@@ -185,22 +174,7 @@ export default function DecisionContent({
         </VStack>
       )}
 
-      {editModal.isOpen && (
-        <DecisionEditModal
-          decision={decision}
-          isOpen
-          onClose={editModal.onClose}
-        />
-      )}
-
-      {deleteModal.isOpen && decision && (
-        <DecisionDeleteModal
-          decision={decision}
-          isOpen
-          onClose={deleteModal.onClose}
-          onDelete={onClose}
-        />
-      )}
+      {actions.modals}
     </Box>
   )
 }

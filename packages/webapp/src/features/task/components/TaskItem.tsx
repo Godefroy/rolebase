@@ -10,6 +10,7 @@ import {
   Avatar,
   Button,
   forwardRef,
+  HStack,
   LinkBox,
   LinkBoxProps,
   LinkOverlay,
@@ -25,6 +26,7 @@ import useUpdateTaskStatus from '../hooks/useUpdateTaskStatus'
 import TaskModal from '../modals/TaskModal'
 import TaskStatusInput from './TaskStatusInput'
 import TaskDueDate from './TaskDueDate'
+import TaskItemActions from './TaskItemActions'
 import TaskStatusTag from './TaskStatusTag'
 
 interface Props extends LinkBoxProps {
@@ -119,7 +121,14 @@ const TaskItem = forwardRef<Props, 'div'>(
                 </LinkOverlay>
               )
             }
-            corner={task?.private && <PrivacyIcon size={16} />}
+            corner={
+              (task?.private || isStacked) && (
+                <HStack spacing={1.5}>
+                  {task?.private && <PrivacyIcon size={16} />}
+                  {isStacked && <TaskItemActions task={task} />}
+                </HStack>
+              )
+            }
             metaStart={
               <>
                 {isMember ? (

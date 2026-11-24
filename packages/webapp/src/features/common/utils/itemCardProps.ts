@@ -57,6 +57,19 @@ export function getItemCardProps({
       _hover: { bg: darkHoverBg, boxShadow: isDragging ? 'dark-lg' : 'none' },
     },
     sx: {
+      // Card "..." menu: takes no space until shown, on hover and focus
+      // (focusing the card's link reveals it for keyboard users),
+      // always shown on touch and small screens
+      // The corner slot also collapses (with its gap) when the menu is its only content
+      '& .item-actions-menu, & .item-corner:not(:has(svg:not(.item-actions-menu svg)))':
+        { display: 'none' },
+      [`&:hover .item-actions-menu, &:focus-within .item-actions-menu, &:has([aria-expanded=true]) .item-actions-menu,
+        &:hover .item-corner:not(:has(svg:not(.item-actions-menu svg))), &:focus-within .item-corner:not(:has(svg:not(.item-actions-menu svg))), &:has([aria-expanded=true]) .item-corner:not(:has(svg:not(.item-actions-menu svg)))`]:
+        { display: 'flex' },
+      '@media (hover: none), (max-width: 47.99em)': {
+        '& .item-actions-menu, & .item-corner:not(:has(svg:not(.item-actions-menu svg)))':
+          { display: 'flex' },
+      },
       '&.active': {
         borderColor: 'brand',
         boxShadow: '0 0 0 1px var(--chakra-colors-brand)',

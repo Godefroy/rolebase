@@ -1,7 +1,4 @@
 import useCurrentMember from '@/member/hooks/useCurrentMember'
-import useOrgMember from '@/member/hooks/useOrgMember'
-import { useOrgContext } from '@/org/contexts/OrgContext'
-import useCircleParticipants from '@/participants/hooks/useCircleParticipants'
 import {
   CircleFragment,
   ThreadActivityFragment,
@@ -14,7 +11,7 @@ import {
 import { ParticipantMember } from '@rolebase/shared/model/member'
 import { useCallback, useEffect, useMemo } from 'react'
 import { usePathInOrg } from '../../org/hooks/usePathInOrg'
-import useExtraParticipants from '../../participants/hooks/useExtraParticipants'
+import useThreadPermissions from './useThreadPermissions'
 
 /***
  * Thread state hook
@@ -39,8 +36,6 @@ export interface ThreadState {
 
 export default function useThreadState(threadId: string): ThreadState {
   const currentMember = useCurrentMember()
-  const isMember = useOrgMember()
-  const { orgData } = useOrgContext()
   const [upsertThreadMemberStatus] = useUpsertThreadMemberStatusMutation()
 
   // Subscribe to thread
@@ -71,24 +66,12 @@ export default function useThreadState(threadId: string): ThreadState {
   const loading = threadResult.loading || activitiesResult.loading
   const error = threadResult.error || activitiesResult.error
 
-  // Meeting page path
+  // Thread page path
   const path = usePathInOrg(`threads/${thread?.id}`)
 
-  // Circle
-  const circle = orgData?.getCircle(thread?.circleId)
-
-  // Participants
-  const circleParticipants = useCircleParticipants(circle)
-  const participants = useExtraParticipants(
-    circleParticipants,
-    thread?.extra_members
-  )
-
-  // Is current member participant?
-  const isParticipant = currentMember
-    ? participants.some((p) => p.member.id === currentMember.id)
-    : false
-  const canEdit = isParticipant || (thread?.private === false && isMember)
+  // Circle, participants and permissions
+  const { circle, participants, isParticipant, canEdit } =
+    useThreadPermissions(thread)
   const canParticipate = canEdit
 
   // Mark an activity as unread

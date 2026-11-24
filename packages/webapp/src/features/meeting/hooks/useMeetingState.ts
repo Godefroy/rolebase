@@ -1,5 +1,4 @@
 import useCurrentMember from '@/member/hooks/useCurrentMember'
-import useOrgMember from '@/member/hooks/useOrgMember'
 import { useOrgContext } from '@/org/contexts/OrgContext'
 import {
   CircleFragment,
@@ -16,8 +15,7 @@ import { isSameDay } from 'date-fns'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { track } from 'src/analytics'
 import { usePathInOrg } from '../../org/hooks/usePathInOrg'
-import useCircleParticipants from '../../participants/hooks/useCircleParticipants'
-import useExtraParticipants from '../../participants/hooks/useExtraParticipants'
+import useMeetingPermissions from './useMeetingPermissions'
 
 /***
  * Meeting state hook
@@ -58,7 +56,7 @@ export interface MeetingState {
 
 export default function useMeetingState(meetingId: string): MeetingState {
   const currentMember = useCurrentMember()
-  const isMember = useOrgMember()
+  const { orgData } = useOrgContext()
   const [updateMeeting] = useUpdateMeetingMutation()
 
   // Subscribe meeting
@@ -70,10 +68,6 @@ export default function useMeetingState(meetingId: string): MeetingState {
 
   // Meeting page path
   const path = usePathInOrg(`meetings/${meeting?.id}`)
-
-  // Circle
-  const { orgData } = useOrgContext()
-  const circle = orgData?.getCircle(meeting?.circleId)
 
   // Meeting not started?
   const isEnded = !!meeting?.ended
@@ -127,28 +121,9 @@ export default function useMeetingState(meetingId: string): MeetingState {
     }
   }, [isStarted, meeting?.endDate])
 
-  // Participants
-  const circleParticipants = useCircleParticipants(circle)
-  const participants = useExtraParticipants([], meeting?.meeting_attendees)
-
-  // Is current member participant? initiator?
-  const isParticipant = currentMember
-    ? participants.some((p) => p.member.id === currentMember.id)
-    : false
-  const isCirclePartcipant = currentMember
-    ? circleParticipants.some((p) => p.member.id === currentMember.id)
-    : false
-
-  // Current member can edit meeting steps?
-  const canEditSteps =
-    isCirclePartcipant || (meeting?.invitedReadonly === false && isParticipant)
-
-  // Current member can edit meeting?
-  const canEdit =
-    canEditSteps ||
-    (meeting?.private === false &&
-      meeting?.invitedReadonly === false &&
-      isMember)
+  // Circle, participants and permissions
+  const { circle, participants, isParticipant, canEditSteps, canEdit } =
+    useMeetingPermissions(meeting)
 
   // Force edit mode event if meeting is ended
   const [forceEdit, setForceEdit] = useState(false)

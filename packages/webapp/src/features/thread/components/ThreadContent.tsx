@@ -1,9 +1,5 @@
 import CircleButton from '@/circle/components/CircleButton'
 import ActionsMenu from '@/common/atoms/actionsMenu/ActionsMenu'
-import CopyLinkMenuItem from '@/common/atoms/actionsMenu/CopyLinkMenuItem'
-import DeleteMenuItem from '@/common/atoms/actionsMenu/DeleteMenuItem'
-import EditMenuItem from '@/common/atoms/actionsMenu/EditMenuItem'
-import UnarchiveMenuItem from '@/common/atoms/actionsMenu/UnarchiveMenuItem'
 import TitleLink from '@/common/atoms/TitleLink'
 import Loading from '@/common/atoms/Loading'
 import ScrollableLayout from '@/common/atoms/ScrollableLayout'
@@ -21,21 +17,19 @@ import {
   Spacer,
   Tag,
   Tooltip,
-  useDisclosure,
   Wrap,
 } from '@chakra-ui/react'
 import { useUpdateThreadMutation } from '@gql'
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PinIcon, PinnedIcon, PrivacyIcon } from 'src/icons'
-import settings from 'src/settings'
 import { ThreadContext } from '../contexts/ThreadContext'
 import useThreadState from '../hooks/useThreadState'
 import useThreadStatus from '../hooks/useThreadStatus'
-import ThreadEditModal from '../modals/ThreadEditModal'
 import ThreadActivities from './ThreadActivities'
 import ThreadActivityCreate from './ThreadActivityCreate'
 import ThreadStatusIcon from './ThreadStatusIcon'
+import useThreadActions from '../hooks/useThreadActions'
 import { ThreadStatusMenu } from './ThreadStatusMenu'
 
 interface Props extends BoxProps {
@@ -59,7 +53,6 @@ export default function ThreadContent({
 
   const {
     thread,
-    path,
     loading,
     error,
     circle,
@@ -68,23 +61,10 @@ export default function ThreadContent({
     canParticipate,
   } = threadState
 
-  // Create modal
-  const editModal = useDisclosure()
+  // Actions menu, shared with the thread cards
+  const actions = useThreadActions(thread)
 
   const { threadStatus, setStatus } = useThreadStatus(thread)
-
-  // Archive / unarchive
-  const handleArchive = useCallback(
-    () =>
-      updateThread({
-        variables: { id, values: { archivedAt: new Date().toISOString() } },
-      }),
-    [id]
-  )
-  const handleUnarchive = useCallback(
-    () => updateThread({ variables: { id, values: { archivedAt: null } } }),
-    [id]
-  )
 
   // Pin / unpin for everyone
   const handleTogglePin = useCallback(
@@ -120,7 +100,7 @@ export default function ThreadContent({
 
                 <Heading as="h1" size="md">
                   {canEdit ? (
-                    <TitleLink href="#" onClick={editModal.onOpen}>
+                    <TitleLink href="#" onClick={actions.openEdit}>
                       {title}
                     </TitleLink>
                   ) : (
@@ -201,17 +181,8 @@ export default function ThreadContent({
             </Wrap>
 
             <Flex mr={headerIcons ? -2 : 0}>
-              {canEdit && (
-                <ActionsMenu ml={2}>
-                  <EditMenuItem onClick={editModal.onOpen} />
-                  <CopyLinkMenuItem url={`${settings.url}${path}`} />
-                  {!thread?.archivedAt && (
-                    <DeleteMenuItem onClick={handleArchive} />
-                  )}
-                  {thread?.archivedAt && (
-                    <UnarchiveMenuItem onClick={handleUnarchive} />
-                  )}
-                </ActionsMenu>
+              {actions.hasItems && (
+                <ActionsMenu ml={2}>{actions.items}</ActionsMenu>
               )}
               {headerIcons}
             </Flex>
@@ -227,9 +198,7 @@ export default function ThreadContent({
         <ThreadActivities />
       </ScrollableLayout>
 
-      {editModal.isOpen && (
-        <ThreadEditModal isOpen thread={thread} onClose={editModal.onClose} />
-      )}
+      {actions.modals}
     </ThreadContext.Provider>
   )
 }

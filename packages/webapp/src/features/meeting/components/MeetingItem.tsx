@@ -8,6 +8,7 @@ import { usePathInOrg } from '@/org/hooks/usePathInOrg'
 import {
   Button,
   forwardRef,
+  HStack,
   LinkBox,
   LinkBoxProps,
   LinkOverlay,
@@ -22,6 +23,7 @@ import { useTranslation } from 'react-i18next'
 import { Link as ReachLink, useLocation } from 'react-router'
 import { MeetingIcon, PrivacyIcon } from 'src/icons'
 import MeetingModal from '../modals/MeetingModal'
+import MeetingItemActions from './MeetingItemActions'
 
 interface Props extends LinkBoxProps {
   meeting: MeetingSummaryFragment
@@ -100,7 +102,14 @@ const MeetingItem = forwardRef<Props, 'div'>(
           <ListItemLayout
             stacked={card}
             icon={showIcon && <MeetingIcon />}
-            corner={meeting?.private && <PrivacyIcon size={16} />}
+            corner={
+              (meeting?.private || card) && (
+                <HStack spacing={1.5}>
+                  {meeting?.private && <PrivacyIcon size={16} />}
+                  {card && <MeetingItemActions meetingId={meeting.id} />}
+                </HStack>
+              )
+            }
             title={
               openButton ? (
                 <Text {...titleProps}>{title}</Text>
@@ -122,7 +131,7 @@ const MeetingItem = forwardRef<Props, 'div'>(
                   whiteSpace="nowrap"
                   color="gray.500"
                   _dark={{ color: 'gray.400' }}
-                  fontSize={card ? 'sm' : undefined}
+                  fontSize={card ? 'xs' : undefined}
                 >
                   {dateLabel}
                 </Text>

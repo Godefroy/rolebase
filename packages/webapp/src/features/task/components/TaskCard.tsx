@@ -8,6 +8,7 @@ import { usePathInOrg } from '@/org/hooks/usePathInOrg'
 import {
   Avatar,
   forwardRef,
+  HStack,
   LinkBox,
   LinkBoxProps,
   LinkOverlay,
@@ -19,6 +20,7 @@ import { Link as ReachLink } from 'react-router'
 import { PrivacyIcon } from 'src/icons'
 import TaskModal from '../modals/TaskModal'
 import TaskDueDate from './TaskDueDate'
+import TaskItemActions from './TaskItemActions'
 
 interface Props extends LinkBoxProps {
   task: TaskFragment
@@ -74,7 +76,12 @@ const TaskCard = forwardRef<Props, 'div'>(
                 {task.title}
               </LinkOverlay>
             }
-            corner={task?.private && <PrivacyIcon size={16} />}
+            corner={
+              <HStack spacing={1.5}>
+                {task?.private && <PrivacyIcon size={16} />}
+                <TaskItemActions task={task} />
+              </HStack>
+            }
             metaStart={
               task.dueDate && (
                 <TaskDueDate dueDate={task.dueDate} status={task.status} />

@@ -15,13 +15,20 @@ interface Props extends Omit<IconButtonProps, 'aria-label' | 'children'> {
   // The menu items to render, composed from the reusable *MenuItem atoms
   // (EditMenuItem, DeleteMenuItem, …) plus any caller-specific MenuItem.
   children: ReactNode
+  onOpen?(): void
+  onClose?(): void
 }
 
-export default function ActionsMenu({ children, ...props }: Props) {
+export default function ActionsMenu({
+  children,
+  onOpen,
+  onClose,
+  ...props
+}: Props) {
   const { t } = useTranslation()
 
   return (
-    <Menu isLazy>
+    <Menu isLazy onOpen={onOpen} onClose={onClose}>
       <MenuButton
         aria-label={t('ActionsMenu.label')}
         as={IconButton}

@@ -7,7 +7,7 @@ export function getListItemTitleProps(stacked: boolean): ChakraProps {
         display: 'block',
         noOfLines: 2,
         wordBreak: 'break-word',
-        fontWeight: 'medium',
+        fontSize: '14px',
         lineHeight: 'short',
       }
     : {
