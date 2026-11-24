@@ -3,7 +3,7 @@ import { Title } from '@/common/atoms/Title'
 import useUpdatableQueryParams from '@/common/hooks/useUpdatableQueryParams'
 import { Box, Heading } from '@chakra-ui/react'
 import { Task_Status_Enum } from '@gql'
-import { TasksViewTypes } from '@rolebase/shared/model/task'
+import { TasksSortTypes, TasksViewTypes } from '@rolebase/shared/model/task'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import TasksContent from '../components/TasksContent'
@@ -15,6 +15,7 @@ type Params = {
   member: string
   circle: string
   status: Task_Status_Enum
+  sort: TasksSortTypes
 }
 
 export default function TasksPage() {
@@ -48,16 +49,24 @@ export default function TasksPage() {
   const handleStatusChange = (status: Task_Status_Enum | undefined) =>
     changeParams({ status })
 
+  // Sort param
+  const sort =
+    (params.sort && TasksSortTypes[params.sort]) || TasksSortTypes.Manual
+  const handleSortChange = (sort: TasksSortTypes) =>
+    changeParams({ sort: sort === TasksSortTypes.Manual ? undefined : sort })
+
   return (
     <TasksModuleProvider
       view={view}
       circleId={circleId}
       memberId={memberId}
       status={status}
+      sort={sort}
       onViewChange={handleViewChange}
       onCircleChange={handleCircleChange}
       onMemberChange={handleMemberChange}
       onStatusChange={handleStatusChange}
+      onSortChange={handleSortChange}
     >
       <ScrollableLayout
         header={

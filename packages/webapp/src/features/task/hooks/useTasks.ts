@@ -5,9 +5,10 @@ import {
   useTasksSubscription,
   useUpdateTaskViewMutation,
 } from '@gql'
-import { TasksViewTypes } from '@rolebase/shared/model/task'
+import { TasksSortTypes, TasksViewTypes } from '@rolebase/shared/model/task'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useOrgContext } from '@/org/contexts/OrgContext'
+import { sortTasks } from '../utils/sortTasks'
 
 export function useTasks(
   view: TasksViewTypes,
@@ -16,7 +17,8 @@ export function useTasks(
     circleId?: string
     status?: Task_Status_Enum
     archived?: boolean
-  }
+  },
+  sort: TasksSortTypes = TasksSortTypes.Manual
 ) {
   const { orgId } = useOrgContext()
 
@@ -90,12 +92,14 @@ export function useTasks(
       }
     }
 
-    return newTasks.sort((a, b) => {
+    // Manual order first, then display sort (the saved order stays untouched)
+    const manuallySortedTasks = newTasks.sort((a, b) => {
       const aIndex = tasksIdsCache.indexOf(a.id)
       const bIndex = tasksIdsCache.indexOf(b.id)
       return aIndex - bIndex
     })
-  }, [tasks, tasksIdsCache, loading])
+    return sortTasks(manuallySortedTasks, sort)
+  }, [tasks, tasksIdsCache, loading, sort])
 
   // Save new ordered list
   const [createTaskView] = useCreateTaskViewMutation()
@@ -116,10 +120,13 @@ export function useTasks(
     [orgId, key, tasksView]
   )
 
-  return {
-    tasks: sortedTasks,
-    loading: loading || !orgId,
-    error,
-    changeOrder,
-  }
+  return useMemo(
+    () => ({
+      tasks: sortedTasks,
+      loading: loading || !orgId,
+      error,
+      changeOrder,
+    }),
+    [sortedTasks, loading, orgId, error, changeOrder]
+  )
 }

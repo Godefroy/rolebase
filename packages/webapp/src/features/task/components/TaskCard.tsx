@@ -38,10 +38,14 @@ const TaskCard = forwardRef<Props, 'div'>(
     const { isOpen, onOpen, onClose } = useDisclosure()
     const handleOpen = useNormalClickHandler(onOpen)
 
+    // Block the browser's native drag of the link (drag and drop handles override it)
+    const handleDragStart = (event: React.DragEvent) => event.preventDefault()
+
     return (
       <>
         <LinkBox
           ref={ref}
+          onDragStart={handleDragStart}
           p={1}
           pt={3}
           pl={3}

@@ -1407,6 +1407,12 @@
   "TasksList": {
     "empty": "Aucune tâche"
   },
+  "TasksSortMenu": {
+    "Manual": "Ordre manuel",
+    "DueDate": "Date limite",
+    "CreatedAt": "Date de création",
+    "Title": "Titre"
+  },
   "TasksHeader": {
     "kanban": "Kanban",
     "list": "Liste"

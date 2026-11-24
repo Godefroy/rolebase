@@ -9,10 +9,9 @@ import OnboardingVideo, {
   OnboardingVideoType,
 } from '@/onboarding/components/OnboardingVideo'
 import { Box } from '@chakra-ui/react'
-import { TasksViewTypes } from '@rolebase/shared/model/task'
+import { TasksSortTypes, TasksViewTypes } from '@rolebase/shared/model/task'
 import React, { useContext } from 'react'
 import { TasksModuleContext } from '../contexts/TasksModuleContext'
-import { useTasks } from '../hooks/useTasks'
 import TasksKanban from './TasksKanban'
 import TasksList from './TasksList'
 
@@ -25,14 +24,16 @@ export default function TasksContent({ overflowContainer, isFullPage }: Props) {
   const isMember = useOrgMember()
   const isAdmin = useOrgAdmin()
 
-  const { view, circleId, memberId, status } = useContext(TasksModuleContext)
-
-  // Subscribe to tasks
-  const { tasks, loading, error, changeOrder } = useTasks(view, {
-    memberId,
+  const {
+    view,
     circleId,
-    status,
-  })
+    memberId,
+    sort,
+    tasks: tasksResult,
+  } = useContext(TasksModuleContext)
+  if (!tasksResult) return null
+  const { tasks, loading, error, changeOrder } = tasksResult
+  const isSorted = !!sort && sort !== TasksSortTypes.Manual
 
   return (
     <>
@@ -40,7 +41,7 @@ export default function TasksContent({ overflowContainer, isFullPage }: Props) {
         <OverflowContainer {...overflowContainer}>
           <TasksKanban
             tasks={tasks}
-            onOrderChange={isMember ? changeOrder : undefined}
+            onOrderChange={isMember && !isSorted ? changeOrder : undefined}
             showMember={!memberId}
             showCircle={!circleId}
           />
@@ -60,7 +61,7 @@ export default function TasksContent({ overflowContainer, isFullPage }: Props) {
         <Box maxW="3xl" px={{ base: 0, sm: 3 }}>
           <TasksList
             tasks={tasks}
-            onOrderChange={isMember ? changeOrder : undefined}
+            onOrderChange={isMember && !isSorted ? changeOrder : undefined}
             showMember={!memberId}
             showCircle={!circleId}
             showDueDate

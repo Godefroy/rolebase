@@ -1,7 +1,7 @@
 import useCurrentMember from '@/member/hooks/useCurrentMember'
 import { useDisclosure } from '@chakra-ui/react'
 import { Task_Status_Enum, TaskFragment } from '@gql'
-import { TasksViewTypes } from '@rolebase/shared/model/task'
+import { TasksSortTypes, TasksViewTypes } from '@rolebase/shared/model/task'
 import React, {
   createContext,
   ReactNode,
@@ -9,6 +9,7 @@ import React, {
   useMemo,
   useState,
 } from 'react'
+import { useTasks } from '../hooks/useTasks'
 import TaskModal from '../modals/TaskModal'
 
 export interface TasksModuleContextParams {
@@ -16,13 +17,16 @@ export interface TasksModuleContextParams {
   circleId?: string
   memberId?: string
   status?: Task_Status_Enum
+  sort?: TasksSortTypes
   onViewChange?: (view: TasksViewTypes) => void
   onCircleChange?: (circleId: string | undefined) => void
   onMemberChange?: (memberId: string | undefined) => void
   onStatusChange?: (status: Task_Status_Enum | undefined) => void
+  onSortChange?: (sort: TasksSortTypes) => void
 }
 
 export interface TasksModuleContextValue extends TasksModuleContextParams {
+  tasks?: ReturnType<typeof useTasks>
   openCreateTask?: (defaults?: Partial<TaskFragment>) => void
 }
 
@@ -43,6 +47,24 @@ export function TasksModuleProvider({
 
   const [defaults, setDefaults] = useState<Partial<TaskFragment>>({})
 
+  // Sort from params, or local state when params don't handle it
+  const [localSort, setLocalSort] = useState(TasksSortTypes.Manual)
+  const sort = params.onSortChange
+    ? (params.sort ?? TasksSortTypes.Manual)
+    : localSort
+  const onSortChange = params.onSortChange ?? setLocalSort
+
+  // Subscribe to tasks
+  const tasks = useTasks(
+    params.view,
+    {
+      memberId: params.memberId,
+      circleId: params.circleId,
+      status: params.status,
+    },
+    sort
+  )
+
   useEffect(() => {
     setDefaults({
       memberId: params.memberId || currentMember?.id,
@@ -54,6 +76,9 @@ export function TasksModuleProvider({
   const value: TasksModuleContextValue = useMemo(
     () => ({
       ...params,
+      sort,
+      onSortChange,
+      tasks,
       openCreateTask: (defaults) => {
         if (defaults) {
           setDefaults((d) => ({ ...d, ...defaults }))
@@ -62,6 +87,9 @@ export function TasksModuleProvider({
       },
     }),
     [
+      tasks,
+      sort,
+      onSortChange,
       params.view,
       params.circleId,
       params.memberId,

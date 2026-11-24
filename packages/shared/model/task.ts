@@ -13,3 +13,10 @@ export enum TasksViewTypes {
   Kanban = 'Kanban',
   List = 'List',
 }
+
+export enum TasksSortTypes {
+  Manual = 'Manual',
+  DueDate = 'DueDate',
+  CreatedAt = 'CreatedAt',
+  Title = 'Title',
+}

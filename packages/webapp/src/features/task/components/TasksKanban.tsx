@@ -69,6 +69,7 @@ export default function TasksKanban({
             tasks={tasks}
             showCircle={showCircle}
             showMember={showMember}
+            isDragDisabled={!onOrderChange}
           />
         ))}
       </HStack>

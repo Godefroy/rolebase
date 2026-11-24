@@ -74,6 +74,7 @@ import {
   SidebarLeft,
   SidebarRight,
   Sms,
+  Sort,
   Star,
   Stop,
   Sun1,
@@ -175,6 +176,7 @@ export const SidebarRightIcon = SidebarRight
 export const ShareIcon = Share
 export const ShortcutsIcon = Command
 export const ShowIcon = Eye
+export const SortIcon = Sort
 export const StopIcon = Stop
 export const SubscriptionIcon = Star
 export const SubscriptionPlanBusiness = Briefcase

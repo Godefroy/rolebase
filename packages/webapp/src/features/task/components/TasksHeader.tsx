@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { CreateIcon, KanbanIcon, TasksListIcon } from 'src/icons'
 import { TasksModuleContext } from '../contexts/TasksModuleContext'
 import TasksFilterStatus from './TasksFilterStatus'
+import TasksSortMenu from './TasksSortMenu'
 
 interface Props extends Omit<BoxProps, 'title'> {
   title?: ReactNode
@@ -31,6 +32,8 @@ export default function TasksHeader({
     onCircleChange,
     onMemberChange,
     onStatusChange,
+    sort,
+    onSortChange,
     openCreateTask,
   } = useContext(TasksModuleContext)
 
@@ -74,6 +77,9 @@ export default function TasksHeader({
       >
         {onStatusChange && view === TasksViewTypes.List && (
           <TasksFilterStatus value={status} onChange={onStatusChange} />
+        )}
+        {sort && onSortChange && (
+          <TasksSortMenu value={sort} onChange={onSortChange} />
         )}
       </CircleAndMemberFilters>
 

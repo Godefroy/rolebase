@@ -67,6 +67,9 @@ const TaskItem = forwardRef<Props, 'div'>(
     const { isOpen, onOpen, onClose } = useDisclosure()
     const handleOpen = useNormalClickHandler(onOpen)
 
+    // Block the browser's native drag of the link (drag and drop handles override it)
+    const handleDragStart = (event: React.DragEvent) => event.preventDefault()
+
     // Is active?
     const location = useLocation()
     const isActive = location.pathname === path
@@ -75,6 +78,7 @@ const TaskItem = forwardRef<Props, 'div'>(
       <>
         <LinkBox
           ref={ref}
+          onDragStart={handleDragStart}
           p={1}
           boxShadow={isDragging ? 'lg' : 'none'}
           bg={isDragging ? 'gray.50' : undefined}

@@ -16,6 +16,7 @@ interface Props {
   tasks: TaskFragment[]
   showCircle?: boolean
   showMember?: boolean
+  isDragDisabled?: boolean
   onOrderChange?(tasksIds: string[], changedTask: TaskFragment): void
 }
 
@@ -24,6 +25,7 @@ export default function TasksKanbanColumn({
   tasks,
   showCircle,
   showMember,
+  isDragDisabled,
 }: Props) {
   const { t } = useTranslation()
   const isMember = useOrgMember()
@@ -81,7 +83,12 @@ export default function TasksKanbanColumn({
       }
     >
       {filteredTasks.map((task, index) => (
-        <Draggable key={task.id} draggableId={task.id} index={index}>
+        <Draggable
+          key={task.id}
+          draggableId={task.id}
+          index={index}
+          isDragDisabled={isDragDisabled}
+        >
           {(provided, snapshot) => (
             <TaskCard
               ref={provided.innerRef}
