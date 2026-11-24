@@ -104,6 +104,10 @@ export default function Calendar(props: CalendarOptions) {
       contentHeight="1800px"
       expandRows
       snapDuration={{ minutes: 15 }}
+      // Show time and title on one line for events shorter than 45 minutes
+      eventShortHeight={45}
+      eventMinHeight={20}
+      slotEventOverlap={false}
       weekends={false}
       allDaySlot={false}
       nowIndicator

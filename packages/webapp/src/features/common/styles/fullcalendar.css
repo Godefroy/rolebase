@@ -80,6 +80,27 @@ a.fc-event:hover {
 a.fc-v-event:hover .fc-event-title {
   overflow: initial;
 }
+/* Short events (up to 45 minutes): one line, no vertical padding */
+.fc .fc-timegrid-event-short {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.fc .fc-timegrid-event-short .fc-event-main-frame {
+  align-items: center;
+  height: 100%;
+  white-space: nowrap;
+}
+.fc .fc-timegrid-event-short .fc-event-time,
+.fc .fc-timegrid-event-short .fc-event-title {
+  line-height: 1.2;
+}
+.fc .fc-timegrid-event-short .fc-event-title-container {
+  min-width: 0;
+}
+.fc .fc-timegrid-event-short .fc-event-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 div.fc-timegrid-event-harness:hover {
   z-index: 3 !important;
 }
