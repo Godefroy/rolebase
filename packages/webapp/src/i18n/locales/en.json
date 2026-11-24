@@ -1345,6 +1345,7 @@
   "TaskContent": {
     "headingEdit": "Task",
     "headingCreate": "New task",
+    "createdAt": "Created on {{date}}",
     "titlePlaceholder": "Result to be achieved...",
     "circle": "Role",
     "memberId": "Assigned member",

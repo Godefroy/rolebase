@@ -7,6 +7,7 @@ import Loading from '@/common/atoms/Loading'
 import Switch from '@/common/atoms/Switch'
 import SwitchController from '@/common/atoms/SwitchController'
 import { Title } from '@/common/atoms/Title'
+import useDateLocale from '@/common/hooks/useDateLocale'
 import { usePreventClose } from '@/common/hooks/usePreventClose'
 import Page404 from '@/common/pages/Page404'
 import CollabEditor from '@/editor/components/CollabEditor'
@@ -39,6 +40,7 @@ import {
   Input,
   Spacer,
   Tag,
+  Text,
   Tooltip,
   useDisclosure,
   VStack,
@@ -53,6 +55,7 @@ import {
 import { yupResolver } from '@hookform/resolvers/yup'
 import { nameSchema } from '@rolebase/shared/schemas'
 import { getDateTimeLocal } from '@utils/dates'
+import { format } from 'date-fns'
 import debounce from 'lodash.debounce'
 import React, { useCallback, useEffect, useMemo } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -102,6 +105,7 @@ export default function TaskContent({
   ...boxProps
 }: Props) {
   const { t } = useTranslation()
+  const dateLocale = useDateLocale()
   const { orgId, orgData } = useOrgContext()
   const isMember = useOrgMember()
   const currentMember = useCurrentMember()
@@ -302,6 +306,15 @@ export default function TaskContent({
             autoFocus
             readOnly={!isMember}
           />
+          {task && (
+            <Text fontSize="sm" color="gray.400" mt={2}>
+              {t('TaskContent.createdAt', {
+                date: format(new Date(task.createdAt), 'PPP', {
+                  locale: dateLocale,
+                }),
+              })}
+            </Text>
+          )}
         </FormControl>
 
         <FormControl isInvalid={!!errors.description}>
