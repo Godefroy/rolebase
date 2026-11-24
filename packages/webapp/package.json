@@ -14,7 +14,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@apollo/client": "^3.9.11",
+    "@apollo/client": "^4.3.8",
     "@chakra-ui/icons": "^2.2.4",
     "@chakra-ui/react": "^2.8.2",
     "@emoji-mart/data": "^1.2.1",
