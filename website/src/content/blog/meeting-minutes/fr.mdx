@@ -3,7 +3,7 @@ title: 'Modèle de compte rendu de réunion Word, avec un exemple'
 h1: 'Comment faire un compte rendu de réunion utile'
 summary: 'Téléchargez le modèle Word, notez les décisions pendant la réunion, et le compte rendu est bouclé à la fin de la séance plutôt que le soir même.'
 date: 2023-11-14
-update: 2026-11-01
+update: 2026-11-24
 image: './thumbnail.jpg'
 similarPosts:
   - 'remote-meetings'
@@ -11,7 +11,7 @@ similarPosts:
   - 'tactical-meeting'
 ---
 
-La plupart des comptes rendus se rédigent le soir de la réunion, de mémoire, et personne ne les relit. Partez d'un modèle de compte rendu de réunion que vous remplissez pendant que les gens parlent encore, et le document est prêt quand tout le monde quitte la salle.
+La plupart des comptes rendus, rédigés le soir de la réunion et de mémoire, ne sont jamais relus. Partez d’un modèle de compte rendu de réunion que vous remplissez pendant que les gens parlent encore, pour que le document soit prêt quand tout le monde quitte la salle.
 
 Cette page contient ce modèle en fichier Word et en texte simple, un ordre du jour type, un exemple rempli, le format qui garde un compte rendu retrouvable un an plus tard, et la méthode pour le remplir.
 
@@ -22,7 +22,7 @@ Un bon compte rendu indique la date et les participants, suit l’ordre du jour,
 {/* DOWNLOAD regen: python3 ./generate-meeting-templates.py */}
 <Button label="Télécharger le modèle Word" href="/downloads/compte-rendu-de-reunion-modele.docx" variant="primary" />
 
-Le fichier s'ouvre dans Word, Google Docs, LibreOffice ou Pages. Pour rédiger directement dans un wiki ou un outil de réunion, reprenez la même trame en texte simple.
+Le fichier s’ouvre dans Word, Google Docs, LibreOffice ou Pages. Pour rédiger directement dans un wiki ou un outil de réunion, reprenez la même trame en texte simple.
 
 ```
 Réunion :
@@ -60,7 +60,7 @@ Date :
 Reporté :
 ```
 
-**Pourquoi** évite qu'une décision soit rediscutée trois mois plus tard par quelqu'un qui n'était pas dans la salle. **Responsable** désigne une personne nommée, jamais une équipe, parce qu'une action portée par tout le monde n'est portée par personne. Dans une organisation par rôles, c'est un rôle plutôt qu'un intitulé de poste, ce qui garde l'action valable quand la personne change. Pour retrouver ces décisions d’une réunion à l’autre, reportez-les aussi dans un [registre des décisions](/fr/blog/decision-log).
+**Pourquoi** évite qu’une décision soit rediscutée trois mois plus tard par quelqu’un qui n’était pas dans la salle. **Responsable** désigne une personne nommée, jamais une équipe, parce que quand toute l’équipe porte une action, chacun compte sur les autres pour la faire. Dans une organisation par rôles, le responsable est un rôle plutôt qu’un intitulé de poste, ce qui garde l’action valable quand la personne change. Pour retrouver ces décisions d’une réunion à l’autre, reportez-les aussi dans un [registre des décisions](/fr/blog/decision-log).
 
 ### Un exemple rempli
 
@@ -76,194 +76,104 @@ La trame remplie après une réunion produit de 45 minutes donne ceci.
 
 #### Ordre du jour
 
-1. Abandons à l'inscription
+1. Abandons à l’inscription
 2. Test de la page tarifs
 3. Date de mise en ligne
 
 #### Discussions et décisions
 
-##### Abandons à l'inscription
+##### Abandons à l’inscription
 
-- **Discuté :** 38 % des nouveaux comptes s'arrêtent à l'étape d'invitation.
-- **Décidé :** rendre l'étape d'invitation facultative.
-- **Pourquoi :** elle bloque les personnes qui s'inscrivent seules pour essayer l'outil.
+- **Discuté :** 38 % des nouveaux comptes s’arrêtent à l’étape d’invitation.
+- **Décidé :** rendre l’étape d’invitation facultative.
+- **Pourquoi :** elle bloque les personnes qui s’inscrivent seules pour essayer l’outil.
 
 ##### Date de mise en ligne
 
-- **Discuté :** la migration de l'API a deux jours de retard.
-- **Décidé :** garder le 27 mars, sortir l'export CSV de la livraison.
-- **Pourquoi :** la date a été annoncée à trois clients, l'export peut attendre la version suivante.
+- **Discuté :** la migration de l’API a deux jours de retard.
+- **Décidé :** garder le 27 mars, sortir l’export CSV de la livraison.
+- **Pourquoi :** la date a été annoncée à trois clients, l’export peut attendre la version suivante.
 
 #### Actions
 
 | Action | Responsable | Échéance |
 | --- | --- | --- |
 | Annoncer aux trois clients ce que contient la livraison du 27 mars | Anaïs | 16 mars |
-| Rendre l'étape d'invitation facultative | Salomé | 18 mars |
+| Rendre l’étape d’invitation facultative | Salomé | 18 mars |
 
 #### Prochaine réunion
 
 - **Date :** 18 mars 2026
 - **Reporté :** test de la page tarifs
 
-L'exemple garde les décisions plutôt que le débat. La personne qui le relira dans six mois cherche la décision, sa raison et le responsable, et rien de plus. Une décision introuvable revient à l’ordre du jour, ce qui est l’un des signaux de la [réunionite](/fr/blog/meeting-overload).
+L’exemple garde les décisions plutôt que le débat. La personne qui le relira dans six mois cherche la décision, sa raison et le responsable, et rien de plus. Une décision introuvable revient à l’ordre du jour, ce qui est l’un des signaux de la [réunionite](/fr/blog/meeting-overload).
 
-## L'ordre du jour qui nourrit le compte rendu
+## L’ordre du jour qui nourrit le compte rendu
 
-Un compte rendu se rédige bien plus vite quand l'ordre du jour a déjà la forme que le compte rendu prendra. Envoyez l'ordre du jour avant la réunion, avec une ligne par point, et donnez à chaque point son résultat attendu. Nos [modèles d'ordre du jour](/fr/blog/meeting-agenda-template) traitent ce sujet, avec un téléchargement Word et une trame par type de réunion. Pour un rendez-vous régulier, reprenez aussi cet [ordre du jour de réunion d’équipe avec des exemples hebdomadaires](/fr/blog/staff-meeting).
+Un compte rendu se rédige bien plus vite quand l’ordre du jour a déjà la forme que le compte rendu prendra. Envoyez l’ordre du jour avant la réunion, avec une ligne par point, et donnez à chaque point son résultat attendu. Pour l’ordre du jour lui-même, vous pouvez [télécharger un modèle d’ordre du jour Word et l’adapter à chaque type de réunion](/fr/blog/meeting-agenda-template). Pour un rendez-vous régulier, reprenez aussi un [ordre du jour de réunion d’équipe avec des exemples hebdomadaires](/fr/blog/staff-meeting).
 
-## Le Rôle Vital des Comptes Rendus de Réunions : Un accès rapide à l'information
+## Pourquoi garder un compte rendu de chaque réunion
 
-### Le rôle de documentation interne
+Une fois la réunion terminée, le compte rendu reste la seule trace de ce qu’elle a décidé. Les équipes le rouvrent dans quatre situations :
 
-Les comptes-rendus de réunions sont extrêments importants pour la documentation interne. Ils peuvent servir de ressource pour l'onboarding des nouveaux employés et comme référence pour les audits ou revues de processus.
+- Une nouvelle recrue, ou la personne qui remplace un collègue absent, reprend l’historique d’un projet sans le reconstituer à partir des messageries.
+- Quand quelqu’un remet une décision en cause quelques mois plus tard, le compte rendu montre ce qui a été décidé et pourquoi.
+- Un audit ou une revue de processus demande la preuve de ce que l’organisation a décidé, et à quelle date.
+- Les absents se mettent à jour sans interrompre un collègue en plein travail de concentration.
 
-En effet, les comptes rendus de réunions ne se limitent pas seulement à l'onboarding des nouveaux employés, bien que cela représente une application clé. Ils servent également de ressource précieuse dans de nombreux autres contextes au sein d'une entreprise. Par exemple, lorsqu'un employé doit s'absenter pour une période prolongée ou quitter définitivement l'organisation, ces documents fournissent un historique complet des discussions et des décisions qui ont été prises, permettant ainsi une transition et une continuité fluides des projets en cours.
-
-En outre, les comptes rendus offrent une base fiable pour la prise de décision et la planification stratégique. Ils permettent aux dirigeants et aux gestionnaires de suivre l'évolution des idées et des stratégies au fil du temps, facilitant ainsi l'évaluation des performances et la prise de décisions éclairées. De plus, en cas de désaccord ou de confusion sur une direction prise par l'équipe, le compte rendu sert de référence objective pour clarifier les malentendus et confirmer les engagements.
-
-Les comptes rendus de réunions jouent aussi un rôle crucial en matière de gouvernance d'entreprise. Lors des audits ou des revues de processus, ils fournissent une preuve documentée des actions et décisions de l'entreprise, ce qui est essentiel pour démontrer la conformité aux réglementations et aux meilleures pratiques de l'industrie.
-
-De plus, ces documents aident à maintenir l'ensemble de l'équipe informée et engagée. Ils garantissent que même les membres qui n'ont pas pu assister à une réunion spécifique sont au courant des développements récents et peuvent contribuer de manière significative aux discussions et aux initiatives futures.
-
-### Le cas des entreprises Hybrides et Full Remote
-
-Dans les entreprises hybrides et full remote, les comptes rendus de réunions revêtent une importance capitale, jouant un rôle crucial dans le maintien de la communication, de la cohérence et de la productivité. Dans ces environnements où les interactions en personne sont limitées ou inexistantes, les comptes rendus servent de ponts essentiels pour assurer que tous les membres de l'équipe, qu'ils soient au bureau ou à distance, restent informés et alignés sur les objectifs communs.
-
-La rapidité de l'accès à l'information est essentielle, mais souvent entravée par des créneaux de travail profond où les interruptions sont minimisées.
-
-C'est là que les comptes rendus de réunions prennent toute leur importance. Ils permettent d'accéder rapidement et de manière autonome aux informations clés sans avoir à interrompre un collègue.
-
-Un système d'archivage d'informations facilite l'autonomie dans la prise de décision et la mise en œuvre rapide des idées. Il aide à surmonter les défis liés à la communication asynchrone typique des environnements hybrides et full remote, assurant que les membres de l'équipe peuvent progresser efficacement, même en l'absence de réponses immédiates de leurs collègues.
-
-A l'inverse, un accès lent à l'information peut pousser une idée à être abandonnée ou repoussée plutôt que d'être directement mise en place. Ce serait dommage.
-
-Ainsi, les comptes rendus deviennent un outil vital pour maintenir la dynamique et l'efficacité au sein des équipes dispersées géographiquement.
-
-### La diffusion de l'information contre l'effet silo
-
-Les comptes rendus de réunions jouent un rôle crucial dans la lutte contre l'effet silo dans les entreprises. En mettant à disposition des informations précieuses sur les différents aspects d'un projet, ils favorisent la transversalité et la collaboration entre les départements. Ces documents aident à décloisonner l'information, permettant à chaque équipe de comprendre non seulement leur contribution mais aussi comment leur travail s'intègre dans le cadre plus large de l'organisation.
-
-En facilitant l'accès aux informations cruciales, les comptes rendus contribuent à une meilleure compréhension des objectifs et des stratégies globales. Cela devient particulièrement pertinent dans des contextes où les équipes travaillent de manière isolée ou à distance. En disposant d'un compte rendu bien structuré, chaque membre de l'équipe peut facilement suivre l'évolution du projet, comprendre les décisions prises et identifier les prochaines étapes, sans dépendre de réunions supplémentaires ou de communications informelles.
-
-De plus, dans les situations où des décisions doivent être réévaluées ou des erreurs corrigées, les comptes rendus fournissent une base factuelle pour analyser ce qui a été décidé précédemment. Ils servent alors de point de référence pour rectifier le tir, optimiser les processus et prendre de meilleures décisions à l'avenir.
-
-En résumé, les comptes rendus de réunions sont un outil puissant pour promouvoir une culture d'entreprise où l'information circule librement et efficacement. En brisant les barrières de communication et en offrant une vision claire et partagée, ils jouent un rôle essentiel dans la création d'environnements de travail plus intégrés, transparents et efficaces.
+Les équipes hybrides ou à distance comptent le plus sur le compte rendu pour que les absents se mettent à jour seuls. Quand la réponse se trouve dans un compte rendu partagé, ils peuvent avancer le jour même au lieu d’attendre qu’un collègue leur réponde. Les autres services lisent le même compte rendu pour voir ce qu’une décision change dans leur propre travail.
 
 ## Comment rédiger un bon compte rendu de réunion
 
-Le modèle vous donne la structure. Bien le remplir commence par [mener une réunion qui mérite d'être consignée](/fr/blog/productive-meetings), puis viennent la prise de notes et le suivi.
+Le modèle vous donne la structure. Pour bien le remplir, préparez-le avant la séance, prenez les notes pendant et faites le suivi après. Chaque étape est plus simple quand vous [menez une réunion qui mérite d’être consignée](/fr/blog/productive-meetings).
 
-### Comprendre l'Objectif du Compte Rendu
+### Avant la réunion
 
-Un bon compte rendu de réunion doit capturer l'essence des discussions, les décisions prises, et les actions à entreprendre. Son but est de fournir un résumé clair et concis qui puisse servir de référence pour les participants, absents et futurs partie-prenantes.
+- Recopiez l’ordre du jour dans le modèle, avec un bloc par point.
+- Remplissez l’en-tête avec la date, les participants, les excusés et le nom de la personne qui rédige le compte rendu.
 
-#### Avant la Réunion: Préparation
+### Pendant la réunion
 
-1. **Connaître l'Ordre du Jour**: Avant la réunion, familiarisez-vous avec l'ordre du jour. Cela vous aidera à comprendre les sujets à couvrir et à structurer vos notes en conséquence.
-2. **Choisir le Bon Format**: Décidez si vous utiliserez un format structuré (avec des sections prédéfinies) ou un format plus libre. Cela dépendra souvent du type de réunion et des préférences de votre organisation.
+- Notez chaque décision, sa raison et les actions au fil de l’eau.
+- Résumez seulement la partie du débat qui a mené à chaque décision.
+- Notez qui a fait une proposition ou soulevé une objection quand elle a pesé sur la décision.
+- Faites reformuler une décision floue, puis demandez qui prend chaque action et pour quelle date.
 
-#### Pendant la Réunion: Prise de Notes Efficace
+### Après la réunion
 
-1. **Notez les Points Clés**: Concentrez-vous sur les idées principales, les décisions prises, et les actions assignées. Il n'est pas nécessaire de retranscrire mot pour mot.
-2. **Identifier les Intervenants**: Notez qui a dit quoi, surtout lorsqu'il s'agit de décisions ou de commentaires importants.
-3. **Clarifier les Doutes**: N'hésitez pas à demander des éclaircissements si un point n'est pas clair.
+- Relisez le compte rendu le jour même, vérifiez les noms et les dates, et ajoutez le lien vers les documents montrés en séance.
+- Envoyez-le aux participants et aux absents.
+- Ouvrez la réunion suivante sur les actions du compte rendu précédent, pour marquer chacune comme faite, reportée ou abandonnée.
 
-#### Après la Réunion: Rédaction du Compte Rendu
+## Archiver ses comptes rendus pour les retrouver
 
-1. **Structurez le Document**: Commencez par l'en-tête (nom de l'entreprise, date, heure, lieu, participants), suivi de l'ordre du jour, des points discutés, des décisions prises, et des actions à entreprendre.
-2. **Clarté et Concision**: Soyez clair et concis. Utilisez des phrases courtes et directes pour faciliter la compréhension.
-3. **Actions et Responsabilités**: Mettez en évidence les tâches assignées et les échéances. Indiquez clairement qui est responsable de quoi.
-4. **Vérification et Correction**: Relisez le compte rendu pour corriger les erreurs et vous assurer que toutes les informations importantes sont incluses.
+Un compte rendu sert tant qu’on peut le retrouver, même un an plus tard. Cinq habitudes facilitent la recherche :
 
-#### Conseils Supplémentaires
+- Utilisez le même modèle pour toutes les réunions, pour qu’une série de comptes rendus se lise de la même façon.
+- Nommez les fichiers sur un seul schéma, par exemple `CR_Ventes_2026-03-11`, pour qu’ils se classent par date.
+- Rangez-les dans un seul espace partagé (Google Drive, SharePoint, Notion ou un outil de réunion), par équipe ou par type de réunion.
+- Décidez qui peut les lire et qui peut les modifier.
+- Archivez le compte rendu juste après la réunion, pendant que tout le monde y pense encore.
 
-- **Utilisez des Bullet Points**: Pour plus de clarté, organisez les informations sous forme de listes à puces.
-- **Inclure des Annexes**: Si des documents ou présentations ont été partagés pendant la réunion, référencez-les ou joignez-les au compte rendu.
-- **Diffusion Rapide**: Envoyez le compte rendu aux participants et aux absents dès que possible après la réunion.
+## Un compte rendu rédigé pendant la réunion avec Rolebase
 
-#### L'Importance du Suivi
+Une procédure de compte rendu marche quand l’équipe la suit vraiment. Les comptes rendus rangés sur Notion, Google Drive ou SharePoint finissent souvent dans un dossier que les personnes concernées n’ouvrent jamais, alors elles demandent l’information à un collègue.
 
-- **Suivi des Actions**: Assurez-vous que les actions décrites dans le compte rendu sont suivies. Cela peut impliquer de collaborer avec les gestionnaires de projet ou les chefs d'équipe.
+Dans Rolebase, chaque réunion suit son ordre du jour. Chaque point a ses propres notes et ses discussions rattachées, donc vous rédigez le compte rendu pendant que les gens parlent.
 
-Un bon compte rendu de réunion est un outil de communication essentiel. Il garantit que tous les participants, présents et absents, sont sur la même longueur d'onde et conscients des décisions prises et des actions à entreprendre. En suivant ces étapes et conseils, vous pouvez rédiger des comptes rendus de réunion qui sont non seulement informatifs mais aussi facilitent la gestion et le suivi des projets au sein de votre organisation.
+![Déroulé d’une réunion Rolebase, avec son ordre du jour modulable et les échanges rattachés à chaque point](./rolebase_deroule_reunion.png)
 
-## L'Archivage et la Gestion des Comptes Rendus : Bonnes pratiques pour bien les retrouver
-
-L'archivage et la gestion efficaces des comptes rendus de réunions sont cruciaux pour toute organisation. Ils garantissent non seulement que les informations sont facilement accessibles pour référence future, mais aussi qu'elles sont sécurisées et organisées. Voici des bonnes pratiques pour archiver et gérer les comptes rendus de manière efficace.
-
-### Comprendre l'Importance de l'Archivage
-
-Un archivage adéquat des comptes rendus permet de retrouver rapidement des informations clés, aide à la prise de décision informée, et assure la conformité aux normes de gouvernance et d'audit. Il facilite également le transfert de connaissances au sein de l'entreprise.
-
-#### Préparation et Organisation
-
-1. **Standardisation des Formats**: Utilisez un format standard pour tous les comptes rendus pour assurer la cohérence. Cela simplifie la recherche et la comparaison des documents.
-2. **Nommer les Fichiers de Manière Logique**: Adoptez un système de nommage clair, par exemple, "CompteRendu_Reunion_Ventes_20230321".
-3. **Utilisation de Métadonnées**: Inclure des métadonnées telles que la date, le sujet, les participants, et les mots-clés peut grandement faciliter la recherche de documents spécifiques.
-
-#### Choix d'un Système de Stockage
-
-- **Systèmes Cloud vs Locaux**: Choisissez entre un stockage cloud (comme Google Drive, SharePoint ou Notion) et un stockage local en fonction des besoins en sécurité et accessibilité de votre organisation.
-- **Accès et Sécurité**: Assurez-vous que les comptes rendus sont accessibles aux personnes concernées tout en garantissant la sécurité des données.
-
-#### Processus d'Archivage
-
-- **Archivage après la Réunion**: Archivez le compte rendu immédiatement après la réunion pour éviter les pertes ou les oublis.
-- **Catégorisation et Indexation**: Catégorisez et indexez les comptes rendus par projet, département ou type de réunion pour un accès rapide.
-
-#### Accessibilité et Partage
-
-- **Politique de Partage**: Définissez une politique claire pour le partage des comptes rendus. Qui peut les consulter ? Qui peut les modifier ?
-- **Intégration aux Outils de Travail**: Intégrez l'accès aux comptes rendus dans les outils de travail quotidiens pour faciliter leur consultation.
-
-#### Formation et Sensibilisation
-
-- Formez les employés sur l'importance de l'archivage et les meilleures pratiques pour assurer une gestion efficace.
-
-#### Révisions et Audits Réguliers
-
-- Effectuez des audits réguliers pour s'assurer que les pratiques d'archivage sont toujours adéquates et que les informations sont à jour.
-
-## Une solution clé en main pour vos comptes rendus de réunions
-
-La mise en place de nouveaux process demande toujours un certain effort à la fois de la part des leaders ainsi que de l'ensemble de l'entreprise.
-
-En effet, un process non adopté ne génère aucune valeur. Au contraire il génère des frustrations vis-à-vis de l'échec de son implémentation.
-
-### Simplification du rituel de réunion & nourrir automatiquement la documentation
-
-Pour nourrir efficacement sa documentation avec des comptes-rendus de réunion vous l'avez vu il faut cocher un certain nombre de cases.
-
-Aujourd'hui sur Notion, Google Drive ou Sharepoint il est impossible d'être omniscient et un nombre conséquent de documents se retrouvent donc orphelins caché dans un espace sans que les personnes en ayant besoin puissent les trouver facilement.
-
-Si l'on y réfléchi, si l'on doit demander à une ou plusieurs personnes où trouver une information. La gestion de la documentation n'est pas efficace.
-
-Avec Rolebase chaque réunion est structuré autour d'un ordre du jour modulable, d'échanges collaboratifs et de synthèses. Les thématiques bénéficient d'une discussion spécifique, pouvant être intégrée aux délibérations.
-
-![Déroulé d'une réunion Rolebase, avec son ordre du jour modulable et les échanges rattachés à chaque point](./rolebase_deroule_reunion.png)
-
-L'objectif de cette architecture est de simplifier au maximum les process afin de valoriser le temps des équipes, les encourageant à se focaliser sur leur domaine de prédilection.
-
-### L'Intelligence Artificielle pour vous faire gagner du temps
-
-Avec Rolebase il est extrêmement simple de mettre en place des comptes-rendus de réunion sans nécessiter de temps supplémentaire (tout est déjà intégré à la réunion).
-
-Rolebase peut rédiger un court résumé à partir des notes saisies pendant la réunion.
-
-Après la séance, générez un paragraphe à partir des notes des étapes de l’ordre du jour et des discussions rattachées. Modifiez-le au besoin, puis retrouvez-le avec la recherche Rolebase.
+Après la séance, les [fonctions de réunion de Rolebase](/fr/features) rédigent un court résumé à partir des notes saisies sous chaque point de l’ordre du jour et dans les discussions.
 
 ![Réunion Rolebase terminée, avec le bouton qui génère un résumé à partir des notes des participants](./compte-rendu-20r-c3-a9union.png)
 
-Voici le résumé généré à partir des notes de la réunion. Vous pouvez le modifier pour ajouter ou retirer des informations.
+Modifiez le résumé pour ajouter ou retirer des informations.
 
 ![Résumé de réunion généré par Rolebase, modifiable pour ajouter ou retirer des informations](./compte-rendu_g-c3-a9n-c3-a9r-c3-a9.png)
 
-Ensuite celui-ci sera facilement trouvable avec la recherche Rolebase.
+Chacun dans l’équipe peut ensuite retrouver la réunion et son résumé avec la recherche Rolebase.
 
-![Recherche Rolebase retrouvant un compte rendu de réunion parmi les contenus de l'organisation](./recherche_rolebase.png)
-
-**En résumé Rolebase est la solution simple et intuitive vous permettant de mettre en place une culture de l'écrit globale où chacun peut retrouver tous les éléments l'aidant à effectuer ses missions !**
+![Recherche Rolebase retrouvant un compte rendu de réunion parmi les contenus de l’organisation](./recherche_rolebase.png)
 
 ## Questions fréquentes
 
@@ -271,42 +181,52 @@ Ensuite celui-ci sera facilement trouvable avec la recherche Rolebase.
 
 <FaqItem question="Quels sont les 3 types de compte rendu ?">
 
-Le compte rendu intégral transcrit les débats mot pour mot. Le compte rendu analytique suit l'ordre chronologique des interventions en citant leurs auteurs, et les propos peuvent être reformulés tant que le sens reste le même. Le compte rendu synthétique regroupe les échanges par thème, sous des titres, sans rattacher chaque phrase à son auteur. En réunion d'équipe, le compte rendu synthétique est celui qu'on relit, et c'est la forme que suit le modèle de cette page.
+Le compte rendu intégral transcrit les débats mot pour mot. Le compte rendu analytique suit l’ordre chronologique des interventions en citant leurs auteurs, et les propos peuvent être reformulés tant que le sens reste le même. Le compte rendu synthétique regroupe les échanges par thème, sous des titres, sans rattacher chaque phrase à son auteur. En réunion d’équipe, on relit surtout le compte rendu synthétique, la forme que suit le modèle de cette page.
+
+</FaqItem>
+
+<FaqItem question="Quelle est la différence entre un rapport et un compte rendu ?">
+
+Le compte rendu restitue fidèlement et de façon neutre ce qui s’est dit et décidé. Dans un rapport, l’auteur analyse les faits, puis donne son avis et ses recommandations. Après une réunion d’équipe, on attend un compte rendu. Un rapport répond à une demande d’avis, par exemple pour choisir entre deux fournisseurs.
 
 </FaqItem>
 
 <FaqItem question="Que doit contenir un bon compte rendu de réunion ?">
 
-Un compte rendu utile indique la date et les participants, reprend l’ordre du jour, résume les échanges utiles, précise chaque décision et sa raison, puis liste les actions avec un responsable nommé et une échéance. Ajoutez la date de la prochaine réunion si elle est connue. Le modèle ci-dessus place ces éléments sous chaque point, pour retrouver la discussion, la décision et le suivi au même endroit.
+Un compte rendu utile indique la date et les participants, reprend l’ordre du jour, résume les échanges utiles, précise chaque décision et sa raison, puis liste les actions avec un responsable nommé et une échéance. Ajoutez la date de la prochaine réunion si elle est connue. Le modèle de cette page place ces éléments sous chaque point, pour retrouver la discussion, la décision et le suivi au même endroit.
 
 </FaqItem>
 
-<FaqItem question="Quelle est la trame d'un compte rendu de réunion ?">
+<FaqItem question="Quelle est la trame d’un compte rendu de réunion ?">
 
-La trame tient en quatre blocs : un en-tête avec la date et les participants, un bloc par point de l’ordre du jour avec les échanges utiles, la décision et sa raison, un tableau d'actions avec un responsable et une échéance, puis la date de la prochaine réunion. Garder le même ordre d'une réunion à l'autre rend une série de comptes rendus plus facile à parcourir. Un outil qui structure la réunion autour de son ordre du jour, comme [Rolebase](/fr/features), remplit cette trame au fil de la séance.
+La trame tient en quatre blocs : un en-tête avec la date et les participants, un bloc par point de l’ordre du jour avec les échanges utiles, la décision et sa raison, un tableau d’actions avec un responsable et une échéance, puis la date de la prochaine réunion. Gardez le même ordre d’une réunion à l’autre, pour qu’une série de comptes rendus soit plus facile à parcourir. Dans un outil qui structure la réunion autour de son ordre du jour, comme [Rolebase](/fr/features), vous remplissez cette trame au fil de la séance.
 
 </FaqItem>
 
-<FaqItem question="Quelle est la phrase introductive d'un compte rendu de réunion ?">
+<FaqItem question="Quelle est la phrase introductive d’un compte rendu de réunion ?">
 
-Un en-tête remplace la phrase d'introduction : la réunion, la date, l'horaire, le lieu, les participants et les excusés. Le lecteur cherche une information précise et parcourt le document des yeux, donc il gagne à trouver ces éléments sous forme de champs plutôt que dans une phrase à lire. Les procès-verbaux d'assemblée gardent une formule d'ouverture, parce que le Code de commerce ou les statuts imposent d'y faire figurer la date, le lieu, le mode de convocation et la composition du bureau.
+Un en-tête remplace la phrase d’introduction : la réunion, la date, l’horaire, le lieu, les participants et les excusés. Le lecteur cherche une information précise et parcourt le document des yeux, donc il gagne à trouver ces éléments sous forme de champs plutôt que dans une phrase à lire. Les procès-verbaux d’assemblée gardent une formule d’ouverture, parce que le Code de commerce ou les statuts imposent d’y faire figurer la date, le lieu, le mode de convocation et la composition du bureau.
 
 </FaqItem>
 
 <FaqItem question="Quel est le rôle du secrétaire de séance ?">
 
-Avant la réunion, reprenez l’ordre du jour et renseignez la date, les participants et le nom de la personne chargée des notes. Pendant les échanges, notez le sujet, la décision et sa raison, puis demandez qui prend chaque action et pour quelle date. Gardez une question sans réponse comme point ouvert plutôt que de la présenter comme une décision. Dans l’exemple de réunion produit ci-dessus, Karim consigne la décision de rendre l’invitation facultative et confie sa mise en œuvre à Salomé avant le 18 mars. Après la séance, vérifiez les noms et les dates avec les participants, puis partagez le compte rendu rapidement.
+Avant la réunion, reprenez l’ordre du jour et renseignez la date, les participants et le nom de la personne chargée des notes. Pendant les échanges, notez le sujet, la décision et sa raison, puis demandez qui prend chaque action et pour quelle date. Gardez une question sans réponse comme point ouvert plutôt que de la présenter comme une décision. Dans l’exemple rempli de réunion produit, Karim consigne la décision de rendre l’invitation facultative et confie sa mise en œuvre à Salomé avant le 18 mars. Après la séance, vérifiez les noms et les dates avec les participants, puis partagez le compte rendu rapidement.
 
 </FaqItem>
 
-<FaqItem question="Comment appelle-t-on le compte rendu d'une réunion ?">
+<FaqItem question="Quel logiciel gratuit utiliser pour faire un compte rendu de réunion ?">
 
-On parle de procès-verbal quand le document a une valeur juridique et engage l'organisation, en assemblée générale, en conseil d'administration ou en CSE. Le relevé de décisions se limite aux décisions prises, sans le détail des échanges. Le compte rendu couvre le cas courant d'une réunion d'équipe, avec les décisions, leurs raisons et les actions qui en découlent.
+Pour une réunion ponctuelle, Google Docs ou LibreOffice, gratuits tous les deux, suffisent avec le modèle de cette page. Pour des réunions récurrentes, choisissez un outil qui garde l’ordre du jour, les notes, les décisions et les actions au même endroit, pour retrouver le compte rendu précédent en un clic. [Rolebase](/fr/features) rattache chaque réunion à un rôle et rédige un résumé à partir des notes prises en séance. Toutes ses fonctionnalités sont gratuites jusqu’à 5 membres actifs, sans carte bancaire. D’autres outils enregistrent et transcrivent la réunion. Les [logiciels de réunion se distinguent surtout par ce qu’ils gardent après la séance](/fr/blog/best-meeting-management-software) : des décisions, une transcription ou un procès-verbal.
+
+</FaqItem>
+
+<FaqItem question="Comment appelle-t-on le compte rendu d’une réunion ?">
+
+On parle de procès-verbal quand le document a une valeur juridique et engage l’organisation, en assemblée générale, en conseil d’administration ou en CSE. Le relevé de décisions se limite aux décisions prises, sans le détail des échanges. Le compte rendu couvre le cas courant d’une réunion d’équipe, avec les décisions, leurs raisons et les actions qui en découlent.
 
 </FaqItem>
 
 </FaqList>
-
-Pour choisir un outil de réunion récurrente, comparez les [logiciels de réunion selon leurs fonctions d’ordre du jour, de décision et de compte rendu](/fr/blog/best-meeting-management-software).
 
 [Je demande une consultation gratuite avec un expert](/fr/contact)
