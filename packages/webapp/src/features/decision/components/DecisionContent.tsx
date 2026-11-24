@@ -80,84 +80,86 @@ export default function DecisionContent({
   }
 
   return (
-    <Box mb={3} {...boxProps}>
-      {changeTitle && <Title>{decision?.title || '…'}</Title>}
+    <Box>
+      <Box mb={3} {...boxProps}>
+        {changeTitle && <Title>{decision?.title || '…'}</Title>}
 
-      <Flex align="center" mb={5}>
-        <Heading as="h1" size="md">
-          {t('DecisionContent.heading')}
-        </Heading>
+        <Flex align="center" mb={5}>
+          <Heading as="h1" size="md">
+            {t('DecisionContent.heading')}
+          </Heading>
 
-        {decision && <CircleByIdButton id={decision.circleId} ml={3} />}
+          {decision && <CircleByIdButton id={decision.circleId} ml={3} />}
 
-        {decision?.archivedAt && <Tag ml={2}>{t('common.archived')}</Tag>}
+          {decision?.archivedAt && <Tag ml={2}>{t('common.archived')}</Tag>}
 
-        <Spacer />
+          <Spacer />
 
-        {decision?.private && (
-          <Tooltip
-            label={t('DecisionContent.private', {
-              role: orgData?.getRole(circle?.roleId)?.name,
-            })}
-            hasArrow
-          >
-            <Center mr={2}>
-              <PrivacyIcon size={20} />
-            </Center>
-          </Tooltip>
+          {decision?.private && (
+            <Tooltip
+              label={t('DecisionContent.private', {
+                role: orgData?.getRole(circle?.roleId)?.name,
+              })}
+              hasArrow
+            >
+              <Center mr={2}>
+                <PrivacyIcon size={20} />
+              </Center>
+            </Tooltip>
+          )}
+
+          <Flex mr={headerIcons ? -3 : 0}>
+            {actions.hasItems && (
+              <ActionsMenu ml={3}>{actions.items}</ActionsMenu>
+            )}
+            {headerIcons}
+          </Flex>
+        </Flex>
+
+        {id && loading && <Loading active size="md" />}
+
+        <Text fontSize="lg" fontWeight="bold" mt={2} mb={1}>
+          {decision?.title}
+        </Text>
+
+        {decision && (
+          <Text fontSize="sm" fontWeight="normal" color="gray.400" mb={5}>
+            {capitalizeFirstLetter(
+              format(new Date(decision.createdAt), 'PPPP', {
+                locale: dateLocale,
+              })
+            )}
+          </Text>
         )}
 
-        <Flex mr={headerIcons ? -3 : 0}>
-          {actions.hasItems && (
-            <ActionsMenu ml={3}>{actions.items}</ActionsMenu>
-          )}
-          {headerIcons}
-        </Flex>
-      </Flex>
+        <Markdown>{decision?.description || ''}</Markdown>
 
-      {id && loading && <Loading active size="md" />}
-
-      <Text fontSize="lg" fontWeight="bold" mt={2} mb={1}>
-        {decision?.title}
-      </Text>
-
-      {decision && (
-        <Text fontSize="sm" fontWeight="normal" color="gray.400" mb={5}>
-          {capitalizeFirstLetter(
-            format(new Date(decision.createdAt), 'PPPP', {
-              locale: dateLocale,
-            })
-          )}
-        </Text>
-      )}
-
-      <Markdown>{decision?.description || ''}</Markdown>
-
-      {logs && logs.length > 0 && (
-        <Box mt={6}>
-          <Heading as="h2" size="sm" mb={2}>
-            {t('DecisionContent.changes')}
-          </Heading>
-          <VStack align="stretch" spacing={1}>
-            {logs.map((log) => (
-              <Box key={log.id} fontSize="sm">
-                <LogText log={log} />
-              </Box>
-            ))}
-          </VStack>
-        </Box>
-      )}
+        {logs && logs.length > 0 && (
+          <Box mt={6}>
+            <Heading as="h2" size="sm" mb={2}>
+              {t('DecisionContent.changes')}
+            </Heading>
+            <VStack align="stretch" spacing={1}>
+              {logs.map((log) => (
+                <Box key={log.id} fontSize="sm">
+                  <LogText log={log} />
+                </Box>
+              ))}
+            </VStack>
+          </Box>
+        )}
+      </Box>
 
       {threadActivities && threadActivities.length > 0 && (
         <VStack
           align="stretch"
           spacing={0}
-          // Beige surface so the white thread cards stand out on the panel
+          // Beige footer spanning the card so the white thread cards stand out
           bg="menulight"
           _dark={{ bg: 'menudark' }}
-          borderRadius="xl"
+          borderTopRadius="xl"
+          borderBottomRadius="md"
           p={3}
-          mt={6}
         >
           {threadActivities.map(
             (activity) =>
@@ -167,7 +169,6 @@ export default function DecisionContent({
                   thread={activity.thread}
                   showIcon
                   showCircle
-                  openButton
                 />
               )
           )}

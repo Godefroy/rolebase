@@ -2,7 +2,7 @@ import CircleByIdButton from '@/circle/components/CircleByIdButton'
 import ListItemLayout from '@/common/atoms/ListItemLayout'
 import useDateLocale from '@/common/hooks/useDateLocale'
 import { useNormalClickHandler } from '@/common/hooks/useNormalClickHandler'
-import { getItemCardProps } from '@/common/utils/itemCardProps'
+import useItemCardProps from '@/common/hooks/useItemCardProps'
 import { getListItemTitleProps } from '@/common/utils/listItemTitleProps'
 import MemberByIdAvatar from '@/member/components/MemberByIdAvatar'
 import { usePathInOrg } from '@/org/hooks/usePathInOrg'
@@ -54,12 +54,14 @@ const DecisionItem = forwardRef<Props, 'div'>(
     const dateLocale = useDateLocale()
     const titleProps = getListItemTitleProps(!!card)
 
+    const cardProps = useItemCardProps()
+
     return (
       <>
         <LinkBox
           ref={ref}
           {...(card
-            ? { ...getItemCardProps(), mb: 2 }
+            ? { ...cardProps, mb: 2 }
             : {
                 p: 1,
                 _hover: openButton ? undefined : { bg: 'bgItemHover' },

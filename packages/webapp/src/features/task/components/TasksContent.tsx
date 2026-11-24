@@ -57,7 +57,8 @@ export default function TasksContent({ overflowContainer, isFullPage }: Props) {
       )}
 
       {!loading && view === TasksViewTypes.List && (
-        <Box maxW="3xl" px={{ base: 0, sm: 3 }}>
+        // Inset on the tasks page only, elsewhere aligned with the surrounding content
+        <Box maxW="3xl" px={isFullPage ? { base: 0, sm: 3 } : 0}>
           <TasksList
             tasks={tasks}
             onOrderChange={isMember && !isSorted ? changeOrder : undefined}

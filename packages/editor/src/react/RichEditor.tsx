@@ -221,7 +221,9 @@ const RichEditorSession = forwardRef<
         return extension
       }),
       Placeholder.configure({
-        showOnlyCurrent: false,
+        // Default showOnlyCurrent: the incremental path (showOnlyCurrent: false)
+        // reads editor.isEmpty before the transaction, so the empty editor class
+        // lags one change behind (cleared content keeps no placeholder on blur)
         placeholder: ({ editor, node, hasAnchor }) => {
           if (editor.isEmpty) return placeholderRef.current ?? ''
           // Show the paragraph placeholder only where the cursor is

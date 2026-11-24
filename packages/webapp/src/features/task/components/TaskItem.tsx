@@ -1,6 +1,6 @@
 import CircleByIdButton from '@/circle/components/CircleByIdButton'
 import ListItemLayout from '@/common/atoms/ListItemLayout'
-import { getItemCardProps } from '@/common/utils/itemCardProps'
+import useItemCardProps from '@/common/hooks/useItemCardProps'
 import { getListItemTitleProps } from '@/common/utils/listItemTitleProps'
 import { useNormalClickHandler } from '@/common/hooks/useNormalClickHandler'
 import MemberByIdAvatar from '@/member/components/MemberByIdAvatar'
@@ -83,13 +83,15 @@ const TaskItem = forwardRef<Props, 'div'>(
     const isStacked = !!(showCircle || showMember || showDueDate)
     const titleProps = getListItemTitleProps(isStacked)
 
+    const cardProps = useItemCardProps({ draggable, isDragging })
+
     return (
       <>
         <LinkBox
           ref={ref}
           onDragStart={handleDragStart}
           {...(isStacked
-            ? { ...getItemCardProps({ draggable, isDragging }), mb: 2 }
+            ? { ...cardProps, mb: 2 }
             : {
                 p: 1,
                 boxShadow: isDragging ? 'lg' : 'none',

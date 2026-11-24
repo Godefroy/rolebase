@@ -1,5 +1,6 @@
 import Loading from '@/common/atoms/Loading'
 import ScrollableLayout from '@/common/atoms/ScrollableLayout'
+import { ItemCardContext } from '@/common/contexts/ItemCardContext'
 import { Title } from '@/common/atoms/Title'
 import Page404 from '@/common/pages/Page404'
 import { useOrgContext } from '@/org/contexts/OrgContext'
@@ -12,6 +13,8 @@ import MeetingContent from './MeetingContent'
 import MeetingHeader from './MeetingHeader'
 import MeetingPanelEnded from './MeetingPanelEnded'
 import MeetingPanelStarted from './MeetingPanelStarted'
+
+const itemCardStyle = { bordered: true }
 
 interface Props extends BoxProps {
   id: string
@@ -51,6 +54,7 @@ export default function MeetingContainer({
 
       <ScrollableLayout
         {...boxProps}
+        beigeContent
         header={<MeetingHeader headerIcons={headerIcons} />}
         footer={
           isStarted ? (
@@ -60,7 +64,10 @@ export default function MeetingContainer({
           ) : undefined
         }
       >
-        {loading ? <Loading active size="md" mt={10} /> : <MeetingContent />}
+        {/* Bordered cards on the beige meeting page */}
+        <ItemCardContext.Provider value={itemCardStyle}>
+          {loading ? <Loading active size="md" mt={10} /> : <MeetingContent />}
+        </ItemCardContext.Provider>
       </ScrollableLayout>
     </MeetingContext.Provider>
   )

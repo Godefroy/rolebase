@@ -1,7 +1,7 @@
 import CircleByIdButton from '@/circle/components/CircleByIdButton'
 import ListItemLayout from '@/common/atoms/ListItemLayout'
 import { useNormalClickHandler } from '@/common/hooks/useNormalClickHandler'
-import { getItemCardProps } from '@/common/utils/itemCardProps'
+import useItemCardProps from '@/common/hooks/useItemCardProps'
 import { getListItemTitleProps } from '@/common/utils/listItemTitleProps'
 import MemberByIdAvatar from '@/member/components/MemberByIdAvatar'
 import { usePathInOrg } from '@/org/hooks/usePathInOrg'
@@ -51,12 +51,14 @@ const TaskCard = forwardRef<Props, 'div'>(
     // Block the browser's native drag of the link (drag and drop handles override it)
     const handleDragStart = (event: React.DragEvent) => event.preventDefault()
 
+    const cardProps = useItemCardProps({ draggable, isDragging, onColor: true })
+
     return (
       <>
         <LinkBox
           ref={ref}
           onDragStart={handleDragStart}
-          {...getItemCardProps({ draggable, isDragging, onColor: true })}
+          {...cardProps}
           {...linkBoxProps}
           tabIndex={
             // Remove tabIndex because it's redondant with link

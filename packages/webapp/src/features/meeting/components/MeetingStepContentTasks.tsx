@@ -99,20 +99,12 @@ export default function MeetingStepContentTasks({ step }: Props) {
           onStatusChange={handleStatusChange}
         >
           <TasksHeader pb={5} />
-          {/* Beige surface so the white task cards stand out on the meeting panel */}
-          <Box
-            bg="menulight"
-            _dark={{ bg: 'menudark' }}
-            borderRadius="xl"
-            p={4}
-          >
-            <TasksContent
-              overflowContainer={{
-                expandLeft: true,
-                expandRight: true,
-              }}
-            />
-          </Box>
+          <TasksContent
+            overflowContainer={{
+              expandLeft: true,
+              expandRight: true,
+            }}
+          />
         </TasksModuleProvider>
       )}
 

@@ -240,228 +240,229 @@ export default function TaskContent({
   }
 
   return (
-    <Box {...boxProps}>
-      {changeTitle && <Title>{task?.title || '…'}</Title>}
+    <Box>
+      <Box {...boxProps}>
+        {changeTitle && <Title>{task?.title || '…'}</Title>}
 
-      <Flex align="center" mb={5}>
-        <Heading as="h1" size="md">
-          {t(id ? 'TaskContent.headingEdit' : 'TaskContent.headingCreate')}
-        </Heading>
+        <Flex align="center" mb={5}>
+          <Heading as="h1" size="md">
+            {t(id ? 'TaskContent.headingEdit' : 'TaskContent.headingCreate')}
+          </Heading>
 
-        {task &&
-          (isMember ? (
-            <TaskStatusInput
-              value={task.status}
-              onChange={handleChangeStatus}
-              ml={5}
-              size="lg"
-            />
-          ) : (
-            <TaskStatusTag status={task.status} ml={5} size="lg" />
-          ))}
-
-        {id && loading && <Loading active size="sm" ml={5} />}
-
-        {task?.archivedAt && <Tag ml={2}>{t('common.archived')}</Tag>}
-
-        <Spacer />
-
-        {task?.private && (
-          <Tooltip
-            label={t('TaskContent.privateTooltip', {
-              role: orgData?.getRole(circle?.roleId)?.name,
-            })}
-            hasArrow
-          >
-            <Center mr={2}>
-              <PrivacyIcon size={20} />
-            </Center>
-          </Tooltip>
-        )}
-
-        <Flex mr={headerIcons ? -3 : 0}>
-          {id && actions.hasItems && (
-            <ActionsMenu ml={3}>{actions.items}</ActionsMenu>
-          )}
-
-          {headerIcons}
-        </Flex>
-      </Flex>
-
-      <VStack spacing={10} alignItems="start" mb={3}>
-        <FormControl isInvalid={!!errors.title}>
-          <Input
-            {...register('title')}
-            size="lg"
-            placeholder={t('TaskContent.titlePlaceholder')}
-            autoFocus
-            readOnly={!isMember}
-          />
-          {task && (
-            <Text fontSize="sm" color="gray.400" mt={2}>
-              {t('TaskContent.createdAt', {
-                date: format(new Date(task.createdAt), 'PPP', {
-                  locale: dateLocale,
-                }),
-              })}
-            </Text>
-          )}
-        </FormControl>
-
-        <FormControl isInvalid={!!errors.description}>
-          <FormLabel>{t('TaskContent.description')}</FormLabel>
-          {task ? (
-            <CollabEditor
-              docId={`task-${id}-description`}
-              placeholder={t('TaskContent.notes')}
-              minH="80px"
-              readOnly={!isMember}
-            />
-          ) : (
-            <EditorController
-              name="description"
-              placeholder={t('TaskContent.notes')}
-              control={control}
-            />
-          )}
-        </FormControl>
-
-        <Flex flexWrap="wrap">
-          <FormControl isInvalid={!!errors.circleId} w="auto" mr={5}>
-            <FormLabel>{t('TaskContent.circle')}</FormLabel>
-            <Controller
-              name="circleId"
-              control={control}
-              render={({ field }) =>
-                isMember ? (
-                  <CircleSearchInput
-                    value={field.value}
-                    onChange={field.onChange}
-                  />
-                ) : (
-                  <CircleByIdButton id={field.value} />
-                )
-              }
-            />
-          </FormControl>
-
-          <FormControl isInvalid={!!errors.memberId} w="auto">
-            <FormLabel>{t('TaskContent.memberId')}</FormLabel>
-            <Controller
-              name="memberId"
-              control={control}
-              render={({ field }) =>
-                isMember ? (
-                  <MemberSearchInput
-                    value={field.value ?? undefined}
-                    onChange={field.onChange}
-                    onClear={() => field.onChange(null)}
-                  />
-                ) : field.value ? (
-                  <CircleMemberLink memberId={field.value}>
-                    <MemberByIdButton id={field.value} size="sm" />
-                  </CircleMemberLink>
-                ) : (
-                  <></>
-                )
-              }
-            />
-          </FormControl>
-        </Flex>
-
-        <VStack spacing={3} align="start">
-          <FormControl>
-            <Switch
-              isChecked={!!dueDate}
-              isReadOnly={!isMember}
-              onChange={handleToggleDueDate}
-            >
-              {t('TaskContent.dueDate')}
-            </Switch>
-            <Collapse in={!!dueDate}>
-              <Box mt={4} mb={2} pl={10}>
-                <Input
-                  {...register('dueDate')}
-                  type="datetime-local"
-                  w="250px"
-                  readOnly={!isMember}
-                />
-              </Box>
-            </Collapse>
-          </FormControl>
-
-          <FormControl>
-            <SwitchController
-              name="private"
-              control={control}
-              isReadOnly={!isMember}
-            >
-              {t('TaskContent.private')}
-              <ParticipantsNumber
-                participants={allParticipants}
-                opacity={watchedData.private ? 1 : 0.4}
-                ml={2}
+          {task &&
+            (isMember ? (
+              <TaskStatusInput
+                value={task.status}
+                onChange={handleChangeStatus}
+                ml={5}
+                size="lg"
               />
-            </SwitchController>
-            <Collapse in={watchedData.private}>
-              <FormHelperText ml="40px" mb={2}>
-                {t('TaskContent.privateHelp', {
-                  role: orgData?.getRole(circle?.roleId)?.name,
-                })}
-              </FormHelperText>
-            </Collapse>
-          </FormControl>
-        </VStack>
+            ) : (
+              <TaskStatusTag status={task.status} ml={5} size="lg" />
+            ))}
 
-        <Collapse in={!isPrivateAllowed}>
-          <Alert status="warning">
-            <AlertIcon />
-            <AlertDescription>
-              {t('TaskContent.privateNotAllowed', {
+          {id && loading && <Loading active size="sm" ml={5} />}
+
+          {task?.archivedAt && <Tag ml={2}>{t('common.archived')}</Tag>}
+
+          <Spacer />
+
+          {task?.private && (
+            <Tooltip
+              label={t('TaskContent.privateTooltip', {
                 role: orgData?.getRole(circle?.roleId)?.name,
               })}
-            </AlertDescription>
-          </Alert>
-        </Collapse>
-
-        {threadActivities && threadActivities.length > 0 && (
-          <VStack
-            align="stretch"
-            spacing={0}
-            // Beige surface so the white thread cards stand out on the panel
-            bg="menulight"
-            _dark={{ bg: 'menudark' }}
-            borderRadius="xl"
-            p={3}
-            w="100%"
-          >
-            {threadActivities.map(
-              (activity) =>
-                activity.thread && (
-                  <ThreadItem
-                    key={activity.id}
-                    thread={activity.thread}
-                    showIcon
-                    showCircle
-                    openButton
-                  />
-                )
-            )}
-          </VStack>
-        )}
-
-        {!id && isMember && (
-          <Box w="100%" textAlign="right">
-            <Button
-              colorScheme="blue"
-              isDisabled={!isPrivateAllowed}
-              onClick={onSubmit}
+              hasArrow
             >
-              {t('common.create')}
-            </Button>
-          </Box>
-        )}
-      </VStack>
+              <Center mr={2}>
+                <PrivacyIcon size={20} />
+              </Center>
+            </Tooltip>
+          )}
+
+          <Flex mr={headerIcons ? -3 : 0}>
+            {id && actions.hasItems && (
+              <ActionsMenu ml={3}>{actions.items}</ActionsMenu>
+            )}
+
+            {headerIcons}
+          </Flex>
+        </Flex>
+
+        <VStack spacing={10} alignItems="start" mb={3}>
+          <FormControl isInvalid={!!errors.title}>
+            <Input
+              {...register('title')}
+              size="lg"
+              placeholder={t('TaskContent.titlePlaceholder')}
+              autoFocus
+              readOnly={!isMember}
+            />
+            {task && (
+              <Text fontSize="sm" color="gray.400" mt={2}>
+                {t('TaskContent.createdAt', {
+                  date: format(new Date(task.createdAt), 'PPP', {
+                    locale: dateLocale,
+                  }),
+                })}
+              </Text>
+            )}
+          </FormControl>
+
+          <FormControl isInvalid={!!errors.description}>
+            <FormLabel>{t('TaskContent.description')}</FormLabel>
+            {task ? (
+              <CollabEditor
+                docId={`task-${id}-description`}
+                placeholder={t('TaskContent.notes')}
+                minH="80px"
+                readOnly={!isMember}
+              />
+            ) : (
+              <EditorController
+                name="description"
+                placeholder={t('TaskContent.notes')}
+                control={control}
+              />
+            )}
+          </FormControl>
+
+          <Flex flexWrap="wrap">
+            <FormControl isInvalid={!!errors.circleId} w="auto" mr={5}>
+              <FormLabel>{t('TaskContent.circle')}</FormLabel>
+              <Controller
+                name="circleId"
+                control={control}
+                render={({ field }) =>
+                  isMember ? (
+                    <CircleSearchInput
+                      value={field.value}
+                      onChange={field.onChange}
+                    />
+                  ) : (
+                    <CircleByIdButton id={field.value} />
+                  )
+                }
+              />
+            </FormControl>
+
+            <FormControl isInvalid={!!errors.memberId} w="auto">
+              <FormLabel>{t('TaskContent.memberId')}</FormLabel>
+              <Controller
+                name="memberId"
+                control={control}
+                render={({ field }) =>
+                  isMember ? (
+                    <MemberSearchInput
+                      value={field.value ?? undefined}
+                      onChange={field.onChange}
+                      onClear={() => field.onChange(null)}
+                    />
+                  ) : field.value ? (
+                    <CircleMemberLink memberId={field.value}>
+                      <MemberByIdButton id={field.value} size="sm" />
+                    </CircleMemberLink>
+                  ) : (
+                    <></>
+                  )
+                }
+              />
+            </FormControl>
+          </Flex>
+
+          <VStack spacing={3} align="start">
+            <FormControl>
+              <Switch
+                isChecked={!!dueDate}
+                isReadOnly={!isMember}
+                onChange={handleToggleDueDate}
+              >
+                {t('TaskContent.dueDate')}
+              </Switch>
+              <Collapse in={!!dueDate}>
+                <Box mt={4} mb={2} pl={10}>
+                  <Input
+                    {...register('dueDate')}
+                    type="datetime-local"
+                    w="250px"
+                    readOnly={!isMember}
+                  />
+                </Box>
+              </Collapse>
+            </FormControl>
+
+            <FormControl>
+              <SwitchController
+                name="private"
+                control={control}
+                isReadOnly={!isMember}
+              >
+                {t('TaskContent.private')}
+                <ParticipantsNumber
+                  participants={allParticipants}
+                  opacity={watchedData.private ? 1 : 0.4}
+                  ml={2}
+                />
+              </SwitchController>
+              <Collapse in={watchedData.private}>
+                <FormHelperText ml="40px" mb={2}>
+                  {t('TaskContent.privateHelp', {
+                    role: orgData?.getRole(circle?.roleId)?.name,
+                  })}
+                </FormHelperText>
+              </Collapse>
+            </FormControl>
+          </VStack>
+
+          <Collapse in={!isPrivateAllowed}>
+            <Alert status="warning">
+              <AlertIcon />
+              <AlertDescription>
+                {t('TaskContent.privateNotAllowed', {
+                  role: orgData?.getRole(circle?.roleId)?.name,
+                })}
+              </AlertDescription>
+            </Alert>
+          </Collapse>
+
+          {!id && isMember && (
+            <Box w="100%" textAlign="right">
+              <Button
+                colorScheme="blue"
+                isDisabled={!isPrivateAllowed}
+                onClick={onSubmit}
+              >
+                {t('common.create')}
+              </Button>
+            </Box>
+          )}
+        </VStack>
+      </Box>
+
+      {threadActivities && threadActivities.length > 0 && (
+        <VStack
+          align="stretch"
+          spacing={0}
+          // Beige footer spanning the card so the white thread cards stand out
+          bg="menulight"
+          _dark={{ bg: 'menudark' }}
+          borderTopRadius="xl"
+          borderBottomRadius="md"
+          p={3}
+        >
+          {threadActivities.map(
+            (activity) =>
+              activity.thread && (
+                <ThreadItem
+                  key={activity.id}
+                  thread={activity.thread}
+                  showIcon
+                  showCircle
+                />
+              )
+          )}
+        </VStack>
+      )}
 
       {actions.modals}
     </Box>

@@ -702,7 +702,6 @@
     "empty": "Aucune réunion prévue."
   },
   "MeetingStepContent": {
-    "addNotes": "Écrire des notes",
     "notesPlaceholder": "Notes...",
     "notAllowed": "Vous n'avez pas accès à cette réunion."
   },

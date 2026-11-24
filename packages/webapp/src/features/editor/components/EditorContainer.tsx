@@ -27,8 +27,21 @@ export default function EditorContainer({
           : undefined
       }
       outline={0}
+      sx={
+        readOnly
+          ? undefined
+          : {
+              // White background once the editor has content (light theme)
+              '&:has(.ProseMirror):not(:has(.is-editor-empty))': {
+                bg: 'white',
+              },
+            }
+      }
       _dark={{
         bg: readOnly ? undefined : 'blackAlpha.100',
+        '&:has(.ProseMirror):not(:has(.is-editor-empty))': {
+          bg: readOnly ? undefined : 'blackAlpha.100',
+        },
       }}
       _invalid={{
         borderColor: 'red.500',

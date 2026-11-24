@@ -11,15 +11,18 @@ const restShadow = '0 1px 2px hsla(31, 30%, 25%, 0.06)'
 const hoverShadow = '0 6px 16px hsla(31, 30%, 25%, 0.12)'
 // Static cards: faint warm outline, no shadow or lift (a beige tint would
 // blend into the beige background)
-const staticHoverRing = `${restShadow}, 0 0 0 1px hsla(31, 30%, 25%, 0.14)`
+const outlineColor = 'hsla(31, 30%, 25%, 0.14)'
+const staticHoverRing = `${restShadow}, 0 0 0 1px ${outlineColor}`
 
-interface Options {
+export interface ItemCardOptions {
   // Draggable cards (manual order) get a lifted hover with a shadow,
   // static cards a faint outline
   draggable?: boolean
   isDragging?: boolean
   // Card sits on a colored surface (kanban column), darker in dark mode
   onColor?: boolean
+  // Visible border in addition to the shadow (meeting page)
+  bordered?: boolean
 }
 
 // White card without border, meant to sit on the beige background
@@ -28,7 +31,8 @@ export function getItemCardProps({
   draggable,
   isDragging,
   onColor,
-}: Options = {}): ItemCardProps {
+  bordered,
+}: ItemCardOptions = {}): ItemCardProps {
   const darkBg = onColor ? 'blackAlpha.400' : 'whiteAlpha.100'
   const darkHoverBg = onColor ? 'blackAlpha.500' : 'whiteAlpha.200'
   return {
@@ -38,7 +42,7 @@ export function getItemCardProps({
     bg: 'white',
     // Transparent border keeps the size stable when the selected ring shows
     borderWidth: '1px',
-    borderColor: 'transparent',
+    borderColor: bordered ? outlineColor : 'transparent',
     borderRadius: 'xl',
     boxShadow: isDragging ? 'lg' : restShadow,
     cursor: 'pointer',
@@ -53,6 +57,7 @@ export function getItemCardProps({
       : { boxShadow: staticHoverRing },
     _dark: {
       bg: darkBg,
+      borderColor: bordered ? 'whiteAlpha.200' : 'transparent',
       boxShadow: isDragging ? 'dark-lg' : 'none',
       _hover: { bg: darkHoverBg, boxShadow: isDragging ? 'dark-lg' : 'none' },
     },

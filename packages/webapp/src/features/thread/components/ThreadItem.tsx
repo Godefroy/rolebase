@@ -1,6 +1,6 @@
 import CircleByIdButton from '@/circle/components/CircleByIdButton'
 import ListItemLayout from '@/common/atoms/ListItemLayout'
-import { getItemCardProps } from '@/common/utils/itemCardProps'
+import useItemCardProps from '@/common/hooks/useItemCardProps'
 import { getListItemTitleProps } from '@/common/utils/listItemTitleProps'
 import { useNormalClickHandler } from '@/common/hooks/useNormalClickHandler'
 import MemberByIdAvatar from '@/member/components/MemberByIdAvatar'
@@ -39,6 +39,8 @@ interface Props extends LinkBoxProps {
   showCircle?: boolean
   showMember?: boolean
   isDragging?: boolean
+  // Drag and drop enabled (manual order)
+  draggable?: boolean
   labelProps?: TypographyProps
 }
 
@@ -53,6 +55,7 @@ const ThreadItem = forwardRef<Props, 'div'>(
       showCircle,
       showMember,
       isDragging,
+      draggable,
       labelProps,
       children,
       ...linkBoxProps
@@ -81,12 +84,18 @@ const ThreadItem = forwardRef<Props, 'div'>(
     const isStacked = !!(showCircle || showMember)
     const titleProps = getListItemTitleProps(isStacked)
 
+    // Block the browser's native drag of the link (drag and drop handles override it)
+    const handleDragStart = (event: React.DragEvent) => event.preventDefault()
+
+    const cardProps = useItemCardProps({ draggable, isDragging })
+
     return (
       <>
         <LinkBox
           ref={ref}
+          onDragStart={draggable ? handleDragStart : undefined}
           {...(isStacked
-            ? { ...getItemCardProps({ isDragging }), mb: 2 }
+            ? { ...cardProps, mb: 2 }
             : {
                 p: 1,
                 boxShadow: isDragging ? 'lg' : 'none',

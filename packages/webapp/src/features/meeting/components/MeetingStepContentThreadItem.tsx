@@ -95,6 +95,8 @@ export default function MeetingStepContentThreadItem({
                   fontWeight: 'medium',
                 }}
                 {...provided.dragHandleProps}
+                // After the handle props, which set draggable={false}
+                draggable={editable}
               >
                 {onRemove && (
                   <IconTextButton

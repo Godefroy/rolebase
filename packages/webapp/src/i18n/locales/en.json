@@ -668,7 +668,6 @@
     "empty": "No meeting planned."
   },
   "MeetingStepContent": {
-    "addNotes": "Write notes",
     "notesPlaceholder": "Notes...",
     "notAllowed": "You do not have access to this meeting."
   },
