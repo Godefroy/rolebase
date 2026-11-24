@@ -19,7 +19,8 @@ const instructions = [
 
 // The tools are generic on purpose: they expose the GraphQL schema and the
 // tRPC router as they are, so the MCP server follows the API without upkeep.
-export function createMcpServer(ctx: Context & { userId: string }) {
+// Without userId (no API key), tools answer with an error.
+export function createMcpServer(ctx: Context) {
   const server = new McpServer(
     { name: 'rolebase', version: '1.0.0' },
     { instructions }

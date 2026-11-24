@@ -12,12 +12,14 @@ import { createMcpServer } from './createMcpServer'
 // - "Authorization: Bearer", the only option of some assistants
 // - the URL (/mcp/<key>), for assistants that only connect without
 //   authentication or with OAuth, like ChatGPT
+// Without a key, discovery works but tools answer with an error: clients
+// like Claude check the server before the key is entered.
 
 registerRestRoutes(async (app) => {
   app.post('/mcp', async (req, res) => {
     const ctx = await createContext({ req, res })
     const userId = ctx.userId ?? (await getBearerApiKeyUserId(req))
-    await handleMcpRequest(ctx, userId)
+    await handleMcpRequest(ctx, userId, hasApiKey(req))
   })
 
   app.post<{ Params: { apiKey: string } }>('/mcp/:apiKey', async (req, res) => {
@@ -25,7 +27,7 @@ registerRestRoutes(async (app) => {
     const userId = await authenticateApiKey(req.params.apiKey).catch(
       () => undefined
     )
-    await handleMcpRequest(ctx, userId)
+    await handleMcpRequest(ctx, userId, true)
   })
 
   // No SSE stream nor session to close in stateless mode
@@ -38,16 +40,20 @@ registerRestRoutes(async (app) => {
   })
 })
 
-async function handleMcpRequest(ctx: Context, userId: string | undefined) {
+async function handleMcpRequest(
+  ctx: Context,
+  userId: string | undefined,
+  withApiKey: boolean
+) {
   const { req, res } = ctx
-  if (!userId) {
+  if (withApiKey && !userId) {
     // Not 401 nor 403: MCP clients take both as a call for OAuth, which
     // this server doesn't support, and hide this message
     res.status(400).send(jsonRpcError('Missing or invalid API key'))
     return
   }
 
-  const server = createMcpServer({ ...ctx, isAuthenticated: true, userId })
+  const server = createMcpServer({ ...ctx, isAuthenticated: !!userId, userId })
   const transport = new StreamableHTTPServerTransport({
     sessionIdGenerator: undefined,
     enableJsonResponse: true,
@@ -70,6 +76,10 @@ async function handleMcpRequest(ctx: Context, userId: string | undefined) {
 
 function jsonRpcError(message: string) {
   return { jsonrpc: '2.0', error: { code: -32000, message }, id: null }
+}
+
+function hasApiKey(req: FastifyRequest) {
+  return !!req.headers['x-api-key'] || !!req.headers.authorization
 }
 
 // The context already handles a bearer access token: try it as an API key

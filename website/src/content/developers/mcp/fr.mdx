@@ -15,7 +15,7 @@ Rolebase expose un serveur [Model Context Protocol](https://modelcontextprotocol
 | Production          | `https://api.rolebase.io/mcp` |
 | Développement local | `http://localhost:8888/mcp`   |
 
-Le serveur utilise le transport Streamable HTTP et ne garde aucune session entre les requêtes. Il s'authentifie avec une [clé API](/fr/developers/use-the-api#authentification), envoyée dans l'en-tête `x-api-key`, sous la forme `Authorization: Bearer <votre-cle-api>`, ou, uniquement pour les clients qui n'acceptent aucun en-tête comme ChatGPT, dans l'URL (`/mcp/<votre-cle-api>`). Une clé absente ou invalide reçoit une réponse `400` : les clients affichent l'erreur au lieu de lancer une connexion OAuth.
+Le serveur utilise le transport Streamable HTTP et ne garde aucune session entre les requêtes. Il s'authentifie avec une [clé API](/fr/developers/use-the-api#authentification), envoyée dans l'en-tête `x-api-key`, sous la forme `Authorization: Bearer <votre-cle-api>`, ou, uniquement pour les clients qui n'acceptent aucun en-tête comme ChatGPT, dans l'URL (`/mcp/<votre-cle-api>`). Sans clé, le serveur répond quand même à `initialize` et `tools/list`, pour que les clients comme Claude puissent le vérifier avant la saisie de la clé, et chaque appel d'outil renvoie une erreur qui demande la clé. Une clé invalide reçoit une réponse `400` : les clients affichent l'erreur au lieu de lancer une connexion OAuth.
 
 <Callout type="warning" title="Clé dans l'URL">
   Réservez la forme URL aux clients qui n'offrent aucune autre option : le
@@ -25,7 +25,7 @@ Le serveur utilise le transport Streamable HTTP et ne garde aucune session entre
 
 ## Outils de développement
 
-Créez une clé API depuis **Mon compte > Clés API**, puis ajoutez le serveur à votre outil.
+Créez une clé API depuis **Mon compte > Clés API**, puis ajoutez le serveur à votre outil. La page **Mon compte > Client MCP** fournit les configurations ci-dessous avec votre clé déjà remplie.
 
 ### Claude Code
 

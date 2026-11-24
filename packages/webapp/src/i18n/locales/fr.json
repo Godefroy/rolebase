@@ -46,6 +46,67 @@
     "renameSuccess": "Clé API renommée",
     "copyToast": "Clé API copiée dans le presse-papiers"
   },
+  "McpPage": {
+    "description": "Connectez un assistant IA comme Claude, ChatGPT ou Mistral Vibe, ou un outil de développement comme Claude Code ou Cursor, à Rolebase avec le serveur MCP. L'assistant peut alors consulter et modifier vos organisations avec vos permissions.",
+    "viewDocs": "Voir la documentation du connecteur MCP",
+    "devDocs": "Documentation du serveur MCP pour les développeurs",
+    "apiKey": "Clé API",
+    "keyHelp": "Les extraits ci-dessous utilisent cette clé. Elle donne accès à Rolebase en votre nom : créez une clé dédiée à chaque assistant, pour pouvoir la supprimer séparément.",
+    "noKey": "L'assistant s'authentifie avec une clé API. Vous n'en avez pas encore.",
+    "createKey": "Créer une clé API",
+    "newKeyName": "MCP",
+    "keyPlaceholder": "<votre-clé-api>",
+    "serverUrl": "URL du serveur",
+    "urlWithKey": "URL du serveur avec votre clé API",
+    "keyInUrlWarning": "Cette URL contient votre clé API : la personne qui la détient peut agir dans Rolebase en votre nom. Ne la partagez avec personne.",
+    "command": "Commande à lancer dans un terminal",
+    "codexConfig": "À ajouter dans ~/.codex/config.toml",
+    "codexEnv": "Définissez la variable d'environnement",
+    "cursorConfig": "À ajouter dans ~/.cursor/mcp.json (ou .cursor/mcp.json dans un projet)",
+    "vscodeConfig": "À ajouter dans mcp.json (Palette de commandes > MCP: Open User Configuration)",
+    "copied": "Copié dans le presse-papiers",
+    "clients": {
+      "claude": {
+        "steps": [
+          "Dans Claude, ouvrez <a>Plug-ins</a>, cliquez sur <b>Ajouter</b>, puis ajoutez un connecteur personnalisé.",
+          "Nommez-le « Rolebase » et collez l'URL du serveur.",
+          "Dans <b>Authentification</b>, choisissez <b>Aucune connexion</b>.",
+          "Dans <b>En-têtes de requête</b>, sélectionnez <code>x-api-key</code> et collez votre clé API comme valeur.",
+          "Cliquez sur <b>Ajouter</b>."
+        ],
+        "note": "Sur Claude Team et Enterprise, le connecteur ajouté par un propriétaire s'applique à tous les membres, qui agiraient alors dans Rolebase avec le compte de ce propriétaire."
+      },
+      "chatgpt": {
+        "steps": [
+          "Dans ChatGPT sur le web, ouvrez les <b>Paramètres</b>, puis <b>Applications</b> (appelé <b>Connecteurs</b> sur certains comptes).",
+          "Dans les paramètres avancés, activez le <b>mode développeur</b> si ChatGPT le demande.",
+          "Créez une application : nommez-la « Rolebase », collez l'URL ci-dessous et choisissez <b>Aucune authentification</b>.",
+          "Dans une conversation, activez l'application Rolebase depuis le menu <b>+</b>."
+        ],
+        "note": "ChatGPT accepte uniquement les connecteurs sans authentification ou avec une connexion OAuth : la clé API se place donc dans l'URL. Les applications personnalisées sont disponibles sur les offres payantes de ChatGPT."
+      },
+      "mistral": {
+        "steps": [
+          "Ouvrez la page <b>Connecteurs</b> et ajoutez un connecteur depuis l'onglet <b>Connecteur MCP personnalisé</b>.",
+          "Nommez-le <code>rolebase</code>, collez l'URL du serveur, puis cliquez sur <b>Connecter</b>.",
+          "Quand Mistral Vibe demande l'authentification, choisissez l'option jeton bearer et collez votre clé API."
+        ]
+      },
+      "codex": {
+        "steps": [
+          "Ajoutez le serveur dans <code>~/.codex/config.toml</code>, partagé par la CLI Codex, l'extension IDE et l'application de bureau.",
+          "Définissez la variable d'environnement <code>ROLEBASE_API_KEY</code>, par exemple dans le profil de votre shell."
+        ]
+      },
+      "vscode": {
+        "steps": [
+          "Dans la Palette de commandes, lancez <b>MCP: Open User Configuration</b>, ou créez <code>.vscode/mcp.json</code> dans un projet.",
+          "Ajoutez cette configuration. Le fichier ne contient aucun secret.",
+          "Au premier démarrage du serveur, VS Code demande la clé : collez votre clé API."
+        ]
+      }
+    }
+  },
   "AppCalendarOrgSelect": {
     "placeholder": "Synchroniser les réunions",
     "remove": "Arrêter de synchroniser",
@@ -1082,7 +1143,8 @@
     "api": "Clés API",
     "export": "Export",
     "superAdmin": "Administration",
-    "toastSaved": "Paramètres enregistrés !"
+    "toastSaved": "Paramètres enregistrés !",
+    "mcp": "Client MCP"
   },
   "Sidebar": {
     "close": "Fermer la barre latérale",

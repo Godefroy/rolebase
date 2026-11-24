@@ -6,6 +6,7 @@ import { trpcRouter } from '../..'
 import { createCallerFactory, Meta } from '../../../trpc'
 import { Context } from '../../../trpc/context'
 import { onTrpcError } from '../../../trpc/onTrpcError'
+import { requireUserId } from '../utils/requireUserId'
 import { textResult } from '../utils/textResult'
 
 export function registerTrpcTools(server: McpServer, ctx: Context) {
@@ -42,6 +43,7 @@ export function registerTrpcTools(server: McpServer, ctx: Context) {
       },
     },
     async ({ procedure, input }) => {
+      requireUserId(ctx.userId)
       if (!getProcedures()[procedure]) {
         throw new Error(
           `Unknown procedure: ${procedure}. List them with trpc_procedures.`

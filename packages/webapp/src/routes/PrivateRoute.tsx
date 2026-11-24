@@ -1,5 +1,6 @@
 import ApiPage from '@/apps/pages/ApiPage'
 import AppsPage from '@/apps/pages/AppsPage'
+import McpPage from '@/apps/pages/McpPage'
 import OAuthRedirectPage from '@/apps/pages/OAuthRedirectPage'
 import CrispSetUser from '@/common/atoms/CrispSetUser'
 import Loading from '@/common/atoms/Loading'
@@ -85,6 +86,7 @@ export default function PrivateRoute() {
         <Route path="settings" element={<SettingsLayout />}>
           <Route path="apps" element={<AppsPage />} />
           <Route path="api-keys" element={<ApiPage />} />
+          <Route path="mcp" element={<McpPage />} />
           <Route path="credentials" element={<CredentialsSettingsPage />} />
           <Route path="notifications" element={<NotificationsSettingsPage />} />
         </Route>

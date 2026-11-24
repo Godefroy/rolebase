@@ -18,23 +18,21 @@ Le connecteur MCP relie un [assistant IA](/fr/guides/use-an-ai-assistant) à vot
 
 Chaque assistant demande l'URL du serveur, `https://api.rolebase.io/mcp`, et votre clé API, qu'il envoie avec chaque requête.
 
+<Callout type="tip">
+  La page **Mon compte > Client MCP** des paramètres de Rolebase reprend ces
+  étapes pour chaque assistant, avec l'URL du serveur et votre clé API prêtes à
+  copier. Elle peut aussi créer la clé pour vous.
+</Callout>
+
 ### Claude
 
-1. Allez dans [Customize > Connectors](https://claude.ai/customize/connectors) et cliquez sur **Add custom connector**.
+1. Dans Claude, ouvrez [Plug-ins](https://claude.ai/customize/connectors), cliquez sur **Ajouter**, puis ajoutez un connecteur personnalisé.
 2. Nommez-le « Rolebase » et saisissez l'URL du serveur.
-3. Pour l'authentification, choisissez **No sign-in**.
-4. Dans **Request headers**, sélectionnez `x-api-key` et collez votre clé API comme valeur.
-5. Cliquez sur **Add**.
+3. Dans **Authentification**, choisissez **Aucune connexion**.
+4. Dans **En-têtes de requête**, sélectionnez `x-api-key` et collez votre clé API comme valeur.
+5. Cliquez sur **Ajouter**.
 
 Le connecteur est alors disponible sur le web, dans l'application de bureau et sur mobile.
-
-La section **Request headers** s'ouvre progressivement aux comptes Claude. Si elle manque dans votre fenêtre, saisissez plutôt `https://api.rolebase.io/mcp/VOTRE_CLE_API` comme URL du serveur, et passez l'étape 4.
-
-<Callout type="warning" title="Clé dans l'URL">
-  Avec cette option, l'URL contient votre clé API : la personne qui la détient
-  peut agir dans Rolebase en votre nom. Ne la partagez avec personne, et
-  supprimez la clé dans Rolebase si elle a fuité.
-</Callout>
 
 <Callout type="warning" title="Claude Team et Enterprise">
   Sur ces offres, un propriétaire ajoute le connecteur pour toute l'organisation
@@ -44,7 +42,7 @@ La section **Request headers** s'ouvre progressivement aux comptes Claude. Si el
 
 ### Mistral Vibe
 
-1. Ouvrez la page **Connecteurs** et ajoutez un connecteur depuis l'onglet de connecteur MCP personnalisé (**Custom MCP Connector**).
+1. Ouvrez la page **Connecteurs** et ajoutez un connecteur depuis l'onglet **Connecteur MCP personnalisé**.
 2. Nommez-le `rolebase`, saisissez l'URL du serveur, puis cliquez sur **Connecter**.
 3. Quand Mistral Vibe demande l'authentification, choisissez l'option jeton bearer et collez votre clé API.
 

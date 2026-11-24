@@ -52,6 +52,8 @@ export default forwardRef<Props, 'button'>(function Tab(
         color="inherit"
         fontWeight="semibold"
         border={0}
+        // Cancel the margin of the line variant, made for its border
+        mb={0}
         borderRadius="full"
         _hover={{ bg: 'whiteAlpha.600' }}
         _selected={{

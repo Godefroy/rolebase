@@ -48,6 +48,7 @@ import {
   Link21,
   Lock1,
   LogoutCurve,
+  MagicStar,
   Magicpen,
   Maximize1,
   Maximize3,
@@ -95,6 +96,7 @@ import { IoSearchOutline } from 'react-icons/io5'
 export const AddIcon = Add
 export const ArchiveIcon = ArchiveBox
 export const ApiIcon = Code
+export const McpIcon = MagicStar
 export const BillingIcon = Receipt
 export const AppsIcon = ArrangeHorizontalSquare
 export const ArrowRightIcon = ArrowRight

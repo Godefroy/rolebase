@@ -15,7 +15,7 @@ Rolebase exposes a [Model Context Protocol](https://modelcontextprotocol.io) (MC
 | Production        | `https://api.rolebase.io/mcp` |
 | Local development | `http://localhost:8888/mcp`   |
 
-The server uses the Streamable HTTP transport and keeps no session between requests. It authenticates with an [API key](/en/developers/use-the-api#authentication), sent in the `x-api-key` header, as `Authorization: Bearer <your-api-key>`, or, only for clients that accept no header, such as ChatGPT, in the URL (`/mcp/<your-api-key>`). A missing or invalid key gets a `400` response, so clients show the error instead of starting an OAuth flow.
+The server uses the Streamable HTTP transport and keeps no session between requests. It authenticates with an [API key](/en/developers/use-the-api#authentication), sent in the `x-api-key` header, as `Authorization: Bearer <your-api-key>`, or, only for clients that accept no header, such as ChatGPT, in the URL (`/mcp/<your-api-key>`). Without a key, the server still answers `initialize` and `tools/list`, so clients such as Claude can check it before the key is entered, and every tool call returns an error asking for the key. An invalid key gets a `400` response, so clients show the error instead of starting an OAuth flow.
 
 <Callout type="warning" title="Key in the URL">
   Use the URL form only when the client offers no other way: the client may
@@ -25,7 +25,7 @@ The server uses the Streamable HTTP transport and keeps no session between reque
 
 ## Developer tools
 
-Create an API key from **My account > API keys**, then add the server to your tool.
+Create an API key from **My account > API keys**, then add the server to your tool. The **My account > MCP client** page gives the configurations below with your key already filled in.
 
 ### Claude Code
 

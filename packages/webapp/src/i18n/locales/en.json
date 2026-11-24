@@ -46,6 +46,67 @@
     "renameSuccess": "API key renamed",
     "copyToast": "API key copied to clipboard"
   },
+  "McpPage": {
+    "description": "Connect an AI assistant such as Claude, ChatGPT or Mistral Vibe, or a developer tool such as Claude Code or Cursor, to Rolebase with the MCP server. The assistant can then read and update your organizations with your permissions.",
+    "viewDocs": "View the MCP connector documentation",
+    "devDocs": "MCP server documentation for developers",
+    "apiKey": "API key",
+    "keyHelp": "The snippets below use this key. It gives access to Rolebase on your behalf: create a dedicated key for each assistant, so you can delete it separately.",
+    "noKey": "The assistant authenticates with an API key. You don't have one yet.",
+    "createKey": "Create an API key",
+    "newKeyName": "MCP",
+    "keyPlaceholder": "<your-api-key>",
+    "serverUrl": "Server URL",
+    "urlWithKey": "Server URL with your API key",
+    "keyInUrlWarning": "This URL contains your API key: whoever has it can act in Rolebase on your behalf. Share it with nobody.",
+    "command": "Command to run in a terminal",
+    "codexConfig": "Add to ~/.codex/config.toml",
+    "codexEnv": "Set the environment variable",
+    "cursorConfig": "Add to ~/.cursor/mcp.json (or .cursor/mcp.json in a project)",
+    "vscodeConfig": "Add to mcp.json (Command Palette > MCP: Open User Configuration)",
+    "copied": "Copied to clipboard",
+    "clients": {
+      "claude": {
+        "steps": [
+          "In Claude, open <a>Plugins</a>, click <b>Add</b>, then add a custom connector.",
+          "Name it \"Rolebase\" and paste the server URL.",
+          "Under <b>Authentication</b>, choose <b>No sign-in</b>.",
+          "Under <b>Request headers</b>, pick <code>x-api-key</code> and paste your API key as the value.",
+          "Click <b>Add</b>."
+        ],
+        "note": "On Claude Team and Enterprise, the connector added by an Owner applies to all members, who would then act in Rolebase with the Owner's account."
+      },
+      "chatgpt": {
+        "steps": [
+          "In ChatGPT on the web, open <b>Settings</b>, then <b>Apps</b> (called <b>Connectors</b> on some accounts).",
+          "In the advanced settings, turn on <b>Developer mode</b> if ChatGPT asks for it.",
+          "Create an app: name it \"Rolebase\", paste the URL below and choose <b>No authentication</b>.",
+          "In a conversation, turn on the Rolebase app from the <b>+</b> menu."
+        ],
+        "note": "ChatGPT only accepts connectors with no authentication or with an OAuth sign-in, so the API key goes in the URL. Custom apps are available on paid ChatGPT plans."
+      },
+      "mistral": {
+        "steps": [
+          "Open the <b>Connectors</b> page and add a connector from the <b>Custom MCP Connector</b> tab.",
+          "Name it <code>rolebase</code>, paste the server URL, then click <b>Connect</b>.",
+          "When Mistral Vibe asks for authentication, choose the bearer token option and paste your API key."
+        ]
+      },
+      "codex": {
+        "steps": [
+          "Add the server to <code>~/.codex/config.toml</code>, shared by the Codex CLI, the IDE extension and the desktop app.",
+          "Set the <code>ROLEBASE_API_KEY</code> environment variable, for instance in your shell profile."
+        ]
+      },
+      "vscode": {
+        "steps": [
+          "In the Command Palette, run <b>MCP: Open User Configuration</b>, or create <code>.vscode/mcp.json</code> in a project.",
+          "Add this configuration. The file holds no secret.",
+          "When the server first starts, VS Code asks for the key: paste your API key."
+        ]
+      }
+    }
+  },
   "AppCalendarOrgSelect": {
     "placeholder": "Synchronize meetings",
     "remove": "Stop syncing",
@@ -1049,7 +1110,8 @@
     "api": "API keys",
     "export": "Export",
     "superAdmin": "Administration",
-    "toastSaved": "Settings saved!"
+    "toastSaved": "Settings saved!",
+    "mcp": "MCP client"
   },
   "Sidebar": {
     "close": "Close sidebar",

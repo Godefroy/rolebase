@@ -1,5 +1,7 @@
 subscription userApps($userId: uuid!) {
-  user_app(where: { userId: { _eq: $userId }, archivedAt: { _is_null: true } }) {
+  user_app(
+    where: { userId: { _eq: $userId }, archivedAt: { _is_null: true } }
+  ) {
     ...UserApp
   }
 }

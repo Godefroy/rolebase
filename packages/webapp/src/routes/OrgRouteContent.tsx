@@ -1,5 +1,6 @@
 import ApiPage from '@/apps/pages/ApiPage'
 import AppsPage from '@/apps/pages/AppsPage'
+import McpPage from '@/apps/pages/McpPage'
 import CirclesPage from '@/circle/pages/CirclesPage'
 import Loading from '@/common/atoms/Loading'
 import TextError from '@/common/atoms/TextError'
@@ -89,6 +90,7 @@ export default function OrgRouteContent() {
               </Route>
               <Route path="apps" element={<AppsPage />} />
               <Route path="api-keys" element={<ApiPage />} />
+              <Route path="mcp" element={<McpPage />} />
               <Route path="credentials" element={<CredentialsSettingsPage />} />
               <Route
                 path="notifications"

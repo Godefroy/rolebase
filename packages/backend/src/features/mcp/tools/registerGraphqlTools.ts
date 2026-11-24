@@ -11,9 +11,13 @@ import {
 import { z } from 'zod'
 import { userGraphqlRequest } from '../../../utils/userGraphqlRequest'
 import { validateGraphqlQuery } from '../../../utils/validateGraphqlQuery'
+import { requireUserId } from '../utils/requireUserId'
 import { textResult } from '../utils/textResult'
 
-export function registerGraphqlTools(server: McpServer, userId: string) {
+export function registerGraphqlTools(
+  server: McpServer,
+  userId: string | undefined
+) {
   server.registerTool(
     'graphql',
     {
@@ -29,10 +33,13 @@ export function registerGraphqlTools(server: McpServer, userId: string) {
       },
     },
     async ({ query, variables }) => {
+      const authUserId = requireUserId(userId)
       // Depth, size and nesting limits (see validateGraphqlQuery)
       validateGraphqlQuery(query)
       // GraphQL errors are thrown, and returned as tool errors by the SDK
-      return textResult(await userGraphqlRequest(userId, { query, variables }))
+      return textResult(
+        await userGraphqlRequest(authUserId, { query, variables })
+      )
     }
   )
 
@@ -48,7 +55,7 @@ export function registerGraphqlTools(server: McpServer, userId: string) {
       annotations: { readOnlyHint: true },
     },
     async ({ type }) => {
-      const schema = await getSchema(userId)
+      const schema = await getSchema(requireUserId(userId))
 
       if (!type) {
         return textResult(
