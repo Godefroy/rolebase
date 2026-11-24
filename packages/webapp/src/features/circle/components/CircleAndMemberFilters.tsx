@@ -28,7 +28,8 @@ export default function CircleAndMemberFilters({
     <ButtonGroup
       size="sm"
       variant="outline"
-      spacing={2}
+      spacing={0}
+      gap={2}
       flexWrap="wrap"
       {...boxProps}
     >

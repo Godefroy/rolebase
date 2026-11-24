@@ -18,6 +18,7 @@ import {
   ArrowUp,
   ArrowUp2,
   Briefcase,
+  Calendar,
   Calendar2,
   Chart2,
   Code,
@@ -116,6 +117,7 @@ export const CreateIcon = AddSquare
 export const CurrentMemberIcon = UserSquare
 export const DarkThemeIcon = Moon
 export const DecisionIcon = Judge
+export const DueDateIcon = Calendar
 export const DecisionsIcon = Judge
 export const DeleteIcon = Trash
 export const DownloadIcon = Import

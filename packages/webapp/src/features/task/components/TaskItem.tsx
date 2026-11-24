@@ -1,5 +1,7 @@
 import CircleByIdButton from '@/circle/components/CircleByIdButton'
-import useDateLocale from '@/common/hooks/useDateLocale'
+import ListItemLayout from '@/common/atoms/ListItemLayout'
+import { getItemCardProps } from '@/common/utils/itemCardProps'
+import { getListItemTitleProps } from '@/common/utils/listItemTitleProps'
 import { useNormalClickHandler } from '@/common/hooks/useNormalClickHandler'
 import MemberByIdAvatar from '@/member/components/MemberByIdAvatar'
 import useOrgMember from '@/member/hooks/useOrgMember'
@@ -7,9 +9,7 @@ import { usePathInOrg } from '@/org/hooks/usePathInOrg'
 import {
   Avatar,
   Button,
-  Center,
   forwardRef,
-  HStack,
   LinkBox,
   LinkBoxProps,
   LinkOverlay,
@@ -17,7 +17,6 @@ import {
   useDisclosure,
 } from '@chakra-ui/react'
 import { Task_Status_Enum, TaskFragment } from '@gql'
-import { formatRelative } from 'date-fns'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link as ReachLink, useLocation } from 'react-router'
@@ -25,6 +24,7 @@ import { PrivacyIcon, TaskIcon } from 'src/icons'
 import useUpdateTaskStatus from '../hooks/useUpdateTaskStatus'
 import TaskModal from '../modals/TaskModal'
 import TaskStatusInput from './TaskStatusInput'
+import TaskDueDate from './TaskDueDate'
 import TaskStatusTag from './TaskStatusTag'
 
 interface Props extends LinkBoxProps {
@@ -36,6 +36,8 @@ interface Props extends LinkBoxProps {
   showIcon?: boolean
   showDueDate?: boolean
   isDragging?: boolean
+  // Drag and drop enabled (manual order)
+  draggable?: boolean
 }
 
 const TaskItem = forwardRef<Props, 'div'>(
@@ -49,6 +51,7 @@ const TaskItem = forwardRef<Props, 'div'>(
       showIcon,
       showDueDate,
       isDragging,
+      draggable,
       children,
       ...linkBoxProps
     },
@@ -57,7 +60,6 @@ const TaskItem = forwardRef<Props, 'div'>(
     const { t } = useTranslation()
     const isMember = useOrgMember()
     const updateTaskStatus = useUpdateTaskStatus()
-    const dateLocale = useDateLocale()
 
     const handleChangeStatus = (status: Task_Status_Enum) => {
       updateTaskStatus(task, status)
@@ -74,16 +76,25 @@ const TaskItem = forwardRef<Props, 'div'>(
     const location = useLocation()
     const isActive = location.pathname === path
 
+    // Rich rows (with metadata) show the title on up to 2 lines
+    // and the metadata below it on mobile
+    const isStacked = !!(showCircle || showMember || showDueDate)
+    const titleProps = getListItemTitleProps(isStacked)
+
     return (
       <>
         <LinkBox
           ref={ref}
           onDragStart={handleDragStart}
-          p={1}
-          boxShadow={isDragging ? 'lg' : 'none'}
-          bg={isDragging ? 'gray.50' : undefined}
-          _dark={{ bg: isDragging ? 'gray.700' : undefined }}
-          _hover={openButton ? undefined : { bg: 'bgItemHover' }}
+          {...(isStacked
+            ? { ...getItemCardProps({ draggable, isDragging }), mb: 2 }
+            : {
+                p: 1,
+                boxShadow: isDragging ? 'lg' : 'none',
+                bg: isDragging ? 'gray.50' : undefined,
+                _dark: { bg: isDragging ? 'gray.700' : undefined },
+                _hover: openButton ? undefined : { bg: 'bgItemHover' },
+              })}
           {...linkBoxProps}
           tabIndex={
             // Remove tabIndex because it's redondant with link
@@ -91,81 +102,63 @@ const TaskItem = forwardRef<Props, 'div'>(
           }
           className={isActive ? 'active' : undefined}
         >
-          <HStack align="center">
-            {showIcon && (
-              <Center w={6} h={6}>
-                <TaskIcon />
-              </Center>
-            )}
-
-            {openButton ? (
-              <Text
-                flex={1}
-                w="0"
-                display="block"
-                whiteSpace="nowrap"
-                overflow="hidden"
-                textOverflow="ellipsis"
-              >
-                {task.title}
-              </Text>
-            ) : (
-              <LinkOverlay
-                as={ReachLink}
-                to={path}
-                flex={1}
-                w="0"
-                display="block"
-                whiteSpace="nowrap"
-                overflow="hidden"
-                textOverflow="ellipsis"
-                onClick={noModal ? undefined : handleOpen}
-              >
-                {task.title}
-              </LinkOverlay>
-            )}
-
-            {showDueDate && task.dueDate && (
-              <Text
-                fontSize="sm"
-                color="gray.500"
-                _dark={{ color: 'gray.300' }}
-              >
-                {formatRelative(new Date(task.dueDate), new Date(), {
-                  locale: dateLocale,
-                })}
-              </Text>
-            )}
-
-            {task?.private && <PrivacyIcon size={18} />}
-
-            {showCircle && <CircleByIdButton id={task.circleId} size="xs" />}
-
-            {showMember &&
-              (task.memberId ? (
-                <MemberByIdAvatar id={task.memberId} size="xs" />
+          <ListItemLayout
+            stacked={isStacked}
+            icon={showIcon && <TaskIcon />}
+            title={
+              openButton ? (
+                <Text {...titleProps}>{task.title}</Text>
               ) : (
-                <Avatar name="?" size="xs" />
-              ))}
+                <LinkOverlay
+                  as={ReachLink}
+                  to={path}
+                  {...titleProps}
+                  onClick={noModal ? undefined : handleOpen}
+                >
+                  {task.title}
+                </LinkOverlay>
+              )
+            }
+            corner={task?.private && <PrivacyIcon size={16} />}
+            metaStart={
+              <>
+                {isMember ? (
+                  <TaskStatusInput
+                    value={task.status}
+                    onChange={handleChangeStatus}
+                    zIndex={2}
+                  />
+                ) : (
+                  <TaskStatusTag status={task.status} />
+                )}
+                {showDueDate && task.dueDate && (
+                  <TaskDueDate dueDate={task.dueDate} status={task.status} />
+                )}
+              </>
+            }
+            meta={
+              <>
+                {showCircle && (
+                  <CircleByIdButton id={task.circleId} size="xs" />
+                )}
 
-            {isMember ? (
-              <TaskStatusInput
-                value={task.status}
-                onChange={handleChangeStatus}
-                zIndex={2}
-              />
-            ) : (
-              <TaskStatusTag status={task.status} />
-            )}
+                {showMember &&
+                  (task.memberId ? (
+                    <MemberByIdAvatar id={task.memberId} size="xs" />
+                  ) : (
+                    <Avatar name="?" size="xs" />
+                  ))}
 
-            {children}
+                {children}
 
-            {openButton && (
-              <Button size="sm" variant="outline" onClick={onOpen}>
-                {t('TaskItem.open')}
-              </Button>
-            )}
-          </HStack>
+                {openButton && (
+                  <Button size="sm" variant="outline" onClick={onOpen}>
+                    {t('TaskItem.open')}
+                  </Button>
+                )}
+              </>
+            }
+          />
         </LinkBox>
 
         {isOpen && <TaskModal id={task.id} isOpen onClose={onClose} />}

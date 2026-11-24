@@ -1,4 +1,7 @@
 import CircleByIdButton from '@/circle/components/CircleByIdButton'
+import ListItemLayout from '@/common/atoms/ListItemLayout'
+import { getItemCardProps } from '@/common/utils/itemCardProps'
+import { getListItemTitleProps } from '@/common/utils/listItemTitleProps'
 import { useNormalClickHandler } from '@/common/hooks/useNormalClickHandler'
 import MemberByIdAvatar from '@/member/components/MemberByIdAvatar'
 import useOrgMember from '@/member/hooks/useOrgMember'
@@ -7,10 +10,9 @@ import { usePathInOrg } from '@/org/hooks/usePathInOrg'
 import {
   Box,
   Button,
-  Center,
   Circle,
-  forwardRef,
   HStack,
+  forwardRef,
   LinkBox,
   LinkBoxProps,
   LinkOverlay,
@@ -73,15 +75,24 @@ const ThreadItem = forwardRef<Props, 'div'>(
     const location = useLocation()
     const isActive = location.pathname === path
 
+    // Rich rows (with metadata) show the title on up to 2 lines
+    // and the metadata below it on mobile
+    const isStacked = !!(showCircle || showMember)
+    const titleProps = getListItemTitleProps(isStacked)
+
     return (
       <>
         <LinkBox
           ref={ref}
-          p={1}
-          boxShadow={isDragging ? 'lg' : 'none'}
-          bg={isDragging ? 'gray.50' : undefined}
-          _dark={{ bg: isDragging ? 'gray.700' : undefined }}
-          _hover={openButton ? undefined : { bg: 'bgItemHover' }}
+          {...(isStacked
+            ? { ...getItemCardProps({ isDragging }), mb: 2 }
+            : {
+                p: 1,
+                boxShadow: isDragging ? 'lg' : 'none',
+                bg: isDragging ? 'gray.50' : undefined,
+                _dark: { bg: isDragging ? 'gray.700' : undefined },
+                _hover: openButton ? undefined : { bg: 'bgItemHover' },
+              })}
           {...linkBoxProps}
           tabIndex={
             // Remove tabIndex because it's redundant with link
@@ -89,84 +100,89 @@ const ThreadItem = forwardRef<Props, 'div'>(
           }
           className={isActive ? 'active' : undefined}
         >
-          <HStack align="center">
-            {showIcon && (
-              <Center zIndex="2" position="relative">
-                <ThreadStatusIcon
-                  value={threadStatus}
-                  readOnly={!isMember}
-                  onChange={setStatus}
-                />
-                {unread && (
-                  <Circle
-                    size="8px"
-                    position="absolute"
-                    top="-1px"
-                    right="-1px"
-                    bg="red.400"
-                    _dark={{ bg: 'red.600' }}
+          <ListItemLayout
+            stacked={isStacked}
+            icon={
+              showIcon && (
+                <>
+                  <ThreadStatusIcon
+                    value={threadStatus}
+                    readOnly={!isMember}
+                    onChange={setStatus}
+                  />
+                  {unread && (
+                    <Circle
+                      size="8px"
+                      position="absolute"
+                      top="-1px"
+                      right="-1px"
+                      bg="red.400"
+                      _dark={{ bg: 'red.600' }}
+                    />
+                  )}
+                </>
+              )
+            }
+            title={
+              openButton ? (
+                <Text
+                  {...titleProps}
+                  fontWeight={unread ? 'bold' : titleProps.fontWeight}
+                  {...labelProps}
+                >
+                  {thread.title}
+                </Text>
+              ) : (
+                <LinkOverlay
+                  as={ReachLink}
+                  to={path}
+                  {...titleProps}
+                  fontWeight={unread ? 'bold' : titleProps.fontWeight}
+                  {...labelProps}
+                  onClick={noModal ? undefined : handleOpen}
+                >
+                  {thread.title}
+                </LinkOverlay>
+              )
+            }
+            corner={
+              (thread?.pinned || thread?.private) && (
+                <HStack spacing={1.5}>
+                  {thread?.pinned && (
+                    <Box color="yellow.500">
+                      <PinnedIcon size={16} />
+                    </Box>
+                  )}
+                  {thread?.private && <PrivacyIcon size={16} />}
+                </HStack>
+              )
+            }
+            meta={
+              <>
+                {showMember && threadInitiator && (
+                  <MemberByIdAvatar
+                    id={threadInitiator.id}
+                    circleId={thread.circleId}
+                    w={6}
+                    h={6}
+                    size="xs"
                   />
                 )}
-              </Center>
-            )}
 
-            {openButton ? (
-              <Text
-                flex={1}
-                w="0"
-                whiteSpace="nowrap"
-                overflow="hidden"
-                textOverflow="ellipsis"
-                fontWeight={unread ? 'bold' : undefined}
-                {...labelProps}
-              >
-                {thread.title}
-              </Text>
-            ) : (
-              <LinkOverlay
-                as={ReachLink}
-                to={path}
-                flex={1}
-                w="0"
-                whiteSpace="nowrap"
-                overflow="hidden"
-                textOverflow="ellipsis"
-                fontWeight={unread ? 'bold' : undefined}
-                {...labelProps}
-                onClick={noModal ? undefined : handleOpen}
-              >
-                {thread.title}
-              </LinkOverlay>
-            )}
+                {showCircle && (
+                  <CircleByIdButton id={thread.circleId} size="xs" />
+                )}
 
-            {thread?.pinned && (
-              <Box color="yellow.500">
-                <PinnedIcon size={16} />
-              </Box>
-            )}
+                {children}
 
-            {thread?.private && <PrivacyIcon size={18} />}
-
-            {showMember && threadInitiator && (
-              <MemberByIdAvatar
-                id={threadInitiator.id}
-                circleId={thread.circleId}
-                w={6}
-                h={6}
-                size="xs"
-              />
-            )}
-
-            {showCircle && <CircleByIdButton id={thread.circleId} size="xs" />}
-
-            {children}
-
-            {openButton && (
-              <Button size="sm" variant="outline" onClick={onOpen}>
-                {t('ThreadItem.open')}
-              </Button>
-            )}
-          </HStack>
+                {openButton && (
+                  <Button size="sm" variant="outline" onClick={onOpen}>
+                    {t('ThreadItem.open')}
+                  </Button>
+                )}
+              </>
+            }
+          />
         </LinkBox>
 
         {isOpen && <ThreadModal id={thread.id} isOpen onClose={onClose} />}

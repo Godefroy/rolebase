@@ -1,6 +1,8 @@
 import {
+  Box,
   Button,
   ButtonProps,
+  Circle,
   Menu,
   MenuButton,
   MenuItemOption,
@@ -34,11 +36,30 @@ export default function TasksSortMenu({ value, onChange, ...boxProps }: Props) {
     <Menu>
       <MenuButton
         as={Button}
-        leftIcon={<SortIcon size="1em" />}
+        leftIcon={
+          <Box position="relative">
+            <SortIcon size="1em" />
+            {value !== TasksSortTypes.Manual && (
+              // Shows an active sort when the label is hidden
+              <Circle
+                display={{ base: 'block', sm: 'none' }}
+                size="7px"
+                position="absolute"
+                top="-3px"
+                right="-4px"
+                bg="blue.500"
+                _dark={{ bg: 'blue.300' }}
+              />
+            )}
+          </Box>
+        }
         rightIcon={<ChevronDownIcon size="1em" />}
+        aria-label={t(`TasksSortMenu.${value}`)}
         {...boxProps}
       >
-        {t(`TasksSortMenu.${value}`)}
+        <Box as="span" display={{ base: 'none', sm: 'inline' }}>
+          {t(`TasksSortMenu.${value}`)}
+        </Box>
       </MenuButton>
       <MenuList zIndex={2000}>
         <MenuOptionGroup type="radio" value={value} onChange={handleChange}>

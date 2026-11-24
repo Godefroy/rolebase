@@ -10,6 +10,8 @@ interface Props extends BoxProps {
   header?: ReactNode
   children?: ReactNode
   footer?: ReactNode
+  // Content on the beige background instead of the white panel (card lists)
+  beigeContent?: boolean
 }
 
 const scrollbarWidth = '12px'
@@ -18,6 +20,7 @@ export default function ScrollableLayout({
   header,
   children,
   footer,
+  beigeContent,
   ...boxProps
 }: Props) {
   const sidebarContext = useContext(SidebarContext)
@@ -98,8 +101,8 @@ export default function ScrollableLayout({
             borderTopRadius={showTopbar ? 0 : '32px'}
             borderBottomRadius={showBottombar ? 0 : '32px'}
             transition="border-radius 0.1s ease-out"
-            bg="white"
-            _dark={{ bg: 'gray.900' }}
+            bg={beigeContent ? 'menulight' : 'white'}
+            _dark={{ bg: beigeContent ? 'menudark' : 'gray.900' }}
           >
             {children}
           </Box>

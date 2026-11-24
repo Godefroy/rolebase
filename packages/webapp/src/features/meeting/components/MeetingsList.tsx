@@ -11,6 +11,8 @@ interface Props {
   noModal?: boolean
   showCircle?: boolean
   highlightToday?: boolean
+  // Show meetings as cards (main content lists)
+  card?: boolean
   itemProps?: HTMLChakraProps<any>
   dayLabelProps?: BoxProps
 }
@@ -20,6 +22,7 @@ export default function MeetingsList({
   noModal,
   showCircle,
   highlightToday,
+  card,
   itemProps,
   dayLabelProps,
 }: Props) {
@@ -65,7 +68,11 @@ export default function MeetingsList({
               },
             })}
           >
-            <DayLabel date={day[0].startDate} {...dayLabelProps} />
+            <DayLabel
+              date={day[0].startDate}
+              mb={card ? 2 : undefined}
+              {...dayLabelProps}
+            />
             {day.map((meeting) => (
               <MeetingItem
                 key={meeting.id}
@@ -73,7 +80,8 @@ export default function MeetingsList({
                 noModal={noModal}
                 showTime
                 showCircle={showCircle}
-                pl={2}
+                card={card}
+                pl={card ? undefined : 2}
                 {...itemProps}
               />
             ))}

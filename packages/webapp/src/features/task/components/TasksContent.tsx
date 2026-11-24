@@ -27,7 +27,6 @@ export default function TasksContent({ overflowContainer, isFullPage }: Props) {
   const {
     view,
     circleId,
-    memberId,
     sort,
     tasks: tasksResult,
   } = useContext(TasksModuleContext)
@@ -42,7 +41,7 @@ export default function TasksContent({ overflowContainer, isFullPage }: Props) {
           <TasksKanban
             tasks={tasks}
             onOrderChange={isMember && !isSorted ? changeOrder : undefined}
-            showMember={!memberId}
+            showMember
             showCircle={!circleId}
           />
 
@@ -62,7 +61,7 @@ export default function TasksContent({ overflowContainer, isFullPage }: Props) {
           <TasksList
             tasks={tasks}
             onOrderChange={isMember && !isSorted ? changeOrder : undefined}
-            showMember={!memberId}
+            showMember
             showCircle={!circleId}
             showDueDate
             showCreateBtn

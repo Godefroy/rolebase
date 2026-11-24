@@ -2,6 +2,8 @@ import CircleAndMemberFilters from '@/circle/components/CircleAndMemberFilters'
 import useFilterEntitiesByCircle from '@/circle/hooks/useFilterEntitiesByCircle'
 import Calendar from '@/common/atoms/Calendar'
 import Loading from '@/common/atoms/Loading'
+import IconTextButton from '@/common/atoms/IconTextButton'
+import PageHeader from '@/common/atoms/PageHeader'
 import ScrollableLayout from '@/common/atoms/ScrollableLayout'
 import TextErrors from '@/common/atoms/TextErrors'
 import { Title } from '@/common/atoms/Title'
@@ -13,14 +15,11 @@ import useFilterScopedEntitiesByMember from '@/participants/hooks/useFilterScope
 import useUserMetadata from '@/user/hooks/useUserMetadata'
 import {
   Box,
-  Button,
   Flex,
-  Heading,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
-  Spacer,
   useColorMode,
   useDisclosure,
 } from '@chakra-ui/react'
@@ -306,92 +305,95 @@ export default function MeetingsPage() {
 
       <ScrollableLayout
         header={
-          <Flex ml={5} w="100%" alignItems="center" flexWrap="wrap">
-            <Heading as="h1" size="lg">
-              {t('MeetingsPage.heading')}
-            </Heading>
-
-            <CircleAndMemberFilters
-              circleId={circleId}
-              memberId={memberId}
-              ml={5}
-              my={2}
-              onCircleChange={handleCircleChange}
-              onMemberChange={handleMemberChange}
-            />
-
-            <Spacer />
-
-            <Menu placement="bottom-end">
-              <MenuButton
-                as={Button}
-                size="sm"
-                variant="outline"
-                fontWeight="normal"
-                leftIcon={<SettingsIcon size={20} />}
+          <PageHeader
+            ml={5}
+            title={t('MeetingsPage.heading')}
+            filters={
+              <CircleAndMemberFilters
+                circleId={circleId}
+                memberId={memberId}
                 my={2}
-              >
-                {t('MeetingsPage.settings')}
-              </MenuButton>
-              <MenuList
-                fontFamily="body"
-                fontSize="1rem"
-                fontWeight="normal"
-                zIndex={1000}
-              >
-                {isMember && (
-                  <>
+                onCircleChange={handleCircleChange}
+                onMemberChange={handleMemberChange}
+              />
+            }
+            actions={
+              <>
+                <Menu placement="bottom-end">
+                  <MenuButton
+                    as={IconTextButton}
+                    aria-label={t('MeetingsPage.settings')}
+                    showText={{ base: false, xl: true }}
+                    size="sm"
+                    variant="outline"
+                    fontWeight="normal"
+                    icon={<SettingsIcon size={20} />}
+                  />
+                  <MenuList
+                    fontFamily="body"
+                    fontSize="1rem"
+                    fontWeight="normal"
+                    zIndex={1000}
+                  >
+                    {isMember && (
+                      <>
+                        <MenuItem
+                          icon={<CopyIcon size={20} />}
+                          onClick={templatesModal.onOpen}
+                        >
+                          {t('MeetingsPage.templates')}
+                        </MenuItem>
+                        <MenuItem
+                          icon={<MeetingRecurringIcon size={20} />}
+                          onClick={recurringListModal.onOpen}
+                        >
+                          {t('MeetingsPage.recurring')}
+                        </MenuItem>
+                      </>
+                    )}
                     <MenuItem
-                      icon={<CopyIcon size={20} />}
-                      onClick={templatesModal.onOpen}
+                      icon={
+                        weekend ? (
+                          <HideIcon size={20} />
+                        ) : (
+                          <ShowIcon size={20} />
+                        )
+                      }
+                      onClick={() =>
+                        setMetadata('calendarShowWeekend', !weekend)
+                      }
                     >
-                      {t('MeetingsPage.templates')}
+                      {weekend
+                        ? t('MeetingsPage.hideWeekend')
+                        : t('MeetingsPage.showWeekend')}
                     </MenuItem>
                     <MenuItem
-                      icon={<MeetingRecurringIcon size={20} />}
-                      onClick={recurringListModal.onOpen}
+                      icon={<ExportIcon size={20} />}
+                      onClick={exportModal.onOpen}
                     >
-                      {t('MeetingsPage.recurring')}
+                      {t('MeetingsPage.export')}
                     </MenuItem>
-                  </>
-                )}
-                <MenuItem
-                  icon={
-                    weekend ? <HideIcon size={20} /> : <ShowIcon size={20} />
-                  }
-                  onClick={() => setMetadata('calendarShowWeekend', !weekend)}
-                >
-                  {weekend
-                    ? t('MeetingsPage.hideWeekend')
-                    : t('MeetingsPage.showWeekend')}
-                </MenuItem>
-                <MenuItem
-                  icon={<ExportIcon size={20} />}
-                  onClick={exportModal.onOpen}
-                >
-                  {t('MeetingsPage.export')}
-                </MenuItem>
-                <Link to="/apps">
-                  <MenuItem icon={<AppsIcon size={20} />}>
-                    {t('MeetingsPage.apps')}
-                  </MenuItem>
-                </Link>
-              </MenuList>
-            </Menu>
+                    <Link to="/apps">
+                      <MenuItem icon={<AppsIcon size={20} />}>
+                        {t('MeetingsPage.apps')}
+                      </MenuItem>
+                    </Link>
+                  </MenuList>
+                </Menu>
 
-            {isMember && (
-              <Button
-                size="md"
-                colorScheme="blue"
-                ml={5}
-                my={1}
-                leftIcon={<CreateIcon size={20} />}
-                onClick={handleCreate}
-              >
-                {t('MeetingsPage.create')}
-              </Button>
-            )}
-          </Flex>
+                {isMember && (
+                  <IconTextButton
+                    aria-label={t('MeetingsPage.create')}
+                    showText={{ base: false, xl: true }}
+                    size="md"
+                    colorScheme="blue"
+                    icon={<CreateIcon size={20} />}
+                    onClick={handleCreate}
+                  />
+                )}
+              </>
+            }
+          />
         }
       >
         <Box py={5} h="100%">

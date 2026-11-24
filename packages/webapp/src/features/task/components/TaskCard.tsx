@@ -1,39 +1,47 @@
 import CircleByIdButton from '@/circle/components/CircleByIdButton'
-import useDateLocale from '@/common/hooks/useDateLocale'
+import ListItemLayout from '@/common/atoms/ListItemLayout'
 import { useNormalClickHandler } from '@/common/hooks/useNormalClickHandler'
+import { getItemCardProps } from '@/common/utils/itemCardProps'
+import { getListItemTitleProps } from '@/common/utils/listItemTitleProps'
 import MemberByIdAvatar from '@/member/components/MemberByIdAvatar'
 import { usePathInOrg } from '@/org/hooks/usePathInOrg'
 import {
   Avatar,
   forwardRef,
-  HStack,
   LinkBox,
   LinkBoxProps,
   LinkOverlay,
-  Text,
   useDisclosure,
 } from '@chakra-ui/react'
 import { TaskFragment } from '@gql'
-import { formatRelative } from 'date-fns'
 import React from 'react'
 import { Link as ReachLink } from 'react-router'
 import { PrivacyIcon } from 'src/icons'
 import TaskModal from '../modals/TaskModal'
+import TaskDueDate from './TaskDueDate'
 
 interface Props extends LinkBoxProps {
   task: TaskFragment
   showCircle?: boolean
   showMember?: boolean
   isDragging?: boolean
+  // Drag and drop enabled (manual order)
+  draggable?: boolean
 }
 
 const TaskCard = forwardRef<Props, 'div'>(
   (
-    { task, showCircle, showMember, isDragging, children, ...linkBoxProps },
+    {
+      task,
+      showCircle,
+      showMember,
+      isDragging,
+      draggable,
+      children,
+      ...linkBoxProps
+    },
     ref
   ) => {
-    const dateLocale = useDateLocale()
-
     const path = usePathInOrg(`tasks/${task.id}`)
     const { isOpen, onOpen, onClose } = useDisclosure()
     const handleOpen = useNormalClickHandler(onOpen)
@@ -46,57 +54,51 @@ const TaskCard = forwardRef<Props, 'div'>(
         <LinkBox
           ref={ref}
           onDragStart={handleDragStart}
-          p={1}
-          pt={3}
-          pl={3}
-          bg="white"
-          _dark={{
-            bg: 'blackAlpha.500',
-          }}
-          borderRadius="md"
-          borderWidth={1}
-          boxShadow={isDragging ? 'lg' : 'sm'}
-          transition="box-shadow 200ms ease-out"
-          _hover={{
-            boxShadow: 'md',
-          }}
+          {...getItemCardProps({ draggable, isDragging, onColor: true })}
           {...linkBoxProps}
           tabIndex={
             // Remove tabIndex because it's redondant with link
             undefined
           }
         >
-          <LinkOverlay as={ReachLink} flex={1} to={path} onClick={handleOpen}>
-            {task.title}
-          </LinkOverlay>
+          <ListItemLayout
+            stacked
+            title={
+              <LinkOverlay
+                as={ReachLink}
+                to={path}
+                {...getListItemTitleProps(true)}
+                noOfLines={3}
+                onClick={handleOpen}
+              >
+                {task.title}
+              </LinkOverlay>
+            }
+            corner={task?.private && <PrivacyIcon size={16} />}
+            metaStart={
+              task.dueDate && (
+                <TaskDueDate dueDate={task.dueDate} status={task.status} />
+              )
+            }
+            meta={
+              showCircle || showMember || children ? (
+                <>
+                  {showCircle && (
+                    <CircleByIdButton id={task.circleId} size="xs" />
+                  )}
 
-          {task.dueDate && (
-            <Text
-              fontSize="sm"
-              textAlign="right"
-              color="gray.500"
-              _dark={{ color: 'gray.300' }}
-            >
-              {formatRelative(new Date(task.dueDate), new Date(), {
-                locale: dateLocale,
-              })}
-            </Text>
-          )}
+                  {showMember &&
+                    (task.memberId ? (
+                      <MemberByIdAvatar id={task.memberId} size="xs" />
+                    ) : (
+                      <Avatar name="?" size="xs" />
+                    ))}
 
-          <HStack align="center" justifyContent="end" mt={1}>
-            {task?.private && <PrivacyIcon size={18} />}
-
-            {showCircle && <CircleByIdButton id={task.circleId} size="xs" />}
-
-            {showMember &&
-              (task.memberId ? (
-                <MemberByIdAvatar id={task.memberId} size="xs" />
-              ) : (
-                <Avatar name="?" size="xs" />
-              ))}
-
-            {children}
-          </HStack>
+                  {children}
+                </>
+              ) : undefined
+            }
+          />
         </LinkBox>
 
         {isOpen && <TaskModal id={task.id} isOpen onClose={onClose} />}

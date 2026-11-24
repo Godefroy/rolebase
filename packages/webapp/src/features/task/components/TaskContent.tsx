@@ -434,7 +434,16 @@ export default function TaskContent({
         </Collapse>
 
         {threadActivities && threadActivities.length > 0 && (
-          <VStack align="stretch" spacing={1} w="100%">
+          <VStack
+            align="stretch"
+            spacing={0}
+            // Beige surface so the white thread cards stand out on the panel
+            bg="menulight"
+            _dark={{ bg: 'menudark' }}
+            borderRadius="xl"
+            p={3}
+            w="100%"
+          >
             {threadActivities.map(
               (activity) =>
                 activity.thread && (

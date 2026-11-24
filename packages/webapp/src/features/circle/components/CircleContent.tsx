@@ -197,8 +197,9 @@ export default function CircleContent({
           flex={flowHeight ? undefined : 1}
           minH={flowHeight ? undefined : 0}
           overflowY={flowHeight ? undefined : 'auto'}
-          bg={tab === TabsEnum.News ? 'menulight' : undefined}
-          _dark={{ bg: tab === TabsEnum.News ? 'menudark' : undefined }}
+          // Beige background for tabs that list items as cards
+          bg={tab !== TabsEnum.Role ? 'menulight' : undefined}
+          _dark={{ bg: tab !== TabsEnum.Role ? 'menudark' : undefined }}
         >
           <TabPanel px={6} py={10}>
             <CircleRole />

@@ -38,6 +38,9 @@ export default function TasksList({
 
   const { openCreateTask } = useContext(TasksModuleContext)
 
+  // Same condition as TaskItem's card layout
+  const isCard = !!(showCircle || showMember || showDueDate)
+
   // Move a task
   const handleDragEnd = useCallback(
     (result: DropResult) => {
@@ -81,19 +84,26 @@ export default function TasksList({
                 isDragDisabled={!onOrderChange}
               >
                 {(provided, snapshot) => (
-                  <TaskItem
-                    key={task.id}
+                  // Draggable root: spacing as padding (no margin) so the
+                  // library measures stable sizes
+                  <Box
                     ref={provided.innerRef}
-                    task={task}
-                    noModal={noModal}
-                    showCircle={showCircle}
-                    showMember={showMember}
-                    showDueDate={showDueDate}
-                    isDragging={snapshot.isDragging}
-                    {...itemProps}
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
-                  />
+                    pb={isCard ? 2 : 0}
+                  >
+                    <TaskItem
+                      task={task}
+                      noModal={noModal}
+                      showCircle={showCircle}
+                      showMember={showMember}
+                      showDueDate={showDueDate}
+                      isDragging={snapshot.isDragging}
+                      draggable={!!onOrderChange}
+                      mb={0}
+                      {...itemProps}
+                    />
+                  </Box>
                 )}
               </Draggable>
             ))}

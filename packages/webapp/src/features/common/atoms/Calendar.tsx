@@ -34,12 +34,20 @@ const headerToolbar = {
   right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
 }
 
+// No week view on small screens, where its columns are too narrow
+const smallScreenHeaderToolbar = {
+  ...headerToolbar,
+  right: 'dayGridMonth,timeGridDay,listWeek',
+}
+
 export default function Calendar(props: CalendarOptions) {
   const {
     i18n: { language },
   } = useTranslation()
   const dateLocale = useDateLocale()
-  const [isSmallScreen] = useMediaQuery('(max-width: 700px)')
+  const [isSmallScreen] = useMediaQuery('(max-width: 700px)', {
+    ssr: false,
+  })
 
   const dayHeaderContent = useCallback(
     ({ date, isToday, view }: DayHeaderContentArg) => (
@@ -91,7 +99,7 @@ export default function Calendar(props: CalendarOptions) {
       locale={language}
       locales={locales}
       plugins={plugins}
-      headerToolbar={headerToolbar}
+      headerToolbar={isSmallScreen ? smallScreenHeaderToolbar : headerToolbar}
       titleFormat={{
         year: 'numeric',
         month: 'long',

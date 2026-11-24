@@ -56,7 +56,7 @@ export default function CircleDecisions({ circleId }: Props) {
       )}
 
       {decisions?.map((decision) => (
-        <DecisionItem key={decision.id} decision={decision} />
+        <DecisionItem key={decision.id} decision={decision} card />
       ))}
 
       {editModal.isOpen && (

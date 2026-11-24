@@ -57,7 +57,12 @@ export default function DashboardMyMeetings() {
       <TextErrors errors={[error]} />
 
       {meetings && (
-        <MeetingsList meetings={meetings.slice(0, max)} noModal showCircle />
+        <MeetingsList
+          meetings={meetings.slice(0, max)}
+          noModal
+          showCircle
+          card
+        />
       )}
 
       {createModal.isOpen && (

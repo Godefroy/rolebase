@@ -1,21 +1,22 @@
 import CircleByIdButton from '@/circle/components/CircleByIdButton'
+import ListItemLayout from '@/common/atoms/ListItemLayout'
 import useDateLocale from '@/common/hooks/useDateLocale'
 import { useNormalClickHandler } from '@/common/hooks/useNormalClickHandler'
+import { getItemCardProps } from '@/common/utils/itemCardProps'
+import { getListItemTitleProps } from '@/common/utils/listItemTitleProps'
 import { usePathInOrg } from '@/org/hooks/usePathInOrg'
 import {
   Button,
   forwardRef,
-  HStack,
   LinkBox,
   LinkBoxProps,
   LinkOverlay,
-  Spacer,
   Text,
   useDisclosure,
 } from '@chakra-ui/react'
 import { MeetingSummaryFragment } from '@gql'
 import { capitalizeFirstLetter } from '@utils/capitalizeFirstLetter'
-import { format } from 'date-fns'
+import { format, isSameDay } from 'date-fns'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link as ReachLink, useLocation } from 'react-router'
@@ -30,6 +31,8 @@ interface Props extends LinkBoxProps {
   showIcon?: boolean
   showDate?: boolean
   showTime?: boolean
+  // Card layout, for lists in a main content area
+  card?: boolean
 }
 
 const MeetingItem = forwardRef<Props, 'div'>(
@@ -42,6 +45,7 @@ const MeetingItem = forwardRef<Props, 'div'>(
       showIcon,
       showDate,
       showTime,
+      card,
       children,
       ...linkBoxProps
     },
@@ -53,17 +57,39 @@ const MeetingItem = forwardRef<Props, 'div'>(
     const handleOpen = useNormalClickHandler(onOpen)
     const dateLocale = useDateLocale()
     const startDate = new Date(meeting.startDate)
+    const endDate = new Date(meeting.endDate)
 
     // Is active?
     const location = useLocation()
     const isActive = location.pathname === path
 
+    const title = t('MeetingItem.title', { title: meeting.title })
+
+    // Date and time range, with both dates when the meeting spans several days
+    const formatDay = (date: Date) =>
+      capitalizeFirstLetter(format(date, 'eeee P', { locale: dateLocale }))
+    const formatTime = (date: Date) => format(date, 'p', { locale: dateLocale })
+    const endLabel = isSameDay(startDate, endDate)
+      ? formatTime(endDate)
+      : `${formatDay(endDate)} ${formatTime(endDate)}`
+    const dateLabel = [
+      showDate && formatDay(startDate),
+      showTime && `${formatTime(startDate)} – ${endLabel}`,
+    ]
+      .filter(Boolean)
+      .join(' · ')
+    const titleProps = getListItemTitleProps(!!card)
+
     return (
       <>
         <LinkBox
           ref={ref}
-          p={1}
-          _hover={openButton ? undefined : { bg: 'bgItemHover' }}
+          {...(card
+            ? { ...getItemCardProps(), mb: 2 }
+            : {
+                p: 1,
+                _hover: openButton ? undefined : { bg: 'bgItemHover' },
+              })}
           {...linkBoxProps}
           tabIndex={
             // Remove tabIndex because it's redondant with link
@@ -71,60 +97,53 @@ const MeetingItem = forwardRef<Props, 'div'>(
           }
           className={isActive ? 'active' : undefined}
         >
-          <HStack align="center">
-            {showIcon && <MeetingIcon />}
-
-            {openButton ? (
-              <Text
-                minW="0"
-                whiteSpace="nowrap"
-                overflow="hidden"
-                textOverflow="ellipsis"
-              >
-                {t('MeetingItem.title', { title: meeting.title })}
-              </Text>
-            ) : (
-              <LinkOverlay
-                as={ReachLink}
-                to={path}
-                minW="0"
-                whiteSpace="nowrap"
-                overflow="hidden"
-                textOverflow="ellipsis"
-                onClick={noModal ? undefined : handleOpen}
-              >
-                {t('MeetingItem.title', { title: meeting.title })}
-              </LinkOverlay>
-            )}
-
-            {showDate && (
-              <Text pr={1} color="gray.500" _dark={{ color: 'gray.400' }}>
-                {capitalizeFirstLetter(
-                  format(startDate, 'eeee P', { locale: dateLocale })
-                )}
-              </Text>
-            )}
-
-            {showTime && (
-              <Text pr={1} color="gray.500" _dark={{ color: 'gray.400' }}>
-                {format(startDate, 'p', { locale: dateLocale })}
-              </Text>
-            )}
-
-            <Spacer />
-
-            {meeting?.private && <PrivacyIcon size={18} />}
-
-            {showCircle && <CircleByIdButton id={meeting.circleId} size="xs" />}
-
-            {children}
-
-            {openButton && (
-              <Button size="sm" variant="outline" onClick={onOpen}>
-                {t('MeetingItem.open')}
-              </Button>
-            )}
-          </HStack>
+          <ListItemLayout
+            stacked={card}
+            icon={showIcon && <MeetingIcon />}
+            corner={meeting?.private && <PrivacyIcon size={16} />}
+            title={
+              openButton ? (
+                <Text {...titleProps}>{title}</Text>
+              ) : (
+                <LinkOverlay
+                  as={ReachLink}
+                  to={path}
+                  {...titleProps}
+                  onClick={noModal ? undefined : handleOpen}
+                >
+                  {title}
+                </LinkOverlay>
+              )
+            }
+            metaStart={
+              (showDate || showTime) && (
+                <Text
+                  as="span"
+                  whiteSpace="nowrap"
+                  color="gray.500"
+                  _dark={{ color: 'gray.400' }}
+                  fontSize={card ? 'sm' : undefined}
+                >
+                  {dateLabel}
+                </Text>
+              )
+            }
+            meta={
+              (showCircle || children || openButton) && (
+                <>
+                  {showCircle && (
+                    <CircleByIdButton id={meeting.circleId} size="xs" />
+                  )}
+                  {children}
+                  {openButton && (
+                    <Button size="sm" variant="outline" onClick={onOpen}>
+                      {t('MeetingItem.open')}
+                    </Button>
+                  )}
+                </>
+              )
+            }
+          />
         </LinkBox>
 
         {isOpen && <MeetingModal id={meeting.id} isOpen onClose={onClose} />}

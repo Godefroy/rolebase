@@ -1,6 +1,6 @@
 import useOrgMember from '@/member/hooks/useOrgMember'
 import { AddIcon } from '@chakra-ui/icons'
-import { Button, IconButton } from '@chakra-ui/react'
+import { Box, Button, IconButton } from '@chakra-ui/react'
 import { TaskFragment, Task_Status_Enum } from '@gql'
 import { Draggable } from '@hello-pangea/dnd'
 import { TasksViewTypes } from '@rolebase/shared/model/task'
@@ -90,16 +90,22 @@ export default function TasksKanbanColumn({
           isDragDisabled={isDragDisabled}
         >
           {(provided, snapshot) => (
-            <TaskCard
+            // Draggable root: spacing as padding (no margin) so the library
+            // measures stable sizes
+            <Box
               ref={provided.innerRef}
-              task={task}
-              showCircle={showCircle}
-              showMember={showMember}
-              isDragging={snapshot.isDragging}
-              mb={2}
               {...provided.draggableProps}
               {...provided.dragHandleProps}
-            />
+              pb={2}
+            >
+              <TaskCard
+                task={task}
+                showCircle={showCircle}
+                showMember={showMember}
+                isDragging={snapshot.isDragging}
+                draggable={!isDragDisabled}
+              />
+            </Box>
           )}
         </Draggable>
       ))}

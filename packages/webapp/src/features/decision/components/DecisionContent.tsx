@@ -160,7 +160,16 @@ export default function DecisionContent({
       )}
 
       {threadActivities && threadActivities.length > 0 && (
-        <VStack align="stretch" spacing={1} mt={6}>
+        <VStack
+          align="stretch"
+          spacing={0}
+          // Beige surface so the white thread cards stand out on the panel
+          bg="menulight"
+          _dark={{ bg: 'menudark' }}
+          borderRadius="xl"
+          p={3}
+          mt={6}
+        >
           {threadActivities.map(
             (activity) =>
               activity.thread && (

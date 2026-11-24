@@ -1,7 +1,7 @@
 import ScrollableLayout from '@/common/atoms/ScrollableLayout'
 import { Title } from '@/common/atoms/Title'
 import useUpdatableQueryParams from '@/common/hooks/useUpdatableQueryParams'
-import { Box, Heading } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import { Task_Status_Enum } from '@gql'
 import { TasksSortTypes, TasksViewTypes } from '@rolebase/shared/model/task'
 import React from 'react'
@@ -69,15 +69,9 @@ export default function TasksPage() {
       onSortChange={handleSortChange}
     >
       <ScrollableLayout
+        beigeContent
         header={
-          <TasksHeader
-            showCreateBtn
-            title={
-              <Heading as="h1" size="lg" ml={5} mr={7}>
-                {t('TasksPage.heading')}
-              </Heading>
-            }
-          />
+          <TasksHeader showCreateBtn title={t('TasksPage.heading')} ml={5} />
         }
       >
         <Title>{t('TasksPage.heading')}</Title>

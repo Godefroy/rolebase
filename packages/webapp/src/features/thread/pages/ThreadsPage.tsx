@@ -1,6 +1,8 @@
 import CircleAndMemberFilters from '@/circle/components/CircleAndMemberFilters'
 import useFilterEntitiesByCircle from '@/circle/hooks/useFilterEntitiesByCircle'
 import Loading from '@/common/atoms/Loading'
+import IconTextButton from '@/common/atoms/IconTextButton'
+import PageHeader from '@/common/atoms/PageHeader'
 import ScrollableLayout from '@/common/atoms/ScrollableLayout'
 import TextErrors from '@/common/atoms/TextErrors'
 import { Title } from '@/common/atoms/Title'
@@ -12,14 +14,11 @@ import OnboardingVideo, {
 import {
   Box,
   Button,
-  Flex,
-  Heading,
   Menu,
   MenuButton,
   MenuItemOption,
   MenuList,
   MenuOptionGroup,
-  Spacer,
   useDisclosure,
 } from '@chakra-ui/react'
 import { Thread_Status_Enum } from '@gql'
@@ -101,59 +100,58 @@ export default function ThreadsPage() {
       <Title>{t('ThreadsPage.heading')}</Title>
 
       <ScrollableLayout
+        beigeContent
         header={
-          <Flex ml={5} w="100%" alignItems="center" flexWrap="wrap">
-            <Heading as="h1" size="lg">
-              {t('ThreadsPage.heading')}
-            </Heading>
-
-            <CircleAndMemberFilters
-              circleId={circleId}
-              memberId={memberId}
-              ml={5}
-              my={2}
-              onCircleChange={handleCircleChange}
-              onMemberChange={handleMemberChange}
-            >
-              <Menu>
-                <MenuButton
-                  as={Button}
-                  rightIcon={<ChevronDownIcon size="1em" />}
-                  fontWeight="normal"
-                >
-                  {t(`common.threadStatus.${status ?? threadStatusNotClosed}`)}
-                </MenuButton>
-                <MenuList zIndex={2000}>
-                  <MenuOptionGroup
-                    type="radio"
-                    value={status ?? threadStatusNotClosed}
-                    onChange={handleThreadStatusChange}
-                  >
-                    {threadStatusFiltersList.map((status) => (
-                      <MenuItemOption key={status} value={status}>
-                        {t(`common.threadStatus.${status}`)}
-                      </MenuItemOption>
-                    ))}
-                  </MenuOptionGroup>
-                </MenuList>
-              </Menu>
-            </CircleAndMemberFilters>
-
-            <Spacer />
-
-            {isMember && (
-              <Button
-                size="md"
-                colorScheme="blue"
-                ml={5}
-                my={1}
-                leftIcon={<CreateIcon size={20} />}
-                onClick={onCreateOpen}
+          <PageHeader
+            ml={5}
+            title={t('ThreadsPage.heading')}
+            filters={
+              <CircleAndMemberFilters
+                circleId={circleId}
+                memberId={memberId}
+                my={2}
+                onCircleChange={handleCircleChange}
+                onMemberChange={handleMemberChange}
               >
-                {t('ThreadsPage.create')}
-              </Button>
-            )}
-          </Flex>
+                <Menu>
+                  <MenuButton
+                    as={Button}
+                    rightIcon={<ChevronDownIcon size="1em" />}
+                    fontWeight="normal"
+                  >
+                    {t(
+                      `common.threadStatus.${status ?? threadStatusNotClosed}`
+                    )}
+                  </MenuButton>
+                  <MenuList zIndex={2000}>
+                    <MenuOptionGroup
+                      type="radio"
+                      value={status ?? threadStatusNotClosed}
+                      onChange={handleThreadStatusChange}
+                    >
+                      {threadStatusFiltersList.map((status) => (
+                        <MenuItemOption key={status} value={status}>
+                          {t(`common.threadStatus.${status}`)}
+                        </MenuItemOption>
+                      ))}
+                    </MenuOptionGroup>
+                  </MenuList>
+                </Menu>
+              </CircleAndMemberFilters>
+            }
+            actions={
+              isMember && (
+                <IconTextButton
+                  aria-label={t('ThreadsPage.create')}
+                  showText={{ base: false, xl: true }}
+                  size="md"
+                  colorScheme="blue"
+                  icon={<CreateIcon size={20} />}
+                  onClick={onCreateOpen}
+                />
+              )
+            }
+          />
         }
       >
         <Box maxW="3xl" my={10} px={{ base: 5, sm: 10 }}>
