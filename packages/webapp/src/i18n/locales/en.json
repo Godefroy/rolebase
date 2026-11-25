@@ -625,10 +625,6 @@
     "title": "Meeting {{title}}",
     "open": "Open meeting"
   },
-  "MeetingOpenCurrent": {
-    "heading": "Meeting in progress",
-    "info": "You have a meeting in progress, would you like to join it?"
-  },
   "MeetingPanelEnded": {
     "headingWrite": "Write the meeting summary",
     "headingRead": "Meeting summary",
@@ -1113,8 +1109,6 @@
     "mcp": "MCP client"
   },
   "Sidebar": {
-    "close": "Close sidebar",
-    "lock": "Lock sidebar open",
     "orgs": "Organizations",
     "settings": "Settings",
     "menu": "Menu",
@@ -1124,7 +1118,14 @@
     "meetings": "Meetings",
     "tasks": "Tasks",
     "search": "Search",
-    "help": "Help"
+    "help": "Help",
+    "collapse": "Collapse sidebar",
+    "expand": "Expand sidebar",
+    "seeAllThreads_one": "See my discussion",
+    "seeAllThreads_other": "See my {{count}} discussions",
+    "seeAllTasks_one": "See my task",
+    "seeAllTasks_other": "See my {{count}} tasks",
+    "nextMeeting": "Next: {{title}}, {{time}}"
   },
   "HelpMenu": {
     "documentation": "Documentation",

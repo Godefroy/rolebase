@@ -1,12 +1,24 @@
 import { useDisclosure, useMediaQuery } from '@chakra-ui/react'
 import { UserLocalStorageKeys } from '@utils/localStorage'
 import debounce from 'lodash.debounce'
-import React, { createContext, useCallback, useMemo, useState } from 'react'
+import React, {
+  createContext,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 
 // Width of sidebar
 const sidebarMinWidth = 250
 const sidebarMaxWidth = 600
 export const defaultSidebarWidth = 336
+
+// Width of the collapsed sidebar (icons only)
+export const collapsedSidebarWidth = 64
+
+// Duration of the collapse and expand transition
+export const sidebarTransitionMs = 200
 
 export const getSidebarWidth = () => {
   const retrievedSidebarWidth = localStorage.getItem(
@@ -22,8 +34,20 @@ export const defaultSidebarHeight = 50
 
 interface SidebarContextValue {
   isMobile: boolean
+  // Mobile: menu opened below the top bar
   expand: ReturnType<typeof useDisclosure>
-  minimize: ReturnType<typeof useDisclosure>
+  // Desktop: sidebar collapsed to icons
+  collapsed: boolean
+  toggleCollapse(): void
+  // Collapse or expand transition in progress
+  animating: boolean
+  // Icons only: collapsed sidebar (desktop) or top bar (mobile)
+  compact: boolean
+  // Width of the sidebar itself, animated
+  sidebarWidth: number
+  // Width of the expanded sidebar (resizable)
+  expandedWidth: number
+  // Space taken on the left of the page
   width: number
   height: number
   setWidth(width: number): void
@@ -40,9 +64,32 @@ interface SidebarProviderProps {
 
 export function SidebarProvider({ children }: SidebarProviderProps) {
   const expand = useDisclosure()
-  const minimize = useDisclosure()
   const [width, setWidth] = useState<number>(getSidebarWidth)
   const [height, setHeight] = useState<number>(0)
+
+  // Collapsed state, remembered in this browser
+  const collapse = useDisclosure({
+    defaultIsOpen:
+      localStorage.getItem(UserLocalStorageKeys.SidebarCollapsed) === '1',
+    onOpen: () =>
+      localStorage.setItem(UserLocalStorageKeys.SidebarCollapsed, '1'),
+    onClose: () =>
+      localStorage.removeItem(UserLocalStorageKeys.SidebarCollapsed),
+  })
+
+  // Collapse and expand transition in progress: the page margin follows the
+  // narrow sidebar, and the content switches to icons once it's collapsed
+  const [animating, setAnimating] = useState(false)
+  const animationTimeout = useRef<ReturnType<typeof setTimeout>>()
+  const toggleCollapse = useCallback(() => {
+    collapse.onToggle()
+    setAnimating(true)
+    clearTimeout(animationTimeout.current)
+    animationTimeout.current = setTimeout(
+      () => setAnimating(false),
+      sidebarTransitionMs
+    )
+  }, [collapse.onToggle])
 
   const saveWidth = debounce((width: number) => {
     localStorage.setItem(UserLocalStorageKeys.SidebarWidth, `${width}`)
@@ -64,13 +111,26 @@ export function SidebarProvider({ children }: SidebarProviderProps) {
     () => ({
       isMobile,
       expand,
-      minimize,
-      width: isMobile || minimize.isOpen ? 0 : width,
+      collapsed: collapse.isOpen,
+      toggleCollapse,
+      animating,
+      compact: isMobile ? !expand.isOpen : collapse.isOpen && !animating,
+      sidebarWidth: isMobile
+        ? 0
+        : collapse.isOpen
+          ? collapsedSidebarWidth
+          : width,
+      expandedWidth: width,
+      width: isMobile
+        ? 0
+        : collapse.isOpen || animating
+          ? collapsedSidebarWidth
+          : width,
       height: isMobile ? defaultSidebarHeight : 0,
       setWidth: handleSetWidth,
       setHeight,
     }),
-    [expand.isOpen, minimize.isOpen, isMobile, width, height]
+    [expand.isOpen, collapse.isOpen, animating, isMobile, width, height]
   )
 
   return (

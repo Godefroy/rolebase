@@ -659,10 +659,6 @@
     "title": "Réunion {{title}}",
     "open": "Ouvrir la réunion"
   },
-  "MeetingOpenCurrent": {
-    "heading": "Réunion en cours",
-    "info": "Vous avez une réunion en cours, souhaitez-vous la rejoindre ?"
-  },
   "MeetingPanelEnded": {
     "headingWrite": "Rédigez le résumé de la réunion",
     "headingRead": "Résumé de la réunion",
@@ -1146,8 +1142,6 @@
     "mcp": "Client MCP"
   },
   "Sidebar": {
-    "close": "Fermer la barre latérale",
-    "lock": "Garder la barre latérale ouverte",
     "orgs": "Organisations",
     "menu": "Menu",
     "settings": "Paramètres",
@@ -1157,7 +1151,14 @@
     "meetings": "Réunions",
     "tasks": "Tâches",
     "search": "Rechercher",
-    "help": "Aide"
+    "help": "Aide",
+    "collapse": "Réduire la barre latérale",
+    "expand": "Déplier la barre latérale",
+    "seeAllThreads_one": "Voir ma discussion",
+    "seeAllThreads_other": "Voir mes {{count}} discussions",
+    "seeAllTasks_one": "Voir ma tâche",
+    "seeAllTasks_other": "Voir mes {{count}} tâches",
+    "nextMeeting": "Ensuite : {{title}}, {{time}}"
   },
   "HelpMenu": {
     "documentation": "Documentation",

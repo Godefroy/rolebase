@@ -1,8 +1,7 @@
 import { BoxProps, Text } from '@chakra-ui/react'
-import { format, isSameDay, isToday, isTomorrow } from 'date-fns'
+import { isSameDay } from 'date-fns'
 import React from 'react'
-import { useTranslation } from 'react-i18next'
-import useDateLocale from '../hooks/useDateLocale'
+import useFormatDay from '../hooks/useFormatDay'
 
 interface Props extends BoxProps {
   date: string
@@ -14,13 +13,10 @@ export default function DayLabel({
   prevDate: prevDateStr,
   ...boxProps
 }: Props) {
-  const { t } = useTranslation()
-  const dateLocale = useDateLocale()
+  const formatDay = useFormatDay()
 
   const date = new Date(dateStr)
   const prevDate = prevDateStr ? new Date(prevDateStr) : undefined
-  const currentDate = new Date()
-  const currentYear = currentDate.getFullYear()
 
   // Show nothing if the date is the same as the previous one
   if (prevDate && isSameDay(date, prevDate)) {
@@ -35,15 +31,7 @@ export default function DayLabel({
       _dark={{ color: 'gray.400' }}
       {...boxProps}
     >
-      {isToday(date)
-        ? t('common.dates.today')
-        : isTomorrow(date)
-          ? t('common.dates.tomorrow')
-          : format(
-              date,
-              date.getFullYear() !== currentYear ? 'eeee P' : 'eeee dd/MM',
-              { locale: dateLocale }
-            )}
+      {formatDay(date)}
     </Text>
   )
 }

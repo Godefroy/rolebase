@@ -47,7 +47,6 @@ import {
   SettingsIcon,
   ShowIcon,
 } from 'src/icons'
-import MeetingOpenCurrent from '../components/MeetingOpenCurrent'
 import MeetingEditModal from '../modals/MeetingEditModal'
 import MeetingExportModal from '../modals/MeetingExportModal'
 import MeetingRecurringEditModal from '../modals/MeetingRecurringEditModal'
@@ -225,7 +224,6 @@ export default function MeetingsPage() {
   const recurringEditModal = useDisclosure()
   const recurringListModal = useDisclosure()
   const exportModal = useDisclosure()
-  const currentMeetingModal = useDisclosure({ defaultIsOpen: true })
 
   // Dates for meeting creation modal
   const [startDate, setStartDate] = useState<Date | undefined>()
@@ -458,10 +456,6 @@ export default function MeetingsPage() {
 
       {exportModal.isOpen && (
         <MeetingExportModal isOpen onClose={exportModal.onClose} />
-      )}
-
-      {currentMeetingModal.isOpen && (
-        <MeetingOpenCurrent isOpen onClose={currentMeetingModal.onClose} />
       )}
     </Flex>
   )

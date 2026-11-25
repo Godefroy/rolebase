@@ -3,30 +3,52 @@ import { Icon } from 'iconsax-react'
 import React from 'react'
 
 export interface SidebarIconProps extends BoxProps {
-  icon: Icon
+  icon?: Icon
+  // Custom icon (avatar, org icon), in place of icon
+  iconNode?: React.ReactNode
   isActive?: boolean
   alert?: boolean
 }
 
 export default function SidebarIcon({
   icon: IconComponent,
+  iconNode,
   isActive,
   alert,
   ...boxProps
 }: SidebarIconProps) {
   return (
-    <Box fontSize="1.2em" position="relative" {...boxProps}>
+    <Box
+      position="relative"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+      w="20px"
+      h="20px"
+      flexShrink={0}
+      color={isActive ? 'brand' : undefined}
+      {...boxProps}
+    >
+      {IconComponent ? (
+        <IconComponent size={20} variant={isActive ? 'Bold' : 'Linear'} />
+      ) : (
+        iconNode
+      )}
+
       {alert && (
         <Circle
           size="8px"
           position="absolute"
-          top="-3px"
-          right="-3px"
+          top="-2px"
+          right="-2px"
           bg="red.400"
-          _dark={{ bg: 'red.600' }}
+          boxShadow="0 0 0 2px var(--chakra-colors-menulight)"
+          _dark={{
+            bg: 'red.500',
+            boxShadow: '0 0 0 2px var(--chakra-colors-menudark)',
+          }}
         />
       )}
-      <IconComponent variant={isActive ? 'Bold' : 'Linear'} />
     </Box>
   )
 }

@@ -1,23 +1,20 @@
-import {
-  Box,
-  Button,
-  ButtonProps,
-  HTMLChakraProps,
-  Spacer,
-  forwardRef,
-} from '@chakra-ui/react'
-import { Icon } from 'iconsax-react'
+import { Box, Button, ButtonProps, forwardRef } from '@chakra-ui/react'
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AddIcon } from 'src/icons'
-import SidebarIcon from './SidebarIcon'
+import {
+  sidebarItemActiveStyle,
+  sidebarItemHoverStyle,
+} from '../utils/sidebarItemStyles'
+import SidebarIcon, { SidebarIconProps } from './SidebarIcon'
+import SidebarTopIcon from './SidebarTopIcon'
 
-export interface SidebarItemProps extends ButtonProps {
-  icon?: Icon
-  iconNode?: React.ReactNode
+export interface SidebarItemProps
+  extends ButtonProps, Pick<SidebarIconProps, 'icon' | 'iconNode' | 'alert'> {
   isPathExact?: boolean
   isPathStart?: boolean
-  alert?: boolean
+  // Icon only (collapsed sidebar, mobile top bar)
+  compact?: boolean
   onAdd?: () => void
 }
 
@@ -28,6 +25,7 @@ export default forwardRef(function SidebarItem(
     isPathExact,
     isPathStart,
     alert,
+    compact,
     children,
     onAdd,
     ...buttonProps
@@ -37,7 +35,7 @@ export default forwardRef(function SidebarItem(
   const { t } = useTranslation()
 
   const handleAddClick = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement>) => {
+    (event: React.MouseEvent<HTMLElement>) => {
       event.stopPropagation()
       event.preventDefault()
       onAdd?.()
@@ -45,51 +43,74 @@ export default forwardRef(function SidebarItem(
     [onAdd]
   )
 
+  const handleAddKeyDown = useCallback(
+    (event: React.KeyboardEvent<HTMLElement>) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.stopPropagation()
+        event.preventDefault()
+        onAdd?.()
+      }
+    },
+    [onAdd]
+  )
+
+  if (compact) {
+    return (
+      <SidebarTopIcon
+        ref={ref}
+        icon={icon}
+        iconNode={iconNode}
+        isActive={isPathStart}
+        alert={alert}
+        {...buttonProps}
+      >
+        {typeof children === 'string' ? children : ''}
+      </SidebarTopIcon>
+    )
+  }
+
   return (
     <Button
       ref={ref}
+      role="group"
       variant="unstyled"
       w="100%"
       h="auto"
-      py={3}
-      fontWeight="normal"
+      py={2.5}
+      px={3}
       display="flex"
+      alignItems="center"
+      gap={3}
       justifyContent="start"
       textAlign="left"
       borderRadius="xl"
-      _hover={{ bg: 'whiteAlpha.600' }}
-      _active={{
-        fontWeight: 'semibold',
-        bg: 'white',
-      }}
-      _dark={{
-        color: 'whiteAlpha.800',
-        _hover: {
-          bg: 'whiteAlpha.50',
-        },
-        _active: {
-          color: 'white',
-          bg: 'whiteAlpha.100',
-        },
-      }}
-      isActive={isPathExact}
+      color="gray.700"
+      _hover={isPathStart ? undefined : sidebarItemHoverStyle}
+      _dark={{ color: 'whiteAlpha.800' }}
+      fontWeight={isPathStart ? 'semibold' : 'medium'}
+      sx={isPathStart ? sidebarItemActiveStyle : undefined}
       {...buttonProps}
     >
-      {icon ? (
-        <SidebarIcon
-          icon={icon}
-          isActive={isPathStart}
-          alert={alert}
-          ml={4}
-          mr={3}
-        />
-      ) : (
-        iconNode
-      )}
+      <SidebarIcon
+        icon={icon}
+        iconNode={iconNode}
+        isActive={isPathStart}
+        alert={alert}
+        color={isPathStart ? 'brand' : 'gray.600'}
+        _dark={{ color: isPathStart ? 'brand' : 'whiteAlpha.700' }}
+      />
 
-      {children}
+      <Box
+        as="span"
+        flex={1}
+        minW={0}
+        overflow="hidden"
+        textOverflow="ellipsis"
+        whiteSpace="nowrap"
+      >
+        {children}
+      </Box>
 
-      <Spacer />
       {onAdd && (
         <Box
           as="span"
@@ -97,54 +118,36 @@ export default forwardRef(function SidebarItem(
           tabIndex={0}
           aria-label={t('common.add')}
           onClick={handleAddClick}
-          onKeyDown={(e: React.KeyboardEvent) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault()
-              onAdd()
-            }
-          }}
+          onKeyDown={handleAddKeyDown}
           display="inline-flex"
           alignItems="center"
           justifyContent="center"
           borderRadius="md"
-          p={1}
-          mr={2}
-          color="gray"
-          cursor="pointer"
+          p={0.5}
+          ml={-1}
+          mr={-1}
+          color="gray.500"
+          opacity={0}
+          _groupHover={{ opacity: 1 }}
+          _focusVisible={{ opacity: 1 }}
           _hover={{
-            color: 'black',
+            color: 'gray.700',
             bg: 'blackAlpha.100',
-            _dark: {
-              color: 'white',
-              bg: 'whiteAlpha.200',
-            },
+            _dark: { color: 'white', bg: 'whiteAlpha.200' },
           }}
         >
-          <AddIcon size={20} />
+          <AddIcon size={18} />
         </Box>
       )}
     </Button>
   )
 })
 
-export const sidebarSubItemProps: HTMLChakraProps<any> = {
-  pl: '50.25px',
+// Rows of a list below a sidebar link
+export const sidebarSubItemProps = {
   borderRadius: 'md',
-
-  _hover: { bg: 'whiteAlpha.600' },
-  _dark: {
-    color: 'whiteAlpha.800',
-    _hover: {
-      bg: 'whiteAlpha.50',
-    },
-  },
+  _hover: sidebarItemHoverStyle,
   sx: {
-    '&.active': {
-      bg: 'white',
-      _dark: {
-        color: 'white',
-        bg: 'whiteAlpha.100',
-      },
-    },
+    '&.active, &.active:hover': sidebarItemActiveStyle,
   },
 }

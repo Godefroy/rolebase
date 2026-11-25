@@ -4,6 +4,7 @@ import { Task_Status_Enum } from '@gql'
 import { formatRelative } from 'date-fns'
 import React from 'react'
 import { DueDateIcon } from 'src/icons'
+import { isTaskOverdue } from '../utils/isTaskOverdue'
 
 interface Props extends StackProps {
   dueDate: string
@@ -13,7 +14,7 @@ interface Props extends StackProps {
 export default function TaskDueDate({ dueDate, status, ...stackProps }: Props) {
   const dateLocale = useDateLocale()
   const date = new Date(dueDate)
-  const isOverdue = status !== Task_Status_Enum.Done && date < new Date()
+  const isOverdue = isTaskOverdue({ dueDate, status })
 
   return (
     <HStack

@@ -1,6 +1,7 @@
 import CircleByIdButton from '@/circle/components/CircleByIdButton'
 import ListItemLayout from '@/common/atoms/ListItemLayout'
 import useDateLocale from '@/common/hooks/useDateLocale'
+import useFormatDay from '@/common/hooks/useFormatDay'
 import { useNormalClickHandler } from '@/common/hooks/useNormalClickHandler'
 import useItemCardProps from '@/common/hooks/useItemCardProps'
 import { getListItemTitleProps } from '@/common/utils/listItemTitleProps'
@@ -33,6 +34,9 @@ interface Props extends LinkBoxProps {
   showIcon?: boolean
   showDate?: boolean
   showTime?: boolean
+  // Day before the time: today, tomorrow or weekday and date
+  showDay?: boolean
+  hideActions?: boolean
   // Card layout, for lists in a main content area
   card?: boolean
 }
@@ -47,6 +51,8 @@ const MeetingItem = forwardRef<Props, 'div'>(
       showIcon,
       showDate,
       showTime,
+      showDay,
+      hideActions,
       card,
       children,
       ...linkBoxProps
@@ -58,6 +64,7 @@ const MeetingItem = forwardRef<Props, 'div'>(
     const { isOpen, onOpen, onClose } = useDisclosure()
     const handleOpen = useNormalClickHandler(onOpen)
     const dateLocale = useDateLocale()
+    const formatShortDay = useFormatDay()
     const startDate = new Date(meeting.startDate)
     const endDate = new Date(meeting.endDate)
 
@@ -76,6 +83,7 @@ const MeetingItem = forwardRef<Props, 'div'>(
       : `${formatDay(endDate)} ${formatTime(endDate)}`
     const dateLabel = [
       showDate && formatDay(startDate),
+      showDay && capitalizeFirstLetter(formatShortDay(startDate)),
       showTime && `${formatTime(startDate)} – ${endLabel}`,
     ]
       .filter(Boolean)
@@ -105,10 +113,12 @@ const MeetingItem = forwardRef<Props, 'div'>(
             stacked={card}
             icon={showIcon && <MeetingIcon />}
             corner={
-              (meeting?.private || card) && (
+              (meeting?.private || (card && !hideActions)) && (
                 <HStack spacing={1.5}>
                   {meeting?.private && <PrivacyIcon size={16} />}
-                  {card && <MeetingItemActions meetingId={meeting.id} />}
+                  {card && !hideActions && (
+                    <MeetingItemActions meetingId={meeting.id} />
+                  )}
                 </HStack>
               )
             }

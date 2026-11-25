@@ -1,49 +1,64 @@
-import { ButtonProps, forwardRef, IconButton } from '@chakra-ui/react'
-import { Icon } from 'iconsax-react'
-import React from 'react'
-import SidebarIcon from './SidebarIcon'
+import { Button, ButtonProps, forwardRef, Tooltip } from '@chakra-ui/react'
+import React, { useContext } from 'react'
+import { SidebarContext } from '../contexts/SidebarContext'
+import {
+  sidebarItemActiveStyle,
+  sidebarItemHoverStyle,
+} from '../utils/sidebarItemStyles'
+import SidebarIcon, { SidebarIconProps } from './SidebarIcon'
 
-export interface SidebarTopIconProps extends ButtonProps {
-  icon: Icon
-  isPathExact?: boolean
-  isPathStart?: boolean
-  alert?: boolean
+export interface SidebarTopIconProps
+  extends ButtonProps, Pick<SidebarIconProps, 'icon' | 'iconNode' | 'alert'> {
+  isActive?: boolean
   children: string
 }
 
+// Icon-only sidebar link: collapsed sidebar (desktop) and top bar (mobile)
 export default forwardRef(function SidebarTopIcon(
   {
     icon,
-    isPathExact,
-    isPathStart,
+    iconNode,
+    isActive,
     alert,
     children,
     ...buttonProps
   }: SidebarTopIconProps,
   ref
 ) {
+  const sidebarContext = useContext(SidebarContext)
+
   return (
-    <IconButton
-      ref={ref}
-      aria-label={children}
-      icon={<SidebarIcon icon={icon} isActive={isPathStart} alert={alert} />}
-      variant="unstyled"
-      display="flex"
-      align="center"
-      isActive={isPathExact}
-      _hover={{ bg: 'whiteAlpha.600' }}
-      _active={{ bg: 'white' }}
-      _dark={{
-        color: 'whiteAlpha.600',
-        _hover: {
-          color: 'whiteAlpha.800',
-        },
-        _active: {
-          color: 'white',
-          bg: 'whiteAlpha.100',
-        },
-      }}
-      {...buttonProps}
-    />
+    <Tooltip
+      label={children}
+      placement="right"
+      openDelay={300}
+      isDisabled={sidebarContext?.isMobile}
+    >
+      <Button
+        ref={ref}
+        aria-label={children}
+        variant="unstyled"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        flexShrink={0}
+        w="44px"
+        minW="44px"
+        h="40px"
+        borderRadius="xl"
+        color="gray.600"
+        _hover={isActive ? undefined : sidebarItemHoverStyle}
+        _dark={{ color: 'whiteAlpha.800' }}
+        sx={isActive ? sidebarItemActiveStyle : undefined}
+        {...buttonProps}
+      >
+        <SidebarIcon
+          icon={icon}
+          iconNode={iconNode}
+          isActive={isActive}
+          alert={alert}
+        />
+      </Button>
+    </Tooltip>
   )
 })

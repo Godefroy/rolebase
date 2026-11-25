@@ -21,13 +21,12 @@ import { Task_Status_Enum, TaskFragment } from '@gql'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link as ReachLink, useLocation } from 'react-router'
-import { PrivacyIcon, TaskIcon } from 'src/icons'
+import { PrivacyIcon } from 'src/icons'
 import useUpdateTaskStatus from '../hooks/useUpdateTaskStatus'
 import TaskModal from '../modals/TaskModal'
-import TaskStatusInput from './TaskStatusInput'
+import TaskStatusCheckbox from './TaskStatusCheckbox'
 import TaskDueDate from './TaskDueDate'
 import TaskItemActions from './TaskItemActions'
-import TaskStatusTag from './TaskStatusTag'
 
 interface Props extends LinkBoxProps {
   task: TaskFragment
@@ -35,7 +34,6 @@ interface Props extends LinkBoxProps {
   openButton?: boolean
   showCircle?: boolean
   showMember?: boolean
-  showIcon?: boolean
   showDueDate?: boolean
   isDragging?: boolean
   // Drag and drop enabled (manual order)
@@ -50,7 +48,6 @@ const TaskItem = forwardRef<Props, 'div'>(
       openButton,
       showCircle,
       showMember,
-      showIcon,
       showDueDate,
       isDragging,
       draggable,
@@ -108,7 +105,13 @@ const TaskItem = forwardRef<Props, 'div'>(
         >
           <ListItemLayout
             stacked={isStacked}
-            icon={showIcon && <TaskIcon />}
+            icon={
+              <TaskStatusCheckbox
+                value={task.status}
+                readOnly={!isMember}
+                onChange={handleChangeStatus}
+              />
+            }
             title={
               openButton ? (
                 <Text {...titleProps}>{task.title}</Text>
@@ -132,20 +135,10 @@ const TaskItem = forwardRef<Props, 'div'>(
               )
             }
             metaStart={
-              <>
-                {isMember ? (
-                  <TaskStatusInput
-                    value={task.status}
-                    onChange={handleChangeStatus}
-                    zIndex={2}
-                  />
-                ) : (
-                  <TaskStatusTag status={task.status} />
-                )}
-                {showDueDate && task.dueDate && (
-                  <TaskDueDate dueDate={task.dueDate} status={task.status} />
-                )}
-              </>
+              showDueDate &&
+              task.dueDate && (
+                <TaskDueDate dueDate={task.dueDate} status={task.status} />
+              )
             }
             meta={
               <>

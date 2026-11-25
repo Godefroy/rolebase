@@ -1,6 +1,5 @@
-import { SidebarContext } from '@/layout/contexts/SidebarContext'
 import { Box, BoxProps, Flex } from '@chakra-ui/react'
-import React, { ReactNode, useContext, useRef } from 'react'
+import React, { ReactNode, useRef } from 'react'
 import useScrollable, {
   ScrollPosition,
   ScrollableContext,
@@ -23,8 +22,6 @@ export default function ScrollableLayout({
   beigeContent,
   ...boxProps
 }: Props) {
-  const sidebarContext = useContext(SidebarContext)
-
   // Scrollable content
   const topRef = useRef<HTMLDivElement>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
@@ -66,11 +63,6 @@ export default function ScrollableLayout({
           w="100%"
           py={2}
           px={scrollbarWidth}
-          pl={
-            sidebarContext?.minimize.isOpen && !sidebarContext?.isMobile
-              ? 12
-              : 0
-          }
           borderBottomWidth={2}
           borderBottomColor={showTopbar ? 'gray.200' : 'transparent'}
           bg="menulight"

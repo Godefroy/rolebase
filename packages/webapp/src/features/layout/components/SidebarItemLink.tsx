@@ -4,11 +4,15 @@ import SidebarItem, { SidebarItemProps } from './SidebarItem'
 import SidebarLink, { SidebarLinkProps } from './SidebarLink'
 
 export default forwardRef(function SidebarItemLink(
-  { to, ...buttonProps }: Omit<SidebarLinkProps, 'children'> & SidebarItemProps,
+  {
+    to,
+    activePath,
+    ...buttonProps
+  }: Omit<SidebarLinkProps, 'children'> & SidebarItemProps,
   ref
 ) {
   return (
-    <SidebarLink to={to}>
+    <SidebarLink to={to} activePath={activePath}>
       {(isExact, isStart) => (
         <SidebarItem
           ref={ref}

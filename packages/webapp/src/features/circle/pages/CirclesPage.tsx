@@ -240,9 +240,6 @@ export default function CirclesPage() {
         right={focusCrop.right}
         zIndex={2}
         p={2}
-        pl={
-          sidebarContext?.minimize.isOpen && !sidebarContext?.isMobile ? 12 : 2
-        }
       />
     </GraphProvider>
   )

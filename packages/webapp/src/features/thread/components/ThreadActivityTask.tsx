@@ -21,7 +21,6 @@ export default function ThreadActivityTask({ activity }: Props) {
         <TaskItem
           task={activity.refTask}
           showMember
-          showIcon
           showDueDate
           openButton
           maxW="2xl"

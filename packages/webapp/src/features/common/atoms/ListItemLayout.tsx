@@ -4,7 +4,7 @@ import React, { ReactNode } from 'react'
 interface Props {
   icon?: ReactNode
   title: ReactNode
-  // Indicator in the top-right corner, aligned with the first title line
+  // Indicator in the top-right corner (stacked) or at the far right (inline)
   corner?: ReactNode
   // Metadata aligned left under the title (stacked) or before meta (inline)
   metaStart?: ReactNode
@@ -89,9 +89,9 @@ export default function ListItemLayout({
       </Box>
       {(corner || metaStart || meta) && (
         <HStack spacing={2} flexShrink={0} sx={metaItemsStyle}>
-          {corner}
           {metaStart}
           {meta}
+          {corner}
         </HStack>
       )}
     </Flex>

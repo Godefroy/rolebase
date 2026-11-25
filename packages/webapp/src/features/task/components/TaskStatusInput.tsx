@@ -1,18 +1,9 @@
-import {
-  Menu,
-  MenuButton,
-  MenuItemOption,
-  MenuList,
-  MenuOptionGroup,
-  Portal,
-  Tag,
-  TagProps,
-} from '@chakra-ui/react'
+import { Menu, MenuButton, Tag, TagProps } from '@chakra-ui/react'
 import { Task_Status_Enum } from '@gql'
-import { taskStatusList } from '@rolebase/shared/model/task'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { taskStatusColors } from 'src/theme'
+import TaskStatusMenuList from './TaskStatusMenuList'
 
 interface Props extends Omit<TagProps, 'onChange'> {
   value: Task_Status_Enum
@@ -46,22 +37,7 @@ export default function TaskStatusInput({
         {t(`common.taskStatus.${value}`)}
       </MenuButton>
 
-      {/* Portal: cards create their own stacking context */}
-      <Portal>
-        <MenuList zIndex={2000}>
-          <MenuOptionGroup type="radio" value={value}>
-            {taskStatusList.map((status) => (
-              <MenuItemOption
-                key={status}
-                value={status}
-                onClick={() => onChange(status)}
-              >
-                {t(`common.taskStatus.${status}`)}
-              </MenuItemOption>
-            ))}
-          </MenuOptionGroup>
-        </MenuList>
-      </Portal>
+      <TaskStatusMenuList value={value} onChange={onChange} />
     </Menu>
   )
 }

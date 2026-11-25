@@ -31,6 +31,8 @@ export default function OrgSwitch(props: MenuButtonProps) {
   const orgs = useStoreState((state) => state.orgs.entries)
   const sortedOrgs = orgs?.sort((a, b) => (a.name < b.name ? -1 : 1))
   const showName = org && org.id === orgId
+  // Collapsed sidebar or mobile top bar: org icon only
+  const iconOnly = !!sidebarContext?.compact
 
   const handleOrgClick = (orgId: string) => {
     localStorage.setItem(UserLocalStorageKeys.DefaultOrgId, orgId)
@@ -53,8 +55,8 @@ export default function OrgSwitch(props: MenuButtonProps) {
         fontWeight="bold"
         justifyContent="left"
         h="auto"
-        py={3}
-        pl={3}
+        py={iconOnly ? 2 : 3}
+        pl={iconOnly ? 2 : 3}
         pr={2}
         textAlign="left"
         borderRadius="xl"
@@ -75,19 +77,29 @@ export default function OrgSwitch(props: MenuButtonProps) {
             bg: 'whiteAlpha.100',
           },
         }}
+        aria-label={org?.name}
         {...props}
       >
         <HStack spacing={3} w="100%">
           <OrgIcon icon={org?.icon} name={org?.name} size={24} />
-          <Box
-            flex={1}
-            overflow="hidden"
-            textOverflow="ellipsis"
-            whiteSpace="nowrap"
-          >
-            {showName ? org.name : ''}
-          </Box>
-          <UpDownIcon opacity={0.6} flexShrink={0} />
+          {!iconOnly && (
+            <>
+              <Box
+                flex={1}
+                overflow="hidden"
+                textOverflow="ellipsis"
+                whiteSpace="nowrap"
+              >
+                {showName ? org.name : ''}
+              </Box>
+              <UpDownIcon
+                boxSize="10px"
+                flexShrink={0}
+                color="gray.400"
+                _dark={{ color: 'whiteAlpha.500' }}
+              />
+            </>
+          )}
         </HStack>
       </MenuButton>
 
