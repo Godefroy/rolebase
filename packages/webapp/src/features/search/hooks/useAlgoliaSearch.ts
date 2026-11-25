@@ -47,8 +47,7 @@ async function getConfig(orgId: string): Promise<AlgoliaConfig> {
 
 // Keep one index client per org, renewed when its key expires
 let cachedIndex:
-  | { orgId: string; config: AlgoliaConfig; index: SearchIndex }
-  | undefined
+  { orgId: string; config: AlgoliaConfig; index: SearchIndex } | undefined
 
 async function getIndex(orgId: string): Promise<SearchIndex> {
   if (cachedIndex?.orgId === orgId && isConfigValid(cachedIndex.config)) {

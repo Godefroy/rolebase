@@ -1,9 +1,4 @@
-import {
-  FragmentDefinitionNode,
-  Kind,
-  parse,
-  SelectionSetNode,
-} from 'graphql'
+import { FragmentDefinitionNode, Kind, parse, SelectionSetNode } from 'graphql'
 
 // Limits of the queries forwarded to Hasura by the public GraphQL endpoint
 // and the MCP graphql tool. Hasura CE applies no cost limit, and some

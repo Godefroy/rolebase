@@ -5,10 +5,7 @@ import {
   LogDisplay,
   LogType,
 } from '@rolebase/shared/model/log'
-import {
-  ProposalLog,
-  ProposalVoteValue,
-} from '@rolebase/shared/model/proposal'
+import { ProposalLog, ProposalVoteValue } from '@rolebase/shared/model/proposal'
 import { gql, Thread_Activity_Type_Enum } from '../../gql'
 import { adminRequest } from '../../utils/adminRequest'
 import { loadOrgData } from '../org/loadOrgData'

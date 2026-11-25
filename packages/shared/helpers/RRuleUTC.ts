@@ -12,7 +12,15 @@ const maxStringLength = 2000
 const maxYear = 9999 // Year where rrule stops iterating
 const timeParts = ['byhour', 'byminute', 'bysecond'] as const
 const timePartMax = { byhour: 23, byminute: 59, bysecond: 59 }
-const commonParts = ['freq', 'dtstart', 'interval', 'wkst', 'count', 'until', 'tzid']
+const commonParts = [
+  'freq',
+  'dtstart',
+  'interval',
+  'wkst',
+  'count',
+  'until',
+  'tzid',
+]
 
 // Parts allowed per frequency. DAILY (with INTERVAL=1) and WEEKLY rules
 // built from these parts always produce occurrences. MONTHLY and YEARLY
@@ -77,12 +85,20 @@ export function validateRRule(rrule: RRule) {
     throw new RRuleValidationError('invalid BYDAY')
   }
   // DAILY with an INTERVAL visits only some weekdays
-  if (freq === Frequency.DAILY && interval > 1 && isSet(rrule.origOptions.byweekday)) {
+  if (
+    freq === Frequency.DAILY &&
+    interval > 1 &&
+    isSet(rrule.origOptions.byweekday)
+  ) {
     throw new RRuleValidationError('BYDAY not allowed with DAILY and INTERVAL')
   }
   const timesPerDay = timeParts.reduce((total, part) => {
     const values = rrule.options[part]
-    if (values?.some((v) => !Number.isInteger(v) || v < 0 || v > timePartMax[part])) {
+    if (
+      values?.some(
+        (v) => !Number.isInteger(v) || v < 0 || v > timePartMax[part]
+      )
+    ) {
       throw new RRuleValidationError(`invalid ${part}`)
     }
     return total * (values?.length || 1)

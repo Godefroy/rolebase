@@ -46,9 +46,7 @@ export default function MemberActivity({
             </Column>
             <Column>
               {/* Rendered as HTML for its <b> markup: escape the names */}
-              <Text
-                dangerouslySetInnerHTML={{ __html: t('activity', true) }}
-              />
+              <Text dangerouslySetInnerHTML={{ __html: t('activity', true) }} />
             </Column>
           </Row>
         </Section>

@@ -38,7 +38,7 @@ module.exports = {
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': [
       'error',
-      { args: 'none', caughtErrors: 'none' },
+      { args: 'none', caughtErrors: 'none', ignoreRestSiblings: true },
     ],
     '@typescript-eslint/explicit-function-return-type': 'off',
   },

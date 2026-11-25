@@ -41,7 +41,10 @@ describe('validateGraphqlQuery', () => {
   })
 
   it('rejects deep queries', () => {
-    const fields = Array.from({ length: graphqlLimits.maxDepth }, (_, i) => `f${i}`)
+    const fields = Array.from(
+      { length: graphqlLimits.maxDepth },
+      (_, i) => `f${i}`
+    )
     const query = fields.reduceRight((inner, f) => `${f} { ${inner} }`, 'id')
     expect(() => validateGraphqlQuery(`{ ${query} }`)).toThrow('too deep')
   })
@@ -66,7 +69,9 @@ describe('validateGraphqlQuery', () => {
 
   it('rejects recursive fragments, long queries and non strings', () => {
     expect(() =>
-      validateGraphqlQuery('{ circle { ...A } } fragment A on circle { children { ...A } }')
+      validateGraphqlQuery(
+        '{ circle { ...A } } fragment A on circle { children { ...A } }'
+      )
     ).toThrow()
     expect(() => validateGraphqlQuery(`{ ${'a '.repeat(30_000)} }`)).toThrow()
     expect(() => validateGraphqlQuery({ query: '{ a }' })).toThrow()

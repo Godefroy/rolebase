@@ -2,10 +2,7 @@
 // (see the `docId` props passed to CollabEditor). Any other name is rejected.
 
 export type RoomType =
-  | 'meetingStep'
-  | 'meetingSummary'
-  | 'taskDescription'
-  | 'threadMeetingNote'
+  'meetingStep' | 'meetingSummary' | 'taskDescription' | 'threadMeetingNote'
 
 export interface ParsedRoom {
   name: string

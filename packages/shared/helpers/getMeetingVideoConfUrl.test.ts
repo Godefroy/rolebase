@@ -8,12 +8,12 @@ const meetingWithUrl = (url: string) =>
 
 describe('getMeetingVideoConfUrl', () => {
   it('returns http(s) URLs', () => {
-    expect(getMeetingVideoConfUrl(meetingWithUrl('https://meet.example.com/a'))).toBe(
-      'https://meet.example.com/a'
-    )
-    expect(getMeetingVideoConfUrl(meetingWithUrl('http://localhost:8080'))).toBe(
-      'http://localhost:8080'
-    )
+    expect(
+      getMeetingVideoConfUrl(meetingWithUrl('https://meet.example.com/a'))
+    ).toBe('https://meet.example.com/a')
+    expect(
+      getMeetingVideoConfUrl(meetingWithUrl('http://localhost:8080'))
+    ).toBe('http://localhost:8080')
   })
 
   it('ignores other schemes and invalid URLs', () => {

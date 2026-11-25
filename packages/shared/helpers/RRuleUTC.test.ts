@@ -80,7 +80,10 @@ describe('rrule safety', () => {
       'too many times per day',
       'DTSTART:20250101T000000Z\nRRULE:FREQ=DAILY;BYHOUR=0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23;BYMINUTE=0,30',
     ],
-    ['huge interval', 'DTSTART:20250101T000000Z\nRRULE:FREQ=DAILY;INTERVAL=100000'],
+    [
+      'huge interval',
+      'DTSTART:20250101T000000Z\nRRULE:FREQ=DAILY;INTERVAL=100000',
+    ],
     ['unknown property', 'X=1'],
   ]
 
@@ -105,7 +108,12 @@ describe('rrule safety', () => {
 
   it('accepts rules produced by the editor', () => {
     expect(() => new RRuleUTC(rruleLondon)).not.toThrow()
-    for (const freq of [RRule.DAILY, RRule.WEEKLY, RRule.MONTHLY, RRule.YEARLY]) {
+    for (const freq of [
+      RRule.DAILY,
+      RRule.WEEKLY,
+      RRule.MONTHLY,
+      RRule.YEARLY,
+    ]) {
       const value = new RRule({
         freq,
         interval: 2,
@@ -148,8 +156,18 @@ describe('rrule safety', () => {
     const dtstart = new Date(Date.UTC(2023, 5, 1, 9, 30))
     const values = [
       new RRule({ freq: RRule.MONTHLY, dtstart, bymonthday: [31] }),
-      new RRule({ freq: RRule.MONTHLY, dtstart, bysetpos: [-1], byweekday: [4] }),
-      new RRule({ freq: RRule.MONTHLY, dtstart, bysetpos: [2], byweekday: [0] }),
+      new RRule({
+        freq: RRule.MONTHLY,
+        dtstart,
+        bysetpos: [-1],
+        byweekday: [4],
+      }),
+      new RRule({
+        freq: RRule.MONTHLY,
+        dtstart,
+        bysetpos: [2],
+        byweekday: [0],
+      }),
       new RRule({ freq: RRule.YEARLY, dtstart, bymonth: [12] }),
       new RRule({
         freq: RRule.WEEKLY,

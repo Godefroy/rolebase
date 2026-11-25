@@ -19,10 +19,7 @@ export default function useColleagueOrgs() {
 
   const refresh = useCallback(
     () =>
-      trpc.member.getColleagueOrgs
-        .query()
-        .then(setOrgs)
-        .catch(console.error),
+      trpc.member.getColleagueOrgs.query().then(setOrgs).catch(console.error),
     []
   )
 

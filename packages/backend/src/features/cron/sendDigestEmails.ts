@@ -43,7 +43,9 @@ export default webhookProcedure.mutation(async () => {
       if (!occurrenceDate) continue
 
       // Last sent digest date
-      const lastDate = digestLastDate ? new Date(digestLastDate) : occurrenceDate
+      const lastDate = digestLastDate
+        ? new Date(digestLastDate)
+        : occurrenceDate
 
       // Skip if not due yet
       if (occurrenceDate < lastDate) {

@@ -11,6 +11,9 @@
     "isolatedModules": true,
     "strict": true,
     "strictNullChecks": true,
-    "jsx": "react"
+    "jsx": "react",
+    "types": [
+      "node"
+    ]
   }
 }

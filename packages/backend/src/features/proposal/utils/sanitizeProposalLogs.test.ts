@@ -117,10 +117,7 @@ describe('sanitizeProposalLogs', () => {
     ).toThrow(ProposalValidationError)
     expect(() =>
       sanitize(
-        log(
-          {},
-          { type: LogType.CircleArchive, id: foreignCircleId, name: 'x' }
-        )
+        log({}, { type: LogType.CircleArchive, id: foreignCircleId, name: 'x' })
       )
     ).toThrow(ProposalValidationError)
   })
@@ -277,7 +274,9 @@ describe('sanitizeProposalLogs', () => {
         orgId,
         {
           ...existing,
-          members: new Map([[memberId, { orgId: otherOrgId, archivedAt: null }]]),
+          members: new Map([
+            [memberId, { orgId: otherOrgId, archivedAt: null }],
+          ]),
         }
       )
     ).toThrow(ProposalValidationError)
