@@ -1,12 +1,15 @@
+import useHasRoomForColumns from '@/layout/hooks/useHasRoomForColumns'
 import CircleAndMemberFilters from '@/circle/components/CircleAndMemberFilters'
 import useFilterEntitiesByCircle from '@/circle/hooks/useFilterEntitiesByCircle'
 import Loading from '@/common/atoms/Loading'
 import IconTextButton from '@/common/atoms/IconTextButton'
-import PageHeader from '@/common/atoms/PageHeader'
+import PageHeader, { pageHeaderButtonSize } from '@/common/atoms/PageHeader'
 import ScrollableLayout from '@/common/atoms/ScrollableLayout'
 import TextErrors from '@/common/atoms/TextErrors'
 import { Title } from '@/common/atoms/Title'
+import useOverflowHidden from '@/common/hooks/useOverflowHidden'
 import useUpdatableQueryParams from '@/common/hooks/useUpdatableQueryParams'
+import { SidebarContext } from '@/layout/contexts/SidebarContext'
 import useOrgMember from '@/member/hooks/useOrgMember'
 import OnboardingVideo, {
   OnboardingVideoType,
@@ -14,6 +17,7 @@ import OnboardingVideo, {
 import {
   Box,
   Button,
+  Flex,
   Menu,
   MenuButton,
   MenuItemOption,
@@ -23,13 +27,17 @@ import {
 } from '@chakra-ui/react'
 import { Thread_Status_Enum } from '@gql'
 import { threadStatusList } from '@rolebase/shared/model/thread'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useContext, useState } from 'react'
+import { Outlet, useParams } from 'react-router'
 import { useTranslation } from 'react-i18next'
-import { ChevronDownIcon, CreateIcon } from 'src/icons'
+import { AddIcon, ChevronDownIcon } from 'src/icons'
 import ThreadsList from '../components/ThreadsList'
 import useFilterThreadsByMember from '../hooks/useFilterThreadsByMember'
 import useThreads from '../hooks/useThreads'
 import ThreadEditModal from '../modals/ThreadEditModal'
+
+// Room needed for the list and a thread side by side
+const threadsColumnsMinWidth = 920
 
 type Params = {
   member: string
@@ -49,6 +57,12 @@ export default function ThreadsPage() {
   const { t } = useTranslation()
   const { params, changeParams } = useUpdatableQueryParams<Params>()
   const isMember = useOrgMember()
+  const sidebarContext = useContext(SidebarContext)
+
+  // Selected thread: next to the list on desktop, in its place on mobile
+  const { threadId } = useParams<{ threadId: string }>()
+  const hasColumns = useHasRoomForColumns(threadsColumnsMinWidth)
+  useOverflowHidden()
 
   // Member param
   const memberId =
@@ -95,9 +109,12 @@ export default function ThreadsPage() {
     )
   }, [])
 
-  return (
+  // Mobile: the selected thread replaces the list
+  if (threadId && !hasColumns) return <Outlet />
+
+  const list = (
     <>
-      <Title>{t('ThreadsPage.heading')}</Title>
+      {!threadId && <Title>{t('ThreadsPage.heading')}</Title>}
 
       <ScrollableLayout
         beigeContent
@@ -143,10 +160,10 @@ export default function ThreadsPage() {
               isMember && (
                 <IconTextButton
                   aria-label={t('ThreadsPage.create')}
-                  showText={{ base: false, xl: true }}
-                  size="md"
+                  showText="wide"
+                  size={pageHeaderButtonSize}
                   colorScheme="blue"
-                  icon={<CreateIcon size={20} />}
+                  icon={<AddIcon size={20} />}
                   onClick={onCreateOpen}
                 />
               )
@@ -154,7 +171,11 @@ export default function ThreadsPage() {
           />
         }
       >
-        <Box maxW="3xl" my={10} px={{ base: 5, sm: 10 }}>
+        <Box
+          maxW="3xl"
+          my={threadId ? 4 : 10}
+          px={threadId ? 4 : { base: 5, sm: 10 }}
+        >
           {loading && <Loading active center />}
           <TextErrors errors={[error]} />
 
@@ -167,7 +188,13 @@ export default function ThreadsPage() {
             />
           )}
 
-          {threads?.length === 0 && (
+          {isMember && !loading && (
+            <Button variant="outline" size="sm" mt={3} onClick={onCreateOpen}>
+              {t('ThreadsPage.add')}
+            </Button>
+          )}
+
+          {!loading && threads?.length === 0 && (
             <OnboardingVideo
               type={OnboardingVideoType.ThreadsAndTasks}
               mt={10}
@@ -178,5 +205,20 @@ export default function ThreadsPage() {
 
       {isCreateOpen && <ThreadEditModal isOpen onClose={onCreateClose} />}
     </>
+  )
+
+  // List and selected thread side by side. Same structure with or without a
+  // selected thread, so that the list is not remounted when one is opened
+  return (
+    <Flex h={`calc(100dvh - ${sidebarContext?.height || 0}px)`}>
+      <Box w={threadId ? '420px' : '100%'} flexShrink={0} h="100%">
+        {list}
+      </Box>
+      {threadId && (
+        <Box flex={1} minW={0} h="100%">
+          <Outlet />
+        </Box>
+      )}
+    </Flex>
   )
 }

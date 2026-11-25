@@ -6,6 +6,7 @@ import { useNormalClickHandler } from '@/common/hooks/useNormalClickHandler'
 import MemberByIdAvatar from '@/member/components/MemberByIdAvatar'
 import useOrgMember from '@/member/hooks/useOrgMember'
 import { useOrgContext } from '@/org/contexts/OrgContext'
+import useItemPathInList from '@/common/hooks/useItemPathInList'
 import { usePathInOrg } from '@/org/hooks/usePathInOrg'
 import {
   Box,
@@ -64,6 +65,7 @@ const ThreadItem = forwardRef<Props, 'div'>(
   ) => {
     const { t } = useTranslation()
     const path = usePathInOrg(`threads/${thread.id}`)
+    const { linkPath, isInListPage } = useItemPathInList('threads', thread.id)
     const { isOpen, onOpen, onClose } = useDisclosure()
     const handleOpen = useNormalClickHandler(onOpen)
     const isMember = useOrgMember()
@@ -145,11 +147,11 @@ const ThreadItem = forwardRef<Props, 'div'>(
               ) : (
                 <LinkOverlay
                   as={ReachLink}
-                  to={path}
+                  to={linkPath}
                   {...titleProps}
                   fontWeight={unread ? 'bold' : titleProps.fontWeight}
                   {...labelProps}
-                  onClick={noModal ? undefined : handleOpen}
+                  onClick={noModal || isInListPage ? undefined : handleOpen}
                 >
                   {thread.title}
                 </LinkOverlay>

@@ -51,7 +51,7 @@ export default function CircleThreads({ circleId }: Props) {
 
       {threads && <ThreadsList threads={threads} showIcon showMember />}
 
-      {isAdmin && threads?.length === 0 && (
+      {isAdmin && !loading && threads?.length === 0 && (
         <OnboardingVideo type={OnboardingVideoType.ThreadsAndTasks} mt={10} />
       )}
 

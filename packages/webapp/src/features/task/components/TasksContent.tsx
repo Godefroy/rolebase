@@ -45,7 +45,7 @@ export default function TasksContent({ overflowContainer, isFullPage }: Props) {
             showCircle={!circleId}
           />
 
-          {isAdmin && tasks.length === 0 && isFullPage && (
+          {isAdmin && !loading && tasks.length === 0 && isFullPage && (
             <OnboardingVideo
               type={OnboardingVideoType.ThreadsAndTasks}
               mt={10}
@@ -68,7 +68,7 @@ export default function TasksContent({ overflowContainer, isFullPage }: Props) {
             showCreateBtn
           />
 
-          {isAdmin && tasks.length === 0 && isFullPage && (
+          {isAdmin && !loading && tasks.length === 0 && isFullPage && (
             <OnboardingVideo
               type={OnboardingVideoType.ThreadsAndTasks}
               mt={10}

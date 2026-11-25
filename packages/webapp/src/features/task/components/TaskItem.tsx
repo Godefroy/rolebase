@@ -5,6 +5,7 @@ import { getListItemTitleProps } from '@/common/utils/listItemTitleProps'
 import { useNormalClickHandler } from '@/common/hooks/useNormalClickHandler'
 import MemberByIdAvatar from '@/member/components/MemberByIdAvatar'
 import useOrgMember from '@/member/hooks/useOrgMember'
+import useItemPathInList from '@/common/hooks/useItemPathInList'
 import { usePathInOrg } from '@/org/hooks/usePathInOrg'
 import {
   Avatar,
@@ -65,6 +66,7 @@ const TaskItem = forwardRef<Props, 'div'>(
     }
 
     const path = usePathInOrg(`tasks/${task.id}`)
+    const { linkPath, isInListPage } = useItemPathInList('tasks', task.id)
     const { isOpen, onOpen, onClose } = useDisclosure()
     const handleOpen = useNormalClickHandler(onOpen)
 
@@ -118,9 +120,9 @@ const TaskItem = forwardRef<Props, 'div'>(
               ) : (
                 <LinkOverlay
                   as={ReachLink}
-                  to={path}
+                  to={linkPath}
                   {...titleProps}
-                  onClick={noModal ? undefined : handleOpen}
+                  onClick={noModal || isInListPage ? undefined : handleOpen}
                 >
                   {task.title}
                 </LinkOverlay>

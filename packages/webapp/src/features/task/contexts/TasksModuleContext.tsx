@@ -1,4 +1,5 @@
 import useCurrentMember from '@/member/hooks/useCurrentMember'
+import { usePathInOrg } from '@/org/hooks/usePathInOrg'
 import { useDisclosure } from '@chakra-ui/react'
 import { Task_Status_Enum, TaskFragment } from '@gql'
 import { TasksSortTypes, TasksViewTypes } from '@rolebase/shared/model/task'
@@ -9,6 +10,7 @@ import React, {
   useMemo,
   useState,
 } from 'react'
+import { useLocation, useNavigate } from 'react-router'
 import { useTasks } from '../hooks/useTasks'
 import TaskModal from '../modals/TaskModal'
 
@@ -101,12 +103,27 @@ export function TasksModuleProvider({
     ]
   )
 
+  // On the tasks page, open the created task next to the tasks
+  const location = useLocation()
+  const navigate = useNavigate()
+  const tasksPath = usePathInOrg('tasks')
+  const handleCreate = (taskId: string) => {
+    if (location.pathname.startsWith(tasksPath)) {
+      navigate(`${tasksPath}/${taskId}${location.search}`)
+    }
+  }
+
   return (
     <TasksModuleContext.Provider value={value}>
       {children}
 
       {modal.isOpen && (
-        <TaskModal isOpen defaults={defaults} onClose={modal.onClose} />
+        <TaskModal
+          isOpen
+          defaults={defaults}
+          onCreate={handleCreate}
+          onClose={modal.onClose}
+        />
       )}
     </TasksModuleContext.Provider>
   )

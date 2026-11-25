@@ -4,7 +4,7 @@ import { useNormalClickHandler } from '@/common/hooks/useNormalClickHandler'
 import useItemCardProps from '@/common/hooks/useItemCardProps'
 import { getListItemTitleProps } from '@/common/utils/listItemTitleProps'
 import MemberByIdAvatar from '@/member/components/MemberByIdAvatar'
-import { usePathInOrg } from '@/org/hooks/usePathInOrg'
+import useItemPathInList from '@/common/hooks/useItemPathInList'
 import {
   Avatar,
   forwardRef,
@@ -44,7 +44,10 @@ const TaskCard = forwardRef<Props, 'div'>(
     },
     ref
   ) => {
-    const path = usePathInOrg(`tasks/${task.id}`)
+    const { linkPath, isInListPage, isActive } = useItemPathInList(
+      'tasks',
+      task.id
+    )
     const { isOpen, onOpen, onClose } = useDisclosure()
     const handleOpen = useNormalClickHandler(onOpen)
 
@@ -64,16 +67,17 @@ const TaskCard = forwardRef<Props, 'div'>(
             // Remove tabIndex because it's redondant with link
             undefined
           }
+          className={isActive ? 'active' : undefined}
         >
           <ListItemLayout
             stacked
             title={
               <LinkOverlay
                 as={ReachLink}
-                to={path}
+                to={linkPath}
                 {...getListItemTitleProps(true)}
                 noOfLines={3}
-                onClick={handleOpen}
+                onClick={isInListPage ? undefined : handleOpen}
               >
                 {task.title}
               </LinkOverlay>

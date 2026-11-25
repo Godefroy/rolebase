@@ -1,12 +1,12 @@
 import CircleAndMemberFilters from '@/circle/components/CircleAndMemberFilters'
 import IconTextButton from '@/common/atoms/IconTextButton'
 import useOrgMember from '@/member/hooks/useOrgMember'
-import PageHeader from '@/common/atoms/PageHeader'
+import PageHeader, { pageHeaderButtonSize } from '@/common/atoms/PageHeader'
 import { ButtonGroup, FlexProps, HStack } from '@chakra-ui/react'
 import { TasksViewTypes } from '@rolebase/shared/model/task'
 import React, { ReactNode, useContext, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { CreateIcon, KanbanIcon, TasksListIcon } from 'src/icons'
+import { AddIcon, KanbanIcon, TasksListIcon } from 'src/icons'
 import { TasksModuleContext } from '../contexts/TasksModuleContext'
 import TasksFilterStatus from './TasksFilterStatus'
 import TasksSortMenu from './TasksSortMenu'
@@ -63,7 +63,7 @@ export default function TasksHeader({
             <TasksSortMenu
               value={sort}
               onChange={onSortChange}
-              display={{ base: 'none', md: 'inline-flex' }}
+              className="page-header-inline-only"
             />
           )}
         </CircleAndMemberFilters>
@@ -74,10 +74,10 @@ export default function TasksHeader({
         isMember && (
           <IconTextButton
             aria-label={t('TasksPage.create')}
-            showText={{ base: false, xl: true }}
-            size="md"
+            showText="wide"
+            size={pageHeaderButtonSize}
             colorScheme="blue"
-            icon={<CreateIcon size={20} />}
+            icon={<AddIcon size={20} />}
             onClick={() => openCreateTask()}
           />
         )
@@ -89,7 +89,7 @@ export default function TasksHeader({
           <ButtonGroup isAttached variant="outline" size="sm" my={2}>
             <IconTextButton
               aria-label={t('TasksHeader.kanban')}
-              showText={{ base: false, sm: true, md: false, xl: true }}
+              showText="wide"
               icon={<KanbanIcon size={18} />}
               fontWeight={view === TasksViewTypes.Kanban ? 'bold' : 'normal'}
               isActive={view === TasksViewTypes.Kanban}
@@ -97,7 +97,7 @@ export default function TasksHeader({
             />
             <IconTextButton
               aria-label={t('TasksHeader.list')}
-              showText={{ base: false, sm: true, md: false, xl: true }}
+              showText="wide"
               icon={<TasksListIcon size={18} />}
               fontWeight={view === TasksViewTypes.List ? 'bold' : 'normal'}
               isActive={view === TasksViewTypes.List}
@@ -106,7 +106,7 @@ export default function TasksHeader({
           </ButtonGroup>
         )}
 
-        {/* On mobile, sort sits on the title row to keep filters on one line */}
+        {/* With stacked filters, sort sits on the title row to keep filters on one line */}
         {sort && onSortChange && (
           <TasksSortMenu
             value={sort}
@@ -114,7 +114,7 @@ export default function TasksHeader({
             size="sm"
             variant="outline"
             fontWeight="normal"
-            display={{ base: 'inline-flex', md: 'none' }}
+            className="page-header-stacked-only"
           />
         )}
       </HStack>

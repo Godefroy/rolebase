@@ -1,6 +1,6 @@
+import IconTextButton from '@/common/atoms/IconTextButton'
 import {
   Box,
-  Button,
   ButtonProps,
   Circle,
   Menu,
@@ -35,8 +35,9 @@ export default function TasksSortMenu({ value, onChange, ...boxProps }: Props) {
   return (
     <Menu>
       <MenuButton
-        as={Button}
-        leftIcon={
+        as={IconTextButton}
+        showText={{ base: false, sm: true }}
+        icon={
           <Box position="relative">
             <SortIcon size="1em" />
             {value !== TasksSortTypes.Manual && (
@@ -56,11 +57,7 @@ export default function TasksSortMenu({ value, onChange, ...boxProps }: Props) {
         rightIcon={<ChevronDownIcon size="1em" />}
         aria-label={t(`TasksSortMenu.${value}`)}
         {...boxProps}
-      >
-        <Box as="span" display={{ base: 'none', sm: 'inline' }}>
-          {t(`TasksSortMenu.${value}`)}
-        </Box>
-      </MenuButton>
+      />
       <MenuList zIndex={2000}>
         <MenuOptionGroup type="radio" value={value} onChange={handleChange}>
           {tasksSortList.map((sort) => (

@@ -90,7 +90,7 @@ export default function ThreadContent({
         {...boxProps}
         header={
           <>
-            <Wrap spacing={4} flex={1} ml={3} align="center">
+            <Wrap spacing={4} flex={1} minW={0} ml={3} align="center">
               <HStack spacing={2} align="center">
                 <ThreadStatusIcon
                   value={threadStatus}
@@ -180,7 +180,7 @@ export default function ThreadContent({
               </HStack>
             </Wrap>
 
-            <Flex mr={headerIcons ? -2 : 0}>
+            <Flex mr={headerIcons ? -2 : 0} flexShrink={0}>
               {actions.hasItems && (
                 <ActionsMenu ml={2}>{actions.items}</ActionsMenu>
               )}

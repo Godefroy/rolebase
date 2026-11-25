@@ -3,7 +3,7 @@ import useFilterEntitiesByCircle from '@/circle/hooks/useFilterEntitiesByCircle'
 import Calendar from '@/common/atoms/Calendar'
 import Loading from '@/common/atoms/Loading'
 import IconTextButton from '@/common/atoms/IconTextButton'
-import PageHeader from '@/common/atoms/PageHeader'
+import PageHeader, { pageHeaderButtonSize } from '@/common/atoms/PageHeader'
 import ScrollableLayout from '@/common/atoms/ScrollableLayout'
 import TextErrors from '@/common/atoms/TextErrors'
 import { Title } from '@/common/atoms/Title'
@@ -38,9 +38,9 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
 import {
+  AddIcon,
   AppsIcon,
   CopyIcon,
-  CreateIcon,
   ExportIcon,
   HideIcon,
   MeetingRecurringIcon,
@@ -321,8 +321,8 @@ export default function MeetingsPage() {
                   <MenuButton
                     as={IconTextButton}
                     aria-label={t('MeetingsPage.settings')}
-                    showText={{ base: false, xl: true }}
-                    size="sm"
+                    showText="wide"
+                    size={pageHeaderButtonSize}
                     variant="outline"
                     fontWeight="normal"
                     icon={<SettingsIcon size={20} />}
@@ -382,10 +382,10 @@ export default function MeetingsPage() {
                 {isMember && (
                   <IconTextButton
                     aria-label={t('MeetingsPage.create')}
-                    showText={{ base: false, xl: true }}
-                    size="md"
+                    showText="wide"
+                    size={pageHeaderButtonSize}
                     colorScheme="blue"
-                    icon={<CreateIcon size={20} />}
+                    icon={<AddIcon size={20} />}
                     onClick={handleCreate}
                   />
                 )}

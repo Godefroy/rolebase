@@ -72,7 +72,7 @@ export default function CircleTasks({ circleId }: Props) {
         showDueDate
       />
 
-      {isAdmin && tasks.length === 0 && (
+      {isAdmin && !loading && tasks.length === 0 && (
         <OnboardingVideo type={OnboardingVideoType.ThreadsAndTasks} mt={10} />
       )}
 

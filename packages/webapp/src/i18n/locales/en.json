@@ -1678,7 +1678,8 @@
   },
   "ThreadsPage": {
     "heading": "Discussions",
-    "create": "New discussion"
+    "create": "New discussion",
+    "add": "Add a discussion"
   },
   "VacantRolesPanel": {
     "heading": "Vacant roles",

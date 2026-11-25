@@ -66,16 +66,18 @@ export default function OrgRouteContent() {
             <Route index element={<Navigate to="news" replace />} />
             <Route path="roles" element={<CirclesPage />} />
             <Route path="news" element={<DashboardPage />} />
-            <Route path="threads/:threadId" element={<ThreadPage />} />
-            <Route path="threads" element={<ThreadsPage />} />
+            <Route path="threads" element={<ThreadsPage />}>
+              <Route path=":threadId" element={<ThreadPage />} />
+            </Route>
             <Route path="meetings/:meetingId" element={<MeetingPage />} />
             <Route
               path="meetings-recurring/:id"
               element={<MeetingRecurringPage />}
             />
             <Route path="meetings" element={<MeetingsPage />} />
-            <Route path="tasks/:taskId" element={<TaskPage />} />
-            <Route path="tasks" element={<TasksPage />} />
+            <Route path="tasks" element={<TasksPage />}>
+              <Route path=":taskId" element={<TaskPage />} />
+            </Route>
             <Route path="decisions/:decisionId" element={<DecisionPage />} />
             <Route path="export-circle" element={<CircleExportPage />} />
             <Route path="settings" element={<SettingsLayout />}>
