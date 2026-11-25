@@ -29,6 +29,6 @@
     "@types/react-dom": "^18.2.7",
     "@typescript/native-preview": "^7.0.0-dev.20260707.2",
     "typescript": "^5.2.2",
-    "vitest": "^5.1.0"
+    "vitest": "^5.1.1"
   }
 }
