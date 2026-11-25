@@ -47,7 +47,7 @@ export default function SidebarSearchField({ showShortcut, onClick }: Props) {
 
       {showShortcut && (
         <Kbd fontSize="xs" bg="transparent">
-          {cmdOrCtrlKey} P
+          {cmdOrCtrlKey} K
         </Kbd>
       )}
     </Flex>

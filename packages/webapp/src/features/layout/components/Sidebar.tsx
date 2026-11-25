@@ -93,10 +93,10 @@ export default function Sidebar() {
   const threadModal = useDisclosure()
   const taskModal = useDisclosure()
 
-  // Use Cmd+K or Cmd+P keys to open search
+  // Use Cmd/Ctrl+K to open search
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'p' && (event.ctrlKey || event.metaKey)) {
+      if (event.key.toLowerCase() === 'k' && (event.ctrlKey || event.metaKey)) {
         event.preventDefault()
         searchModal.onOpen()
       }
