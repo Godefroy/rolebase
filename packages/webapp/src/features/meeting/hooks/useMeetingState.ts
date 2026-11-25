@@ -63,8 +63,39 @@ export default function useMeetingState(meetingId: string): MeetingState {
   const { data, loading, error } = useMeetingSubscription({
     variables: { id: meetingId },
   })
-  const meeting = data?.meeting_by_pk || undefined
+  const serverMeeting = data?.meeting_by_pk || undefined
+
+  // Optimistic step change, shown until the subscription brings a new state
+  const [optimisticValues, setOptimisticValues] = useState<
+    Pick<MeetingFragment, 'currentStepId' | 'ended'> | undefined
+  >()
+  useEffect(() => {
+    setOptimisticValues(undefined)
+  }, [serverMeeting?.currentStepId, serverMeeting?.ended])
+
+  const meeting = useMemo(
+    () =>
+      serverMeeting && optimisticValues
+        ? { ...serverMeeting, ...optimisticValues }
+        : serverMeeting,
+    [serverMeeting, optimisticValues]
+  )
   const steps = meeting?.steps
+
+  // Change current step and ended state, optimistically
+  const updateStep = useCallback(
+    async (values: Pick<MeetingFragment, 'currentStepId' | 'ended'>) => {
+      if (!meeting) return
+      setOptimisticValues(values)
+      try {
+        await updateMeeting({ variables: { id: meeting.id, values } })
+      } catch (error) {
+        setOptimisticValues(undefined)
+        throw error
+      }
+    },
+    [meeting]
+  )
 
   // Meeting page path
   const path = usePathInOrg(`meetings/${meeting?.id}`)
@@ -178,52 +209,29 @@ export default function useMeetingState(meetingId: string): MeetingState {
   // Go to step
   const handleGoToStep = useCallback(
     async (stepId: string) => {
-      if (!meeting) return
-      await updateMeeting({
-        variables: {
-          id: meeting.id,
-          values: {
-            currentStepId: stepId,
-          },
-        },
-      })
+      if (!meeting || meeting.currentStepId === stepId) return
+      await updateStep({ currentStepId: stepId, ended: meeting.ended })
     },
-    [meeting]
+    [meeting, updateStep]
   )
 
   // End meeting
   const handleEnd = useCallback(async () => {
     if (!meeting) return
-    await updateMeeting({
-      variables: {
-        id: meetingId,
-        values: {
-          currentStepId: null,
-          ended: true,
-        },
-      },
-    })
+    await updateStep({ currentStepId: null, ended: true })
     track('meeting_ended', {
       participants: participants.length,
       durationMin: Math.round(
         (Date.now() - new Date(meeting.startDate).getTime()) / 60000
       ),
     })
-  }, [meeting, participants])
+  }, [meeting, participants, updateStep])
 
   // Cancel start of meeting
   const handleCancelStart = useCallback(async () => {
     if (!meeting) return
-    await updateMeeting({
-      variables: {
-        id: meetingId,
-        values: {
-          currentStepId: null,
-          ended: false,
-        },
-      },
-    })
-  }, [meeting, participants])
+    await updateStep({ currentStepId: null, ended: false })
+  }, [meeting, updateStep])
 
   // Next step
   const handleNextStep = useCallback(async () => {
@@ -243,15 +251,7 @@ export default function useMeetingState(meetingId: string): MeetingState {
       }
 
       // Go to first step
-      await updateMeeting({
-        variables: {
-          id: meeting.id,
-          values: {
-            currentStepId: firstStep.id,
-            ended: false,
-          },
-        },
-      })
+      await updateStep({ currentStepId: firstStep.id, ended: false })
       return
     }
 
@@ -275,15 +275,8 @@ export default function useMeetingState(meetingId: string): MeetingState {
     if (!nextStep) throw new Error('Next step not found')
 
     // Go to next step
-    await updateMeeting({
-      variables: {
-        id: meeting.id,
-        values: {
-          currentStepId: nextStep.id,
-        },
-      },
-    })
-  }, [meeting, steps, participants, handleEnd])
+    await updateStep({ currentStepId: nextStep.id, ended: meeting.ended })
+  }, [meeting, steps, handleEnd, updateStep])
 
   // Video conference URL
   const videoConfUrl = useMemo(
