@@ -82,10 +82,18 @@ export default class GoogleCalendarApp
       version: 'v3',
       auth: this.auth,
     })
+    // googleapis hands the batcher a Headers instance, which it serializes as
+    // an empty object: pass plain headers so each request keeps its own
+    // (Content-Type included)
+    const batchFetch = batchFetchImplementation()
     this.calendarBatch = calendar({
       version: 'v3',
       auth: this.auth,
-      fetchImplementation: batchFetchImplementation(),
+      fetchImplementation: (url, init) =>
+        batchFetch(url, {
+          ...init,
+          headers: Object.fromEntries(new Headers(init?.headers)),
+        }),
     })
   }
 
@@ -113,11 +121,15 @@ export default class GoogleCalendarApp
   }
 
   public async uninstall() {
-    try {
-      // Disconnect all synchronized calendars
-      for (const calendar of this.config.orgsCalendars) {
+    // Disconnect all synchronized calendars, one failure must not stop the others
+    for (const calendar of this.config.orgsCalendars) {
+      try {
         await this.disconnectOrgCalendar(calendar)
+      } catch (error) {
+        console.error(error)
       }
+    }
+    try {
       await this.auth.revokeCredentials()
     } catch (error) {
       console.error(error)
@@ -205,7 +217,8 @@ export default class GoogleCalendarApp
           eventId: event.id,
         })
       } catch (error) {
-        if ((error as any)?.code !== 404) {
+        const code = (error as any)?.code
+        if (code !== 404 && code !== 410) {
           throw error
         }
       }
@@ -238,7 +251,8 @@ export default class GoogleCalendarApp
           .replace(/[:-]/g, '')}Z`,
       })
     } catch (error) {
-      if ((error as any)?.code !== 404) {
+      const code = (error as any)?.code
+      if (code !== 404 && code !== 410) {
         throw error
       }
     }
@@ -589,13 +603,22 @@ export default class GoogleCalendarApp
     } while (pageToken)
 
     // Delete Rolebase events
+    // Deleting a recurring event also deletes its modified occurrences,
+    // which are listed separately: ignore events that are already gone
     await Promise.all(
-      eventsIds.map((eventId) =>
-        this.calendarBatch.events.delete({
-          calendarId: orgCalendar.calendarId,
-          eventId,
-        })
-      )
+      eventsIds.map(async (eventId) => {
+        try {
+          await this.calendarBatch.events.delete({
+            calendarId: orgCalendar.calendarId,
+            eventId,
+          })
+        } catch (error) {
+          const code = (error as any)?.code
+          if (code !== 404 && code !== 410) {
+            throw error
+          }
+        }
+      })
     )
   }
 

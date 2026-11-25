@@ -18,7 +18,7 @@
     "nhost:config:deploy": "cd ../.. && nhost run config-deploy --config packages/backend/nhost-service.toml --service-id 94212868-126b-47d0-bc96-4a9ac670c2ea"
   },
   "dependencies": {
-    "@googleapis/calendar": "^9.8.0",
+    "@googleapis/calendar": "^20.2.0",
     "@jrmdayn/googleapis-batcher": "^0.10.1",
     "@microsoft/microsoft-graph-types-beta": "^0.40.0-preview",
     "@modelcontextprotocol/sdk": "^1.32.2",
