@@ -3,7 +3,7 @@ title: 'Employee Photo Directory: How to Make One (Template)'
 h1: 'How to make an employee photo directory and keep it up to date'
 summary: 'Make an employee photo directory with a free Word template: what each card shows, the steps and the photo consent rules.'
 date: 2026-09-24
-update: 2026-11-09
+update: 2026-11-25
 image: './thumbnail.jpg'
 similarPosts:
   - 'org-chart-types'
@@ -16,7 +16,9 @@ takeaways:
   - 'A photo directory kept in a Word file goes wrong with the first new hire nobody adds. Build it from your list of roles: each person appears in the directory when they get a role and drops out when they no longer hold any.'
 ---
 
-An employee photo directory puts every employee’s photo and name on one page, so everyone knows who is who. To make one, list the people with their team and their roles, ask each of them for permission to use their photo, collect photos in the same format, then fill in a Word template or an online tool. The hard part comes afterwards: the directory has to change with every new hire and every departure, or it is wrong within a few months. This page gives the steps, a free Word template with a photo consent form, and the image rights rules that apply to staff photos.
+A photo directory shows the members of a group with each person’s photo and name, so everyone knows who is who. An employee photo directory puts every employee on one page. To make one, list the people with their team and their roles, ask each of them for permission to use their photo, collect photos in the same format, then fill in a Word template or an online tool. The hard part comes afterwards: the directory has to change with every new hire and every departure, or it is wrong within a few months. This page gives the steps, a free Word template with a photo consent form, and the image rights rules that apply to staff photos.
+
+A photo directory is also called a picture directory, a face book or a "who’s who". An org chart with photos is an org chart and a photo directory at once: each role’s box shows the photo and name of the person who holds it.
 
 ## What a photo directory is for
 
@@ -66,13 +68,28 @@ The downloadable Word template has three pages: a filled-in example directory, a
 {/* DOWNLOAD regen: python3 ./generate-photo-directory-template.py */}
 <Button label="Download the Word template" href="/downloads/photo-directory-template.docx" variant="primary" />
 
-## Making a photo directory in Excel, PowerPoint or Canva
+## Making a photo directory in Excel, PowerPoint, Canva, Notion or SharePoint
 
 The Word template is enough for most small teams. You can also use a tool you already have.
 
 In Microsoft 365 and Excel 2024, you can place one photo per cell: select the cell, then **Insert**, **Pictures** and **Place in Cell**. The photo then [takes the size of the cell](https://support.microsoft.com/en-us/office/e9317aee-4294-49a3-875c-9dd95845bab0). Put the photos on one row, then the name, team and roles in the cells below. On an older version, the photo sits on top of the cells and you resize it by hand.
 
 In PowerPoint, **Insert** then **SmartArt** opens a **Picture** category, with captioned photo grids such as Picture Caption List, enough for a one-slide directory. Canva has free "meet the team" templates that look polished but are filled in card by card. To fill every card at once from a spreadsheet, you need a paid Canva plan. With all three tools, you end up with a file to redo at every new hire.
+
+In Notion, create a database with one row per person, a **Files & media** property for the photo and a multi-select property for the roles, then show it as a **Gallery** view. In the view settings, pick the photo property as the [card preview](https://www.notion.com/help/galleries): each card then shows the photo, followed by the properties you make visible. You enter each new hire and their roles by hand.
+
+If your company runs on Microsoft 365, each employee’s name, photo and job title are already in their directory profile. On a SharePoint page, the [People web part](https://support.microsoft.com/en-us/office/7e52c5f6-2d72-48fa-a9d3-d2750765fa05) shows those profiles as cards, but you add people one at a time. In Teams and Outlook, a colleague’s profile card also shows their manager and their team. These cards stay current when IT updates an account. They show the job title from the directory, without the topics each person handles.
+
+These tools differ most on two points: where the roles appear on the card, and the work each new hire or departure takes.
+
+| Tool | The person’s roles | A new hire or a departure |
+|---|---|---|
+| Word, Excel, PowerPoint | Typed by hand on the card | Card to add or delete by hand |
+| Canva | Typed by hand on the card | Card to redo, or a spreadsheet import on a paid plan |
+| Notion, Gallery view | In a property you fill in | Row to add or delete by hand |
+| SharePoint, Teams | Missing, the card shows the job title | Profile created with the account, people added one by one on the SharePoint page |
+| HR systems such as BambooHR | Rarely, the card shows the job title and department | Automatic, from the employee record |
+| Rolebase, photo directory view | In the profile, one click from the photo | The person appears with their first role and drops out once archived |
 
 ## What to look for in employee directory software
 
@@ -85,7 +102,7 @@ Once a file takes more time to maintain than it saves, switch to employee direct
 - An app in Slack or Microsoft Teams, or an embed in your intranet.
 - The pricing model: per user, per headcount band, or a yearly flat fee.
 
-Prices vary widely. Pingboard is now part of Workleap, which [sells it inside a suite starting at US$4,999 a year](https://workleap.com/pricing). Sift [prices by headcount band](https://justsift.com/pricing), from US$3,800 a year for its org chart for up to 250 people. HR systems such as BambooHR include a directory and an org chart in every plan. If your company runs on Microsoft 365, the [Org Explorer in Outlook](https://petri.com/organization-explorer-outlook-microsoft-365/) has shown reporting lines without an extra license since 2025.
+Prices vary widely. Pingboard is now part of Workleap, which [sells it inside a suite starting at US$4,999 a year](https://workleap.com/pricing). Sift [prices by headcount band](https://justsift.com/pricing), from US$3,800 a year for its org chart for up to 250 people. HR systems such as BambooHR include a directory that [shows each employee’s photo, name and job title](https://bamboohr.screenstepslive.com/a/587751) and that you can group by department or location. If your company runs on Microsoft 365, the [Org Explorer in Outlook](https://petri.com/organization-explorer-outlook-microsoft-365/) has shown reporting lines without an extra license since 2025.
 
 Rolebase has no HR sync and no contact fields: each member’s profile holds a name, a photo, a description and their roles. A company of several hundred people that needs HR sync and phone numbers should pick a dedicated directory. Rolebase fits teams that mostly want to know who handles what, with a directory that changes whenever the roles change.
 
@@ -159,6 +176,12 @@ Insert a three-column table on a portrait page, with one row for the photos and 
 <FaqItem question="How do I make a photo directory in Excel?">
 
 In Microsoft 365 or Excel 2024, select a cell, then click **Insert**, **Pictures** and **Place in Cell**: the photo fits the cell. Make the rows taller and the columns wider to get square cells, place one photo per cell and type the name, team and roles just below. Before printing, pick **Fit All Columns on One Page** in the print settings.
+
+</FaqItem>
+
+<FaqItem question="What software can I use to make a photo directory?">
+
+For a small team, the Word template on this page or a Canva template is enough. If your company already uses Microsoft 365 or an HR system such as BambooHR, start with its directory: each profile, with the photo and job title, is created with the user account or the employee record. On a SharePoint page, you still add people one by one. If you also want to see what each person handles, pick a tool where roles are part of the profile. Rolebase is one: its photo directory view is [free for up to five active members](/en/pricing).
 
 </FaqItem>
 
