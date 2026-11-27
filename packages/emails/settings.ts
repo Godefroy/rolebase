@@ -7,6 +7,12 @@ export default {
     email: 'noreply@rolebase.io',
   },
 
+  // Reply-To of the emails that offer help
+  founder: {
+    name: 'Godefroy de Compreignac',
+    email: 'godefroy@rolebase.io',
+  },
+
   smtp: {
     host: process.env.SMTP_HOST || '',
     port: Number(process.env.SMTP_PORT) || 587,

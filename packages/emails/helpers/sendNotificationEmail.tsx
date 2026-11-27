@@ -11,6 +11,7 @@ interface Params {
   paragraphs: string[]
   ctaUrl?: string
   ctaLabel?: string
+  replyTo?: EmailAddress
 }
 
 // Send a generic transactional notification email (see the Notification
@@ -22,6 +23,7 @@ export default async function sendNotificationEmail({
   paragraphs,
   ctaUrl,
   ctaLabel,
+  replyTo,
 }: Params) {
   const emailHTML = await render(
     <Notification
@@ -38,6 +40,7 @@ export default async function sendNotificationEmail({
       Email: settings.sender.email,
       Name: settings.sender.name,
     },
+    ReplyTo: replyTo,
     To: recipients,
     Subject: subject,
     HTMLPart: emailHTML,

@@ -7,6 +7,7 @@ export interface EmailAddress {
 
 export interface EmailMessage {
   From: EmailAddress
+  ReplyTo?: EmailAddress
   To: EmailAddress[]
   Subject: string
   HTMLPart?: string

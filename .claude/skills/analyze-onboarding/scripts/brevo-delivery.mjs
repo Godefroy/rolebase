@@ -2,7 +2,8 @@
 // domains, never full addresses.
 // 1. Delay between each new account (created on its first code request) and
 //    its first code email: a delay means codes weren't sent (outage).
-//    Password signups get a confirmation email instead of a code.
+//    Password signups get a confirmation email instead of a code (or a code,
+//    when the account signed up with a code and set a password later).
 // 2. Brevo events of the accounts that never entered their code: delivered,
 //    bounced, blocked...
 // Usage, from the repo root (IPv4: the IPv4 address is the one authorized in
@@ -79,7 +80,11 @@ let late = 0
 for (const [email, createdMs, verified, password] of users) {
   const created = Number(createdMs)
   const isPassword = password === 't'
-  const first = ((isPassword ? confirmTimes : codeTimes)[email] || [])
+  // A code account can set a password later: its first email is then a code
+  const first = [
+    ...(codeTimes[email] || []),
+    ...((isPassword && confirmTimes[email]) || []),
+  ]
     .filter((t) => t >= created - 60000)
     .sort()[0]
   const delay =

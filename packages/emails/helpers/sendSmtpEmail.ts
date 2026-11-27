@@ -18,6 +18,10 @@ export async function sendSmtpEmail(...messages: EmailMessage[]) {
       // Address objects: nodemailer quotes and encodes the names itself,
       // so a name can't inject extra recipients
       from: { name: message.From.Name, address: message.From.Email },
+      replyTo: message.ReplyTo && {
+        name: message.ReplyTo.Name,
+        address: message.ReplyTo.Email,
+      },
       to: message.To.map((r) => ({ name: r.Name, address: r.Email })),
       subject: message.Subject,
       html: message.HTMLPart,

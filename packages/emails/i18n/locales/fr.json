@@ -101,15 +101,13 @@
       "cta": "Terminer la configuration"
     },
     "noInvite": {
-      "subject": "Montrez l’organigramme de {{org}} à votre équipe",
-      "title": "Faites entrer votre équipe dans {{org}}",
-      "paragraph1": "Bonjour {{name}}, l’organigramme de {{org}} est en place. Invitez maintenant les personnes qui travaillent avec vous.",
-      "paragraph1Members_one": "Bonjour {{name}}, l’organigramme de {{org}} est en place. Vous y avez ajouté {{count}} membre qui ne le voit pas encore : invitez-le avec son adresse email.",
-      "paragraph1Members_other": "Bonjour {{name}}, l’organigramme de {{org}} est en place. Vous y avez ajouté {{count}} membres qui ne le voient pas encore : invitez-les avec leur adresse email.",
-      "paragraph2": "En solo, vous avez un organigramme. À plusieurs, Rolebase devient l’outil de travail de l’équipe : chacun retrouve ses rôles et ses redevabilités, voit qui porte quoi et sait à qui s’adresser pour chaque sujet, sans avoir à vous le demander.",
-      "paragraph3": "Les réunions prennent aussi tout leur sens : chacun ajoute ses points à l’ordre du jour, et les décisions et les tâches restent rattachées aux rôles et aux bonnes personnes. Entre deux réunions, les sujets avancent dans les discussions.",
-      "paragraph4": "Pour inviter quelqu’un, son adresse email suffit. Les 5 premiers comptes sont gratuits.",
-      "cta": "Inviter mon équipe"
+      "subject": "Besoin d’un coup de main pour {{org}} ?",
+      "title": "Un coup de main pour la suite ?",
+      "paragraph1": "Bonjour {{name}}, je suis Godefroy, fondateur de Rolebase. L’organigramme de {{org}} est en place. Si vous avez une question pour la suite (décrire les rôles, lancer une première réunion, faire entrer l’équipe), répondez simplement à ce mail, je vous réponds personnellement.",
+      "paragraph2": "Quand vous serez prêt, inviter quelqu’un ne demande que son adresse email, et les 5 premiers comptes sont gratuits.",
+      "paragraph2Members_one": "Quand vous serez prêt, le membre que vous avez ajouté pourra consulter l’organigramme : l’inviter ne demande que son adresse email, et les 5 premiers comptes sont gratuits.",
+      "paragraph2Members_other": "Quand vous serez prêt, les {{count}} membres que vous avez ajoutés pourront consulter l’organigramme : les inviter ne demande que leur adresse email, et les 5 premiers comptes sont gratuits.",
+      "cta": "Ouvrir {{org}}"
     }
   }
 }

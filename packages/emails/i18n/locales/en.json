@@ -101,15 +101,13 @@
       "cta": "Finish the setup"
     },
     "noInvite": {
-      "subject": "Show your team the {{org}} org chart",
-      "title": "Bring your team into {{org}}",
-      "paragraph1": "Hi {{name}}, the {{org}} org chart is in place. Now invite the people you work with.",
-      "paragraph1Members_one": "Hi {{name}}, the {{org}} org chart is in place. You added {{count}} member to it who can’t see it yet: invite them with their email address.",
-      "paragraph1Members_other": "Hi {{name}}, the {{org}} org chart is in place. You added {{count}} members to it who can’t see it yet: invite them with their email addresses.",
-      "paragraph2": "On your own, you have an org chart. Together, Rolebase becomes your team’s workspace: everyone finds their roles and accountabilities, sees who holds what and knows who to turn to for each topic, without having to ask you.",
-      "paragraph3": "Meetings make sense too: everyone adds their points to the agenda, and decisions and tasks stay attached to the roles and the right people. Between meetings, topics move forward in threads.",
-      "paragraph4": "To invite someone, all you need is their email address. The first 5 accounts are free.",
-      "cta": "Invite my team"
+      "subject": "Need a hand with {{org}}?",
+      "title": "A hand with what comes next?",
+      "paragraph1": "Hi {{name}}, I’m Godefroy, founder of Rolebase. The {{org}} org chart is in place. If you have a question about what comes next (describing roles, running a first meeting, bringing your team in), just reply to this email and I’ll answer personally.",
+      "paragraph2": "When you’re ready, inviting someone only takes their email address, and the first 5 accounts are free.",
+      "paragraph2Members_one": "When you’re ready, the member you added can see the org chart: inviting them only takes their email address, and the first 5 accounts are free.",
+      "paragraph2Members_other": "When you’re ready, the {{count}} members you added can see the org chart: inviting them only takes their email addresses, and the first 5 accounts are free.",
+      "cta": "Open {{org}}"
     }
   }
 }

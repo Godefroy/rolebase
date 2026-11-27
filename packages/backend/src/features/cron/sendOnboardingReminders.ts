@@ -1,5 +1,7 @@
 import i18n from '@rolebase/emails/i18n'
+import { EmailAddress } from '@rolebase/emails/helpers/sendEmail'
 import sendNotificationEmail from '@rolebase/emails/helpers/sendNotificationEmail'
+import emailSettings from '@rolebase/emails/settings'
 import { getOrgPath } from '@rolebase/shared/helpers/getOrgPath'
 import { UserMetadata } from '@rolebase/shared/model/user'
 import { gql } from '../../gql'
@@ -13,7 +15,8 @@ const hour = 60 * 60 * 1000
 // Onboarding reminders, one email each, sent once per user:
 // - noOrg: signed in (code validated) 1 to 48 hours ago, still no organization
 // - noSetup: organization created 1 to 48 hours ago, setup left unfinished
-// - noInvite: organization set up 24 to 72 hours ago, nobody invited yet
+// - noInvite: organization set up 24 to 72 hours ago, nobody invited yet.
+//   An offer of help from the founder, who gets the replies
 // The windows only catch recent signups, so older users never receive them.
 export default webhookProcedure.mutation(async () => {
   const now = Date.now()
@@ -68,8 +71,7 @@ export default webhookProcedure.mutation(async () => {
     const metadata: UserMetadata = user.metadata || {}
     if (metadata.onboardingReminders?.noInvite) continue
 
-    // Name the members typed at the setup who still can't see the org chart,
-    // and open the invite modal, pre-filled with them
+    // Name the members typed at the setup who still can't see the org chart
     const withoutAccess = org.members_aggregate.aggregate?.count ?? 0
     await sendReminder({
       type: 'noInvite',
@@ -77,10 +79,15 @@ export default webhookProcedure.mutation(async () => {
       lang: user.locale,
       replace: { name: user.displayName, org: org.name },
       count: withoutAccess,
-      paragraphs: withoutAccess
-        ? ['paragraph1Members', 'paragraph2', 'paragraph3', 'paragraph4']
-        : ['paragraph1', 'paragraph2', 'paragraph3', 'paragraph4'],
-      ctaUrl: `${settings.url}${getOrgPath(org)}/settings/members?invite`,
+      paragraphs: [
+        'paragraph1',
+        withoutAccess ? 'paragraph2Members' : 'paragraph2',
+      ],
+      ctaUrl: `${settings.url}${getOrgPath(org)}/`,
+      replyTo: {
+        Name: emailSettings.founder.name,
+        Email: emailSettings.founder.email,
+      },
     })
     await markSent(user.id, metadata, 'noInvite')
   }
@@ -97,6 +104,7 @@ interface ReminderParams {
   count?: number
   paragraphs?: string[]
   ctaUrl: string
+  replyTo?: EmailAddress
 }
 
 async function sendReminder({
@@ -107,6 +115,7 @@ async function sendReminder({
   count,
   paragraphs: paragraphKeys = ['paragraph1', 'paragraph2', 'paragraph3'],
   ctaUrl,
+  replyTo,
 }: ReminderParams) {
   const t = (key: string) =>
     i18n.t(`emails:OnboardingReminder.${type}.${key}`, {
@@ -127,6 +136,7 @@ async function sendReminder({
       paragraphs,
       ctaUrl,
       ctaLabel: t('cta'),
+      replyTo,
     })
   } catch (error) {
     console.error(`Error sending ${type} onboarding reminder`, error)
